@@ -14,6 +14,10 @@ import (
 var repo *git.Repository
 var master *plumbing.Hash
 
+func getLog() (object.CommitIter, error) {
+	return repo.Log(&git.LogOptions{From: *master})
+}
+
 type commitInfo struct {
 	Date time.Time
 	Desc string
@@ -30,6 +34,21 @@ func makeCommitInfo(c *object.Commit) commitInfo {
 		Desc: desc,
 		Hash: c.Hash,
 	}
+}
+
+func commits(iter object.CommitIter) chan commitInfo {
+	ret := make(chan commitInfo)
+	go func() {
+		err := iter.ForEach(func(c *object.Commit) error {
+			ret <- makeCommitInfo(c)
+			return nil
+		})
+		close(ret)
+		if err != nil {
+			log.Panicln(err)
+		}
+	}()
+	return ret
 }
 
 func optimalClone(url string) error {

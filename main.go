@@ -15,7 +15,11 @@ import (
 /// --------------
 
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
-	"commitLog": commitLog,
+	// Git, initialization
+	"git_getLog": getLog,
+
+	// Git, safe
+	"git_commits": commits,
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors

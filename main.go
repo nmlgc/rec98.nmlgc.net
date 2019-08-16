@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -33,6 +34,21 @@ func htmlWrap(handler func(wr http.ResponseWriter, req *http.Request)) http.Hand
 /// --------------
 
 func main() {
+	if len(os.Args) < 2 {
+		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
+	}
+
+	err := optimalClone(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Done.")
+
+	master, err = repo.ResolveRevision("master")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := mux.NewRouter()
 
 	staticSrv := http.FileServer(http.Dir("static/"))

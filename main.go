@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -33,6 +34,14 @@ func htmlWrap(handler func(wr http.ResponseWriter, req *http.Request)) http.Hand
 
 /// --------------
 
+func measureRequestTime(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		next.ServeHTTP(wr, req)
+		log.Printf("%s %s: %v\n", req.Method, req.URL.Path, time.Since(start))
+	})
+}
+
 func main() {
 	if len(os.Args) < 2 {
 		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
@@ -53,6 +62,7 @@ func main() {
 
 	staticSrv := http.FileServer(http.Dir("static/"))
 
+	r.Use(measureRequestTime)
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
 	r.Handle("/", htmlWrap(indexHandler))

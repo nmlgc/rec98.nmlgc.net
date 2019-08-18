@@ -14,7 +14,9 @@ import (
 /// HTML templates
 /// --------------
 
-var pages = template.Must(template.ParseGlob("*.html"))
+var pages = template.Must(template.New("").Funcs(map[string]interface{}{
+	"commitLog": commitLog,
+}).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors
 // using the facilities from package log.

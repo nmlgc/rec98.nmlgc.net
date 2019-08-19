@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -39,11 +40,18 @@ func executeTemplate(wr io.Writer, name string, data interface{}) {
 	}
 }
 
-func htmlWrap(handler func(wr http.ResponseWriter, req *http.Request)) http.Handler {
+func htmlWrap(template string) http.Handler {
+	tmpl := pages.Lookup(template)
+	if tmpl == nil {
+		log.Fatalf("couldn't find template %s", template)
+	}
+
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-		executeTemplate(wr, "header.html", nil)
-		handler(wr, req)
-		executeTemplate(wr, "footer.html", nil)
+		if err := tmpl.Execute(wr, mux.Vars(req)); err != nil {
+			wr.WriteHeader(500)
+			fmt.Fprintln(wr, err)
+			return
+		}
 	})
 }
 
@@ -80,7 +88,7 @@ func main() {
 	r.Use(measureRequestTime)
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
-	r.Handle("/", htmlWrap(indexHandler))
-	r.Handle("/numbers/{rev}", htmlWrap(numbersHandler))
+	r.Handle("/", htmlWrap("index.html"))
+	r.Handle("/numbers/{rev}", htmlWrap("numbers.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

@@ -1,7 +1,8 @@
-{{$commit := git_getCommit .rev}}
-{{$tree := $commit.Tree}}
-{{$ci := git_makeCommitInfo $commit}}
+{{$commit := git_getCommit .rev -}}
+{{$tree := $commit.Tree -}}
+{{$ci := git_makeCommitInfo $commit -}}
 
+{{template "header.html"}}
 <h2>Commit overview</h2>
 <h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
 <table>
@@ -24,3 +25,4 @@
 		</tr>{{end}}
 	</tbody>
 </table>
+{{template "footer.html"}}

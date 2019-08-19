@@ -9,7 +9,7 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
-var htmlCommitRow = template.Must(template.New("commit-row").Parse(`<tr><td>{{.Date}}</td><th>{{.Desc}}</th><td><a href="https://github.com/nmlgc/ReC98/commit/{{.Hash}}"><code>{{.Hash}}</code></a></td></tr>`))
+var htmlCommitRow = template.Must(template.New("commit-row").Parse(`<tr><td>{{.Date}}</td><th><a href="/numbers/{{.Hash}}">{{.Desc}}</a></th><td><a href="https://github.com/nmlgc/ReC98/commit/{{.Hash}}"><code>{{.Hash}}</code></a></td></tr>`))
 
 func indexHandler(wr http.ResponseWriter, req *http.Request) {
 	masterIter, err := repo.Log(&git.LogOptions{From: *master})

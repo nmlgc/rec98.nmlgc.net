@@ -1,5 +1,7 @@
 package main
 
+import "gopkg.in/src-d/go-git.v4/plumbing/object"
+
 type gameSource struct {
 	Init      []string
 	OP        []string
@@ -42,4 +44,15 @@ var gameSources = []gameSource{
 		[]string{"th05_main.asm", "th05_main_seg3+4.inc"},
 		[]string{"th05_maine.asm"},
 	},
+}
+
+func numbersOfSources(tree *object.Tree, sources []string) int64 {
+	ret := int64(0)
+	for _, file := range sources {
+		f, err := tree.File(file)
+		if err == nil {
+			ret += f.Size
+		}
+	}
+	return ret
 }

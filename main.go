@@ -56,5 +56,6 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
 	r.Handle("/", htmlWrap(indexHandler))
+	r.Handle("/numbers/{rev}", htmlWrap(numbersHandler))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

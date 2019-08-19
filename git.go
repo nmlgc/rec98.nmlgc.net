@@ -14,6 +14,14 @@ import (
 var repo *git.Repository
 var master *plumbing.Hash
 
+func getCommit(rev string) (*object.Commit, error) {
+	hash, err := repo.ResolveRevision(plumbing.Revision(rev))
+	if err != nil {
+		return nil, err
+	}
+	return repo.CommitObject(*hash)
+}
+
 func getLog() (object.CommitIter, error) {
 	return repo.Log(&git.LogOptions{From: *master})
 }

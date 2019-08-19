@@ -16,10 +16,19 @@ import (
 
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
-	"git_getLog": getLog,
+	"git_getCommit": getCommit,
+	"git_getLog":    getLog,
+
+	// Arithmetic, safe
+	"inc": func(i int) int { return i + 1 },
 
 	// Git, safe
-	"git_commits": commits,
+	"git_commits":        commits,
+	"git_makeCommitInfo": makeCommitInfo,
+
+	// ReC98, safe
+	"rec98_gameSources":      func() []gameSource { return gameSources },
+	"rec98_numbersOfSources": numbersOfSources,
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors

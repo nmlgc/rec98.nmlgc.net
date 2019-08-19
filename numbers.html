@@ -1,0 +1,26 @@
+{{$commit := git_getCommit .rev}}
+{{$tree := $commit.Tree}}
+{{$ci := git_makeCommitInfo $commit}}
+
+<h2>Commit overview</h2>
+<h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
+<table>
+	<thead>
+		<tr>
+			<th></th>
+			<th>ZUN.COM</th>
+			<th>OP</th>
+			<th>Main</th>
+			<th>Cutscenes</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{range $game, $sources := rec98_gameSources}}<tr>
+			<th>{{printf "TH%02d" (inc $game)}}</th>
+			<td>{{rec98_numbersOfSources $tree $sources.Init}}</td>
+			<td>{{rec98_numbersOfSources $tree $sources.OP}}</td>
+			<td>{{rec98_numbersOfSources $tree $sources.Main}}</td>
+			<td>{{rec98_numbersOfSources $tree $sources.Cutscenes}}</td>
+		</tr>{{end}}
+	</tbody>
+</table>

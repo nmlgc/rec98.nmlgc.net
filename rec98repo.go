@@ -9,6 +9,13 @@ type gameSource struct {
 	Cutscenes []string
 }
 
+type gameNumbers struct {
+	Init      int
+	OP        int
+	Main      int
+	Cutscenes int
+}
+
 func (gs gameSource) All() []string {
 	var ret []string
 	ret = append(ret, gs.Init...)
@@ -17,7 +24,7 @@ func (gs gameSource) All() []string {
 	return append(ret, gs.Cutscenes...)
 }
 
-var gameSources = []gameSource{
+var gameSources = [5]gameSource{
 	{
 		[]string{"th01_zunsoft.asm"},
 		[]string{"th01_op.asm"},
@@ -46,13 +53,22 @@ var gameSources = []gameSource{
 	},
 }
 
-func numbersOfSources(tree *object.Tree, sources []string) int64 {
-	ret := int64(0)
-	for _, file := range sources {
-		f, err := tree.File(file)
-		if err == nil {
-			ret += f.Size
+func numbersAtTree(tree *object.Tree) (numbers [5]gameNumbers) {
+	numberFor := func(sources []string) (number int) {
+		for _, file := range sources {
+			f, err := tree.File(file)
+			if err == nil {
+				number += int(f.Size)
+			}
 		}
+		return
 	}
-	return ret
+
+	for game, sources := range gameSources {
+		numbers[game].Init = numberFor(sources.Init)
+		numbers[game].OP = numberFor(sources.OP)
+		numbers[game].Main = numberFor(sources.Main)
+		numbers[game].Cutscenes = numberFor(sources.Cutscenes)
+	}
+	return
 }

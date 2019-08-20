@@ -28,8 +28,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"git_makeCommitInfo": makeCommitInfo,
 
 	// ReC98, safe
-	"rec98_gameSources":      func() []gameSource { return gameSources },
-	"rec98_numbersOfSources": numbersOfSources,
+	"rec98_numbersAtTree": numbersAtTree,
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors

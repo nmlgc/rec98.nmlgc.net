@@ -28,7 +28,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"git_makeCommitInfo": makeCommitInfo,
 
 	// ReC98, safe
-	"rec98_numbersAtTree": numbersAtTree,
+	"ReC98_REProgressAtTree": REProgressAtTree,
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors
@@ -88,6 +88,6 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
 	r.Handle("/", htmlWrap("index.html"))
-	r.Handle("/numbers/{rev}", htmlWrap("numbers.html"))
+	r.Handle("/progress/{rev}", htmlWrap("progress.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

@@ -9,7 +9,10 @@ type gameSource struct {
 	Cutscenes []string
 }
 
-type gameNumbers struct {
+// REProgress lists the number of not yet reverse-engineered instructions in
+// each component of a game
+// each component of a game.
+type REProgress struct {
 	Init      int
 	OP        int
 	Main      int
@@ -53,22 +56,43 @@ var gameSources = [5]gameSource{
 	},
 }
 
-func numbersAtTree(tree *object.Tree) (numbers [5]gameNumbers) {
-	numberFor := func(sources []string) (number int) {
+// REProgressAtTree parses the ASM dump files for every game at the given Git
+// tree, and returns the progress for each.
+func REProgressAtTree(tree *object.Tree) (progress [5]REProgress) {
+	type progressTuple struct {
+		target *int
+		result asmStats
+	}
+	c := make(chan progressTuple)
+	filesParsed := 0
+
+	progressFor := func(target *int, sources []string) {
 		for _, file := range sources {
 			f, err := tree.File(file)
-			if err == nil {
-				number += int(f.Size)
+			if err != nil {
+				continue
 			}
+			fr, err := f.Reader()
+			if err != nil {
+				continue
+			}
+			go func() {
+				c <- progressTuple{target, asmParseStats(fr)}
+			}()
+			filesParsed++
 		}
-		return
 	}
-
 	for game, sources := range gameSources {
-		numbers[game].Init = numberFor(sources.Init)
-		numbers[game].OP = numberFor(sources.OP)
-		numbers[game].Main = numberFor(sources.Main)
-		numbers[game].Cutscenes = numberFor(sources.Cutscenes)
+		progressFor(&progress[game].Init, sources.Init)
+		progressFor(&progress[game].OP, sources.OP)
+		progressFor(&progress[game].Main, sources.Main)
+		progressFor(&progress[game].Cutscenes, sources.Cutscenes)
+	}
+	for ; filesParsed > 0; filesParsed-- {
+		pt := <-c
+		for _, proc := range pt.result {
+			*(pt.target) += proc.instructionCount
+		}
 	}
 	return
 }

@@ -1,9 +1,9 @@
 {{$commit := git_getCommit .rev -}}
 {{$ci := git_makeCommitInfo $commit -}}
-{{$numbers := rec98_numbersAtTree $commit.Tree -}}
+{{$progress := ReC98_REProgressAtTree $commit.Tree -}}
 
 {{template "header.html"}}
-<h2>Commit overview</h2>
+<h2>Reverse-engineering progress</h2>
 <h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
 <table>
 	<thead>
@@ -16,12 +16,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{range $game, $sources := $numbers}}<tr>
+		{{range $game, $icounts := $progress}}<tr>
 			<th>{{printf "TH%02d" (inc $game)}}</th>
-			<td>{{$sources.Init}}</td>
-			<td>{{$sources.OP}}</td>
-			<td>{{$sources.Main}}</td>
-			<td>{{$sources.Cutscenes}}</td>
+			<td>{{$icounts.Init}}</td>
+			<td>{{$icounts.OP}}</td>
+			<td>{{$icounts.Main}}</td>
+			<td>{{$icounts.Cutscenes}}</td>
 		</tr>{{end}}
 	</tbody>
 </table>

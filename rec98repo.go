@@ -9,14 +9,20 @@ type gameSource struct {
 	Cutscenes []string
 }
 
-// REProgress lists the number of not yet reverse-engineered instructions in
-// each component of a game
-// each component of a game.
-type REProgress struct {
+type componentCounts struct {
 	Init      int
 	OP        int
 	Main      int
 	Cutscenes int
+}
+
+// REProgress lists the number of not yet reverse-engineered instructions in
+// all of ReC98.
+type REProgress struct {
+	ICounts      [5]componentCounts // Every individual component in each game
+	ComponentSum componentCounts    // All games per component
+	GameSum      [5]int             // All components per game
+	Total        int                // Everything
 }
 
 func (gs gameSource) All() []string {
@@ -58,7 +64,7 @@ var gameSources = [5]gameSource{
 
 // REProgressAtTree parses the ASM dump files for every game at the given Git
 // tree, and returns the progress for each.
-func REProgressAtTree(tree *object.Tree) (progress [5]REProgress) {
+func REProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
 		target *int
 		result asmStats
@@ -83,16 +89,26 @@ func REProgressAtTree(tree *object.Tree) (progress [5]REProgress) {
 		}
 	}
 	for game, sources := range gameSources {
-		progressFor(&progress[game].Init, sources.Init)
-		progressFor(&progress[game].OP, sources.OP)
-		progressFor(&progress[game].Main, sources.Main)
-		progressFor(&progress[game].Cutscenes, sources.Cutscenes)
+		progressFor(&progress.ICounts[game].Init, sources.Init)
+		progressFor(&progress.ICounts[game].OP, sources.OP)
+		progressFor(&progress.ICounts[game].Main, sources.Main)
+		progressFor(&progress.ICounts[game].Cutscenes, sources.Cutscenes)
 	}
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result {
 			*(pt.target) += proc.instructionCount
 		}
+	}
+
+	for game, icounts := range progress.ICounts {
+		gameSum := icounts.Init + icounts.OP + icounts.Main + icounts.Cutscenes
+		progress.ComponentSum.Init += icounts.Init
+		progress.ComponentSum.OP += icounts.OP
+		progress.ComponentSum.Main += icounts.Main
+		progress.ComponentSum.Cutscenes += icounts.Cutscenes
+		progress.GameSum[game] = gameSum
+		progress.Total += gameSum
 	}
 	return
 }

@@ -13,16 +13,26 @@
 			<th>OP</th>
 			<th>Main</th>
 			<th>Cutscenes</th>
+			<th>Total</th>
 		</tr>
 	</thead>
 	<tbody>
-		{{range $game, $icounts := $progress}}<tr>
+		{{range $game, $icounts := $progress.ICounts}}<tr>
 			<th>{{printf "TH%02d" (inc $game)}}</th>
 			<td>{{$icounts.Init}}</td>
 			<td>{{$icounts.OP}}</td>
 			<td>{{$icounts.Main}}</td>
 			<td>{{$icounts.Cutscenes}}</td>
+			<td>{{index $progress.GameSum $game}}</td>
 		</tr>{{end}}
+		<tr>
+			<th>Total</th>
+			<td>{{$progress.ComponentSum.Init}}</td>
+			<td>{{$progress.ComponentSum.OP}}</td>
+			<td>{{$progress.ComponentSum.Main}}</td>
+			<td>{{$progress.ComponentSum.Cutscenes}}</td>
+			<td>{{$progress.Total}}</td>
+		</tr>
 	</tbody>
 </table>
 {{template "footer.html"}}

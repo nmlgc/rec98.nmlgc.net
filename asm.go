@@ -16,10 +16,10 @@ var rxLabel = regexp.MustCompile(`\s*\w+:(\s+|\z)`)
 var rxProcStart = regexp.MustCompile(`(?i)(.+?)\s+proc`)
 var rxProcEnd = regexp.MustCompile(`(?i)(.+?)\s+endp`)
 var rxIgnoredInstructions = regexp.MustCompile(
-	`(?i)\b(nop|db|dw|dd|dq|include|public|assume|end)\b`,
+	`(?i)\b(nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
 )
 var rxIgnoredDirectives = regexp.MustCompile(
-	`(?i)(.+)\s*(\=|label|segment|ends)(\s+|\z)`,
+	`(?i)(.+)\s*(\=|equ|label|segment|ends)(\s+|\z)`,
 )
 var rxRegisters = regexp.MustCompile(
 	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(\s+|\z)`,

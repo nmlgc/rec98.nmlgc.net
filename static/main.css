@@ -1,0 +1,32 @@
+/* Progress table
+   -------------- */
+#progress {
+	border-collapse: collapse;
+}
+
+#progress td,
+#progress th {
+	text-align: right;
+	padding: 0.25em 0.5em;
+}
+
+#progress th:first-child,
+#progress td:first-child {
+	border-right: 1px solid gray;
+}
+
+#progress th:last-child,
+#progress td:last-child {
+	border-left: 1px solid gray;
+}
+
+#progress thead th,
+#progress thead td {
+	border-bottom: 1px solid gray;
+}
+
+#progress tfoot th,
+#progress tfoot td {
+	border-top: 1px solid gray;
+}
+/* -------------- */

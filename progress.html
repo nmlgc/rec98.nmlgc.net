@@ -5,7 +5,7 @@
 {{template "header.html"}}
 <h2>Reverse-engineering progress</h2>
 <h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
-<table>
+<table id="progress">
 	<thead>
 		<tr>
 			<th></th>
@@ -25,6 +25,8 @@
 			<td>{{$icounts.Cutscenes}}</td>
 			<td>{{index $progress.GameSum $game}}</td>
 		</tr>{{end}}
+	</tbody>
+	<tfoot>
 		<tr>
 			<th>Total</th>
 			<td>{{$progress.ComponentSum.Init}}</td>
@@ -33,6 +35,6 @@
 			<td>{{$progress.ComponentSum.Cutscenes}}</td>
 			<td>{{$progress.Total}}</td>
 		</tr>
-	</tbody>
+	</tfoot>
 </table>
 {{template "footer.html"}}

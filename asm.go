@@ -12,25 +12,25 @@ import (
 	"strings"
 )
 
-var rxLabel = regexp.MustCompile(`\s*\w+:(\s+|\z)`)
-var rxProcStart = regexp.MustCompile(`(?i)(.+?)\s+proc`)
-var rxProcEnd = regexp.MustCompile(`(?i)(.+?)\s+endp`)
+var rxLabel = regexp.MustCompile(`^\s*\w+:(?:\s+|\z)`)
+var rxProcStart = regexp.MustCompile(`(?i)^(.+?)\s+proc`)
+var rxProcEnd = regexp.MustCompile(`(?i)^.+?\s+endp`)
 var rxIgnoredInstructions = regexp.MustCompile(
-	`(?i)\b(nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
+	`(?i)\b(?:nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
 )
 var rxIgnoredDirectives = regexp.MustCompile(
-	`(?i)(.+)\s*(\=|equ|label|ends)(\s+|\z)`,
+	`(?i)^.+?\s*(?:\=|equ|label|ends)(?:\s+|\z)`,
 )
 
 // Yes, _TEXT catches more things than the 'CODE' class.
 var rxCodeSegment = regexp.MustCompile(
-	`(?i)^((.*_TEXT)\s+segment)|.+\s+segment.+'CODE'|\.code\s*$`,
+	`(?i)^(?:.*_TEXT\s+segment|.+\s+segment.+'CODE'|\.code\s*$)`,
 )
 var rxDataSegment = regexp.MustCompile(
-	`(?i)^((.+)\s*segment.+'DATA')|\.data\??\s*$`,
+	`(?i)^(?:.+\s*segment.+'DATA'|\.data\??\s*$)`,
 )
 var rxRegisters = regexp.MustCompile(
-	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(\s+|\z)`,
+	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(?:\s+|\z)`,
 )
 
 type asmProc struct {

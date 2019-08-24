@@ -1,6 +1,9 @@
 package main
 
-import "gopkg.in/src-d/go-git.v4/plumbing/object"
+import (
+	"gopkg.in/src-d/go-git.v4/plumbing"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
+)
 
 type gameSource struct {
 	Init      []string
@@ -62,9 +65,7 @@ var gameSources = [5]gameSource{
 	},
 }
 
-// REProgressAtTree parses the ASM dump files for every game at the given Git
-// tree, and returns the progress for each.
-func REProgressAtTree(tree *object.Tree) (progress REProgress) {
+func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
 		target *int
 		result asmStats
@@ -112,3 +113,17 @@ func REProgressAtTree(tree *object.Tree) (progress REProgress) {
 	}
 	return
 }
+
+// REProgressAtTree parses the ASM dump files for every game at the given Git
+// tree, and returns the progress for each.
+var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
+	cache := make(map[plumbing.Hash]*REProgress)
+	return func(tree *object.Tree) REProgress {
+		if progress, ok := cache[tree.Hash]; ok {
+			return *progress
+		}
+		progress := reProgressAtTree(tree)
+		cache[tree.Hash] = &progress
+		return progress
+	}
+}()

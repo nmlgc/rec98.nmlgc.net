@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+
+	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
@@ -127,3 +130,30 @@ var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 		return progress
 	}
 }()
+
+// REBaselineRev returns a revision of the project where the game source .ASM
+// files contain 0% third-party code, and 100% of the instructions that make
+// up actual game code.
+func REBaselineRev() string {
+	return "re-baseline"
+}
+
+// REProgressBaseline calculates the progress at the top of the baseline
+// branch, and returns a function that can return those calculated values.
+func REProgressBaseline(repo *git.Repository) (func() (baseline REProgress), error) {
+	rev := REBaselineRev()
+	log.Printf(
+		"Calculating the baseline of reverse-engineering progress, from `%s`...",
+		rev,
+	)
+	commit, err := getCommit(rev)
+	if err != nil {
+		return nil, err
+	}
+	tree, err := commit.Tree()
+	if err != nil {
+		return nil, err
+	}
+	baseline := REProgressAtTree(tree)
+	return func() REProgress { return baseline }, nil
+}

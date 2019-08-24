@@ -29,6 +29,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
+	"ReC98_REBaselineRev":    REBaselineRev,
+	// Added after the repository was successfully opened
+	"ReC98_REProgressBaseline": func() int { return 0 },
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors
@@ -79,6 +82,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Calculate the baseline for reverse-engineering progress
+	// -------------------------------------------------------
+	baselineFunc, err := REProgressBaseline(repo)
+	if err != nil {
+		log.Fatalln("Error retrieving the baseline for reverse-engineering progress:", err)
+	}
+	log.Printf("That worked!")
+
+	pages.Funcs(map[string]interface{}{
+		"ReC98_REProgressBaseline": baselineFunc,
+	})
+	// -------------------------------------------------------
+
+	log.Printf("Got everything, starting the server.")
 
 	r := mux.NewRouter()
 

@@ -12,21 +12,21 @@
 	<tbody>
 		{{range $game, $icounts := $.ICounts}}<tr>
 			<th>{{printf "TH%02d" (inc $game)}}</th>
-			<td>{{$icounts.Init}}</td>
-			<td>{{$icounts.OP}}</td>
-			<td>{{$icounts.Main}}</td>
-			<td>{{$icounts.Cutscenes}}</td>
-			<td>{{index $.GameSum $game}}</td>
+			<td>{{$.Format $icounts.Init}}</td>
+			<td>{{$.Format $icounts.OP}}</td>
+			<td>{{$.Format $icounts.Main}}</td>
+			<td>{{$.Format $icounts.Cutscenes}}</td>
+			<td>{{index $.GameSum $game | $.Format}}</td>
 		</tr>{{end}}
 	</tbody>
 	<tfoot>
 		<tr>
 			<th>Total</th>
-			<td>{{$.ComponentSum.Init}}</td>
-			<td>{{$.ComponentSum.OP}}</td>
-			<td>{{$.ComponentSum.Main}}</td>
-			<td>{{$.ComponentSum.Cutscenes}}</td>
-			<td>{{$.Total}}</td>
+			<td>{{$.Format $.ComponentSum.Init}}</td>
+			<td>{{$.Format $.ComponentSum.OP}}</td>
+			<td>{{$.Format $.ComponentSum.Main}}</td>
+			<td>{{$.Format $.ComponentSum.Cutscenes}}</td>
+			<td>{{$.Format $.Total}}</td>
 		</tr>
 	</tfoot>
 </table>

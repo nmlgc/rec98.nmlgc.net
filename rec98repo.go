@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"log"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -16,10 +18,10 @@ type gameSource struct {
 }
 
 type componentCounts struct {
-	Init      int
-	OP        int
-	Main      int
-	Cutscenes int
+	Init      float32
+	OP        float32
+	Main      float32
+	Cutscenes float32
 }
 
 // REProgress lists the number of not yet reverse-engineered instructions in
@@ -27,8 +29,13 @@ type componentCounts struct {
 type REProgress struct {
 	ICounts      [5]componentCounts // Every individual component in each game
 	ComponentSum componentCounts    // All games per component
-	GameSum      [5]int             // All components per game
-	Total        int                // Everything
+	GameSum      [5]float32         // All components per game
+	Total        float32            // Everything
+}
+
+// Format prints val as if it were an integer.
+func (p REProgress) Format(val float32) string {
+	return fmt.Sprintf("%.0f", val)
 }
 
 func (gs gameSource) All() []string {
@@ -70,13 +77,13 @@ var gameSources = [5]gameSource{
 
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
-		target *int
+		target *float32
 		result asmStats
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
 
-	progressFor := func(target *int, sources []string) {
+	progressFor := func(target *float32, sources []string) {
 		for _, file := range sources {
 			f, err := tree.File(file)
 			if err != nil {
@@ -101,7 +108,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result {
-			*(pt.target) += proc.instructionCount
+			*(pt.target) += float32(proc.instructionCount)
 		}
 	}
 

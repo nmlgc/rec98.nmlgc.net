@@ -38,6 +38,36 @@ func (p REProgress) Format(val float32) string {
 	return fmt.Sprintf("%.0f", val)
 }
 
+// REProgressPct represents the progress as percentages.
+type REProgressPct REProgress
+
+// Format prints val as if it were an integer.
+func (p REProgressPct) Format(val float32) template.HTML {
+	return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
+}
+
+// Pct calculates the completion percentages of p relative to base.
+func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
+	formula := func(p float32, base float32) float32 {
+		return (1.0 - (p / base)) * 100.0
+	}
+	componentFormula := func(p componentCounts, base componentCounts) (pct componentCounts) {
+		pct.Init = formula(p.Init, base.Init)
+		pct.OP = formula(p.OP, base.OP)
+		pct.Main = formula(p.Main, base.Main)
+		pct.Cutscenes = formula(p.Cutscenes, base.Cutscenes)
+		return
+	}
+
+	for game := range p.ICounts {
+		pct.ICounts[game] = componentFormula(p.ICounts[game], base.ICounts[game])
+		pct.GameSum[game] = formula(p.GameSum[game], base.GameSum[game])
+	}
+	pct.ComponentSum = componentFormula(p.ComponentSum, base.ComponentSum)
+	pct.Total = formula(p.Total, base.Total)
+	return
+}
+
 func (gs gameSource) All() []string {
 	var ret []string
 	ret = append(ret, gs.Init...)

@@ -5,36 +5,5 @@
 {{template "header.html"}}
 <h2>Reverse-engineering progress</h2>
 <h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
-<table id="progress">
-	<thead>
-		<tr>
-			<th></th>
-			<th>ZUN.COM</th>
-			<th>OP</th>
-			<th>Main</th>
-			<th>Cutscenes</th>
-			<th>Total</th>
-		</tr>
-	</thead>
-	<tbody>
-		{{range $game, $icounts := $progress.ICounts}}<tr>
-			<th>{{printf "TH%02d" (inc $game)}}</th>
-			<td>{{$icounts.Init}}</td>
-			<td>{{$icounts.OP}}</td>
-			<td>{{$icounts.Main}}</td>
-			<td>{{$icounts.Cutscenes}}</td>
-			<td>{{index $progress.GameSum $game}}</td>
-		</tr>{{end}}
-	</tbody>
-	<tfoot>
-		<tr>
-			<th>Total</th>
-			<td>{{$progress.ComponentSum.Init}}</td>
-			<td>{{$progress.ComponentSum.OP}}</td>
-			<td>{{$progress.ComponentSum.Main}}</td>
-			<td>{{$progress.ComponentSum.Cutscenes}}</td>
-			<td>{{$progress.Total}}</td>
-		</tr>
-	</tfoot>
-</table>
+{{template "progress_table.html" $progress}}
 {{template "footer.html"}}

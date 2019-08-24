@@ -1,0 +1,32 @@
+<table id="progress">
+	<thead>
+		<tr>
+			<th></th>
+			<th>ZUN.COM</th>
+			<th>OP</th>
+			<th>Main</th>
+			<th>Cutscenes</th>
+			<th>Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{range $game, $icounts := $.ICounts}}<tr>
+			<th>{{printf "TH%02d" (inc $game)}}</th>
+			<td>{{$icounts.Init}}</td>
+			<td>{{$icounts.OP}}</td>
+			<td>{{$icounts.Main}}</td>
+			<td>{{$icounts.Cutscenes}}</td>
+			<td>{{index $.GameSum $game}}</td>
+		</tr>{{end}}
+	</tbody>
+	<tfoot>
+		<tr>
+			<th>Total</th>
+			<td>{{$.ComponentSum.Init}}</td>
+			<td>{{$.ComponentSum.OP}}</td>
+			<td>{{$.ComponentSum.Main}}</td>
+			<td>{{$.ComponentSum.Cutscenes}}</td>
+			<td>{{$.Total}}</td>
+		</tr>
+	</tfoot>
+</table>

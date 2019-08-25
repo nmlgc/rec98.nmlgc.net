@@ -149,7 +149,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	}
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
-		for _, proc := range pt.result {
+		for _, proc := range pt.result.procs {
 			*(pt.target) += float32(proc.instructionCount)
 		}
 	}

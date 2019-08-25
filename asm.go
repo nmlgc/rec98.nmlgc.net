@@ -39,9 +39,11 @@ type asmProc struct {
 	hashString       string // A somewhat unique signature for this proc
 }
 
-type asmStats []asmProc
+type asmStats struct {
+	procs []asmProc
+}
 
-func asmParseStats(file io.ReadCloser) asmStats {
+func asmParseStats(file io.ReadCloser) (ret asmStats) {
 	type SegmentType int
 
 	const (
@@ -50,7 +52,6 @@ func asmParseStats(file io.ReadCloser) asmStats {
 		Data
 	)
 
-	var ret []asmProc
 	inSeg := None
 	procCount := 0
 	unnamedProcName := func() string {
@@ -90,7 +91,7 @@ func asmParseStats(file io.ReadCloser) asmStats {
 		}
 
 		if m := rxProcStart.FindStringSubmatch(line); m != nil {
-			if procCount < len(ret) {
+			if procCount < len(ret.procs) {
 				procCount++
 			}
 			procName = m[1]
@@ -102,10 +103,10 @@ func asmParseStats(file io.ReadCloser) asmStats {
 			// OK, got an instruction that counts towards the total.
 			params := strings.Fields(line)
 
-			if procCount >= len(ret) {
-				ret = append(ret, asmProc{name: procName})
+			if procCount >= len(ret.procs) {
+				ret.procs = append(ret.procs, asmProc{name: procName})
 			}
-			proc := &ret[procCount]
+			proc := &ret.procs[procCount]
 			proc.hashString += params[0] + " "
 			if len(params) > 1 {
 				if i := strings.IndexByte(params[1], ','); i > 0 {

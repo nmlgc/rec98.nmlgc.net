@@ -53,9 +53,22 @@ type REMetric struct {
 	Total        float32            // Everything
 }
 
+// Sum updates the sums of m, based on its CMetrics.
+func (m *REMetric) Sum() {
+	for game, cmetric := range m.CMetrics {
+		gameSum := cmetric.Init + cmetric.OP + cmetric.Main + cmetric.Cutscenes
+		m.ComponentSum.Init += cmetric.Init
+		m.ComponentSum.OP += cmetric.OP
+		m.ComponentSum.Main += cmetric.Main
+		m.ComponentSum.Cutscenes += cmetric.Cutscenes
+		m.GameSum[game] = gameSum
+		m.Total += gameSum
+	}
+}
+
 // REProgress lists the number of not yet reverse-engineered instructions in
 // all of ReC98.
-type REProgress REMetric
+type REProgress = REMetric
 
 // Format prints val as if it were an integer.
 func (p REProgress) Format(val float32) string {
@@ -158,15 +171,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		}
 	}
 
-	for game, cmetric := range progress.CMetrics {
-		gameSum := cmetric.Init + cmetric.OP + cmetric.Main + cmetric.Cutscenes
-		progress.ComponentSum.Init += cmetric.Init
-		progress.ComponentSum.OP += cmetric.OP
-		progress.ComponentSum.Main += cmetric.Main
-		progress.ComponentSum.Cutscenes += cmetric.Cutscenes
-		progress.GameSum[game] = gameSum
-		progress.Total += gameSum
-	}
+	progress.Sum()
 	return
 }
 

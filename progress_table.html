@@ -10,12 +10,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{range $game, $icounts := $.ICounts}}<tr>
+		{{range $game, $cmetric := $.CMetrics}}<tr>
 			<th>{{printf "TH%02d" (inc $game)}}</th>
-			<td>{{$.Format $icounts.Init}}</td>
-			<td>{{$.Format $icounts.OP}}</td>
-			<td>{{$.Format $icounts.Main}}</td>
-			<td>{{$.Format $icounts.Cutscenes}}</td>
+			<td>{{$.Format $cmetric.Init}}</td>
+			<td>{{$.Format $cmetric.OP}}</td>
+			<td>{{$.Format $cmetric.Main}}</td>
+			<td>{{$.Format $cmetric.Cutscenes}}</td>
 			<td>{{index $.GameSum $game | $.Format}}</td>
 		</tr>{{end}}
 	</tbody>

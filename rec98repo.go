@@ -46,11 +46,14 @@ type componentMetric struct {
 
 // REMetric stores a number for each component in each binary,
 // together with the per-game, per-component, and total sums.
+// progress_table.html uses this structure as its data source.
 type REMetric struct {
 	CMetrics     [5]componentMetric // Every individual component in each game
 	ComponentSum componentMetric    // All games per component
 	GameSum      [5]float32         // All components per game
 	Total        float32            // Everything
+	// Since subtemplate calls can only take a single parameter…
+	Format func(float32) template.HTML
 }
 
 // Sum updates the sums of m, based on its CMetrics.
@@ -66,22 +69,13 @@ func (m *REMetric) Sum() {
 	}
 }
 
-// REProgress lists the number of not yet reverse-engineered instructions in
-// all of ReC98.
-type REProgress = REMetric
-
-// Format prints val as if it were an integer.
-func (p REProgress) Format(val float32) string {
-	return fmt.Sprintf("%.0f", val)
+// REProgress collects all progress-indicating metrics across all of ReC98.
+type REProgress struct {
+	Instructions REMetric
 }
 
 // REProgressPct represents the progress as percentages.
 type REProgressPct REProgress
-
-// Format prints val as if it were an integer.
-func (p REProgressPct) Format(val float32) template.HTML {
-	return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
-}
 
 // Pct calculates the completion percentages of p relative to base.
 func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
@@ -96,12 +90,20 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 		return
 	}
 
-	for game := range p.CMetrics {
-		pct.CMetrics[game] = componentFormula(p.CMetrics[game], base.CMetrics[game])
-		pct.GameSum[game] = formula(p.GameSum[game], base.GameSum[game])
+	metricFormula := func(p REMetric, base REMetric) (pct REMetric) {
+		for game := range p.CMetrics {
+			pct.CMetrics[game] = componentFormula(p.CMetrics[game], base.CMetrics[game])
+			pct.GameSum[game] = formula(p.GameSum[game], base.GameSum[game])
+		}
+		pct.ComponentSum = componentFormula(p.ComponentSum, base.ComponentSum)
+		pct.Total = formula(p.Total, base.Total)
+		pct.Format = func(val float32) template.HTML {
+			return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
+		}
+		return
 	}
-	pct.ComponentSum = componentFormula(p.ComponentSum, base.ComponentSum)
-	pct.Total = formula(p.Total, base.Total)
+
+	pct.Instructions = metricFormula(p.Instructions, base.Instructions)
 	return
 }
 
@@ -136,13 +138,13 @@ var gameSources = [5]gameSource{
 
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
-		target *float32
-		result asmStats
+		instructions *float32
+		result       asmStats
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
 
-	progressFor := func(target *float32, comp gameComponent) {
+	progressFor := func(instructions *float32, comp gameComponent) {
 		for _, file := range comp.files {
 			f, err := tree.File(file)
 			if err != nil {
@@ -153,25 +155,29 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 				continue
 			}
 			go func() {
-				c <- progressTuple{target, asmParseStats(fr)}
+				c <- progressTuple{instructions, asmParseStats(fr)}
 			}()
 			filesParsed++
 		}
 	}
 	for game, sources := range gameSources {
-		progressFor(&progress.CMetrics[game].Init, sources.Init)
-		progressFor(&progress.CMetrics[game].OP, sources.OP)
-		progressFor(&progress.CMetrics[game].Main, sources.Main)
-		progressFor(&progress.CMetrics[game].Cutscenes, sources.Cutscenes)
+		pi := &progress.Instructions
+		progressFor(&pi.CMetrics[game].Init, sources.Init)
+		progressFor(&pi.CMetrics[game].OP, sources.OP)
+		progressFor(&pi.CMetrics[game].Main, sources.Main)
+		progressFor(&pi.CMetrics[game].Cutscenes, sources.Cutscenes)
+		pi.Format = func(val float32) template.HTML {
+			return template.HTML(fmt.Sprintf("%.0f", val))
+		}
 	}
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result.procs {
-			*(pt.target) += float32(proc.instructionCount)
+			*(pt.instructions) += float32(proc.instructionCount)
 		}
 	}
 
-	progress.Sum()
+	progress.Instructions.Sum()
 	return
 }
 

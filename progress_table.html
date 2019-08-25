@@ -12,21 +12,21 @@
 	<tbody>
 		{{range $game, $cmetric := $.CMetrics}}<tr>
 			<th>{{printf "TH%02d" (inc $game)}}</th>
-			<td>{{$.Format $cmetric.Init}}</td>
-			<td>{{$.Format $cmetric.OP}}</td>
-			<td>{{$.Format $cmetric.Main}}</td>
-			<td>{{$.Format $cmetric.Cutscenes}}</td>
-			<td>{{index $.GameSum $game | $.Format}}</td>
+			<td>{{call $.Format $cmetric.Init}}</td>
+			<td>{{call $.Format $cmetric.OP}}</td>
+			<td>{{call $.Format $cmetric.Main}}</td>
+			<td>{{call $.Format $cmetric.Cutscenes}}</td>
+			<td>{{index $.GameSum $game | call $.Format}}</td>
 		</tr>{{end}}
 	</tbody>
 	<tfoot>
 		<tr>
 			<th>Total</th>
-			<td>{{$.Format $.ComponentSum.Init}}</td>
-			<td>{{$.Format $.ComponentSum.OP}}</td>
-			<td>{{$.Format $.ComponentSum.Main}}</td>
-			<td>{{$.Format $.ComponentSum.Cutscenes}}</td>
-			<td>{{$.Format $.Total}}</td>
+			<td>{{call $.Format $.ComponentSum.Init}}</td>
+			<td>{{call $.Format $.ComponentSum.OP}}</td>
+			<td>{{call $.Format $.ComponentSum.Main}}</td>
+			<td>{{call $.Format $.ComponentSum.Cutscenes}}</td>
+			<td>{{call $.Format $.Total}}</td>
 		</tr>
 	</tfoot>
 </table>

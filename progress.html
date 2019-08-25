@@ -1,11 +1,12 @@
 {{$commit := git_getCommit .rev -}}
 {{$ci := git_makeCommitInfo $commit -}}
 {{$progress := ReC98_REProgressAtTree $commit.Tree -}}
+{{$pct := $progress.Pct ReC98_REProgressBaseline -}}
 
 {{template "header.html"}}
 <h2>Reverse-engineering progress</h2>
 <h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
-{{template "progress_table.html" $progress}}
+{{template "progress_table.html" $progress.Instructions}}
 <h4>Completion percentage <a href="/progress/{{ReC98_REBaselineRev}}">(reference values)</a></h4>
-{{template "progress_table.html" $progress.Pct ReC98_REProgressBaseline}}
+{{template "progress_table.html" $pct.Instructions}}
 {{template "footer.html"}}

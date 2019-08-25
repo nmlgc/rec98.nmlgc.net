@@ -58,6 +58,16 @@ func asmParseStats(file io.ReadCloser) asmStats {
 	}
 	procName := unnamedProcName()
 
+	isCodeLine := func(line string) bool {
+		if rxCodeSegment.MatchString(line) {
+			inSeg = Code
+			return false // Ignore *this* line
+		} else if rxDataSegment.MatchString(line) {
+			inSeg = Data
+		}
+		return inSeg == Code
+	}
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -75,12 +85,11 @@ func asmParseStats(file io.ReadCloser) asmStats {
 		if line = strings.TrimSpace(line); len(line) == 0 {
 			continue
 		}
+		if !isCodeLine(line) {
+			continue
+		}
 
-		if rxCodeSegment.MatchString(line) {
-			inSeg = Code
-		} else if rxDataSegment.MatchString(line) {
-			inSeg = Data
-		} else if m := rxProcStart.FindStringSubmatch(line); m != nil {
+		if m := rxProcStart.FindStringSubmatch(line); m != nil {
 			if procCount < len(ret) {
 				procCount++
 			}
@@ -88,8 +97,7 @@ func asmParseStats(file io.ReadCloser) asmStats {
 		} else if rxProcEnd.MatchString(line) {
 			procCount++
 			procName = unnamedProcName()
-		} else if inSeg == Code &&
-			!rxIgnoredInstructions.MatchString(line) &&
+		} else if !rxIgnoredInstructions.MatchString(line) &&
 			!rxIgnoredDirectives.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
 			params := strings.Fields(line)

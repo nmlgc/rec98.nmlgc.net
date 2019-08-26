@@ -37,6 +37,9 @@ var rxRegisters = regexp.MustCompile(
 
 var rxAddress = regexp.MustCompile(`(-?[0-9][0-9a-fA-F]{1,4})h`)
 
+// A few instructions that can't have address immediates: INT, IN, OUT, and ENTER.
+var rxNoAddressInstruction = regexp.MustCompile(`(?i)^(?:int?|out|enter)$`)
+
 type asmProc struct {
 	name             string
 	instructionCount int
@@ -121,10 +124,10 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 			params := strings.Fields(line)
 
 			if dataRange.Start > 0 {
-				if m := rxAddress.FindStringSubmatch(line); m != nil {
-					if maybeAddress(m[1]) {
-						ret.absoluteRefs++
-					}
+				m := rxAddress.FindStringSubmatch(line)
+				if m != nil && maybeAddress(m[1]) &&
+					!rxNoAddressInstruction.MatchString(params[0]) {
+					ret.absoluteRefs++
 				}
 			}
 

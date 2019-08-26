@@ -1,5 +1,19 @@
+.progress-grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 /* Progress table
    -------------- */
+.progress figcaption {
+	text-align: center;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-top: 1px dotted grey;
+	border-bottom: 1px dotted grey;
+	margin-bottom: 1em;
+}
+
 .progress {
 	border-collapse: collapse;
 }

@@ -8,7 +8,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -33,6 +35,8 @@ var rxRegisters = regexp.MustCompile(
 	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(?:\s+|\z)`,
 )
 
+var rxAddress = regexp.MustCompile(`(-?[0-9][0-9a-fA-F]{1,4})h`)
+
 type asmProc struct {
 	name             string
 	instructionCount int
@@ -40,10 +44,23 @@ type asmProc struct {
 }
 
 type asmStats struct {
-	procs []asmProc
+	procs        []asmProc
+	absoluteRefs int
 }
 
-func asmParseStats(file io.ReadCloser) (ret asmStats) {
+func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
+	maybeAddress := func(s string) bool {
+		addr, err := strconv.ParseInt(s, 16, 64)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		// Fix up negative numbers
+		if addr < 0 {
+			addr = 0x10000 + addr
+		}
+		return addr >= int64(dataRange.Start) && addr <= int64(dataRange.End)
+	}
+
 	type SegmentType int
 
 	const (
@@ -102,6 +119,14 @@ func asmParseStats(file io.ReadCloser) (ret asmStats) {
 			!rxIgnoredDirectives.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
 			params := strings.Fields(line)
+
+			if dataRange.Start > 0 {
+				if m := rxAddress.FindStringSubmatch(line); m != nil {
+					if maybeAddress(m[1]) {
+						ret.absoluteRefs++
+					}
+				}
+			}
 
 			if procCount >= len(ret.procs) {
 				ret.procs = append(ret.procs, asmProc{name: procName})

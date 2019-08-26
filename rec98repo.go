@@ -73,6 +73,7 @@ func (m *REMetric) Sum() {
 // REProgress collects all progress-indicating metrics across all of ReC98.
 type REProgress struct {
 	Instructions REMetric
+	AbsoluteRefs REMetric
 }
 
 // REProgressPct represents the progress as percentages.
@@ -108,6 +109,7 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 	}
 
 	pct.Instructions = metricFormula(p.Instructions, base.Instructions)
+	pct.AbsoluteRefs = metricFormula(p.AbsoluteRefs, base.AbsoluteRefs)
 	return
 }
 
@@ -143,12 +145,15 @@ var gameSources = [5]gameSource{
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
 		instructions *float32
+		absoluteRefs *float32
 		result       asmStats
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
 
-	progressFor := func(instructions *float32, comp gameComponent) {
+	progressFor := func(
+		instructions *float32, absoluteRefs *float32, comp gameComponent,
+	) {
 		for _, file := range comp.files {
 			f, err := tree.File(file)
 			if err != nil {
@@ -159,29 +164,36 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 				continue
 			}
 			go func() {
-				c <- progressTuple{instructions, asmParseStats(fr)}
+				c <- progressTuple{
+					instructions, absoluteRefs,
+					asmParseStats(fr, comp.dataRange),
+				}
 			}()
 			filesParsed++
 		}
 	}
 	for game, sources := range gameSources {
 		pi := &progress.Instructions
-		progressFor(&pi.CMetrics[game].Init, sources.Init)
-		progressFor(&pi.CMetrics[game].OP, sources.OP)
-		progressFor(&pi.CMetrics[game].Main, sources.Main)
-		progressFor(&pi.CMetrics[game].Cutscenes, sources.Cutscenes)
+		pr := &progress.AbsoluteRefs
+		progressFor(&pi.CMetrics[game].Init, &pr.CMetrics[game].Init, sources.Init)
+		progressFor(&pi.CMetrics[game].OP, &pr.CMetrics[game].OP, sources.OP)
+		progressFor(&pi.CMetrics[game].Main, &pr.CMetrics[game].Main, sources.Main)
+		progressFor(&pi.CMetrics[game].Cutscenes, &pr.CMetrics[game].Cutscenes, sources.Cutscenes)
 		pi.Format = func(val float32) template.HTML {
 			return template.HTML(fmt.Sprintf("%.0f", val))
 		}
+		pr.Format = pi.Format
 	}
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result.procs {
 			*(pt.instructions) += float32(proc.instructionCount)
 		}
+		*(pt.absoluteRefs) += float32(pt.result.absoluteRefs)
 	}
 
 	progress.Instructions.Sum()
+	progress.AbsoluteRefs.Sum()
 	return
 }
 

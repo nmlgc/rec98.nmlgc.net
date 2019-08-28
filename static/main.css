@@ -1,3 +1,13 @@
+/* Variables
+   --------- */
+:root {
+	--header-height: 2.5em;
+	--header-border: 1px solid silver;
+	--logo-width: 3.5em;
+	--logo-padding: 0.5em;
+}
+/* --------- */
+
 html {
 	font-family: sans-serif;
 }
@@ -10,6 +20,65 @@ a {
 a:hover {
 	color: red;
 }
+
+/* Header
+   ------ */
+body {
+	margin: 0;
+}
+
+header {
+	display: table;
+	height: var(--header-height);
+	background: linear-gradient(180deg, white 0%, rgb(220, 220, 220) 100%);
+	border: var(--header-border);
+	flex-wrap: wrap;
+}
+
+header div {
+	display: table-cell;
+	width: 100%;
+}
+
+nav {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+	min-height: var(--header-height);
+}
+
+header div.logo {
+	width: var(--logo-width);
+	min-width: var(--logo-width);
+	padding-right: calc(var(--logo-padding) * 4);
+}
+
+header a.logo {
+	position: absolute;
+	/* Chrome would accept just `padding`, but Firefox… grr */
+	top: var(--logo-padding);
+	left: calc(var(--logo-padding) * 2);
+}
+
+header img.logo {
+	width: var(--logo-width);
+}
+
+header nav a {
+	color: rgb(96, 96, 192);
+	text-align: center;
+	border-left: var(--header-border);
+	line-height: var(--header-height);
+}
+
+header nav a:hover {
+	background: linear-gradient(180deg, white 0%, rgb(256, 220, 220) 100%);
+}
+
+main {
+	margin: 1em;
+}
+
+/* ------ */
 
 .progress-grid {
 	display: flex;

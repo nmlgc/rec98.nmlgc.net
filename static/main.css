@@ -2,6 +2,15 @@ html {
 	font-family: sans-serif;
 }
 
+a {
+	color: blue;
+	text-decoration: none;
+}
+
+a:hover {
+	color: red;
+}
+
 .progress-grid {
 	display: flex;
 	flex-wrap: wrap;

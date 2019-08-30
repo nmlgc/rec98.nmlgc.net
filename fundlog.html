@@ -1,0 +1,12 @@
+{{$outstanding := DB_PushesOutstanding -}}
+
+{{- template "header.html" -}}
+{{if $outstanding.Rows -}}
+<h1>Still outstanding</h1>
+{{template "push_table.html" $outstanding}}
+<h1>Delivered</h1>
+{{else}}
+<p>No outstanding deliveries at this point in time!</p>
+{{end}}
+{{template "push_table.html" DB_PushesDelivered}}
+{{- template "footer.html" -}}

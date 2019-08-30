@@ -1,6 +1,8 @@
 /* Variables
    --------- */
 :root {
+	--c-lightgray: rgb(220, 220, 220);
+
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
 	--logo-width: 3.5em;
@@ -30,7 +32,7 @@ body {
 header {
 	display: table;
 	height: var(--header-height);
-	background: linear-gradient(180deg, white 0%, rgb(220, 220, 220) 100%);
+	background: linear-gradient(180deg, white 0%, var(--c-lightgray) 100%);
 	border: var(--header-border);
 	flex-wrap: wrap;
 }
@@ -77,7 +79,6 @@ header nav a:hover {
 main {
 	margin: 1em;
 }
-
 /* ------ */
 
 /* Link icons
@@ -90,6 +91,45 @@ a[href^="https://github.com"]:before {
 	margin-left: 0.175em;
 	margin-right: 0.175em;
 	content:"";
+}
+/* ---------- */
+
+/* Tables
+   ------ */
+table {
+	border-collapse: collapse;
+}
+
+thead th,
+thead td {
+	border-bottom: 1px solid gray;
+}
+
+td, th {
+	padding: 0.25em 0.5em;
+}
+
+.icon-cell {
+	text-align: center;
+}
+/* ------ */
+
+/* Push table
+   ---------- */
+.pushes thead tr {
+	background-color: #fcfcfc;
+}
+
+.pushes tbody tr:nth-child(even) {
+	background-color: #ffffff;
+}
+.pushes tbody tr:nth-child(odd) {
+	background-color: #f8f8f8;
+}
+
+.pushes th:not(:first-child),
+.pushes td:not(:first-child) {
+	border-left: 1px solid gray;
 }
 /* ---------- */
 
@@ -109,14 +149,9 @@ a[href^="https://github.com"]:before {
 	margin-bottom: 1em;
 }
 
-.progress {
-	border-collapse: collapse;
-}
-
 .progress td,
 .progress th {
 	text-align: right;
-	padding: 0.25em 0.5em;
 }
 
 .progress th:first-child,
@@ -127,11 +162,6 @@ a[href^="https://github.com"]:before {
 .progress th:last-child,
 .progress td:last-child {
 	border-left: 1px solid gray;
-}
-
-.progress thead th,
-.progress thead td {
-	border-bottom: 1px solid gray;
 }
 
 .progress tfoot th,

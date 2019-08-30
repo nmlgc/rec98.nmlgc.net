@@ -1,8 +1,16 @@
 package main
 
 import (
+	"encoding/csv"
+	"log"
+	"os"
+	"path/filepath"
 	"time"
+
+	"github.com/gocarina/gocsv"
 )
+
+const dbPath = "db/"
 
 /// Nullable types
 /// --------------
@@ -54,4 +62,36 @@ type Push struct {
 	IncludeInEstimate bool
 }
 
+type tCustomers []*Customer
+type tPushes []*Push
+
+func (c tCustomers) ByID(id int) Customer {
+	return *c[id-1]
+}
+
+var customers = tCustomers{}
+var pushes = tPushes{}
+
 /// -------
+
+func loadTSV(slice interface{}, table string) error {
+	f, err := os.Open(filepath.Join(dbPath, table+".tsv"))
+	if err != nil {
+		return err
+	}
+	reader := csv.NewReader(f)
+	reader.Comma = '\t'
+	return gocsv.UnmarshalCSV(reader, slice)
+}
+
+func init() {
+	var err error
+	err = loadTSV(&customers, "customers")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = loadTSV(&pushes, "pushes")
+	if err != nil {
+		log.Fatalln(err)
+	}
+}

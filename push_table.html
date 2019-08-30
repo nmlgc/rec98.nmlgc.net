@@ -1,0 +1,26 @@
+<table class="pushes">
+	<thead>
+		<tr>
+			<th>Push ID</th>
+			<th>Time purchased</th>
+			<th>Funded by</th>
+			<th>Goal</th>
+			{{if $.IsDelivered -}}
+			<th>Time delivered</th>
+			<th>Commits</th>
+			{{- end}}
+		</tr>
+	</thead>
+	<tbody>
+		{{range .Rows}}<tr>
+			<th>{{.ID}}</th>
+			<td>💰 {{HTML_Time .Purchased}}</td>
+			<td>{{DB_CustomerByID .Customer}}</td>
+			<td>{{.Goal}}</td>
+			{{- if $.IsDelivered}}
+			<td>🚚 {{HTML_Time .Delivered.Time}}</td>
+			<td class="icon-cell"><a href="https://github.com/{{.Diff}}"></a></td>
+			{{- end}}
+		</tr>{{end}}
+	</tbody>
+</table>

@@ -47,6 +47,11 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"ReC98_REBaselineRev":    REBaselineRev,
 	// Added after the repository was successfully opened
 	"ReC98_REProgressBaseline": func() int { return 0 },
+
+	// Database view, safe
+	"DB_CustomerByID":      CustomerByID,
+	"DB_PushesOutstanding": PushesOutstanding,
+	"DB_PushesDelivered":   PushesDelivered,
 }).ParseGlob("*.html"))
 
 // executeTemplate wraps template execution on [pages], logging any errors
@@ -121,6 +126,7 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
 	r.Handle("/", htmlWrap("index.html"))
+	r.Handle("/fundlog", htmlWrap("fundlog.html"))
 	r.Handle("/progress/{rev}", htmlWrap("progress.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

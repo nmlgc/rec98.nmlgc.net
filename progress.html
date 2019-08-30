@@ -6,7 +6,7 @@
 
 {{template "header.html"}}
 <h2>Reverse-engineering progress</h2>
-<h3>{{$ci.Date}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
+<h3>{{HTML_Time $ci.Time}} – {{$ci.Desc}} (<a href="https://github.com/nmlgc/ReC98/commit/{{$ci.Hash}}"><code>{{$ci.Hash}}</code></a>)</h3>
 
 <div class="progress-grid">
 	<figure class="progress">

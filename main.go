@@ -15,6 +15,18 @@ import (
 /// HTML templates
 /// --------------
 
+// HTMLTime outputs a time.Time in a nice HTML format. Needs to be a function
+// rather than a separate type with a custom String() function because that
+// one always has to return a `string`, not a `template.HTML`.
+func HTMLTime(t time.Time) template.HTML {
+	utctime := t.UTC()
+	str := utctime.Format("2006-01-02 15:04&nbsp;UTC")
+	// Adding the `datetime` attribute in case we ever want to have some
+	// JavaScript for conversion into different time zones…
+	dt := utctime.Format(time.RFC3339)
+	return template.HTML(fmt.Sprintf(`<time datetime="%s">%s</time>`, dt, str))
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -22,6 +34,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
+
+	// Markup, safe
+	"HTML_Time": HTMLTime,
 
 	// Git, safe
 	"git_commits":        commits,

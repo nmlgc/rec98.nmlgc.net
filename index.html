@@ -7,7 +7,7 @@
 <p>In the meantime, click on the title of a commit to show the number of not yet reverse-engineered x86 instructions at that commit. For comparison, <a href="/progress/{{ReC98_REBaselineRev}}">here are the total numbers of game code instructions, with all third-party code filtered</a>.</p>
 <table><tbody>
 	{{range git_commits $log}}<tr>
-		<td>{{.Date}}</td>
+		<td>{{HTML_Time .Time}}</td>
 		<th><a href="/progress/{{.Hash}}">{{.Desc}}</a></th>
 		<td><a href="https://github.com/nmlgc/ReC98/commit/{{.Hash}}"><code>{{.Hash}}</code></a></td>
 	</tr>{{end}}

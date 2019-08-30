@@ -27,7 +27,7 @@ func getLog() (object.CommitIter, error) {
 }
 
 type commitInfo struct {
-	Date time.Time
+	Time time.Time
 	Desc string
 	Hash plumbing.Hash
 }
@@ -38,7 +38,7 @@ func makeCommitInfo(c *object.Commit) commitInfo {
 		desc = desc[:i]
 	}
 	return commitInfo{
-		Date: c.Author.When,
+		Time: c.Author.When,
 		Desc: desc,
 		Hash: c.Hash,
 	}

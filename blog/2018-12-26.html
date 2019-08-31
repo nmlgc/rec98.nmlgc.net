@@ -1,0 +1,9 @@
+{{$patch := printf "%v%v" .PostPrefix "TH05BossRush.zip" -}}
+
+<p>… yeah, no, we won't get very far without figuring out these drawing routines.<br>
+Which process data that comes from the .STD files.
+Which has various arrays related to the background… including one to specify the scrolling speed. And wait, setting that to 0 actually is what starts a boss battle?</p>
+
+<p>So, have a <a href="{{$patch}}">TH05 Boss Rush patch</a>. Theoretically, this should have also worked for TH04, but for some reason, the Stage 3 boss gets stuck on the first phase if we do this?</p>
+
+<p><a href="https://github.com/nmlgc/ReC98/commit/cf9f629">Here's the diff for the Boss Rush.</a> Turning it into a thcrap-style Skipgame patch is left as an exercise for the reader.</p>

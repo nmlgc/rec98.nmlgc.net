@@ -23,6 +23,36 @@ a:hover {
 	color: red;
 }
 
+blockquote {
+	color: green;
+	white-space: pre-line;
+}
+
+img[src*="emoji-"] {
+	/* Shamelessly stolen from Discord's CSS */
+	width: 1.45em;
+	height: 1.45em;
+	margin-left: .05em;
+	margin-right: .05em;
+	vertical-align: -.4em;
+}
+
+.gallery {
+	text-align: center;
+	margin: 0 auto;
+}
+
+.gallery img, video.gallery {
+	max-width: 100%; /* Important for phones! */
+	box-shadow: var(--blog-shadow);
+}
+
+.gallery img {
+	max-height: 15em;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
 /* Header
    ------ */
 body {

@@ -1,0 +1,6 @@
+<p>So, let's continue with player shots! …eh, or maybe not directly, since they involve two other structure types in TH05, which we'd have to cover first. One of them is a different sort of sprite, and since I like me some context in my reverse-engineering, let's disable every other sprite type first to figure out what it is.</p>
+
+<p>One of those other sprite types were the little sparks flying away from killed stage enemies, midbosses, and grazed bullets; easy enough to also RE right now. Turns out they use the same 8 hardcoded 8×8 sprites in TH02, TH04, and TH05. Except that it's actually 64 16×8 sprites, because ZUN wanted to pre-shift them for all 8 possible start pixels within a planar VRAM byte (rather than, like, just writing a few instructions to shift them programmatically), leading to them taking up 1,024 bytes rather than just 64.<br>
+Oh, and the thing I wanted to RE *actually* was the decay animation whenever a shot hits something. Not too complex either, especially since it's exclusive to TH05.</p>
+
+<p>And since there was some time left and I actually have to pick some of the next RE places strategically to best prepare for the upcoming 17 decompilation pushes, here's two more function pointers for good measure.</p>

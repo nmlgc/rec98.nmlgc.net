@@ -1,0 +1,3 @@
+<p>Stumbled across one more drawing function in the way… which was only a duplicated and seemingly pointlessly micro-optimized copy of master.lib's <code>super_roll_put_tiny()</code> function, used for fast display of 4-color 16×16 sprites.</p>
+
+<p>With this out of the way, we can tackle player shot sprite animation next. This will get rid of a lot of code, since every power level of every character's shot type is implemented in its own function. Which makes up thousands of instructions in both TH04 and TH05 that we can nicely decompile in the future without going through a dedicated reverse-engineering step.</p>

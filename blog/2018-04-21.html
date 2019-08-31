@@ -1,0 +1,10 @@
+{{$vid := printf "%v%v" .PostPrefix "Homing_Mima" -}}
+
+<p>You could use this to get a homing Mima, for example.</p>
+
+<video class="gallery" controls loop>
+	<source src="{{$vid}}.mp4" type="video/mp4"> <!-- For Chrome, smaller file -->
+	<source src="{{$vid}}.webm" type="video/webm"> <!-- For Firefox, VP9 -->
+	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+(Video of Mima with Reimu's shot type; <a href="{{$vid}}.mp4">download here</a>)
+</video>

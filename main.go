@@ -54,15 +54,17 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"DB_PushesDelivered":   PushesDelivered,
 }).ParseGlob("*.html"))
 
-// executeTemplate wraps template execution on [pages], logging any errors
+// pagesExecute wraps template execution on [pages], logging any errors
 // using the facilities from package log.
-func executeTemplate(wr io.Writer, name string, data interface{}) {
+func pagesExecute(wr io.Writer, name string, data interface{}) {
 	if err := pages.ExecuteTemplate(wr, name, data); err != nil {
 		log.Println(wr, err)
 	}
 }
 
-func htmlWrap(template string) http.Handler {
+// pagesHandler returns a handler that executes the given template of [pages],
+// with a map of the request variables as the value of dot.
+func pagesHandler(template string) http.Handler {
 	tmpl := pages.Lookup(template)
 	if tmpl == nil {
 		log.Fatalf("couldn't find template %s", template)
@@ -125,8 +127,8 @@ func main() {
 	r.Use(measureRequestTime)
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
 	r.Handle("/favicon.ico", staticSrv)
-	r.Handle("/", htmlWrap("index.html"))
-	r.Handle("/fundlog", htmlWrap("fundlog.html"))
-	r.Handle("/progress/{rev}", htmlWrap("progress.html"))
+	r.Handle("/", pagesHandler("index.html"))
+	r.Handle("/fundlog", pagesHandler("fundlog.html"))
+	r.Handle("/progress/{rev}", pagesHandler("progress.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

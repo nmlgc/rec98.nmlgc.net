@@ -9,7 +9,7 @@
 	{{range git_commits $log}}<tr>
 		<td>{{HTML_Time .Time}}</td>
 		<th><a href="/progress/{{.Hash}}">{{.Desc}}</a></th>
-		<td><a href="https://github.com/nmlgc/ReC98/commit/{{.Hash}}"><code>{{.Hash}}</code></a></td>
+		<td>{{git_CommitLink .Hash.String}}</td>
 	</tr>{{end}}
 </tbody></table>
 {{template "footer.html"}}

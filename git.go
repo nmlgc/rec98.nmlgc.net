@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"log"
 	"strings"
 	"time"
@@ -42,6 +44,15 @@ func makeCommitInfo(c *object.Commit) commitInfo {
 		Desc: desc,
 		Hash: c.Hash,
 	}
+}
+
+// CommitLink returns a nicely formatted link to rev in the ReC98 repository.
+func CommitLink(rev string) template.HTML {
+	revEsc := template.HTMLEscapeString(rev)
+	return template.HTML(fmt.Sprintf(
+		`<a href="https://github.com/nmlgc/ReC98/commit/%s"><code>%s</code></a>`,
+		revEsc, revEsc,
+	))
 }
 
 func commits(iter object.CommitIter) chan commitInfo {

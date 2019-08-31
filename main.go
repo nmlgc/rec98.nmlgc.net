@@ -41,6 +41,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, safe
 	"git_commits":        commits,
 	"git_makeCommitInfo": makeCommitInfo,
+	"git_CommitLink":     CommitLink,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,

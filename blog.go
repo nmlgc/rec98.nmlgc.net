@@ -4,12 +4,17 @@ import (
 	"html/template"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
 var blogHP = newHostedPath("blog/", "/blog/")
 
-var blogPosts = pagesParseSubdirectory(blogHP.LocalPath, "*.html")
+var blogPosts = func() []string {
+	ret := pagesParseSubdirectory(blogHP.LocalPath, "*.html")
+	sort.Slice(ret, func(i, j int) bool { return ret[i] > ret[j] })
+	return ret
+}()
 
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {

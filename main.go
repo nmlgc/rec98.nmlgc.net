@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -85,7 +87,29 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"DB_CustomerByID":      CustomerByID,
 	"DB_PushesOutstanding": PushesOutstanding,
 	"DB_PushesDelivered":   PushesDelivered,
+
+	// Blog, safe
+	// Added later to avoid a initialization loop
+	"Blog_Posts": func() int { return 0 },
 }).ParseGlob("*.html"))
+
+// pagesParseSubdirectory parses all files in `dir` that match glob into
+// subtemplates of [pages], prefixing their name with `dir` (unlike Go's own
+// template.ParseGlob function), and returns a slice of the file names parsed.
+func pagesParseSubdirectory(dir string, glob string) (templates []string) {
+	matches, err := filepath.Glob(filepath.Join(dir, glob))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, m := range matches {
+		buf, err := ioutil.ReadFile(m)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		template.Must(pages.New(m).Parse(string(buf)))
+	}
+	return matches
+}
 
 // pagesExecute wraps template execution on [pages], logging any errors
 // using the facilities from package log.
@@ -151,15 +175,21 @@ func main() {
 	})
 	// -------------------------------------------------------
 
+	pages.Funcs(map[string]interface{}{
+		"Blog_Posts": Posts,
+	})
+
 	log.Printf("Got everything, starting the server.")
 
 	r := mux.NewRouter()
 
 	r.Use(measureRequestTime)
 	staticHP.RegisterFileServer(r)
+	blogHP.RegisterFileServer(r)
 	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
+	r.Handle(path.Clean(blogHP.URLPrefix), pagesHandler("blog.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

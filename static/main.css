@@ -2,11 +2,14 @@
    --------- */
 :root {
 	--c-lightgray: rgb(220, 220, 220);
+	--c-border: silver;
+	--c-bg: #f8f8f8;
 
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
 	--logo-width: 3.5em;
 	--logo-padding: 0.5em;
+	--blog-shadow: 0 0 0.5em 0 var(--c-border);
 }
 /* --------- */
 
@@ -154,7 +157,7 @@ td, th {
 	background-color: #ffffff;
 }
 .pushes tbody tr:nth-child(odd) {
-	background-color: #f8f8f8;
+	background-color: var(--c-bg);
 }
 
 .pushes th:not(:first-child),
@@ -199,3 +202,45 @@ td, th {
 	border-top: 1px solid gray;
 }
 /* -------------- */
+
+/* Blog
+   ---- */
+article {
+	margin: 3em auto;
+	border-bottom: var(--header-border);
+	box-shadow: var(--blog-shadow);
+	background: var(--c-bg);
+	padding: 1em;
+}
+
+article dl {
+	border-bottom: var(--header-border);
+	padding-bottom: 0.5em;
+	margin: 0;
+}
+
+article dt, article dd {
+	display: inline;
+}
+
+article dt .emoji {
+	display: inline-block;
+	width: 1.5em;
+	text-align: right;
+}
+
+article dd:after {
+	display: block;
+	content: " ";
+}
+
+article dt {
+	font-size: 75%;
+	color: gray;
+	font-weight: bold;
+}
+
+article dd {
+	margin: 0;
+}
+/* ---- */

@@ -12,7 +12,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{range .Rows}}<tr>
+		{{range .Rows}}<tr id="{{.ID}}">
 			<th>{{.ID}}</th>
 			<td>💰 {{HTML_Time .Purchased}}</td>
 			<td>{{DB_CustomerByID .Customer}}</td>

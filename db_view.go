@@ -2,6 +2,8 @@ package main
 
 import (
 	"html/template"
+	"log"
+	"time"
 )
 
 // CustomerByID returns a HTML representation of the given customer.
@@ -41,4 +43,20 @@ func PushesDelivered() PushProjection {
 		true,
 		PushesWhere(func(p Push) bool { return p.Delivered.Time != nil }),
 	}
+}
+
+// PushesDeliveredAt returns all pushes delivered at the given date.
+func PushesDeliveredAt(datestring string) []Push {
+	dp, err := time.Parse("2006-01-02", datestring)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	aY, aM, aD := dp.Date()
+	return PushesWhere(func(p Push) bool {
+		if p.Delivered.Time == nil {
+			return false
+		}
+		pY, pM, pD := p.Delivered.Time.Date()
+		return pD == aD && pM == aM && pY == aY
+	})
 }

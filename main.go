@@ -7,10 +7,42 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"time"
 
 	"github.com/gorilla/mux"
 )
+
+// hostedPath stores the corresponding URL prefix for a local filesystem path.
+type hostedPath struct {
+	srv http.Handler
+
+	LocalPath string // must end with a slash
+	URLPrefix string // must start *and* end with a slash
+}
+
+// newHostedPath sets up a new hostedPath instance.
+func newHostedPath(LocalPath string, URLPrefix string) (ret hostedPath) {
+	ret.LocalPath = path.Clean(LocalPath) + "/"
+	ret.URLPrefix = URLPrefix
+	dir := http.Dir(ret.LocalPath)
+	ret.srv = http.FileServer(dir)
+	return
+}
+
+// Server returns hp's file serving handler, e.g. to be re-used elsewhere.
+func (hp hostedPath) Server() http.Handler {
+	return hp.srv
+}
+
+// RegisterFileServer registers a HTTP route on the given router at hp's
+// URLPrefix, serving any local files in hp's LocalPath.
+func (hp hostedPath) RegisterFileServer(r *mux.Router) {
+	stripped := http.StripPrefix(hp.URLPrefix, hp.srv)
+	r.PathPrefix(hp.URLPrefix).Handler(stripped)
+}
+
+var staticHP = newHostedPath("static/", "/static/")
 
 /// HTML templates
 /// --------------
@@ -123,11 +155,9 @@ func main() {
 
 	r := mux.NewRouter()
 
-	staticSrv := http.FileServer(http.Dir("static/"))
-
 	r.Use(measureRequestTime)
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", staticSrv))
-	r.Handle("/favicon.ico", staticSrv)
+	staticHP.RegisterFileServer(r)
+	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress.html"))

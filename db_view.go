@@ -5,7 +5,7 @@ import (
 )
 
 // CustomerByID returns a HTML representation of the given customer.
-func CustomerByID(id int) template.HTML {
+func CustomerByID(id CustomerID) template.HTML {
 	return template.HTML(customers.ByID(id).Name)
 }
 

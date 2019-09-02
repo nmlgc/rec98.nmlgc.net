@@ -46,6 +46,9 @@ func (t NullableTime) String() string {
 /// Schemas
 /// -------
 
+// CustomerID represents a consecutively numbered customer ID.
+type CustomerID int
+
 // Customer represents everyone who bought something.
 type Customer struct {
 	Name string
@@ -55,7 +58,7 @@ type Customer struct {
 type Push struct {
 	ID                string
 	Purchased         time.Time
-	Customer          int
+	Customer          CustomerID
 	Goal              string
 	Delivered         NullableTime
 	Diff              string
@@ -65,7 +68,7 @@ type Push struct {
 type tCustomers []*Customer
 type tPushes []*Push
 
-func (c tCustomers) ByID(id int) Customer {
+func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
 }
 

@@ -61,6 +61,25 @@ func HTMLTime(t time.Time) template.HTML {
 	return template.HTML(fmt.Sprintf(`<time datetime="%s">%s</time>`, dt, str))
 }
 
+// HTMLEmoji returns HTML markup for the given custom emoji.
+func HTMLEmoji(emoji string) template.HTML {
+	fn := emoji
+	style := ""
+	switch emoji {
+	case "onricdennat":
+		fn = "tannedcirno"
+		style = `transform: scaleX(-1);`
+	}
+
+	if len(style) > 0 {
+		style = `style="` + style + `" `
+	}
+	return template.HTML(fmt.Sprintf(
+		`<img src="%semoji-%s.png" alt=":%s:" %s/>`,
+		staticHP.URLPrefix, fn, emoji, style,
+	))
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -70,7 +89,8 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"inc": func(i int) int { return i + 1 },
 
 	// Markup, safe
-	"HTML_Time": HTMLTime,
+	"HTML_Time":  HTMLTime,
+	"HTML_Emoji": HTMLEmoji,
 
 	// Git, safe
 	"git_commits":        commits,

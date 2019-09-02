@@ -11,11 +11,30 @@ import (
 
 var blogHP = newHostedPath("blog/", "/blog/")
 
-var blogPosts = func() []string {
+// Blog contains the names of all blog post templates, sorted from newest to
+// oldest.
+type Blog []string
+
+var blog = func() Blog {
 	ret := pagesParseSubdirectory(blogHP.LocalPath, "*.html")
 	sort.Slice(ret, func(i, j int) bool { return ret[i] > ret[j] })
-	return ret
+	return Blog(ret)
 }()
+
+// HasEntryFor returns the ID of a potential blog entry posted at the given
+// date, or nil if there is none.
+func (b Blog) HasEntryFor(date time.Time) *string {
+	ds := date.Format("2006-01-02")
+	filename := filepath.Join(blogHP.LocalPath, ds+".html")
+	// Note that we don't use sort.SearchStrings() here, since we're sorted
+	// in descending order!
+	i := sort.Search(len(b), func(i int) bool { return b[i] <= filename })
+	// i := sort.SearchStrings(b, filename)
+	if i >= len(b) || b[i] != filename {
+		return nil
+	}
+	return &ds
+}
 
 // DiffInfo contains all pieces of information parsed from a GitHub diff URL.
 type DiffInfo struct {
@@ -58,7 +77,7 @@ type Post struct {
 func Posts() chan Post {
 	ret := make(chan Post)
 	go func() {
-		for _, tmplName := range blogPosts {
+		for _, tmplName := range blog {
 			var b strings.Builder
 
 			basename := filepath.Base(tmplName)

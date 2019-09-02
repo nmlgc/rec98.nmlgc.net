@@ -61,6 +61,7 @@ type Push struct {
 	Customer          CustomerID
 	Goal              string
 	Delivered         NullableTime
+	Summary           *string
 	Diff              string
 	IncludeInEstimate bool
 }
@@ -96,5 +97,13 @@ func init() {
 	err = loadTSV(&pushes, "pushes")
 	if err != nil {
 		log.Fatalln(err)
+	}
+	for _, p := range pushes {
+		if p.Delivered.Time == nil {
+			continue
+		}
+		if summary := blog.HasEntryFor(*p.Delivered.Time); summary != nil {
+			p.Summary = summary
+		}
 	}
 }

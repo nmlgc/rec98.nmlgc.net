@@ -8,6 +8,7 @@
 			{{if $.IsDelivered -}}
 			<th>Time delivered</th>
 			<th>Commits</th>
+			<th>Summary</th>
 			{{- end}}
 		</tr>
 	</thead>
@@ -20,6 +21,7 @@
 			{{- if $.IsDelivered}}
 			<td>🚚 {{HTML_Time .Delivered.Time}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff}}"></a></td>
+			<td class="icon-cell">{{if .Summary}}<a href="/blog#{{.Summary}}">📝</a>{{end}}</td>
 			{{- end}}
 		</tr>{{end}}
 	</tbody>

@@ -116,7 +116,7 @@ main {
 
 /* Link icons
    ---------- */
-a[href^="https://github.com"]:before {
+a:not(.customer)[href^="https://github.com/"]:before {
 	background-image: url('/static/github.svg');
 	display: inline-block;
 	width: 1em;

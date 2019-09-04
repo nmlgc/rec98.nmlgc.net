@@ -52,6 +52,7 @@ type CustomerID int
 // Customer represents everyone who bought something.
 type Customer struct {
 	Name string
+	URL  string
 }
 
 // Push represents a single unit of work.

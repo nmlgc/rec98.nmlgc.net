@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"time"
@@ -8,7 +9,13 @@ import (
 
 // CustomerByID returns a HTML representation of the given customer.
 func CustomerByID(id CustomerID) template.HTML {
-	return template.HTML(customers.ByID(id).Name)
+	c := customers.ByID(id)
+	if len(c.URL) == 0 {
+		return template.HTML(c.Name)
+	}
+	return template.HTML(fmt.Sprintf(
+		`<a class="customer" href="%s">%s</a>`, c.URL, c.Name,
+	))
 }
 
 // PushProjection indicates the various types of pushes for push_table.html.

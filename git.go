@@ -13,19 +13,37 @@ import (
 	"gopkg.in/src-d/go-git.v4/storage/memory"
 )
 
-var repo *git.Repository
+// Repository wraps a go-git Repository object.
+type Repository struct {
+	R *git.Repository
+}
+
+// NewRepository calls optimalClone(url), and wraps the result into our
+// Repository type.
+func NewRepository(url string) (ret Repository) {
+	r, err := optimalClone(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Done.")
+
+	ret.R = r
+	return
+}
+
+var repo Repository
 var master *plumbing.Hash
 
 func getCommit(rev string) (*object.Commit, error) {
-	hash, err := repo.ResolveRevision(plumbing.Revision(rev))
+	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
 	if err != nil {
 		return nil, err
 	}
-	return repo.CommitObject(*hash)
+	return repo.R.CommitObject(*hash)
 }
 
 func getLog() (object.CommitIter, error) {
-	return repo.Log(&git.LogOptions{From: *master})
+	return repo.R.Log(&git.LogOptions{From: *master})
 }
 
 type commitInfo struct {
@@ -70,17 +88,14 @@ func commits(iter object.CommitIter) chan commitInfo {
 	return ret
 }
 
-func optimalClone(url string) error {
-	var err error
+func optimalClone(url string) (*git.Repository, error) {
 	if strings.HasPrefix(url, "https://") {
 		// TODO: This takes 3 GB of memory?!
 		log.Printf("Cloning %s to memory...\n", url)
-		repo, err = git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
+		return git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
 			URL: url,
 		})
-	} else {
-		log.Printf("Opening %s...\n", url)
-		repo, err = git.PlainOpen(url)
 	}
-	return err
+	log.Printf("Opening %s...\n", url)
+	return git.PlainOpen(url)
 }

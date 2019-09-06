@@ -171,13 +171,9 @@ func main() {
 		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
 	}
 
-	err := optimalClone(os.Args[1])
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Done.")
-
-	master, err = repo.ResolveRevision("master")
+	var err error
+	repo = NewRepository(os.Args[1])
+	master, err = repo.R.ResolveRevision("master")
 	if err != nil {
 		log.Fatal(err)
 	}

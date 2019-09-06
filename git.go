@@ -16,6 +16,38 @@ import (
 // Repository wraps a go-git Repository object.
 type Repository struct {
 	R *git.Repository
+
+	UniqueLen   int // Shortest possible but still unique commit hash length
+	ShortToLong map[string]plumbing.Hash
+}
+
+type eHashTooShort struct{}
+
+func (e eHashTooShort) Error() string {
+	return ""
+}
+
+func testShortLength(r *git.Repository, sl int, branches []plumbing.Hash) map[string]plumbing.Hash {
+	ret := make(map[string]plumbing.Hash)
+	for _, branch := range branches {
+		logIter, err := r.Log(&git.LogOptions{From: branch})
+		if err != nil {
+			log.Fatalln(err)
+		}
+		err = logIter.ForEach(func(c *object.Commit) error {
+			curFull := c.Hash
+			curShort := curFull.String()[:sl]
+			if prevFull, ok := ret[curShort]; ok && prevFull != curFull {
+				return eHashTooShort{}
+			}
+			ret[curShort] = curFull
+			return nil
+		})
+		if _, ok := err.(eHashTooShort); ok {
+			return nil
+		}
+	}
+	return ret
 }
 
 // NewRepository calls optimalClone(url), and wraps the result into our
@@ -27,6 +59,27 @@ func NewRepository(url string) (ret Repository) {
 	}
 	log.Printf("Done.")
 
+	// Collect all branches
+	var branches []plumbing.Hash
+	branchIter, err := r.Branches()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if err = branchIter.ForEach(func(ref *plumbing.Reference) error {
+		branches = append(branches, ref.Hash())
+		return nil
+	}); err != nil {
+		log.Fatalln(err)
+	}
+
+	testlen := 0
+	for testlen < 40 && ret.ShortToLong == nil {
+		testlen++
+		ret.ShortToLong = testShortLength(r, testlen, branches)
+	}
+	log.Printf("shortest unique hash length is %v characters", testlen)
+
+	ret.UniqueLen = testlen
 	ret.R = r
 	return
 }

@@ -184,7 +184,7 @@ func main() {
 
 	// Calculate the baseline for reverse-engineering progress
 	// -------------------------------------------------------
-	baselineFunc, err := REProgressBaseline(repo)
+	baselineFunc, err := REProgressBaseline()
 	if err != nil {
 		log.Fatalln("Error retrieving the baseline for reverse-engineering progress:", err)
 	}

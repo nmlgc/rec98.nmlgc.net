@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 
-	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
@@ -220,7 +219,7 @@ func REBaselineRev() string {
 
 // REProgressBaseline calculates the progress at the top of the baseline
 // branch, and returns a function that can return those calculated values.
-func REProgressBaseline(repo *git.Repository) (func() (baseline REProgress), error) {
+func REProgressBaseline() (func() (baseline REProgress), error) {
 	rev := REBaselineRev()
 	log.Printf(
 		"Calculating the baseline of reverse-engineering progress, from `%s`...",

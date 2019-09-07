@@ -30,19 +30,19 @@ func comp(dataStart uint, dataEnd uint, files ...string) gameComponent {
 	return gameComponent{files, ByteRange{dataStart, dataEnd}}
 }
 
-type gameSource struct {
-	Init      gameComponent
-	OP        gameComponent
-	Main      gameComponent
-	Cutscenes gameComponent
-}
+type gameSource [4]gameComponent
 
-type componentMetric struct {
-	Init      float32
-	OP        float32
-	Main      float32
-	Cutscenes float32
-}
+func (gs gameSource) Init() gameComponent      { return gs[0] }
+func (gs gameSource) OP() gameComponent        { return gs[1] }
+func (gs gameSource) Main() gameComponent      { return gs[2] }
+func (gs gameSource) Cutscenes() gameComponent { return gs[3] }
+
+type componentMetric [4]float32
+
+func (cm componentMetric) Init() float32      { return cm[0] }
+func (cm componentMetric) OP() float32        { return cm[1] }
+func (cm componentMetric) Main() float32      { return cm[2] }
+func (cm componentMetric) Cutscenes() float32 { return cm[3] }
 
 // REMetric stores a number for each component in each binary,
 // together with the per-game, per-component, and total sums.
@@ -59,11 +59,11 @@ type REMetric struct {
 // Sum updates the sums of m, based on its CMetrics.
 func (m *REMetric) Sum() {
 	for game, cmetric := range m.CMetrics {
-		gameSum := cmetric.Init + cmetric.OP + cmetric.Main + cmetric.Cutscenes
-		m.ComponentSum.Init += cmetric.Init
-		m.ComponentSum.OP += cmetric.OP
-		m.ComponentSum.Main += cmetric.Main
-		m.ComponentSum.Cutscenes += cmetric.Cutscenes
+		gameSum := float32(0.0)
+		for i := range cmetric {
+			gameSum += cmetric[i]
+			m.ComponentSum[i] += cmetric[i]
+		}
 		m.GameSum[game] = gameSum
 		m.Total += gameSum
 	}
@@ -84,10 +84,9 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 		return (1.0 - (p / base)) * 100.0
 	}
 	componentFormula := func(p componentMetric, base componentMetric) (pct componentMetric) {
-		pct.Init = formula(p.Init, base.Init)
-		pct.OP = formula(p.OP, base.OP)
-		pct.Main = formula(p.Main, base.Main)
-		pct.Cutscenes = formula(p.Cutscenes, base.Cutscenes)
+		for i := range p {
+			pct[i] = formula(p[i], base[i])
+		}
 		return
 	}
 
@@ -174,10 +173,9 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	for game, sources := range gameSources {
 		pi := &progress.Instructions
 		pr := &progress.AbsoluteRefs
-		progressFor(&pi.CMetrics[game].Init, &pr.CMetrics[game].Init, sources.Init)
-		progressFor(&pi.CMetrics[game].OP, &pr.CMetrics[game].OP, sources.OP)
-		progressFor(&pi.CMetrics[game].Main, &pr.CMetrics[game].Main, sources.Main)
-		progressFor(&pi.CMetrics[game].Cutscenes, &pr.CMetrics[game].Cutscenes, sources.Cutscenes)
+		for i := range pi.ComponentSum {
+			progressFor(&pi.CMetrics[game][i], &pr.CMetrics[game][i], sources[i])
+		}
 		pi.Format = func(val float32) template.HTML {
 			return template.HTML(fmt.Sprintf("%.0f", val))
 		}

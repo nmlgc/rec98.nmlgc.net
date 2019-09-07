@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -23,18 +24,34 @@ type DiffInfo struct {
 	Rev     string
 }
 
-// NewDiffInfo parses a GitHub diff URL into a DiffInfo structure.
-func NewDiffInfo(url string) DiffInfo {
+type eInvalidDiffURL struct {
+	url string
+	err string
+}
+
+func (e eInvalidDiffURL) Error() string {
+	return fmt.Sprintf("invalid diff URL format: \"%s\": %s", e.url, e.err)
+}
+
+// UnmarshalCSV parses a GitHub diff URL into a DiffInfo structure.
+func (d *DiffInfo) UnmarshalCSV(url string) error {
+	if len(url) == 0 {
+		return nil
+	}
 	s := strings.Split(url, "/")
+	if len(s) != 4 {
+		return eInvalidDiffURL{url, "expected 3 slashes"}
+	}
 	project := ""
 	if s[1] == "rec98.nmlgc.net" {
 		project = "Website"
 	}
-	return DiffInfo{
+	*d = DiffInfo{
 		URL:     url,
 		Project: project,
-		Rev:     s[len(s)-1],
+		Rev:     s[3],
 	}
+	return nil
 }
 
 // NullableTime represents time values that can be empty.
@@ -85,7 +102,7 @@ type Push struct {
 	Goal              string
 	Delivered         NullableTime
 	Summary           *string
-	Diff              string
+	Diff              *DiffInfo
 	IncludeInEstimate bool
 }
 

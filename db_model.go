@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gocarina/gocsv"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 const dbPath = "db/"
@@ -65,6 +66,37 @@ func (d *DiffInfo) UnmarshalCSV(url string) error {
 		IsRange: isRange,
 	}
 	return nil
+}
+
+// Range retrieves the commits at the top and bottom of the range described by
+// d.
+func (d *DiffInfo) Range() (top, bottom *object.Commit) {
+	must := func(ret *object.Commit, err error) *object.Commit {
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return ret
+	}
+
+	if d.IsRange {
+		revs := strings.Split(d.Rev, "...")
+		if len(revs) == 1 && strings.Contains(d.Rev, "..") {
+			log.Fatalln("two-dot ranges not supported:", d.Rev)
+		}
+		bottom = must(getCommit(revs[0]))
+		top = must(getCommit(revs[1]))
+		return
+	}
+	// Single commit...
+	top = must(getCommit((d.Rev)))
+	if len(top.ParentHashes) > 1 {
+		log.Fatalf(
+			"%s has more than one parent; use the \"compare\" mode instead!",
+			d.Rev,
+		)
+	}
+	bottom = must(top.Parent(0))
+	return
 }
 
 // NullableTime represents time values that can be empty.

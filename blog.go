@@ -36,27 +36,6 @@ func (b Blog) HasEntryFor(date time.Time) *string {
 	return &ds
 }
 
-// DiffInfo contains all pieces of information parsed from a GitHub diff URL.
-type DiffInfo struct {
-	URL     string
-	Project string
-	Rev     string
-}
-
-// NewDiffInfo parses a GitHub diff URL into a DiffInfo structure.
-func NewDiffInfo(url string) DiffInfo {
-	s := strings.Split(url, "/")
-	project := ""
-	if s[1] == "rec98.nmlgc.net" {
-		project = "Website"
-	}
-	return DiffInfo{
-		URL:     url,
-		Project: project,
-		Rev:     s[len(s)-1],
-	}
-}
-
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
 	PostPrefix template.HTML // Prefix for potential post-specific files

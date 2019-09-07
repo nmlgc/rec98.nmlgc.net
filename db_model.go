@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/gocarina/gocsv"
@@ -12,8 +13,29 @@ import (
 
 const dbPath = "db/"
 
-/// Nullable types
-/// --------------
+/// Custom types
+/// ------------
+
+// DiffInfo contains all pieces of information parsed from a GitHub diff URL.
+type DiffInfo struct {
+	URL     string
+	Project string
+	Rev     string
+}
+
+// NewDiffInfo parses a GitHub diff URL into a DiffInfo structure.
+func NewDiffInfo(url string) DiffInfo {
+	s := strings.Split(url, "/")
+	project := ""
+	if s[1] == "rec98.nmlgc.net" {
+		project = "Website"
+	}
+	return DiffInfo{
+		URL:     url,
+		Project: project,
+		Rev:     s[len(s)-1],
+	}
+}
 
 // NullableTime represents time values that can be empty.
 type NullableTime struct {
@@ -41,7 +63,7 @@ func (t NullableTime) String() string {
 	return t.Time.String()
 }
 
-/// --------------
+/// ------------
 
 /// Schemas
 /// -------

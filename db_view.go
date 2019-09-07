@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"sort"
 	"time"
 )
 
@@ -50,6 +51,32 @@ func PushesDelivered() PushProjection {
 		true,
 		PushesWhere(func(p Push) bool { return p.Delivered.Time != nil }),
 	}
+}
+
+// DiffInfoWeighted combines a DiffInfo with the number of pushes it took to
+// get done.
+type DiffInfoWeighted struct {
+	DiffInfo
+	Pushes float32
+}
+
+// DiffsForEstimate returns the diffs of all completed pushes that are part of
+// the progress estimate, sorted from the latest to the earliest delivery.
+func DiffsForEstimate() (ret []DiffInfoWeighted) {
+	selected := PushesWhere(func(p Push) bool {
+		return p.Delivered.Time != nil && p.IncludeInEstimate
+	})
+	sort.SliceStable(selected, func(i, j int) bool {
+		return selected[i].Delivered.Time.After(*selected[j].Delivered.Time)
+	})
+	for _, p := range selected {
+		if len(ret) > 0 && ret[len(ret)-1].DiffInfo == *p.Diff {
+			ret[len(ret)-1].Pushes += 1.0
+		} else {
+			ret = append(ret, DiffInfoWeighted{*p.Diff, 1.0})
+		}
+	}
+	return
 }
 
 // PushesDeliveredAt returns all pushes delivered at the given date.

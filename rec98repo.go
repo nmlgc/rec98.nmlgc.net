@@ -58,6 +58,10 @@ type REMetric struct {
 
 // Sum updates the sums of m, based on its CMetrics.
 func (m *REMetric) Sum() *REMetric {
+	for i := range m.ComponentSum {
+		m.ComponentSum[i] = 0
+	}
+	m.Total = 0
 	for game, cmetric := range m.CMetrics {
 		gameSum := float32(0.0)
 		for i := range cmetric {

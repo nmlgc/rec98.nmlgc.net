@@ -22,6 +22,7 @@ type DiffInfo struct {
 	URL     string
 	Project string
 	Rev     string
+	IsRange bool
 }
 
 type eInvalidDiffURL struct {
@@ -46,10 +47,22 @@ func (d *DiffInfo) UnmarshalCSV(url string) error {
 	if s[1] == "rec98.nmlgc.net" {
 		project = "Website"
 	}
+	var isRange bool
+	switch s[2] {
+	case "compare":
+		isRange = true
+	case "commit":
+		isRange = false
+	default:
+		return eInvalidDiffURL{url,
+			"mode must be either \"compare\" or \"commit\"",
+		}
+	}
 	*d = DiffInfo{
 		URL:     url,
 		Project: project,
 		Rev:     s[3],
+		IsRange: isRange,
 	}
 	return nil
 }

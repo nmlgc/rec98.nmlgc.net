@@ -89,10 +89,15 @@ var master *plumbing.Hash
 
 func getCommit(rev string) (*object.Commit, error) {
 	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
-	if err != nil {
-		return nil, err
+	if err == nil {
+		return repo.R.CommitObject(*hash)
 	}
-	return repo.R.CommitObject(*hash)
+	if len(rev) >= repo.UniqueLen {
+		if hash, ok := repo.ShortToLong[rev[:repo.UniqueLen]]; ok {
+			return repo.R.CommitObject(hash)
+		}
+	}
+	return nil, err
 }
 
 func getLog() (object.CommitIter, error) {

@@ -151,15 +151,32 @@ type Push struct {
 	IncludeInEstimate bool
 }
 
+// PushPrice represents the price of one push at a given point in time.
+type PushPrice struct {
+	Time  time.Time
+	Cents int
+}
+
 type tCustomers []*Customer
 type tPushes []*Push
+type tPushPrices []*PushPrice
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
 }
 
+func (p tPushPrices) At(t time.Time) (price int) {
+	for _, pushprice := range p {
+		if pushprice.Time.Before(t) {
+			price = pushprice.Cents
+		}
+	}
+	return
+}
+
 var customers = tCustomers{}
 var pushes = tPushes{}
+var pushprices = tPushPrices{}
 
 /// -------
 
@@ -180,6 +197,10 @@ func init() {
 		log.Fatalln(err)
 	}
 	err = loadTSV(&pushes, "pushes")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = loadTSV(&pushprices, "pushprices")
 	if err != nil {
 		log.Fatalln(err)
 	}

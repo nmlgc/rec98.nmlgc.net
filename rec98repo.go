@@ -57,7 +57,7 @@ type REMetric struct {
 }
 
 // Sum updates the sums of m, based on its CMetrics.
-func (m *REMetric) Sum() {
+func (m *REMetric) Sum() *REMetric {
 	for game, cmetric := range m.CMetrics {
 		gameSum := float32(0.0)
 		for i := range cmetric {
@@ -67,6 +67,7 @@ func (m *REMetric) Sum() {
 		m.GameSum[game] = gameSum
 		m.Total += gameSum
 	}
+	return m
 }
 
 // REProgress collects all progress-indicating metrics across all of ReC98.

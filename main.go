@@ -206,6 +206,7 @@ func main() {
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(path.Clean(blogHP.URLPrefix), pagesHandler("blog.html"))
-	r.Handle("/progress/{rev}", pagesHandler("progress.html"))
+	r.Handle("/progress", pagesHandler("progress.html"))
+	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

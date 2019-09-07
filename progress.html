@@ -1,36 +1,13 @@
-{{$commit := git_getCommit .rev -}}
-{{$ci := git_makeCommitInfo $commit -}}
-{{$progress := ReC98_REProgressAtTree $commit.Tree -}}
-{{$pct := $progress.Pct ReC98_REProgressBaseline -}}
-{{$notBaseline := ne .rev ReC98_REBaselineRev -}}
+{{$log := git_getLog -}}
 
 {{template "header.html"}}
-<h2>Reverse-engineering progress</h2>
-<h3>{{HTML_Time $ci.Time}} – {{$ci.Desc}} ({{git_CommitLink .rev}})</h3>
-
-<div class="progress-grid">
-	<figure class="progress">
-		<figcaption>Not yet reverse-engineered x86 instructions</figcaption>
-		{{template "progress_table.html" $progress.Instructions}}
-	</figure>
-	<figure class="progress">
-		<figcaption>Completion percentage
-			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
-		</figcaption>
-		{{template "progress_table.html" $pct.Instructions}}
-	</figure>
-</div>
-<hr />
-<div class="progress-grid">
-	<figure class="progress">
-		<figcaption>Upper bound of absolute memory references</figcaption>
-		{{template "progress_table.html" $progress.AbsoluteRefs}}
-	</figure>
-	<figure class="progress">
-		<figcaption>Probability of position independence
-			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
-		</figcaption>
-		{{template "progress_table.html" $pct.AbsoluteRefs}}
-	</figure>
-</div>
+<h2>Per-commit progress metrics</h2>
+<p>For comparison, <a href="/progress/{{ReC98_REBaselineRev}}">here are the total numbers of game code instructions, with all third-party code filtered</a>.</p>
+<table><tbody>
+	{{range git_commits $log}}<tr>
+		<td>{{HTML_Time .Time}}</td>
+		<th><a href="/progress/{{.Hash}}">{{.Desc}}</a></th>
+		<td>{{git_CommitLink .Hash.String}}</td>
+	</tr>{{end}}
+</tbody></table>
 {{template "footer.html"}}

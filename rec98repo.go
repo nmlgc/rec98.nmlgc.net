@@ -141,6 +141,26 @@ var gameSources = [5]gameSource{
 	},
 }
 
+// REProgressAtRev goes all the way from a Git revision string to a progress
+// structure.
+func REProgressAtRev(rev string) (*REProgress, error) {
+	commit, err := getCommit(rev)
+	if err != nil {
+		return nil, err
+	}
+	return REProgressAtCommit(commit)
+}
+
+// REProgressAtCommit retrieves the progress at the given commit.
+func REProgressAtCommit(commit *object.Commit) (*REProgress, error) {
+	tree, err := commit.Tree()
+	if err != nil {
+		return nil, err
+	}
+	ret := REProgressAtTree(tree)
+	return &ret, nil
+}
+
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
 		instructions *float32
@@ -224,14 +244,9 @@ func REProgressBaseline() (func() (baseline REProgress), error) {
 		"Calculating the baseline of reverse-engineering progress, from `%s`...",
 		rev,
 	)
-	commit, err := getCommit(rev)
+	baseline, err := REProgressAtRev(rev)
 	if err != nil {
 		return nil, err
 	}
-	tree, err := commit.Tree()
-	if err != nil {
-		return nil, err
-	}
-	baseline := REProgressAtTree(tree)
-	return func() REProgress { return baseline }, nil
+	return func() REProgress { return *baseline }, nil
 }

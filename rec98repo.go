@@ -16,7 +16,8 @@ type ByteRange struct {
 }
 
 type gameComponent struct {
-	files []string
+	binary string
+	files  []string
 	// Byte range occupied by the data and BSS segments of the main game code,
 	// relative to the DS value used in  the source. Meaning: Large number
 	// after the code segment for tiny/small/compact models (where CS == DS),
@@ -25,8 +26,8 @@ type gameComponent struct {
 }
 
 // comp is a nice constructor for gameComponents.
-func comp(dataStart uint, dataEnd uint, files ...string) gameComponent {
-	return gameComponent{files, ByteRange{dataStart, dataEnd}}
+func comp(binary string, dataStart uint, dataEnd uint, files ...string) gameComponent {
+	return gameComponent{binary, files, ByteRange{dataStart, dataEnd}}
 }
 
 type gameSource [4]gameComponent
@@ -112,30 +113,30 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 
 var gameSources = [5]gameSource{
 	{
-		comp(0x21CE, 0x3360, "th01_zunsoft.asm"),
-		comp(0x90, 0x1D2A, "th01_op.asm"),
-		comp(0x90, 0x6C3A, "th01_reiiden.asm", "th01_reiiden_2.inc"),
-		comp(0x90, 0x1CBA, "th01_fuuin.asm"),
+		comp("ZUNSOFT.COM", 0x21CE, 0x3360, "th01_zunsoft.asm"),
+		comp("OP.EXE", 0x90, 0x1D2A, "th01_op.asm"),
+		comp("REIIDEN.EXE", 0x90, 0x6C3A, "th01_reiiden.asm", "th01_reiiden_2.inc"),
+		comp("FUUIN.EXE", 0x90, 0x1CBA, "th01_fuuin.asm"),
 	}, {
-		comp(0, 0, "th02_zuninit.asm", "th02_zun_res.asm"),
-		comp(0x90, 0x2340, "th02_op.asm"),
-		comp(0x90, 0x93BA, "th02_main.asm"),
-		comp(0x90, 0x2CE2, "th02_maine.asm"),
+		comp("ZUN.COM", 0, 0, "th02_zuninit.asm", "th02_zun_res.asm"),
+		comp("OP.EXE", 0x90, 0x2340, "th02_op.asm"),
+		comp("MAIN.EXE", 0x90, 0x93BA, "th02_main.asm"),
+		comp("MAINE.EXE", 0x90, 0x2CE2, "th02_maine.asm"),
 	}, {
-		comp(0, 0, "th03_res_yume.asm", "th03_zunsp.asm"),
-		comp(0x90, 0x2510, "th03_op.asm"),
-		comp(0x90, 0x8E90, "th03_main.asm"),
-		comp(0x90, 0x2880, "th03_mainl.asm"),
+		comp("ZUN.COM", 0, 0, "th03_res_yume.asm", "th03_zunsp.asm"),
+		comp("OP.EXE", 0x90, 0x2510, "th03_op.asm"),
+		comp("MAIN.EXE", 0x90, 0x8E90, "th03_main.asm"),
+		comp("MAINL.EXE", 0x90, 0x2880, "th03_mainl.asm"),
 	}, {
-		comp(0, 0, "th04_res_huma.asm"),
-		comp(0x90, 0x401C, "th04_op.asm"),
-		comp(0x90, 0xBDB2, "th04_main.asm", "th04_main_seg3+4.inc"),
-		comp(0x90, 0x4120, "th04_maine.asm"),
+		comp("ZUN.COM", 0, 0, "th04_res_huma.asm"),
+		comp("OP.EXE", 0x90, 0x401C, "th04_op.asm"),
+		comp("MAIN.EXE", 0x90, 0xBDB2, "th04_main.asm", "th04_main_seg3+4.inc"),
+		comp("MAINE.EXE", 0x90, 0x4120, "th04_maine.asm"),
 	}, {
-		comp(0, 0, "th05_res_kso.asm"),
-		comp(0x90, 0x51DE, "th05_op.asm"),
-		comp(0x90, 0xC748, "th05_main.asm", "th05_main_seg3+4.inc"),
-		comp(0x90, 0xC56E, "th05_maine.asm"),
+		comp("ZUN.COM", 0, 0, "th05_res_kso.asm"),
+		comp("OP.EXE", 0x90, 0x51DE, "th05_op.asm"),
+		comp("MAIN.EXE", 0x90, 0xC748, "th05_main.asm", "th05_main_seg3+4.inc"),
+		comp("MAINE.EXE", 0x90, 0xC56E, "th05_maine.asm"),
 	},
 }
 

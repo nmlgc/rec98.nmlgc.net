@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"path"
@@ -80,6 +81,14 @@ func HTMLEmoji(emoji string) template.HTML {
 	))
 }
 
+// HTMLPercentage formats the given value as a percentage.
+func HTMLPercentage(val float32) template.HTML {
+	if math.IsNaN(float64(val)) {
+		return "n/a"
+	}
+	return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -89,8 +98,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"inc": func(i int) int { return i + 1 },
 
 	// Markup, safe
-	"HTML_Time":  HTMLTime,
-	"HTML_Emoji": HTMLEmoji,
+	"HTML_Time":       HTMLTime,
+	"HTML_Emoji":      HTMLEmoji,
+	"HTML_Percentage": HTMLPercentage,
 
 	// Git, safe
 	"git_commits":        commits,

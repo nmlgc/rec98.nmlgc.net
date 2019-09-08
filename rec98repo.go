@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"math"
 
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -102,12 +101,7 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 		}
 		pct.ComponentSum = componentFormula(p.ComponentSum, base.ComponentSum)
 		pct.Total = formula(p.Total, base.Total)
-		pct.Format = func(val float32) template.HTML {
-			if math.IsNaN(float64(val)) {
-				return "n/a"
-			}
-			return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
-		}
+		pct.Format = HTMLPercentage
 		return
 	}
 

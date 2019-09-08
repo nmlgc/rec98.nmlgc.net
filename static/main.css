@@ -67,7 +67,6 @@ header {
 	height: var(--header-height);
 	background: linear-gradient(180deg, white 0%, var(--c-lightgray) 100%);
 	border: var(--header-border);
-	flex-wrap: wrap;
 }
 
 header div {

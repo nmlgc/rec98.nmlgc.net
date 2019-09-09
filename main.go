@@ -89,6 +89,16 @@ func HTMLPercentage(val float64) template.HTML {
 	return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))
 }
 
+// HTMLCurrency formats the given amount of cents as a currency value.
+func HTMLCurrency(cents float64) template.HTML {
+	return template.HTML(
+		fmt.Sprintf(
+			"<script>formatCurrency(%.0f)</script>"+
+				"<noscript>%.2f&nbsp;€</noscript>", cents, cents/100.0,
+		),
+	)
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -101,6 +111,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"HTML_Time":       HTMLTime,
 	"HTML_Emoji":      HTMLEmoji,
 	"HTML_Percentage": HTMLPercentage,
+	"HTML_Currency":   HTMLCurrency,
 
 	// Git, safe
 	"git_commits":        commits,

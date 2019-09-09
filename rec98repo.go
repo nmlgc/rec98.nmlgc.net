@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -72,6 +73,36 @@ func (m *REMetric) Sum() *REMetric {
 		m.Total += gameSum
 	}
 	return m
+}
+
+// In case we'll ever need addition or subtraction... good that closures
+// actually save us from needing a separate function for scalars.
+func metricOp(a, b REMetric, op func(a, b float64) float64) (ret REMetric) {
+	if a.Format != nil {
+		ret.Format = a.Format
+	} else {
+		ret.Format = b.Format
+	}
+	for i := range a.CMetrics {
+		for j := range a.ComponentSum {
+			ret.CMetrics[i][j] = op(a.CMetrics[i][j], b.CMetrics[i][j])
+		}
+	}
+	return *ret.Sum()
+}
+
+// MulBy returns the result of a multiplication of m by v as a new metric
+// structure.
+func (m REMetric) MulBy(v float64) (ret REMetric) {
+	return metricOp(m, m, func(a, b float64) float64 { return a * v })
+}
+
+// DivByCeil returns the result of a division of m by v, followed by ceiling
+// the result, as a new metric structure.
+func (m REMetric) DivByCeil(v float64) (ret REMetric) {
+	return metricOp(m, m, func(a, b float64) float64 {
+		return math.Ceil(a / v)
+	})
 }
 
 // REProgress collects all progress-indicating metrics across all of ReC98.

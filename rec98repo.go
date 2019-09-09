@@ -249,3 +249,47 @@ func REProgressBaseline() (func() (baseline REProgress), error) {
 	}
 	return func() REProgress { return *baseline }, nil
 }
+
+// RESpeed represents the total reverse-engineering speed in instructions and
+// references per unit of time.
+type RESpeed struct {
+	Instructions float32
+	AbsoluteRefs float32
+}
+
+func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
+	for _, diff := range diffs {
+		top, bottom := diff.Range()
+		tp, err := REProgressAtCommit(top)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		bp, err := REProgressAtCommit(bottom)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		// Yup, one value for all games, despite uth05win...
+		diffInstructions := bp.Instructions.Total - tp.Instructions.Total
+		diffInstructions /= diff.Pushes
+		diffAbsoluteRefs := bp.AbsoluteRefs.Total - tp.AbsoluteRefs.Total
+		diffAbsoluteRefs /= diff.Pushes
+
+		spp.Instructions += diffInstructions
+		spp.AbsoluteRefs += diffAbsoluteRefs
+	}
+	spp.Instructions /= float32(len(diffs))
+	spp.AbsoluteRefs /= float32(len(diffs))
+	return
+}
+
+// RESpeedPerPushFrom calculates the reverse-engineering speed based on the
+// given diffs, and caches the result.
+func RESpeedPerPushFrom(diffs []DiffInfoWeighted) func() RESpeed {
+	log.Printf("Calculating the crowdfunding target...")
+	spp := reSpeedPerPushFrom(DiffsForEstimate())
+	log.Printf("Done!")
+	return func() RESpeed {
+		return spp
+	}
+}

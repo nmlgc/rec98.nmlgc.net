@@ -50,16 +50,26 @@ var staticHP = newHostedPath("static/", "/static/")
 /// HTML templates
 /// --------------
 
-// HTMLTime outputs a time.Time in a nice HTML format. Needs to be a function
-// rather than a separate type with a custom String() function because that
-// one always has to return a `string`, not a `template.HTML`.
-func HTMLTime(t time.Time) template.HTML {
+// Needs to be a function rather than a separate type with a custom String()
+// function because that one always has to return a `string`, not a
+// `template.HTML`.
+func htmlFormattedTime(t time.Time, format string) template.HTML {
 	utctime := t.UTC()
-	str := utctime.Format("2006-01-02 15:04&nbsp;UTC")
+	str := utctime.Format(format)
 	// Adding the `datetime` attribute in case we ever want to have some
 	// JavaScript for conversion into different time zones…
 	dt := utctime.Format(time.RFC3339)
 	return template.HTML(fmt.Sprintf(`<time datetime="%s">%s</time>`, dt, str))
+}
+
+// HTMLTime outputs t in a nice HTML format.
+func HTMLTime(t time.Time) template.HTML {
+	return htmlFormattedTime(t, "2006-01-02 15:04&nbsp;UTC")
+}
+
+// HTMLDate outputs the date part of t in ISO 8601 format.
+func HTMLDate(t time.Time) template.HTML {
+	return htmlFormattedTime(t, "2006-01-02")
 }
 
 // HTMLEmoji returns HTML markup for the given custom emoji.
@@ -110,6 +120,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"inc": func(i int) int { return i + 1 },
 
 	// Markup, safe
+	"HTML_Date":       HTMLDate,
 	"HTML_Time":       HTMLTime,
 	"HTML_Emoji":      HTMLEmoji,
 	"HTML_Percentage": HTMLPercentage,

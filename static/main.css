@@ -9,6 +9,9 @@
 	--header-border: 1px solid silver;
 	--logo-width: 3.5em;
 	--logo-padding: 0.5em;
+	--estimate-tl: -1px;
+	--estimate-br:  1px;
+	--estimate-blur: 1px;
 	--blog-shadow: 0 0 0.5em 0 var(--c-border);
 }
 /* --------- */
@@ -125,6 +128,103 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	content:"";
 }
 /* ---------- */
+
+/* Estimate
+   -------- */
+#estimate h1,
+#estimate h2 {
+	text-align: center;
+}
+
+#estimate section {
+	display: grid;
+	grid-template-columns: 4.5em 1fr auto;
+	align-items: center;
+	margin-bottom: 1em;
+}
+
+#estimate section h3 {
+	text-align: right;
+	font-size: inherit;
+}
+
+#estimate section.overall h3 {
+	font-size: 80%;
+}
+
+#estimate section * {
+	margin: 0;
+}
+
+#estimate .overall { font-size: 150%; }
+#estimate .game    { font-size: 125%; margin-top: .5em; margin-bottom: .5em; }
+
+#estimate code {
+	font-size: 80%;
+}
+
+#estimate div {
+	position: relative;
+	margin-left: .25em;
+	margin-right: .25em;
+}
+
+#estimate progress {
+	width: 100%;
+	height: 0.75em;
+}
+
+#estimate    .game progress { height: 1.25em; }
+#estimate .overall progress { height: 1.75em; }
+
+#estimate div .number {
+	position: absolute;
+	margin: 0;
+	text-shadow:
+		var(--estimate-tl) var(--estimate-tl) var(--estimate-blur) white,
+		var(--estimate-tl) var(--estimate-br) var(--estimate-blur) white,
+		var(--estimate-br) var(--estimate-tl) var(--estimate-blur) white,
+		var(--estimate-br) var(--estimate-br) var(--estimate-blur) white;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 90%;
+}
+
+#estimate .overall .number {
+	font-size: 112.5%;
+}
+
+#estimate .overall .number,
+#estimate    .game .number {
+	font-weight: bold;
+}
+
+#estimate .cost {
+	text-align: right;
+}
+
+#estimate .cost .amount {
+	font-weight: bold;
+}
+
+#estimate aside {
+	text-align: center;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	grid-column-gap: 0.5em;
+}
+
+#estimate aside .icon-cell {
+	font-size: 150%;
+}
+
+#estimate .warning {
+	font-size: 110%;
+}
+/* -------- */
+
 
 /* Tables
    ------ */

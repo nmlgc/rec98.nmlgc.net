@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"math"
+	"time"
 
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -353,4 +354,73 @@ func REProgressEstimateAtTree(baseline REProgress) func(*object.Tree, RESpeed) R
 	return func(tree *object.Tree, speed RESpeed) REProgressEstimate {
 		return reProgressEstimateAtTree(tree, speed, baseline)
 	}
+}
+
+// REMetricEstimate contains the REProgressEstimate values for a single metric.
+type REMetricEstimate struct {
+	Done  REMetric
+	Money REMetric
+}
+
+// ForInstructions returns e's reverse-engineering values.
+func (e REProgressEstimate) ForInstructions() REMetricEstimate {
+	return REMetricEstimate{
+		Done:  e.Done.Instructions,
+		Money: e.Money.Instructions,
+	}
+}
+
+// ForAbsoluteRefs returns e's position independence values.
+func (e REProgressEstimate) ForAbsoluteRefs() REMetricEstimate {
+	return REMetricEstimate{
+		Done:  e.Done.AbsoluteRefs,
+		Money: e.Money.AbsoluteRefs,
+	}
+}
+
+// REEstimate represents a single estimate line, with completion percentage
+// and cost estimation.
+type REEstimate struct {
+	Title template.HTML
+	Done  float64
+	Money float64
+}
+
+// ForAll returns the estimate line for all games.
+func (m REMetricEstimate) ForAll() REEstimate {
+	return REEstimate{
+		Title: template.HTML("All games"),
+		Done:  m.Done.Total,
+		Money: m.Money.Total,
+	}
+}
+
+// ForGameTotal returns the estimate line for completing a single game.
+func (m REMetricEstimate) ForGameTotal(game int) REEstimate {
+	gameStr := fmt.Sprintf("%02d", game+1)
+	return REEstimate{
+		Title: HTMLEmoji("th"+gameStr) + "&nbsp;TH" + template.HTML(gameStr),
+		Done:  m.Done.GameSum[game],
+		Money: m.Money.GameSum[game],
+	}
+}
+
+// ForComponents returns estimate lines for all components of the given game.
+func (m REMetricEstimate) ForComponents(game int) chan REEstimate {
+	ret := make(chan REEstimate)
+	go func() {
+		for comp := 1; comp < 4; comp++ {
+			ret <- REEstimate{
+				Title: template.HTML(
+					fmt.Sprintf(
+						"<code>%s</code>", gameSources[game][comp].binary,
+					),
+				),
+				Done:  m.Done.CMetrics[game][comp],
+				Money: m.Money.CMetrics[game][comp],
+			}
+		}
+		close(ret)
+	}()
+	return ret
 }

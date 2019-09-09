@@ -1,5 +1,28 @@
-{{template "header.html"}}
-<h1>ReC98</h1>
-<h2>The Touhou PC-98 Restoration Project</h2>
-<p>This page is currently under construction. When it's done, it will provide a nice overview about how much "done" we actually are, and a way to crowdfund further progress.</p>
+{{$master := git_getCommit "master" -}}
+{{$ci := git_makeCommitInfo $master -}}
+{{$spp := ReC98_RESpeedPerPush -}}
+{{$pe := ReC98_REProgressEstimateAtTree $master.Tree $spp -}}
+
+{{- template "header.html" "estimate" -}}
+
+<h1>ReC98 completion status, as of <a href="/progress/{{$ci.Hash.String}}">{{HTML_Date $ci.Time}}</a>:</h1>
+<hr />
+<h2>Reverse-engineering</h2>
+{{template "estimate_metrics.html" $pe.ForInstructions}}
+<hr />
+<h2>Position independence</h2>
+{{template "estimate_metrics.html" $pe.ForAbsoluteRefs}}
+<hr />
+<aside class="warning">
+	<span class="icon-cell">⚠️</span>
+	<p><strong>These prices are <i>estimates</i>, calculated from <a href="/fundlog">the entire crowdfunding history</a>, and should <i>not</i> be interpreted as goals to be hit. They <i>will</i> drop or increase as progress speeds up or slows down. Therefore, <i>there is no guarantee</i> that paying any fraction of these will translate to exactly that fraction of progress.</strong><br>
+	(Also, do <i>not</i> send me money right now!)</p>
+	<span class="icon-cell">⚠️</span>
+</aside>
+<aside>
+	<span class="icon-cell">📉</span>
+	<p>Currently calculating with an average speed of <b>{{printf "%.0f" $spp.Instructions}} instructions</b> and <b>{{printf "%.0f" $spp.AbsoluteRefs}} absolute memory references</b> removed per push. <a href="/progress">Raw, per-commit metrics are here.</a></p>
+	<span class="icon-cell">📉</span>
+</aside>
+
 {{template "footer.html"}}

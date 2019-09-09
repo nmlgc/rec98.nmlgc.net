@@ -82,8 +82,8 @@ func HTMLEmoji(emoji string) template.HTML {
 }
 
 // HTMLPercentage formats the given value as a percentage.
-func HTMLPercentage(val float32) template.HTML {
-	if math.IsNaN(float64(val)) {
+func HTMLPercentage(val float64) template.HTML {
+	if math.IsNaN(val) {
 		return "n/a"
 	}
 	return template.HTML(fmt.Sprintf("%.2f&nbsp;%%", val))

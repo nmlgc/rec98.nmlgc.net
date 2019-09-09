@@ -37,12 +37,12 @@ func (gs gameSource) OP() gameComponent        { return gs[1] }
 func (gs gameSource) Main() gameComponent      { return gs[2] }
 func (gs gameSource) Cutscenes() gameComponent { return gs[3] }
 
-type componentMetric [4]float32
+type componentMetric [4]float64
 
-func (cm componentMetric) Init() float32      { return cm[0] }
-func (cm componentMetric) OP() float32        { return cm[1] }
-func (cm componentMetric) Main() float32      { return cm[2] }
-func (cm componentMetric) Cutscenes() float32 { return cm[3] }
+func (cm componentMetric) Init() float64      { return cm[0] }
+func (cm componentMetric) OP() float64        { return cm[1] }
+func (cm componentMetric) Main() float64      { return cm[2] }
+func (cm componentMetric) Cutscenes() float64 { return cm[3] }
 
 // REMetric stores a number for each component in each binary,
 // together with the per-game, per-component, and total sums.
@@ -50,10 +50,10 @@ func (cm componentMetric) Cutscenes() float32 { return cm[3] }
 type REMetric struct {
 	CMetrics     [5]componentMetric // Every individual component in each game
 	ComponentSum componentMetric    // All games per component
-	GameSum      [5]float32         // All components per game
-	Total        float32            // Everything
+	GameSum      [5]float64         // All components per game
+	Total        float64            // Everything
 	// Since subtemplate calls can only take a single parameter…
-	Format func(float32) template.HTML
+	Format func(float64) template.HTML
 }
 
 // Sum updates the sums of m, based on its CMetrics.
@@ -63,7 +63,7 @@ func (m *REMetric) Sum() *REMetric {
 	}
 	m.Total = 0
 	for game, cmetric := range m.CMetrics {
-		gameSum := float32(0.0)
+		gameSum := 0.0
 		for i := range cmetric {
 			gameSum += cmetric[i]
 			m.ComponentSum[i] += cmetric[i]
@@ -85,7 +85,7 @@ type REProgressPct REProgress
 
 // Pct calculates the completion percentages of p relative to base.
 func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
-	formula := func(p float32, base float32) float32 {
+	formula := func(p float64, base float64) float64 {
 		return (1.0 - (p / base)) * 100.0
 	}
 	componentFormula := func(p componentMetric, base componentMetric) (pct componentMetric) {
@@ -162,15 +162,15 @@ func REProgressAtCommit(commit *object.Commit) (*REProgress, error) {
 
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type progressTuple struct {
-		instructions *float32
-		absoluteRefs *float32
+		instructions *float64
+		absoluteRefs *float64
 		result       asmStats
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
 
 	progressFor := func(
-		instructions *float32, absoluteRefs *float32, comp gameComponent,
+		instructions *float64, absoluteRefs *float64, comp gameComponent,
 	) {
 		for _, file := range comp.files {
 			f, err := tree.File(file)
@@ -196,7 +196,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		for i := range pi.ComponentSum {
 			progressFor(&pi.CMetrics[game][i], &pr.CMetrics[game][i], sources[i])
 		}
-		pi.Format = func(val float32) template.HTML {
+		pi.Format = func(val float64) template.HTML {
 			return template.HTML(fmt.Sprintf("%.0f", val))
 		}
 		pr.Format = pi.Format
@@ -204,9 +204,9 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result.procs {
-			*(pt.instructions) += float32(proc.instructionCount)
+			*(pt.instructions) += float64(proc.instructionCount)
 		}
-		*(pt.absoluteRefs) += float32(pt.result.absoluteRefs)
+		*(pt.absoluteRefs) += float64(pt.result.absoluteRefs)
 	}
 
 	progress.Instructions.Sum()
@@ -253,8 +253,8 @@ func REProgressBaseline() (func() (baseline REProgress), error) {
 // RESpeed represents the total reverse-engineering speed in instructions and
 // references per unit of time.
 type RESpeed struct {
-	Instructions float32
-	AbsoluteRefs float32
+	Instructions float64
+	AbsoluteRefs float64
 }
 
 func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
@@ -278,8 +278,8 @@ func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 		spp.Instructions += diffInstructions
 		spp.AbsoluteRefs += diffAbsoluteRefs
 	}
-	spp.Instructions /= float32(len(diffs))
-	spp.AbsoluteRefs /= float32(len(diffs))
+	spp.Instructions /= float64(len(diffs))
+	spp.AbsoluteRefs /= float64(len(diffs))
 	return
 }
 

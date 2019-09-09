@@ -57,7 +57,7 @@ func PushesDelivered() PushProjection {
 // get done.
 type DiffInfoWeighted struct {
 	DiffInfo
-	Pushes float32
+	Pushes float64
 }
 
 // DiffsForEstimate returns the diffs of all completed pushes that are part of

@@ -135,8 +135,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"ReC98_REProgressAtTree": REProgressAtTree,
 	"ReC98_REBaselineRev":    REBaselineRev,
 	// Added after the repository was successfully opened
-	"ReC98_REProgressBaseline": func() int { return 0 },
-	"ReC98_RESpeedPerPush":     func() int { return 0 },
+	"ReC98_REProgressBaseline":       func() int { return 0 },
+	"ReC98_RESpeedPerPush":           func() int { return 0 },
+	"ReC98_REProgressEstimateAtTree": func() int { return 0 },
 
 	// Database view, safe
 	"DB_CustomerByID":      CustomerByID,
@@ -222,10 +223,12 @@ func main() {
 	log.Printf("That worked!")
 
 	sppFunc := RESpeedPerPushFrom(DiffsForEstimate())
+	estimateFunc := REProgressEstimateAtTree(baselineFunc())
 
 	pages.Funcs(map[string]interface{}{
-		"ReC98_REProgressBaseline": baselineFunc,
-		"ReC98_RESpeedPerPush":     sppFunc,
+		"ReC98_REProgressBaseline":       baselineFunc,
+		"ReC98_RESpeedPerPush":           sppFunc,
+		"ReC98_REProgressEstimateAtTree": estimateFunc,
 	})
 	// -------------------------------------------------------
 

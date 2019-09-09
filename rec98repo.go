@@ -324,3 +324,33 @@ func RESpeedPerPushFrom(diffs []DiffInfoWeighted) func() RESpeed {
 		return spp
 	}
 }
+
+// REProgressEstimate combines per-component completion percentages with
+// per-component cost estimations for completing the rest.
+type REProgressEstimate struct {
+	Done  REProgressPct
+	Money REProgress
+}
+
+// spp is a separate parameter because the same template that calls this
+// function really should also report it to the reader. So you'd have to
+// retrieve it anyway.
+func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgress) REProgressEstimate {
+	price := float64(pushprices.At(time.Now()))
+	done := REProgressAtTree(tree)
+	return REProgressEstimate{
+		Done: done.Pct(baseline),
+		Money: REProgress{
+			done.Instructions.DivByCeil(spp.Instructions).MulBy(price),
+			done.AbsoluteRefs.DivByCeil(spp.AbsoluteRefs).MulBy(price),
+		},
+	}
+}
+
+// REProgressEstimateAtTree returns a closure that returns the progress
+// estimate, relative to the given baseline.
+func REProgressEstimateAtTree(baseline REProgress) func(*object.Tree, RESpeed) REProgressEstimate {
+	return func(tree *object.Tree, speed RESpeed) REProgressEstimate {
+		return reProgressEstimateAtTree(tree, speed, baseline)
+	}
+}

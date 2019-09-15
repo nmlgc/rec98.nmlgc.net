@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-var rxLabel = regexp.MustCompile(`^\s*\w+:(?:\s+|\z)`)
+var rxLabel = regexp.MustCompile(`^\s*[@\w]+:(?:\s+|\z)`)
 var rxProcStart = regexp.MustCompile(`(?i)^(.+?)\s+proc`)
 var rxProcEnd = regexp.MustCompile(`(?i)^.+?\s+endp`)
 var rxIgnoredInstructions = regexp.MustCompile(

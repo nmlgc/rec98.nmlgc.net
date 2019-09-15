@@ -1,0 +1,30 @@
+<p>
+	Here we go, new C code! …eh, it will still take a bit to really get
+	decompilation going at the speeds I was hoping for. Especially with the
+	sheer amount of <i>stuff</i> that is set in the first few significant
+	functions we actually <i>can</i> decompile, which now all has to be
+	correctly declared in the C world. Turns out I spent the last 2 years
+	screwing up the case of exported functions, and even some of their names,
+	so that it didn't actually reflect their calling convention… yup. That's
+	just the stuff you tend to forget while it doesn't matter.
+</p><p>
+	To make up for that, I decided to research whether we can make use of some
+	C++ features to improve code readability after all. Previously, it seemed
+	that TH01 was the only game that included any C++ code, whereas TH02 and
+	later seemed to be 100% C and ASM. However, during the development of the
+	soon to be released new build system, I noticed that even this old
+	compiler from the mid-90's, infamous for prioritizing compile speeds over
+	all but the most trivial optimizations, was capable of quite surprising
+	levels of automatic inlining with class methods…
+</p><p>
+	…leading the research to culminate in the mindblow that is
+	{{git_CommitLink "9d121c7"}} – yes, we <i>can</i> use C++ class methods
+	and operator overloading to make the code more readable, while still
+	generating the same code than if we had just used C and preprocessor
+	macros.
+</p><p>
+	Looks like there's now the potential for a few pull requests from outside
+	devs that apply C++ features to improve the legibility of previously
+	decompiled and terribly macro-ridden code. So, if anyone wants to help
+	without spending money…
+</p>

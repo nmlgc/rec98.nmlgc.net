@@ -80,10 +80,10 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 	procName := unnamedProcName()
 
 	isCodeLine := func(line string) bool {
-		if rxCodeSegment.MatchString(line) {
+		if inSeg != Code && rxCodeSegment.MatchString(line) {
 			inSeg = Code
 			return false // Ignore *this* line
-		} else if rxDataSegment.MatchString(line) {
+		} else if inSeg != Data && rxDataSegment.MatchString(line) {
 			inSeg = Data
 		}
 		return inSeg == Code

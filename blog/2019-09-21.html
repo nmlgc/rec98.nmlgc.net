@@ -1,0 +1,36 @@
+<p>
+	The glacial pace continues, with TH05's unnecessarily, inappropriately
+	micro-optimized, and hence, un-decompilable code for rendering the current
+	and high score, as well as the enemy health / dream / power bars. While
+	the latter might still pass as well-written ASM, the former goes to such
+	ridiculous levels that it ends up being <i>technically</i> buggy. If you
+	enjoy <a href="https://twitter.com/zun_code">quality ZUN code</a>, it's
+	definitely worth a read.
+</p><p>
+	In TH05, this all still is at the end of code segment #1, but in TH04,
+	the same code lies all over the same segment. And since I <i>really</i>
+	wanted to move that code into its final form <i>now</i>, I finally did the
+	research into decompiling from anywhere else in a segment.
+</p><p>
+	Turns out we actually can! It's kinda annoying, though: After splitting
+	the segment after the function we want to decompile, we then need to group
+	the two new segments back together into one "virtual segment" matching the
+	original one. </i>But</i> since all ASM in ReC98 heavily relies on being
+	assembled in MASM mode, we then start to suffer from MASM's group
+	addressing quirk. Which then forces us to manually prefix every single
+	function call
+	<ul>
+		<li>from inside the group</li>
+		<li>to anywhere else within the newly created segment</li>
+	</ul>
+	with the group name. It's stupidly boring busywork, because of all the
+    function calls you <i>mustn't</i> prefix. Special tooling might make this
+    easier, but I don't have it, and I'm not getting crowdfunded for it.
+</p><p>
+	So while you now definitely <i>can</i> request any specific thing in any
+	of the 5 games to be decompiled <i>right now</i>, it will take slightly
+	longer, and cost slightly more.<br>
+	(Except for that one big segment in TH04, of course.)
+</p><p>
+	Only one function away from the TH05 shot type control functions now!
+</p>

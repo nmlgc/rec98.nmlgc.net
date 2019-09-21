@@ -85,7 +85,6 @@ func NewRepository(url string) (ret Repository) {
 }
 
 var repo Repository
-var master *plumbing.Hash
 
 func getCommit(rev string) (*object.Commit, error) {
 	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
@@ -100,8 +99,8 @@ func getCommit(rev string) (*object.Commit, error) {
 	return nil, err
 }
 
-func getLog() (object.CommitIter, error) {
-	return repo.R.Log(&git.LogOptions{From: *master})
+func getLogAt(c *object.Commit) (object.CommitIter, error) {
+	return repo.R.Log(&git.LogOptions{From: c.Hash})
 }
 
 type commitInfo struct {

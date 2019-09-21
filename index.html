@@ -1,4 +1,4 @@
-{{$master := git_getCommit "master" -}}
+{{$master := git_MasterCommit -}}
 {{$ci := git_makeCommitInfo $master -}}
 {{$spp := ReC98_RESpeedPerPush -}}
 {{$pe := ReC98_REProgressEstimateAtTree $master.Tree $spp -}}

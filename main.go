@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 // hostedPath stores the corresponding URL prefix for a local filesystem path.
@@ -114,7 +115,7 @@ func HTMLCurrency(cents float64) template.HTML {
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
-	"git_getLog":    getLog,
+	"git_getLogAt":  getLogAt,
 
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
@@ -130,6 +131,8 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"git_commits":        commits,
 	"git_makeCommitInfo": makeCommitInfo,
 	"git_CommitLink":     CommitLink,
+	// Added after the repository was successfully opened
+	"git_MasterCommit": func() int { return 0 },
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
@@ -207,12 +210,14 @@ func main() {
 		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
 	}
 
-	var err error
 	repo = NewRepository(os.Args[1])
-	master, err = repo.R.ResolveRevision("master")
+	master, err := getCommit("master")
 	if err != nil {
 		log.Fatal(err)
 	}
+	pages.Funcs(map[string]interface{}{
+		"git_MasterCommit": func() *object.Commit { return master },
+	})
 
 	// Calculate the baseline for reverse-engineering progress
 	// -------------------------------------------------------

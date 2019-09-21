@@ -1,4 +1,4 @@
-{{$log := git_getLog -}}
+{{$log := git_getLogAt git_MasterCommit -}}
 
 {{template "header.html"}}
 <h2>Per-commit progress metrics</h2>

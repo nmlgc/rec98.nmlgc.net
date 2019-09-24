@@ -1,0 +1,27 @@
+<p>
+	Deathbombs confirmed, in both TH04 and TH05! On the surface, it's the same
+	<a href="https://www.youtube.com/watch?v=4du_rEB0M88">8-frame window as in
+	most Windows games</a>, but due to the slightly lower PC-98 frame rate of
+	56.4&nbsp;Hz, it's actually slightly more lenient in TH04 and TH05.
+</p><p>
+	The last function in front of the TH05 shot type control functions marks
+	the player's previous position in VRAM to be redrawn. But as it turns out,
+	"player" not only means "the player's option satellites on shot levels ≥
+	2", but also "the explosion animation if you lose a life", which required
+	reverse-engineering both things, ultimately leading to the confirmation of
+	deathbombs.
+</p><p>
+	It actually was kind of surprising that we then had reverse-engineered
+	everything related to <i>rendering</i> all three things mentioned above,
+	and could also cover the player rendering function right now. Luckily,
+	TH05 didn't decide to also micro-optimize <i>that</i> function into
+	un-decompilability; in fact, it wasn't changed at all from TH04. Unlike
+	the one invalidation function whose decompilation would have
+	<i>actually</i> been the goal here…
+</p><p>
+	But now, we've finally gotten to where we wanted to… and only got 2
+	outstanding decompilation pushes left. Time to get the website ready for
+	hosting an actual crowdfunding campaign, I'd say – It'll make a better
+	impression if people can still see things being delivered after the big
+	announcement.
+</p>

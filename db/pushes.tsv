@@ -32,8 +32,8 @@ P0030	2018-09-01T16:06:56Z	5	Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/comp
 P0031	2018-09-01T16:06:56Z	5	Decompilation	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
 P0032	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
 P0033	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
-P0034	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
-P0035	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
+P0034	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
+P0035	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
 P0036	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
 P0037	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
 P0038	2018-09-03T16:56:39Z	6	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0

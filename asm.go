@@ -119,7 +119,7 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 	}
 
 	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
+	for inSeg != Data && scanner.Scan() {
 		line := scanner.Text()
 
 		// Remove comments

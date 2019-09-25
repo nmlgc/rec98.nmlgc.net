@@ -25,7 +25,7 @@ func (k keywords) match(s string) bool {
 	return false
 }
 
-var rxLabel = regexp.MustCompile(`^\s*[@\w]+:(?:\s+|\z)`)
+var rxLabel = regexp.MustCompile(`^\s*[@\w]+:`)
 
 // These come first in a file, are separated by whitespace, and may be
 // followed by an agument.
@@ -48,10 +48,10 @@ var rxEquals = regexp.MustCompile(`^[@\w]+?\s*=`)
 
 // Yes, _TEXT catches more things than the 'CODE' class.
 var rxCodeSegment = regexp.MustCompile(
-	`(?i)^(?:.*_TEXT\s+segment|.+\s+segment.+'CODE'|\.code\s*$)`,
+	`(?i)^(?:.*_TEXT\s+segment|.+\s+segment.+'CODE'|\.code$)`,
 )
 var rxDataSegment = regexp.MustCompile(
-	`(?i)^(?:.+\s*segment.+'DATA'|\.data\??\s*$)`,
+	`(?i)^(?:.+?\s+segment.+'DATA'|\.data\??$)`,
 )
 var rxRegisters = regexp.MustCompile(
 	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(?:\s+|\z)`,

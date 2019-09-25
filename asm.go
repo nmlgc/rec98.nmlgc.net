@@ -15,8 +15,6 @@ import (
 )
 
 var rxLabel = regexp.MustCompile(`^\s*[@\w]+:(?:\s+|\z)`)
-var rxProcStart = regexp.MustCompile(`(?i)^(.+?)\s+proc`)
-var rxProcEnd = regexp.MustCompile(`(?i)^.+?\s+endp`)
 var rxIgnoredInstructions = regexp.MustCompile(
 	`(?i)\b(?:nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
 )
@@ -110,18 +108,27 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 			continue
 		}
 
-		if m := rxProcStart.FindStringSubmatch(line); m != nil {
-			if procCount < len(ret.procs) {
-				procCount++
+		params := strings.Fields(line)
+
+		if len(params) > 1 {
+			if len(params[1]) >= 4 {
+				// Captures PROC and PROCDESC
+				if strings.EqualFold(params[1][:4], "proc") {
+					if procCount < len(ret.procs) {
+						procCount++
+					}
+					procName = params[0]
+					continue
+				} else if strings.EqualFold(params[1], "endp") {
+					procCount++
+					procName = unnamedProcName()
+					continue
+				}
 			}
-			procName = m[1]
-		} else if rxProcEnd.MatchString(line) {
-			procCount++
-			procName = unnamedProcName()
-		} else if !rxIgnoredInstructions.MatchString(line) &&
+		}
+		if !rxIgnoredInstructions.MatchString(line) &&
 			!rxIgnoredDirectives.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
-			params := strings.Fields(line)
 
 			if dataRange.Start > 0 {
 				m := rxAddress.FindStringSubmatch(line)

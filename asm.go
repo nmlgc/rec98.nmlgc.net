@@ -26,13 +26,21 @@ func (k keywords) match(s string) bool {
 }
 
 var rxLabel = regexp.MustCompile(`^\s*[@\w]+:(?:\s+|\z)`)
-var rxIgnoredInstructions = regexp.MustCompile(
-	`(?i)\b(?:nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
-)
+
+// These come first in a file, are separated by whitespace, and may be
+// followed by an agument.
+var kwIgnoredInstructions = keywords{
+	"nop", "include", "public", "extern", "assume", "end",
+}
 
 // These are prefixed by a symbol name, and surrounded with whitespace.
 var kwIgnoredDirectives = keywords{
-	"equ", "label", "ends",
+	"equ", "label", "segment", "ends",
+}
+
+// May appear either in "instruction" or "directive" form.
+var kwData = keywords{
+	"db", "dw", "dd", "dq",
 }
 
 // Special case, because it doesn't require whitespace around the = sign.
@@ -141,11 +149,12 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 					continue
 				}
 			}
-			if kwIgnoredDirectives.match(params[1]) {
+			if kwIgnoredDirectives.match(params[1]) || kwData.match(params[1]) {
 				continue
 			}
 		}
-		if !rxIgnoredInstructions.MatchString(line) &&
+		if !kwIgnoredInstructions.match(params[0]) &&
+			!kwData.match(params[0]) &&
 			!rxEquals.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
 

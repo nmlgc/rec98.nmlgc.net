@@ -57,6 +57,13 @@ var rxRegisters = regexp.MustCompile(
 	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(?:\s+|\z)`,
 )
 
+var kwRegisters = keywords{
+	"eax", "ebx", "ecx", "edx", "esp", "ebp", "esi", "edi",
+	"ax", "bx", "cx", "dx", "sp", "bp", "si", "di",
+	"ah", "al", "bh", "bl", "ch", "cl", "dh", "dl",
+	"cs", "ds", "es", "fs", "gs", "ss",
+}
+
 var rxAddress = regexp.MustCompile(`(-?[0-9][0-9a-fA-F]{1,4})h`)
 
 // A few instructions that can't have address immediates: INT, IN, OUT, and ENTER.
@@ -175,8 +182,8 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 				if i := strings.IndexByte(params[1], ','); i > 0 {
 					params[1] = params[1][:i]
 				}
-				if m := rxRegisters.FindStringSubmatch(params[1]); m != nil {
-					proc.hashString += m[1] + " "
+				if kwRegisters.match(params[1]) {
+					proc.hashString += strings.ToLower(params[1]) + " "
 				}
 			}
 			proc.instructionCount++

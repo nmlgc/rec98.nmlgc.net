@@ -14,13 +14,29 @@ import (
 	"strings"
 )
 
+type keywords []string
+
+func (k keywords) match(s string) bool {
+	for _, word := range k {
+		if strings.EqualFold(s, word) {
+			return true
+		}
+	}
+	return false
+}
+
 var rxLabel = regexp.MustCompile(`^\s*[@\w]+:(?:\s+|\z)`)
 var rxIgnoredInstructions = regexp.MustCompile(
 	`(?i)\b(?:nop|db|dw|dd|dq|include|public|extern|assume|end)\b`,
 )
-var rxIgnoredDirectives = regexp.MustCompile(
-	`(?i)^.+?\s*(?:\=|equ|label|ends)(?:\s+|\z)`,
-)
+
+// These are prefixed by a symbol name, and surrounded with whitespace.
+var kwIgnoredDirectives = keywords{
+	"equ", "label", "ends",
+}
+
+// Special case, because it doesn't require whitespace around the = sign.
+var rxEquals = regexp.MustCompile(`^[@\w]+?\s*=`)
 
 // Yes, _TEXT catches more things than the 'CODE' class.
 var rxCodeSegment = regexp.MustCompile(
@@ -125,9 +141,12 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 					continue
 				}
 			}
+			if kwIgnoredDirectives.match(params[1]) {
+				continue
+			}
 		}
 		if !rxIgnoredInstructions.MatchString(line) &&
-			!rxIgnoredDirectives.MatchString(line) {
+			!rxEquals.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
 
 			if dataRange.Start > 0 {

@@ -125,13 +125,47 @@ func (t NullableTime) String() string {
 	return t.Time.String()
 }
 
+type eInvalidID struct {
+	input string
+}
+
+func (e eInvalidID) Error() string {
+	return fmt.Sprintf("invalid ID: \"%s\"", e.input)
+}
+
+func parseID(input string, format string) (ret int, err error) {
+	n, err := fmt.Sscanf(input, format, &ret)
+	if err != nil {
+		return 0, err
+	} else if n != 1 {
+		return 0, eInvalidID{input}
+	}
+	return ret, nil
+}
+
 /// ------------
 
 /// Schemas
 /// -------
 
-// CustomerID represents a consecutively numbered customer ID.
+// CustomerID represents a consecutively numbered, 1-based customer ID.
 type CustomerID int
+
+// PushID represents a consecutively numbered, 1-based customer ID.
+type PushID int
+
+const pushIDFormat = "P%04d"
+
+func (i PushID) String() string {
+	return fmt.Sprintf(pushIDFormat, i)
+}
+
+// UnmarshalCSV decodes a PushID from its string representation.
+func (i *PushID) UnmarshalCSV(s string) error {
+	ret, err := parseID(s, pushIDFormat)
+	*i = PushID(ret)
+	return err
+}
 
 // Customer represents everyone who bought something.
 type Customer struct {
@@ -141,7 +175,7 @@ type Customer struct {
 
 // Push represents a single unit of work.
 type Push struct {
-	ID                string
+	ID                PushID
 	Purchased         time.Time
 	Customer          CustomerID
 	Goal              string

@@ -167,22 +167,67 @@ func (i *PushID) UnmarshalCSV(s string) error {
 	return err
 }
 
+// TransactionID represents a consecutively numbered transaction ID.
+type TransactionID int
+
+const transactionIDFormat = "T%04d"
+
+func (i TransactionID) String() string {
+	return fmt.Sprintf(transactionIDFormat, i)
+}
+
+// UnmarshalCSV decodes a TransactionID from its string representation.
+func (i *TransactionID) UnmarshalCSV(s string) error {
+	ret, err := parseID(s, transactionIDFormat)
+	*i = TransactionID(ret)
+	return err
+}
+
 // Customer represents everyone who bought something.
 type Customer struct {
 	Name string
 	URL  string
 }
 
+// Transaction represents a single money transfer that may or may not be large
+// enough to result in one or more pushes.
+type Transaction struct {
+	ID       TransactionID
+	Time     time.Time
+	Customer CustomerID
+	Cents    int
+	Goal     string
+}
+
 // Push represents a single unit of work.
 type Push struct {
 	ID                PushID
-	Purchased         time.Time
-	Customer          CustomerID
+	Transactions      []*Transaction
 	Goal              string
 	Delivered         NullableTime
 	Summary           *string
 	Diff              *DiffInfo
 	IncludeInEstimate bool
+}
+
+// FundedBy returns all customers that were involved in funding this push
+func (p Push) FundedBy() (ret []CustomerID) {
+	for _, t := range p.Transactions {
+		ret = append(ret, t.Customer)
+	}
+	RemoveDuplicates(&ret)
+	return
+}
+
+// FundedAt returns the timestamp of the last transaction that was part of
+// this push.
+func (p Push) FundedAt() (ret time.Time) {
+	for _, t := range p.Transactions {
+		if t.Time.After(ret) {
+			ret = t.Time
+		}
+	}
+	return
 }
 
 // PushPrice represents the price of one push at a given point in time.
@@ -192,11 +237,16 @@ type PushPrice struct {
 }
 
 type tCustomers []*Customer
+type tTransactions []*Transaction
 type tPushes []*Push
 type tPushPrices []*PushPrice
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
+}
+
+func (t tTransactions) ByID(id TransactionID) *Transaction {
+	return t[id-1]
 }
 
 func (p tPushPrices) At(t time.Time) (price int) {
@@ -209,6 +259,7 @@ func (p tPushPrices) At(t time.Time) (price int) {
 }
 
 var customers = tCustomers{}
+var transactions = tTransactions{}
 var pushes = tPushes{}
 var pushprices = tPushPrices{}
 
@@ -218,8 +269,7 @@ var pushprices = tPushPrices{}
 // --------------------
 type pushTSV struct {
 	ID                PushID
-	Purchased         time.Time
-	Customer          CustomerID
+	Transactions      []TransactionID
 	Goal              string
 	Delivered         NullableTime
 	Diff              *DiffInfo
@@ -231,15 +281,21 @@ func (p *pushTSV) toActualPush() *Push {
 	if p.Delivered.Time != nil {
 		summary = blog.HasEntryFor(*p.Delivered.Time)
 	}
+
 	return &Push{
 		ID:                p.ID,
-		Purchased:         p.Purchased,
-		Customer:          p.Customer,
 		Goal:              p.Goal,
 		Delivered:         p.Delivered,
 		Diff:              p.Diff,
 		IncludeInEstimate: p.IncludeInEstimate,
 
+		Transactions: func() (ret []*Transaction) {
+			for _, tid := range p.Transactions {
+				t := transactions.ByID(tid)
+				ret = append(ret, t)
+			}
+			return
+		}(),
 		Summary: summary,
 	}
 }
@@ -261,6 +317,10 @@ func init() {
 	var tsvPushes []*pushTSV
 
 	err = loadTSV(&customers, "customers")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = loadTSV(&transactions, "transactions")
 	if err != nil {
 		log.Fatalln(err)
 	}

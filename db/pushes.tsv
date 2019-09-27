@@ -1,56 +1,56 @@
-ID	Purchased	Customer	Goal	Delivered	Diff	IncludeInEstimate
-P0001	2018-01-21T19:35:01Z	1	ReC98 having a good future			0
-P0002	2018-01-21T19:35:01Z	1	ReC98 having a good future			0
-P0003	2018-01-21T19:35:01Z	1	ReC98 having a good future			0
-P0004	2018-01-21T19:35:01Z	1	ReC98 having a good future			0
-P0005	2018-03-13T22:02:51Z	2	TH05 reverse-engineering	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d739d82...4b8baf14135d	1
-P0006	2018-03-13T22:02:51Z	2	TH05 reverse-engineering	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d0e52e...843905eceaa7	1
-P0007	2018-03-28T09:08:11Z	2	TH05 reverse-engineering	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f30a3b...47e5601613ff	1
-P0008	2018-03-28T09:08:11Z	2	TH05 reverse-engineering	2018-04-21T13:52:00Z	nmlgc/ReC98/compare/47e5601613ff...d62dd06ddffb	1
-P0009	2018-08-19T16:55:41Z	3	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	nmlgc/ReC98/compare/79cc3ed71ccf...141baa4ca92b	0
-P0010	2018-08-19T16:55:41Z	3	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb	0
-P0011	2018-08-29T14:12:33Z	4	Building a website	2019-08-24T22:10:53Z	nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc	0
-P0012	2018-08-29T14:12:33Z	4	Building a website	2019-08-26T16:21:46Z	nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2	0
-P0013	2018-08-29T14:12:33Z	4	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8	0
-P0014	2018-08-29T14:12:33Z	4	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632	0
-P0015	2018-08-29T14:12:33Z	4	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f	0
-P0016	2018-08-29T14:12:33Z	4	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b	0
-P0017	2018-08-29T14:12:33Z	4	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2	0
-P0018	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-09-02T19:33:00Z	nmlgc/ReC98/compare/746681d...178d58940853	1
-P0019	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/c592464	1
-P0020	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/cbe8a37	1
-P0021	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/8dfc2cd	1
-P0022	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/79cc3ed	1
-P0023	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
-P0024	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
-P0025	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0026	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0027	2018-09-01T16:06:56Z	5	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0028	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-11T21:25:04Z	nmlgc/ReC98/compare/6023f5c...6ff427a	1
-P0029	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/6ff427a...c7fc4ca	1
-P0030	2018-09-01T16:06:56Z	5	Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/c7fc4ca...dea40ad	1
-P0031	2018-09-01T16:06:56Z	5	Decompilation	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
-P0032	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
-P0033	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
-P0034	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
-P0035	2018-09-01T16:06:56Z	5	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
-P0036	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
-P0037	2018-09-01T16:06:56Z	5	Reverse-engineering → Decompilation			1
-P0038	2018-09-03T16:56:39Z	6	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
-P0039	2018-09-03T16:56:39Z	6	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
-P0040	2018-10-18T23:06:33Z	2	TH05 reverse-engineering	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c09cce1...b03bc9135749	1
-P0041	2018-10-18T23:06:33Z	2	TH05 reverse-engineering	2018-12-09T00:26:00Z	nmlgc/ReC98/compare/b03bc9135749...f3b6137fe24d	1
-P0042	2018-10-18T23:06:33Z	2	TH05 reverse-engineering	2018-12-12T01:52:00Z	nmlgc/ReC98/compare/f3b6137fe24d...807df3d5a749	1
-P0043	2018-12-25T11:32:26Z	2	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0044	2018-12-25T11:32:26Z	2	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0045	2018-12-25T11:32:26Z	2	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0046	2018-12-25T11:32:26Z	2	TH05 reverse-engineering	2019-01-01T01:38:00Z	nmlgc/ReC98/compare/612beb815b9a...deb45ea14e01	1
-P0047	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
-P0048	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
-P0049	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
-P0050	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
-P0051	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0052	2018-12-30T13:09:47Z	2	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0053	2019-01-19T20:50:21Z	2	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0054	2019-03-29T18:59:42Z	7	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e	0
-P0055	2019-03-29T18:59:42Z	7	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98	0
+ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
+P0001	[1]	ReC98 having a good future			0
+P0002	[1]	ReC98 having a good future			0
+P0003	[1]	ReC98 having a good future			0
+P0004	[1]	ReC98 having a good future			0
+P0005	[2]	TH05 reverse-engineering	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d739d82...4b8baf14135d	1
+P0006	[2]	TH05 reverse-engineering	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d0e52e...843905eceaa7	1
+P0007	[3]	TH05 reverse-engineering	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f30a3b...47e5601613ff	1
+P0008	[3]	TH05 reverse-engineering	2018-04-21T13:52:00Z	nmlgc/ReC98/compare/47e5601613ff...d62dd06ddffb	1
+P0009	[4]	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	nmlgc/ReC98/compare/79cc3ed71ccf...141baa4ca92b	0
+P0010	[4]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb	0
+P0011	[5]	Building a website	2019-08-24T22:10:53Z	nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc	0
+P0012	[5]	Building a website	2019-08-26T16:21:46Z	nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2	0
+P0013	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8	0
+P0014	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632	0
+P0015	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f	0
+P0016	[5]	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b	0
+P0017	[5]	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2	0
+P0018	[6]	Reverse-engineering	2018-09-02T19:33:00Z	nmlgc/ReC98/compare/746681d...178d58940853	1
+P0019	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/c592464	1
+P0020	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/cbe8a37	1
+P0021	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/8dfc2cd	1
+P0022	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/79cc3ed	1
+P0023	[6]	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
+P0024	[6]	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
+P0025	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
+P0026	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
+P0027	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
+P0028	[7]	Reverse-engineering	2019-09-11T21:25:04Z	nmlgc/ReC98/compare/6023f5c...6ff427a	1
+P0029	[7]	Reverse-engineering → Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/6ff427a...c7fc4ca	1
+P0030	[7]	Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/c7fc4ca...dea40ad	1
+P0031	[7]	Decompilation	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
+P0032	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
+P0033	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
+P0034	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
+P0035	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
+P0036	[7]	Reverse-engineering → Decompilation			1
+P0037	[7]	Reverse-engineering → Decompilation			1
+P0038	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
+P0039	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
+P0040	[9]	TH05 reverse-engineering	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c09cce1...b03bc9135749	1
+P0041	[9]	TH05 reverse-engineering	2018-12-09T00:26:00Z	nmlgc/ReC98/compare/b03bc9135749...f3b6137fe24d	1
+P0042	[9]	TH05 reverse-engineering	2018-12-12T01:52:00Z	nmlgc/ReC98/compare/f3b6137fe24d...807df3d5a749	1
+P0043	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
+P0044	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
+P0045	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
+P0046	[10]	TH05 reverse-engineering	2019-01-01T01:38:00Z	nmlgc/ReC98/compare/612beb815b9a...deb45ea14e01	1
+P0047	[11]	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
+P0048	[11]	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
+P0049	[11]	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
+P0050	[11]	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
+P0051	[11]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
+P0052	[11]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
+P0053	[12]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
+P0054	[13]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e	0
+P0055	[13]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98	0

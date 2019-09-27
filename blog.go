@@ -77,7 +77,7 @@ func Posts() chan Post {
 				push := &pushes[i]
 				post.PushIDs = append(post.PushIDs, push.ID)
 				post.Diffs = append(post.Diffs, *push.Diff)
-				post.FundedBy = append(post.FundedBy, push.Customer)
+				post.FundedBy = append(post.FundedBy, push.FundedBy()...)
 			}
 			RemoveDuplicates(&post.Diffs)
 			RemoveDuplicates(&post.FundedBy)

@@ -15,8 +15,10 @@
 	<tbody>
 		{{range .Rows}}<tr id="{{.ID}}">
 			<th>{{.ID}}</th>
-			<td>💰 {{HTML_Time .Purchased}}</td>
-			<td>{{DB_CustomerByID .Customer}}</td>
+			<td>💰 {{HTML_Time .FundedAt}}</td>
+			<td>{{range $i, $customer := .FundedBy -}}
+				{{- if $i}}, {{end}}{{DB_CustomerByID $customer}}</a>
+			{{- end}}</td>
 			<td>{{.Goal}}</td>
 			{{- if $.IsDelivered}}
 			<td>🚚 {{HTML_Time .Delivered.Time}}</td>

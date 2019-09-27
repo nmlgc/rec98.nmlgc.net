@@ -214,6 +214,38 @@ var pushprices = tPushPrices{}
 
 /// -------
 
+// TSV input structures
+// --------------------
+type pushTSV struct {
+	ID                PushID
+	Purchased         time.Time
+	Customer          CustomerID
+	Goal              string
+	Delivered         NullableTime
+	Diff              *DiffInfo
+	IncludeInEstimate bool
+}
+
+func (p *pushTSV) toActualPush() *Push {
+	var summary *string
+	if p.Delivered.Time != nil {
+		summary = blog.HasEntryFor(*p.Delivered.Time)
+	}
+	return &Push{
+		ID:                p.ID,
+		Purchased:         p.Purchased,
+		Customer:          p.Customer,
+		Goal:              p.Goal,
+		Delivered:         p.Delivered,
+		Diff:              p.Diff,
+		IncludeInEstimate: p.IncludeInEstimate,
+
+		Summary: summary,
+	}
+}
+
+// --------------------
+
 func loadTSV(slice interface{}, table string) error {
 	f, err := os.Open(filepath.Join(dbPath, table+".tsv"))
 	if err != nil {
@@ -226,11 +258,13 @@ func loadTSV(slice interface{}, table string) error {
 
 func init() {
 	var err error
+	var tsvPushes []*pushTSV
+
 	err = loadTSV(&customers, "customers")
 	if err != nil {
 		log.Fatalln(err)
 	}
-	err = loadTSV(&pushes, "pushes")
+	err = loadTSV(&tsvPushes, "pushes")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -238,12 +272,7 @@ func init() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	for _, p := range pushes {
-		if p.Delivered.Time == nil {
-			continue
-		}
-		if summary := blog.HasEntryFor(*p.Delivered.Time); summary != nil {
-			p.Summary = summary
-		}
+	for _, p := range tsvPushes {
+		pushes = append(pushes, p.toActualPush())
 	}
 }

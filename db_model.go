@@ -171,6 +171,29 @@ type Transaction struct {
 	Customer CustomerID
 	Cents    int
 	Goal     string
+
+	// Calculated after the push table has loaded
+	Outstanding int
+}
+
+// Consumes up to pushpriceRem outstanding cents from p, and returns the new
+// remaining push price.
+func (t *Transaction) consume(p *pushTSV, pushpriceRem int) int {
+	if pushpriceRem <= 0 {
+		log.Fatalf(
+			"%s consumed more transactions than it should have (%s)",
+			p.ID, p.Transactions,
+		)
+	} else if t.Outstanding <= 0 {
+		log.Fatalf("more pushes associated with %s than it paid for", t.ID)
+	}
+	if t.Outstanding >= pushpriceRem {
+		t.Outstanding -= pushpriceRem
+		return 0
+	}
+	pushpriceRem -= t.Outstanding
+	t.Outstanding = 0
+	return pushpriceRem
 }
 
 // Push represents a single unit of work.
@@ -259,9 +282,23 @@ func (p *pushTSV) toActualPush() *Push {
 		IncludeInEstimate: p.IncludeInEstimate,
 
 		Transactions: func() (ret []*Transaction) {
+			if len(p.Transactions) == 0 {
+				log.Fatalf("%s has no transactions associated with it", p.ID)
+			}
+			earliest := time.Now()
 			for _, tid := range p.Transactions {
 				t := transactions.ByID(tid)
+				if t.Time.Before(earliest) {
+					earliest = t.Time
+				}
 				ret = append(ret, t)
+			}
+			pushpriceRem := pushprices.At(earliest)
+			for _, t := range ret {
+				pushpriceRem = t.consume(p, pushpriceRem)
+			}
+			if pushpriceRem != 0 {
+				log.Fatalf("%s is not fully paid for", p.ID)
 			}
 			return
 		}(),
@@ -300,6 +337,9 @@ func init() {
 	err = loadTSV(&pushprices, "pushprices")
 	if err != nil {
 		log.Fatalln(err)
+	}
+	for i := range transactions {
+		transactions[i].Outstanding = transactions[i].Cents
 	}
 	for _, p := range tsvPushes {
 		pushes = append(pushes, p.toActualPush())

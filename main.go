@@ -119,6 +119,11 @@ func HTMLCurrency(cents float64) template.HTML {
 	)
 }
 
+// HTMLPushPrice returns the current push price, rendered as HTML.
+func HTMLPushPrice() template.HTML {
+	return HTMLCurrency(pushprices.Current())
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -134,6 +139,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"HTML_FloatMaxPrec": HTMLFloatMaxPrec,
 	"HTML_Percentage":   HTMLPercentage,
 	"HTML_Currency":     HTMLCurrency,
+	"HTML_PushPrice":    HTMLPushPrice,
 
 	// Git, safe
 	"git_commits":        commits,

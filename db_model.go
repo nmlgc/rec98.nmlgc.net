@@ -255,6 +255,10 @@ func (p tPushPrices) At(t time.Time) (price int) {
 	return
 }
 
+func (p tPushPrices) Current() (price float64) {
+	return float64(p.At(time.Now()))
+}
+
 var customers = tCustomers{}
 var transactions = tTransactions{}
 var pushes = tPushes{}

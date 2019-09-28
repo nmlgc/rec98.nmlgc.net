@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"math"
-	"time"
 
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
@@ -337,7 +336,7 @@ type REProgressEstimate struct {
 // function really should also report it to the reader. So you'd have to
 // retrieve it anyway.
 func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgress) REProgressEstimate {
-	price := float64(pushprices.At(time.Now()))
+	price := pushprices.Current()
 	done := REProgressAtTree(tree)
 	return REProgressEstimate{
 		Done: done.Pct(baseline),

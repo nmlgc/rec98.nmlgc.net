@@ -268,5 +268,6 @@ func main() {
 	r.Handle(path.Clean(blogHP.URLPrefix), pagesHandler("blog.html"))
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
+	r.Handle("/legal", pagesHandler("legal.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

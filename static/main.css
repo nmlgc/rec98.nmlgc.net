@@ -265,6 +265,20 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 /* ---------------- */
 
+/* Legal notice
+   ------------ */
+#legal h2 {
+	margin-block-end: 0em;
+}
+
+#legal h2 + p {
+	font-size: 90%;
+	margin-block-start: 0.5em;
+	margin-block-end: 1.5em;
+	color: gray;
+}
+/* ------------ */
+
 /* Definition lists
    ---------------- */
 dl {

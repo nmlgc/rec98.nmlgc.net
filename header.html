@@ -3,6 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{{if .}}{{if eq . "legal" -}}
+		<meta name="robots" content="noindex, noarchive" />
+	{{- end}}{{end -}}
 	<link rel="stylesheet" href="/static/main.css" />
 	<script src="/static/main.js"></script>
 	<title>ReC98</title>

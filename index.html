@@ -15,8 +15,7 @@
 <hr />
 <aside class="warning">
 	<span class="icon-cell">⚠️</span>
-	<p><strong>These prices are <i>estimates</i>, calculated from <a href="/fundlog">the entire crowdfunding history</a>, and should <i>not</i> be interpreted as goals to be hit. They <i>will</i> drop or increase as progress speeds up or slows down. Therefore, <i>there is no guarantee</i> that paying any fraction of these will translate to exactly that fraction of progress.</strong><br>
-	(Also, do <i>not</i> send me money right now!)</p>
+	<p><strong>These prices are <i>estimates</i>, calculated from <a href="/fundlog">the entire crowdfunding history</a>, and should <i>not</i> be interpreted as goals to be hit. They <i>will</i> drop or increase as progress speeds up or slows down. Therefore, <i>there is no guarantee</i> that paying any fraction of these will translate to exactly that fraction of progress.</strong></p>
 	<span class="icon-cell">⚠️</span>
 </aside>
 <aside>
@@ -24,5 +23,26 @@
 	<p>Currently calculating with an average speed of <b>{{printf "%.0f" $spp.Instructions}} instructions</b> and <b>{{printf "%.0f" $spp.AbsoluteRefs}} absolute memory references</b> removed per push. <a href="/progress">Raw, per-commit metrics are here.</a></p>
 	<span class="icon-cell">📉</span>
 </aside>
+<hr />
+<aside id="contribute">
+	<span class="icon-cell">🚀</span>
+	<p>While I still have to finish an extensive FAQ page and properly integrate PayPal before this crowdfunding can launch officially, the system is <i>technically</i> ready to accept orders now. So, if you're familiar with the terms from the old Discord #storefront, you can order right now, if you want:</p>
+	<span class="icon-cell">🚀</span>
+</aside>
+<aside>
+	<span class="icon-cell">💰</span>
+	{{template "paypal_button.html" "LVUTSRDKDEVZ2"}}
+	<span class="icon-cell">💰</span>
+</aside>
+<aside>
+	<span class="icon-cell">ℹ</span>
+	<div>
+		<p>I will then check your order as soon as I see it, and confirm it via email.</p>
+		<p>Every {{HTML_PushPrice}} will be turned into <a href="/fundlog">one push with a 4-digit ID</a>. Orders below that amount are of course also welcome.</p>
+		<p>Depending on how much is bought before the official launch, I'll then deliver these pushes either now (if it ends up being a lot) or after the launch (if it ends up being just a bit).</p>
+	</div>
+	<span class="icon-cell">ℹ</span>
+</aside>
+<hr />
 
 {{template "footer.html"}}

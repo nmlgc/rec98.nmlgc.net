@@ -242,7 +242,7 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	text-align: center;
 	display: grid;
 	grid-template-columns: auto 1fr auto;
-	align-items: center;
+	place-items: center;
 	grid-column-gap: 0.5em;
 }
 
@@ -332,6 +332,26 @@ td, th {
 	text-align: center;
 }
 /* ------ */
+
+/* Forms
+   ----- */
+form.paypal {
+	border: var(--header-border);
+	min-width: 75%;
+	box-shadow: var(--blog-shadow);
+	background: var(--c-bg);
+
+	padding: 1em;
+	display: grid;
+	grid-gap: 0.5em;
+	place-items: center;
+}
+
+form.paypal input:not([type="image"]),
+form.paypal select {
+	justify-self: stretch;
+}
+/* ----- */
 
 /* Push table
    ---------- */

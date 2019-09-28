@@ -225,6 +225,39 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 /* -------- */
 
+/* Definition lists
+   ---------------- */
+dl {
+	border-bottom: var(--header-border);
+	padding-bottom: 0.5em;
+	margin: 0;
+}
+
+dt, dd {
+	display: inline;
+}
+
+dt .emoji {
+	display: inline-block;
+	width: 1.5em;
+	text-align: right;
+}
+
+dd:after {
+	display: block;
+	content: " ";
+}
+
+dt {
+	font-size: 75%;
+	color: gray;
+	font-weight: bold;
+}
+
+dd {
+	margin: 0;
+}
+/* ---------------- */
 
 /* Tables
    ------ */
@@ -310,36 +343,5 @@ article {
 	box-shadow: var(--blog-shadow);
 	background: var(--c-bg);
 	padding: 1em;
-}
-
-article dl {
-	border-bottom: var(--header-border);
-	padding-bottom: 0.5em;
-	margin: 0;
-}
-
-article dt, article dd {
-	display: inline;
-}
-
-article dt .emoji {
-	display: inline-block;
-	width: 1.5em;
-	text-align: right;
-}
-
-article dd:after {
-	display: block;
-	content: " ";
-}
-
-article dt {
-	font-size: 75%;
-	color: gray;
-	font-weight: bold;
-}
-
-article dd {
-	margin: 0;
 }
 /* ---- */

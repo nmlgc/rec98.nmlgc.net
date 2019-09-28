@@ -226,6 +226,16 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 /* -------- */
 
+/* Crowdfunding log
+   ---------------- */
+#fundlog ul {
+	margin-block-start: 0;
+	margin-block-end: 0;
+	padding-block-start: 0.25em;
+	padding-block-end: 1.5em;
+}
+/* ---------------- */
+
 /* Definition lists
    ---------------- */
 dl {

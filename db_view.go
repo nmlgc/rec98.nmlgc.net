@@ -19,6 +19,54 @@ func CustomerByID(id CustomerID) template.HTML {
 	))
 }
 
+// ContribPerCustomer represents the contribution of a single customer towards
+// the goal this structure is included in.
+type ContribPerCustomer struct {
+	Customer     CustomerID
+	PushFraction float64
+}
+
+// TransactionsPerGoal lists all contributions towards a specific goal.
+type TransactionsPerGoal struct {
+	Goal        string
+	PerCustomer []ContribPerCustomer
+}
+
+func (t *TransactionsPerGoal) forCustomer(c CustomerID) *ContribPerCustomer {
+	for i := range t.PerCustomer {
+		if t.PerCustomer[i].Customer == c {
+			return &t.PerCustomer[i]
+		}
+	}
+	t.PerCustomer = append(t.PerCustomer, ContribPerCustomer{Customer: c})
+	return &t.PerCustomer[len(t.PerCustomer)-1]
+}
+
+// TransactionBacklog returns all transactions that haven't been consumed by
+// pushes, sorted by goal and customer.
+func TransactionBacklog() (ret []TransactionsPerGoal) {
+	transactionsForGoal := func(goal string) *TransactionsPerGoal {
+		for i := range ret {
+			if ret[i].Goal == goal {
+				return &ret[i]
+			}
+		}
+		ret = append(ret, TransactionsPerGoal{Goal: goal})
+		return &ret[len(ret)-1]
+	}
+
+	for i := len(transactions) - 1; i >= 0; i-- {
+		t := transactions[i]
+		if t.Outstanding > 0 {
+			tfg := transactionsForGoal(t.Goal)
+			fpc := tfg.forCustomer(t.Customer)
+			pushprice := pushprices.At(t.Time)
+			fpc.PushFraction += float64(t.Outstanding) / float64(pushprice)
+		}
+	}
+	return ret
+}
+
 // PushesWhere returns the pushes fulfilling the given predicate, with the
 // latest pushes at the beginning.
 func PushesWhere(pred func(p Push) bool) (ret []Push) {

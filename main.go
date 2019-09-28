@@ -92,6 +92,13 @@ func HTMLEmoji(emoji string) template.HTML {
 	))
 }
 
+// HTMLFloatMaxPrec prints the most compact representation of v, with at
+// most n decimal places.
+func HTMLFloatMaxPrec(val float64, n int) string {
+	pow := math.Pow10(n)
+	return fmt.Sprintf("%v", math.Round(val*pow)/pow)
+}
+
 // HTMLPercentage formats the given value as a percentage.
 func HTMLPercentage(val float64) template.HTML {
 	if math.IsNaN(val) {
@@ -121,11 +128,12 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"inc": func(i int) int { return i + 1 },
 
 	// Markup, safe
-	"HTML_Date":       HTMLDate,
-	"HTML_Time":       HTMLTime,
-	"HTML_Emoji":      HTMLEmoji,
-	"HTML_Percentage": HTMLPercentage,
-	"HTML_Currency":   HTMLCurrency,
+	"HTML_Date":         HTMLDate,
+	"HTML_Time":         HTMLTime,
+	"HTML_Emoji":        HTMLEmoji,
+	"HTML_FloatMaxPrec": HTMLFloatMaxPrec,
+	"HTML_Percentage":   HTMLPercentage,
+	"HTML_Currency":     HTMLCurrency,
 
 	// Git, safe
 	"git_commits":        commits,
@@ -143,8 +151,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"ReC98_REProgressEstimateAtTree": func() int { return 0 },
 
 	// Database view, safe
-	"DB_CustomerByID": CustomerByID,
-	"DB_Pushes":       Pushes,
+	"DB_CustomerByID":       CustomerByID,
+	"DB_TransactionBacklog": TransactionBacklog,
+	"DB_Pushes":             Pushes,
 
 	// Blog, safe
 	// Added later to avoid a initialization loop

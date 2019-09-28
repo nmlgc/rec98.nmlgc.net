@@ -1,12 +1,24 @@
-{{$outstanding := 0 -}}
+{{$backlog := DB_TransactionBacklog -}}
 
-{{- template "header.html" -}}
-{{if $outstanding -}}
-<h1>Still outstanding</h1>
-{{template "push_table.html" $outstanding}}
-<h1>Delivered</h1>
+{{- template "header.html" "fundlog" -}}
+<h1>Backlog</h1>
+{{if $backlog -}}
+<dl>
+	{{range $goal := $backlog -}}<dt>
+		<span class="emoji">🥅</span> Goal:
+	</dt><dd>
+		<strong>{{$goal.Goal}}</strong>
+		<ul>
+			{{range $perCustomer := $goal.PerCustomer}}<li>
+				<b>{{HTML_FloatMaxPrec $perCustomer.PushFraction 2}}</b> pushes
+				from {{DB_CustomerByID $perCustomer.Customer}}
+			</li>{{end}}
+		</ul>
+	</dd>{{end}}
+</dl>
 {{else}}
-<p>No outstanding deliveries at this point in time!</p>
+<p>Currently empty!</p>
 {{end}}
+<h1>Delivered</h1>
 {{template "push_table.html" DB_Pushes}}
 {{- template "footer.html" -}}

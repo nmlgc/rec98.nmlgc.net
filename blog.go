@@ -69,7 +69,7 @@ func Posts() chan Post {
 			pushes := PushesDeliveredAt(date)
 			post := Post{
 				Date: date,
-				Time: *pushes[0].Delivered.Time,
+				Time: pushes[0].Delivered,
 				Body: template.HTML(b.String()),
 			}
 

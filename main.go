@@ -143,9 +143,8 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"ReC98_REProgressEstimateAtTree": func() int { return 0 },
 
 	// Database view, safe
-	"DB_CustomerByID":      CustomerByID,
-	"DB_PushesOutstanding": PushesOutstanding,
-	"DB_PushesDelivered":   PushesDelivered,
+	"DB_CustomerByID": CustomerByID,
+	"DB_Pushes":       Pushes,
 
 	// Blog, safe
 	// Added later to avoid a initialization loop

@@ -1,8 +1,4 @@
 ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
-P0001	[1]	ReC98 having a good future			0
-P0002	[1]	ReC98 having a good future			0
-P0003	[1]	ReC98 having a good future			0
-P0004	[1]	ReC98 having a good future			0
 P0005	[2]	TH05 reverse-engineering	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d739d82...4b8baf14135d	1
 P0006	[2]	TH05 reverse-engineering	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d0e52e...843905eceaa7	1
 P0007	[3]	TH05 reverse-engineering	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f30a3b...47e5601613ff	1
@@ -34,8 +30,6 @@ P0032	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa..
 P0033	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
 P0034	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
 P0035	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
-P0036	[7]	Reverse-engineering → Decompilation			1
-P0037	[7]	Reverse-engineering → Decompilation			1
 P0038	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
 P0039	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
 P0040	[9]	TH05 reverse-engineering	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c09cce1...b03bc9135749	1

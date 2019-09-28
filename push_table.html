@@ -5,26 +5,22 @@
 			<th>Time purchased</th>
 			<th>Funded by</th>
 			<th>Goal</th>
-			{{if $.IsDelivered -}}
 			<th>Time delivered</th>
 			<th>Commits</th>
 			<th>Summary</th>
-			{{- end}}
 		</tr>
 	</thead>
 	<tbody>
-		{{range .Rows}}<tr id="{{.ID}}">
+		{{range .}}<tr id="{{.ID}}">
 			<th>{{.ID}}</th>
 			<td>💰 {{HTML_Time .FundedAt}}</td>
 			<td>{{range $i, $customer := .FundedBy -}}
 				{{- if $i}}, {{end}}{{DB_CustomerByID $customer}}</a>
 			{{- end}}</td>
 			<td>{{.Goal}}</td>
-			{{- if $.IsDelivered}}
-			<td>🚚 {{HTML_Time .Delivered.Time}}</td>
+			<td>🚚 {{HTML_Time .Delivered}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
 			<td class="icon-cell">{{if .Summary}}<a href="/blog#{{.Summary}}">📝</a>{{end}}</td>
-			{{- end}}
 		</tr>{{end}}
 	</tbody>
 </table>

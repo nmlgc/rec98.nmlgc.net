@@ -99,32 +99,6 @@ func (d *DiffInfo) Range() (top, bottom *object.Commit) {
 	return
 }
 
-// NullableTime represents time values that can be empty.
-type NullableTime struct {
-	*time.Time
-}
-
-// UnmarshalCSV wraps time.Parse to accept empty strings.
-func (t *NullableTime) UnmarshalCSV(s string) error {
-	t.Time = nil
-	if len(s) == 0 {
-		return nil
-	}
-	ret, err := time.Parse(time.RFC3339, s)
-	if err != nil {
-		return err
-	}
-	t.Time = &ret
-	return err
-}
-
-func (t NullableTime) String() string {
-	if t.Time == nil {
-		return ""
-	}
-	return t.Time.String()
-}
-
 type eInvalidID struct {
 	input string
 }
@@ -204,7 +178,7 @@ type Push struct {
 	ID                PushID
 	Transactions      []*Transaction
 	Goal              string
-	Delivered         NullableTime
+	Delivered         time.Time
 	Summary           *string
 	Diff              *DiffInfo
 	IncludeInEstimate bool
@@ -271,17 +245,12 @@ type pushTSV struct {
 	ID                PushID
 	Transactions      []TransactionID
 	Goal              string
-	Delivered         NullableTime
+	Delivered         time.Time
 	Diff              *DiffInfo
 	IncludeInEstimate bool
 }
 
 func (p *pushTSV) toActualPush() *Push {
-	var summary *string
-	if p.Delivered.Time != nil {
-		summary = blog.HasEntryFor(*p.Delivered.Time)
-	}
-
 	return &Push{
 		ID:                p.ID,
 		Goal:              p.Goal,
@@ -296,7 +265,7 @@ func (p *pushTSV) toActualPush() *Push {
 			}
 			return
 		}(),
-		Summary: summary,
+		Summary: blog.HasEntryFor(p.Delivered),
 	}
 }
 

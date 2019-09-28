@@ -13,10 +13,13 @@
 	--estimate-br:  1px;
 	--estimate-blur: 1px;
 	--blog-shadow: 0 0 0.5em 0 var(--c-border);
+
+	--footer-height: 1.75em;
 }
 /* --------- */
 
 html {
+	height: 100%;
 	font-family: sans-serif;
 }
 
@@ -62,7 +65,9 @@ img[src*="emoji-"] {
 /* Header
    ------ */
 body {
+	min-height: 100%;
 	margin: 0;
+	position: relative;
 	line-height: 1.4;
 }
 
@@ -113,6 +118,30 @@ header nav a:hover {
 }
 
 main {
+	margin: 1em;
+}
+/* ------ */
+
+/* Footer
+   ------ */
+body::after {
+	content: "";
+	display: block;
+	height: var(--footer-height);
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: var(--footer-height);
+
+	background: linear-gradient(180deg, white 0%, var(--c-lightgray) 100%);
+	text-align: right;
+}
+
+footer * {
+	font-size: 75%;
 	margin: 1em;
 }
 /* ------ */

@@ -128,6 +128,7 @@ func PushesDeliveredAt(datestring string) []Push {
 type Cap struct {
 	Now         time.Time
 	Then        time.Time
+	FirstFree   *time.Time
 	Pushes      int
 	Cap         float64
 	Outstanding float64
@@ -153,6 +154,13 @@ func CapCurrent() (ret Cap) {
 		}
 		for _, fpc := range tpg.PerCustomer {
 			ret.Outstanding += fpc.PushFraction * price
+		}
+	}
+
+	if ret.Outstanding >= ret.Cap {
+		firstfree := start + int(ret.Outstanding/price)
+		if firstfree < len(freetime) {
+			ret.FirstFree = &freetime[firstfree].Date.Time
 		}
 	}
 	return ret

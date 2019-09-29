@@ -7,6 +7,14 @@
 	</p>
 	<meter value="{{.Outstanding}}" max="{{.Cap}}"></meter>
 	<small>
+	{{- if ge .Outstanding .Cap -}}
+		{{- if .FirstFree -}}
+			Sold out until {{HTML_Date .FirstFree}}, please check back then!
+		{{- else -}}
+			Sold out until further notice… wow.
+		{{- end -}}
+	{{- else -}}
 		Based on my free time in the 4 weeks from now to {{HTML_Date .Then}}.
+	{{- end -}}
 	</small>
 </section>

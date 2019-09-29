@@ -160,6 +160,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"DB_CustomerByID":       CustomerByID,
 	"DB_TransactionBacklog": TransactionBacklog,
 	"DB_Pushes":             Pushes,
+	"DB_CapCurrent":         CapCurrent,
 
 	// Blog, safe
 	// Added later to avoid a initialization loop

@@ -122,3 +122,38 @@ func PushesDeliveredAt(datestring string) []Push {
 		return pD == aD && pM == aM && pY == aY
 	})
 }
+
+// Cap bundles all information about the current state of the backlog, with
+// regard to the crowdfunding cap.
+type Cap struct {
+	Now         time.Time
+	Then        time.Time
+	Pushes      int
+	Cap         float64
+	Outstanding float64
+}
+
+// CapCurrent calculates the cap from the current point in time.
+func CapCurrent() (ret Cap) {
+	price := pushprices.Current()
+	ret.Now = time.Now()
+	ret.Then = ret.Now.Add(CapWindow)
+
+	start := freetime.IndexBefore(ret.Now)
+	end := freetime.IndexBefore(ret.Then)
+
+	ret.Pushes = end - start
+	ret.Cap = float64(ret.Pushes) * price
+
+	backlog := TransactionBacklog()
+	for _, tpg := range backlog {
+		// Yes, a very ugly hack...
+		if tpg.Goal == "ReC98 having a good future" {
+			continue
+		}
+		for _, fpc := range tpg.PerCustomer {
+			ret.Outstanding += fpc.PushFraction * price
+		}
+	}
+	return ret
+}

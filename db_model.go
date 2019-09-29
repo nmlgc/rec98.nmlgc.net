@@ -18,6 +18,10 @@ const devLocationName = "Europe/Berlin"
 
 var devLocation *time.Location
 
+// CapWindow defines the maximum acceptable backlog size, based on the free
+// time from now to this point in the future.
+const CapWindow = time.Duration(time.Hour * 24 * 7 * 4)
+
 // FreeTimeDecisionPoint defines the cut-off time for deciding whether a day
 // will be spent working on ReC98 or not.
 const FreeTimeDecisionPoint = time.Duration(time.Hour * 16)
@@ -282,6 +286,15 @@ func (p tPushPrices) At(t time.Time) (price int) {
 
 func (p tPushPrices) Current() (price float64) {
 	return float64(p.At(time.Now()))
+}
+
+func (f tFreeTime) IndexBefore(t time.Time) int {
+	for i := range freetime {
+		if freetime[i].Date.After(t) {
+			return i
+		}
+	}
+	return 0
 }
 
 var customers = tCustomers{}

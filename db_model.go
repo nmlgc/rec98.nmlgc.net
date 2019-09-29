@@ -14,6 +14,9 @@ import (
 )
 
 const dbPath = "db/"
+const devLocationName = "Europe/Berlin"
+
+var devLocation *time.Location
 
 /// Custom types
 /// ------------
@@ -115,6 +118,17 @@ func parseID(input string, format string) (ret int, err error) {
 		return 0, eInvalidID{input}
 	}
 	return ret, nil
+}
+
+// LocalDateStamp represents a date-only timestamp in the devLocation.
+type LocalDateStamp struct {
+	time.Time
+}
+
+// UnmarshalCSV decodes an ISO 8601 date to a LocalDateStamp.
+func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
+	d.Time, err = time.ParseInLocation("2006-01-02", s, devLocation)
+	return err
 }
 
 /// ------------
@@ -233,10 +247,16 @@ type PushPrice struct {
 	Cents int
 }
 
+// FreeTime represents a single day that can be spent on getting a push done.
+type FreeTime struct {
+	Date LocalDateStamp
+}
+
 type tCustomers []*Customer
 type tTransactions []*Transaction
 type tPushes []*Push
 type tPushPrices []*PushPrice
+type tFreeTime []*FreeTime
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
@@ -263,6 +283,7 @@ var customers = tCustomers{}
 var transactions = tTransactions{}
 var pushes = tPushes{}
 var pushprices = tPushPrices{}
+var freetime = tFreeTime{}
 
 /// -------
 
@@ -326,6 +347,11 @@ func init() {
 	var err error
 	var tsvPushes []*pushTSV
 
+	devLocation, err = time.LoadLocation(devLocationName)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	err = loadTSV(&customers, "customers")
 	if err != nil {
 		log.Fatalln(err)
@@ -339,6 +365,10 @@ func init() {
 		log.Fatalln(err)
 	}
 	err = loadTSV(&pushprices, "pushprices")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = loadTSV(&freetime, "freetime")
 	if err != nil {
 		log.Fatalln(err)
 	}

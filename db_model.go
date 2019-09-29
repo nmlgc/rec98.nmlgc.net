@@ -18,6 +18,10 @@ const devLocationName = "Europe/Berlin"
 
 var devLocation *time.Location
 
+// FreeTimeDecisionPoint defines the cut-off time for deciding whether a day
+// will be spent working on ReC98 or not.
+const FreeTimeDecisionPoint = time.Duration(time.Hour * 16)
+
 /// Custom types
 /// ------------
 
@@ -128,6 +132,7 @@ type LocalDateStamp struct {
 // UnmarshalCSV decodes an ISO 8601 date to a LocalDateStamp.
 func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 	d.Time, err = time.ParseInLocation("2006-01-02", s, devLocation)
+	d.Time = d.Time.Add(FreeTimeDecisionPoint)
 	return err
 }
 

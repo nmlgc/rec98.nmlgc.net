@@ -5,11 +5,15 @@
 
 {{- template "header.html" "estimate" -}}
 
-<h1>ReC98 completion status, as of <a href="/progress/{{$ci.Hash.String}}">{{HTML_Date $ci.Time}}</a>:</h1>
+{{template "cap.html" DB_CapCurrent}}
+
 <hr />
+
+<h1 id="status">Completion status, as of <a href="/progress/{{$ci.Hash.String}}">{{HTML_Date $ci.Time}}</a>:</h1>
+
 <h2>Reverse-engineering</h2>
 {{template "estimate_metrics.html" $pe.ForInstructions}}
-<hr />
+
 <h2>Position independence</h2>
 {{template "estimate_metrics.html" $pe.ForAbsoluteRefs}}
 <hr />

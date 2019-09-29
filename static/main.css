@@ -166,6 +166,31 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	text-align: center;
 }
 
+#estimate #cap {
+	display: grid;
+	grid-template-columns: auto;
+	place-items: center;
+	font-size: 125%;
+	grid-gap: 1em;
+	justify-content: center;
+}
+
+#estimate #cap * {
+	text-align: center;
+}
+
+#estimate #cap small {
+	color: gray;
+}
+
+#estimate #cap .amount {
+	font-size: 125%;
+}
+
+#estimate #cap meter {
+	width: 100%;
+}
+
 #estimate section {
 	display: grid;
 	grid-template-columns: 4.5em 1fr auto;
@@ -234,7 +259,7 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	text-align: right;
 }
 
-#estimate .cost .amount {
+.amount {
 	font-weight: bold;
 }
 

@@ -1,0 +1,12 @@
+<section id="cap">
+	<p>
+		<small>Currently outstanding workload / cap:</small>
+		<span class="amount">{{HTML_Currency .Outstanding}}</span>
+		out of
+		<span class="amount">{{HTML_Currency .Cap}}</span>
+	</p>
+	<meter value="{{.Outstanding}}" max="{{.Cap}}"></meter>
+	<small>
+		Based on my free time in the 4 weeks from now to {{HTML_Date .Then}}.
+	</small>
+</section>

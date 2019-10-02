@@ -225,7 +225,7 @@ type Push struct {
 	Transactions      []*Transaction
 	Goal              string
 	Delivered         time.Time
-	Summary           *string
+	Summary           *BlogEntry
 	Diff              *DiffInfo
 	IncludeInEstimate bool
 }

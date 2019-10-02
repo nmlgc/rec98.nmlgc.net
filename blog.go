@@ -21,9 +21,15 @@ var blog = func() Blog {
 	return Blog(ret)
 }()
 
+// BlogEntry identifies an existing blog entry.
+type BlogEntry struct {
+	Date         string
+	templateName string
+}
+
 // HasEntryFor returns the ID of a potential blog entry posted at the given
 // date, or nil if there is none.
-func (b Blog) HasEntryFor(date time.Time) *string {
+func (b Blog) HasEntryFor(date time.Time) *BlogEntry {
 	ds := date.Format("2006-01-02")
 	filename := filepath.Join(blogHP.LocalPath, ds+".html")
 	// Note that we don't use sort.SearchStrings() here, since we're sorted
@@ -33,7 +39,10 @@ func (b Blog) HasEntryFor(date time.Time) *string {
 	if i >= len(b) || b[i] != filename {
 		return nil
 	}
-	return &ds
+	return &BlogEntry{
+		Date:         ds,
+		templateName: filename,
+	}
 }
 
 // PostDot contains everything handed to a blog template as the value of dot.

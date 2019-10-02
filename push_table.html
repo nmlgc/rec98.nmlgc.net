@@ -20,7 +20,9 @@
 			<td>{{.Goal}}</td>
 			<td>🚚 {{HTML_Time .Delivered}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
-			<td class="icon-cell">{{if .Summary}}<a href="/blog#{{.Summary}}">📝</a>{{end}}</td>
+			<td class="icon-cell">{{if .Summary -}}
+				<a href="/blog#{{.Summary.Date}}">📝</a>
+			{{- end}}</td>
 		</tr>{{end}}
 	</tbody>
 </table>

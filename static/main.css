@@ -437,7 +437,7 @@ form.paypal select {
 /* Blog
    ---- */
 article {
-	margin: 3em auto;
+	margin-bottom: 3em;
 	border-bottom: var(--header-border);
 	box-shadow: var(--blog-shadow);
 	background: var(--c-bg);

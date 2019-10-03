@@ -129,6 +129,10 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"git_getCommit": getCommit,
 	"git_getLogAt":  getLogAt,
 
+	// Blog, initialization
+	// Added later to avoid a initialization loop
+	"Blog_GetPost": func() int { return 0 },
+
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
 
@@ -253,7 +257,8 @@ func main() {
 	// -------------------------------------------------------
 
 	pages.Funcs(map[string]interface{}{
-		"Blog_Posts": Posts,
+		"Blog_Posts":   Posts,
+		"Blog_GetPost": GetPost,
 	})
 
 	log.Printf("Got everything, starting the server.")
@@ -267,6 +272,7 @@ func main() {
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle("/blog", pagesHandler("blog.html"))
+	r.Handle("/blog/{date}", pagesHandler("blog_single.html"))
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	r.Handle("/legal", pagesHandler("legal.html"))

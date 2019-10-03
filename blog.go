@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"path"
 	"path/filepath"
@@ -65,6 +66,14 @@ type Post struct {
 	Body     template.HTML
 }
 
+type eNoPost struct {
+	date string
+}
+
+func (e eNoPost) Error() string {
+	return fmt.Sprintf("no blog entry posted on %s", e.date)
+}
+
 // Render builds a new Post instance from e.
 func (e BlogEntry) Render() Post {
 	var b strings.Builder
@@ -89,6 +98,16 @@ func (e BlogEntry) Render() Post {
 	RemoveDuplicates(&post.Diffs)
 	RemoveDuplicates(&post.FundedBy)
 	return post
+}
+
+// GetPost returns the post that was originally posted on the given date.
+func GetPost(date string) (*Post, error) {
+	entry := blog.FindEntryByString(date)
+	if entry == nil {
+		return nil, eNoPost{date}
+	}
+	post := entry.Render()
+	return &post, nil
 }
 
 // Posts renders all blog posts.

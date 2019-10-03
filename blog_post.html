@@ -1,7 +1,7 @@
 <article id="{{.Date}}">
 	<dl>
 		<dt><span class="emoji">📝</span> Posted:</dt>
-		<dd><a href="#{{.Date}}">{{HTML_Time .Time}}</a></dd>
+		<dd><a href="/blog/{{.Date}}">{{HTML_Time .Time}}</a></dd>
 		<dt><span class="emoji">🚚</span> Summary of:</dt>
 		<dd>{{range $i, $push := .PushIDs -}}
 			{{- if $i}}, {{end}}<a href="/fundlog#{{$push}}">{{$push}}</a>

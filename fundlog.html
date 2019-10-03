@@ -1,7 +1,7 @@
 {{$backlog := DB_TransactionBacklog -}}
 
 {{- template "header.html" "fundlog" -}}
-<h1>Backlog</h1>
+<h2>Backlog</h2>
 {{if $backlog -}}
 <dl>
 	{{range $goal := $backlog -}}<dt>
@@ -19,6 +19,6 @@
 {{else}}
 <p>Currently empty!</p>
 {{end}}
-<h1>Delivered</h1>
+<h2>Delivered</h2>
 {{template "push_table.html" DB_Pushes}}
 {{- template "footer.html" -}}

@@ -47,7 +47,7 @@ func (b Blog) HasEntryFor(date time.Time) *BlogEntry {
 
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
-	PostPrefix template.HTML // Prefix for potential post-specific files
+	FilePrefix template.HTML // Prefix for potential post-specific files
 }
 
 // Post bundles the rendered HTML body of a post, together with information
@@ -65,7 +65,7 @@ type Post struct {
 func (e BlogEntry) Render() Post {
 	var b strings.Builder
 	ctx := PostDot{
-		PostPrefix: template.HTML(blogHP.URLPrefix + e.Date + "-"),
+		FilePrefix: template.HTML(blogHP.URLPrefix + e.Date + "-"),
 	}
 	pagesExecute(&b, e.templateName, &ctx)
 

@@ -345,7 +345,7 @@ func (p *pushTSV) toActualPush() *Push {
 			}
 			return
 		}(),
-		Summary: blog.HasEntryFor(p.Delivered),
+		Summary: blog.FindEntryByTime(p.Delivered),
 	}
 }
 

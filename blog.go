@@ -27,22 +27,26 @@ type BlogEntry struct {
 	templateName string
 }
 
-// HasEntryFor returns the ID of a potential blog entry posted at the given
-// date, or nil if there is none.
-func (b Blog) HasEntryFor(date time.Time) *BlogEntry {
-	ds := date.Format("2006-01-02")
-	filename := filepath.Join(blogHP.LocalPath, ds+".html")
+// FindEntryByString looks for and returns a potential blog entry posted
+// during the given ISO 8601-formatted date, or nil if there is none.
+func (b Blog) FindEntryByString(date string) *BlogEntry {
+	filename := filepath.Join(blogHP.LocalPath, date+".html")
 	// Note that we don't use sort.SearchStrings() here, since we're sorted
 	// in descending order!
 	i := sort.Search(len(b), func(i int) bool { return b[i] <= filename })
-	// i := sort.SearchStrings(b, filename)
 	if i >= len(b) || b[i] != filename {
 		return nil
 	}
 	return &BlogEntry{
-		Date:         ds,
+		Date:         date,
 		templateName: filename,
 	}
+}
+
+// FindEntryByTime looks for and returns a potential blog entry posted during
+// the date of the given Time instance, or nil if there is none.
+func (b Blog) FindEntryByTime(date time.Time) *BlogEntry {
+	return b.FindEntryByString(date.Format("2006-01-02"))
 }
 
 // PostDot contains everything handed to a blog template as the value of dot.

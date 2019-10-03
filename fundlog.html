@@ -10,7 +10,9 @@
 		<strong>{{$goal.Goal}}</strong>
 		<ul>
 			{{range $perCustomer := $goal.PerCustomer}}<li>
-				<b>{{HTML_FloatMaxPrec $perCustomer.PushFraction 2}}</b> pushes
+				{{$frac := $perCustomer.PushFraction -}}
+				<b>{{HTML_FloatMaxPrec $frac 2}}</b>
+				{{if eq $frac 1.0 -}} push {{- else -}} pushes {{- end}}
 				from {{DB_CustomerByID $perCustomer.Customer}}
 			</li>{{end}}
 		</ul>

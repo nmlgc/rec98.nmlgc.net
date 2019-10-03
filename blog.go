@@ -61,36 +61,43 @@ type Post struct {
 	Body     template.HTML
 }
 
+// Render builds a new Post instance from e.
+func (e BlogEntry) Render() Post {
+	var b strings.Builder
+	ctx := PostDot{
+		PostPrefix: template.HTML(blogHP.URLPrefix + e.Date + "-"),
+	}
+	pagesExecute(&b, e.templateName, &ctx)
+
+	pushes := PushesDeliveredAt(e.Date)
+	post := Post{
+		Date: e.Date,
+		Time: pushes[0].Delivered,
+		Body: template.HTML(b.String()),
+	}
+
+	for i := len(pushes) - 1; i >= 0; i-- {
+		push := &pushes[i]
+		post.PushIDs = append(post.PushIDs, push.ID)
+		post.Diffs = append(post.Diffs, *push.Diff)
+		post.FundedBy = append(post.FundedBy, push.FundedBy()...)
+	}
+	RemoveDuplicates(&post.Diffs)
+	RemoveDuplicates(&post.FundedBy)
+	return post
+}
+
 // Posts renders all blog posts.
 func Posts() chan Post {
 	ret := make(chan Post)
 	go func() {
-		for _, tmplName := range blog {
-			var b strings.Builder
-
-			basename := filepath.Base(tmplName)
+		for _, tmpl := range blog {
+			basename := filepath.Base(tmpl)
 			date := strings.TrimSuffix(basename, path.Ext(basename))
-			ctx := PostDot{
-				PostPrefix: template.HTML(blogHP.URLPrefix + date + "-"),
-			}
-			pagesExecute(&b, tmplName, &ctx)
-
-			pushes := PushesDeliveredAt(date)
-			post := Post{
-				Date: date,
-				Time: pushes[0].Delivered,
-				Body: template.HTML(b.String()),
-			}
-
-			for i := len(pushes) - 1; i >= 0; i-- {
-				push := &pushes[i]
-				post.PushIDs = append(post.PushIDs, push.ID)
-				post.Diffs = append(post.Diffs, *push.Diff)
-				post.FundedBy = append(post.FundedBy, push.FundedBy()...)
-			}
-			RemoveDuplicates(&post.Diffs)
-			RemoveDuplicates(&post.FundedBy)
-			ret <- post
+			ret <- BlogEntry{
+				Date:         date,
+				templateName: tmpl,
+			}.Render()
 		}
 		close(ret)
 	}()

@@ -46,6 +46,18 @@ img[src*="emoji-"] {
 	vertical-align: -.4em;
 }
 
+aside {
+	text-align: center;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	place-items: center;
+	grid-column-gap: 0.5em;
+}
+
+aside .icon-cell {
+	font-size: 150%;
+}
+
 .gallery {
 	text-align: center;
 	margin: 0 auto;
@@ -159,14 +171,9 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 /* ---------- */
 
-/* Estimate
-   -------- */
-#estimate h1,
-#estimate h2 {
-	text-align: center;
-}
-
-#estimate #cap {
+/* Cap
+   --- */
+#cap {
 	display: grid;
 	grid-template-columns: auto;
 	place-items: center;
@@ -175,23 +182,32 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	justify-content: center;
 }
 
-#estimate #cap * {
+#cap * {
+	margin: 0;
 	text-align: center;
 }
 
-#estimate #cap small {
+#cap small {
 	color: gray;
 }
 
-#estimate #cap .amount {
+#cap .amount {
 	font-size: 125%;
 }
 
-#estimate #cap meter {
+#cap meter {
 	width: 100%;
 }
+/* --- */
 
-#estimate section {
+/* Estimate
+   -------- */
+#estimate h1,
+#estimate h2 {
+	text-align: center;
+}
+
+section.overall, section.game, section.binary {
 	display: grid;
 	grid-template-columns: 4.5em 1fr auto;
 	align-items: center;
@@ -261,18 +277,6 @@ a:not(.customer)[href^="https://github.com/"]:before {
 
 .amount {
 	font-weight: bold;
-}
-
-#estimate aside {
-	text-align: center;
-	display: grid;
-	grid-template-columns: auto 1fr auto;
-	place-items: center;
-	grid-column-gap: 0.5em;
-}
-
-#estimate aside .icon-cell {
-	font-size: 150%;
 }
 
 #estimate .warning {

@@ -4,7 +4,7 @@
 {{range $game, $_ := $.Done.GameSum}}<section class="game">
 	{{template "estimate.html" $.ForGameTotal $game -}}
 	</section>
-	<section>{{range $comp := $.ForComponents $game}}
+	<section class="binary">{{range $comp := $.ForComponents $game}}
 		{{- template "estimate.html" .}}
 	{{end}}</section>
 {{- end -}}

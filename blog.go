@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var blogHP = newHostedPath("blog/", "/blog/")
+var blogHP = newHostedPath("blog/", "/blog/static/")
 
 // Blog contains the names of all blog post templates, sorted from newest to
 // oldest.

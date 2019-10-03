@@ -1,5 +1,9 @@
+{{$cap := DB_CapCurrent true}}
+
 {{- template "header.html" "order" -}}
 
+{{- template "cap.html" $cap -}}
+{{- if not $cap.Reached -}}
 	<h2>Order</h2>
 	<aside>
 		<span></span>
@@ -14,5 +18,6 @@
 		</div>
 		<span class="icon-cell">ℹ</span>
 	</aside>
+{{end}}
 
 {{- template "footer.html" -}}

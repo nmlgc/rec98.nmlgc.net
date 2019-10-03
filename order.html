@@ -1,0 +1,18 @@
+{{- template "header.html" "order" -}}
+
+	<h2>Order</h2>
+	<aside>
+		<span></span>
+		{{template "paypal_button.html" "LVUTSRDKDEVZ2"}}
+		<span></span>
+	</aside>
+	<aside>
+		<span class="icon-cell">ℹ</span>
+		<div>
+			<p>I will then check your order as soon as I see it, and confirm it via email.</p>
+			<p>Every {{HTML_PushPrice}} will be turned into <a href="/fundlog">one push with a 4-digit ID</a>. Orders below that amount are of course also welcome.</p>
+		</div>
+		<span class="icon-cell">ℹ</span>
+	</aside>
+
+{{- template "footer.html" -}}

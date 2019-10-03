@@ -132,6 +132,7 @@ type Cap struct {
 	Pushes      int
 	Cap         float64
 	Outstanding float64
+	Ctx         interface{}
 }
 
 // Reached returns whether the cap has been reached.
@@ -140,7 +141,7 @@ func (c Cap) Reached() bool {
 }
 
 // CapCurrent calculates the cap from the current point in time.
-func CapCurrent() (ret Cap) {
+func CapCurrent(ctx interface{}) (ret Cap) {
 	price := pushprices.Current()
 	ret.Now = time.Now()
 	ret.Then = ret.Now.Add(CapWindow)
@@ -168,5 +169,6 @@ func CapCurrent() (ret Cap) {
 			ret.FirstFree = &freetime[firstfree].Date.Time
 		}
 	}
+	ret.Ctx = ctx
 	return ret
 }

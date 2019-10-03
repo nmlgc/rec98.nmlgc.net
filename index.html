@@ -5,7 +5,7 @@
 
 {{- template "header.html" "estimate" -}}
 
-{{template "cap.html" DB_CapCurrent}}
+{{template "cap.html" DB_CapCurrent false}}
 
 <hr />
 
@@ -26,26 +26,6 @@
 	<span class="icon-cell">📉</span>
 	<p>Currently calculating with an average speed of <b>{{printf "%.0f" $spp.Instructions}} instructions</b> and <b>{{printf "%.0f" $spp.AbsoluteRefs}} absolute memory references</b> removed per push. <a href="/progress">Raw, per-commit metrics are here.</a></p>
 	<span class="icon-cell">📉</span>
-</aside>
-<hr />
-<aside id="contribute">
-	<span class="icon-cell">🚀</span>
-	<p>While I still have to finish an extensive FAQ page and properly integrate PayPal before this crowdfunding can launch officially, the system is <i>technically</i> ready to accept orders now. So, if you're familiar with the terms from the old Discord #storefront, you can order right now, if you want:</p>
-	<span class="icon-cell">🚀</span>
-</aside>
-<aside>
-	<span class="icon-cell">💰</span>
-	{{template "paypal_button.html" "LVUTSRDKDEVZ2"}}
-	<span class="icon-cell">💰</span>
-</aside>
-<aside>
-	<span class="icon-cell">ℹ</span>
-	<div>
-		<p>I will then check your order as soon as I see it, and confirm it via email.</p>
-		<p>Every {{HTML_PushPrice}} will be turned into <a href="/fundlog">one push with a 4-digit ID</a>. Orders below that amount are of course also welcome.</p>
-		<p>Depending on how much is bought before the official launch, I'll then deliver these pushes either now (if it ends up being a lot) or after the launch (if it ends up being just a bit).</p>
-	</div>
-	<span class="icon-cell">ℹ</span>
 </aside>
 <hr />
 

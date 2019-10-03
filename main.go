@@ -276,6 +276,7 @@ func main() {
 	r.Handle("/blog/{date}", pagesHandler("blog_single.html"))
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
+	r.Handle("/order", pagesHandler("order.html"))
 	r.Handle("/legal", pagesHandler("legal.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

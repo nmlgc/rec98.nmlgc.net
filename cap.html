@@ -16,5 +16,10 @@
 	{{- else -}}
 		Based on my free time in the 4 weeks from now to {{HTML_Date .Then}}.
 	{{- end -}}
-	</small>
+	</small>{{if not .Ctx}}{{if not .Reached}}
+	<p>
+		Interested in contributing? Make sure you've read the <a href="/faq">
+		FAQ page</a>, and place your order there.
+	</p>
+	{{end}}{{end}}
 </section>

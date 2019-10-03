@@ -280,6 +280,37 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 /* -------- */
 
+/* FAQ
+   --- */
+#faq section {
+	position: relative;
+	box-shadow: var(--blog-shadow);
+	padding: 1em 1em 1em 3em;
+	margin-bottom: 1.5em;
+}
+
+#faq section dl {
+	overflow-x: auto;
+	white-space: nowrap;
+	border-bottom: 0;
+}
+
+#faq section > a {
+	position: absolute;
+	left: 1.25em;
+	top: 2.25em;
+}
+
+#faq section pre {
+	border: var(--header-border);
+	box-shadow: var(--blog-shadow);
+	padding: 1em;
+	-moz-tab-size: 4;
+	tab-size: 4;
+	overflow-x: scroll;
+}
+/* --- */
+
 /* Crowdfunding log
    ---------------- */
 #fundlog ul {

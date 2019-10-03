@@ -270,6 +270,7 @@ func main() {
 	blogHP.RegisterFileServer(r)
 	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))
+	r.Handle("/faq", pagesHandler("faq.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle("/blog", pagesHandler("blog.html"))
 	r.Handle("/blog/{date}", pagesHandler("blog_single.html"))

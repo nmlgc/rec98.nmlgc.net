@@ -1,0 +1,550 @@
+{{- template "header.html" "faq"}}
+{{define "<q>"}}<section id="{{.}}"><a href="#{{.}}">🔗</a><h3>{{end}}
+{{define "</q>"}}</section>{{end}}
+
+<h2>FAQ</h2>
+{{template "<q>" "what"}}
+	What is this about?
+</h3>
+<p>
+	For now, the aim is to perfectly reconstruct the lost<sup>[citation
+	needed]</sup> source code of the first five games of the
+	<a href="https://en.wikipedia.org/wiki/Touhou_Project">Touhou Project</a>
+	series by <i>ZUN Soft</i> (now <i>Team Shanghai Alice</i>), which were
+	originally released exclusively for the NEC PC-9801 platform.
+</p><p>
+	The original games being:
+</p><dl>
+	<dt>TH01:</dt>
+	<dd>
+		<span lang="ja">東方靈異伝　～ </span>
+		The Highly Responsive to Prayers (1997)
+	</dd>
+	<dt>TH02:</dt>
+	<dd>
+		<span lang="ja">東方封魔録　～ </span>
+		the Story of Eastern Wonderland (1997)
+	</dd>
+	<dt>TH03:</dt>
+	<dd>
+		<span lang="ja">東方夢時空　～ </span>
+		Phantasmagoria of Dim.Dream (1997)
+	</dd>
+	<dt>TH04:</dt>
+	<dd>
+		<span lang="ja">東方幻想郷　～ </span>
+		Lotus Land Story (1998)
+	</dd>
+	<dt>TH05:</dt>
+	<dd>
+		<span lang="ja">東方怪綺談　～ </span>
+		Mystic Square (1998)
+	</dd>
+</dl><p>
+	Since we only have the binaries, we obviously can't know how ZUN named any
+	variables and functions, and which comments the original code was
+	surrounded with. <i>Perfect</i> therefore means that the binaries compiled
+	from the code in the <a href="https://github.com/nmlgc/ReC98">ReC98
+	repository</a> are <a href="https://github.com/nmlgc/mzdiff">
+	indistinguishable</a> from ZUN's original builds, making it impossible to
+	<i>disprove</i> that the original source <i>couldn't</i> have looked like
+	this. This property is maintained for every Git commit along the way.
+</p><p>
+	Aside from the preservation angle and the resulting deep insight into the
+	games' mechanics, the code can then serve as the foundation for any type
+	of mod, or any port to non-PC-98 platforms, developed by the community.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "ports"}}
+	The README mentions <i>your</i> grandiose plans about ports to other
+	systems though…
+</h3>
+<p>
+	I would <i>like</i> for that to be my goal, but crowdfunding something
+	that's <i>this</i> open-ended probably wouldn't go very well. Besides, it
+	requires a complete decompilation of at least one game first. So let's get
+	there first, I'd say – and who knows, maybe someone else will then already
+	waiting to take the decompiled source code and port it.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "who"}}Who are you?</h3>
+<p>
+	I created the <a href="https://github.com/thpatch/thcrap">Touhou Community
+	Reliant Automatic Patcher</a> and <a href="https://thpatch.net">Touhou
+	Patch Center</a> in 2012, and remained a core developer of both before
+	retiring in March 2019. Older Touhou fans might also remember me for
+	<i>Touhou Music Room</i> (2010/2011) and the <i>Touhou Vorbis
+	Compressor</i> (2011).
+</p><p>
+	Check my <a href="https://github.com/nmlgc">GitHub page</a> as well as the
+	<a href="/fundlog">crowdfunding log</a> here for more proof of my track
+	record.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "position-independence"}}
+	What is this "position independence" thing about?
+</h3>
+<p>
+	Position <i>dependence</i> means that memory references are expressed as
+	raw number constants, making it impossible to increase or decrease the
+	number of bytes in the non-header parts of an executable without breaking
+	references to the executable's own memory, due to global variables no
+	longer being where the game expects them to be.
+</p><p>
+	16-bit x86 code has to take
+	<a href="https://en.wikipedia.org/wiki/X86_memory_segmentation">
+	segmentation</a> into account for all its memory accesses. This means that
+	each actual address is built out of two 16-bit values, the <i>segment</i>
+	and the <i>offset</i>. With such a rather low range of values, the line
+	between actual memory offsets and numeric constants becomes blurred. Most
+	disassemblers I know of that target this architecture therefore only do a
+	very superficial attempt at identifying data references, and give up once
+	arrays are involved, just leaving a numeric constant in place of such a
+	reference. And for good reason: Doing this properly effectively requires
+	an emulator, running the game and performing control flow analysis.
+	Anything more trivial – <i>especially</i> anything parsing individual
+	lines of ASM – and you're bound to
+</p><ul>
+	<li>miss addresses that are <i>calculated</i> from other constants</li>
+	<li>mistake function pointers for data pointers</li>
+	<li>mistake pointers into special memory segments (graphics RAM, BIOS RAM,
+	etc.) for data pointers</li>
+	<li>or confuse <i>actual</i> numeric constants for memory addresses.
+</ul><p>
+	And even <i>with</i> an emulator, you're still faced with the fact that on
+	the low level of ASM and C,
+	<a href="https://www.youtube.com/watch?v=i2fhNVQPb5I&t=43s">the declared
+	size of an array is simply advisory anyway</a>. So what do you put,
+	especially when being confronted with out-of-bounds array access bugs in
+	the original game itself?
+</p><p>
+	So if you've chosen to deliver quality instead of delivering experimental
+	research, the best choice is to give up, don't pretend to be
+	position-independent in the first place, and treat <i>every</i> numeric
+	constant that falls within the range of any data segment as a possible
+	memory reference. Sure, this means that the <i>actual</i> number of memory
+	references are lower, and thus, the actual percentage of
+	position-independence is higher than the front page may suggest. But
+	<i>we can't tell</i>, and erring on the side of caution is, in my opinion,
+	better than pretending that the code is more position-independent than it
+	actually is, just because it ran through some sort of experimental tool.
+</p><p>
+	While position-dependent code is still a significant step up from modding
+	game binaries via hex-editing, it effectively still suffers from most of
+	the same constraints, despite looking like regular source code that you
+	can just arbitrarily edit and recompile. So while modding the game in all
+	sorts of ways is definitely <i>possible</i> right now, it's definitely
+	harder than it needs to be. Once a binary reaches 100% position
+	independence though, developing any sort of mod, in either C/C++ or ASM,
+	will become trivial.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "why"}}
+	Why crowdfunding?
+</h3>
+<p>
+	Personally, I gain nothing from this project – neither in the
+	fun/happiness domain, given that I don't particularly <i>like</i> Touhou
+	these days, nor in the professional/employment prospect domain. At this
+	rate, serving a weeb audience any longer with ever more elaborate projects
+	won't get me anywhere else in life that it already doesn't get me in after
+	having done it for so long. All things considered, most real-life IT
+	companies I talked to don't see these past Touhou-related projects as
+	anything particularly special. Lately, I've been getting the feeling that
+	I should have just written them in COBOL – now <i>that</i> would have
+	certainly given me the reaction from RL I was hoping for!
+</p><p>
+	That leaves crowdfunding as an ethical way to balance the fandom's
+	interest in this project with me getting old and slowly but surely wanting
+	to have more of a RL.
+</p><p>
+	Another advantage is that it's <i>you</i>, the patrons, who decide which
+	game to focus on. This is particularly relevant given that <i>I</i> don't
+	really care which game I end up covering – see above.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "automate"}}
+	Can't a machine automate all this work? It all seems very blue-collar and
+	mechanical.
+</h3>
+<p>
+	Maybe. While it would have been an option to collect lots of money for
+	developing an automated decompilation solution, that would have been a
+	huge risk, and my previous attempts at it failed spectacularly. In
+	contrast, selling small chunks of progress for an hourly wage leads to a
+	stream of tiny, but immediate results. It may take longer in the end, but
+	even partially reverse-engineered game code can be a tremendous help to
+	modders. Also, naming variables, contextualizing numeric constants, and the
+	resulting insights into the game mechanics, is something you simply can't
+	get out of an automated solution.
+</p><p>
+	Consider this piece of ASM:
+</p><pre>; Somewhere…
+	mov	byte_2CEC2, 40
+
+; Somewhere else…
+	cmp	byte_25351, 0
+	jz	@@return_from_function
+	; …
+	cmp	byte_2CEC2, 0
+	jz	@@down
+	cmp	byte_2CEC2, 32
+	jbe	@@return_from_function
+	mov	byte_2CEC2, 0
+	; …
+@@down:
+	dec	byte_25351
+</pre><p>
+	Now, I could simply decompile this into
+</p><pre>// Somewhere…
+	byte_2CEC2 = 40;
+
+// Somewhere else…
+	if(byte_25351 == 0) {
+		return;
+	}
+	; …
+	if(byte_2CEC2 != 0) {
+		if(byte_2CEC2 <= 32) {
+			return;
+		}
+		byte_2CEC2 = 0;
+	}
+	byte_25351--;
+</pre><p>
+	However, that doesn't really tell you anything that you couldn't already
+	tell from looking at the assembly. After manually reverse-engineering
+	the meaning of these variables, we learn that
+</p><ul>
+	<li><code>byte_2CEC2</code> is the <i>miss countdown</i> – set to 40 if
+	you collide with anything, playing an explosion animation while it's
+	nonzero, then decremented each frame, and actually removing then life once
+	it <i>reaches</i> zero</li>
+	<li>and that <code>byte_25351</code> is the number of bombs in stock.</li>
+</ul><p>
+	And lo and behold, we just proved the existence of an 8-frame deathbomb
+	window,
+	<a href="https://twitter.com/ReC98Project/status/1176592461155713026">
+	ending up with an insight that's immediately valuable to many fans</a>.
+	Finally, let's define some symbols:
+</p><pre>MISS_FRAMES = 32
+DEATHBOMB_WINDOW = 8
+
+; Somewhere…
+	mov	_miss_time, MISS_FRAMES + DEATHBOMB_WINDOW
+
+; Somewhere else…
+	cmp	_bombs, 0
+	jz	@@return_from_function
+	; …
+	cmp	_miss_time, 0
+	jz	@@down
+	cmp	_miss_time, MISS_FRAMES
+	jbe	@@return_from_function
+	mov	_miss_time, 0
+	; …
+@@down:
+	dec	_bombs
+</pre><p>
+	And suddenly, it becomes both obvious <i>and easily moddable</i> to
+	whoever reads the code, even while it's still assembly. <i>This is the
+	level I operate at.</i> Decompilation only becomes mere syntactic sugar
+	at this point.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "duration"}}
+	How long is this crowdfunding campaign going to run?
+</h3>
+<p>
+	Indefinitely – and that's the beauty of it. Whenever someone is
+	interested, they can insert a coin, and every {{HTML_PushPrice}} in the
+	backlog will then be turned into tangible progress.
+</p><p>
+	Effectively, this project will run for as long as the market deems it
+	valuable. Maybe we get enough to complete one game, maybe we won't. Maybe
+	there will be no interest whatsoever for a few months, and then a small
+	number of big transactions. Who knows.
+</p><p>
+	In a way, this is therefore closer to art commissions than it is to your
+	typical video game crowdfunding campaign.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "dosbox-x"}}
+	PC-98 emulation is getting better and better, DOSBox-X even has dynamic
+	recompilation now. Are source ports of a single game series even worth it?
+</h3>
+<p>
+	Again, you decide.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "uth05win"}}
+	Isn't <a href="http://m.newsmth.net/article/TouHou/single/11992">
+	uth05win</a> already what you wanted to achieve? We even have
+	<a href="https://github.com/Wintiger0222/uth05win">source code</a> for it.
+</h3>
+<p>
+	Initially, I thought the same, and had the impression that uth05win's
+	source code release would immediately obsolete ReC98.
+</p><p>
+	However, while uth05win did indeed legitimately reverse-engineer most of
+	TH05, the final port seems to have taken quite some liberties. I myself
+	wouldn't know – for me, uth05win is still a tremendous help in
+	reverse-engineering not only TH05, but also TH04 and, to a lesser extent,
+	even the  previous three games. Die-hard PC-98 Touhou fans, on the other
+	hand, tend to immediately dismiss it as <i>"not the real thing"</i>.
+	Which, ironically, led to ReC98's approach of a provably legit source code
+	reconstruction being appreciated <i>more</i>, not less, among this group
+	of people.
+</p><p>
+	Also, the obvious reason I don't restrict myself to just one game.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "identical-code"}}
+	Why do pushes that are geared towards one specific game also tend to come
+	with progress in other games? Aren't you wasting time there by not focusing
+	100% on what your patrons wanted you to do?
+</h3>
+<p>
+	If the same function appears in more than one game, more or less
+	unchanged, I'd only be wasting time re-familiarizing myself with all the
+	involved concepts months later. I think it makes more sense to immediately
+	cover identical functionality in all games. It's basically free progress
+	for everyone else.
+</p><p>
+	Then again, the more progress is made, the more infrequently this will
+	happen, as the amount of not yet reverse-engineered code shared between
+	the games approaches zero.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "refunds"}}
+	Do you have a refund policy?
+</h3>
+<p>
+	Yes! You can request refunds for every push I haven't started working on
+	yet. I <i>will</i> keep the money after having delivered a push though.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "tsa-takedown"}}
+	Can't Team Shanghai Alice take down this project and crowdfunding at any
+	time?
+</h3>
+<p>
+	While I can't promise that they <i>won't</i>, the same kind of source code
+	reconstruction has been done for the
+	<a href="https://github.com/pret/pokered#see-also">Generation I-III
+	Pokémon games</a>, <a href="https://github.com/n64decomp/sm64">Super Mario
+	64</a>, and <a href="https://github.com/diasurgical/devilution">Diablo</a>,
+	all of which still generate revenue for their right holders.
+</p><p>
+	Keep in mind that <i>the product is the code, in the form of new commits
+	in a Git repository</i>. Once again, I do <i>not</i> sell the promise of a
+	finished Windows/Linux/phone port of any of the games.
+</p><p>
+	Perform a <code>git clone</code> after I pushed the commits you bought,
+	and you now have a DRM-free digital copy of the progress you paid for.
+	Nothing I produce will ever be put behind a paywall. The only thing that
+	<i>is</i> behind a paywall is the time it takes to make it all happen.
+</p><p>
+	Also, consider this idea: Once the project is done, anyone can feel free
+	to burn the reconstructed source code on a CD, and hand it to ZUN during
+	some convention. Then, of course, ZUN has every right to commercially
+	exploit it – which would be fine by me, as I will have been paid my fair
+	share at that point.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "pull-requests"}}
+	Can I still help out with the reverse-engineering by contributing to the
+	ReC98 repository?
+</h3>
+<p>
+	Yes! As stated above, this is not about me making lots of profit. The
+	community will certainly thank you for driving the total estimate further
+	down.
+</p><p>
+	Although I'd really recommend you to <i>please</i> spend your time on a
+	different project, which will bring you further in life that anything
+	related to the main Touhou series ever will.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "cap-why"}}
+	Why a cap?
+</h3>
+<p>
+	The cap corresponds to the maximum time I can healthily allocate to this
+	project within the next 4 weeks. It is meant to
+</p><ul>
+	<li>protect all of <i>you</i> from throwing more money at me than I can
+	reasonably convert into progress, and to</li>
+	<li>ensure that at any point, I will be at most 4 weeks behind any
+	commissioned pushes. Therefore, it will also protects <i>me</i> from
+	burning out.</li>
+</ul>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "cap-too-low"}}
+	With the current rate of progress, and the cap being at the low level that
+	it is, the project is never going to finish!
+</h3>
+<p>
+	I do expect progress to speed up significantly at one point.
+</p><p>
+	… Well, OK, I've kept saying this for a while now, and as of 2019-10-02,
+	it hasn't happened yet. And that's exactly why it's up to you to pick a
+	priority that <i>you</i> care about, to make the most of this project.
+</p><p>
+	Aside from that, we'll just have to wait until I have more free time, I'm
+	afraid.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "slow-2018"}}
+	Some of the 2018 pushes were delivered months or even years after they were
+	paid…
+</h3>
+<p>
+	Back then, I not only didn't have a cap, but also vastly undersold myself,
+	while also offering crowdfunded features for thcrap in parallel. That's
+	why the latter are sometimes referred to in the old blog posts here. But
+	compare that to now:
+</p><ul>
+	<li>I've resigned from thcrap</li>
+	<li>The aforementioned cap is in place</li>
+	<li>The build system for this project is now pretty close to optimal,
+	providing quick turnaround times, minimizing frustration, and keeping me
+	nicely focused.</li>
+</ul><p>
+	However, if you <i>absolutely request</i> me to prioritize an element of a
+	game that requires a ton of not yet reverse-engineered knowledge to fully
+	grasp, and you <i>absolutely</i> don't accept your money going to anything
+	else, I <i>will</i> have to put that on the back burner. It will be made
+	clear in the backlog whenever that happens, though.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "policenauts"}}
+	I'd like to see PC-98 Policenauts (or any other DOS program compiled using
+	Borland/Turbo C++) decompiled. What's in it for me?
+</h3>
+<p>
+	The ReC98 repository includes
+	<a href="https://github.com/nmlgc/ReC98/blob/master/Research/Borland%20C%2B%2B%20decompilation.md">
+	a currently incomplete file with the ASM→C++ patterns, as well as
+	information about the limits of decompilability</a>. This file will be
+	continuously updated with new insights. So while you probably wouldn't
+	want to support this project until the very end, it might be worth
+	supporting ReC98 for just a bit – at least until it becomes obvious that I
+	completely figured out Turbo C++, and that other decompilation project
+	you wanted to see made significant progress.
+</p><p>
+	And who knows, maybe we <i>will</i> see a somewhat automated decompilation
+	solution come out of this.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "replays"}}
+	I want replays! What's in it for me?
+</h3>
+<p>
+	Make sure you know someone willing to implement it. Then, tell me that
+	replays are your goal when placing your order, and I'll keep you updated
+	once it's trivial to implement and you can stop supporting the project.
+	Shouldn't take all too long.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "translations"}}
+	I want translations into languages with non-ASCII characters! What's in it
+	for me?
+</h3>
+<p>
+	Unless you found someone who's <i>really</i> willing to dig deep into
+	PC-98 hardware details, you'd probably want to support, or wait for, the
+	entire completed decompilation of your game of choice, since you'd
+	probably first want a port to a modern system that supports Unicode and
+	fonts.
+</p><p>
+	Or, y'know, you can just always replace the font ROM of your PC-98
+	emulator of choice, because who cares about real hardware anyway, right?
+	In that case, it will take considerably less time. Still, make sure to
+	tell me that translations are your goal when placing your order.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "netplay"}}
+	I want TH03 netplay! What's in it for me?
+</h3>
+<p>
+	I'm not a low-level networking person, so who knows whether doing this
+	natively on PC-98 is actually as impractical as it sounds. Porting the
+	game to a modern OS with a network stack first (which, again, requires a
+	complete decompilation) will certainly be a lot more convenient to whoever
+	ends up trying their hand on it, though.
+</p>
+{{template "</q>"}}
+
+
+
+{{template "<q>" "ads"}}
+	Do you sell ad space on this site?
+</h3>
+<p>
+	Every contributor, no matter how much they paid, has the option to have
+	their name be turned into a link to a URL of their choice. So if you
+	consider that to be advertising, then yes. If you had more than that in
+	mind, hit me up, and we might make it happen. No JavaScript or remote
+	content, though!
+</p>
+{{template "</q>"}}
+
+{{- template "footer.html" -}}

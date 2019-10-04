@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"sort"
 	"time"
 )
@@ -126,13 +127,14 @@ func PushesDeliveredAt(datestring string) []Push {
 // Cap bundles all information about the current state of the backlog, with
 // regard to the crowdfunding cap.
 type Cap struct {
-	Now         time.Time
-	Then        time.Time
-	FirstFree   *time.Time
-	Pushes      int
-	Cap         float64
-	Outstanding float64
-	Ctx         interface{}
+	Now             time.Time
+	Then            time.Time
+	FirstFree       *time.Time
+	Pushes          int
+	Cap             float64
+	Outstanding     float64
+	FracOutstanding float64
+	Ctx             interface{}
 }
 
 // Reached returns whether the cap has been reached.
@@ -169,6 +171,7 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 			ret.FirstFree = &freetime[firstfree].Date.Time
 		}
 	}
+	ret.FracOutstanding = math.Min(ret.Outstanding/ret.Cap, 1.0) * 100.0
 	ret.Ctx = ctx
 	return ret
 }

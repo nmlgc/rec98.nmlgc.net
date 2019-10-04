@@ -195,8 +195,34 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	font-size: 125%;
 }
 
-#cap meter {
+#cap div.meter {
+	height: 100%;
 	width: 100%;
+	box-sizing: border-box;
+	background: linear-gradient(
+		#dddddd,
+		#eeeeee 20%,
+		#cccccc 45%,
+		#cccccc 55%,
+		#dddddd
+	);
+	text-align: left;
+}
+
+#cap div.meter * {
+	display: inline-block;
+	height: 100%;
+	margin: 0;
+}
+
+#cap div.meter .confirmed {
+	background: linear-gradient(
+		#aadd77,
+		#cceeaa 20%,
+		#77aa33 45%,
+		#77aa33 55%,
+		#aadd77
+	);
 }
 /* --- */
 

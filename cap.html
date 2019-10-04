@@ -5,7 +5,9 @@
 		out of
 		<span class="amount">{{HTML_Currency .Cap}}</span>
 	</p>
-	<meter value="{{.Outstanding}}" max="{{.Cap}}"></meter>
+	<div class="meter">
+		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div>
+	</div>
 	<small>
 	{{- if .Reached -}}
 		{{- if .FirstFree -}}

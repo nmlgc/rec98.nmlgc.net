@@ -361,8 +361,12 @@ func (p *pushTSV) toActualPush() *Push {
 
 // --------------------
 
+func tsvPath(table string) string {
+	return filepath.Join(dbPath, table+".tsv")
+}
+
 func loadTSV(slice interface{}, table string) {
-	f, err := os.Open(filepath.Join(dbPath, table+".tsv"))
+	f, err := os.Open(tsvPath(table))
 	// TODO: Unfortunately, this has to compile with Go 1.12 for the time
 	// being, so we can't use `errors.Is(err, os.ErrNotExist)` 🙁
 	if _, ok := err.(*os.PathError); ok {

@@ -173,6 +173,16 @@ a:not(.customer)[href^="https://github.com/"]:before {
 	margin-right: 0.175em;
 	content:"";
 }
+
+a:not(.customer)[href^="https://twitter.com/"]:before {
+	background-image: url('/static/twitter.svg');
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	margin-left: 0.175em;
+	margin-right: 0.175em;
+	content:"";
+}
 /* ---------- */
 
 /* Cap

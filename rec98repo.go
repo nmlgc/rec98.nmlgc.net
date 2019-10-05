@@ -292,13 +292,9 @@ func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 	for _, diff := range diffs {
 		top, bottom := diff.Range()
 		tp, err := REProgressAtCommit(top)
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
 		bp, err := REProgressAtCommit(bottom)
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
 
 		// Yup, one value for all games, despite uth05win...
 		diffInstructions := bp.Instructions.Total - tp.Instructions.Total

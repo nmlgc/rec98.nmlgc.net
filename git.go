@@ -31,9 +31,7 @@ func testShortLength(r *git.Repository, sl int, branches []plumbing.Hash) map[st
 	ret := make(map[string]plumbing.Hash)
 	for _, branch := range branches {
 		logIter, err := r.Log(&git.LogOptions{From: branch})
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
 		err = logIter.ForEach(func(c *object.Commit) error {
 			curFull := c.Hash
 			curShort := curFull.String()[:sl]
@@ -62,15 +60,13 @@ func NewRepository(url string) (ret Repository) {
 	// Collect all branches
 	var branches []plumbing.Hash
 	branchIter, err := r.Branches()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	if err = branchIter.ForEach(func(ref *plumbing.Reference) error {
-		branches = append(branches, ref.Hash())
-		return nil
-	}); err != nil {
-		log.Fatalln(err)
-	}
+	FatalIf(err)
+	FatalIf(
+		branchIter.ForEach(func(ref *plumbing.Reference) error {
+			branches = append(branches, ref.Hash())
+			return nil
+		}),
+	)
 
 	testlen := 0
 	for testlen < 40 && ret.ShortToLong == nil {

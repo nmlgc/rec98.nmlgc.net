@@ -17,6 +17,13 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
+// FatalIf removes the boilerplate for cases where errors are fatal.
+func FatalIf(err error) {
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
 // hostedPath stores the corresponding URL prefix for a local filesystem path.
 type hostedPath struct {
 	srv http.Handler
@@ -176,14 +183,10 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 // template.ParseGlob function), and returns a slice of the file names parsed.
 func pagesParseSubdirectory(dir string, glob string) (templates []string) {
 	matches, err := filepath.Glob(filepath.Join(dir, glob))
-	if err != nil {
-		log.Fatalln(err)
-	}
+	FatalIf(err)
 	for _, m := range matches {
 		buf, err := ioutil.ReadFile(m)
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
 		template.Must(pages.New(m).Parse(string(buf)))
 	}
 	return matches

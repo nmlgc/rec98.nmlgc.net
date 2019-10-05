@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"math"
 	"sort"
 	"time"
@@ -114,9 +113,7 @@ func DiffsForEstimate() (ret []DiffInfoWeighted) {
 // PushesDeliveredAt returns all pushes delivered at the given date.
 func PushesDeliveredAt(datestring string) []Push {
 	dp, err := time.Parse("2006-01-02", datestring)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	FatalIf(err)
 	aY, aM, aD := dp.Date()
 	return PushesWhere(func(p Push) bool {
 		pY, pM, pD := p.Delivered.Date()

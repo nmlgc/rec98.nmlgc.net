@@ -83,9 +83,7 @@ func (d *DiffInfo) UnmarshalCSV(url string) error {
 // d.
 func (d *DiffInfo) Range() (top, bottom *object.Commit) {
 	must := func(ret *object.Commit, err error) *object.Commit {
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
 		return ret
 	}
 
@@ -351,14 +349,12 @@ func (p *pushTSV) toActualPush() *Push {
 
 // --------------------
 
-func loadTSV(slice interface{}, table string) error {
+func loadTSV(slice interface{}, table string) {
 	f, err := os.Open(filepath.Join(dbPath, table+".tsv"))
-	if err != nil {
-		return err
-	}
+	FatalIf(err)
 	reader := csv.NewReader(f)
 	reader.Comma = '\t'
-	return gocsv.UnmarshalCSV(reader, slice)
+	FatalIf(gocsv.UnmarshalCSV(reader, slice))
 }
 
 func init() {
@@ -366,30 +362,14 @@ func init() {
 	var tsvPushes []*pushTSV
 
 	devLocation, err = time.LoadLocation(devLocationName)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	FatalIf(err)
 
-	err = loadTSV(&customers, "customers")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = loadTSV(&transactions, "transactions")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = loadTSV(&tsvPushes, "pushes")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = loadTSV(&pushprices, "pushprices")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = loadTSV(&freetime, "freetime")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	loadTSV(&customers, "customers")
+	loadTSV(&transactions, "transactions")
+	loadTSV(&tsvPushes, "pushes")
+	loadTSV(&pushprices, "pushprices")
+	loadTSV(&freetime, "freetime")
+
 	for i := range transactions {
 		transactions[i].Outstanding = transactions[i].Cents
 	}

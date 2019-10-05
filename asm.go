@@ -8,7 +8,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -83,9 +82,8 @@ type asmStats struct {
 func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 	maybeAddress := func(s string) bool {
 		addr, err := strconv.ParseInt(s, 16, 64)
-		if err != nil {
-			log.Fatalln(err)
-		}
+		FatalIf(err)
+
 		// Fix up negative numbers
 		if addr < 0 {
 			addr = 0x10000 + addr

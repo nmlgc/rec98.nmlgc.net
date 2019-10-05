@@ -343,6 +343,10 @@ func (e eIncomingInsertError) Error() string {
 func (i *tIncoming) Insert(new *Incoming) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
+	// No timestamp?
+	if new.Time == nil {
+		return eIncomingInsertError{}
+	}
 	for oldIn := range i.data {
 		// Duplicates?
 		if i.data[oldIn].PayPalID == new.PayPalID {

@@ -303,12 +303,12 @@ func (p tPushPrices) Current() (price float64) {
 }
 
 func (f tFreeTime) IndexBefore(t time.Time) int {
-	for i := range freetime {
-		if freetime[i].Date.After(t) {
+	for i := range f {
+		if f[i].Date.After(t) {
 			return i
 		}
 	}
-	return 0
+	return len(f)
 }
 
 func (i *tIncoming) Insert(new *Incoming) error {

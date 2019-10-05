@@ -259,11 +259,22 @@ type FreeTime struct {
 	Date LocalDateStamp
 }
 
+// Incoming represents an unprocessed order coming in from the client side.
+type Incoming struct {
+	PayPalID string
+	CustName string
+	CustURL  string
+	Metric   string
+	Goal     string
+	Cycle    string
+}
+
 type tCustomers []*Customer
 type tTransactions []*Transaction
 type tPushes []*Push
 type tPushPrices []*PushPrice
 type tFreeTime []*FreeTime
+type tIncoming []*Incoming
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
@@ -300,6 +311,7 @@ var transactions = tTransactions{}
 var pushes = tPushes{}
 var pushprices = tPushPrices{}
 var freetime = tFreeTime{}
+var incoming = tIncoming{}
 
 /// -------
 
@@ -374,6 +386,7 @@ func init() {
 	loadTSV(&tsvPushes, "pushes")
 	loadTSV(&pushprices, "pushprices")
 	loadTSV(&freetime, "freetime")
+	loadTSV(&incoming, "incoming")
 
 	for i := range transactions {
 		transactions[i].Outstanding = transactions[i].Cents

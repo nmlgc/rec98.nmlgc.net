@@ -553,9 +553,21 @@ DEATHBOMB_WINDOW = 8
 	Alright! I have understood what this project is about, and am convinced
 	that I want to support it. Take me to the order form!
 </h3>
-<p>
-	<a href="/order">Here you go!</a>
-</p>
+<form action="/order">
+	<input type="checkbox" id="consent" required>
+	<label for="consent">
+		I agree that
+		<ul>
+			<li>remote content from <code>paypal.com</code> is loaded</li>
+			<li>and that the data of my contribution will be processed,
+			stored, and made publicly available.</li>
+		</ul>
+		You will have the option to stay anonymous though.
+	</label>
+	<p>
+		<button>Order</button>
+	</p>
+</form>
 {{template "</q>"}}
 
 {{- template "footer.html" -}}

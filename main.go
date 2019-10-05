@@ -283,6 +283,7 @@ func main() {
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	if paypal_auth.Initialized() {
+		r.Handle("/api/transaction-incoming", transactionIncomingHandler)
 		r.Handle("/order", pagesHandler("order.html"))
 	}
 	r.Handle("/legal", pagesHandler("legal.html"))

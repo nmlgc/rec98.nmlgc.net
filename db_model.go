@@ -262,12 +262,16 @@ type FreeTime struct {
 
 // Incoming represents an unprocessed order coming in from the client side.
 type Incoming struct {
+	// Retrieved via the POST body
 	PayPalID string
 	CustName string
 	CustURL  string
 	Metric   string
 	Goal     string
 	Cycle    string
+	// Retrieved from PayPal
+	Cents int
+	Time  *time.Time
 }
 
 // PayPalAuth collects all data required for authenticating with PayPal.

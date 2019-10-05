@@ -17,6 +17,7 @@ function cycle() {
 
 function startTransaction() {
 	document.getElementById("error").hidden = true;
+	document.querySelector("html").classList.add("wait");
 }
 
 function thankyou() {
@@ -46,6 +47,7 @@ async function sendIncoming(orderID, amount) {
 			"I should have received your order though, and will confirm it " +
 			"as soon as I see it.";
 		error.hidden = false;
+		document.querySelector("html").classList.remove("wait");
 	} else {
 		thankyou();
 	}

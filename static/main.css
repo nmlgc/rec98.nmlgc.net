@@ -74,6 +74,10 @@ aside .icon-cell {
 	margin-right: 5%;
 }
 
+.wait {
+	cursor: wait;
+}
+
 /* Header
    ------ */
 body {

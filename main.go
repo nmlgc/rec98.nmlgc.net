@@ -176,6 +176,9 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Blog, safe
 	// Added later to avoid a initialization loop
 	"Blog_Posts": func() int { return 0 },
+
+	// PayPal, safe
+	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
 }).ParseGlob("*.html"))
 
 // pagesParseSubdirectory parses all files in `dir` that match glob into
@@ -285,6 +288,7 @@ func main() {
 	if paypal_auth.Initialized() {
 		r.Handle("/api/transaction-incoming", transactionIncomingHandler)
 		r.Handle("/order", pagesHandler("order.html"))
+		r.Handle("/thankyou", pagesHandler("thankyou.html"))
 	}
 	r.Handle("/legal", pagesHandler("legal.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))

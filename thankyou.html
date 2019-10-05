@@ -1,0 +1,11 @@
+{{$cap := DB_CapCurrent true}}
+
+{{- template "header.html" "order" -}}
+
+{{- template "cap.html" $cap -}}
+<h2>Thank you!</h2>
+<p>
+	I will check your order as soon as I see it, and confirm it via email.
+</p>
+
+{{- template "footer.html" -}}

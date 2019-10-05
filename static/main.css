@@ -435,7 +435,11 @@ td, th {
 
 /* Forms
    ----- */
-form.paypal {
+#order * {
+	text-align: center;
+}
+
+#order form {
 	border: var(--header-border);
 	min-width: 75%;
 	box-shadow: var(--blog-shadow);
@@ -447,9 +451,31 @@ form.paypal {
 	place-items: center;
 }
 
-form.paypal input:not([type="image"]),
-form.paypal select {
+#order form input[type="text"],
+#order form select {
+	font-size: 112.5%;
+	padding: 0.25em;
+	margin-bottom: 0.75em;
+}
+
+#order form input[type="number"] {
+	font-size: 175%;
+	background: inherit;
+	border: 0;
+	width: 5em;
+}
+
+#order form .amount {
+	font-size: 175%;
+}
+
+#order form input[type="text"],
+#order form select {
 	justify-self: stretch;
+}
+
+#error {
+	color: red;
 }
 /* ----- */
 

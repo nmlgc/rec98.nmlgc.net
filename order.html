@@ -4,19 +4,51 @@
 
 {{- template "cap.html" $cap -}}
 {{- if not $cap.Reached -}}
+	<script src="https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR">
+	</script>
+
 	<h2>Order</h2>
 	<aside>
 		<span></span>
-		{{template "paypal_button.html" "LVUTSRDKDEVZ2"}}
+		<form action="/thankyou" method="post">
+			<label>
+				Name (leave blank to stay anonymous)
+			</label>
+			<input type="text" id="cust-name">
+			<label>
+				URL (optional, will turn your name into a link)
+			</label>
+			<input type="text" id="cust-url">
+			<label>
+				This contribution should go towards…
+			</label>
+			<select id="metric">
+				<option>Reverse-engineering</option>
+				<option>Position independence</option>
+				<option>Improving the website</option>
+				<option>Something else?</option>
+			</select>
+			<label>
+				Any specific game or aspect?
+			</label>
+			<input type="text" id="goal">
+			<div>
+				<input id="amount" type="number" value="0.00">
+				<span class="amount">€</span>
+			</div>
+			<div id="paypal-button-container"></div>
+			<div id="error" hidden></div>
+		</form>
 		<span></span>
 	</aside>
+	<script src="/static/paypal.js"></script>
 	<aside>
-		<span class="icon-cell">ℹ</span>
+		<span class="icon-cell">❓</span>
 		<div>
-			<p>I will then check your order as soon as I see it, and confirm it via email.</p>
-			<p>Every {{HTML_PushPrice}} will be turned into <a href="/fundlog">one push with a 4-digit ID</a>. Orders below that amount are of course also welcome.</p>
+			Questions? Problems? Want to set up a monthly subscription instead?
+			<script>document.write(HTMLSupportMail());</script>.
 		</div>
-		<span class="icon-cell">ℹ</span>
+		<span class="icon-cell">❓</span>
 	</aside>
 {{end}}
 

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gocarina/gocsv"
@@ -274,7 +275,11 @@ type tTransactions []*Transaction
 type tPushes []*Push
 type tPushPrices []*PushPrice
 type tFreeTime []*FreeTime
-type tIncoming []*Incoming
+
+type tIncoming struct {
+	data  []*Incoming
+	mutex sync.Mutex
+}
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id-1]
@@ -304,6 +309,13 @@ func (f tFreeTime) IndexBefore(t time.Time) int {
 		}
 	}
 	return 0
+}
+
+func (i *tIncoming) Insert(new *Incoming) error {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
+	i.data = append(i.data, new)
+	return saveTSV(i.data, "incoming")
 }
 
 var customers = tCustomers{}
@@ -378,6 +390,27 @@ func loadTSV(slice interface{}, table string) {
 	FatalIf(gocsv.UnmarshalCSV(reader, slice))
 }
 
+func saveTSV(slice interface{}, table string) error {
+	fnRegular := tsvPath(table)
+	fnNew := fmt.Sprintf("%s-%v.tsv", fnRegular, time.Now().UnixNano())
+
+	f, err := os.Create(fnNew)
+	if err != nil {
+		return err
+	}
+	writer := csv.NewWriter(f)
+	writer.Comma = '\t'
+	err = gocsv.MarshalCSV(slice, gocsv.NewSafeCSVWriter(writer))
+	if err != nil {
+		return err
+	}
+	err = f.Close()
+	if err != nil {
+		return err
+	}
+	return os.Rename(fnNew, fnRegular)
+}
+
 func init() {
 	var err error
 	var tsvPushes []*pushTSV
@@ -390,7 +423,7 @@ func init() {
 	loadTSV(&tsvPushes, "pushes")
 	loadTSV(&pushprices, "pushprices")
 	loadTSV(&freetime, "freetime")
-	loadTSV(&incoming, "incoming")
+	loadTSV(&incoming.data, "incoming")
 
 	for i := range transactions {
 		transactions[i].Outstanding = transactions[i].Cents

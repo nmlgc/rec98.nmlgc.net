@@ -224,6 +224,8 @@ a:not(.customer)[href^="https://github.com/"]:before {
 		#aadd77
 	);
 }
+
+#cap span.confirmed { color: green; }
 /* --- */
 
 /* Estimate

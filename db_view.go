@@ -130,7 +130,9 @@ type Cap struct {
 	Pushes          int
 	Cap             float64
 	Outstanding     float64
+	Incoming        float64
 	FracOutstanding float64
+	FracIncoming    float64
 	Ctx             interface{}
 }
 
@@ -162,13 +164,20 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 		}
 	}
 
-	if ret.Outstanding >= ret.Cap {
-		firstfree := start + int(ret.Outstanding/price)
+	ret.Incoming = float64(incoming.Total())
+	sum := ret.Outstanding + ret.Incoming
+	if sum >= ret.Cap {
+		firstfree := start + int(sum/price)
 		if firstfree < len(freetime) {
 			ret.FirstFree = &freetime[firstfree].Date.Time
 		}
 	}
+
 	ret.FracOutstanding = math.Min(ret.Outstanding/ret.Cap, 1.0) * 100.0
+	ret.FracIncoming = math.Min((ret.Incoming/ret.Cap), 1.0) * 100.0
+	if (ret.FracOutstanding + ret.FracIncoming) > 100.0 {
+		ret.FracIncoming = 100.0 - ret.FracOutstanding
+	}
 	ret.Ctx = ctx
 	return ret
 }

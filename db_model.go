@@ -327,6 +327,13 @@ func (f tFreeTime) IndexBefore(t time.Time) int {
 	return len(f)
 }
 
+func (i *tIncoming) Total() (cents int) {
+	for _, in := range i.data {
+		cents += in.Cents
+	}
+	return
+}
+
 func (i *tIncoming) Insert(new *Incoming) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()

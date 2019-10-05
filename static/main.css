@@ -226,6 +226,18 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 
 #cap span.confirmed { color: green; }
+
+#cap div.meter .incoming {
+    background: linear-gradient(
+		#ffc7c7,
+		#ffcccc 20%,
+		#dd4444 45%,
+		#dd4444 55%,
+		#ffc7c7
+	);
+}
+
+#cap span.incoming { color: red; }
 /* --- */
 
 /* Estimate

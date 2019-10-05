@@ -2,11 +2,17 @@
 	<p>
 		<small>Currently outstanding workload / cap:</small>
 		<span class="amount confirmed">{{HTML_Currency .Outstanding}}</span>
+		{{if .Incoming}}<small>
+			+ <span class="amount incoming">
+				{{HTML_Currency .Incoming}} unconfirmed
+			</span>
+		</small>{{end}}
 		out of
 		<span class="amount">{{HTML_Currency .Cap}}</span>
 	</p>
 	<div class="meter">
-		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div>
+		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div><!--
+		--><div class="incoming" style="width: {{.FracIncoming}}%;"></div>
 	</div>
 	<small>
 	{{- if .Reached -}}

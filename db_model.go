@@ -270,6 +270,18 @@ type Incoming struct {
 	Cycle    string
 }
 
+// PayPalAuth collects all data required for authenticating with PayPal.
+type PayPalAuth struct {
+	APIBase  string
+	ClientID string
+	Secret   string
+}
+
+// Initialized returns whether we have PayPal data.
+func (p PayPalAuth) Initialized() bool {
+	return p.APIBase != ""
+}
+
 type tCustomers []*Customer
 type tTransactions []*Transaction
 type tPushes []*Push
@@ -324,6 +336,7 @@ var pushes = tPushes{}
 var pushprices = tPushPrices{}
 var freetime = tFreeTime{}
 var incoming = tIncoming{}
+var paypal_auth = PayPalAuth{}
 
 /// -------
 
@@ -414,6 +427,7 @@ func saveTSV(slice interface{}, table string) error {
 func init() {
 	var err error
 	var tsvPushes []*pushTSV
+	var paypalAuths []*PayPalAuth
 
 	devLocation, err = time.LoadLocation(devLocationName)
 	FatalIf(err)
@@ -424,11 +438,18 @@ func init() {
 	loadTSV(&pushprices, "pushprices")
 	loadTSV(&freetime, "freetime")
 	loadTSV(&incoming.data, "incoming")
+	loadTSV(&paypalAuths, "paypal_auth")
 
 	for i := range transactions {
 		transactions[i].Outstanding = transactions[i].Cents
 	}
 	for _, p := range tsvPushes {
 		pushes = append(pushes, p.toActualPush())
+	}
+	if len(paypalAuths) > 0 {
+		paypal_auth = *paypalAuths[0]
+		log.Println("Using PayPal auth", paypal_auth)
+	} else {
+		log.Println("paypal_auth table is empty, disabling integration")
 	}
 }

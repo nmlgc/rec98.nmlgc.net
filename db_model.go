@@ -351,6 +351,11 @@ func (p *pushTSV) toActualPush() *Push {
 
 func loadTSV(slice interface{}, table string) {
 	f, err := os.Open(filepath.Join(dbPath, table+".tsv"))
+	// TODO: Unfortunately, this has to compile with Go 1.12 for the time
+	// being, so we can't use `errors.Is(err, os.ErrNotExist)` 🙁
+	if _, ok := err.(*os.PathError); ok {
+		return
+	}
 	FatalIf(err)
 	reader := csv.NewReader(f)
 	reader.Comma = '\t'

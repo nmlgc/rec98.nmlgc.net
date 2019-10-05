@@ -87,7 +87,7 @@ function onCycle() {
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 2);
 		}
-		amount.min = 0.01;
+		amount.min = 1.00;
 		amount.step = 0.01;
 	} else {
 	}

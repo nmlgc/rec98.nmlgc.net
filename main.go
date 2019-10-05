@@ -197,6 +197,11 @@ func pagesExecute(wr io.Writer, name string, data interface{}) {
 	}
 }
 
+func respondWithError(wr http.ResponseWriter, err error) {
+	wr.WriteHeader(500)
+	fmt.Fprintln(wr, err)
+}
+
 // pagesHandler returns a handler that executes the given template of [pages],
 // with a map of the request variables as the value of dot.
 func pagesHandler(template string) http.Handler {
@@ -207,9 +212,7 @@ func pagesHandler(template string) http.Handler {
 
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
 		if err := tmpl.Execute(wr, mux.Vars(req)); err != nil {
-			wr.WriteHeader(500)
-			fmt.Fprintln(wr, err)
-			return
+			respondWithError(wr, err)
 		}
 	})
 }

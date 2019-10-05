@@ -334,9 +334,21 @@ func (i *tIncoming) Total() (cents int) {
 	return
 }
 
+type eIncomingInsertError struct{}
+
+func (e eIncomingInsertError) Error() string {
+	return "malformed transaction"
+}
+
 func (i *tIncoming) Insert(new *Incoming) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
+	for oldIn := range i.data {
+		// Duplicates?
+		if i.data[oldIn].PayPalID == new.PayPalID {
+			return eIncomingInsertError{}
+		}
+	}
 	i.data = append(i.data, new)
 	return saveTSV(i.data, "incoming")
 }

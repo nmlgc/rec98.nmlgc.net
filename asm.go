@@ -52,9 +52,6 @@ var rxCodeSegment = regexp.MustCompile(
 var rxDataSegment = regexp.MustCompile(
 	`(?i)^(?:.+?\s+segment.+'DATA'|\.data\??$)`,
 )
-var rxRegisters = regexp.MustCompile(
-	`(?i)^((e?(ax|bx|cx|dx|sp|bp|si|di))|((a|b|c|d)(h|l))|((c|d|e|f|g|s)s))(?:\s+|\z)`,
-)
 
 var kwRegisters = keywords{
 	"eax", "ebx", "ecx", "edx", "esp", "ebp", "esi", "edi",

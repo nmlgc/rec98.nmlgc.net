@@ -26,8 +26,8 @@ func (k keywords) match(s string) bool {
 
 var rxLabel = regexp.MustCompile(`^\s*[@\w]+:`)
 
-// These come first in a file, are separated by whitespace, and may be
-// followed by an agument.
+// These come first in a line, are separated by whitespace, and may be
+// followed by an argument.
 var kwIgnoredInstructions = keywords{
 	"nop", "include", "public", "extern", "assume", "end",
 }

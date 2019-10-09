@@ -55,12 +55,12 @@ func (hp hostedPath) RegisterFileServer(r *mux.Router) {
 
 var staticHP = newHostedPath("static/", "/static/")
 
-/// HTML templates
+/// HTML templates.
+// Need to be functions that return template.HTML rather than separate types
+// with a custom String() function because html/template assumes all `string`s
+// to be plaintext in need of HTML escaping.
 /// --------------
 
-// Needs to be a function rather than a separate type with a custom String()
-// function because that one always has to return a `string`, not a
-// `template.HTML`.
 func htmlFormattedTime(t time.Time, format string) template.HTML {
 	utctime := t.UTC()
 	str := utctime.Format(format)

@@ -20,7 +20,7 @@ type gameComponent struct {
 	binary string
 	files  []string
 	// Byte range occupied by the data and BSS segments of the main game code,
-	// relative to the DS value used in  the source. Meaning: Large number
+	// relative to the DS value used in the source. Meaning: Large number
 	// after the code segment for tiny/small/compact models (where CS == DS),
 	// small value for medium/large models (where DS is its own segment).
 	dataRange ByteRange

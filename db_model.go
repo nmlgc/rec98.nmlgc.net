@@ -147,7 +147,7 @@ func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 // CustomerID represents a consecutively numbered, 1-based customer ID.
 type CustomerID int
 
-// PushID represents a consecutively numbered, 1-based customer ID.
+// PushID represents a consecutively numbered, 1-based push ID.
 type PushID int
 
 const pushIDFormat = "P%04d"
@@ -229,7 +229,7 @@ type Push struct {
 	IncludeInEstimate bool
 }
 
-// FundedBy returns all customers that were involved in funding this push
+// FundedBy returns all customers that were involved in funding this push.
 func (p Push) FundedBy() (ret []CustomerID) {
 	for _, t := range p.Transactions {
 		ret = append(ret, t.Customer)
@@ -281,7 +281,7 @@ type PayPalAuth struct {
 	Secret   string
 }
 
-// Initialized returns whether we have PayPal data.
+// Initialized returns whether we have PayPal credentials.
 func (p PayPalAuth) Initialized() bool {
 	return p.APIBase != ""
 }

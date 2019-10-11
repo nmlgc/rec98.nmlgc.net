@@ -5,10 +5,25 @@ import (
 	"html/template"
 	"log"
 	"math"
+	"strings"
 
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
+
+type eInvalidGame struct{}
+
+func (e eInvalidGame) Error() string {
+	return "invalid game"
+}
+
+// GameAbbrev converts a game number into an abbreviated string.
+func GameAbbrev(gameNum0Based int) (string, error) {
+	if gameNum0Based < 0 || gameNum0Based > 4 {
+		return "", eInvalidGame{}
+	}
+	return fmt.Sprintf("TH%02d", gameNum0Based+1), nil
+}
 
 // ByteRange defines a range of bytes by its start and end address.
 type ByteRange struct {
@@ -391,13 +406,17 @@ func (m REMetricEstimate) ForAll() REEstimate {
 }
 
 // ForGameTotal returns the estimate line for completing a single game.
-func (m REMetricEstimate) ForGameTotal(game int) REEstimate {
-	gameStr := fmt.Sprintf("%02d", game+1)
-	return REEstimate{
-		Title: HTMLEmoji("th"+gameStr) + "&nbsp;TH" + template.HTML(gameStr),
+func (m REMetricEstimate) ForGameTotal(game int) (*REEstimate, error) {
+	gameStr, err := GameAbbrev(game)
+	if err != nil {
+		return nil, err
+	}
+	icon := HTMLEmoji(strings.ToLower(gameStr))
+	return &REEstimate{
+		Title: icon + "&nbsp;" + template.HTML(gameStr),
 		Done:  m.Done.GameSum[game],
 		Money: m.Money.GameSum[game],
-	}
+	}, nil
 }
 
 // ForComponents returns estimate lines for all components of the given game.

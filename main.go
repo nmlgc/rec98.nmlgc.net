@@ -265,6 +265,18 @@ func main() {
 	})
 	// -------------------------------------------------------
 
+	// Badge data
+	// ----------
+	masterTree, err := master.Tree()
+	FatalIf(err)
+
+	badger := Badger{
+		Done:     REProgressAtTree(masterTree).Pct(baselineFunc()),
+		Cap:      CapCurrent(nil),
+		Fallback: pagesHandler("badges.html"),
+	}
+	// ----------
+
 	pages.Funcs(map[string]interface{}{
 		"Blog_Posts":   Posts,
 		"Blog_GetPost": GetPost,
@@ -290,6 +302,9 @@ func main() {
 		r.Handle("/order", pagesHandler("order.html"))
 		r.Handle("/thankyou", pagesHandler("thankyou.html"))
 	}
+	r.Handle("/badges", badger.Fallback)
+	r.Handle("/badge/{type}", badger)
+	r.Handle("/badge/{type}/{game}", badger)
 	r.Handle("/legal", pagesHandler("legal.html"))
 	log.Fatal(http.ListenAndServe(":8098", r))
 }

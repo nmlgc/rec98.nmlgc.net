@@ -1,0 +1,30 @@
+{{- template "header.html" "badges" -}}
+<!-- Inline styles because this is supposed to be a ready-made example for
+     Markdown integration. -->
+<h2>Badges</h2>
+<p>
+	<img src="/badge/cap" />
+</p>
+<div style=
+	"display: grid;
+	grid-template-columns: repeat(7, max-content);
+	grid-gap: 0.25em;
+	align-items: center;
+">
+	<span style="text-align: right;">Reverse-engineered:&nbsp;</span>
+	<img src="/badge/re" />
+	<img src="/badge/re/1" />
+	<img src="/badge/re/2" />
+	<img src="/badge/re/3" />
+	<img src="/badge/re/4" />
+	<img src="/badge/re/5" />
+	<span style="text-align: right;">Position&nbsp;independence:&nbsp;</span>
+	<img src="/badge/pi" />
+	<img src="/badge/pi/1" />
+	<img src="/badge/pi/2" />
+	<img src="/badge/pi/3" />
+	<img src="/badge/pi/4" />
+	<img src="/badge/pi/5" />
+</div>
+
+{{template "footer.html"}}

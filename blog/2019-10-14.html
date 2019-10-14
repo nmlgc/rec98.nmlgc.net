@@ -1,0 +1,39 @@
+<p>
+	And just in time for {{DB_CustomerByID 5}}'s last outstanding pushes, the
+	TH05 shot type control functions made the speedup happen!
+</p><ul>
+	<li>
+		TH05 as a whole is now 20% reverse-engineered, and 50% position
+		independent,
+	</li><li>
+		TH05's <code>MAIN.EXE</code> is now even below TH02's in terms of not
+		yet RE'd instructions,
+	</li><li>
+		and all price estimates have now fallen significantly.
+	</li>
+</ul><p>
+	It would have been <i>really</i> nice to also include Reimu's shot
+	control functions in this last push, but figuring out this entire system,
+	with its weird bitflags and <code>switch</code> statement
+	micro-optimizations, was once again taking way longer than it should
+	have. Especially with my new-found insistence on turning this obvious
+	copy-pasta into something somewhat readable and terse…
+</p><p>
+	But with such a rather tabular visual structure, things should now be
+	moddable in hopefully easily consistent way. Of course, since we're
+	<i>only</i> at 54% position independence for <code>MAIN.EXE</code>,
+	this isn't possible yet <a href="/faq#position-independence">without
+	crashing the game</a>, but modifiying damage would already work.
+</p><p>
+	Despite my earlier claims of ZUN only having used C++ in TH01, as it's the
+	only game using <code>new</code> and <code>delete</code>,
+	<a href="https://github.com/nmlgc/ReC98/blob/master/Research/Borland%20C%2B%2B%20decompilation.md">
+	it's now pretty much confirmed that ZUN used it for all games, as inlined
+	functions (and by extension, C++ class methods) are the only way to get
+	certain instructions out of the Turbo C++ code generator</a>. Also, I've
+	kept my promise and started <i>really</i> filling that decompilation
+	pattern file.
+</p><p>
+	And now, with the reverse-engineering backlog finally being cleared out,
+	we wait for the next orders, and the direction they might focus on…
+</p>

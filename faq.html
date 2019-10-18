@@ -90,6 +90,42 @@
 
 
 
+{{template "<q>" "three"}}
+	What's the split between <code>OP</code>, <code>MAIN</code> and
+	<code>MAINE</code>? What things are they responsible for? How do they
+	interact with each other?
+</h3>
+<ul><li>
+	<code>OP.EXE</code> contains the game's main menu and all other menus
+	reachable from there. In TH04 and TH05, it also contains the <i>ZUN
+	Soft</i> animation and the initial sound configuration menu. As a modder,
+	you'd care about this file if you want to add anything involving new
+	menus, like practice modes or a replay selection.
+</li><li>
+	As soon as you start the game, you're in <code>MAIN.EXE</code>
+	(<code>REIIDEN.EXE</code> for TH01). As the biggest executable, it handles
+	everything happening within a stage. Most notably, boss behavior – unlike
+	the Windows games, where this is stored in the separate
+	<a href="https://en.touhouwiki.net/wiki/User:Mddass/Touhou_File_Format_Specification/ECL">
+	ECL script files, found in the main <code>.dat</code> archive</a>.
+</li><li>
+	<code>MAINE.EXE</code> (<code>FUUIN.EXE</code> for TH01,
+	<code>MAINL.EXE</code> for TH03) then contains code for the ending
+	cutscenes, the staff roll, and anything after that. In TH03, it also
+	contains the stage start and end screens with the character pictures, as
+	well as the cutscenes before Stage 8 and 9.
+</li></ul><p>
+	Since only one executable can be active at any given time, there has to be
+	some way of sharing data between them. This is done using a resident
+	<code>"Config"</code> structure, kept at the top of conventional DOS RAM.
+	Currently, we're reverse-engineered the contents of this structure for
+	<a href="https://github.com/nmlgc/ReC98/blob/e0d90dbdc39941d775d5b38cbef33fd56522d846/th01/th01.h#L43">TH01</a>
+	and <a href="https://github.com/nmlgc/ReC98/blob/aa56a7cb18881fbc602c0324b727c1578cac825e/th02/th02.h#L224">TH02</a>.
+</p>
+{{template "</q>"}}
+
+
+
 {{template "<q>" "position-independence"}}
 	What is this "position independence" thing about?
 </h3>

@@ -28,7 +28,7 @@ type eInvalidAmount struct {
 }
 
 func (e eInvalidAmount) Error() string {
-	return fmt.Sprintf("invalid purchase unit amount: %s", e.amount)
+	return fmt.Sprintf("invalid purchase unit amount: %v", e.amount)
 }
 
 func parseAmount(amount paypal.PurchaseUnitAmount) (cents int, err error) {

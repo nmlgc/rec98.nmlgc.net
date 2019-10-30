@@ -53,16 +53,22 @@ async function sendIncoming(orderID, amount) {
 	}
 }
 
+let params_shared = {
+	application_context: {
+		shipping_preference: 'NO_SHIPPING'
+	}
+};
+
 let order = {
 	createOrder: function(data, actions) {
 		startTransaction();
-		return actions.order.create({
+		return actions.order.create(Object.assign({
 			purchase_units: [{
 				amount: {
 					value: document.getElementById("amount").value
 				}
 			}]
-		});
+		}, params_shared));
 	},
 	onApprove: async function(data, actions) {
 		await actions.order.capture();

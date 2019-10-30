@@ -32,7 +32,19 @@
 				Any specific game or aspect?
 			</label>
 			<input type="text" id="goal">
+			<label>
+				This is a…
+			</label>
 			<div>
+				<input type="radio" id="onetime" onChange="onCycle()" name="cycle" value="onetime" checked>
+				<label for="onetime">… one-time contribution</label>
+			</div>
+			<div>
+				<input type="radio" id="monthly" onChange="onCycle()" name="cycle" value="monthly">
+				<label for="monthly">… monthly contribution</label>
+			</div>
+			<div>
+				of
 				<input id="amount" type="number" max="{{$cap.FreeEuros}}">
 				<span class="amount">€</span>
 			</div>
@@ -45,7 +57,7 @@
 	<aside>
 		<span class="icon-cell">❓</span>
 		<div>
-			Questions? Problems? Want to set up a monthly subscription instead?
+			Questions? Problems?
 			<script>document.write(HTMLSupportMail());</script>.
 		</div>
 		<span class="icon-cell">❓</span>

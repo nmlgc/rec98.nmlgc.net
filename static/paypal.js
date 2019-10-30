@@ -8,7 +8,7 @@ function HTMLSupportMail() {
 }
 
 function isOneTime() {
-	return true;
+	return document.getElementById("onetime").checked;
 }
 
 function cycle() {
@@ -59,6 +59,29 @@ let params_shared = {
 	}
 };
 
+let subscription = {
+	createSubscription: function(data, actions) {
+		startTransaction();
+		let p = {
+			purchase_units: [{
+				amount: {
+					value: document.getElementById("amount").value
+				}
+			}]
+		};
+		return actions.subscription.create(Object.assign({
+			'plan_id': 'P-9AN20019EU9300502LW47CUI',
+			'quantity': document.getElementById("amount").value
+		}, params_shared));
+	},
+	onApprove: async function(data, actions) {
+		// For some reason, PayPal's /v2/checkout/orders/ API doesn't return
+		// the subscription amount, so for now, let's just send it ourselves…
+		// At least the server bails out if the order ID doesn't exist, so… 🤷
+		await sendIncoming(data.orderID, document.getElementById("amount").value);
+	}
+};
+
 let order = {
 	createOrder: function(data, actions) {
 		startTransaction();
@@ -98,6 +121,12 @@ function onCycle() {
 		amount.min = 1.00;
 		amount.step = 0.01;
 	} else {
+		paypal.Buttons(subscription).render(button_selector);
+		amount.onchange = function() {
+			amount.value = formatNumber(amount, 0);
+		}
+		amount.min = 1;
+		amount.step = 1;
 	}
 	amount.onchange();
 }

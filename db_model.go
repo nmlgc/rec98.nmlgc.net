@@ -298,7 +298,7 @@ type tIncoming struct {
 }
 
 func (c tCustomers) ByID(id CustomerID) Customer {
-	return *c[id-1]
+	return *c[id]
 }
 
 func (t tTransactions) ByID(id TransactionID) *Transaction {

@@ -6,6 +6,9 @@
 <h2>Thank you!</h2>
 <p>
 	I will check your order as soon as I see it, and confirm it via email.
-</p>
+</p>{{with .PostFormValue "cycle"}}{{if ne . "onetime"}}<p>
+	You can cancel your subscription at any time through PayPal's web
+	interface.
+</p>{{end}}{{end}}
 
 {{- template "footer.html" -}}

@@ -1,4 +1,4 @@
-{{$post := Blog_GetPost .date -}}
+{{$post := Blog_GetPost .Vars.date -}}
 
 {{template "header.html" -}}
 <h2><a href="/blog#{{.date}}">⮜ Blog</a></h2>

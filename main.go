@@ -208,6 +208,18 @@ func respondWithError(wr http.ResponseWriter, err error) {
 	fmt.Fprintln(wr, err)
 }
 
+// MuxedRequest wraps a http.Request together with the request vars from
+// gorilla/mux.
+type MuxedRequest struct {
+	*http.Request
+	Vars map[string]string
+}
+
+// NewMuxedRequest wraps req into a MuxedRequest.
+func NewMuxedRequest(req *http.Request) MuxedRequest {
+	return MuxedRequest{req, mux.Vars(req)}
+}
+
 // pagesHandler returns a handler that executes the given template of [pages],
 // with a map of the request variables as the value of dot.
 func pagesHandler(template string) http.Handler {
@@ -217,7 +229,7 @@ func pagesHandler(template string) http.Handler {
 	}
 
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-		if err := tmpl.Execute(wr, mux.Vars(req)); err != nil {
+		if err := tmpl.Execute(wr, NewMuxedRequest(req)); err != nil {
 			respondWithError(wr, err)
 		}
 	})

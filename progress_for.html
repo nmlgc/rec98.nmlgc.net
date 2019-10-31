@@ -1,12 +1,13 @@
-{{$commit := git_getCommit .rev -}}
+{{$rev := .Vars.rev}}
+{{$commit := git_getCommit $rev -}}
 {{$ci := git_makeCommitInfo $commit -}}
 {{$progress := ReC98_REProgressAtTree $commit.Tree -}}
 {{$pct := $progress.Pct ReC98_REProgressBaseline -}}
-{{$notBaseline := ne .rev ReC98_REBaselineRev -}}
+{{$notBaseline := ne $rev ReC98_REBaselineRev -}}
 
 {{template "header.html"}}
 <h2><a href="/progress">⮜ Per-commit progress metrics</a></h2>
-<h3>{{HTML_Time $ci.Time}} – {{$ci.Desc}} ({{git_CommitLink .rev}})</h3>
+<h3>{{HTML_Time $ci.Time}} – {{$ci.Desc}} ({{git_CommitLink $rev}})</h3>
 
 <div class="progress-grid">
 	<figure class="progress">

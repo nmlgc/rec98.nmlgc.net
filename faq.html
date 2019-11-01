@@ -8,9 +8,9 @@
 </h3>
 <p>
 	For now, the aim is to perfectly reconstruct the lost<sup>[citation
-	needed]</sup> source code of the first five games of the
+	needed]</sup> source code of the first five
 	<a href="https://en.wikipedia.org/wiki/Touhou_Project">Touhou Project</a>
-	series by <i>ZUN Soft</i> (now <i>Team Shanghai Alice</i>), which were
+	games by <i>ZUN Soft</i> (now <i>Team Shanghai Alice</i>), which were
 	originally released exclusively for the NEC PC-9801 platform.
 </p><p>
 	The original games being:
@@ -47,7 +47,7 @@
 	from the code in the <a href="https://github.com/nmlgc/ReC98">ReC98
 	repository</a> are <a href="https://github.com/nmlgc/mzdiff">
 	indistinguishable</a> from ZUN's original builds, making it impossible to
-	<i>disprove</i> that the original source <i>couldn't</i> have looked like
+	<i>disprove</i> that the original code <i>couldn't</i> have looked like
 	this. This property is maintained for every Git commit along the way.
 </p><p>
 	Aside from the preservation angle and the resulting deep insight into the
@@ -66,8 +66,8 @@
 	I would <i>like</i> for that to be my goal, but crowdfunding something
 	that's <i>this</i> open-ended probably wouldn't go very well. Besides, it
 	requires a complete decompilation of at least one game first. So let's get
-	there first, I'd say – and who knows, maybe someone else will then already
-	waiting to take the decompiled source code and port it.
+	there first, I'd say – who knows, maybe someone else is just waiting for
+	that to happen, and will then quickly do a port by themselves?
 </p>
 {{template "</q>"}}
 
@@ -113,7 +113,7 @@
 	<code>MAINL.EXE</code> for TH03) then contains code for the ending
 	cutscenes, the staff roll, and anything after that. In TH03, it also
 	contains the stage start and end screens with the character pictures, as
-	well as the cutscenes before Stage 8 and 9.
+	well as the cutscenes before stages 8 and 9.
 </li></ul><p>
 	Since only one executable can be active at any given time, there has to be
 	some way of sharing data between them. This is done using a resident
@@ -130,25 +130,32 @@
 	What is this "position independence" thing about?
 </h3>
 <p>
-	Position <i>dependence</i> means that memory references are expressed as
-	raw number constants, making it impossible to increase or decrease the
-	number of bytes in the non-header parts of an executable without breaking
-	references to the executable's own memory, due to global variables no
-	longer being where the game expects them to be.
+	Position <i>dependence</i> means that a binary's references to global
+	variables are expressed as raw number constants, rather than being named
+	with identifiers:
+<pre>mov ax, some_data   ; Position-independent
+mov ax, 1234h       ; Position-dependent; assumes that
+                    ; [some_data] is at address 1234h
+</pre>
+	If you increase or decrease the number of bytes anywhere in the non-header
+	parts of an executable, you'll end up breaking most of these
+	position-dependent references, since global variables no longer are where
+	the game expects them to be. This will lead to quite some instability.
 </p><p>
-	16-bit x86 code has to take
-	<a href="https://en.wikipedia.org/wiki/X86_memory_segmentation">
+	Now, why is this such an issue for PC-98 Touhou? 16-bit x86 code has to
+	take <a href="https://en.wikipedia.org/wiki/X86_memory_segmentation">
 	segmentation</a> into account for all its memory accesses. This means that
 	each actual address is built out of two 16-bit values, the <i>segment</i>
-	and the <i>offset</i>. With such a rather low range of values, the line
-	between actual memory offsets and numeric constants becomes blurred. Most
-	disassemblers I know of that target this architecture therefore only do a
-	very superficial attempt at identifying data references, and give up once
-	arrays are involved, just leaving a numeric constant in place of such a
-	reference. And for good reason: Doing this properly effectively requires
-	an emulator, running the game and performing control flow analysis.
-	Anything more trivial – <i>especially</i> anything parsing individual
-	lines of ASM – and you're bound to
+	and the <i>offset</i>. Since offsets therefore can only range from 0 to
+	2<sup>16</sup>-1, the line between actual memory offsets and numeric
+	constants becomes blurred. Most disassemblers I know of that target this
+	architecture therefore only do a very superficial attempt at identifying
+	data references, and give up once arrays are involved, just leaving a
+	numeric constant in place of such a reference. And for good reason: Doing
+	this properly effectively requires an emulator, running the game and
+	performing control flow analysis. Anything less than that –
+	<i>especially</i> anything parsing individual lines of ASM – and you're
+	bound to
 </p><ul>
 	<li>miss addresses that are <i>calculated</i> from other constants</li>
 	<li>mistake function pointers for data pointers</li>
@@ -269,7 +276,7 @@
 </p><ul>
 	<li><code>byte_2CEC2</code> is the <i>miss countdown</i> – set to 40 if
 	you collide with anything, playing an explosion animation while it's
-	nonzero, then decremented each frame, and actually removing then life once
+	nonzero, then decremented each frame, and actually removing the life once
 	it <i>reaches</i> zero</li>
 	<li>and that <code>byte_25351</code> is the number of bombs in stock.</li>
 </ul><p>

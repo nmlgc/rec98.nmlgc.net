@@ -1,6 +1,7 @@
-{{$post := Blog_GetPost .Vars.date -}}
+{{$date := .Vars.date}}
+{{$post := Blog_GetPost $date -}}
 
 {{template "header.html" -}}
-<h2><a href="/blog#{{.date}}">⮜ Blog</a></h2>
+<h2><a href="/blog#{{$date}}">⮜ Blog</a></h2>
 {{template "blog_post.html" $post}}
 {{- template "footer.html" -}}

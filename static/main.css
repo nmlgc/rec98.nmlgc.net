@@ -239,7 +239,7 @@ a:not(.customer)[href^="https://twitter.com/"]:before {
 	);
 }
 
-#cap span.confirmed { color: green; }
+span.confirmed { color: green; }
 
 #cap div.meter .incoming {
     background: linear-gradient(
@@ -251,7 +251,7 @@ a:not(.customer)[href^="https://twitter.com/"]:before {
 	);
 }
 
-#cap span.incoming { color: red; }
+span.incoming { color: red; }
 /* --- */
 
 /* Estimate

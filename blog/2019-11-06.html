@@ -1,0 +1,38 @@
+<p>
+	No priorities, again…?! Please don't do this to me… 😕
+</p><p>
+	Well, let's not continue with TH05 then 😛 And instead use the occasion to
+	commit <a href="https://twitter.com/m1yur1/status/1018855232371998720">this
+	interesting discovery, made by @m1yur1 last year</a>. Yup, TH03's "ZUNSP"
+	sprite driver is actually a "rebranded" version of Promisence Soft's
+	<code>SPRITE16.COM</code>. Sure, you <i>were</i> allowed to use this
+	driver in your own game, but replacing the copyright with your own isn't
+	exactly the nicest thing to do… That now makes three library programmers
+	that ZUN didn't credit. Makes me wonder what makes M. Kajihara so special.
+	Probably the fact that Touhou has always been about the music for ZUN,
+	first and foremost.
+</p><p>
+	But what makes this more than a piece of trivia is the fact that
+	Promiscence Soft's SPRITE16 sample game <i>StormySpace</i> was bundled
+	with documentation on the driver. Shoutout to the Neo Kobe PC-98
+	collection for preserving he original release!
+</p><p>
+	That means more documented third-party code that we don't necessarily have
+	to reverse-engineer, just like master.lib or KAJA's PMD driver. However,
+	the PC-98 EGC <i>is</i> rather complex and <i>definitely</i> not designed
+	for alpha-tested 16-color sprite blitting. So it (once again) took quite a
+	while to make sense of SPRITE16's code and the available documentation on
+	the EGC, to come up with satisfying function names. As a result, I'm going
+	to distribute the entire RE work related to TH03's SPRITE16 interface
+	across a total of three pushes, this one being the first of them.
+</p><ul>
+	<li>The second one will reverse-engineer the SPRITE16 code reachable from
+	its interrupt handler, and also come with somewhat detailed English
+	documentation on the PC-98 EGC raster ops in particular,</li>
+	<li>and the third one will cover TH03's sprite drawing functions, which
+	look pretty undecompilable once again…</li>
+</ul><p>
+	Next up, we do have more TH05 progress though, now for the first time
+	specifically with position independence in mind. Pretty excited for this
+	one!
+</p>

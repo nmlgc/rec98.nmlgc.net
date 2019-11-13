@@ -1,0 +1,43 @@
+<p>
+	So, here we have the first two pushes with an explicit focus on position
+	independence… and they start out looking barely different from regular
+	reverse-engineering? They even already deduplicate a bunch of item-related
+	code, which was simple enough that it required little additional work?
+	Because the actual work, once again, was in comparing uth05win's
+	interpretations and naming choices with the original PC-98 code? So that
+	we only ended up removing a handful of memory references there?
+</p><p>
+	(Oh well, you can mod item drops now!)
+</p><p>
+	So, continuing to interpret PI as a mere by-product of reverse-engineering
+	might ultimately drive up the total PI cost quite a bit. But alright then,
+	let's systematically clear out some false positives by looking at
+	master.lib function calls instead… and suddenly we get the PI progress we
+	were looking for, nicely spread out over all games since TH02. That kinda
+	makes it sound like useless work, only done because it's dictated by some
+	counting algorithm on a website. But decompilation will want to convert
+	all of these values to decimal anyway. We're merely doing that right now,
+	across all games.
+</p><p>
+	Then again, it doesn't <i>actually</i> make any game more
+	position-independent, and only proves how position-independent it already
+	was. So I'm <i>really</i> wondering right now whether I should just rush
+	<i>actual</i> position independence by simply identifying structures and
+	their sizes, and not bother with members or false positives until that's
+	done. That would certainly get the job done for TH04 and TH05 in just a
+	few more pushes, but then leave all the proving work (<i>and</i> the road
+	to 100% PI on the front page) to reverse-engineering.
+</p><p>
+	I don't know. Would it be worth it to have a game that's „<i>maybe</i>
+	fully position-independent“, only for there to <i>maybe</i> be rare edge
+	cases where it isn't?
+</p><p>
+	Or maybe, continuing to strike a balance between identifying false
+	positives (fast) and reverse-engineering structures (slow) will continue
+	to work out like it did now, and make us end up close to the current
+	estimate, which was attractive enough to sell out the crowdfunding for the
+	first time… 🤔
+</p><p>
+	Please give feedback! If possible, by Friday evening UTC+1, before I start
+	working on the next PI push, this time with a focus on TH04.
+</p>

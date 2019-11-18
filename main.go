@@ -305,8 +305,8 @@ func main() {
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/faq", pagesHandler("faq.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
-	r.Handle("/blog", pagesHandler("blog.html"))
-	r.Handle("/blog/{date}", pagesHandler("blog_single.html"))
+	r.Handle(blogURLPrefix, pagesHandler("blog.html"))
+	r.Handle(blogURLPrefix+"/{date}", pagesHandler("blog_single.html"))
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	if paypal_auth.Initialized() {

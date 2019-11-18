@@ -175,7 +175,8 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 
 	// Blog, safe
 	// Added later to avoid a initialization loop
-	"Blog_Posts": func() int { return 0 },
+	"Blog_Posts":    func() int { return 0 },
+	"Blog_PostLink": PostLink,
 
 	// PayPal, safe
 	"PayPal_ClientID": func() string { return paypal_auth.ClientID },

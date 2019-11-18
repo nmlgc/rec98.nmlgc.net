@@ -21,7 +21,7 @@
 			<td>🚚 {{HTML_Time .Delivered}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
 			<td class="icon-cell">{{if .Summary -}}
-				<a href="/blog/{{.Summary.Date}}">📝</a>
+				{{Blog_PostLink .Summary.Date ""}}
 			{{- end}}</td>
 		</tr>{{end}}
 	</tbody>

@@ -1,0 +1,44 @@
+{{$pic1 := printf "%v%v" .FilePrefix "egc_shift_left-before.png" -}}
+{{$pic2 := printf "%v%v" .FilePrefix "egc_shift_left-after.png" -}}
+{{$pic3 := printf "%v%v" .FilePrefix "Priorities-given.svg" -}}
+
+<p>
+	With no feedback to {{Blog_PostLink "2019-11-13" "last week's blog post"}},
+	I assume you all are fine with how things are going? Alright then, another
+	one towards position independence, with the same approach as before…
+<p>
+	Since {{DB_CustomerByID 2}} wanted to learn something about how the PC-98
+	EGC is used in TH04 and TH05, I took a look at master.lib's <code>
+	egc_shift_*()</code> functions. These simply do a hardware-accelerated
+	<code>memmove()</code> of any VRAM region, and are used for screen shaking
+	effects. Hover over the image below for the raw effect:
+</p><p class="gallery"><a
+href="{{$pic1}}"><img src="{{$pic1}}" onmouseover="this.setAttribute('src', {{$pic2}});" onmouseout="this.setAttribute('src', {{$pic1}});" alt="Demonstration of an egc_shift_left() call" /></a>
+</p><p>
+	Then, I finally wanted to take a look at the bullet structures, but it
+	required <i>way</i> too much reverse-engineering to even start within ¾ of
+	a position independence push. Even <i>with</i> the help of uth05win –
+	bullet handling was changed quite a bit from TH04 to TH05.
+</p><p>
+	What I ultimately settled on was more raw, "boring" PI work based around
+	an already known set of functions. For this one, I looked at vector
+	construction… and this time, that actually <i>made</i> the games a little
+	bit more position-independent, and <i>wasn't</i> just all about removing
+	false positives from the calculation. This was one of the few sets of
+	functions that would also apply to TH01, and it revealed just how
+	chaotically that game was coded. This one commit shows three ways how ZUN
+	stored regular 2D points in TH01:
+</p><ul>
+	<li>"regularly", like in master.lib's <code>Point</code> structure (X
+	first, Y second)</li>
+	<li>reversed, (Y first and X second), then obviously with two distinct
+	variables declared next to each other</li>
+	<li>and with multiple points stored in a <a href="https://en.wikipedia.org/wiki/AoS_and_SoA#Structure_of_Arrays">structure of arrays</a>.</li>
+</ul><p>
+	… yeah. But in more productive news, this <i>did</i> actually lay the
+	groundwork for TH04 and TH05 bullet structures. Which might even be coming
+	up within the next big, 5-push order from {{DB_CustomerByID 9}}? These are
+	the	priorities I got from them, let's see how close I can get!
+</p><p class="gallery"><a
+href="{{$pic3}}"><embed src="{{$pic3}}" alt="Priorities given for P0060 to P0064" /></a></p
+>

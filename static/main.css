@@ -68,7 +68,8 @@ aside .icon-cell {
 	box-shadow: var(--blog-shadow);
 }
 
-.gallery img {
+.gallery img,
+.gallery embed {
 	max-height: 15em;
 	margin-left: 5%;
 	margin-right: 5%;

@@ -1,0 +1,29 @@
+<p>
+	So, where to start? Well, TH04 bullets are hard, so let's
+	<s>procrastinate</s> start with TH03 instead {{HTML_Emoji "tannedcirno"}}
+	The {{Blog_PostLink "2019-11-06" "sprite display functions"}} are the
+	obvious blocker for any structure describing a sprite, and therefore most
+	meaningful PI gains in that game… and I actually did manage to fit a
+	decompilation of those three functions into exactly the amount of time
+	that the {{DB_CustomerByID 9}} community votes alloted to TH03
+	reverse-engineering!
+</p><p>
+	And a pretty amazing one at that. The original code was so obviously
+	written in ASM and was just barely decompilable by exclusively using
+	register pseudovariables and a bit of <code>goto</code>, but I was able to
+	abstract most of that away, not least thanks to a few helpful optimization
+	properties of Turbo C++… seriously, I can't stop marveling at this ancient
+	compiler. The end result is both readable, clear, and dare I say
+	<i>portable</i>?! To anyone interested in porting TH03,
+	<a href="https://github.com/nmlgc/ReC98/blob/master/th03/sprite16.cpp">
+	take a look. How painful would it be to port <i>that</i> away from 16-bit
+	x86</a>?
+</p><p>
+	However, this push is also a typical example that the RE/PI priorities can
+	only control what I <i>look</i> at, and the outcome can actually differ
+	greatly. Even though the priorities were 65% RE and 35% PI, the progress
+	outcome was +0.13% RE and +1.35% PI. But hey, we've got one more push with
+	a focus on TH03 PI, so maybe <i>that </i> one will include more RE than
+	PI, and then everything will end up just as ordered?
+	{{HTML_Emoji "onricdennat"}}
+</p>

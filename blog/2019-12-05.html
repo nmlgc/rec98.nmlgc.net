@@ -1,0 +1,23 @@
+<p>
+	… nope, with a game whose <tt>MAIN.EXE</tt> is still just 5%
+	reverse-engineered <i>and</i> which naturally makes heavy use of
+	structures, there's still a lot more PI groundwork to be done before RE
+	progress can speed up to the levels that we've now reached with TH05. The
+	good news is that this game is (now) way easier to understand: In contrast
+	to TH04 and TH05, where we needed to work towards player shots over a
+	two-digit number of pushes, TH03 only needed two for SPRITE16, and a half
+	one for the playfield shaking mechanism. After that, I could even already
+	decompile the per-frame shot update and render functions, thanks to TH03's
+	high number of code segments. Now, even the big 128-byte player structure
+	doesn't seem all too far off.
+</p><p>
+	Then again, as TH03 shares no code with any other game, this actually was
+	a completely average PI push. For the remaining three, we'll return to
+	TH04 and TH05 though, which should more than make up for the slight drop
+	in RE speed after this one.
+</p><p>
+	In other news, we've now also reached peak C++, with the introduction of
+	<code>template</code>s! TH03 stores movement speeds in a 4.4 fixed-point
+	format, which is an 8-bit spin on the usual 16-bit, 12.4 fixed-point
+	format.
+</p>

@@ -285,7 +285,6 @@ func main() {
 
 	badger := Badger{
 		Done:     REProgressAtTree(masterTree).Pct(baselineFunc()),
-		Cap:      CapCurrent(nil),
 		Fallback: pagesHandler("badges.html"),
 	}
 	// ----------

@@ -59,8 +59,6 @@ var gradientPoints = GradientTable{
 // Badger collects all data we want to generate badges for.
 type Badger struct {
 	Done REProgressPct
-	Cap  Cap
-
 	Fallback http.Handler
 }
 
@@ -93,8 +91,9 @@ var typeMetric = map[string]func(Badger) *REMetric{
 // Parse creates a badge with the given typ for the given game.
 func (b Badger) Parse(typ string, game string) (*BadgeContent, error) {
 	if typ == "cap" && game == "" {
+		cap := CapCurrent(nil)
 		return &BadgeContent{
-			"4-week crowdfunding goal", b.Cap.FracOutstanding, " reached",
+			"4-week crowdfunding goal", cap.FracOutstanding, " reached",
 		}, nil
 	}
 

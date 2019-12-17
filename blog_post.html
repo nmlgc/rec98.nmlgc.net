@@ -1,6 +1,7 @@
 <article id="{{.Date}}">
 	<dl>
 		<dt><span class="emoji">📝</span> Posted:</dt>
+{{if .PushIDs}}
 		<dd><a href="/blog/{{.Date}}">{{HTML_Time .Time}}</a></dd>
 		<dt><span class="emoji">🚚</span> Summary of:</dt>
 		<dd>{{range $i, $push := .PushIDs -}}
@@ -17,6 +18,9 @@
 		<dd>{{range $i, $customer := .FundedBy -}}
 			{{- if $i}}, {{end}}{{DB_CustomerByID $customer -}}
 		{{- end}}</dd>
+{{else}}
+		<dd><a href="/blog/{{.Date}}">{{HTML_Date .Time}}</a></dd>
+{{end}}
 	</dl>
 	<section>
 {{.Body}}</section>

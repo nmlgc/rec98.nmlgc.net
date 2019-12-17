@@ -132,6 +132,12 @@ type LocalDateStamp struct {
 	time.Time
 }
 
+// DateInDevLocation decodes an ISO 8601 date to a LocalDateStamp.
+func DateInDevLocation(s string) (ret LocalDateStamp) {
+	FatalIf(ret.UnmarshalCSV(s))
+	return
+}
+
 // UnmarshalCSV decodes an ISO 8601 date to a LocalDateStamp.
 func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 	d.Time, err = time.ParseInLocation("2006-01-02", s, devLocation)

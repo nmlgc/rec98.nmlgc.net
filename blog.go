@@ -86,8 +86,12 @@ func (e BlogEntry) Render() Post {
 	pushes := PushesDeliveredAt(e.Date)
 	post := Post{
 		Date: e.Date,
-		Time: pushes[0].Delivered,
 		Body: template.HTML(b.String()),
+	}
+	if pushes != nil {
+		post.Time = pushes[0].Delivered
+	} else {
+		post.Time = DateInDevLocation(e.Date).Time
 	}
 
 	for i := len(pushes) - 1; i >= 0; i-- {

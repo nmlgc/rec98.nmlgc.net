@@ -1,0 +1,41 @@
+<p>
+	Did <a href="https://twitter.com/WindowsTiger">WindowsTiger</a> just cover
+	2% over all games <a href="https://github.com/wintiger0222/ReC98">on his
+	own</a>? While not all of that passed my review, +1.59% RE and +1.66% PI
+	over all 5 games is still pretty noteworthy, and comfortably pushes TH05
+	over the 25% mark in RE, and the 60% mark in PI.
+</p><p>
+	<b><i>However.</i></b>
+</p><p>
+	While I definitely do appreciate such contributions, reviewing and
+	adapting these to my current code organization standards also takes more
+	time than I'd like it to take. And taken to this level, it <i>does</i>
+	kind of undermine this crowdfunding project, causing both a <i>literal</i>
+	denial of service and exactly the stress that this crowdfunding was
+	designed to avoid. Most of the time, I can't merge all of that as-is
+	without knowingly creating annoyances down the line. But I don't want to
+	just ignore it either, or reject every non-perfect commit…<br />
+	That's also why I let it slide this time, due to some of the RE work in
+	there being genuinely amazing. In the future though, be aware that your
+	chance of having your work merged diminishes the further you move ahead of
+	my current <tt>master</tt> branch. In extreme cases like this one, I'll
+	then just be waiting until enough generic reverse-engineering pushes have
+	accrued, and treat the merge as regular work.
+</p><p>
+	But now, time to continue with the regular programming… I <i>am</i> kind
+	of exhausted from all of this, so no bullets for the next two
+	{{DB_CustomerByID 9}} pushes, still… Good thing there's still plenty of
+	simpler things with big percentage gains to be done:
+</p><ul>
+	<li>WindowsTiger mostly focused on <tt>OP.EXE</tt> which I tended to
+	neglect, as the big <tt>MAIN</tt> executables seemed to be more
+	interesting to my backers. (It's not like anyone ever <i>requested</i>
+	<tt>OP</tt> to be done either – like, who even cares about boring menu
+	source code, right?) Good that I therefore sort of left it as low-hanging
+	fruit to be grabbed by outside contributors – because now, TH04's and
+	TH05's <tt>OP.EXE</tt> are close to 100% position-independence. The <tt>
+	GENSOU.SCR</tt> format is pretty much the only thing missing there right
+	now, so let's finally go all the way there, I'd say.</li>
+	<li>And in TH05, there's still Reimu's shot type functions left to be
+	decompiled.</li>
+</ul>

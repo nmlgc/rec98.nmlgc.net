@@ -69,10 +69,17 @@ aside .icon-cell {
 }
 
 .gallery img,
-.gallery embed {
+.gallery embed,
+.gallery iframe {
 	max-height: 15em;
 	margin-left: 5%;
 	margin-right: 5%;
+}
+
+.gallery iframe {
+	width: calc((15em / 9) * 16);
+	height: 480px;
+	max-width: 100%;
 }
 
 .wait {
@@ -564,5 +571,11 @@ article {
 	box-shadow: var(--blog-shadow);
 	background: var(--c-bg);
 	padding: 1em;
+}
+
+article h5 {
+	margin-block-start: 0em;
+	margin-block-end: 0em;
+	font-style: italic;
 }
 /* ---- */

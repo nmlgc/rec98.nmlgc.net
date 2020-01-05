@@ -1,0 +1,38 @@
+<p>
+	So, the thing that made me so excited about TH01 were all those bulky C
+	reimplementations of master.lib functions. Identical copies in all three
+	executables, trivial to figure out and decompile, removing tons of
+	instructions, and providing a foundation for large parts of the game
+	later. The first set of functions near the end of that shared code segment
+	deals with color palette handling, and master.lib's resident palette
+	structure in particular. (No relation to <a href="/faq#three">the game's
+	resident structure.</a>) Which directly starts us out with pretty much
+	<i>all</i> the decompilation difficulties imaginable:
+</p><ul>
+	<li>iteration over internal DOS structures via segment pointers – Turbo
+	C++ doesn't support a lot of arithmetic on those, requiring tons of casts
+	to make it work</li>
+	<li>calls to a <code>far</code> function near the beginning of a segment
+	from a function near the end of a segment – these are undecompilable until
+	we've decompiled both functions (and thus, the majority of the segment),
+	and need to be spelled out in ASM for the time being. And if the caller
+	<i>then</i> stores some of the involved variables in registers, there's no
+	way around the ugliest of workarounds, <i>spelling out opcode bytes</i>…
+	</li>
+	<li>surprising color format inconsistencies – apparently, GRB (rather than
+	RGB) is some sort of wider standard in PC-98 inter-process communication,
+	because it matches the order of the hardware's palette register ports?
+	(<span style="color: green;"><code>0AAh</code> = green</span>,
+	<span style="color: red;"><code>0ACh</code> = red</span>,
+	<span style="color: blue;"><code>0AEh</code> = blue</span>)? Yet the
+	game's actual palette still uses RGB…</li>
+</ul><p>
+	And as it turns out, the game doesn't even use the resident palette
+	feature. Which adds yet another set of functions to the, uh, learning
+	experience that ZUN must have chosen this game to be. I wouldn't be
+	surprised if we manage to uncover actual scrapped beta game content later
+	on, among all the unused code that's bound to still be in there.
+</p><p>
+	At least decompilation should get easier for the next few TH01 pushes now…
+	right?
+</p>

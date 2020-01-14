@@ -1,0 +1,39 @@
+<p>
+	Now <i>that's</i> more like the speed I was expecting! After a few more
+	unused functions for palette fading and rectangle blitting, we've reached
+	the big line drawing functions. And the biggest one among <i>them</i>,
+	drawing a straight line at any angle between two points using
+	<a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">
+	Bresenham's algorithm</a>, actually happens to be the single longest
+	function present in more than one binary in all of PC-98 Touhou, and #23
+	on the list of individual longest functions.
+</p><p>
+	And it <i>technically</i> has a ZUN bug! If you pass a point outside the
+	(0, 0) - (639, 399) screen range, the function will calculate a new point
+	at the edge of the screen, so that the resulting line will retain the
+	angle intended by the points given. Except that it does so by calculating
+	the line slope using an integer division rather than a floating-point one
+	{{HTML_Emoji "zunpet"}} Doesn't seem like it actually causes any weirdly
+	skewed lines to be drawn in-game, though; that case is only hit in the
+	Mima boss fight, which draws a few lines with a bottom coordinate of
+	400 rather than the maximum of 399. It <i>might</i> also cause the wrong
+	background pixels to be restored during parts of the YuugenMagan fight,
+	leading to flickering sprites, but seriously, that's an issue everywhere
+	you look in this game.
+</p><p>
+	Together with the rendering-text-to-VRAM function we've mostly already
+	known from TH02, this pushed the total RE percentage well over 20%, and
+	almost doubled the TH01 RE percentage, all within three pushes. And
+	comparatively, it went <i>really</i> smoothly, to the point (ha) where I
+	even had enough time left to also include the single-point functions that
+	come next in that code segment. Since about half of the remaining
+	functions in <code>OP.EXE</code> are present in more than just itself,
+	I'll be able to at least keep up this speed until <code>OP.EXE</code> hits
+	the 70% RE mark. That is, as long as the backers' priorities continue to
+	be generic RE or "giving some love to TH01"… we don't have a precedent for
+	TH01's actual game code yet.
+</p><p>
+	And that's all the TH01 progress funded for January! Next up, we actually
+	<i>do</i> have a focus on TH03's game and scoring mechanics… or at least
+	the foundation for that.
+</p>

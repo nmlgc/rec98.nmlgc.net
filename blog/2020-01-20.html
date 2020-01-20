@@ -1,0 +1,44 @@
+<p>
+	As noted in {{Blog_PostLink "2019-12-05" "P0061"}}, TH03 gameplay RE is
+	indeed going to progress <i>very</i> slowly in the beginning. A lot of the
+	initial progress won't even be reflected in the RE% – there are just so
+	many features in this game that are intertwined into each other, and I
+	only consider functions to be "reverse-engineered" once we understand
+	<i>every</i> involved piece of code and data, and labeled every absolute
+	memory reference in it. (Yes, that means that the percentages on the front
+	page are actually underselling ReC98's progress quite a bit, and reflect a
+	pretty low bound of our actual understanding of the games.)
+</p><p>
+	So, when I get asked to look directly at gameplay code <i>right now</i>,
+	it's quite the struggle to find a place that can be covered within a push
+	or two <i>and</i> that would immediately benefit
+	<a href="https://en.touhouwiki.net/wiki/User:KirbyComment/Phantasmagoria_of_Dimensional_Dream_Info">
+	scoreplayers</a>. The basics of score and combo handling themselves
+	managed to fit in pretty well, though:
+</p><ul>
+	<li>Just like TH04 and TH05, TH03 stores the current score as 8
+	<a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">binary-coded
+	decimal</a> digits. Since the last constant 0 is not included, the maximum
+	score displayable without glitches therefore is 999,999,990 points, but
+	the game will happily store up to 24,699,999,990 points before the score
+	wraps back to 0.</li>
+	<li>There are (surprisingly?) only 6 places where the game actually
+	adds points to the score. Not quite sure about all of them yet, but they
+	(of course) include ending a combo, killing enemies, and the bonus at the
+	end of a round.</li>
+	<li>Combos can be continued for 80 frames after a 2-hit. The hit counter
+	can only be increased in the first 48, and effectively resets to 0 for the
+	last 32, when the Spell Point value starts blinking.</li>
+	<li>TH03 can track a total of 16 independent "hit combo sources" per
+	player, simultaneously. These are <i>not</i> related to the number of
+	actual explosions; rather, each explosion is assigned to one of the 16
+	slots when it spawns, and all consecutive explosions spawned from that one
+	will then add to the hit combo in that slot. The hit number displayed in
+	the top left is simply the largest one among all these.</li>
+</ul><p>
+	Oh well, at least we still got a bit of PI% out of this one. From this
+	point though, the next push (or two) should be enough to cover the big
+	128-byte player structure – which by itself might not be immediately
+	interesting to scoreplayers, but surely is quite a blocker for everything
+	else.
+</p>

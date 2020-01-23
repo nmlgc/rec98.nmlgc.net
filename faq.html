@@ -114,7 +114,7 @@
 
 
 
-{{template "<q>" "position-independence"}}
+{{template "<q>" "pi-what"}}
 	What is this "position independence" thing about?
 </h3>
 <p>
@@ -180,6 +180,62 @@ mov ax, 1234h       ; Position-dependent; assumes that
 </p>
 {{template "</q>"}}
 
+
+
+{{template "<q>" "pi-how"}}
+	How is position independence calculated?
+</h3>
+<p>
+	The <a href="/progress">absolute number</a> is the sum of all remaining
+	hexadecimal literals in all code segments of a binary's big
+	<kbd>.asm</kbd> dump file that fall into all of these categories:
+</p><h4>
+	1) Matches the regex <code>(-?[0-9][0-9a-fA-F]{1,4})h</code> for
+	hexadecimal literals in TASM/MASM syntax
+</h4><p>
+	IDA dumps all number literals ≥10 as hex by default. Restricting the PI
+	calculation to hex numbers allows us to clearly mark false positives by
+	simply converting those numbers to decimal. Having to do this manually
+	further communicates that every such conversion was a conscious decision,
+	based on the newly RE'd context the number is used in.
+</p><p>
+	This might seem like useless work at first, only necessary because it's
+	dictated by some counting algorithm on a website. However, most of those
+	false positives turn out to be things like (sub)pixel coordinates, number
+	of score points, frame counts… which the typical person <i>does</i> prefer
+	and expect to be expressed in decimal. Thus, this conversion turns into
+	quite a quality-of-life improvement for anyone reading and modding the
+	code. <i>Especially</i> with the fixed-point 12.4 "subpixel" type used for
+	playfield-space coordinates in TH03-TH05, which we can abstract away even
+	at the ASM level.
+</p><h4>
+	2) Falls within the <a href="https://github.com/nmlgc/rec98.nmlgc.net/blob/43a9f1d51602eeb224a55ffeb384f2ad12d20798/rec98repo.go#L160">
+	data segment ranges occupied by ZUN data</a>
+</h4><p>
+	This means that <i>structure size independence</i> is an explicit non-goal
+	of PI. The reason becomes clear if you look at all the things a 16-bit
+	number literal can represent:
+</p><p class="gallery">
+	<embed src="/static/faq-pi-ranges.svg" alt="Value ranges" />
+</p><p>
+	If we don't limit the value range to ZUN data,
+	<a href="https://en.wikipedia.org/wiki/Benford%27s_law">all the low
+	numbers</a> would vastly drown out the actual memory references we are
+	trying to identify, resulting in a number that's even less representative
+	of the code's actual position independence. And since structures can have
+	any size, we'll necessarily have to leave them to reverse-engineering.
+</p><h4>
+	3) Not the argument to any x86 instruction unrelated to memory accesses
+</h4><p>
+	These include
+</p><ul>
+	<li>the I/O port instructions <code>IN</code> and <code>OUT</code> (which
+	take architecture-specific port numbers),</li>
+	<li><code>INT</code> (which takes a software interrupt number),</li>
+	<li>and <code>ENTER</code> (which takes the size of a function's stack
+	allocation for local variables).</li>
+</ul>
+{{template "</q>"}}
 
 
 {{template "<q>" "why"}}

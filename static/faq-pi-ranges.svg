@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 154 64">
+	<style type="text/css"><![CDATA[
+		text {
+			font-family: sans-serif;
+			line-height: 125%;
+			text-anchor: middle;
+			font-size: 0.25em;
+		}
+		text.number {
+			font-family: monospace;
+			font-size: 0.4em;
+		}
+		path {
+			stroke-linecap: round;
+		}
+		path.box {
+			opacity: .75;
+			stroke-width: .5;
+		}
+	]]></style>
+	<text x="17.5" y="5">
+		<tspan>libc startup</tspan>
+		<tspan x="17.5" dy="1.4em">data range</tspan>
+	</text>
+	<text x="80" y="5">ZUN data range</text>
+	<text class="number" x="0.5" y="57" style="text-anchor: start;">0x0000</text>
+	<text class="number" x="149.5" y="57" style="text-anchor: end;">0xFFFF</text>
+	<text x="80" y="56.5"><tspan font-size="3">(not to scale, obviously)</tspan></text>
+	<path class="box" fill="#f80" stroke="#e70" d="M35 15h90v36H 35z"/>
+	<path class="box" fill="#f00" stroke="#d00" d="M 0,15 35,15 35,25 H 125 L 125,15 150,15 150,51 H 0 Z"/>
+	<path class="box" fill="#0f0" stroke="#0d0" d="M2 40h148v11H 2z"/>
+	<path d="M0 51h150" fill="none" stroke="#000"/>
+	<path d="M0 50v2" fill="none" stroke="#000"/>
+	<path d="M150 50v2" fill="none" stroke="#000"/>
+	<path d="M35 7v50 M125 7v50" fill="gray" stroke="#ccc"/>
+	<text x="80" y="21"><tspan font-style="italic">Actual</tspan> PI-relevant memory references</text>
+	<text x="17.5" y="30">(<tspan font-style="italic">lots</tspan> of numbers)</text>
+	<text x="80" y="34.5">Other numeric constants ("false positives")</text>
+	<text x="80" y="46.75">All possible structure sizes</text>
+</svg>

@@ -1,0 +1,53 @@
+<p>
+	Turns out that covering TH03's 128-byte player structure <i>was</i> way
+	more insightful than expected! And while it doesn't include <i>every</i>
+	bit of per-player data, we still got to know quite a bit about the game
+	from just trying to name its members:
+</p><ul>
+	<li>50 frames of invincibility when starting a new round</li>
+	<li>110 frames of invincibility when getting hit</li>
+	<li>64 frames of knockback when getting hit</li>
+	<li>128 frames before a charged up gauge/boss attack is fired
+	automatically</li>
+	<li>The damage a player will take from the next hit starts out at ½ heart
+	at the beginning of each round, and increases by another ½ heart every
+	1024 frames, capped at a maximum of 3 hearts. This guarantees that a
+	player will always survive at least two hits.</li>
+	<li>In Story Mode, hit damage is biased in favor of the player for the
+	first 6 stages. The CPU will always take an additional 1½ hearts of damage
+	in stages 1 and 2, 1 heart in stages 3 and 4, and ½ heart in stages 5 and
+	6, plus the above frame-based and capped damage amount. So while it's
+	therefore possible to cause 4½ hearts of damage in Stages 1 and 2 if the
+	first hit is somehow delayed for at least 5120 frames, you'd still win
+	faster if the CPU gets hit as soon as possible.</li>
+	<li>CPU players will charge up a gauge/boss attack as soon as their gauge
+	has reached a certain level. These levels are now proved to be random; at
+	the start of every round, the game generates a sequence of 64 gauge level
+	positions (from 1 to 4), separately for each player. If a round were to
+	last long enough for a CPU player to fire all 64 of those predetermined
+	attacks, you'd observe that sequence repeating.<ul>
+		<li>Yes, that means that in theory, these levels can be
+		RNG-manipulated. More details on that once we got this game's resident
+		structure, where the seed is stored.</li>
+	</ul></li>
+	<li>CPU players follow two main strategies: trying to not get hit, and…
+	not quite doing that once they've survived for a certain safety threshold
+	of frames. For the first 2000 frames of a round, this safety frame counter
+	is reset to 0 every 64 frames, leading the CPU to switch quickly between
+	the two strategies in the first few Story Mode stages on lower
+	difficulties, where this safety threshold is less than 64. The calculation
+	of the actual value is a bit more complex; more on that also once we got
+	this game's resident structure.</li>
+	<li>Section 13 of <a href="https://en.touhouwiki.net/wiki/Phantasmagoria_of_Dim.Dream/Translation/Manual">
+	<code>夢時空.TXT</code></a> states that Boss Attacks are only counted
+	towards the Clear Bonus if they were caused by reaching a certain number
+	of spell points. This is incorrect; manually charged Level 4 Boss Attacks
+	are counted as well.</li>
+</ul><p>
+	The next TH03 pushes can now cover all the functions that reference this
+	structure in one way or another, and actually commit all this research and
+	translate it into some RE%. Since the non-TH05 priorities have become a
+	bit unclear after the last 50&nbsp;€ RE contribution though (as of this
+	writing, it's still 10&nbsp;€ to decide on what game to cover in two RE
+	pushes!), I'll be returning to TH05 until that's decided.
+</p>

@@ -66,3 +66,7 @@ P0068	[30]	TH01 reverse-engineering	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/ebb
 P0069	[30, 24]	TH01 reverse-engineering	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e0d0dcd...0f18dbc	1
 P0070	[27]	TH03 scoring mechanics	2020-01-20T21:51:25Z	nmlgc/Rec98/compare/a931758...327021b	1
 P0071	[27, 33]	TH03 scoring mechanics	2020-01-29T08:17:30Z	nmlgc/Rec98/compare/327021b...4bb04ab	1
+P0072	[23, 32]	TH04 / TH05 position independence	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/4bb04ab...cea3ea6	1
+P0073	[37, 40]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/cea3ea6...5286417	1
+P0074	[34]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/5286417...1807906	1
+P0075	[34, 41]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1

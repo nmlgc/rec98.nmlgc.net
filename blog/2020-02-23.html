@@ -1,0 +1,76 @@
+<p>
+	Well, that took twice as long as I thought, with the two pushes containing
+	a lot more maintenance than actual new research. Spending some time
+	improving both field names and types in
+	<a href="https://www.youtube.com/channel/UChyVpooBi31k3xPbWYsoq3w">32th System</a>'s
+	TH03 resident structure finally gives us <a href="/faq#three">all of those
+	structures</a>. Which means that we can now cover all the remaining
+	decompilable <code>ZUN.COM</code> parts at once…
+</p><p>
+	Oh wait, their <code>main()</code> functions have stayed largely identical
+	since TH02? Time to clean up and separate that first, then… and combine
+	two recent code generation observations into the solution to a
+	decompilation puzzle from 4½ years ago. Alright, time to decomp-
+</p><p>
+	Oh wait, we'd <i>kinda</i> like to properly RE all the code in TH03-TH05
+	that deals with loading and saving .CFG files. Almost every outside
+	contributor wanted to grab this supposedly low-hanging fruit a lot
+	earlier, but (of course) always just for a single game, while missing how
+	the format evolved.
+</p><p>
+	So, <code>ZUN.COM</code>. For some reason, people seem to consider it
+	particularly important, even though it contains neither any game logic nor
+	any code specific to PC-98 hardware… All that this decompilable part does
+	is to initialize a game's .CFG file, allocate an empty resident structure
+	using master.lib functions, release it after you quit the game,
+	error-check all that, and print some playful messages~ (OK, TH05's also
+	directly fills the resident structure with all data from <code>
+	MIKO.CFG</code>, which all the other games do in <code>OP.EXE</code>.)
+	At least modders can now freely change and extend all the resident
+	structures, as well as the .CFG files? And translators can translate those
+	messages that you won't see on a decently fast emulator anyway? Have fun,
+	I guess 🤷‍
+</p><p>
+	And you <i>can</i> in fact do this right now – even for TH04 and TH05,
+	whose <code>ZUN.COM</code> currently isn't rebuilt by ReC98. There is
+	actually a rather involved reason for this:
+</p><ul>
+	<li>One of the missing files is TH05's <code>GJINIT.COM</code>.</li>
+	<li>Which contains all of TH05's gaiji characters in hardcoded 1bpp form,
+	together with a bit of ASM for writing them to the PC-98's hardware gaiji
+	RAM</li>
+	<li>Which means we'd ideally first like to have a sprite compiler, for
+	<i>all</i> the hardcoded 1bpp sprites</li>
+	<li>Which must compile to an ASM slice in the meantime, but should also
+	output directly to an OMF .OBJ file (for performance now), as well as to C
+	code (for portability later)</li>
+	<li>The <a href="https://twitter.com/ReC98Project/status/1162488931365113859">
+	custom build system I've been using since mid-August</a> has some
+	declarations for OMF .OBJ files, but it needs maybe 1 or 2 more weeks of
+	polish to be shipped</li>
+	<li>Which I won't put in as long as the backlog contains <i>actual
+	progress</i> to drive up the percentages on the front page.</li>
+</ul><p>
+	 So yeah, no meaningful RE and PI progress at any of these levels. Heck,
+	 even as a modder, you can just replace the <code>zun zun_res</code>
+	 (TH02), <code>zun -5</code> (TH03), or <code>zun -s</code> (TH04/TH05)
+	 calls in <code>GAME.BAT</code> with a direct call to your modified <code>
+	 *RES*.COM</code>. And with the alternative being "manually typing 0 and 1
+	 bits into a text file", editing the sprites in TH05's
+	 <code>GJINIT.COM</code> is way more comfortable in a binary sprite editor
+	 anyway.
+</p><p>
+	For me though, the best part in all of this was that it finally made sense
+	to throw out the old Borland C++ run-time assembly slices 🗑 This giant
+	waste of time <a href="https://github.com/nmlgc/ReC98/commit/c2a8c22">
+	became obvious 5 years ago</a>, but any ASM dump of a <code>.COM</code>
+	file would have needed rather ugly workarounds without those slices. Now
+	that all .COM binaries that were originally written in C <i>are</i>
+	compiled from C, we can all enjoy slightly faster grepping over the entire
+	repository, which now has 229 fewer files. Productivity will skyrocket!
+	{{HTML_Emoji "tannedcirno"}}
+</p><p>
+	Next up: Three weeks of almost full-time ReC98 work! Two more PI-focused
+	pushes to finish this TH05 stretch first, before switching priorities to
+	TH01 again.
+</p>

@@ -1,0 +1,61 @@
+{{$vid := printf "%v%v" .FilePrefix "Curvebullet-Speed-11" -}}
+
+<p>
+	To finish this TH05 stretch, we've got a feature that's exclusive to TH05
+	for once! As the final memory management innovation in PC-98 Touhou, TH05
+	provides a single static (64 * 26)-byte array for storing up to 64
+	entities of a custom type, specific to a stage or boss portion. The game
+	uses this array for
+</p><ol>
+	<li>the Stage 2 star particles,</li>
+	<li>Alice's puppets,</li>
+	<li>the tip of curve ("jello") bullets,</li>
+	<li>Mai's snowballs and Yuki's fireballs,</li>
+	<li>Yumeko's knives,</li>
+	<li>and Shinki's 32×32 bullets,</li>
+</ol><p>
+	which makes sense, given that only one of those will be active at any
+	given time.
+</p><p>
+	On the surface, they all appear to share the same 26-byte structure, with
+	consistently sized fields, merely using its 5 generic fields for different
+	purposes. Looking closer though, there actually <i>are</i> differences in
+	the signedness of certain fields across the six types. uth05win chose to
+	declare them as entirely separate structures, and given all the semantic
+	differences (pixels vs. subpixels, regular vs. tiny master.lib sprites,
+	…), it made sense to do the same in ReC98. It quickly turned out to be the
+	only solution to meet my own standards of code readability.
+</p><p>
+	Which blew this one up to two pushes once again… But now, modders can
+	trivially resize any of those structures without affecting the other types
+	within the original (64 * 26)-byte boundary, even without full position
+	independence. While you'd still have to reduce the type-specific
+	<i>number</i> of distinct entities if you made any structure larger, you
+	could also have more entities with fewer structure members.
+</p><p>
+	As for the types themselves, they're full of redundancy once again – as
+	you might have already expected from seeing #4, #5, and #6 listed as
+	unrelated to each other. Those could have indeed been merged into a single
+	32×32 bullet type, supporting all the unique properties of #4
+	(destructible, with optional revenge bullets), #5 (optional number of
+	twirl animation frames before they begin to move) and #6 (delay clouds).
+	The <code>*_add()</code>, <code>*_update()</code>, and <code>*_render()
+	</code> functions of #5 and #6 could even already be completely
+	reverse-engineered from just applying the structure onto the ASM, with the
+	ones of #3 and #4 only needing one more RE push.
+</p><p>
+	But perhaps the most interesting discovery here is in the curve bullets:
+	TH05 only renders every <i>second</i> one of the 17 nodes in a curve
+	bullet, yet hit-tests every single one of them. In practice, this is an
+	acceptable optimization though – you only start to notice jagged edges and
+	gaps between the fragments once their speed exceeds roughly 11 pixels per
+	second:
+</p><video class="gallery" controls loop>
+	<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
+	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+	(Video of EX-Alice hacked to exclusively shoot curve bullets with a speed
+	of 11 pixels a second; <a href="{{$vid}}.webm">download here</a>)
+</video><p>
+	And that brings us to the last 20% of TH05 position independence! But
+	first, we'll have more cheap and fast TH01 progress.
+</p>

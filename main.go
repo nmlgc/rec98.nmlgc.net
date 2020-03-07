@@ -143,6 +143,18 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
 
+	// Control flow, safe
+	"loop": func(times int) chan int {
+		ret := make(chan int)
+		go func() {
+			for i := 0; i < times; i++ {
+				ret <- i
+			}
+			close(ret)
+		}()
+		return ret
+	},
+
 	// Markup, safe
 	"HTML_Date":         HTMLDate,
 	"HTML_Time":         HTMLTime,

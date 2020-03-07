@@ -1,0 +1,49 @@
+{{$prefix := .FilePrefix -}}
+{{$grzview := printf "%v%v" .FilePrefix "grzview.zip" -}}
+
+<p>
+	Sadly, we've already reached the end of fast triple-speed TH01 progress
+	with {{Blog_PostLink "2020-03-03" "the last push"}}, which decompiled the
+	last segment shared by all three of TH01's executables. There's still a
+	bit of double-speed progress left though, with a small number of code
+	segments that are shared between just two of the three executables.
+</p><p>
+	At the end of the first one of these, we've got all the code for the .GRZ
+	format – which is yet another run-length encoded image format, but this
+	time storing up to 16 full 640×400 16-color images with an alpha bit. This
+	one is exclusively used to wastefully store Konngara's sword slash and
+	<a href="https://en.wikipedia.org/wiki/Kuji-in">kuji-in</a> kill
+	animations. Due to… suboptimal code organization, the code for the format
+	is also present in <code>OP.EXE</code>, despite not being used there. But
+	hey, that brings TH01 to over 20% in RE!
+</p><p>
+	Decoupling the RLE command stream from the pixel data sounds like a nice
+	idea at first, allowing the format to efficiently encode a variety of
+	animation frames displayed all over the screen… <i>if ZUN actually made
+	use of it</i>. The RLE stream also has quite some ridiculous overhead,
+	starting with 1 byte to store the 1-bit command (putting a single 8×1
+	pixel block, or entering a run of N such blocks). Run commands then store
+	another 1-byte run length, which has to be followed by <i>another</i>
+	command byte to identify the run as putting N blocks, or skipping N blocks.
+	And the pixel data is just a sequence of these blocks for all 4 bitplanes,
+	in uncompressed form…
+</p><p>
+	Also, have some rips of all the images this format is used for:
+</p><p class="gallery small">{{range loop 16 -}}
+	{{- $pic := printf "boss8.grz-%1X.png" . -}}
+	{{- $picFN := printf "%v%v" $prefix $pic -}}
+	<a href="{{$picFN}}"><img
+		src="{{$picFN}}"
+		alt="<code>boss8.grz</code>, image {{inc .}}/16"
+	/></a>
+{{- end}}</p><p>
+	To make these, I just wrote <a href="{{$grzview}}">a small viewer</a>,
+	calling the same decompiled TH01 code. Obviously, this means that it not
+	only must to be run on a PC-98, but also discards the alpha information.
+	If any backers are <i>really</i> interested in having a proper converter
+	to and from PNG, I can implement that in an upcoming push… although that
+	would be <i>the</i> perfect thing for outside contributors to do.
+</p><p>
+	Next up, we got some code for the PI format… oh, wait, the actual files
+	are called "GRP" in TH01.
+</p>

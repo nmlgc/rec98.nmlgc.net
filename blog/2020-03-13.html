@@ -1,0 +1,29 @@
+<p>
+	Last of the 3 weeks of almost full-time ReC98 work, supposedly the least
+	stressful one, and then things still get delayed thanks to illness 😕 In
+	better news though, it looks like I'll be able to extend these 3 weeks to
+	<i>8</i>, as my RL is shutting down for coronavirus reasons. I'm going to
+	wait a bit for the dust to settle before raising the crowdfunding cap
+	though, since RL might give me more to do from home after all. I may or
+	may not also get commissioned for a non-Touhou translation patch project
+	to be worked on in that time…
+</p><p>
+	The .GRP file functions turned out to, of course, also be present in
+	<code>FUUIN.EXE</code>. In fact, that binary had the largest share of
+	progress in this push, since it's the only one to include <i>another</i>
+	reimplementation of master.lib-style hardware palette fading. As a typical
+	little ZUN inconsistency, the <code>FUUIN.EXE</code> version of one .GRP
+	palette function directly calls one of these functions.
+</p><p>
+	As for the functions themselves, they basically wrap the single-function
+	<a href="https://www.vector.co.jp/soft/dos/prog/se037608.html">Pi load and
+	display library by 電脳科学研究所/BERO</a> in a bowl of global state
+	spaghetti. 🍝 At least the function names now clearly encode important
+	side effects like, y'know, a changed hardware palette. The reason ZUN used
+	this separate library over master.lib's PI loading functions was probably
+	its support for defining a color as transparent. This feature is used for
+	the red box in the main menu, and the large cyan Siddhaṃ seed syllables in
+	(again) the Konngara fight.
+</p><p>
+	Next up, we've got the .PTN format!
+</p>

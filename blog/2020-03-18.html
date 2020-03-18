@@ -1,0 +1,46 @@
+<p>
+	Nope, RL has given me <i>plenty</i> of things to do from home after all,
+	so the current cap still remains an accurate representation of my free
+	time. 😕
+</p><p>
+	For now though, we've got one more TH01 file format push, covering the
+	core functions for loading and displaying the 32×32 and 16×16 sprites from
+	the .PTN files, as announced – and probably one of the last ones for quite
+	a while to yield both RE and PI progress way above average. But what is
+	this, error return values in a ZUN game?! And <i>actually good code</i>
+	for deriving the alpha channel from the 16th color in the hardware
+	palette?! Sure, the rest of the code could still be improved a lot, but
+	that was quite a surprise, especially after the spaghetti code of
+	{{Blog_PostLink "2020-03-13" "the last push"}}. That makes up for two of
+	the .PTN structure fields (one of them always 0, and one of them always 1)
+	remaining unused, and therefore unknown.
+</p><p>
+	ZUN also uses the .PTN image slots to store the background of frequently
+	updated VRAM sections, in order to be able to repeatedly draw on top of
+	them – like for example the HUD area where the score and time numbers are
+	drawn. Future games would simply use the text RAM and gaiji for those
+	numbers. This would have worked just fine for TH01 too – especially since
+	all the functions decompiled so far align the VRAM X coordinate to the
+	8-pixel byte grid, which is the simplest way of accessing VRAM given the
+	PC-98's
+	<a href="https://en.wikipedia.org/wiki/Planar_(computer_graphics)">planar
+	memory layout</a>. Looks as if ZUN simply wasn't aware of gaiji during the
+	development of TH01.
+</p><p>
+	This won't be the last time I cover the .PTN format, since all the
+	blitting functions that actually <i>use</i> alpha are exclusive to <code>
+	REIIDEN.EXE</code>, and currently out of decompilation reach. But after
+	some more long overdue cleaning work, TH01 has now passed both TH02 and
+	even TH04 to become <i>the second-most reverse-engineered game in
+	all of ReC98, in terms of absolute numbers</i>! 🎉
+</p><p>
+	Also, PI for TH01's <code>OP.EXE</code> is imminent. Next up though, we've
+	first got the probably final double-speed push for TH01, covering the last
+	set of duplicated functions between the three binaries – quite fitting for
+	the currently last fully funded, outstanding TH01 RE push. Then, we also
+	<i>might</i> get <code>FUUIN.EXE</code> PI within the same push
+	afterwards? After that, TH01 progress <i>will</i> be slowing down, since
+	I'd then have to cover <i>either</i> the main menu <i>or</i> in-game code
+	<i>or</i> the cutscenes, depending on what the backers request. (By
+	default, it's going to be in-game code, of course.)
+</p>

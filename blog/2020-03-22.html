@@ -1,0 +1,34 @@
+<p>
+	Final TH01 RE push for the time being, and as expected, we've got the
+	superficially final piece of shared code between the TH01 executables.
+	However, just having a single implementation for loading and recreating
+	the <code>REYHI*.DAT</code> score files would have been way above ZUN's
+	standards of consistency. So ZUN had the unique idea to mix up the file
+	I/O APIs, using master.lib functions in <code>REIIDEN.EXE</code>, and
+	POSIX functions (along with error messages and disabled interrupts) in
+	<code>FUUIN.EXE</code>… {{HTML_Emoji "zunpet"}} Could have been worse
+	though, as it was possible to abstract that away quite nicely.
+</p><p>
+	That code wasn't quite in the natural way of decompilation either. As it
+	turns out though, {{Blog_PostLink "2019-09-21" "segment splitting"}} isn't
+	so painful after all if one of the new segments only has a few functions.
+	Definitely going to do that more often from now on, since it allows a much
+	larger number of functions to be immediately decompiled. Which is always
+	superior to somehow transforming a function's ASM into a form that I can
+	confidently call "reverse-engineered", only to revisit it again later for
+	its decompilation.
+</p><p>
+	And while I unfortunately missed 25% of total RE by a bit, this push
+	reached two other and perhaps even more significant milestones:
+</p><ul>
+	<li><i>{{Blog_PostLink "2019-09-09" "In a little over 6 months"}}, we've
+	<strong>doubled</strong> the amount of reverse-engineered PC-98 Touhou
+	game code!</i> 📈</li>
+	<li>After (finally) compressing all unknown parts of the BSS segments
+	using arrays, the number of remaining lines in the <code>
+	REIIDEN.EXE</code> ASM dump has fallen below TASM's limit of 65,535. Which
+	means that we no longer need that annoying <code>th01_reiiden_2.inc</code>
+	file that everyone has forgotten about at least once.</li>
+</ul><p>
+	Next up, PI milestones!
+</p>

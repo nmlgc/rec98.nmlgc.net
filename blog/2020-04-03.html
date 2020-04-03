@@ -1,0 +1,43 @@
+<p>
+	Wait, PI for <code>FUUIN.EXE</code> is mainly blocked by the high score
+	menu? That one should <i>really</i> be properly decompiled in a separate
+	RE push, since it's also present in largely identical form in
+	<code>REIIDEN.EXE</code>… but I currently lack the explicit funding to do
+	that.
+</p><p>
+	And as it turns out I shouldn't really capture any of the existing generic
+	RE contributions for it either. Back in 2018 when I ran the crowdfunding
+	on the {{DB_CustomerByID 9}} Discord server, I said that generic RE
+	contributions would never go towards TH01. No one was interested in that
+	game back then, and as it's significantly different from all the other
+	games, it made sense to only cover it if explicitly requested.<br>
+	As {{DB_CustomerByID 9}} still remains one of the biggest supporters and
+	advertisers for ReC98, someone recently believed that this rule was still
+	in effect, despite not being mentioned anywhere on this website.
+</p><p>
+	Fast forward to today, and TH01 has become the single most supported game
+	lately, with plenty of incomplete pushes still open to be completed.
+	Reverse-engineering it has proven to be quite efficient, yielding lots of
+	completion percentage points per push. This, I suppose, is exactly what
+	backers that don't give any specific priorities are mainly interested in.
+	Therefore, <i>I <strong>will</strong> allocate future partial
+	contributions to TH01, whenever it makes sense</i>.
+</p><p>
+	So, instead of rushing TH01 PI, let's wait for {{DB_CustomerByID 13}}'s
+	April subscription, and get the 25% total RE milestone with some TH05 PI
+	progress instead. This one primarily focused on the gather circles
+	(spirals…?), the third-last missing entity type in TH05. These are
+	rendered using the same 8×8 pellet sprite introduced in TH02… except that
+	the <i>actual</i> pellets received a darkened bottom part in TH04
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgMAAAC5YVYYAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAAlQTFRFAAAAqqr/////38h8nAAAAAF0Uk5TAEDm2GYAAAAeSURBVAjXY+BawKC1gmHVKoZVK0EoaymDaAgDawAAXhcHRDMdG+8AAAAASUVORK5CYII=" />.
+	Which, in turn, is actually rendered quite efficiently – the games first
+	render the top white part of all pellets, followed by the bottom gray part
+	of all pellets. The PC-98 GRCG is used throughout the process, doing its
+	typical job of accelerating monochrome blitting, and by arranging the
+	rendering like this, only two GRCG color changes are required to draw any
+	number of pellets. I <i>guess</i> that makes it quite a worthwhile
+	optimization? Don't ask me for specific performance numbers or even saved
+	cycles, though {{HTML_Emoji "onricdennat"}}
+</p><p>
+	Next up, one more TH05 PI push!
+</p>

@@ -1,0 +1,51 @@
+<p>
+	Alright, the score popup numbers shown when collecting items or defeating
+	(mid)bosses. The second-to-last remaining big entity type in TH05… with
+	quite some PI false positives in the memory range occupied by its data.
+	Good thing I still got some outstanding generic RE pushes that haven't
+	been claimed for anything more specific in over a month! These
+	conveniently allowed me to RE most of these functions right away, the
+	right way.
+</p><p>
+	Most of the false positives were boss HP values, passed to a "boss phase
+	end" function which sets the HP value at which the next phase should end.
+	Stage 6 Yuuka, Mugetsu, and EX-Alice have their own copies of this
+	function, in which they also reset certain boss-specific global variables.
+	Since I always like to cover all varieties of such duplicated functions at
+	once, it made sense to reverse-engineer all the involved variables while I
+	was at it… and that's why this was exactly the right time to cover the
+	implementation details of Stage 6 Yuuka's parasol and vanishing animations
+	in TH04. {{HTML_Emoji "zunpet"}}
+</p><p>
+	With still a bit of time left in that RE push afterwards, I could also
+	start looking into some of the smaller functions that didn't quite fit
+	into other pushes. The most notable one there was a simple function that
+	aims from any point to the current player position. Which actually only
+	became a separate function in TH05, probably since it's called 27 times in
+	total. That's 27 places no longer being blocked from further RE progress.
+</p><p>
+	<a href="https://github.com/wintiger0222/ReC98">WindowsTiger</a> already
+	did most of the work for the score popup numbers in January, which meant
+	that I only had to review it and bring it up to ReC98's current coding
+	styles and standards. This one turned out to be one of those rare features
+	whose TH05 implementation is significantly <i>less</i> insane than the
+	TH04 one. Both games lazily redraw only the tiles of the stage background
+	that were drawn over in the previous frame, and try their best to minimize
+	the amount of tiles to be redrawn in this way. For these popup numbers,
+	this involves calculating the on-screen width, based on the exact number
+	of digits in the point value. TH04 calculates this width every frame
+	during the rendering function, and even resorts to setting that field
+	through the digit iteration pointer via self-modifying code… yup. TH05, on
+	the other hand, simply calculates the width once when spawning a new popup
+	number, during the conversion of the point value to
+	<a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">binary-coded
+	decimal</a>. The "×2" multiplier suffix being removed in TH05 certainly
+	also helped in simplifying that feature in this game.
+</p><p>
+	And that's ⅓ of TH05 reverse-engineered! Next up, one more TH05 PI push,
+	in which the stage enemies hopefully finish all the big entity types.
+	Maybe it will also be accompanied by another RE push? In any case, that
+	will be the last piece of TH05 progress for quite some time. The next TH01
+	stretch will consist of 6 pushes at the very least, and I currently have
+	no idea of how much time I can spend on ReC98 a month from now…
+</p>

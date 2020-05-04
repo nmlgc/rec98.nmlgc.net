@@ -1,0 +1,103 @@
+<p>
+	As expected, we've now got the TH04 and TH05 stage enemy structure,
+	finishing position independence for all big entity types. This one was
+	quite straightfoward, as the .STD scripting system is pretty simple.
+</p><p>
+	Its most interesting aspect can be found in the way timing is handled. In
+	Windows Touhou, all .ECL script instructions come with a frame field that
+	defines when they are executed. In TH04's and TH05's .STD scripts, on the
+	other hand, it's up to each individual instruction to add a frame time
+	parameter, anywhere in its parameter list. This frame time defines for how
+	long this instruction should be repeatedly executed, before it manually
+	advances the instruction pointer to the next one. From what I've seen so
+	far, these instruction typically apply their effect on the first frame
+	they run on, and then do nothing for the remaining frames.<br />
+	Oh, and you can't nest the <code>LOOP</code> instruction, since the enemy
+	structure only stores one single counter for the current loop iteration.
+</p><p>
+	Just from the structure, the only innovation introduced by TH05 seems to
+	have been enemy subtypes. These can be used to parametrize scripts via
+	conditional jumps based on this value, as a first attempt at cutting down
+	the need to duplicate entire scripts for similar enemy behavior. And
+	thanks to TH05's favorable segment layout, this game's version of the
+	.STD enemy script interpreter is even immediately ready for decompilation,
+	in one single future push.
+</p><p>
+	As far as I can tell, that now only leaves<ul>
+		<li>.MPN file loading</li>
+		<li>player bomb animations</li>
+		<li>some structures specific to the Shinki and EX-Alice battles</li>
+		<li>plus some smaller things I've missed over the years</li>
+	</ul>
+	until TH05's <code>MAIN.EXE</code> is completely position-independent.
+	<br />
+	Which, however, won't be all it needs for that 100% PI rating on the front
+	page. And with that many false positives, it's quite easy to get lost with
+	immediately reverse-engineering everything around them. This time, the
+	rendering of the text dissolve circles, used for the stage and BGM title
+	popups, caught my eye…  and since the high-level code to handle all of
+	that was near the end of a segment in both TH04 and TH05, I just decided
+	to immediately decompile it all. Like, how hard could it possibly be?
+	Sure, it needed another segment split, which was a <i>bit</i> harder due
+	to all the existing ASM referencing code in that segment, but certainly
+	not impossible…
+</p><p>
+	Oh wait, this code depends on 9 other sets of identifiers that haven't
+	been declared in C land before, some of which require vast reorganizations
+	to bring them up to current consistency standards. Whoops! Good thing that
+	this is the part of the project I'm still offering for free…<br>
+	Among the referenced functions was <code>tiles_invalidate_around()</code>,
+	which marks the stage background tiles within a rectangular area to be
+	redrawn this frame. And this one must have had the hardest function
+	signature to figure out in all of PC-98 Touhou, because <i>it actually
+	seems impossible</i>. Looking at all the ways the game passes the center
+	coordinate to this function, we have<ol>
+		<li>X and Y as 16-bit integer literals, merged into a single
+		<code>PUSH</code> of a 32-bit immediate</li>
+		<li>X and Y calculated and pushed independently from each other</li>
+		<li>by-value copies of entire <code>Point</code> instances</li>
+	</ol>
+	Any single declaration would only lead to at most two of the three cases
+	generating the original instructions. No way around separately declaring
+	the function in every translation unit then, with the correct parameter
+	list for the respective calls. That's how ZUN must have also written it.
+</p><p>
+	Oh well, we would have needed to do all of this <i>some</i> time. At least
+	there were quite a bit of insights to be gained from the actual
+	decompilation, where using <code>const</code> references actually made it
+	possible to turn quite a number of potentially ugly macros into wholesome
+	<code>inline</code> functions.
+</p><p>
+	But still, TH04 and TH05 will come out of ReC98's decompilation as one big
+	mess. A lot of further manual decompilation and refactoring, beyond the
+	limits of the original binary, would be needed to make these games
+	portable to any non-PC-98, non-x86 architecture.<br />
+	And yes, that includes IBM-compatible DOS – which, for some reason, a
+	number of people see as the obvious choice for a first system to port
+	PC-98 Touhou to. This will barely be easier. Sure, you'll save the effort
+	of decompiling all the remaining original ASM. But even <i>with</i>
+	master.lib's <code>MASTER_DOSV</code> setting, these games still very much
+	rely on PC-98 hardware, with corresponding assumptions all over ZUN's
+	code. You <i>will</i> need to provide abstractions for the PC-98's
+	superimposed text mode, the gaiji, and planar 4-bit color access in
+	general, exchanging the use of the PC-98's GRCG and EGC blitter chips with
+	something else. At that point, you might as well port the game to one
+	generic 640×400 framebuffer and away from the constraints of DOS,
+	resulting in that Doom source code-like situation which made <i>that</i>
+	game easily portable to every architecture to begin with. But ZUN just
+	wasn't a John Carmack, sorry.
+</p><p>
+	Or what do I know. I've never programmed for IBM-compatible DOS, but maybe
+	ReC98's audience <i>does</i> include someone who is intimately familiar
+	with IBM-compatible DOS so that the constraints aren't much of an issue
+	for them? But even then, 16-bit Windows would make <i>much</i> more sense
+	as a first porting target if you don't want to bother with that
+	undecompilable ASM.
+</p><p>
+	At least I won't have to look at TH04 and TH05 for quite a while now.
+	{{HTML_Emoji "tannedcirno"}} The delivery delays have made it obvious that
+	my life has become pretty busy again, probably until September. With a
+	total of 9 TH01 pushes from monthly subscriptions now waiting in the
+	backlog, the shop will stay closed until I've caught up with most of
+	these. Which I'm quite hyped for!
+</p>

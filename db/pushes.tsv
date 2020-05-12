@@ -84,3 +84,5 @@ P0086	[48, 45]	TH04/TH05 reverse-engineering	2020-04-16T13:09:16Z	nmlgc/Rec98/co
 P0087	[49]	TH05 position independence	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/24b96cd...97ce7b7	1
 P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/97ce7b7...da6b856	1
 P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/da6b856...90252cc	1
+P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/90252cc...07dab29	1
+P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/07dab29...29c5a73	1

@@ -1,0 +1,65 @@
+<p>
+	Back to TH01, and its high score menu… oh, wait, that one will eventually
+	involve keyboard input. And thanks to the generous TH01 funding situation,
+	there's really no reason <i>not</i> to cover that right now. After all,
+	TH01 is the last game where input still hadn't been RE'd.<br />
+	But first, let's also cover that one unused blitting function, together
+	with <code>REIIDEN.CFG</code> loading and saving, which are in front of
+	the input function in <code>OP.EXE</code>… (By now, we all know about
+	<a href="https://tcrf.net/Touhou_Reiiden:_The_Highly_Responsive_to_Prayers#Bomb_Option">
+	the hidden start bomb configuration</a>, right?)
+</p><p>
+	Unsurprisingly, the earliest game also implements input in the messiest
+	way, with a different function for each of the three executables. "Because
+	they all react differently to keyboard inputs {{HTML_Emoji "zunpet"}}",
+	apparently? <code>OP.EXE</code> even has two functions for it, one for the
+	<span style="color: #993399;">START / CONTINUE / OPTION / QUIT</span> main
+	menu, and one for both Option and Music Test menus, both of which directly
+	perform the ring arithmetic on the menu cursor variable. A consistent
+	separation of keyboard polling from input processing apparently wasn't all
+	too obvious of a thought, since it's only truly done from TH02 on.
+</p><p>
+	This lack of proper architecture becomes actually hilarious once you
+	notice that it did in fact facilitate a recursion bug!
+	{{HTML_Emoji "godzun"}}
+	<a href="https://tcrf.net/Touhou_Reiiden:_The_Highly_Responsive_to_Prayers#Debug_Features">
+	In case you've been living under a rock for the past 8 years, TH01 shipped
+	with debugging features, which you can enter by running the game via
+	<code>game d</code> from the DOS prompt.</a> These features include a
+	memory info screen, shown when pressing PgUp, implemented as one blocking
+	function (<code>test_mem()</code>) called directly in response to the
+	pressed key inside the polling function. <code>test_mem()</code> only
+	returns once that screen is left by pressing PgDown. And in order to poll
+	input… it directly calls back into the same polling function that called
+	it in the first place, after a 3-frame delay.
+</p><p>
+	Which means that <i>this screen is actually re-entered for every 3 frames
+	that the PgUp key is being held</i>. And yes, you can, of course, also
+	crash the system via a stack overflow this way by holding down PgUp for a
+	few seconds, if that's your thing.
+</p><p>
+	What makes this even funnier is that the code actually tracks the last
+	state of every polled key, to prevent exactly that sort of bug. But the
+	copy-pasted assignment of the last input state is only done <i>after</i>
+	<code>test_mem()</code> already returned, making it effectively pointless
+	for PgUp. It <i>does</i> work as intended for PgDown… and that's why you
+	have to actually press <i>and release</i> this key once for every call to
+	<code>test_mem()</code> in order to actually get back into the game. Even
+	though a single call to PgDown will already <i>show</i> the game screen
+	again.
+</p><p>
+	In maybe more relevant news though, this function also came with what can
+	be considered the first piece of actual gameplay logic! Bombing via
+	double-tapping the Z and X keys is also handled here, and now we know that
+	both keys simply have to be tapped twice within a window of 20 frames.
+	They are tracked independently from each other, so you don't necessarily
+	have to press them simultaneously.<br />
+	In debug mode, the <code>bomb</code> count tracks precisely this window of
+	time. That's why it only resets back to 0 when pressing Z or X if it's
+	≥20.
+</p><p>
+	Sure, TH01's code is expectedly terrible and messy. But compared to the
+	micro-optimizations of TH04 and TH05, it's an absolute joy to work on, and
+	opening all these ZUN bug loot boxes is just the icing on the cake.
+	Looking forward to more of the high score menu in the next pushes!
+</p>

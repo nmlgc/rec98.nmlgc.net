@@ -86,3 +86,6 @@ P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/Rec98
 P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/da6b856...90252cc	1
 P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/90252cc...07dab29	1
 P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/07dab29...29c5a73	1
+P0092	[56]	TH01 decompilation (Score menu, part 2)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/29c5a73...4403308	1
+P0093	[57]	TH01 decompilation (Score menu, part 3)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/4403308...0e73029	1
+P0094	[56]	TH01 decompilation (Score menu, part 4 + Endings, part 1)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/0e73029...57a8487	1

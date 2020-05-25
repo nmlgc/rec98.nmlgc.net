@@ -1,0 +1,64 @@
+{{$pic1 := printf "%v%v" .FilePrefix "alphabet.png" -}}
+
+<p>
+	Three pushes to decompile the TH01 high score menu… because it's
+	completely terrible, and needlessly complicated in pretty much every
+	aspect:
+</p><ul>
+	<li>Another, final set of differences between the <code>REIIDEN.EXE</code>
+	and <code>FUUIN.EXE</code> versions of the code. Which are so
+	insignificant that it <i>must</i> mean that ZUN kept this code in two
+	separate, manually and imperfectly synced files. The <code>REIIDEN.EXE
+	</code> version, only shown when game-overing, automatically jumps to the
+	enter/<span lang="ja">終</span> button after the 8th character was entered,
+	and also has a completely invisible timeout that force-enters a high score
+	name after 1000… <i>key presses</i>? Not frames? Why. Like, how do you
+	even realistically such a number. (Best guess: It's a hidden easter egg to
+	amuse players who place drinking glasses on cursor keys. Or beer bottles.)
+	<br />
+	That's all the differences that are <i>maybe</i> visible if you squint
+	hard enough. On top of that though, we got a bunch of further, minor code
+	organization differences that serve no purpose other than to waste
+	decompilation time, and certainly did their part in stretching this out to
+	3 pushes instead of 2.</li>
+</ul><ul>
+	<li>Entered names are restricted to a set of 16-bit, full-width Shift-JIS
+	codepoints, yet are still accessed as 8-bit byte arrays everywhere. This
+	bloats both the C++ and generated ASM code with needless byte splits,
+	swaps, and bit shifts. Same for the route kanji. You have this 16-, heck,
+	even 32-bit CPU, why not use it?! (Fun fact: <code>FUUIN.EXE</code> is
+	explicitly compiled for a 80186, for the most part – unlike <code>
+	REIIDEN.EXE</code>, which <i>does</i> use Turbo C++'s 80386 mode.)</li>
+</ul><ul>
+	<li>The sensible way of storing the current position of the alphabet
+	cursor would simply be two variables, indicating the logical row and
+	column inside the character map. When rendering, you'd then transform
+	these into screen space. This can keep the on-screen position constants in
+	a single place of code.<br />
+	TH01 does the opposite: The selected character is stored directly in terms
+	of its on-screen position, which is then mapped <i>back</i> to a character
+	index for every processed input and the subsequent screen update. There's
+	no notion of a logical row or column anywhere, and consequently, the
+	position constants are vomited all over the code.</li>
+</ul><ul>
+	<li>Which might not be <i>as</i> bad if the character map had a uniform
+	grid structure, with no gaps. But the one in TH01 looks like this:
+	<p class="gallery"><a
+href="{{$pic1}}"><img src="{{$pic1}}" alt="TH01 high score name character map" /></a></p
+>
+	And with no sense of abstraction anywhere, both input handling and
+	rendering end up with a separate <code>if</code> branch for at least 4 of
+	the 6 rows.</li>
+</ul><p>
+	In the end, I just gave up with my usual redundancy reduction efforts for
+	this one. Anyone wanting to change TH01's high score name entering code
+	would be better off just rewriting the entire thing properly.
+</p><p>
+	And that's all of the shared code in TH01! Both <code>OP.EXE</code> and
+	<code>FUUIN.EXE</code> are now only missing the actual main menu and
+	ending code, respectively. Next up, though: The long awaited TH01 PI push.
+	Which will not only deliver 100% PI for <code>OP.EXE</code> and <code>
+	FUUIN.EXE</code>, but also probably <i>quite</i> some gains in <code>
+	REIIDEN.EXE</code>. With now over 30% of the game decompiled, it's about
+	time we get to look at some gameplay code!
+</p>

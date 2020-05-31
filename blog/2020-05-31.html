@@ -1,0 +1,54 @@
+<p>
+	🎉 TH01's <code>OP.EXE</code> and <code>FUUIN.EXE</code> are now fully
+	position-independent! 🎉
+</p><h5>What does this mean?</h5><p>
+	You can now add any data or code to TH01's main menu or ending cutscenes,
+	by simply editing the ReC98 source, writing your mod in ASM or C++, and
+	recompiling the code. Since all absolute memory addresses in <code>OP
+	</code> and <code>FUUIN</code> have now been converted to labels, this
+	will work without causing any instability. See the <a href="/faq#pi-what">
+	position independence section in the FAQ</a> for a more thorough
+	explanation about why this was a problem.
+	<br />
+	As an example, the most popular TH01 mod idea, replacing MDRV2 with PMD,
+	could now at least be <i>prototyped</i> and <i>tested</i> in <code>
+	OP.EXE</code>, without having to worry about x86 instruction lengths.
+	<br />
+	{{Blog_PostLink "2019-12-29" "Check the video I made for the TH04/TH05 <code>OP.EXE</code> PI announcement for a basic overview of how to do that."}}
+<h5>What does this not mean?</h5><p>
+	The original ZUN code hasn't been completely decompiled yet. The final
+	high-level parts of both the main menu and the cutscenes are still ASM,
+	which might make modding a bit inconvenient right now.<br />
+	It's not that much more code though, and could quickly be covered in a few
+	pushes if requested. Due to the plentiful monthly subscriptions, the shop
+	will stay closed for regular orders until the end of June, but backers
+	with outstanding contributions <i>could</i> request that now if they want
+	to – simply drop me a mail. Otherwise, the "generic TH01 RE" money will
+	continue to go towards the main game. That way, we'll have more substance
+	to show once we <i>do</i> decide to decompile the rest of <code>
+	OP.EXE</code> and <code>FUUIN.EXE</code>, and likely get some press
+	coverage as a result.
+</p>
+<hr />
+<p>
+	Then again, we've been building up to this point over the last few pushes,
+	and it only really needed a quick look over the remaining false positives.
+	The majority of the time therefore went towards more PI in <code>
+	REIIDEN.EXE</code>, where the bitplane pointers for .BOS files yielded
+	some quite big gains. Couldn't really find any obvious reason why ZUN used
+	two slighly different variations on loading and blitting those files,
+	though… {{HTML_Emoji "onricdennat"}}
+</p><p>
+	As the final function in this rather random push, we got TH01's
+	hardware-powered scrolling function, used for screen shaking effects and
+	the scrolling backgrounds at the start of the Final Boss stages. And while
+	I tried to document all these I/O writes… it turned out that ZUN actually
+	copied the entire function straight from the <i>PC-9801 Programmers'
+	Bible</i>, with no changes. {{HTML_Emoji "zunpet"}} It's the <code>
+	setgsta()</code> example function on page 150. Which is terribly
+	suboptimal and bloated – all those integer divisions are really <i>
+	not</i> how you'd write such code for a 16-bit compiler from the 90's…
+</p><p>
+	And that gives us 60% PI overall, and 50% PI over all of TH01! Next up:
+	More structures… and classes, even?
+</p>

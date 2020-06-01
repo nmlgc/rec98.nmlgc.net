@@ -401,6 +401,14 @@ section.overall, section.game, section.binary {
 	padding-block-start: 0.25em;
 	padding-block-end: 1.5em;
 }
+
+#fundlog .breakdown {
+	display: block;
+	line-height: 2;
+	margin-bottom: 0.5em;
+	color: gray;
+	font-size: 75%;
+}
 /* ---------------- */
 
 /* Legal notice

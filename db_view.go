@@ -19,11 +19,19 @@ func CustomerByID(id CustomerID) template.HTML {
 	))
 }
 
+// OutstandingPushFraction bundles a transaction ID with its outstanding
+// amount of pushes.
+type OutstandingPushFraction struct {
+	ID       TransactionID
+	Fraction float64
+}
+
 // ContribPerCustomer represents the contribution of a single customer towards
 // the goal this structure is included in.
 type ContribPerCustomer struct {
 	Customer     CustomerID
 	PushFraction float64
+	Breakdown    []OutstandingPushFraction
 }
 
 // TransactionsPerGoal lists all contributions towards a specific goal.
@@ -61,7 +69,12 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 			tfg := transactionsForGoal(t.Goal)
 			fpc := tfg.forCustomer(t.Customer)
 			pushprice := pushprices.At(t.Time)
-			fpc.PushFraction += float64(t.Outstanding) / float64(pushprice)
+			opf := OutstandingPushFraction{
+				ID:       t.ID,
+				Fraction: float64(t.Outstanding) / float64(pushprice),
+			}
+			fpc.Breakdown = append(fpc.Breakdown, opf)
+			fpc.PushFraction += opf.Fraction
 		}
 	}
 	return ret

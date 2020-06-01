@@ -14,6 +14,12 @@
 				<b>{{HTML_FloatMaxPrec $frac 2}}</b>
 				{{if eq $frac 1.0 -}} push {{- else -}} pushes {{- end}}
 				from {{DB_CustomerByID $perCustomer.Customer}}
+				<small class="breakdown">(
+					{{- range $i, $tx := $perCustomer.Breakdown -}}
+						{{- if $i}}, {{end -}}
+						{{HTML_FloatMaxPrec $tx.Fraction 2}} from {{$tx.ID}}
+					{{- end -}}
+				)</small>
 			</li>{{end}}
 		</ul>
 	</dd>{{end}}

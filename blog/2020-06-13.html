@@ -1,0 +1,107 @@
+{{$patch := printf "%v%v" .FilePrefix "TH01OrbPhysicsDebug.zip" -}}
+{{$pic   := printf "%v%v" .FilePrefix "TH01OrbPhysicsDebug.png" -}}
+
+<p>
+	So, let's finally look at some TH01 gameplay structures! The obvious
+	choices here are player shots and pellets, which are conveniently located
+	in the last code segment. Covering these would therefore also help in
+	transferring some first bits of data in <code>REIIDEN.EXE</code> from ASM
+	land to C land. (Splitting the <i>data</i> segment would still be quite
+	annoying.) Player shots are immediately at the beginning…
+</p><p>
+	…but wait, these are drawn as transparent sprites loaded from .PTN files.
+	Guess we first have to spend a push on
+	{{Blog_PostLink "2020-03-13" "Part 2 of this format"}}.<br />
+	Hm, 4 functions for alpha-masked blitting and unblitting of both 16×16 and
+	32×32 .PTN sprites that align the X coordinate to a multiple of 8
+	(remember, the PC-98 uses a
+	<a href="https://en.wikipedia.org/wiki/Planar_(computer_graphics)">planar
+	VRAM memory layout</a>, where 8 pixels correspond to a byte), but only one
+	function that supports unaligned blitting to any X coordinate, and only
+	for 16×16 sprites? Which is only called twice? And doesn't come with a
+	corresponding unblitting function? {{HTML_Emoji "thonk"}}
+</p><p>
+	Yeah, <i>"unblitting"</i>. TH01 isn't
+	<a href="https://en.wikipedia.org/wiki/Double_buffering">double-buffered</a>,
+	and uses the PC-98's second VRAM page exclusively to store a stage's
+	background and static sprites. Since the PC-98 has no hardware sprites,
+	all you can do is write pixels into VRAM, and any animated sprite needs to
+	be manually removed from VRAM at the beginning of each frame. Not using
+	double-buffering theoretically allows TH01 to simply copy back all 128 KB
+	of VRAM once per frame to do this. {{HTML_Emoji "tannedcirno"}} But that
+	would be pretty wasteful, so TH01 just looks at all animated sprites, and
+	selectively copies only their occupied pixels from the second to the first
+	VRAM page.
+</p><hr /><p>
+	Alright, player shot class methods… oh, wait, the collision functions
+	directly act on the Yin-Yang Orb, so we first have to spend a push on
+	<i>that</i> one. And that's where the impression we got from the .PTN
+	functions is confirmed: <i>The orb is, in fact, only ever displayed at
+	byte-aligned X coordinates, divisible by 8.</i> It's only thanks to the
+	constant spinning that its movement appears at least <i>somewhat</i>
+	smooth.<br />
+	This is purely a rendering issue; internally, its position <i>is</i>
+	tracked at pixel precision. Sadly, smooth orb rendering at any unaligned X
+	coordinate wouldn't be <i>that</i> trivial of a mod, because well, the
+	necessary functions for unaligned blitting and unblitting of 32×32 sprites
+	don't exist in TH01's code. Then again, there's so much potential for
+	optimization in this code, so it might be very possible to squeeze those
+	additional two functions into the same C++ translation unit, even without
+	position independence…
+</p><p>
+	More importantly though, this was the right time to decompile the core
+	functions controlling the orb physics – probably the highlight in these
+	three pushes for most people.<br />
+	Well, "physics". The X velocity is restricted to the 5 discrete states of
+	-8, -4, 0, 4, and 8, and gravity is applied by simply adding 1 to the Y
+	velocity every 5 frames {{HTML_Emoji "zunpet"}} No wonder that this can
+	easily lead to situations in which the orb infinitely bounces from the
+	ground.<br />
+	At least fangame authors now have
+	<a href="https://github.com/nmlgc/ReC98/blob/master/th01/main/player/orb.cpp">a
+	reference of how ZUN did it originally</a>, because really, this bad
+	approximation of physics had to have been written that way on purpose. But
+	hey, it uses 64-bit floating-point variables! {{HTML_Emoji "onricdennat"}}
+</p><p>
+	…sometimes at least, and quite randomly. This was also where I had to
+	learn about Turbo C++'s floating-point code generation, and how rigorously
+	it defines the order of instructions when mixing <code>double</code> and
+	<code>float</code> variables in arithmetic or conditional expressions.
+	This meant that I could only get ZUN's original instruction order by using
+	literal constants instead of variables, which is impossible right now
+	without somehow splitting the data segment. In the end, I had to resort to
+	spelling out ⅔ of one function, and one conditional branch of another, in
+	inline ASM. 😕 If ZUN had just written <code>16.0</code> instead of
+	<code>16.0f</code> there, I would have saved quite some hours of my life
+	trying to decompile this correctly…
+</p><p>
+	To sort of make up for the slowdown in progress, <a href="{{$patch}}">
+	here's the TH01 orb physics debug mod</a> I made to properly understand
+	them. To use it, simply replace <code>REIIDEN.EXE</code>, and run the game
+	in debug mode, via <kbd>game d</kbd> on the DOS prompt.<br />
+	<a href="https://github.com/nmlgc/ReC98/commit/874fe6db8a1a40f978b344ed7d400bbedd7ca0a3">
+	Its code</a> might also serve as an example of how to achieve this sort of
+	thing without position independence.
+</p><p class="gallery"><a
+href="{{$pic}}"><img src="{{$pic}}" alt="Screenshot of the TH01 orb physics debug mod" /></a></p
+><hr /><p>
+	Alright, <i>now</i> it's time for player shots though. Yeah, sure, they
+	don't move horizontally, so it's not <i>too</i> bad that those are also
+	always rendered at byte-aligned positions. But, uh… why does this code
+	only use the 16×16 alpha-masked unblitting function for decaying shots,
+	and just sloppily unblits an entire 16×16 square everywhere else?
+</p><p>
+	The worst part though: Unblitting, moving, and rendering player shots <i>
+	is done in a single function, in that order</i>. And that's exactly where
+	TH01's sprite flickering comes from. Since different types of sprites are
+	free to overlap each other, you'd have to first unblit all types, <i>then
+	</i> move all types, and <i>then</i> render all types, as done in later
+	PC-98 Touhou games. If you do these three steps per-type instead, you <i>
+	will</i> unblit sprites of other types that have been rendered before… and
+	therefore end up with flicker.<br />
+	Oh, and finally, ZUN also added an additional sloppy 16×16 square unblit
+	call if a shot collides with a pellet or a boss, for some <i>
+	guaranteed</i> flicker. Sigh.
+</p><hr /><p>
+	And that's ⅓ of all ZUN code in TH01 decompiled! Next up: Pellets!
+</p>

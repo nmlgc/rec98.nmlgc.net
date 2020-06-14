@@ -1,87 +1,87 @@
 ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
-P0005	[2]	TH05 reverse-engineering	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d739d82...4b8baf14135d	1
-P0006	[2]	TH05 reverse-engineering	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d0e52e...843905eceaa7	1
-P0007	[3]	TH05 reverse-engineering	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f30a3b...47e5601613ff	1
-P0008	[3]	TH05 reverse-engineering	2018-04-21T13:52:00Z	nmlgc/ReC98/compare/47e5601613ff...d62dd06ddffb	1
-P0009	[4]	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	nmlgc/ReC98/compare/79cc3ed71ccf...141baa4ca92b	0
-P0010	[4]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb	0
-P0011	[5]	Building a website	2019-08-24T22:10:53Z	nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc	0
-P0012	[5]	Building a website	2019-08-26T16:21:46Z	nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2	0
-P0013	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8	0
-P0014	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632	0
-P0015	[5]	Building a website	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f	0
-P0016	[5]	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b	0
-P0017	[5]	Building a website	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2	0
-P0018	[6]	Reverse-engineering	2018-09-02T19:33:00Z	nmlgc/ReC98/compare/746681d...178d58940853	1
-P0019	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/c592464	1
-P0020	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/cbe8a37	1
-P0021	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/8dfc2cd	1
-P0022	[6]	Reverse-engineering	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/79cc3ed	1
-P0023	[6]	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
-P0024	[6]	Reverse-engineering	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d5a749...0cde4b7cd370	1
-P0025	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0026	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0027	[6]	Reverse-engineering	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7cd370...261d5037ed39	1
-P0028	[7]	Reverse-engineering	2019-09-11T21:25:04Z	nmlgc/ReC98/compare/6023f5c...6ff427a	1
-P0029	[7]	Reverse-engineering → Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/6ff427a...c7fc4ca	1
-P0030	[7]	Decompilation	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/c7fc4ca...dea40ad	1
-P0031	[7]	Decompilation	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
-P0032	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
-P0033	[7]	Reverse-engineering	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
-P0034	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
-P0035	[7]	Reverse-engineering	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
-P0036	[7]	Reverse-engineering	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/a533b5d...82b0e1d	1
-P0037	[7]	Decompilation	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/82b0e1d...e7e1cbc	1
-P0038	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
-P0039	[8]	Building a website	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
-P0040	[9]	TH05 reverse-engineering	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c09cce1...b03bc9135749	1
-P0041	[9]	TH05 reverse-engineering	2018-12-09T00:26:00Z	nmlgc/ReC98/compare/b03bc9135749...f3b6137fe24d	1
-P0042	[9]	TH05 reverse-engineering	2018-12-12T01:52:00Z	nmlgc/ReC98/compare/f3b6137fe24d...807df3d5a749	1
-P0043	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0044	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0045	[10]	TH05 reverse-engineering	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d5037ed39...612beb815b9a	1
-P0046	[10]	TH05 reverse-engineering	2019-01-01T01:38:00Z	nmlgc/ReC98/compare/612beb815b9a...deb45ea14e01	1
-P0047	[11]	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
-P0048	[11]	TH05 reverse-engineering	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f72ba23...893bd46969bf	1
-P0049	[11]	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
-P0050	[11]	TH05 reverse-engineering	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46969bf...6ed8e6033493	1
-P0051	[11]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0052	[11]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0053	[12]	TH05 reverse-engineering	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e6033493...3ba536a2d894	1
-P0054	[13]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e	0
-P0055	[13]	Building a website	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98	0
-P0056	[14, 15]	TH03 reverse-engineering	2019-11-06T22:36:47Z	nmlgc/ReC98/compare/b28cefc...c09446a	1
-P0057	[16, 17]	TH05 position independence	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/1cb9731...ac7540d	1
-P0058	[17]	TH05 position independence	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/ac7540d...fef0299	1
-P0059	[18, 19]	TH04 position independence	2019-11-18T21:28:01Z	nmlgc/ReC98/compare/01de290...8b62780	1
-P0060	[20]	TH03, 65% RE / 35 % PI 	2019-11-29T00:15:36Z	nmlgc/ReC98/compare/29385dd...73f5ae7	1
-P0061	[21]	TH03 position independence	2019-12-05T21:18:16Z	nmlgc/ReC98/compare/96684f4...5f4f5d8	1
-P0062	[21]	TH04 / TH05 RE / PI	2019-12-22T15:09:53Z	nmlgc/ReC98/compare/1d6fbb8...f275e04	1
-P0063	[26]	TH05 OP.EXE position independence	2019-12-28T11:37:29Z	nmlgc/ReC98/compare/034ae4b...8dbb450	1
-P0064	[21, 20]	TH04 / TH05 OP.EXE position independence	2019-12-29T20:23:06Z	nmlgc/ReC98/compare/80cec5b...9faa29a	1
-P0065	[20]	TH04 / TH05 reverse-engineering	2020-01-03T20:45:46Z	nmlgc/ReC98/compare/9faa29a...042b780	1
-P0066	[25, 22]	TH01 reverse-engineering	2020-01-05T20:04:19Z	nmlgc/ReC98/compare/042b780...e55a48b	1
-P0067	[22]	TH01 reverse-engineering	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e55a48b...ebb30ce	1
-P0068	[30]	TH01 reverse-engineering	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/ebb30ce...2ac00d4	1
-P0069	[30, 24]	TH01 reverse-engineering	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e0d0dcd...0f18dbc	1
-P0070	[27]	TH03 scoring mechanics	2020-01-20T21:51:25Z	nmlgc/Rec98/compare/a931758...327021b	1
-P0071	[27, 33]	TH03 scoring mechanics	2020-01-29T08:17:30Z	nmlgc/Rec98/compare/327021b...4bb04ab	1
-P0072	[23, 32]	TH04 / TH05 position independence	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/4bb04ab...cea3ea6	1
-P0073	[37, 40]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/cea3ea6...5286417	1
-P0074	[34]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/5286417...1807906	1
-P0075	[34, 41]	TH04 / TH05 reverse-engineering	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1
-P0076	[29, 31]	TH03 reverse-engineering	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/222fc99...9ae9754	1
-P0077	[39, 35]	TH04 / TH05 reverse-engineering	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/9ae9754...f4eb7a8	1
-P0078	[43, 44]	TH05 position independence	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/f4eb7a8...9e52cb1	1
-P0079	[28]	TH05 position independence	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/9e52cb1...cd48aa3	1
-P0080	[38, 36]	TH01 reverse-engineering	2020-03-03T12:17:54Z	nmlgc/Rec98/compare/cd48aa3...0252da2	1
-P0081	[36]	TH01 reverse-engineering	2020-03-07T20:45:20Z	nmlgc/Rec98/compare/0252da2...5ac9b30	1
-P0082	[46]	TH01 reverse-engineering	2020-03-13T18:56:50Z	nmlgc/Rec98/compare/5ac9b30...f6cbff0	1
-P0083	[47]	TH01 reverse-engineering	2020-03-18T19:39:32Z	nmlgc/Rec98/compare/f6cbff0...dfac2f2	1
-P0084	[47]	TH01 reverse-engineering	2020-03-22T09:18:27Z	nmlgc/Rec98/compare/dfac2f2...110d6dd	1
-P0085	[49]	TH05 position independence	2020-04-03T15:46:03Z	nmlgc/Rec98/compare/110d6dd...54ee99b	1
-P0086	[48, 45]	TH04/TH05 reverse-engineering	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/54ee99b...24b96cd	1
-P0087	[49]	TH05 position independence	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/24b96cd...97ce7b7	1
+P0005	[2]	TH02/TH03/TH04/TH05 RE (RNG, .MAP loading)	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d7...4b8baf1	1
+P0006	[2]	TH04/TH05 RE (ZUN Soft logo explosions)	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d...843905e	1
+P0007	[3]	TH03/TH04/TH05 RE (Joypad functions, frame counts)	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f...47e5601	1
+P0008	[3]	TH02/TH04/TH05 RE (Shot variables and function pointers)	2018-04-21T13:52:00Z	nmlgc/ReC98/compare/47e5601...d62dd06	1
+P0009	[4]	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	nmlgc/ReC98/compare/79cc3ed...141baa4	0
+P0010	[4]	Website (Golang HTML templating)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb	0
+P0011	[5]	Website (Completion percentages)	2019-08-24T22:10:53Z	nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc	0
+P0012	[5]	Website (Memory reference counting)	2019-08-26T16:21:46Z	nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2	0
+P0013	[5]	Website (Design)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8	0
+P0014	[5]	Website (Crowdfunding log + Blog, part 1)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632	0
+P0015	[5]	Website (Blog, part 2)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f	0
+P0016	[5]	Website (Price estimate, part 1)	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b	0
+P0017	[5]	Website (Price estimate, part 2)	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2	0
+P0018	[6]	TH04/TH05 RE (Player variables, part 1 + Motion structure) 	2018-09-02T19:33:00Z	nmlgc/ReC98/compare/746681d...178d589	1
+P0019	[6]	TH03/TH04/TH05 RE (Input, part 1)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/c592464	1
+P0020	[6]	TH03 RE (Input, part 3)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/cbe8a37	1
+P0021	[6]	TH03 RE (Input, part 4)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/8dfc2cd	1
+P0022	[6]	TH03/TH04/TH05 RE (Input, part 2)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/79cc3ed	1
+P0023	[6]	TH05 RE (Lasers, part 2)	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d...0cde4b7	1
+P0024	[6]	TH05 RE (Lasers, part 3)	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d...0cde4b7	1
+P0025	[6]	TH04/TH05 RE (EGC calls)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
+P0026	[6]	TH04/TH05 RE (Boss backdrops)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
+P0027	[6]	TH04/TH05 RE (.STD loading)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
+P0028	[7]	TH04/TH05 RE (Midboss and boss variables, part 3)	2019-09-11T21:25:04Z	nmlgc/ReC98/compare/6023f5c...6ff427a	1
+P0029	[7]	TH04/TH05 RE (Midboss and boss function names)	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/6ff427a...c7fc4ca	1
+P0030	[7]	TH05 decompilation (Stage setup)	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/c7fc4ca...dea40ad	1
+P0031	[7]	TH05 decompilation (Stage .BB loading + Segment split research)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
+P0032	[7]	TH02/TH04/TH05 RE (Score update and rendering)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
+P0033	[7]	TH04/TH05 RE (HUD bars + Player movement)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
+P0034	[7]	TH04/TH05 RE (Player variables, part 2 + Deathbomb window)	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
+P0035	[7]	TH04/TH05 RE (Player rendering)	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
+P0036	[7]	TH04/TH05 RE (Generic player shot functions) 	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/a533b5d...82b0e1d	1
+P0037	[7]	TH05 decompilation (Yuuka's, Mima's, and Marisa's shot functions)	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/82b0e1d...e7e1cbc	1
+P0038	[8]	Website (Basic Golang app server + looping over commit history)	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
+P0039	[8]	Website (Inspecting files in a specific commit)	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
+P0040	[9]	TH04/TH05 RE (GRCG calls + Circles)	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c0...b03bc91	1
+P0041	[9]	TH04/TH05 RE (Midboss and boss variables, part 1)	2018-12-09T00:26:00Z	nmlgc/ReC98/compare/b03bc91...f3b6137	1
+P0042	[9]	TH04/TH05 RE (Rank + TH05 lasers, part 1)	2018-12-12T01:52:00Z	nmlgc/ReC98/compare/f3b6137...807df3d	1
+P0043	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 1)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
+P0044	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 2)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
+P0045	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 3)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
+P0046	[10]	TH04/TH05 RE (16×16 sprite rendering + Player shots, part 1)	2019-01-01T01:38:00Z	nmlgc/ReC98/compare/612beb8...deb45ea	1
+P0047	[11]	TH04/TH05 RE (Player shots, part 2)	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f7...893bd46	1
+P0048	[11]	TH04/TH05 RE (8×8 sparks)	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f7...893bd46	1
+P0049	[11]	TH04/TH05 RE (.BB loading)	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46...6ed8e60	1
+P0050	[11]	TH04/TH05 RE (Midboss and boss variables, part 2)	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46...6ed8e60	1
+P0051	[11]	TH04/TH05 RE (Midboss and boss explosions)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
+P0052	[11]	TH04/TH05 RE (Score variables)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
+P0053	[12]	TH04/TH05 RE (Text popups)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
+P0054	[13]	Website (ASM instruction counting, part 1)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e	0
+P0055	[13]	Website (ASM instruction counting, part 2)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98	0
+P0056	[14, 15]	TH03 RE (The stolen sprite driver, part 1)	2019-11-06T22:36:47Z	nmlgc/ReC98/compare/b28cefc...c09446a	1
+P0057	[16, 17]	TH04/TH05 PI (Items, part 1)	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/1cb9731...ac7540d	1
+P0058	[17]	TH04/TH05 RE (Items, part 2 + Midboss and boss variables, part 4)	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/ac7540d...fef0299	1
+P0059	[18, 19]	TH04/TH05 PI (Motion structures + EGC calls + vector calls)	2019-11-18T21:28:01Z	nmlgc/ReC98/compare/01de290...8b62780	1
+P0060	[20]	TH03 decompilation (The stolen sprite driver, part 2) / PI 	2019-11-29T00:15:36Z	nmlgc/ReC98/compare/29385dd...73f5ae7	1
+P0061	[21]	TH03 RE (Character data, part 1 + Player shots, part 1)	2019-12-05T21:18:16Z	nmlgc/ReC98/compare/96684f4...5f4f5d8	1
+P0062	[21]	TH05 decompilation (Reimu's shot functions) / PI	2019-12-22T15:09:53Z	nmlgc/ReC98/compare/1d6fbb8...f275e04	1
+P0063	[26]	TH05 RE (GENSOU.SCR, part 1)	2019-12-28T11:37:29Z	nmlgc/ReC98/compare/034ae4b...8dbb450	1
+P0064	[21, 20]	TH04/TH05 PI (Completing OP.EXE)	2019-12-29T20:23:06Z	nmlgc/ReC98/compare/80cec5b...9faa29a	1
+P0065	[20]	TH04/TH05 RE (Resident structures)	2020-01-03T20:45:46Z	nmlgc/ReC98/compare/9faa29a...042b780	1
+P0066	[25, 22]	TH01 RE (Palettes) / decompilation (Graphics functions, part 1)	2020-01-05T20:04:19Z	nmlgc/ReC98/compare/042b780...e55a48b	1
+P0067	[22]	TH01 decompilation (Graphics functions, part 2)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e55a48b...ebb30ce	1
+P0068	[30]	TH01 decompilation (Graphics functions, part 3)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/ebb30ce...2ac00d4	1
+P0069	[30, 24]	TH01 decompilation (Graphics functions, part 4)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e0d0dcd...0f18dbc	1
+P0070	[27]	TH03 RE (Score and combo variables)	2020-01-20T21:51:25Z	nmlgc/Rec98/compare/a931758...327021b	1
+P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	nmlgc/Rec98/compare/327021b...4bb04ab	1
+P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/4bb04ab...cea3ea6	1
+P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/cea3ea6...5286417	1
+P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/5286417...1807906	1
+P0075	[34, 41]	TH04/TH05 RE (Bullet pattern types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1
+P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/222fc99...9ae9754	1
+P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/9ae9754...f4eb7a8	1
+P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/f4eb7a8...9e52cb1	1
+P0079	[28]	TH05 PI/RE (Mai's, Yuki's, and Shinki's 32×32 balls, Yumeko's swords)	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/9e52cb1...cd48aa3	1
+P0080	[38, 36]	TH01 decompilation (Graphics functions, part 5)	2020-03-03T12:17:54Z	nmlgc/Rec98/compare/cd48aa3...0252da2	1
+P0081	[36]	TH01 decompilation (.GRZ format)	2020-03-07T20:45:20Z	nmlgc/Rec98/compare/0252da2...5ac9b30	1
+P0082	[46]	TH01 decompilation (.GRP format)	2020-03-13T18:56:50Z	nmlgc/Rec98/compare/5ac9b30...f6cbff0	1
+P0083	[47]	TH01 decompilation (.PTN format, part 1)	2020-03-18T19:39:32Z	nmlgc/Rec98/compare/f6cbff0...dfac2f2	1
+P0084	[47]	TH01 decompilation (REYHI*.DAT loading and creation)	2020-03-22T09:18:27Z	nmlgc/Rec98/compare/dfac2f2...110d6dd	1
+P0085	[49]	TH02/TH04/TH05 RE (Pellet rendering + TH04/TH05 gather circles)	2020-04-03T15:46:03Z	nmlgc/Rec98/compare/110d6dd...54ee99b	1
+P0086	[48, 45]	TH04/TH05 RE (Random PI blockers)	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/54ee99b...24b96cd	1
+P0087	[49]	TH04/TH05 RE (Score popup numbers)	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/24b96cd...97ce7b7	1
 P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/97ce7b7...da6b856	1
 P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/da6b856...90252cc	1
 P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/90252cc...07dab29	1

@@ -7,8 +7,8 @@ import (
 	"math"
 	"strings"
 
-	"gopkg.in/src-d/go-git.v4/plumbing"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
+	"github.com/go-git/go-git/plumbing"
+	"github.com/go-git/go-git/plumbing/object"
 )
 
 type eInvalidGame struct{}

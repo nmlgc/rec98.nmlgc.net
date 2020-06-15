@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/go-git/go-git/plumbing/object"
 	"github.com/gorilla/mux"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 // FatalIf removes the boilerplate for cases where errors are fatal.

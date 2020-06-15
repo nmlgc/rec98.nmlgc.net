@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/src-d/go-git.v4"
-	"gopkg.in/src-d/go-git.v4/plumbing"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
-	"gopkg.in/src-d/go-git.v4/storage/memory"
+	"github.com/go-git/go-git"
+	"github.com/go-git/go-git/plumbing"
+	"github.com/go-git/go-git/plumbing/object"
+	"github.com/go-git/go-git/storage/memory"
 )
 
 // Repository wraps a go-git Repository object.

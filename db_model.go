@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-git/go-git/plumbing/object"
 	"github.com/gocarina/gocsv"
-	"gopkg.in/src-d/go-git.v4/plumbing/object"
 )
 
 const dbPath = "db/"

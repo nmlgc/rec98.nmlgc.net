@@ -1,0 +1,49 @@
+<p>
+	TH01 pellets are coming up next, and for the first time, we'll have the
+	chance to move hardcoded sprite data from ASM land to C land. As it would
+	turn out, bad luck with the 2-byte alignment at the end of <code>
+	REIIDEN.EXE</code>'s data segment pretty much <i>forces</i> us to declare
+	TH01's pellet sprites in C if we want to decompile the final few pellet
+	functions without ugly workarounds for the float literals there. And while
+	I could have just converted them into a C array and called it a day, it
+	did raise the question of when we are going to do this The Right And
+	Moddable Way, by auto-converting actual image files into ASM or C arrays
+	during the build process. These arrays are even more annoying to edit in
+	C, after all – unlike TASM, the old C++ we have to work with doesn't
+	support binary number literals, only hexadecimal or, <i>gasp</i>, octal.
+	<br />
+	Without the explicit funding for such a converter,
+	<a href="https://github.com/nmlgc/ReC98/issues/8">I reached out to
+	GitHub</a>, asking backers and outside contributors whether they'd be in
+	favor of it. As something that requires no RE skills and collides with
+	nothing else, it would be a perfect task for C/C++ coders who want to
+	support ReC98 with something other than money.
+</p><p>
+	And surprisingly, those still exist!
+	<a href="https://github.com/joncampbell123">Jonathan Campbell</a>, of
+	<a href="https://github.com/joncampbell123/dosbox-x">DOSBox-X</a> fame,
+	went ahead and implemented all the required functionality, within just a
+	few days. Thanks again! The result is probably a lot more portable than it
+	would have been if I had written it. Which is pretty relevant for future
+	port authors – any additional tooling we write ourselves should <i>not</i>
+	add to the list of problems they'll have to worry about.
+</p><p>
+	Right now, all of the sprites are <code>#include</code>d from the big ASM
+	dump files, which means that they have to be converted before those files
+	are assembled during the 32-bit build part. We could have introduced a
+	third distinct build step there, perhaps even a 16-bit one so that we can
+	use Turbo C++ 4.0J to also compile the converter… However, the more
+	reasonable option was to do this at the beginning of the 32-bit build
+	step, and add a 32-bit Windows C++ compiler to the list of tools required
+	for ReC98's build process.<br />
+	And the best choice for ReC98 is, in fact… 🥁… the 20-year-old Borland C++
+	5.5 freeware release.
+	<a href="https://github.com/nmlgc/ReC98/blob/master/README.md#building">
+	See the <code>README</code> for a lengthy justification</a>, as well as
+	download links.
+</p><p>
+	So yes, all sprites mentioned in the GitHub issue can now be modded by
+	simply editing .BMP files, using an image editor of your choice. 🖌<br />
+	And now that that's dealt with, it's finally time for more actual
+	progress! TH01 pellets coming tomorrow.
+</p>

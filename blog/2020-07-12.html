@@ -1,0 +1,115 @@
+<p>
+	Well, make that three days. Trying to figure out all the details behind
+	the sprite flickering was absolutely dreadful…<br />
+	It started out easy enough, though. Unsurprisingly, TH01 had a quite
+	limited pellet system compared to TH04 and TH05:
+</p><ul>
+	<li>The cap is 100, rather than 240 in TH04 or 180 in TH05.</li>
+	<li>Only 6 special motion functions (with one of them broken and unused)
+	instead of 10. This is where you find the code that generates SinGyoku's
+	chase pellets, Kikuri's small spinning multi-pellet circles, and
+	Konngara's rain pellets that bounce down from the top of the playfield.
+	</li>
+	<li>A tiny selection of preconfigured multi-pellet patterns. Rather than
+	TH04's and TH05's freely configurable n-way spreads, stacks, and rings,
+	TH01 only provides abstractions for 2-, 3-, 4-, and 5- way spreads (yup,
+	no 6-way or beyond), with a fixed narrow or wide angle between the
+	individual pellets. The resulting pellets are also hardcoded to linear
+	motion, and can't use the special motion functions. Maybe not the best
+	code, but still kind of cute, since the generated patterns do follow a
+	clear logic.</li>
+</ul><p>
+	As expected from TH01, the code comes with its fair share of smaller,
+	insignificant ZUN bugs and oversights. As you would <i>also</i> expect
+	though, the sprite flickering points to the biggest and most consequential
+	flaw in all of this.
+</p><hr /><p>
+	Apparently, it started with ZUN getting the impression that it's only
+	possible to use the PC-98 EGC for fast blitting of all 4 bitplanes in one
+	CPU instruction if you blit 16 horizontal pixels (= 2 bytes) at a time.
+	Consequently, he only wrote one function for EGC-accelerated sprite
+	unblitting, which can only operate on a "grid" of 16×1 tiles in VRAM. But
+	wait, pellets are not only just 8×8, but can also be placed at any
+	unaligned X position…
+</p><p>
+	… yet the game still insists on using this 16-dot-aligned function to
+	unblit pellets, forcing itself into using a super sloppy 16×8 rectangle
+	for the job. 🤦 ZUN then tried to mitigate the resulting flickering in two
+	hilarious ways that just make it worse:
+</p><ol>
+	<li>An… "interlaced rendering" mode? This one's activated for all Stage 15
+	and 20 fights, and separates pellets into two halves that are rendered on
+	alternating frames. Collision detection with the Yin-Yang Orb and the
+	player is only done for the visible half, but collision detection with
+	player <i>shots</i> is still done for all pellets every frame, as are
+	motion updates – so that pellets don't end up moving half as fast as they
+	should.<br />
+	So yeah, your eyes weren't deceiving you. The game <i>does</i> effectively
+	drop its perceived frame rate in the Elis, Kikuri, Sariel, and Konngara
+	fights, and it does so deliberately.</li>
+	<li><p>
+		{{Blog_PostLink "2020-06-13" "Just like player shots"}}, pellets
+		are <i>also</i> unblitted, moved, and rendered in a single function.
+		Thanks to the 16×8 rectangle, there's now the (completely unnecessary)
+		possibility of accidentally unblitting parts of a sprite that was
+		previously drawn into the 8 pixels right of a pellet. And <i>this</i>
+		is where ZUN went full {{HTML_Emoji "tannedcirno"}} and went "oh, I
+		know, let's test the entire 16 pixels, and in case we got an entity
+		there, we simply make the <i>pellet</i> invisible for this frame! Then
+		we don't even have to unblit it later!" {{HTML_Emoji "zunpet"}}
+	</p><p>
+		Except that this is only done for the first 3 elements of the player
+		shot array…?! Which don't even necessarily have to contain the 3 shots
+		fired last. It's not done for the player sprite, the Orb, or, heck,
+		<i>other pellets</i> that come earlier in the pellet array. (At least
+		we avoided going 𝑂(𝑛²) there?)
+	</p><p>
+		Actually, and I'm only realizing this now as I type this blog post:
+		This test is done <i>even if the shots at those array elements aren't
+		active</i>. So, pellets tend to be made invisible based on comparisons
+		with garbage data. {{HTML_Emoji "onricdennat"}}
+	</p><p>
+		And <i>then</i> you notice that the <i>player shot</i>
+		unblit​/​move​/​render function is actually only ever called from the
+		<i>pellet</i> unblit​/​move​/​render function on the one global instance
+		of the player shot manager class, after pellets were unblitted. So, we
+		end up with a sequence of
+	</p><blockquote>Pellet unblit → Pellet move → Shot unblit → Shot move → Shot render → Pellet render</blockquote><p>
+		which means that <i>we can't ever unblit a previously rendered shot
+		with a pellet</i>. Sure, as terrible as this one function call is from
+		a software architecture perspective, it was enough to fix this issue.
+		Yet we don't even get the intended positive effect, and walk away with
+		pellets that are made temporarily invisible for no reason at all. So,
+		uh, maybe it all just <i>was</i> an attempt at increasing the
+		ramerate on lower spec PC-98 models?
+	</p></li>
+</ol><p>
+	Yup, that's it, we've found the most stupid piece of code in this game,
+	period. It'll be hard to top this.
+</p><hr /><p>
+	I'm confident that it's possible to turn TH01 into a well-written, fluid
+	PC-98 game, with no flickering, and no perceived lag, once it's
+	position-independent. With some more in-depth knowledge and documentation
+	on the EGC (remember, there's still
+	{{Blog_PostLink "2019-11-06" "this one TH03 push waiting to be funded"}}),
+	you might even be able to continue using that piece of blitter hardware.
+	And no, you certainly won't need ASM micro-optimizations – just a bit of
+	knowledge about which optimizations Turbo C++ does on its own, and what
+	you'd have to improve in your own code. It'd be very hard to <i>write</i>
+	worse code than what you find in TH01 itself.
+</p><p>
+	(<s><a href="https://godbolt.org">Godbolt</a> for Turbo C++ 4.0J when?</s>
+	Seriously though, that would {{Blog_PostLink "2020-07-09" "also"}} be a
+	great project for outside contributors!)
+</p><hr /><p>
+	Oh well. In contrast to TH04 and TH05, where 4 pushes only covered all the
+	involved data types, they were enough to completely cover <i> all</i> of
+	the pellet code in TH01. Everything's already decompiled, and we never
+	have to look at it again. 😌 And with that, TH01 has also gone from by far
+	the least RE'd to the most RE'd game within ReC98, in just half a year! 🎉
+	<br />
+	Still, that was enough TH01 game logic for a while.
+	{{HTML_Emoji "tannedcirno"}} Next up: Making up for the delay with some
+	more relaxing and easy pieces of TH01 code, that hopefully make just a
+	<i>bit</i> more sense than all this garbage. More image formats, mainly.
+</p>

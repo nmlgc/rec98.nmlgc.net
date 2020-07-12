@@ -93,3 +93,7 @@ P0095	[42]	TH01 PI (Completing OP and FUUIN, .BOS pointers, scrolling)	2020-05-3
 P0096	[46, 52]	TH01 decompilation (.PTN format, part 2)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/8ddb778...8283c5e	1
 P0097	[52, 57]	TH01 decompilation (Orb physics)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/8283c5e...600f036	1
 P0098	[51]	TH01 decompilation (Player shots)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/600f036...ad06748	1
+P0099	[61]	TH01 decompilation (Pellets, part 1)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/1799d67...1b25830	1
+P0100	[60]	TH01 decompilation (Pellets, part 2)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/1b25830...ceb81db	1
+P0101	[42, 61]	TH01 decompilation (Pellets, part 3)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/ceb81db...c11a956	1
+P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/c11a956...b60f38d	1

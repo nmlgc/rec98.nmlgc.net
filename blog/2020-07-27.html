@@ -1,0 +1,71 @@
+{{$pic1 := printf "%v%v" .FilePrefix "Life-wrapping.png" -}}
+{{$pic2 := printf "%v%v" .FilePrefix "mask.grf.png" -}}
+
+<p>
+	It's vacation time! Which, for ReC98, means "relaxing by looking at
+	something boring and uninteresting that we'll ultimately have to cover
+	anyway"… like the TH01 HUD.
+</p><p>
+	{{Blog_PostLink "2020-03-18" "As noted earlier"}}, all the score, card
+	combo, stage, and time numbers are drawn into VRAM. Which turns TH01's HUD
+	rendering from the trivial, gaiji-assisted text RAM writes we see in later
+	games to something that, once again, requires blitting and unblitting
+	steps. For some reason though, everything on there is blitted to <i>both
+	</i> VRAM pages? And that's why the HUD chose to allocate a bunch of .PTN
+	sprite slots to store the background behind all "animated" elements at the
+	beginning of a 4-stage scene or boss battle… <i>separately for every
+	affected 16×16 area</i>. (Looking forward to the completely unnecessary
+	code in the Sariel fight that updates these slots after the backgrounds
+	were animated!) And without any separation into helper functions, we end
+	up with the same blitting calls separately copy-pasted for every single
+	HUD element. That's why something as seemingly trivial as this isn't even
+	<i>done</i> after 2 pushes, as we're still missing the stage timer.
+</p><p>
+	Thankfully, the .PTN function signatures come with none of ZUN's little
+	inconsistencies, so I was able to mostly reduce this copy-pasta to a bunch
+	of small inline functions and macros. Those interfaces still remain a bit
+	annoying, though. As a 32×32 format, .PTN merely supports 16×16 sprites
+	with a separate bunch of functions that take an additional
+	<code>quarter</code> parameter from 0 to 3, to select one of the 4 16×16
+	quarters in a such a sprite…
+</p><hr /><p>
+	For life and bomb counts, there was no way around VRAM though, since ZUN
+	wanted to use more than a single color for those. This is where we find at
+	least somewhat of a mildly interesting quirk in all of this: Any life
+	counts greater than the intended 6 will wrap into new rows, with the bombs
+	in the second row overlapping those excess lives. With the way the rest of
+	the HUD rendering works, that wrapping code code had to be explicitly
+	written… which means that ZUN did in fact accomodate (his own?) cheating
+	there.
+</p><p class="gallery"><a
+href="{{$pic1}}"><img src="{{$pic1}}" alt="TH01 life wrapping" /></a></p
+><hr /><p>
+	Now, I promised image formats, and in the middle of this copy-pasta, we
+	<i>did</i> get one… sort of. <code>MASK.GRF</code>, the red HUD
+	background, is entirely handled with two small bespoke functions… and
+	that's all the code we have for this format. Basically, it's a variation
+	on the {{Blog_PostLink "2020-03-07" ".GRZ format we've seen earlier"}}. It
+	uses the exact same RLE algorithm, but only has a single byte stream for
+	both RLE commands and pixel data… as you would expect from an RLE format.
+</p><p>
+	.GRF actually stores 4 separately encoded RLE streams, which suggests that
+	it was intended for full 16-color images. Unfortunately,
+	<code>MASK.GRF</code> only contains 4 copies of the same HUD background
+	{{HTML_Emoji "zunpet"}}, so no unused beta data for us there. The only
+	thing we <i>could</i> derive from 4 identical bitplanes would be that the
+	background was originally meant to be drawn using color #15, rather than
+	the <span style="color: #ff0000;">red</span> seen in the final game. Color
+	#15 is a stage-specific background color that <i>would</i> have made the
+	HUD blend in quite nicely – in the YuugenMagan fight, it's the changing
+	color of the <span lang="ja">邪</span> in the background, for example. But
+	really, with no generic implementation of this format, that's all just
+	speculation.
+</p><p>
+	Oh, and in case you were looking for a rip of that image:
+</p><p class="gallery"><a
+href="{{$pic2}}"><img src="{{$pic2}}" alt="TH01 HUD background (MASK.GRF)" /></a></p
+><hr /><p>
+	So yeah, more of the usual TH01 code, with the usual small quirks, but
+	nothing all too horrible – as expected. Next up: The image formats that
+	didn't make it into this push.
+</p>

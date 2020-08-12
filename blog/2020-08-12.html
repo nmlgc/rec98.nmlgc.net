@@ -1,0 +1,97 @@
+<p>
+	And indeed, I got to end my vacation with <i>a lot</i> of image format and
+	blitting code, covering the final two formats, .GRC and .BOS. .GRC was
+	nothing noteworthy – one function for loading, one function for
+	byte-aligned blitting, and one function for freeing memory. That's it –
+	not even a unblitting function for this one. .BOS, on the other hand…
+</p><p>
+	…has no generic (read: single/sane) implementation, and is only
+	implemented as methods of some boss entity class. And then again for
+	Sariel's dress and wand animations, and then <i>again</i> for Reimu's
+	animations, both of which weren't even part of these 4 pushes. Looking
+	forward to decompiling essentially the same algorithms all over again… And
+	that's how TH01 became the largest and most bloated PC-98 Touhou game. So
+	yeah, still not done with image formats, even at 44% RE.
+</p><p>
+	This means I also had to reverse-engineer that "boss entity" class… yeah,
+	what else to call something a boss can have multiple of, that may or may
+	not be part of a larger boss sprite, may or may not be animated, and that
+	may or may not have an orb hitbox?<br />
+	All bosses except for Kikuri share the same 5 global instances of this
+	class. Since renaming all these variables in ASM land is tedious anyway, I
+	went the extra mile and directly defined separate, meaningful names for
+	the entities of all bosses. These also now document the natural order in
+	which the bosses will ultimately be decompiled. So, unless a backer
+	requests anything else, this order will be:
+</p><ol>
+	<li>Konngara</li>
+	<li>Sariel</li>
+	<li>Elis</li>
+	<li>Kikuri</li>
+	<li>SinGyoku</li>
+	<li>(code for regular card-flipping stages)</li>
+	<li>Mima</li>
+	<li>YuugenMagan</li>
+</ol><hr /><p>
+	As everyone kind of expects from TH01 by now, this class reveals yet
+	another… um, <i>unique and quirky</i> piece of code architecture. In
+	addition to the position and hitbox members you'd expect from a class like
+	this, the game also stores the .BOS metadata – width, height, animation
+	frame count, and {{Blog_PostLink "2020-05-31" "bitplane pointer slot"}}
+	number – inside the same class. But if each of those still corresponds to
+	one individual on-screen sprite, how can YuugenMagan have 5 eye sprites,
+	or Kikuri have more than one soul and tear sprite? By duplicating that
+	metadata, of course! And copying it from one entity to another
+	{{HTML_Emoji "onricdennat"}}<br />
+	At this point, I feel like I even have to congratulate the game for not
+	actually loading YuugenMagan's eye sprites 5 times. But then again, 53,760
+	bytes of waste would have definitely been noticeable in the DOS days.
+	Makes much more sense to waste that amount of space on an unused C++
+	exception handler, and a bunch of redundant, unoptimized blitting
+	functions {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	(Thinking about it, YuugenMagan fits this entire system perfectly. And
+	together with its position in the game's code – last to be decompiled
+	means first on the linker command line – we might speculate that
+	YuugenMagan was the first boss to be programmed for TH01?)
+</p><p>
+	So if a boss wants to use sprites with different sizes, there's no way
+	around using another entity. And that's why Girl-Elis and Bat-Elis are two
+	distinct entities internally, and have to manually sync their position.
+	Except that there's also a <i>third</i> one for Attacking-Girl-Elis,
+	because Girl-Elis has 9 frames of animation in total, and the global .BOS
+	bitplane pointers are divided into 4 slots of only <i>8</i> images each.
+	{{HTML_Emoji "zunpet"}}<br />
+	Same for SinGyoku, who is split into a <i>sphere</i> entity, a <i>
+	person</i> entity, and a… <i>white flash</i> entity for all three forms,
+	all at the same resolution. Or Konngara's facial expressions, which also
+	require two entities just for themselves.
+</p><hr /><p>
+	And once you decompile all this code, you notice just how much of it the
+	game didn't even use. 13 of the 50 bytes of the boss entity class are
+	outright unused, and 10 bytes are used for a movement clamping and lock
+	system that <i>would</i> have been nice if ZUN also used it outside of
+	Kikuri's soul sprites. Instead, all other bosses ignore this system
+	completely, and just
+	<a href="https://devblogs.microsoft.com/oldnewthing/20140211-00/?p=1803">party on</a>
+	the X/Y coordinates of the boss entities directly.
+</p><p>
+	As for the rendering functions, 5 out of 10 are unused. And while those
+	definitely make up <i>less</i> than half of the code, I still must have
+	spent at least 1 of those 4 pushes on effectively unused functionality.
+	<br />
+	Only one of these functions lends itself to some speculation. For Elis'
+	entrance animation, the class provides functions for wavy blitting and
+	unblitting, which use a separate X coordinate for every line of the
+	sprite. But there's also an unused and sort of broken one for unblitting
+	two overlapping wavy sprites, located at the same Y coordinate. This might
+	indicate that Elis could originally split herself into two sprites,
+	similar to TH04 Stage 6 Yuuka? Or it might just have been some other kind
+	of animation effect, who knows.
+</p><hr /><p>
+	After over 3 months of TH01 progress though, it's finally time to look at
+	other games, to cover the rest of the crowdfunding backlog. Next up: Going
+	back to TH05, and getting rid of those last PI false positives. And since
+	I can potentially spend the next 7 weeks on almost full-time ReC98 work,
+	I've also re-opened the store until October!
+</p>

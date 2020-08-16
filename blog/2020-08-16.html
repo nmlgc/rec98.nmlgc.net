@@ -1,0 +1,83 @@
+<p>
+	Back to TH05! Thanks to the good funding situation, I can strike a nice
+	balance between getting TH05 position-independent as quickly as possible,
+	and properly reverse-engineering some missing important parts of the game.
+	Once 100% PI will get the attention of modders, the code will then be in
+	better shape, and a bit more usable than if I just rushed that goal.
+</p><p>
+	By now, I'm apparently also pretty spoiled by TH01's immediate
+	decompilability, after having worked on that game for so long.
+	Reverse-engineering in ASM land <i>is</i> pretty annoying, after all,
+	since it basically boils down to meticulously editing a piece of ASM into
+	something I can confidently call <i>"reverse-engineered"</i>. Most of the
+	time, simply decompiling that piece of code would take just a little bit
+	longer, but be massively more useful. So, I immediately tried decompiling
+	with TH05… and it just worked, at every place I tried!? Whatever the issue
+	was that made {{Blog_PostLink "2019-09-21" "segment splitting"}} so
+	annoying at my first attempt, I seem to have completely solved it in the
+	meantime. 🤷 So yeah, backers can now request pretty much any part of TH04
+	and TH05 to be decompiled immediately, with no additional segment
+	splitting cost.
+</p><p>
+	(Protip for everyone interested in starting their own ReC project: Just
+	declare one segment per function, right from the start, then group them
+	together to restore the original code segmentation…)
+</p><hr /><p>
+	Except that TH05 then just throws more of its infamous micro-optimized and
+	undecompilable ASM at you. 🙄 This push covered the function that adjusts
+	the bullet pattern template based on rank and the selected difficulty,
+	called every time such a pattern is configured. Which, just like pretty
+	much all of TH05's bullet spawning code, is one of those undecompilable
+	functions. If C allowed labels of other functions as <code>goto</code>
+	targets, it <i>might</i> have been decompilable into something useful to
+	modders… maybe. But like this, there's no point in even trying.
+</p><p>
+	This is such a terrible idea from a software architecture point of view, I
+	can't even. Because now, you suddenly <i>have</i> to mirror your C++
+	declarations in ASM land, and keep them in sync with each other. I'm
+	always happy when I get to delete an ASM declaration from the codebase
+	once I've decompiled all the instances where it was referenced. But for
+	TH05, we now have to keep those declarations around forever. 😕 And all
+	that for a performance increase you probably couldn't even measure. Oh
+	well, pulling off Galaxy Brain-level ASM optimizations <i>is</i> kind of
+	fun if you don't have portability plans… I guess?
+</p><p>
+	If I started a full fangame mod of a PC-98 Touhou game, I'd base it on
+	TH04 rather than TH05, and backport selective features from TH05 as
+	needed. Just because it was released later doesn't make it better, and
+	this is by far not the only one of ZUN's micro-optimizations that just
+	went way too far.
+</p><p>
+	Dropping down to ASM also makes it easier to introduce weird quirks.
+	Decompiled, one of TH05's tuning conditions for
+	<a href="https://sparen.github.io/ph3tutorials/ddsga3.html#sub5">stack
+	patterns</a> on Easy Mode would look something like:
+	<pre>case BP_STACK:
+	// […]
+	if(spread_angle_delta >= 2) {
+		stack_bullet_count--;
+	}</pre>
+	The fields of the bullet pattern template aren't typically reset when
+	setting up a new pattern. So, <code>spread_angle_delta</code> in the
+	context of a stack pattern effectively refers to "the delta angle of the
+	last spread pattern that was fired before this stack – whenever that was".
+	uth05win also spotted this quirk, considered it a bug, and wrote
+	fanfiction by changing <code>spread_angle_delta</code> to
+	<code>stack_bullet_count</code>.<br />
+	As usual for functions that occur in more than one game, I also decompiled
+	the TH04 bullet pattern tuning function, and it's perfectly sane, with no
+	such quirks.
+</p><hr /><p>
+	In the more PI-focused parts of this push, we got the TH05-exclusive
+	smooth boss movement functions, for flying randomly or towards a given
+	point. Pretty unspectacular for the most part, but we've got yet another
+	uth05win inconsistency in the latter one. Once the Y coordinate gets close
+	enough to the target point, it actually speeds up twice as much as the
+	X coordinate would, whereas uth05win used the same speedup factors for
+	both. This might make uth05win a couple of frames slower in all boss
+	fights from Stage 3 on. Hard to measure though – and boss movement partly
+	depends on RNG anyway.
+</p><hr /><p>
+	Next up: Shinki's background animations – which are actually the single
+	biggest source of position dependence left in TH05.
+</p>

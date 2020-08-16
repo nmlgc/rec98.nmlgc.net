@@ -103,3 +103,4 @@ P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-
 P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/11b776b...1f1829d	1
 P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1f1829d...1650241	1
 P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1650241...dcf4e2c	1
+P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet pattern tuning)	2020-08-16T19:48:44Z	nmlgc/Rec98/compare/dcf4e2c...2c7d86b	1

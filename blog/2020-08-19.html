@@ -1,0 +1,38 @@
+<p>
+	… and just as I explained {{Blog_PostLink "2020-08-16" "in the last post"}}
+	how decompilation is typically more sensible and efficient than ASM-level
+	reverse-engineering, we have this push demonstrating a counter-example.
+	The reason why the background particles and lines in the Shinki and
+	EX-Alice battles contributed so much to position dependence was simply
+	because they're accessed in a relatively large amount of functions, one
+	for each different animation. Too many to spend the remaining precious
+	crowdfunded time on reverse-engineering or even decompiling them all,
+	<i>especially</i> now that everyone anticipates 100% PI for TH05's
+	<code>MAIN.EXE</code>.
+</p><p>
+	Therefore, I only decompiled the two functions of the line structure that
+	also demonstrate best how it works, which in turn also helped with RE.
+	Sadly, this revealed that we actually <i>can't</i>
+	{{Blog_PostLink "2019-09-15" "overload <code>operator =()</code>"}} to get
+	that nice assignment syntax for 12.4 fixed-point values, because one of
+	those new functions relies on Turbo C++'s built-in optimizations for
+	trivially copyable structures. Still, impressive that this abstraction
+	caused no other issues for almost one year.
+</p><p>
+	As for the structures themselves… nope, nothing to criticize this time!
+	Sure, one good particle system would have been awesome, instead of having
+	separate structures for the Stage 2 "starfield" particles and the one used
+	in Shinki's battle, with hardcoded animations for both. But given the
+	game's short development time, that was quite an acceptable compromise,
+	I'd say.<br />
+	And as for the lines, there just <i>has</i> to be a reason why the game
+	reserves 20 lines per set, but only renders lines #0, #6, #12, and #18.
+	We'll probably see once we get to look at those animation functions more
+	closely.
+</p><p>
+	This was quite a {{Blog_PostLink "2019-11-29" "TH03-style"}} RE push,
+	which yielded way more PI% than RE%. But now that that's done, I can
+	finally <i>not</i> get distracted by all that stuff when looking at the
+	list of remaining memory references. Next up: The last few missing
+	structures in TH05's <code>MAIN.EXE</code>!
+</p>

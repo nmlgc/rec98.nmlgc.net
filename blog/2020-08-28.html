@@ -1,0 +1,117 @@
+{{$vid := printf "%v%v" .FilePrefix "TH05-Reimu-bomb" -}}
+
+<p>
+	Only one newly ordered push since I've reopened the store? Great, that's
+	all the justification I needed for the extended maintenance delay that was
+	part of these two pushes 😛
+</p><p>
+	Having to write comments to explain whether coordinates are relative to
+	the top-left corner of the screen or the top-left corner of the playfield
+	has finally become old. So, I introduced
+	<a href="https://github.com/nmlgc/ReC98/blob/e447a2d6879fdc9010848de5594acbaf17cb0c16/pc98.h#L5">distinct
+	types for all the coordinate systems we typically encounter</a>, applying
+	them to all code decompiled so far. Note how the planar nature of PC-98
+	VRAM meant that X and Y coordinates also had to be different from each
+	other. On the X side, there's mainly the distinction between the
+	[0;&nbsp;640] screen space and the corresponding [0;&nbsp;80] VRAM byte
+	space. On the Y side, we also have the [0;&nbsp;400] screen space, but
+	the visible area of VRAM might be limited to [0;&nbsp;200] when running in
+	the PC-98's line-doubled 640×200 mode. A VRAM Y coordinate also always
+	implies an added offset for vertical scrolling.
+	<br />
+	During all of the code reconstruction, these types can only have a
+	documenting purpose. Turning them into anything more than just
+	<code>typedef</code>s to <code>int</code>, in order to define conversion
+	operators between them, simply won't recompile into identical binaries.
+	Modding and porting projects, however, now have a nice foundation for
+	doing just that, and can entirely lift coordinate system transformations
+	up into the type system, without having to proofread all the meaningless
+	<code>int</code> declarations themselves.
+</p><hr /><p>
+	So, what was left in terms of memory references? EX-Alice's fire waves
+	were our final unknown entity that can collide with the player. Decently
+	implemented, with little to say about them.
+</p><p>
+	That left the bomb animation structures as the one big remaining PI
+	blocker. They started out nice and simple in TH04, with a small 6-byte
+	star animation structure used for both Reimu and Marisa. TH05, however,
+	gave each character her own animation… and <i>what the hell</i> is going
+	on with Reimu's blue stars there? Nope, not going to figure this out on
+	ASM level.
+</p><p>
+	A decompilation first required some more bomb-related variables to be
+	named though. Since this was part of a generic RE push, it made sense to
+	do this in all 5 games… which then led to nice PI gains in anything
+	<i>but</i> TH05. {{HTML_Emoji "tannedcirno"}} Most notably, we now got the
+	<i>"pulling all items to player"</i> flag in TH04 and TH05, which is
+	actually separate from bombing. The obvious cheat mod is left as an
+	exercise to the reader.
+</p><hr /><p>
+	So, TH05 bomb animations. Just like the
+	{{Blog_PostLink "2020-02-29" "custom entity types of this game"}}, all 4
+	characters share the same memory, with the superficially same 10-byte
+	structure.<br />
+	But let's just look at the very first field. Seen from a low level, it's a
+	simple <code>struct { int x, y; } pos</code>, storing the current position
+	of the character-specific bomb animation entity. But all 4 characters use
+	this field differently:
+	<ul>
+		<li>For Reimu's blue stars, it's the top-left position of each star,
+		in the 12.4 fixed-point format. But unlike the vast majority of these
+		values in TH04 and TH05, it's relative to the top-left corner of the
+		<i>screen</i>, not the playfield. Much better represented as
+		<code>struct { Subpixel screen_x, screen_y; } topleft</code>.</li>
+		<li>For Marisa's lasers, it's the center of each circle, as a regular
+		12.4 fixed-point coordinate, relative to the top-left corner of the
+		playfield. Much better represented as
+		<code>struct { Subpixel x, y; } center</code>.</li>
+		<li>For Mima's shrinking circles, it's the center of each circle in
+		regular pixel coordinates. Much better represented as
+		<code>struct { screen_x_t x; screen_y_t y; } center</code>.</li>
+		<li>For Yuuka's spinning heart, it's the top-left corner in regular pixel coordinates. Much better represented as
+		<code>struct { screen_x_t x; screen_y_t y; } topleft</code>.<br />
+		And yes, singular. The game is actually smart enough to only store a
+		single heart, and then create the rest of the circle on the fly.
+		(If it were even smarter, it wouldn't even use this structure member,
+		but oh well.)</li>
+	</ul>
+	Therefore, I decompiled it as 4 separate structures once again, bundled
+	into an <code>union</code> of arrays.
+</p><p>
+	As for Reimu… yup, that's some pointer arithmetic straight out of
+	<span
+		style="text-decoration: underline dotted;"
+		title="(TL note: Jigoku means hell.)"
+	>Jigoku*</span> for setting and updating the positions of the falling star
+	trails. {{HTML_Emoji "zunpet"}} While that certainly required a number of
+	comments to wrap my head around the current array positions, the one "bug"
+	in all this arithmetic luckily has no effect on the game.<br />
+	There <i>is</i> a small glitch with the growing circles, though. They are
+	spawned at the end of the loop, with their position taken from the star
+	pointer… but <i>after</i> that pointer has already been incremented. On
+	the last loop iteration, this leads to an out-of-bounds structure access,
+	with the position taken from some unknown EX-Alice data, which is 0 during
+	most of the game. If you look at the animation, you can easily spot these
+	bugged circles, consistently growing from the top-left corner (0,&nbsp;0)
+	of the playfield:
+</p><video class="gallery" controls loop>
+	<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
+	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+	(Video of Reimu's bomb animation in TH05, demonstrating the consistent
+	circles growing from the top-left corner of the playfield;
+	<a href="{{$vid}}.webm">download here</a>)
+</video><hr /><p>
+	After all that, there was barely enough remaining time to filter out and
+	label the final few memory references. But now, TH05's
+	<code>MAIN.EXE</code> is <i>technically</i> position-independent! 🎉
+	{{DB_CustomerByID 2}} is going to work on a pretty extensive demo of this
+	unprecedented level of efficient Touhou game modding. For a more impactful
+	effect of both the 100% PI mark and that demo, I'll be delaying the push
+	covering the remaining false positives in that binary until that demo is
+	done. I've accumulated a pretty huge backlog of minor maintenance issues
+	by now…<br />
+	Next up though: The first part of the long-awaited build system
+	improvements. I've finally come up with a way of sanely accelerating the
+	32-bit build part on most setups you could possibly want to build ReC98
+	on, without making the building experience worse for the other few setups.
+</p>

@@ -1,4 +1,5 @@
 ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
+P0001	[1]	Build system improvements, part 1 (Using Tup for the 32-bit build)	2020-09-03T23:26:18Z	nmlgc/ReC98/compare/e447a2d...150d2c6	0
 P0005	[2]	TH02/TH03/TH04/TH05 RE (RNG, .MAP loading)	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d7...4b8baf1	1
 P0006	[2]	TH04/TH05 RE (ZUN Soft logo explosions)	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d...843905e	1
 P0007	[3]	TH03/TH04/TH05 RE (Joypad functions, frame counts)	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f...47e5601	1

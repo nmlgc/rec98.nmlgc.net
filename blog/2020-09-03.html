@@ -1,0 +1,191 @@
+{{$tup := printf "%v%v" .FilePrefix "tup-bac02a5-win32.zip" -}}
+
+<p>
+	(tl;dr: ReC98 has switched to <a href="gittup.org/tup">Tup</a> for the
+	32-bit build. You probably want to get <a href="{{$tup}}"><strong>
+	💾&nbsp;this build of Tup</strong></a>, and put it somewhere in your
+	<code>PATH</code>. It's optional, and always will be, but highly
+	recommended.)
+</p><hr /><p>
+	P0001! Reserved for the delivery of the very first financial contribution
+	I've ever received for ReC98, back in January 2018. {{DB_CustomerByID 1}}
+	requested the exact opposite of immediate results, which motivated me to
+	go on quite a passionate quest for the perfect ReC98 build system. A quest
+	that went way beyond the crowdfunding…
+</p><p>
+	Makefiles are a decent idea in theory: Specify the targets to generate,
+	the source files these targets depend on and are generated from, and the
+	rules to do the generating, with some helpful shorthand syntax. Then, you
+	have build a dependency graph, and your <code>make</code> tool of choice
+	can provide minimal rebuilds of only the targets whose sources changed
+	since the last <code>make</code> call. But, uh… wait, this is C/C++ we're
+	talking about, and doesn't pretty much every source file come with a
+	second set of dependent source files, namely, <i>every single
+	<code>#include</code> in the source file itself</i>? Do we <i>really</i>
+	have to duplicate all these inside the Makefile, and keep it in sync with the source file? 🙄
+</p><p>
+	This fact alone means that Makefiles are inherently unsuited for
+	<i>any</i> language with an <code>#include</code> feature… that is, pretty
+	much every language out there. Not to mention other aspects like changes
+	to the compilation command lines, or the build rules themselves, all of
+	which require metadata of the previous build to be persistently stored in
+	some way. I have no idea why such a trash technology is even touted as a
+	viable build tool for code.
+</p><p>
+	But wait! Most <code>make</code> implementations, including Borland's, do
+	support the notion of <i>auto-dependency</i> information, emitted by the
+	compiler in a specific format, to provide <code>make</code> with the
+	additional list of <code>#include</code>s. Sure, this should be a basic
+	feature of any self-respecting build tool, and not something you have to
+	<i>add</i> as an <i>extension</i>, but let's just set our idealism aside
+	for a moment. Well, too bad that Borland's implementation
+	<a href="https://github.com/nmlgc/ReCBMake">only works if you spell out
+	both the <i>source➜object</i> and the <i>object➜binary</i> rules, which
+	loses the performance gained from compiling multiple translation units in
+	a single <code>BCC</code> or <code>TCC</code> process. And even then, it
+	tends to break in that DOS VM you're probably using.</a> Not to mention,
+	<i>again</i>, all the other aspects that still remain unsolved.
+</p><p>
+	So, I decided to just
+	<a href="https://twitter.com/ReC98Project/status/1162488931365113859">
+	write my own build system</a>, tailor-made for the needs of ReC98's 16-bit
+	build process, and combining a number of experimental ideas. Which is
+	<i>still</i> not quite bug-free and ready for public use, given that the
+	entire past year has kept me busy with actual tangible RE and PI progress.
+	What <i>did</i> finally become ready, however, is the improvement for the
+	32-bit build part, and that's what we've got here.
+</p><hr /><p>
+	💭 Now, if only there was a build system that would perfectly track
+	dependencies of <i>any</i> compiler it calls, by injecting code and
+	hooking file opening syscalls. It'd be completely unrealistic for it to
+	also run on DOS (and we probably don't want to traverse a graph database
+	in a cycle-limited DOSBox), but it would be perfect for our 32-bit build
+	part, as long as that one still exists.
+</p><p>
+	Turns out <a href="http://gittup.org/tup/">Tup</a> is exactly that system.
+	In practice, its low-level nature as a <code>make</code> replacement does
+	limit its general usefulness, which is why you probably haven't seen it
+	used in a lot of projects. But for something like ReC98 with its reliance
+	on outdated compilers that aren't supported by any decent high-level tool,
+	it's exactly the right tool for the job. Also, it's completely beyond me
+	how <a href="https://ninja-build.org/manual.html#ref_headers">Ninja, the
+	most popular <code>make</code> replacement these days, was inspired by
+	Tup, yet went a step back to parsing the specific dependency information
+	produced by gcc, Clang, and Visual Studio, and <i>only</i> those</a>…
+</p><p>
+	Sure, it might seem <i>really</i> minor to worry about not unconditionally
+	rebuilding all 32-bit <code>.asm</code> files, which just takes a couple
+	of seconds anyway. But minimal rebuilds in the 32-bit part also provide
+	the foundation for minimal rebuilds in the 16-bit part – and those
+	<code>TLINK</code> invocations <i>do</i> take quite some time after all.
+</p><p>
+	Using Tup for ReC98 was an idea that dated back to January 2017. Back
+	then, I already opened <a href="https://github.com/gittup/tup/pull/308">
+	the pull request with a fix to allow Tup to work together with 32-bit
+	TASM</a>. As much as I love Tup though, the fact that it only worked on
+	64-bit Windows ≥Vista would have meant that we had to exchange perfect
+	dependency tracking for the ability to build on 32-bit and older Windows
+	versions <i>at all</i>. For a project that relies on DOS compilers, this
+	woulh have exactly the wrong trade-off to make.
+</p><p>
+	What's worse though: <code>TLINK</code> fails to run on modern 32-bit
+	Windows with <code>Loader error (0000) : Unrecognized Error</code>.
+	Therefore, the set of systems that Tup runs on, and the set of systems
+	that can actually compile ReC98's 16-bit build part natively, would have
+	been exactly disjoint, with no OS getting to use both at the same time.
+	<br />
+	So I've kept using Tup for only my own development, but indefinitely
+	shelved the idea of making it the official build system, due to those
+	drawbacks. Recently though, it all came together:
+	<ul>
+		<li>The <code>tup generate</code> sub-command can generate a
+		<code>.bat</code> file that does a full dumb rebuild of everything,
+		which can serve as a fallback option for systems that can't run Tup.
+		All we have to do is to commit that <code>.bat</code> file to the
+		ReC98 Git repository as well, and tell <code>build32b.bat</code> to
+		fall back on that if Tup can't be run. That alone would have given us
+		the benefits of Tup wihout being worse than the current dumb build
+		process.</li>
+		<li>In the meantime, other contributors improved Tup's own build
+		process to the point where 32-bit builds were simple enough to
+		accomplish from the comfort of a WSL terminal.</li>
+		<li><a href="https://github.com/gittup/tup/pull/406">Two commits of
+		mine later</a>, and 32-bit Windows Tup was fully functional. Another
+		one later, and 32-bit Windows Tup even gained one potential advantage
+		over its 64-bit counterpart. Since it only has to support DLL
+		injection into 32-bit programs, it doesn't need a separate 32-bit
+		binary for retrieving function pointers to the 32-bit version of
+		Windows' DLL loading syscalls. Weirdly enough, Windows Defender on
+		current Windows 10 falsely flags that binary as malware, despite it
+		doing <i>nothing but printing those pointer values to stdout</i>.
+		🤷</li>
+		<li>And that <code>TLINK</code> bug?
+		<a href="http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html">Easily
+		solved by a Google search</a>, and by editing
+		<code>%WINDIR%\System32\autoexec.nt</code> and rebooting afterwards:
+		<pre class="chroma"> REM Install DPMI support
+<span class="gd">-LH %SystemRoot%\system32\dosx
+</span><span class="gi">+%SystemRoot%\system32\dosx</span></pre>
+		</li>
+	</ul>
+</p><p>
+	As I'm writing this post, the pull request has unfortunately not yet been
+	merged. So, here's my own custom build instead:
+</p><p>
+	<a href="{{$tup}}"><strong>💾 Download Tup for 32-bit Windows</strong></a>
+	<small>(optimized build at
+	<a href="https://github.com/nmlgc/tup/commit/bac02a5178f6f8edac4ec3bce4d46825785f9f21">this
+	commit</a>)</small>
+</p><p>
+	I've also added it to the DevKit, for any newcomers to ReC98.
+</p><hr /><p>
+	After the switch to Tup and the fallback option, I extensively tested
+	building ReC98 on all operating systems I had lying around. And holy cow,
+	so much in that build was broken beyond belief. In the end, the solution
+	involved just fully rebuilding the entire 16-bit part by default.
+	{{HTML_Emoji "tannedcirno"}} Which, of course, nullifies any of the
+	advantages we might have gotten from a Makefile in the first place, due to
+	just how unreliable they are. If you had problems building ReC98 in the
+	past, try again now!
+</p><p>
+	And sure, it would certainly be possible to also get Tup working on
+	Windows ≤XP, or 9x even. But I leave that to all those tinkerers out there
+	who are actually motivated to keep those OSes alive. My work here is
+	done&nbsp;–&nbsp;we now have a build process that is optimal on 32-bit
+	Windows ≧Vista, and still functional <i>and</i> reliable on 64-bit
+	Windows, Linux, and everything down to Windows 98 SE, and therefore also
+	real PC-98 hardware. Pretty good, I'd say.
+</p><p>
+	(If it weren't for that weird crash of the 16-bit <code>TASM.EXE</code> in
+	that Windows 95 command prompt I've tried it in, it would also work on
+	that OS. Probably just a misconfiguration on my part?)
+</p><p>
+	Now, it might look like a waste of time to improve a 32-bit build part
+	that won't even exist anymore once this project is done. However, a fully
+	16-bit DOS build will only make sense after
+	<ul>
+		<li>master.lib has been turned into a proper library, linked in by
+		<code>TLINK</code>> rather than <code>#include</code>d in the big .ASM
+		files.</li>
+		<li>This affects all games. If master.lib's data was consistently
+		placed at the beginning or end of each data segment, this would be no
+		big deal, but it's placed somewhere else in every binary.</li>
+		<li>So, this will only make sense some time around 90% overall PI, and
+		maybe ~50% RE <i>in each game</i>. Which is something else than 50%
+		overall – <i>especially</i> since it includes TH02, the objectively
+		worst Touhou game, which hasn't received <i>any</i> dedicated funding
+		ever.</li>
+		<li>Then, it will probably still require a couple of dedicated pushes
+		to move all the remaining data to C land.</li>
+		<li>Oh, and my 16-bit build system project also needs to be done
+		before, because, again, Makefiles are trash and we shouldn't rely on
+		them even more.</li>
+	</ul>
+	And who knows whether this project will get funded for that long. So yeah,
+	the 32-bit build part will stay with us for quite some more time, and for
+	all upcoming PI milestones. And with the current build process, it's
+	pretty much the most minor among all the minor issues I can think of.
+	Let's all enjoy the performance of a 32-bit build while we can 🙂
+</p><p>
+	Next up: Paying some technical debt while keeping the RE% and PI% in place.
+</p>

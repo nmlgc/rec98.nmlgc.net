@@ -37,6 +37,15 @@ blockquote {
 	white-space: pre-line;
 }
 
+pre {
+	border: var(--header-border);
+	box-shadow: var(--blog-shadow);
+	padding: 1em;
+	-moz-tab-size: 4;
+	tab-size: 4;
+	overflow-x: scroll;
+}
+
 img[src*="emoji-"] {
 	/* Shamelessly stolen from Discord's CSS */
 	width: 1.45em;
@@ -377,15 +386,6 @@ section.overall, section.game, section.binary {
 	top: 2.25em;
 }
 
-#faq section pre {
-	border: var(--header-border);
-	box-shadow: var(--blog-shadow);
-	padding: 1em;
-	-moz-tab-size: 4;
-	tab-size: 4;
-	overflow-x: scroll;
-}
-
 #faq form button {
 	font-size: 125%;
 	padding: 0.5em;
@@ -597,3 +597,9 @@ article h5 {
 	font-style: italic;
 }
 /* ---- */
+
+/* Syntax highlighting
+   ------------------- */
+/* GenericInserted */ .chroma .gi { color: #00aa00 }
+/* GenericDeleted  */ .chroma .gd { color: #aa0000 }
+/* ------------------- */

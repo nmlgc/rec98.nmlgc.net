@@ -1,0 +1,91 @@
+<p>
+	Alright, tooling and technical debt. Shouldn't be really much to talk
+	about… oh, wait, this is still ReC98 {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	For the tooling part, I finished up the remaining ergonomics and error
+	handling for the
+	{{Blog_PostLink "2020-07-09" "sprite converter that Jonathan Campbell contributed two months ago"}}.
+	While I familiarized myself with the tool, I've actually ran into some
+	unreported errors myself, so this was sort of important to me. Still got
+	no command-line help in there, but the error messages can now do that job
+	probably even better, since we would have had to write them anyway.
+</p><p>
+	So, what's up with the technical debt then? Well, by now we've accumulated
+	quite a number of {{Blog_PostLink "2020-08-16" "ASM code slices"}} that
+	need to be either decompiled or clearly marked as undecompilable. Since we
+	define those slices as "already reverse-engineered", that decision won't
+	affect the numbers on the front page at all. But for a complete
+	decompilation, we'd still have to do this <i>some</i> day. So, rather than
+	incorporating this work into pushes that were purchased with the
+	expectation of measurable progress in a certain area, let's take the
+	"anything goes" pushes, and focus entirely on that during them.
+</p><p>
+	The second code segment seemed like the best place to start with this,
+	since it affects the largest number of games simultaneously. Starting with
+	TH02, this segment contains a set of random "core" functions needed by the
+	binary. Image formats, sounds, input, math, it's all there in some
+	capacity. You could <i>maybe</i> call it all "libzun" or something like
+	that? But for the time being, I simply went with the obvious name,
+	<code>seg2</code>. Maybe I'll come up with something more convincing in
+	the future.
+</p><hr /><p>
+	Oh, but wait, why were we assembling all the previous undecompilable ASM
+	translation units in the 16-bit build part? By moving those to the 32-bit
+	part, we don't even need a 16-bit TASM in our list of dependencies, as
+	long as our build process is not fully 16-bit.<br />
+	And with that, ReC98 now also builds on Windows 95, and thus, every 32-bit
+	Windows version. 🎉 Which is certainly the most user-visible improvement
+	in all of these two pushes. {{HTML_Emoji "onricdennat"}}
+</p><hr /><p>
+	Back in 2015, I already decompiled all of TH02's <code>seg2</code>
+	functions. As suggested by the Borland compiler, I tried to follow a "one
+	translation unit per segment" layout, bundling the binary-specific
+	contents via <code>#include</code>. In the end, it required two
+	translation units – and that was even <i>after</i> manually inserting the
+	original padding bytes via <code>#pragma codestring</code>… yuck. But it
+	worked, compiled, and kept the linker's job (and, by extension,
+	segmentation worries) to a minimum. And as long as it all matched the
+	original binaries, it still counted as a valid reconstruction of ZUN's
+	code. {{HTML_Emoji "zunpet"}}
+</p><p>
+	However, that idea ultimately falls apart once TH03 starts mixing
+	undecompilable ASM code inbetween C functions. Now, we officially have no
+	choice but to use multiple C and ASM translation units, with maybe only
+	just one or two <code>#include</code>s in them…
+</p><p>
+	…or we finally start reconstructing the actual <code>seg2</code> library,
+	turning every sequence of related functions into its own translation unit.
+	This way, we can simply reuse the once-compiled .OBJ files for all the
+	binaries those functions appear in, without requiring that additional
+	layer of translation units mirroring the original segmentation.<br />
+	The best example for this is
+	<a href="https://github.com/nmlgc/ReC98/blob/ecc1372842ad2872f38ce7f0f134dfff6580ae15/th03/hfliplut.c">TH03's
+	almost undecompilable function that generates a lookup table for
+	horizontally flipping 8 1bpp pixels</a>. It's part of every binary since
+	TH03, but only used in that game. With the previous approach, we would
+	have had to add 9 C translation units, which would all have just
+	<code>#include</code>d that one file. Now, we simply put the .OBJ file
+	into the correct place on the linker command line, as soon as we can.
+</p><p>
+	💡 And suddenly, the linker just inserts the correct padding bytes itself.
+</p><p>
+	The most immediate gains there also happened to come from TH03. Which is
+	also where we <i>did</i> get some tiny RE% and PI% gains out of this after
+	all, by reverse-engineering some of its sprite blitting setup code. Sure,
+	I should have done even more RE here, to also cover those 5 functions at
+	the end of code segment #2 in TH03's <code>MAIN.EXE</code> that were in
+	front of a number of library functions I already covered in this push. But
+	let's leave that to an actual RE push 😛
+</p><hr /><p>
+	All in all though, I was just getting started with this; the <i>real</i>
+	gains in terms of removed ASM files are still to come. <i>But</i> in the
+	meantime, the funding situation has become even better in terms of
+	allowing me to focus on things nobody asked for. 🙂 So here's a slightly
+	better idea: Instead of spending two more pushes on this, let's shoot for
+	TH05 <code>MAINE.EXE</code> position independence next. If I manage to get
+	it done, we'll have a 100% position-independent TH05 by the time
+	{{DB_CustomerByID 2}} finishes his <code>MAIN.EXE</code> PI demo, rather
+	than the 94% we'd get from just <code>MAIN.EXE</code>. That's bound to
+	make a much better impression on all the people who will then
+	(re-)discover the project.
+</p>

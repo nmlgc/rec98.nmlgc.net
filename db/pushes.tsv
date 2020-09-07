@@ -108,3 +108,5 @@ P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet pattern tuning)	2
 P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/Rec98/compare/2c7d86b...8b5c146	1
 P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/8b5c146...4ef4c9e	1
 P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/4ef4c9e...e447a2d	1
+P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/150d2c6...6204fdd	1
+P0114	[72]	Separating translation units, part 1 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1

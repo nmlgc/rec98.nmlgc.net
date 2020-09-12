@@ -110,3 +110,5 @@ P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2
 P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/4ef4c9e...e447a2d	1
 P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/150d2c6...6204fdd	1
 P0114	[72]	Separating translation units, part 1 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1
+P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/967bb8b...e5328a3	1
+P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/e5328a3...03048c3	1

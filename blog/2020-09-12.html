@@ -1,0 +1,50 @@
+<p>
+	Finally, after a long while, we've got two pushes with barely anything to
+	talk about! Continuing the road towards 100% PI for TH05, these were
+	exactly the two pushes that TH05 <code>MAINE.EXE</code> PI was estimated
+	to additionally cost, relative to TH04's. Consequently, they mostly went
+	to TH05's unique data structures in the ending cutscenes, the score name
+	registration menu, and the
+	<a href="https://youtu.be/QBqwpZzJCNI?t=3">staff roll</a>.
+</p><p>
+	A unique feature in there is TH05's support for automatic text color
+	changes in its ending scripts, based on the first full-width Shift-JIS
+	codepoint in a line. The <code>\c=<i>codepoint</i>,<i>color</i></code>
+	commands at the top of the <code>_ED??.TXT</code> set up exactly this
+	codepoint→color mapping. As far as I can tell, TH05 is the only Touhou
+	game with a feature like this – even the Windows Touhou games went back to
+	manually spelling out each color change.
+</p><p>
+	The orb particles in TH05's staff roll also try to be a bit unique by
+	using 32-bit X and Y subpixel variables for their current position. With
+	still just 4 fractional bits, I can't really tell yet whether the extended
+	range was actually necessary. Maybe due to how the "camera scrolling"
+	through "space" was implemented? All other entities were pretty much the
+	usual fare, though.<br />
+	12.4, 4.4, and now a 28.4 fixed-point format… yup,
+	{{Blog_PostLink "2019-12-05" "C++ <code>template</code>s"}} were
+	definitely the right choice.
+</p><p>
+	At the end of its staff roll, TH05 not only displays
+	<a href="https://youtu.be/QBqwpZzJCNI?t=167">the usual performance
+	verdict, but then scrolls in the scores at the end of each stage</a>
+	before switching to the high score menu. The simplest way to smoothly
+	scroll between two full screens on a PC-98 involves a separate bitmap…
+	which is exactly what TH05 does here, reserving 28,160 bytes of its global
+	data segment for just one overly large monochrome 320×704 bitmap where
+	both the screens are rendered to. That's… one benefit of splitting your
+	game into multiple executables, I guess? {{HTML_Emoji "tannedcirno"}}
+	<br />
+	Not sure if it's common knowledge that you can actually scroll back and
+	forth between the two screens with the Up and Down keys before moving to
+	the score menu. I surely didn't knew that before. But it makes sense –
+	might as well get the most out of that memory.
+</p><hr /><p>
+	The necessary groundwork for all of this <i>may</i> have actually made
+	TH04's (yes, TH04's) <code>MAINE.EXE</code> technically
+	position-independent. Didn't quite reach the same goal for TH05's – but
+	what we <i>did</i> reach is ⅔ of all PC-98 Touhou code now being
+	position-independent! Next up: Celebrating even more milestones, as
+	{{DB_CustomerByID 2}} is about to finish development on his TH05
+	<code>MAIN.EXE</code> PI demo…
+</p>

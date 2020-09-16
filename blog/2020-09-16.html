@@ -1,0 +1,61 @@
+{{$pic := printf "%v%v" .FilePrefix "TH05-gaiji.png" -}}
+
+<p>
+	Wouldn't it be a bit disappointing to have TH05 completely
+	position-independent, but have it still require hex-editing of the
+	original <code>ZUN.COM</code> to mod its gaiji characters? As in, these
+	custom "text" glyphs, available to the PC-98 text RAM:
+</p><p class="gallery"><a
+	href="{{$pic}}"><img src="{{$pic}}" alt="TH05 gaiji characters" /></a></p
+><p>
+	Especially since we now even have a sprite converter… the lack of which
+	was exactly {{Blog_PostLink "2020-02-23" "what made rebuilding <code>ZUN.COM</code> not that worthwhile before"}}.
+	So, before the big release, let's get all the remaining
+	<code>ZUN.COM</code> sub-binaries of TH04 and TH05 dumped into .ASM files,
+	and re-assembled and linked during the build process.
+</p><p>
+	This is also the moment in which {{DB_CustomerByID 7}}'s 2018
+	reimplementation of O.&nbsp;Morikawa's <code>comcstm</code> finally gets
+	to shine. Back then, I considered it too early to even bother with
+	<code>ZUN.COM</code> and reimplementing the .COM wrapper that ZUN
+	originally used to bundle multiple smaller executables into that single
+	binary. But now that the time is right, it <i>is</i> nice to have that
+	code, as it allowed me to get these rebuilds done in half a push.
+	Otherwise, it would have surely required one or two dedicated ones.
+</p><p>
+	Since we like correctness here, newly dumped ZUN code means that it also
+	has to be included in <a href="/progress/{{ReC98_REBaselineRev}}">the RE%
+	baseline calculation</a>. This is why TH04's and TH05's overall RE% bars
+	have gone back a tiny bit… in case you remember how they previously looked
+	like {{HTML_Emoji "tannedcirno"}} After all, I <i>would</i> like to figure
+	out where all that memory allocated during TH04's and TH05's memory check
+	is freed, if at all.
+</p><hr /><p>
+	Alright, one half of a push left… Y'know, getting rid of those last few PI
+	false positives is actually one of the most annoying chores in this
+	project, and quite stressful as well: I have to convince myself that the
+	remaining false positives are, in fact, not memory references, but with
+	way too little time for in-depth RE and to denote what they are
+	<i>instead</i>. In that situation, <i>everyone</i> (including myself!)
+	<i>is anticipating that PI goal, and not really interested in RE</i>.
+	(Well… that is, until they actually get to developing their mod. But more
+	on that tomorrow. {{HTML_Emoji "onricdennat"}}). Which means that it boils
+	down to quite some hasty, dumb, and superficial RE around those remaining
+	numbers.
+</p><p>
+	So, in the hope of making it less annoying for the other 4 games in the
+	future, let's systematically cover the sources of those remaining false
+	positives in TH05, over all games. I/O port accesses with either the port
+	or the value in registers (and thus, no longer as an immediate argument to
+	the <code>IN</code> or <code>OUT</code> instructions, which the PI counter
+	can clearly inore), palette color arithmetic, or heck, 0xFF constants that
+	obviously just mean "-1" and are <i>not</i> a reference to offset 0xFF in
+	the data segment. All of this, of course, once again had a way bigger
+	effect on everything <i>but</i> an almost position-independent TH05… but
+	hey, that's the sort of thing you reserve the "anything" pushes for. And
+	that's also how we get some of the single biggest PI% gains we have seen
+	so far, and will be seeing before the 100% PI mark. And yes, those will
+	continue in the next push.
+</p><p>
+	Alright! Big release tomorrow…
+</p>

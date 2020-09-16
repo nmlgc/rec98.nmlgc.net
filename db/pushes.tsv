@@ -112,3 +112,4 @@ P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/Rec9
 P0114	[72]	Separating translation units, part 1 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1
 P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/967bb8b...e5328a3	1
 P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/e5328a3...03048c3	1
+P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/Rec98/compare/03048c3...0bb5bc3	1

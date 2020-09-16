@@ -174,12 +174,12 @@ var gameSources = [5]gameSource{
 		comp("MAIN.EXE", 0x90, 0x8E90, "th03_main.asm"),
 		comp("MAINL.EXE", 0x90, 0x2880, "th03_mainl.asm"),
 	}, {
-		comp("ZUN.COM", 0, 0, "th04_res_huma.asm"),
+		comp("ZUN.COM", 0, 0, "th04_zuninit.asm", "th04_memchk.asm", "th04_res_huma.asm"),
 		comp("OP.EXE", 0x90, 0x401C, "th04_op.asm"),
 		comp("MAIN.EXE", 0x90, 0xBDB2, "th04_main.asm", "th04_main_seg3+4.inc"),
 		comp("MAINE.EXE", 0x90, 0x4120, "th04_maine.asm"),
 	}, {
-		comp("ZUN.COM", 0, 0, "th05_res_kso.asm"),
+		comp("ZUN.COM", 0, 0, "th05_zuninit.asm", "th05_gjinit.asm", "th05_memchk.asm", "th05_res_kso.asm"),
 		comp("OP.EXE", 0x90, 0x51DE, "th05_op.asm"),
 		comp("MAIN.EXE", 0x90, 0xC748, "th05_main.asm", "th05_main_seg3+4.inc"),
 		comp("MAINE.EXE", 0x90, 0xC56E, "th05_maine.asm"),

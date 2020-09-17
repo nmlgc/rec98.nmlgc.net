@@ -16,7 +16,7 @@
 	Makefiles are a decent idea in theory: Specify the targets to generate,
 	the source files these targets depend on and are generated from, and the
 	rules to do the generating, with some helpful shorthand syntax. Then, you
-	have build a dependency graph, and your <code>make</code> tool of choice
+	have a build dependency graph, and your <code>make</code> tool of choice
 	can provide minimal rebuilds of only the targets whose sources changed
 	since the last <code>make</code> call. But, uh… wait, this is C/C++ we're
 	talking about, and doesn't pretty much every source file come with a
@@ -86,7 +86,7 @@
 	64-bit Windows ≥Vista would have meant that we had to exchange perfect
 	dependency tracking for the ability to build on 32-bit and older Windows
 	versions <i>at all</i>. For a project that relies on DOS compilers, this
-	woulh have exactly the wrong trade-off to make.
+	would have been exactly the wrong trade-off to make.
 </p><p>
 	What's worse though: <code>TLINK</code> fails to run on modern 32-bit
 	Windows with <code>Loader error (0000) : Unrecognized Error</code>.
@@ -104,7 +104,7 @@
 		All we have to do is to commit that <code>.bat</code> file to the
 		ReC98 Git repository as well, and tell <code>build32b.bat</code> to
 		fall back on that if Tup can't be run. That alone would have given us
-		the benefits of Tup wihout being worse than the current dumb build
+		the benefits of Tup without being worse than the current dumb build
 		process.</li>
 		<li>In the meantime, other contributors improved Tup's own build
 		process to the point where 32-bit builds were simple enough to
@@ -165,12 +165,12 @@
 	16-bit DOS build will only make sense after
 	<ul>
 		<li>master.lib has been turned into a proper library, linked in by
-		<code>TLINK</code>> rather than <code>#include</code>d in the big .ASM
+		<code>TLINK</code> rather than <code>#include</code>d in the big .ASM
 		files.</li>
 		<li>This affects all games. If master.lib's data was consistently
 		placed at the beginning or end of each data segment, this would be no
 		big deal, but it's placed somewhere else in every binary.</li>
-		<li>So, this will only make sense some time around 90% overall PI, and
+		<li>So, this will only make sense sometime around 90% overall PI, and
 		maybe ~50% RE <i>in each game</i>. Which is something else than 50%
 		overall – <i>especially</i> since it includes TH02, the objectively
 		worst Touhou game, which hasn't received <i>any</i> dedicated funding

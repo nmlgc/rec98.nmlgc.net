@@ -1,0 +1,95 @@
+<p>
+	🎉 TH05 is finally fully position-independent! 🎉 To celebrate this
+	milestone, {{DB_CustomerByID 2}} coded a little demo, which we recorded on
+	both an emulator and on real PC-98 hardware:
+	<script>
+		externalRegister('2020-09-17', 'hw', 'https://youtube.com/embed/0BmzWRgv27A');
+		externalRegister('2020-09-17', 'emu', 'https://youtube.com/embed/7-UYGhZ1sB8');
+	</script>
+</p><p class="gallery">
+	<iframe id="2020-09-17-hw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<iframe id="2020-09-17-emu" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p><p>
+	For all the new people who are unfamiliar with PC-98 Touhou internals:
+	<a href="/faq#three">Boss behavior is hardcoded into
+	<code>MAIN.EXE</code>, rather than being scriptable via separate .ECL
+	files like in Windows Touhou</a>. That's what makes this kind of a big
+	deal.
+</p><hr /><h5>What does this mean?</h5><p>
+	You can now freely add or remove both data and code anywhere in TH05, by
+	editing the ReC98 codebase, writing your mod in ASM or C/C++, and
+	recompiling the code. Since all absolute memory addresses have now been
+	converted to labels, this will work without causing any instability. See
+	the <a href="/faq#pi-what">position independence section in the FAQ</a>
+	for a more thorough explanation about why this was a problem.
+</p><p>
+	By extension, this also means that it's now <i>theoretically</i> possible
+	to use a different compiler on the source code. <strong>But:</strong>
+</p><h5>What does this not mean?</h5><p>
+	The original ZUN code hasn't been completely reverse-engineered yet, let
+	alone decompiled. As the final PC-98 Touhou game, TH05 also happens to
+	have the largest amount of actual ZUN-written ASM that can't <i>ever</i>
+	be decompiled within ReC98's constraints of a legit source code
+	reconstruction. But a lot of the originally-in-C code is also still in
+	ASM, which might make modding a bit inconvenient right now. And while I
+	<i>have</i> decompiled a bunch of functions, I selected them largely
+	because they would help with PI (as requested by the backers), and not
+	because they are particularly relevant to typical modding interests.
+</p><p>
+	As a result, the code might also be a bit confusingly organized. There's
+	quite a conflict between various goals there: On the one hand, I'd like to
+	only have a single instance of every function shared with earlier games,
+	as well as reduce ZUN's code duplication within a single game. On the
+	other hand, this leads to quite a lot of code being scattered all over the
+	place and then <code>#include</code>-pasted back together, except for the
+	places where
+	{{Blog_PostLink "2020-09-07" "this doesn't work, and you'd have to use multiple translation units anyway"}}…
+	I'm only beginning to figure out the best structure here, and some more
+	reverse-engineering attention surely won't hurt.
+</p><p></p>
+	Also, keep in mind that the code still targets x86 Real Mode. To work
+	effectively in this codebase, you'd need some familiarity with
+	<a href="https://en.wikipedia.org/wiki/X86_memory_segmentation">memory
+	segmentation</a>, and how to express it all in code. This tends to make
+	even regular C++ development about an order of magnitude harder,
+	especially once you want to interface with the remaining ASM code. That
+	part made {{DB_CustomerByID 2}} struggle quite a bit with implementing his
+	custom scripting language for the demo above. For now, he built that demo
+	on quite a limited foundation – which is why he also chose to release
+	neither the build nor the source publically for the time being.<br />
+	So yeah, you're definitely going to need the TASM and Borland C++ manuals
+	there.
+</p><p>
+	tl;dr: We now know everything about this game's <i>data</i>, but not quite
+	as much about this game's <i>code</i>.
+</p><h5>So, how long until source ports become a realistic project?</h5><p>
+	You <i>probably</i> want to wait for 100% RE, which is when everything
+	that can be decompiled has been decompiled.
+</p><p>
+	Unless your target system is 16-bit Windows, in which case you could
+	theoretically start right away. {{Blog_PostLink "2020-05-04" "Again"}},
+	this would be the ideal first system to port PC-98 Touhou to: It would
+	require all the generic portability work to remove the dependency on PC-98
+	 hardware, thus paving the way for a subsequent port to modern systems,
+	 yet you could still just drop in any undecompiled ASM.
+</p><p>
+	Porting to IBM-compatible DOS would only be a harder and less universally
+	useful version of that. You'd then simply exchange one architecture, with
+	its idiosyncrasies and limits, for another, with its own set of
+	idiosyncrasies and limits. (Unless, of course, you already happen to be
+	intimately familiar with that architecture.) The fact that master.lib
+	provides DOS/V support would have only mattered if ZUN consistently used
+	it to abstract away PC-98 hardware at every single place in the code,
+	which is <i>definitely</i> not the case.
+</p><hr /><p>
+	The list of actually interesting findings in this push is,
+	{{Blog_PostLink "2019-12-29" "again"}}, very short. Probably the most
+	notable discovery: The low-level part of the code that renders Marisa's
+	laser from her TH04 <i>Illusion Laser</i> shot type is still present in
+	TH05. Insert wild mass guessing about potential beta version shot types…
+	Oh, and did you know that the order of background images in the Extra
+	Stage staff roll differs by character?
+</p><p>
+	Next up: Finally driving up the RE% bar again, by decompiling some TH05
+	main menu code.
+</p>

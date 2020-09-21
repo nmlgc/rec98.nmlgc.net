@@ -114,3 +114,4 @@ P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nm
 P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/e5328a3...03048c3	1
 P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/Rec98/compare/03048c3...0bb5bc3	1
 P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/Rec98/compare/0bb5bc3...cbf14eb	1
+P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/Rec98/compare/cbf14eb...453dd3c	1

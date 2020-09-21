@@ -1,0 +1,47 @@
+<p>
+	So, TH05 <code>OP.EXE</code>. The first half of this push started out
+	nicely, with an easy decompilation of the entire player character
+	selection menu. Typical ZUN quality, with not much to say about it. While
+	the overall function structure is identical to its TH04 counterpart, the
+	two games only really share small snippets inside these functions, and do
+	need to be RE'd separately.
+</p><p>
+	The high score viewing (not registration) menu would have been next.
+	Unfortunately, it calls one of the <code>GENSOU.SCR</code> loading
+	functions… which are all a complete mess that still needed to be sorted
+	out first. 5 distinct functions in 6 binaries, and of course TH05 also
+	micro-optimized its <code>MAIN.EXE</code> version to directly use the DOS
+	<code>INT 21h</code> file loading API instead of master.lib's wrappers.
+	Could have all been avoided with a single method on the score data
+	structure, taking a player character ID and a difficulty level as
+	parameters…
+</p><p>
+	So, no score menu in this push then. Looking at the other end of the ASM
+	code though, we find the starting functions for the main game, the Extra
+	Stage, and the demo replays, which <i>did</i> fit perfectly to round out
+	this push.
+</p><p>
+	Which is where we find an easter egg! 🥚 The hidden 5th demo replay,
+	<code>DEMO5.REC</code>, is actually a full Extra Stage clear with Mima,
+	with 3 bombs and 1 death, obviously recorded by ZUN himself. To watch it
+	without modding the game, unlock the Extra Stage with all 4 characters,
+	then hold both the ⬅️ left and ➡️ right arrow keys in the main menu while
+	waiting for the usual demo replay.<br/>
+	I can't possibly be the first one to discover this, but I couldn't find
+	any other mention of it. So, here's a recording of the whole replay:
+	<script>
+		externalRegister('2020-09-21', 'vid', 'https://youtube.com/embed/iP2ywlW2u4U');
+	</script>
+</p><p class="gallery">
+	<iframe id="2020-09-21-vid" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p><p>
+	Note how the boss dialogue is skipped. <code>MAIN.EXE</code> actually
+	contains no less than 6 <code>if()</code> branches just to distinguish
+	this overly long replay from the regular ones.
+</p><hr /><p>
+	I'd really like to do the TH04 and TH05 main menus in parallel, since we
+	can expect a bit more shared code after all the initial differences.
+	Therefore, I'm going to put the next "anything" push towards covering the
+	TH04 version of those functions. Next up though, it's back to TH01, with
+	more redundant image format code…
+</p>

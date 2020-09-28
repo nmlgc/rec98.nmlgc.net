@@ -1,0 +1,101 @@
+{{$pic := printf "%v%v" .FilePrefix "TH01-Invincibility-sprites.png" -}}
+{{$vid := printf "%v%v" .FilePrefix "TH01-Invincibility-naive-unblitting" -}}
+
+<p>
+	Back to TH01, and its boss sprite format… with a separate class for
+	storing animations that only differs minutely from the
+	{{Blog_PostLink "2020-08-12" "regular boss entity class I covered last time"}}?
+	Decompiling this class was almost free, and the main reason why the first
+	of these pushes ended up looking pretty huge.
+</p><p>
+	Next up were the remaining shape drawing functions from the code segment
+	that started with the .GRC functions. P0105 already started these with the
+	(surprisingly sanely implemented) 8×8 diamond, star, and… uh, snowflake
+	(?) sprites
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAIAQMAAADZb60gAAAABlBMVEUAAH4AAAAuh25gAAAAAXRSTlMAQObYZgAAACZJREFUeAEFwTEBACAAw7DKmJhdyEAAMma9JCShLfOi4mS79JWcfK+gCvOAwD5hAAAAAElFTkSuQmCC" alt="" />,
+	prominently seen in the Konngara, Elis, and Sariel fights, respectively.
+	Now, we've also got:<ul>
+		<li>ellipse arcs with a customizable angle distance between the
+		individual dots – mostly just used for drawing full circles,
+		though</li>
+		<li>line loops – which are only used for the rotating white squares
+		around Mima, meaning that the white star in the YuugenMagan fight got
+		a completely redundant reimplementation</li>
+		<li>and the surprisingly weirdest one, drawing the red invincibility
+		sprites.</li>
+	</ul>
+	The weirdness becomes obvious with just a single screenshot:
+</p><p class="gallery"><a
+	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness" /></a></p
+><p>
+	First, we've got the obvious issue of the sprites not being clipped at the
+	right edge of VRAM, with the rightmost pixels in each row of the sprite
+	extending to the beginning of the next row. Well, that's just what you get
+	if you insist on writing unique low-level blitting code for the majority
+	of the individual sprites in the game… 🤷<br />
+	More importantly though, the sprite sheet looks like this:
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAIAQMAAACiS2/sAAAABlBMVEUAAKUAAADf0lD4AAAAAXRSTlMAQObYZgAAACBJREFUeF5jYGCQkABhHQYJHZ0oBp26//8hBJgLlgCRAJs0B/0NobvEAAAAAElFTkSuQmCC" alt="" />
+	So how do we even get these fully filled red diamonds?
+</p><p>
+	Well, turns out that the sprites are never consistently unblitted during
+	their 8 frames of animation. There <i>is</i> a function that <i>looks</i>
+	like it unblits the sprite… except that it starts with by enabling the
+	GRCG and… <i>reading</i> from the first bitplane on the background page?
+	If this was the EGC, such a read would fill some internal registers with
+	the contents of all 4 bitplanes, which can then subsequently be blitted to
+	all 4 bitplanes of any VRAM page with a single memory write. But with the
+	GRCG in RMW mode, reads do nothing special, and simply copy the memory
+	contents of one bitplane to the read destination. <i>Maybe</i> ZUN thought
+	that setting the RMW color to <span style="color: #ff0000;">red</span>
+	also sets some internal 4-plane mask register to match that color?
+	{{HTML_Emoji "zunpet"}} <br />
+	Instead, the rather random pixels read from the first bitplane are then
+	used as a mask for a <i>second</i> blit of the same red sprite.
+	Effectively, this only really "unblits" the invincibility pixels that are
+	drawn on top of Reimu's sprite. Since Reimu is drawn first, the
+	invincibility sprites are overwritten anyway. But due to the palette color
+	layout of Reimu's sprite, its pixels end up fully masking away any
+	invincibility sprite pixels in that second blit, leaving VRAM untouched as
+	a result. Anywhere else though, this animation quickly turns into the
+	union of all animation frames.
+</p><p>
+	Then again, if that 16-dot-aligned rectangular unblitting function is all
+	you know about the EGC, and you can't be bothered to write a perfect
+	unblitter for 8×8 sprites, it becomes obvious why you wouldn't want to use
+	it:
+</p><video class="gallery" controls loop>
+	<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
+	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+	(Video of naively unblitted TH01 invincibility sprites;
+	<a href="{{$vid}}.webm">download here</a>)
+</video><p>
+	Because Reimu would barely be visible under all that flicker. In
+	comparison, those fully filled diamonds actually look pretty good.
+</p><hr /><p>
+	After all that, the remaining time wouldn't have been enough for the next
+	few essential classes, so I closed out the push with three more VRAM
+	effects instead:<ul>
+		<li>Single-bitplane pixel inversion inside a 32×32 square – the main
+		effect behind the discoloration seen in the bomb animation, as well as
+		the exploding squares at the end of Kikuri's and Sariel's entrance
+		animation</li>
+		<li>EGC-accelerated VRAM row copies – the second half of smooth and
+		fully hardware-accelerated scrolling for backgrounds that are twice
+		the size of VRAM</li>
+		<li>And finally, the VRAM page content transition function using
+		meshed 8×8 squares, used for the blocky transition to Sariel's first
+		and second phases. Which is quite ridiculous in just how needlessly
+		bloated it is. I'm positive that this sort of thing could have also
+		been accelerated using the PC-98's EGC… although simply writing better
+		C would have already gone a long way. The function also comes with
+		three unused mesh patterns.</li>
+	</ul>
+</p><hr /><p>
+	And with that, ReC98, as a whole, is not only ⅓ done, but I've also fully
+	caught up with the feature backlog for the first time in the history of
+	this crowdfunding! Time to go into maintenance mode then, while we wait
+	for the next pushes to be funded. Got a huge backlog of tiny maintenance
+	issues to address at a leisurely pace, and of course there's also the
+	{{Blog_PostLink "2020-09-03" "16-bit build system"}} waiting to be
+	finished.
+</p>

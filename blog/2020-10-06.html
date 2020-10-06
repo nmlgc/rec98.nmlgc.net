@@ -1,0 +1,72 @@
+<p>
+	This time around, laser is {{Blog_PostLink "2018-12-16" "actually"}} not
+	difficult, with TH01's shootout laser class being simple enough to nicely
+	fit into a single push. All other stationary lasers (as used by
+	YuugenMagan, for example) don't even use a class, and are simply treated
+	as regular lines with collision detection.
+</p><p>
+	But of course, the shootout lasers also come with the typical share of
+	TH01 jank we've all come to expect by now. This time, it already starts
+	with the hardcoded sprite data:
+</p><p class="gallery"><img
+	src="data:image/gif;base64,R0lGODlhgAAIAIAAAAAAAP///yH5BAAAAAAALAAAAACAAAgAAAJtDI6pYerH2ktRTlDty3rxyzEXNlLdFJVQWmatC35oCKqIaLMvPsJx1ZNtaCjbyqgL8n7LIZCZ9AgdpxmyOcNSn9DqyredLowYrzQXdWpNXHX6RtyQ12E0Hf5m579tKXh8dWWGN1i2x3cXF+ZSAAA7"
+	alt="TH01 shootout laser 'sprites'"
+	style="height: 24px; image-rendering: pixelated;" /></p
+><p>
+	A shootout laser can have a width from 1 to 8 pixels, so ZUN stored a
+	separate 16×1 sprite with a line for each possible width (left-to-right).
+	Then, he shifted all of these sprites 1 pixel to the right for all of the
+	8 possible start positions within a planar VRAM byte (top-to-bottom).
+	Because… doing that bit shift programmatically is <i>way</i> too
+	expensive, so let's pre-shift at compile time, and use 16× the memory per
+	sprite? {{HTML_Emoji "tannedcirno"}}<br />
+</p><p>
+	Since a bunch of other sprite sheets need to be pre-shifted as well (this
+	is the 5th one we've found so far), our sprite converter has a feature to
+	automatically generate those pre-shifted variations. This way, we can
+	abstract away that implementation detail and leave modders with .BMP files
+	that still only contain a single version of each sprite. But, uh…, wait,
+	in this sprite sheet, the second row for 1-pixel lasers is accidentally
+	shifted right by one more pixel that it should have been?! Which means
+	that<ol>
+		<li>we can't use the auto-preshift feature here, and have to store
+		this weird-looking (and quite frankly, completely unnecessary)
+		sprite sheet in its entirety</li>
+		<li>ZUN did, at least during TH01's development, <i>not</i> have a
+		sprite converter, and directly hardcoded these dot patterns in the C++
+		code {{HTML_Emoji "zunpet"}}</li>
+	</ol>
+</p><hr /><p>
+	The waste continues with the class itself. 69 bytes, with 22 bytes
+	outright unused, and 11 not really necessary. As for actual innovations
+	though, we've got
+	{{Blog_PostLink "2020-09-12" "another 32-bit fixed-point type"}}, this
+	time <i>actually</i> using 8 bits for the fractional part. Therefore, the
+	ray position is tracked to the 1/256th of a pixel, using the full
+	precision of master.lib's 8-bit <i>sin()</i> and <i>cos()</i> lookup
+	tables.<br />
+	Unblitting is also remarkably efficient: It's only done once the laser
+	stopped extending and started moving, and only for the exact pixels at the
+	start of the ray that the laser traveled by in a single frame. If only the
+	ray part was also rendered as efficiently – it's fully blitted every frame,
+	right next to the collision detection for each row of the ray.
+</p><hr /><p>
+	With a public interface of two functions (spawn, and update / collide /
+	unblit / render), that's superficially all there is to lasers in this
+	game. There's another (apparently inlined) function though, to both reset
+	and, uh, "fully unblit" all lasers at the end of every boss fight… except
+	that it fails hilariously at doing the latter, and ends up effectively
+	unblitting random 32-pixel line segmnent, due to ZUN confusing both the
+	coordinates and the parameter types for the line unblitting function.
+	{{HTML_Emoji "zunpet"}}<br />
+	A while ago, I was asked about
+	<a href="https://youtu.be/Al0KTB_0u4A?t=80">this crash that tends to
+	happen when defeating Elis</a>. And while you can clearly see the random
+	unblitted line segments that are missing from the sprites, I don't
+	<i>quite</i> think we've found the cause for the crash, since the
+	{{Blog_PostLink "2020-01-14" "line unblitting function used there"}}
+	<i>does</i> clip its coordinates to the VRAM range.
+</p><p>
+	Next up: The final piece of image format code in TH01, covering Reimu's
+	sprites!
+</p>

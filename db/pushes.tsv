@@ -117,3 +117,4 @@ P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/Rec98/compare/0bb5bc3.
 P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/Rec98/compare/cbf14eb...453dd3c	1
 P0120	[74]	TH01 decompilation (.BOS format, part 4 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/453dd3c...3c008b6	1
 P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/3c008b6...5c42fcd	1
+P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98/compare/164591f...4406c3d	1

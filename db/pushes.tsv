@@ -101,9 +101,9 @@ P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	nmlgc/Rec98
 P0103	[61, 65]	TH01 decompilation (HUD, part 1)	2020-07-27T15:27:03Z	nmlgc/Rec98/compare/b60f38d...05c0028	1
 P0104	[65]	TH01 decompilation (HUD, part 2)	2020-07-27T15:27:03Z	nmlgc/Rec98/compare/05c0028...3622eb6	1
 P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/3622eb6...11b776b	1
-P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/11b776b...1f1829d	1
-P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1f1829d...1650241	1
-P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1650241...dcf4e2c	1
+P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/11b776b...1f1829d	1
+P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1f1829d...1650241	1
+P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1650241...dcf4e2c	1
 P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet pattern tuning)	2020-08-16T19:48:44Z	nmlgc/Rec98/compare/dcf4e2c...2c7d86b	1
 P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/Rec98/compare/2c7d86b...8b5c146	1
 P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/8b5c146...4ef4c9e	1
@@ -115,6 +115,7 @@ P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-0
 P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/Rec98/compare/03048c3...0bb5bc3	1
 P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/Rec98/compare/0bb5bc3...cbf14eb	1
 P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/Rec98/compare/cbf14eb...453dd3c	1
-P0120	[74]	TH01 decompilation (.BOS format, part 4 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/453dd3c...3c008b6	1
+P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/453dd3c...3c008b6	1
 P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/3c008b6...5c42fcd	1
 P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98/compare/164591f...4406c3d	1
+P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc/ReC98/compare/4406c3d...72dfa09	1

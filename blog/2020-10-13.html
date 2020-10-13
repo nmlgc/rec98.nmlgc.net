@@ -1,0 +1,131 @@
+<style>
+	#bos-formats-2020-10-13 thead {
+		font-family: monospace;
+	}
+	#bos-formats-2020-10-13 td {
+		text-align: center;
+	}
+</style>
+
+<p>
+	Done with the .BOS format, at last! While there's still quite a bunch of
+	undecompiled non-format blitting code left, this was in fact the final
+	piece of graphics format loading code in TH01.
+</p><p>
+	{{Blog_PostLink "2020-09-28" "Continuing the trend from three pushes ago"}},
+	we've got yet another class, this time for the 48×48 and 48×32 sprites
+	used in Reimu's gohei, slide, and kick animations. The only reason these
+	had to use the .BOS format at all is simply because Reimu's regular
+	sprites are 32×32, and are therefore loaded from
+	{{Blog_PostLink "2020-03-18" ".PTN files"}}.<br />
+	Yes, this makes no sense, because why would you split animations <i>for
+	the same character</i> across two file formats and two APIs, just because
+	of a sprite size difference?
+	This necessity for switching blitting APIs might also explain why Reimu
+	vanishes for a few frames at the beginning and the end of the gohei swing
+	animation, but more on that once we get to the high-level rendering code.
+</p><p>
+	Now that we've decompiled all the .BOS implementations in TH01, here's an
+	overview of all of them, together with .PTN to show that there really was
+	no reason for not using the .BOS API for all for Reimu's sprites:
+</p><table id="bos-formats-2020-10-13">
+		<thead>
+			<tr>
+				<th></th>
+				<th>CBossEntity</th>
+				<th>CBossAnim</th>
+				<th>CPlayerAnim</th>
+				<th>ptn_* (32×32)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Format</th>
+				<td>.BOS</td>
+				<td>.BOS</td>
+				<td>.BOS</td>
+				<td>.PTN</td>
+			</tr>
+			<tr>
+				<th>Hitbox</th>
+				<td>✔</td>
+				<td>✘</td>
+				<td>✘</td>
+				<td>✘</td>
+			</tr>
+			<tr>
+				<th>Byte-aligned blitting</th>
+				<td>✔</td>
+				<td>✔</td>
+				<td>✔</td>
+				<td>✔</td>
+			</tr>
+			<tr>
+				<th>Byte-aligned unblitting</th>
+				<td>✔</td>
+				<td>✘</td>
+				<td>✔</td>
+				<td>✔</td>
+			</tr>
+			<tr>
+				<th>Unaligned blitting</th>
+				<td>Single-line and wave only</td>
+				<td>✘</td>
+				<td>✘</td>
+				<td>✘</td>
+			</tr>
+			<tr>
+				<th>Precise unblitting</th>
+				<td>✔</td>
+				<td>✘</td>
+				<td>✔</td>
+				<td>✔</td>
+			</tr>
+			<tr>
+				<th>Per-file sprite limit</th>
+				<td>8</td>
+				<td>8</td>
+				<td>32</td>
+				<td>64</td>
+			</tr>
+			<tr>
+				<th>Pixels blitted at once</th>
+				<td>16</td>
+				<td>16</td>
+				<td>8</td>
+				<td>32</td>
+			</tr>
+		</tbody>
+	</table>
+</p><p>
+	And even that last property could simply be handled by branching based on
+	the sprite width, and wouldn't be a reason for switching formats. But
+	well, it just wouldn't be TH01 without all that redundant bloat though,
+	would it?
+</p><p>
+	The basic loading, freeing, and blitting code was yet another variation
+	on the other .BOS code we've seen before. So this should have caused just
+	as little trouble as the <code>CBossAnim</code> code… except that
+	<code>CPlayerAnim</code> <i>did</i> add one slightly difficult function to
+	the mix, which led to it requiring almost a full push after all.
+	Similar to {{Blog_PostLink "2020-10-06" "the unblitting code for moving lasers we've seen in the last push"}},
+	ZUN tries to minimize the amount of VRAM writes when unblitting Reimu's
+	slide animations. Technically, it's only necessary to restore the pixels
+	that Reimu traveled by, plus the ones that <i>wouldn't</i> be redrawn by
+	the new animation frame at the new X position.<br />
+	The theoretically arbitrary distance between the two sprites is, of
+	course, modeled by a fixed-size buffer on the stack
+	{{HTML_Emoji "onricdennat"}}, coming with the further assumption that the
+	sprite surely hasn't moved by more than 1 horizontal VRAM byte compared to
+	the last frame. Which, of course, results in glitches if that's not the
+	case, leaving little Reimu parts in VRAM if the slide speed ever exceeded
+	8 pixels per frame. {{HTML_Emoji "tannedcirno"}} (Which it never does,
+	being hardcoded to 6 pixels, but still.). As it also turns out, all those
+	bit masking operations easily lead to <i>incredibly</i> sloppy C code.
+	Which compiles into incredibly terrible ASM, which in turn might end up
+	wasting way more CPU time than the final VRAM write optimization would
+	have gained? Then again, in-depth profiling is way beyond the scope of
+	this project at this point.
+</p><p>
+	Next up: The TH04 main menu, and some more technical debt.
+</p>

@@ -119,3 +119,5 @@ P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-2
 P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/3c008b6...5c42fcd	1
 P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98/compare/164591f...4406c3d	1
 P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc/ReC98/compare/4406c3d...72dfa09	1
+P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/72dfa09...056b1c7	1
+P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1

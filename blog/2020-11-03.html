@@ -1,0 +1,86 @@
+{{$pic := printf "%v%v" .FilePrefix "TH04-m_char-raise_bg.png" -}}
+
+<p>
+	Turns out that TH04's player selection menu is exactly three times as
+	complicated as TH05's. Two screens for character and shot type rather than
+	one, and a way more intricate implementation for saving and restoring the
+	background behind the raised top and left edges of a character picture
+	when moving the cursor between Reimu and Marisa. TH04 decides to backup
+	precisely only the two 256×8 (top) and 8×244 (left) strips behind the
+	edges, indicated in <span style="color: red;">red</span> in the picture
+	below.
+<p class="gallery"><a
+	href="{{$pic}}"><img src="{{$pic}}" alt="Backed-up VRAM area in TH04's player character selection" /></a></p
+><p>
+	These take up just 4 KB of heap memory… but require custom blitting
+	functions, and expanding this explicitly hardcoded approach to TH05's 4
+	characters would have been pretty annoying. So, rather than, uh, <i>not</i>
+	explicitly hardcoding it all, ZUN decided to just be lazy with the backup
+	area in TH05, saving the entire 640×400 screen, and thus spending 128 KB
+	of heap memory on this rather simple selection shadow effect.
+	{{HTML_Emoji "zunpet"}}
+</p><hr /><p>
+	So, this really wasn't something to quickly get done during the first half
+	of a push, even after already having done TH05's equivalent of this menu.
+	But since life is very busy right now, I also used the occasion to start
+	addressing another code organization annoyance: master.lib's single <code>master.h</code> header file.
+</p><ul>
+	<li>Now that ReC98 is trying to develop (or at least mimic) a more
+	type-safe C++ foundation to model the PC-98 hardware, a pure C header
+	(with counter-productive C++ extensions) is becoming increasingly
+	unidiomatic. By moving some of the original assumptions about function
+	parameters into the type system, we can also reduce the reliance on its
+	Japanese-only documentation without having to translate it
+	{{HTML_Emoji "tannedcirno"}}</li>
+	<li>It's far from complete with regards to providing compile-time PC-98
+	hardware constants and helpful types. In fact,
+	<a href="https://github.com/nmlgc/ReC98/blob/f6a3246/planar.h">we started
+	to add these in our own header files</a>
+	<a href="https://github.com/nmlgc/ReC98/blob/f6a3246/pc98.h">a long time
+	ago</a>.</li>
+	<li>It's quite bloated, with <i>at least</i> 2800 lines of code that
+	currently are <code>#include</code>d into the vast majority of files, not
+	counting <code>master.h</code>'s recursively included C standard library
+	headers. PC-98 Touhou only makes direct use of a rather small fraction of
+	its contents.</li>
+	<li>And finally, all the DOS/V compatibility definitions are especially
+	useless in the context of ReC98. As I've noted
+	{{Blog_PostLink "2020-05-04" "time"}} and
+	{{Blog_PostLink "2020-09-17" "time"}} again, porting PC-98 Touhou to
+	IBM-compatible DOS won't be easy, and <code>MASTER_DOSV</code> won't be
+	helping much. Therefore, my upstream version of ReC98 will never include
+	all of master.lib. There's no point in lengthening compile times for
+	everyone by default, and those <i>will</i> be getting quite noticeable
+	after moving to a full 16-bit build process.<br />
+	(Actually, what retro system ports should <i>rather</i> be doing: Get rid
+	of master.lib's original ASM code, replace it with
+	<a href="https://www.youtube.com/watch?v=zBkNBP00wJE">readable, modern
+	C++, and then simply convert the optimized assembly output of modern
+	compilers to your ISA of choice</a>. Improving the landscape of such
+	assembly or object file converters would benefit everyone!)
+</ul><p>
+	So, time to start a new <code>master.hpp</code> header that would contain
+	just the declarations from <code>master.h</code> that PC-98 Touhou
+	actually needs, plus some semantic (yes, semantic) sugar. Comparing just
+	the old <code>master.h</code> to just the new <code>master.hpp</code>
+	after roughly 60% of the transition has been completed, we get median
+	build times of 319&nbsp;ms for <code>master.h</code>, and 144&nbsp;ms for
+	<code>master.hpp</code> on my (admittedly rather slow) DOSBox setup.
+	Nice!<br />
+	As of this push, ReC98 consists of 107 translation units that have to be
+	compiled with Turbo C++ 4.0J. Fully rebuilding all of these currently
+	takes roughly 37.5&nbsp;seconds in DOSBox. After the transition to
+	<code>master.hpp</code> is done, we could therefore shave some 10 to 15
+	seconds off this time, simply by switching header files. And that's just
+	the beginning, as this will also pave the way for further
+	<code>#include</code> optimizations. Life in this codebase will be great!
+</p><hr /><p>
+	Unfortunately, there wasn't enough time to repay some of the actual
+	technical debt I was looking forward to, after all of this. Oh well, at
+	least we now also have nice identifiers for the three different boldface
+	options that are used when rendering text to VRAM, after procrastinating
+	that issue for almost 11 months. Next up, assuming the existing
+	subscriptions: More ridiculous decompilations of things that definitely
+	<i>weren't</i> originally written in C, and a big blocker in TH03's
+	<code>MAIN.EXE</code>.
+</p>

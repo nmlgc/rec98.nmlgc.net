@@ -1,0 +1,97 @@
+<p>
+	Alright, back to continuing the <code>master.hpp</code> transition started
+	in P0124, and repaying technical debt. The last blog post already
+	announced some ridiculous decompilations… and in fact, <i>not a single
+	one</i> of the functions in these two pushes was decompilable into
+	idiomatic C/C++ code.
+</p><p>
+	As usual, that didn't keep me from trying though. The TH04 and TH05
+	version of the infamous <i>16-pixel-aligned, EGC-accelerated rectangle
+	blitting function from page 1 to page 0</i> was fairly average as far as
+	unreasonable decompilations are concerned.<br />
+	The big blocker in TH03's <code>MAIN.EXE</code>, however, turned out to be
+	the .MRS functions, used to render the gauge attack portraits and bomb
+	backgrounds. The blitting code there uses the additional FS and GS segment
+	registers provided by the Intel 386… which
+	<ol>
+		<li>are not supported by Turbo C++'s inline assembler, and</li>
+		<li>can't be turned into pointers, due to a compiler bug in Turbo C++
+		that generates wrong segment prefix opcodes for the <code>_FS</code>
+		and <code>_GS</code> pseudo-registers.</li>
+	</ol>
+</p><p>
+	Apparently I'm the first one to even try doing that with this compiler? I
+	haven't found any other mention of this bug…<br />
+	Compiling via assembly (<code>#pragma inline</code>) would work around
+	this bug and generate the correct instructions. But that would incur yet
+	another dependency on a 16-bit TASM, for something honestly quite
+	insignificant.
+</p><p>
+	What we can always do, however, is using <code>__emit__()</code> to simply
+	output x86 opcodes anywhere in a function. Unlike spelled-out inline
+	assembly, that can even be used in helper functions that are supposed to
+	inline… which does in fact allow us to fully abstract away this compiler
+	bug. Regular <code>if()</code> comparisons with pseudo-registers
+	<i>wouldn't</i> inline, but "converting" them into C++ template function
+	specializations <i>does</i>. All that's left is some C preprocessor abuse
+	to turn the pseudo-registers into types, and then we <i>do</i> retain a
+	normal-looking <code>poke()</code> call in the blitting functions in the
+	end. 🤯
+</p><p>
+	Yeah… the result is
+	<a href="https://github.com/nmlgc/ReC98/commit/8b0165738a1fd66">batshit</a>
+	<a href="https://github.com/nmlgc/ReC98/commit/00e65f4c6b33eeb">insane.</a>
+	I may have gone too far in a few places…<br />
+</p><hr /><p>
+	One might certainly argue that all these ridiculous decompilations
+	actually hurt the preservation angle of this project. <i>"Clearly, ZUN
+	couldn't have <strong>possibly</strong> written such unreasonable C++ code.
+	So why pretend he did, and not just keep it all in its more natural ASM
+	form?"</i> Well, there are several reasons:
+	<ul>
+		<li>Future port authors will merely have to translate all the
+		pseudo-registers and inline assembly to C++. For the former, this is
+		typically as easy as replacing them with newly declared local
+		variables. No need to bother with function prolog and epilog code,
+		calling conventions, or the build system.</li>
+		<li>No duplication of constants and structures in ASM land.</li>
+		<li>As a more expressive language, C++ can document the code much
+		better. Meticulous documentation seems to have become the main
+		attraction of ReC98 these days – I've seen it appreciated quite a
+		number of times, and the continued financial support of all the
+		backers speaks volumes. Mods, on the other hand, are still a rather
+		rare sight.</li>
+		<li>Having as few .ASM files in the source tree as possible looks
+		better to casual visitors who just look at GitHub's repo language
+		breakdown. This way, ReC98 will also turn from an <i>"Assembly
+		project"</i> to its rightful state of <i>"C++ project"</i> much
+		sooner.</li>
+		<li>And finally, it's not like the ASM versions are
+		<i>gone</i>&nbsp;– they're still part of the Git history.</li>
+	</ul>
+</p><p>
+	Unfortunately, these pushes also demonstrated a second disadvantage in
+	trying to decompile everything possible: Since Turbo C++ lacks TASM's
+	fine-grained ability to enforce code alignment on certain multiples of
+	bytes, it might actually be unfeasible to link in a C-compiled object file
+	at its intended original position in some of the .EXE files it's used in.
+	Which… you're only going to notice once you encounter such a case. Due to
+	the slightly jumbled order of functions in the
+	{{Blog_PostLink "2020-09-07" "second, shared code segment"}}, that might
+	be long after you decompiled and successfully linked in the function
+	everywhere else.
+</p><p>
+	And then you'll have to throw away that decompilation after all 😕 Oh
+	well. In this specific case (the lookup table generator for horizontally
+	flipping images), that decompilation was a mess anyway, and probably
+	helped nobody. I could have added a dummy .OBJ that does nothing but
+	enforce the needed 2-byte alignment before the function if I
+	<i>really</i> insisted on keeping the C version, but it really wasn't
+	worth it.
+</p><hr /><p>
+	Now that I've also described yet another meta-issue, maybe there'll
+	<i>really</i> be nothing to say about the next technical debt pushes?
+	{{HTML_Emoji "onricdennat"}} Next up though: Back to actual progress
+	again, with TH01. Which maybe even ends up pushing that game over the 50%
+	RE mark?
+</p>

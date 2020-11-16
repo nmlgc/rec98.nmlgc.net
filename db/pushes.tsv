@@ -121,3 +121,5 @@ P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98
 P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc/ReC98/compare/4406c3d...72dfa09	1
 P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/72dfa09...056b1c7	1
 P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1
+P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/6c22af7...8b01657	1
+P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1

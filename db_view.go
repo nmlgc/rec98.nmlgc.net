@@ -187,8 +187,16 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 		}
 	}
 
-	ret.FracOutstanding = math.Min(ret.Outstanding/ret.Cap, 1.0) * 100.0
-	ret.FracIncoming = math.Min((ret.Incoming/ret.Cap), 1.0) * 100.0
+	fraction := func(dividend, divisor float64) float64 {
+		ret := (dividend / divisor)
+		if math.IsNaN(ret) {
+			ret = 1.0
+		}
+		return math.Min(ret, 1.0) * 100.0
+	}
+
+	ret.FracOutstanding = fraction(ret.Outstanding, ret.Cap)
+	ret.FracIncoming = fraction(ret.Incoming, ret.Cap)
 	if (ret.FracOutstanding + ret.FracIncoming) > 100.0 {
 		ret.FracIncoming = 100.0 - ret.FracOutstanding
 	}

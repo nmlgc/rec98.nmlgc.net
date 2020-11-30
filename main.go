@@ -144,10 +144,10 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"inc": func(i int) int { return i + 1 },
 
 	// Control flow, safe
-	"loop": func(times int) chan int {
+	"loop": func(from int, to int) chan int {
 		ret := make(chan int)
 		go func() {
-			for i := 0; i < times; i++ {
+			for i := from; i < to; i++ {
 				ret <- i
 			}
 			close(ret)

@@ -89,6 +89,11 @@ aside .icon-cell {
 	margin-right: 5%;
 }
 
+.gallery.medium img {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 .gallery.small img {
 	max-height: 5em;
 	margin-left: 0;

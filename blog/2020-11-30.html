@@ -1,0 +1,147 @@
+{{$prefix := .FilePrefix -}}
+{{$pic := printf "%v%v" .FilePrefix "TH01-Overlapping-obstacles-and-cards.png" -}}
+
+<p>
+	So, only one card-flipping function missing, and then we can start
+	decompiling TH01's two final bosses? Unfortunately, that had to be the one
+	big function that initializes and renders all gameplay objects. #17 on the
+	list of longest functions in all of PC-98 Touhou, requiring two pushes to
+	fully understand what's going on there… <i>and then it immediately returns
+	for all "boss" stages whose number is divisible by 5, yet is still called
+	during Sariel's and Konngara's initialization</i> 🤦
+</p><p>
+	Oh well. This also involved the final file format we hadn't looked at
+	yet – the <code>STAGE?.DAT</code> files that describe the layout for all
+	stages within a single 5-stage scene. Which, for a change is a very
+	well-designed form– no, of course it's completely weird, what did you
+	expect? Development must have looked somewhat like this:
+</p><ul>
+	<li>Weirdness #1: <i>{{HTML_Emoji "zunpet"}} "Hm, the stage format should
+	include the file names for the background graphics and music… or should
+	it?"</i> And so, the 22-byte header still references some music and
+	background files that aren't part of the final game. The game doesn't use
+	<i>anything</i> from there, and instead derives those file names from the
+	scene ID.<br />
+	That's probably nothing new to anyone who has ever looked at TH01's data
+	files. In a slightly more interesting discovery though, seeing the+
+	{{Blog_PostLink "2020-07-27" ".GRF extension"}}, in some of the file names
+	that are short enough to not cut it off, confirms that .GRF was initially
+	used for background images. Probably before ZUN learned about .PI, and how
+	it achieves better compression than his own per-bitplane RLE approach?</li>
+</ul><ul><li>
+	<p>Weirdness #2: <i>{{HTML_Emoji "zunpet"}} "Hm, I might want to put
+	obstacles on top of cards?"</i> You'd probably expect this format to
+	contain one single array for every stage, describing which object to place
+	on every 32×32 tile, if any. Well, the real format uses <i>two</i> arrays:
+	One for the cards, and a combined one for all "obstacles" – bumpers, bumper
+	bars, turrets, and portals. However, none of the card-flipping stages in
+	the final game come with any such overlaps. That's quite unfortunate, as it
+	would have made for some quite interesting level designs:</p>
+	<p class="gallery"><a href="{{$pic}}"><img
+		src="{{$pic}}"
+		alt="Experimenting with putting obstacles on top of cards in TH01"
+	/></a></p>
+	<p>As you can see, the final version of the blitting code was not written
+	with such overlaps in mind either, blitting the <i>cards</i> on top of all
+	the <i>obstacles</i>, and not the other way round.</p>
+</li></ul><ul><li>
+	<p>Weirdness #3: <i>{{HTML_Emoji "zunpet"}} "In contrast to obstacles, of
+	which there are multiple types, cards only really need 1 bit. Time for some
+	bit twiddling!"</i> Not the worst idea, given that the 640×336 playfield
+	can fit 20×10 cards, which would fit exactly into 25 bytes if you use a
+	single bit to indicate <i>card</i> or <i>no card</i>. But for whatever
+	reason, ZUN only stored 4 card bits per byte, leaving the other 4 bits
+	unused, and needlessly blowing up that array to 50 bytes. 🤷</p>
+	<p>Oh, and did I mention that the contents of the STAGE?.DAT files are
+	loaded into the main data segment, even though the game immediately parses
+	them into something more conveniently accessible? That's another 1250 bytes
+	of memory wasted for no reason…</p>
+</li></ul><ul>
+	<li>Weirdness #4: <i>{{HTML_Emoji "zunpet"}} "Hm, how about requiring the
+	player to flip some of the cards multiple times? But I've already written
+	all this bit twiddling code to store 4 cards in 1 byte. And if cards should
+	need anywhere from 1 to 4 flips, that would need at least 2 more bits,
+	which won't fit into the unused 4 bits either…"</i> This feature
+	<i>must</i> have come later, because the final game uses 3 "obstacle" type
+	IDs to act as a flip count modifier for a card at the same relative array
+	position. Complete with lookup code to find the actual card index these
+	modifiers belong to, and ridiculous <i>switch</i> statements to not include
+	those non-obstacles in the game's internal obstacle array.
+	{{HTML_Emoji "tannedcirno"}}
+</li></ul><p>
+	With all that, it's almost not worth mentioning how there are 12 turret
+	types, which only differ in which hardcoded pellet pattern they fire at a
+	hardcoded interval of either 100 or 200 frames, and that they're all
+	explicitly spelled out in every single <code>switch</code> statement. Or
+	how the layout of the internal card and obstacle SoA classes is quite
+	disjointed. So here's the new ZUN bugs you've probably already been
+	expecting!
+</p><hr /><p>
+	Cards and obstacles are blitted to both VRAM pages. This way, any other
+	entities moving on top of them can simply be unblitted by restoring pixels
+	from VRAM page 1, without requiring the stationary objects to be redrawn
+	from main memory. Obviously, the backgrounds behind the cards have to be
+	stored somewhere, since the player can remove them. For faster transitions
+	between stages of a scene, ZUN chose to store the backgrounds behind
+	obstacles as well. This way, the background image really only needs to be
+	blitted for the first stage in a scene.
+</p><p>
+	All that memory for the object backgrounds adds up quite a bit though. ZUN
+	actually made the correct choice here and picked a memory allocation
+	function that can return more than the 64 KiB of a single x86 Real Mode
+	segment. He then accesses the individual backgrounds via regular array
+	subscripts… and that's where the bug lies, because he stores the returned
+	address in a regular <code>far</code> pointer rather than a
+	<code>huge</code> one. This way, the game <i>still</i> can only display a
+	total of 102 objects (i.&nbsp;e., cards and obstacles combined) per stage,
+	without any unblitting glitches.<br />
+	What a shame, that limit could have been 127 if ZUN didn't needlessly
+	allocate memory for <i>alpha planes</i> when backing up VRAM content.
+	{{HTML_Emoji "onricdennat"}}
+</p><p>
+	And since array subscripts on <code>far</code> pointers wrap around after
+	64 KiB, trying to sabe the background of the 103rd object is guaranteed to
+	corrupt the memory block header at the beginning of the returned segment.
+	{{HTML_Emoji "zunpet"}}. When TH01 runs in <strong>t</strong>est mode, it
+	correctly reports a corrupted heap in this case.
+</p><hr /><p>
+	Finally, some unused content! Upon discovering TH01's
+	<strong>d</strong>ebug mode, probably everyone tried to access Stage 21,
+	just to see what happens, and indeed landed in an actual stage, with a
+	black background and a weird color palette. Turns out that ZUN <i>did</i>
+	ship an unused scene in <code>SCENE7.DAT</code>, which is exactly was
+	loaded there.<br />
+	Unfortunately, it's easy to believe that this is just garbage data (as I
+	initially did): At the beginning of "Stage 22", the game seems to enter an
+	infinite loop somewhere during the flip-in animation.
+</p><p>
+	Well, we've had a heap overflow above, and the cause here is nothing but a
+	stack buffer overflow – a perhaps more <i>modern</i> kind of classic C bug,
+	given its prevalence in the Windows Touhou games. Explained in a few lines
+	of code: <pre>void stageobjs_init_and_render()
+{
+	int card_animation_frames[50]; // even though there can be up to 200?!
+	int total_frames = 0;
+
+	(code that would end up resetting total_frames if it ever tried to reset
+	card_animation_frames[50]…)
+}</pre>
+	The number of cards in "Stage 22"? 76. There you have it.
+</p><p>
+	But of course, it's trivial to disable this animation and fix these stage
+	transitions. So here they are, Stages 21 to 24, as shipped with the game
+	in <code>STAGE7.DAT</code>:
+</p>
+<p class="gallery medium">{{range loop 21 25 -}}
+	{{- $pic := printf "TH01-Stage-%d.png" . -}}
+	{{- $picFN := printf "%v%v" $prefix $pic -}}
+	<a href="{{$picFN}}"><img
+		src="{{$picFN}}"
+		alt="TH01 stage {{.}}, loaded from <code>STAGE7.DAT</code>"
+	/></a>
+{{- end}}</p><hr /><p>
+	Wow, what a mess. All that was just a bit too much to be covered in two
+	pushes… Next up, assuming the current subscriptions: Taking a vacation with
+	one smaller TH01 push, covering some smaller functions here and there to
+	ensure some uninterrupted Konngara progress later on.
+</p>

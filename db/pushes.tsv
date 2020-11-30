@@ -123,3 +123,5 @@ P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:
 P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1
 P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/6c22af7...8b01657	1
 P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
+P0128	[84]	TH01 decompilation (Card-flipping stages, part 1) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
+P0129	[84]	TH01 decompilation (Card-flipping stages, part 2) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1

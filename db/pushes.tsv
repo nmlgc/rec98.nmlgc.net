@@ -125,3 +125,5 @@ P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format,
 P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
 P0128	[84]	TH01 decompilation (Card-flipping stages, part 1) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
 P0129	[84]	TH01 decompilation (Card-flipping stages, part 2) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
+P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/6d69ea8...576def5	1
+P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/576def5...dc9e3ee	1

@@ -1,0 +1,99 @@
+<p>
+	50% hype! 🎉 But as usual for TH01, even that final set of functions
+	shared between all bosses had to consume two pushes rather than one…
+</p><p>
+	First up, in the ongoing series "Things that TH01 draws to the PC-98
+	graphics layer that really should have been drawn to the text layer
+	instead": The boss HP bar. Oh well, using the graphics layer at least made
+	it possible to have this half-red, half-white pattern
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAPCAIAAACnY0LpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVChTY/jPwPAfCFDJUVEISbwoAwMAdbLCPuvaYX8AAAAASUVORK5CYII=" alt="" />
+	for the middle section.<br />
+	This one pattern is drawn by making surprisingly good use of the GRCG. So
+	far, we've only seen it used for fast monochrome drawing:
+	<pre>// Setting up fast drawing using color #9 (1001 in binary)
+grcg_setmode(GC_RMW);
+outportb(0x7E, 0xFF); // Plane 0: (B): (********)
+outportb(0x7E, 0x00); // Plane 1: (R): (        )
+outportb(0x7E, 0x00); // Plane 2: (G): (        )
+outportb(0x7E, 0xFF); // Plane 3: (E): (********)
+
+// Write a checkerboard pattern (* * * * ) in color #9 to the top-left corner,
+// with transparent blanks. Requires only 1 VRAM write to a single bitplane:
+// The GRCG automatically writes to the correct bitplanes, as specified above
+*(uint8_t *)(MK_FP(0xA800, 0)) = 0xAA;</pre>
+	But since this is actually an 8-pixel <i>tile register</i>, we can set any
+	8-pixel pattern for any bitplane. This way, we can get different colors
+	for every one of the 8 pixels, with still just a single VRAM write of the
+	alpha mask to a single bitplane:
+	<pre>grcg_setmode(GC_RMW); //  Final color: (A7A7A7A7)
+outportb(0x7E, 0x55); // Plane 0: (B): ( * * * *)
+outportb(0x7E, 0xFF); // Plane 1: (R): (********)
+outportb(0x7E, 0x55); // Plane 2: (G): ( * * * *)
+outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre>
+	And I thought TH01 only suffered the drawbacks of PC-98 hardware, making
+	so little use of its actual features that it's perhaps not fair to even
+	call it "a PC-98 game"… Still, I'd say that "bad PC-98 port of an idea"
+	describes it best.
+</p><p>
+	However, after that tiny flash of brilliance, the surrounding HP rendering
+	code goes right back to being the typical sort of confusing TH01 jank.
+	There's only a single function for the three distinct jobs of<ul>
+		<li>incrementing HP during the boss entrance animation,</li>
+		<li>decrementing HP if hit by the Orb, and</li>
+		<li>redrawing the entire bar, because it's still all in VRAM, and
+		Sariel wants different backgrounds,</li>
+	</ul> with magic numbers to select between all of these.
+</p><p>
+	VRAM of course also means that the backgrounds behind the individual hit
+	points have to be stored, so that they can be unblitted later as the boss
+	is losing HP. That's no big deal though, right? Just allocate some memory,
+	copy what's initially in VRAM, then blit it back later using your
+	foundational set of blitting funct– oh, wait, TH01 doesn't have this sort
+	of thing, right {{HTML_Emoji "tannedcirno"}} The closest thing,
+	{{Blog_PostLink "2020-07-27" "once again"}}, are the .PTN functions. And
+	so, the game ends up handling these 16×8 background sprites with 16×16
+	wrappers around functions for 32×32 sprites. {{HTML_Emoji "zunpet"}}
+	That's quite the recipe for confusion, <i>especially</i> since ZUN
+	preferred copy-pasting the necessary ridiculous arithmetic expressions for
+	calculating positions, .PTN sprite IDs, and the ID of the 16×16 quarter
+	inside the 32×32 sprite, instead of just writing simple helper functions.
+	He <i>did</i> manage to make the result <i>mostly</i> bug-free this time
+	around, though! There's one minor hit point discoloration bug if the
+	red-white or white sections start at an odd number of hit points, but
+	that's never the case for any of the original 7 bosses.<br />
+	The remaining sloppiness is ultimately inconsequential as well: The game
+	always backs up <i>twice</i> the number of hit point backgrounds, and thus
+	uses twice the amount of memory actually required. Also, this
+	self-restriction of only unblitting 16×16 pixels at a time requires any
+	remaining odd hit point at the last position to, of course, be rendered
+	again {{HTML_Emoji "onricdennat"}}
+</p><hr /></p>
+	After stumbling over the weakest imaginable random number
+	<s>generator</s>, we finally arrive at the shared boss↔orb collision
+	handling function, the final blocker among the final blockers. This
+	function takes a whopping 12 parameters, 3 of them being references to
+	<code>int</code> values, some of which are duplicated for every one of the
+	7 bosses, with no generic boss <code>struct</code> anywhere.
+	{{Blog_PostLink "2020-08-12" "Previously, I speculated that YuugenMagan might have been the first boss to be programmed for TH01"}}.
+	With all these variables though, there is some new evidence that SinGyoku
+	might have been the first one after all: It's the only boss to use its own
+	HP and phase frame variables, with the other bosses sharing the same two
+	globals.
+</p><p>
+	While this function only handles the <i>response</i> to a boss↔orb
+	collision, it still does way too much to describe it briefly. Took me
+	quite a while to frame it in terms of <i>invincibility</i> (which is the
+	main impact of all of this that can be observed in gameplay code). That
+	made at least <i>some</i> sort of sense, considering the other usages of
+	the variables passed as references to that function. Turns out that
+	YuugenMagan, Kikuri, and Elis abuse what's meant to be the "invincibility
+	frame" variable as a frame counter for some of their animations 🙄<br />
+	Oh well, the game at least doesn't call the collision handling function
+	during those, so "invincibility frame" is <i>technically</i> still a
+	correct variable name there.
+</p><hr /><p>
+	And that's it! We're finally ready to start with Konngara, in 2021. I've
+	been waiting quite a while for this, as all this high-level boss code is
+	very likely to speed up TH01 progress quite a bit. Next up though: Closing
+	out 2020 with more of the technical debt in the other games.
+</p>

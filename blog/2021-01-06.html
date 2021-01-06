@@ -1,0 +1,31 @@
+<p>
+	Now <i>that's</i> the amount of translation unit separation progress I was
+	looking for! Too bad that RL is keeping me more and more occupied these
+	days, and ended up delaying this push until 2021. Now that
+	{{DB_CustomerByID 9}} is also commissioning me to update their
+	infrastructure, it's going to take a while for ReC98 to return to full
+	speed, and for the store to be reopened. Should happen by April at the
+	latest, though!
+</p><p>
+	With everything related to this separation of translation units explained
+	earlier, we've <i>really</i> got a push with nothing to talk about, this
+	time. Except, maybe, for the realization that
+	{{Blog_PostLink "2020-09-07" "this current approach"}} might not be the
+	best fit for TH02 after all: Not only did it force us to
+	{{Blog_PostLink "2020-11-16" "throw away the previous decompilation"}} of
+	the sound effect playback functions, but <code>OP.EXE</code> also contains
+	obviously copy-pasted code <i>in addition</i> to the common, shared set of
+	library functions. How was that game even <i>built</i>, originally??? No
+	way around compiling that one instance of the <i>"delay until given BGM
+	measure"</i> function separately then, if it insists on using its own
+	instance of the VSync delay function…<br />
+	Oh well, this separated layout still works better for the later games, and
+	consistency is good. Smooth sailing with all of the other functions, at
+	least.
+</p><p>
+	Next up: One more of these, which might even end up completing the
+	{{Blog_PostLink "2020-11-03" "transition to our own master.lib header file"}}.
+	In terms of the total number of ASM code left in the <code>SHARED</code>
+	code segments, we're now 30% done after 3 dedicated pushes. It really
+	shouldn't require 7 more pushes, though!
+</p>

@@ -1,0 +1,26 @@
+<p>
+	Wow, 31 commits in a single push? Well, what the last push had in
+	progress, this one had in maintenance. The
+	{{Blog_PostLink "2020-11-03" "master.lib header transition"}} absolutely
+	<i>had</i> to be completed in this one, for my own sanity. And indeed,
+	it reduced the build time for the entirety of ReC98 to about 27 seconds on
+	my system, just as expected in the original announcement. Looking forward
+	to even faster build times with the upcoming <code>#include</code>
+	improvements I've got up my sleeve! The port authors of the future are
+	going to appreciate those quite a bit.
+</p><p>
+	As for the new translation units, the funniest one is probably TH05's
+	function for blitting the 1-color .CDG images used for the main menu
+	options. Which is <i>so</i> optimized that it becomes decompilable again,
+	by ditching the self-modifying code of its TH04 counterpart in favor of
+	simply making better use of CPU registers. The resulting C code is still a
+	mess, but what can you do. {{HTML_Emoji "tannedcirno"}}<br />
+	This was followed by even more TH05 functions that clearly weren't
+	compiled from C, as evidenced by their <a href="https://github.com/nmlgc/ReC98/blob/1d5db7155aa31467c9256f58112420f079078f81/Research/Borland%20C%2B%2B%20decompilation.md#padding-bytes-in-code-segments">padding
+	bytes</a>. It's about time I've documented my lack of ideas of how to get
+	those out of Turbo C++. {{HTML_Emoji "onricdennat"}}
+</p><p>
+	And just like in the previous push, I also had to {{Blog_PostLink "2020-11-16" "throw away"}} a decompiled TH02 function purely due to alignment issues. Couldn't have been a better one though, no one's going to miss a residency check for the MMD driver that is largely identical to the corresponding (and indeed decompilable) function for the PMD driver. Both of those should have been merged into a single function anyway, given how they also mutate the game's sound configuration flags…
+</p><p>
+	In the end, I've slightly slowed down with this one, with <i>only</i> 37% of technical debt done after this 4th dedicated push. Next up: One more of these, centered around TH05's stupidly optimized .PI functions. Maybe also with some more reverse-engineering, after not having done any for 1½ months?
+</p>

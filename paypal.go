@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/plutov/paypal"
+	"github.com/plutov/paypal/v4"
 )
 
 var client *paypal.Client
@@ -19,7 +20,7 @@ func init() {
 	client, err = paypal.NewClient(auth.ClientID, auth.Secret, auth.APIBase)
 	FatalIf(err)
 
-	_, err = client.GetAccessToken()
+	_, err = client.GetAccessToken(context.Background())
 	FatalIf(err)
 }
 
@@ -77,7 +78,7 @@ var transactionIncomingHandler = http.HandlerFunc(
 			return
 		}
 
-		order, err := client.GetOrder(in.PayPalID)
+		order, err := client.GetOrder(context.Background(), in.PayPalID)
 		if err != nil {
 			respondWithError(wr, err)
 			return

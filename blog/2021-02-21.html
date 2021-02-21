@@ -1,0 +1,77 @@
+<p>
+	Technical debt, part 6… and we <i>only</i> got TH05's stupidly optimized
+	.PI functions this time?
+</p><p>
+	As far as actual progress is concerned, that is. In maintenance news
+	though, I was really hyped for the <code>#include</code> improvements I've
+	mentioned in {{Blog_PostLink "2021-01-31" "the last post"}}. The result: A
+	new <code>x86real.h</code> file, bundling all the declarations specific to
+	the 16-bit x86 Real Mode in a smaller file than Turbo C++'s own
+	<code>DOS.H</code>. After all, DOS is something else than the underlying
+	CPU. And while it didn't speed up build times quite as much as I had hoped,
+	it now clearly indicates the x86-specific parts of PC-98 Touhou code to
+	future port authors.
+</p><p>
+	After another couple of improvements to parameter declaration in ASM land,
+	we get to TH05's .PI functions… and really, why did ZUN write <i>all of
+	them</i> in ASM? Why (re)declare all the necessary structures and data in
+	ASM land, when all these functions are merely one layer of abstraction
+	above master.lib, which does all the actual work?<br />
+	I get that ZUN might have wanted masked blitting to be faster, which is
+	used for the fade-in effect seen during TH05's main menu animation and the
+	ending artwork. But, uh… he knew how to modify master.lib. In fact, he
+	<i>did</i> already modify the <code>graph_pack_put_8()</code> function
+	used for rendering a single .PI image row, to ignore master.lib's VRAM
+	clipping region. For this effect though, he first blits each row regularly
+	to the invisible 400th row of VRAM, and <i>then</i> does an EGC-accelerated
+	VRAM-to-VRAM blit of that row to its actual target position with the mask
+	enabled. It would have been way more efficient to add another version of
+	this function that takes a mask pattern. No amount of <code>REP
+	MOVSW</code> is going to change the fact that two VRAM writes per line are
+	slower than a single one. Not to mention that it doesn't justify writing
+	every other .PI function in ASM to go along with it…<br />
+	This is where we also find the most hilarious aspect about this: For most
+	of ZUN's pointless micro-optimizations, you could have maybe made the
+	argument that they do save <i>some</i> CPU cycles here and there, and
+	therefore did something positive to the final, PC-98-exclusive result. But
+	some of the hand-written ASM here doesn't even constitute a
+	micro-optimization, because it's <i>worse</i> than what you would have got
+	out of even Turbo C++ 4.0J with its 80386 optimization flags!
+	{{HTML_Emoji "zunpet"}}
+</p><p>
+	At least it was <i>possible</i> to "decompile" 6 out of the 10 functions
+	here, making them easy to clean up for future modders and port authors.
+	Could have been 7 functions if I also decided to "decompile"
+	<code>pi_free()</code>, but all the C++ code is already surrounded by ASM,
+	resulting in 2 ASM translation units and 2 C++ translation units.
+	<code>pi_free()</code> would have needed a single translation unit by
+	itself, which wasn't worth it, given that I would have had to spell out
+	every single ASM instruction anyway.
+</p><pre>void pascal pi_free(int slot)
+{
+	if(pi_buffers[slot]) {
+		graph_pi_free(&pi_headers[slot], &pi_buffers[slot]);
+		pi_buffers[slot] = NULL;
+	}
+}</pre><p>
+	There you go. What about this needed to be written in ASM?!?
+</p><p>
+	The function calls between these small translation units even seemed to
+	glitch out TASM and the linker in the end, leading to one <code>CALL</code>
+	offset being weirdly shifted by 32 bytes. Usually, TLINK reports a fixup
+	overflow error when this happens, but this time it didn't, for some reason?
+	Mirroring the segment grouping in the affected translation unit did solve
+	the problem, and I already knew this, but only thought of it after spending
+	quite some RTFM time… during which I discovered the <code>-lE</code>
+	switch, which enables TLINK to use the <i>expanded dictionaries</i> in
+	Borland's .OBJ and .LIB files to speed up linking. That shaved off roughly
+	another second from the build time of the complete ReC98 repository. The
+	more you know… Binary blobs compiled with non-Borland tools would be the
+	only reason not to use this flag.
+</p><p>
+	So, even more slowdown with this 5th dedicated push, since we've still only
+	repaid 41% of the technical debt in the <code>SHARED</code> segment so far.
+	Next up: Part 6, which hopefully manages to decompile the FM and SSG
+	channel animations in TH05's Music Room, and hopefully ends up being the
+	final one of the slow ones.
+</p>

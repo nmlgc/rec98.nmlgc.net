@@ -1,0 +1,102 @@
+<p>
+	Alright, no more big code maintenance tasks that absolutely need to be
+	done right now. Time to <i>really</i> focus on parts 6 and 7 of repaying
+	technical debt, right? Except that we don't get to speed up just yet, as
+	TH05's barely decompilable PMD file loading function is rather…
+	complicated.<br/>
+	Fun fact: Whenever I see an unusual sequence of x86 instructions in PC-98
+	Touhou, I first consult the disassembly of Wolfenstein 3D. That game was
+	originally compiled with the quite similar Borland C++ 3.0, so it's quite
+	helpful to compare its ASM to the
+	<a href="https://github.com/id-Software/wolf3d">officially released source
+	code</a>. If I find the instructions in question, they mostly come from
+	that game's ASM code, leading to the amusing realization that "even John
+	Carmack was unable to get these instructions out of this compiler"
+	{{HTML_Emoji "onricdennat"}} This time though, Wolfenstein 3D did point me
+	to Borland's intrinsics for common C functions like <code>memcpy()</code>
+	and <code>strchr()</code>, available via <code>#pragma intrinsic</code>.
+	Bu~t those unfortunately still generate worse code than what ZUN
+	micro-optimized here. Commenting how these sequences of instructions
+	<i>should</i> look in C is unfortunately all I could do here.<br />
+	The conditional branches in this function <i>did</i> compile quite nicely
+	though, clarifying the control flow, <i>and</i> clearly exposing a ZUN
+	bug: TH05's <code>snd_load()</code> will hang in an infinite loop when
+	trying to load a non-existing -86 BGM file (with a <code>.M2</code>
+	extension) if the corresponding -26 BGM file (with a <code>.M</code>
+	extension) doesn't exist either.
+</p><p>
+	Unsurprisingly, the PMD channel monitoring code in TH05's Music Room
+	remains undecompilable outside the two most "high-level" initialization
+	and rendering functions. And it's <i>not</i> because there's data in the
+	middle of the code segment – that would have actually been possible with
+	some <code>#pragma</code>s to ensure that the data and code segments have
+	the same name. As soon as the SI and DI registers are referenced
+	<i>anywhere</i>, Turbo C++ insists on emitting prolog code to save these
+	on the stack at the beginning of the function, and epilog code to restore
+	them from there before returning.
+	<a href="https://github.com/nmlgc/ReC98/commit/7f971a0">Found that out in
+	September 2019, and confirmed that there's no way around it.</a> All the
+	small helper functions here are quite simply too optimized, throwing away
+	any concern for such safety measures. 🤷<br />
+	Oh well, the two functions that <i>were</i> decompilable at least indicate
+	that I do try.
+</p><hr /><p>
+	Within that same 6th push though, we've finally reached the one function
+	in TH05 that was blocking further progress in TH04, allowing that game
+	to finally catch up with the others in terms of separated translation
+	units. Feels good to finally delete more of those .ASM files we've
+	decompiled a while ago… finally!
+</p><p>
+	But since that was just getting started, the most satisfying development
+	in both of these pushes actually came from some more experiments with
+	macros and <code>inline</code> functions for near-ASM code. By adding
+	"unused" dummy parameters for all relevant registers, the exact input
+	registers are made more explicit, which might help future port authors who
+	then <i>maybe</i> wouldn't have to look them up in an x86 instruction
+	reference <i>quite</i> as often. At its best, this even allows us to
+	declare certain functions with the <code>__fastcall</code> convention and
+	expressing such parameter lists as regular C, with no additional
+	pseudo-registers or macros required.<br />
+	As for output registers, Turbo C++'s code generation turns out to be even
+	more amazing than previously thought when it comes to returning
+	pseudo-registers from <code>inline</code> functions. A nice example for
+	how this can improve readability can be found in this piece of TH02 code
+	for polling the PC-98 keyboard state using a BIOS interrupt:
+</p><pre>inline uint8_t keygroup_sense(uint8_t group) {
+	_AL = group;
+	_AH = 0x04;
+	geninterrupt(0x18);
+	// This turns the output register of this BIOS call into the return value
+	// of this function. Surprisingly enough, this does *not* naively generate
+	// the `MOV AL, AH` instruction you might expect here!
+	return _AH;
+}
+
+void input_sense(void)
+{
+	// As a result, this this assignment becomes `_AH = _AH`, which Turbo C++
+	// never emits as such, giving us only the three instructions we need.
+	_AH = keygroup_sense(8);
+
+	// Whereas this one gives us the one additional `MOV BH, AH` instruction
+	// we'd expect, and nothing more.
+	_BH = keygroup_sense(7);
+
+	// And now it's obvious what both of these registers contain, from just
+	// the assignments above.
+	if(_BH & K7_ARROW_UP || _AH & K8_NUM_8) {
+		key_det |= INPUT_UP;
+	}
+	// […]
+}</pre><p>
+	I love it. No inline assembly, as close to idiomatic C code as something
+	like this is going to get, yet still compiling into the minimum possible
+	number of x86 instructions on even a 1994 compiler. This is how I keep
+	this project interesting for myself during chores like these.
+	{{HTML_Emoji "tannedcirno"}} We might have even reached peak
+	<code>inline</code> already?
+</p><p>
+	And that's 65% of technical debt in the <code>SHARED</code> segment repaid
+	so far. Next up: Two more of these, which might already complete that
+	segment? Finally!
+</p>

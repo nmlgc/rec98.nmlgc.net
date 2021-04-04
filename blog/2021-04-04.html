@@ -1,0 +1,115 @@
+{{$patch := printf "%v%v" .DatePrefix "TH03-WASD-2player.zip" -}}
+
+<p>
+	Whoops, the build was broken <i>again</i>? Since
+	<a href="https://github.com/nmlgc/ReC98/commit/7897bf1">P0127 from
+	mid-November 2020</a>, on TASM32 version 5.3, which also happens to be the
+	one in the DevKit… That version changed the alignment for the default
+	segments of certain memory models when requesting <code>.386</code>
+	support. And since redefining segment alignment apparently is highly
+	illegal and absolutely has to be a build error, some of the stand-alone
+	.ASM translation units didn't assemble anymore on this version. I've only
+	spotted this on my own because I casually compiled ReC98 somewhere else –
+	on my development system, I happened to have TASM32 version 5.0 in the
+	<code>PATH</code> during all this time.<br />
+	At least this was a good occasion to
+	<a href="https://github.com/nmlgc/ReC98/commit/8bcf5d7">get rid of some
+	weird segment alignment workarounds from 2015, and replace them with the
+	superior convention of using the <code>USE16</code> modifier for the
+	<code>.MODEL</code> directive.</a>
+</p><p>
+	ReC98 would highly benefit from a build server – both in order to
+	immediately spot issues like this one; even more so than the usual
+	open-source project of its size, I would say. But that might be exactly
+	<i>because</i> it doesn't seem like something you can trivially outsource
+	to one of the big CI providers for open-source projects, and quickly set
+	it up with a few lines of YAML.<br />
+	That might still work in the beginning, and we might get by with a regular
+	64-bit Windows 10 and DOSBox running the exact build tools from the DevKit.
+	Ideally, though, such a server should really run the optimal configuration
+	of a 32-bit Windows 10, allowing both the 32-bit and the 16-bit build step
+	to run natively, which already is something that no popular CI service out
+	there offers. Then, we'd optimally expand to Linux, every other Windows
+	version down to 95, emulated PC-98 systems, other TASM versions… yeah, it'd
+	be a lot. An experimental project all on its own, with additional hosting
+	costs and probably diminishing returns, the more it expands…<br />
+	I've added it as a category to the order form, let's see how much interest
+	there is once the store reopens (which will be at the beginning of May, at
+	the latest). That aside, it would {{Blog_PostLink "2020-07-12" "also"}} be
+	a great project for outside contributors!
+</p><hr /><p>
+	So, technical debt, part 8… and right away, we're faced with TH03's
+	low-level input function, which
+	{{Blog_PostLink "2020-11-16" "once"}}
+	{{Blog_PostLink "2021-01-06" "again"}}
+	{{Blog_PostLink "2021-01-31" "insists"}} on being word-aligned in a way we
+	can't fake without duplicating translation units.
+	Being undecompilable isn't exactly the best property for a function that
+	has been interesting to modders in the past: In 2018,
+	<a href="https://twitter.com/spaztron64">spaztron64</a> created an
+	ASM-level mod that hardcoded more ergonomic key bindings for human-vs-human
+	multiplayer mode: {{HTML_Download .HostedPath $patch}}
+	However, this remapping attempt remained quite limited, since we hadn't
+	(and still haven't) reached full position independence for TH03 yet.
+	There's quite some potential for size optimizations in this function, which
+	would allow more BIOS key groups to already be used right now, but it's not
+	all that obvious to modders who aren't intimately familiar with x86 ASM.
+	Therefore, I <i>really</i> wouldn't want to keep such a long and important
+	function in ASM if we don't <i>absolutely</i> have to…
+</p><p>
+	… and apparently, that's all the motivation I needed? So I took the risk,
+	and spent the first half of this push on reverse-engineering
+	<code>TCC.EXE</code>, to hopefully find a way to get word-aligned code
+	segments out of Turbo C++ after all.
+</p><p>
+	And there is! The <code>-WX</code> option, used for creating
+	<a href="https://en.wikipedia.org/wiki/DOS_Protected_Mode_Interface">DPMI
+	</a> applications, messes up all sorts of code generation aspects in weird
+	ways, but does in fact mark the code segment as word-aligned. We can
+	consider ourselves quite lucky that we get to use Turbo C++ 4.0, because
+	this feature isn't available in any previous version of Borland's C++
+	compilers.<br />
+	That allowed us to restore all the decompilations I previously threw away…
+	well, two of the three, that lookup table generator was too much of a mess
+	in C. {{HTML_Emoji "tannedcirno"}} But <i>what</i> an abuse this is. The
+	subtly different code generation has basically required one creative
+	workaround per usage of <code>-WX</code>. For example, enabling that option
+	causes the regular <code>PUSH BP</code> and <code>POP BP</code> prolog and
+	epilog instructions to be wrapped with <code>INC BP</code> and
+	<code>DEC BP</code>, for some reason:
+</p><pre>a_function_compiled_with_wx proc
+	inc 	bp    	; ???
+	push	bp
+	mov 	bp, sp
+	    	      	; [… function code …]
+	pop 	bp
+	dec 	bp    	; ???
+	ret
+a_function_compiled_with_wx endp</pre><p>
+</p><p>
+	Luckily again, all the functions that currently require <code>-WX</code>
+	don't set up a stack frame and don't take any parameters.<br />
+	While this hasn't <i>directly</i> been an issue so far, it's been pretty
+	close: <code>snd_se_reset(void)</code> is one of the functions that require
+	word alignment. Previously, it shared a translation unit with the
+	immediately following <code>snd_se_play(int new_se)</code>, which does take
+	a parameter, and therefore would have had its prolog and epilog code messed
+	up by <code>-WX</code>.
+	Since the latter function has a consistent (and thus, fakeable) alignment,
+	I simply split that code segment into two, with a new <code>-WX</code>
+	translation unit for just <code>snd_se_reset(void)</code>. Problem solved –
+	after all, two C++ translation units are still better than 1 ASM
+	translation unit. {{HTML_Emoji "onricdennat"}} Especially with all the
+	previous <code>#include</code> improvements.
+</p><p>
+	The rest was more of the usual, getting us 74% done with repaying the
+	technical debt in the <code>SHARED</code> segment. A lot of the remaining
+	26% is TH04 needing to catch up with TH03 and TH05, which takes
+	comparatively little time. With some good luck, we <i>might</i> get this
+	done within the next push… that is, if we aren't confronted with all too
+	many more disgusting decompilations, like the two functions that ended this
+	push.
+	If we are, we might be needing 10 pushes to complete this after all, but
+	that piece of research was definitely worth the delay. Next up: One more of
+	these.
+</p>

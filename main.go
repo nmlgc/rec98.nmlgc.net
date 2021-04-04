@@ -131,6 +131,19 @@ func HTMLPushPrice() template.HTML {
 	return HTMLCurrency(pushprices.Current())
 }
 
+// HTMLDownload returns a file download link for basename, hosted at hp.
+func HTMLDownload(hp hostedPath, basename string) template.HTML {
+	localFN := hp.LocalPath + basename
+	fi, err := os.Stat(localFN)
+	FatalIf(err)
+	return template.HTML(
+		fmt.Sprintf(
+			`<a class="download" href="%s" data-kb="%.1f">%s </a>`,
+			(hp.URLPrefix + basename), (float64(fi.Size()) / 1024.0), basename,
+		),
+	)
+}
+
 var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
@@ -163,6 +176,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"HTML_Percentage":   HTMLPercentage,
 	"HTML_Currency":     HTMLCurrency,
 	"HTML_PushPrice":    HTMLPushPrice,
+	"HTML_Download":     HTMLDownload,
 
 	// Git, safe
 	"git_commits":        commits,

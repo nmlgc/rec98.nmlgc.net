@@ -18,7 +18,7 @@
 }
 /* --------- */
 
-html {
+html, a.download::after {
 	height: 100%;
 	font-family: sans-serif;
 }
@@ -214,6 +214,28 @@ a:not(.customer)[href^="https://twitter.com/"]:before {
 	margin-left: 0.175em;
 	margin-right: 0.175em;
 	content:"";
+}
+
+a.download {
+	display: table;
+	border: var(--header-border);
+	box-shadow: var(--blog-shadow);
+	background: var(--c-bg);
+	margin: 1em;
+	padding: 1em;
+	font-family: monospace;
+}
+
+a.download:before {
+	content: "📦 ";
+	font-size: 150%;
+}
+
+a.download:after {
+	font-size: 75%;
+	color: black;
+	white-space: pre;
+	content: "(" attr(data-kb) " KiB)";
 }
 /* ---------- */
 

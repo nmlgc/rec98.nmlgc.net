@@ -1,4 +1,4 @@
-{{$patch := printf "%v%v" .FilePrefix "TH01OrbPhysicsDebug.zip" -}}
+{{$patch := printf "%v%v" .DatePrefix "TH01OrbPhysicsDebug.zip" -}}
 {{$pic   := printf "%v%v" .FilePrefix "TH01OrbPhysicsDebug.png" -}}
 
 <p>
@@ -75,9 +75,10 @@
 	<code>16.0f</code> there, I would have saved quite some hours of my life
 	trying to decompile this correctly…
 </p><p>
-	To sort of make up for the slowdown in progress, <a href="{{$patch}}">
-	here's the TH01 orb physics debug mod</a> I made to properly understand
-	them. To use it, simply replace <code>REIIDEN.EXE</code>, and run the game
+	To sort of make up for the slowdown in progress, here's the TH01 orb
+	physics debug mod I made to properly understand them:
+	{{HTML_Download .HostedPath $patch}}
+	To use it, simply replace <code>REIIDEN.EXE</code>, and run the game
 	in debug mode, via <kbd>game d</kbd> on the DOS prompt.<br />
 	<a href="https://github.com/nmlgc/ReC98/commit/874fe6db8a1a40f978b344ed7d400bbedd7ca0a3">
 	Its code</a> might also serve as an example of how to achieve this sort of

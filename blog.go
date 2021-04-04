@@ -53,7 +53,9 @@ func (b Blog) FindEntryByTime(date time.Time) *BlogEntry {
 
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
-	FilePrefix template.HTML // Prefix for potential post-specific files
+	HostedPath hostedPath    // Value of [blogHP]
+	DatePrefix string        // Date prefix for potential post-specific files
+	FilePrefix template.HTML // [HostedPath.URLPrefix] + [DatePrefix]
 }
 
 // Post bundles the rendered HTML body of a post, together with information
@@ -78,8 +80,11 @@ func (e eNoPost) Error() string {
 // Render builds a new Post instance from e.
 func (e BlogEntry) Render() Post {
 	var b strings.Builder
+	datePrefix := e.Date + "-"
 	ctx := PostDot{
-		FilePrefix: template.HTML(blogHP.URLPrefix + e.Date + "-"),
+		HostedPath: blogHP,
+		DatePrefix: datePrefix,
+		FilePrefix: template.HTML(blogHP.URLPrefix + datePrefix),
 	}
 	pagesExecute(&b, e.templateName, &ctx)
 

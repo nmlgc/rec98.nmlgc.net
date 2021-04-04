@@ -1,5 +1,5 @@
 {{$prefix := .FilePrefix -}}
-{{$grzview := printf "%v%v" .FilePrefix "grzview.zip" -}}
+{{$grzview := printf "%v%v" .DatePrefix "grzview.zip" -}}
 
 <p>
 	Sadly, we've already reached the end of fast triple-speed TH01 progress
@@ -37,9 +37,10 @@
 		alt="<code>boss8.grz</code>, image {{inc .}}/16"
 	/></a>
 {{- end}}</p><p>
-	To make these, I just wrote <a href="{{$grzview}}">a small viewer</a>,
-	calling the same decompiled TH01 code. Obviously, this means that it not
-	only must to be run on a PC-98, but also discards the alpha information.
+	To make these, I just wrote a small viewer, calling the same decompiled
+	TH01 code: {{HTML_Download .HostedPath $grzview}}
+	Obviously, this means that it not only must to be run on a PC-98, but also
+	discards the alpha information.
 	If any backers are <i>really</i> interested in having a proper converter
 	to and from PNG, I can implement that in an upcoming push… although that
 	would be <i>the</i> perfect thing for outside contributors to do.

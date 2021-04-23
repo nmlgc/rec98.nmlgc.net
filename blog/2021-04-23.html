@@ -1,0 +1,53 @@
+<p>
+	Technical debt, part 9… and as it turns out, it's highly impractical to
+	repay 100% of it at this point in development. 😕
+</p><p>
+	The reason: <code>graph_putsa_fx()</code>, ZUN's function for rendering
+	optionally boldfaced text to VRAM using the font ROM glyphs, in its
+	ridiculously micro-optimized TH04 and TH05 version. This one sets the
+	"callback function" for applying the boldface effect by self-modifying
+	<i>the target of two <code>CALL rel16</code> instructions</i>… because
+	there <i>really</i> wasn't any free register left for an indirect
+	<code>CALL</code>, eh? The necessary distance, from the call site to the
+	function itself, has to be calculated at assembly time, by subtracting the
+	target function label from the call site label.<br />
+	This usually wouldn't be a problem… if ZUN didn't store the resulting
+	lookup tables in the <code>.DATA</code> segment. With code segments, we
+	can easily split them at pretty much any point between functions because
+	there are multiple of them. But there's only a single <code>.DATA</code>
+	segment, with all ZUN and master.lib data sandwiched between Borland C++'s
+	<a href="https://en.wikipedia.org/wiki/Crt0"><code>crt0</code></a> at the
+	top, and Borland C++'s library functions at the bottom of the segment.
+	Adding another split point would require all data after that point to be
+	moved to its own translation unit, which in turn requires
+	<code>EXTERN</code> references in the big .ASM file to all that moved
+	data… in short, it would turn the codebase into an even greater
+	mess.<br />
+	Declaring the labels as <code>EXTERN</code> wouldn't work either, since
+	the linker can't do fancy arithmetic and is limited to simply replacing
+	address placeholders with one single address. So, we're now stuck with
+	this function at the bottom of the <code>SHARED</code> segment, for the
+	foreseeable future.
+</p><hr /><p>
+	We can still continue to separate functions off the top of that segment,
+	though. Pretty much the only thing noteworthy there, so far: TH04's code
+	for loading stage tile images from .MPN files, which we hadn't
+	reverse-engineered so far, and which nicely fit into one of
+	{{DB_CustomerByID 15}}'s pending ⅓ RE contributions. Yup, we finally moved
+	the RE% bars again! If only for a tiny bit.
+	{{HTML_Emoji "tannedcirno"}}<br />
+	Both TH02 and TH05 simply store one pointer to one dynamically allocated
+	memory block for all tile images, as well as the number of images, in the
+	data segment. TH04, on the other hand, reserves memory for 8 .MPN slots,
+	complete with their color palettes, even though it only ever uses the
+	first one of these. There goes another 458 bytes of conventional RAM… I
+	should start summing up all the waste we've seen so far. Let's put the
+	next website contribution towards a tagging system for these blog posts.
+</p><p>
+	At 86% of technical debt in the <code>SHARED</code> segment repaid, we
+	aren't quite done yet, but the rest is mostly just TH04 needing to catch
+	up with functions we've already separated. Next up: Getting to that
+	practical 98.5% point. Since this is very likely to not require a full
+	push, I'll also decompile some more actual TH04 and TH05 game code I
+	previously reverse-engineered – and after that, reopen the store!
+</p>

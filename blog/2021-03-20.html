@@ -55,7 +55,7 @@
 	then <i>maybe</i> wouldn't have to look them up in an x86 instruction
 	reference <i>quite</i> as often. At its best, this even allows us to
 	declare certain functions with the <code>__fastcall</code> convention and
-	expressing such parameter lists as regular C, with no additional
+	express their parameter lists as regular C, with no additional
 	pseudo-registers or macros required.<br />
 	As for output registers, Turbo C++'s code generation turns out to be even
 	more amazing than previously thought when it comes to returning
@@ -74,7 +74,7 @@
 
 void input_sense(void)
 {
-	// As a result, this this assignment becomes `_AH = _AH`, which Turbo C++
+	// As a result, this assignment becomes `_AH = _AH`, which Turbo C++
 	// never emits as such, giving us only the three instructions we need.
 	_AH = keygroup_sense(8);
 

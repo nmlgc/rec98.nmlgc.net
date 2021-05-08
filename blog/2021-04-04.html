@@ -19,8 +19,9 @@
 	<code>.MODEL</code> directive.</a>
 </p><p>
 	ReC98 would highly benefit from a build server – both in order to
-	immediately spot issues like this one; even more so than the usual
-	open-source project of its size, I would say. But that might be exactly
+	immediately spot issues like this one, and as a service for modders.
+	Even more so than the usual open-source project of its size, I would say.
+	But that might be exactly
 	<i>because</i> it doesn't seem like something you can trivially outsource
 	to one of the big CI providers for open-source projects, and quickly set
 	it up with a few lines of YAML.<br />
@@ -98,7 +99,7 @@ a_function_compiled_with_wx endp</pre><p>
 	Since the latter function has a consistent (and thus, fakeable) alignment,
 	I simply split that code segment into two, with a new <code>-WX</code>
 	translation unit for just <code>snd_se_reset(void)</code>. Problem solved –
-	after all, two C++ translation units are still better than 1 ASM
+	after all, two C++ translation units are still better than one ASM
 	translation unit. {{HTML_Emoji "onricdennat"}} Especially with all the
 	previous <code>#include</code> improvements.
 </p><p>

@@ -2,15 +2,16 @@
 	<i>Almost!</i>
 </p><p>
 	Just like most of the time, it was more sensible to cover
-	<tt>GENSOU.SCR</tt>, the last structure missing in TH05's <tt>OP.EXE</tt>,
-	everywhere it's used, rather than just rushing out <tt>OP.EXE</tt>
+	<code>GENSOU.SCR</code>, the last structure missing in TH05's <code>
+	OP.EXE</code>,
+	everywhere it's used, rather than just rushing out <code>OP.EXE</code>
 	position independence. I did have to look into all of the functions to
 	fully RE it after all, and to find out whether the unused fields actually
 	<i>are</i> unused. The only thing that kept this push from yielding even
 	more above-average progress was the sheer inconsistency in how the games
-	implemented the operations on this PC-98 equivalent of <tt>score*.dat</tt>:
+	implemented the operations on this PC-98 equivalent of <code>score*.dat</code>:
 </p><ul>
-	<li><tt>OP.EXE</tt> declares two structure instances, for simultaneous
+	<li><code>OP.EXE</code> declares two structure instances, for simultaneous
 	access to both Reimu and Marisa scores. TH05 with its 4 playable
 	characters instead uses a single one, and overwrites it successively for
 	each character when drawing the high score menu – meaning, you'd only see
@@ -18,21 +19,22 @@
 	score menu. However, it still declares the TH04 "Marisa" structure as a
 	leftover… <i>and also decodes it and verifies its checksum</i>, despite
 	nothing being ever loaded into it</li>
-	<li><tt>MAIN.EXE</tt> uses a separate ASM implementation of the decoding
+	<li><code>MAIN.EXE</code> uses a separate ASM implementation of the decoding
 	and encoding functions {{HTML_Emoji "godzun"}}</li>
-	<li>TH05's <tt>MAIN.EXE</tt> also reimplements the basic loading functions
-	in ASM – <i>without</i> the code to regenerate <tt>GENSOU.SCR</tt> with
+	<li>TH05's <code>MAIN.EXE</code> also reimplements the basic loading
+	functions
+	in ASM – <i>without</i> the code to regenerate <code>GENSOU.SCR</code> with
 	default data if the file is missing or corrupted. That actually makes
-	sense, since any regeneration is already done in <tt>OP.EXE</tt>, which
+	sense, since any regeneration is already done in <code>OP.EXE</code>, which
 	always has to load that file anyway to check how much has been cleared
 	</li>
 	<li>However, there <i>is</i> a regeneration function in TH05's
-	<tt>MAINE.EXE</tt>… which actually generates <i>different</i> default
-	data: <tt>OP.EXE</tt> consistently sets Extra Stage records to Stage 1,
-	while <tt>MAINE.EXE</tt> uses the same place-based stage numbering that
+	<code>MAINE.EXE</code>… which actually generates <i>different</i> default
+	data: <code>OP.EXE</code> consistently sets Extra Stage records to Stage 1,
+	while <code>MAINE.EXE</code> uses the same place-based stage numbering that
 	both versions use for the regular ranks</li>
 </ul><p>
-	<i>Technically</i> though, TH05's <tt>OP.EXE</tt> <i>is</i>
+	<i>Technically</i> though, TH05's <code>OP.EXE</code> <i>is</i>
 	position-independent now, and the rest are (<i>should</i> be?
 	{{HTML_Emoji "tannedcirno"}}) merely false positives. However, TH04's is
 	still missing another structure, in addition to <i>its</i> false

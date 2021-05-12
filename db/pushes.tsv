@@ -109,7 +109,7 @@ P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	202
 P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/8b5c146...4ef4c9e	1
 P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/4ef4c9e...e447a2d	1
 P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/150d2c6...6204fdd	1
-P0114	[72]	Separating translation units, part 1 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1
+P0114	[72]	Separating translation units, part 1/10 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1
 P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/967bb8b...e5328a3	1
 P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/e5328a3...03048c3	1
 P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/Rec98/compare/03048c3...0bb5bc3	1
@@ -122,15 +122,16 @@ P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc
 P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/72dfa09...056b1c7	1
 P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1
 P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/6c22af7...8b01657	1
-P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
+P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2/10 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
 P0128	[84]	TH01 decompilation (Card-flipping stages, part 1) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
 P0129	[84]	TH01 decompilation (Card-flipping stages, part 2) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
 P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/6d69ea8...576def5	1
 P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/576def5...dc9e3ee	1
-P0132	[88]	Separating translation units, part 3 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/Rec98/compare/dc9e3ee...045450c	1
-P0133	[90]	Separating translation units, part 4 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	nmlgc/Rec98/compare/045450c...1d5db71	1
-P0134	[92]	Separating translation units, part 5 (TH05 .PI functions)	2021-02-21T13:36:38Z	nmlgc/Rec98/compare/1d5db71...a6eed55	1
-P0135	[88, 90]	Separating translation units, part 6 (TH05 PMD file loading / Music Room piano)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/a6eed55...252c13d	1
-P0136	[90, 92]	Separating translation units, part 7 (starting to catch up with TH04)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/252c13d...07bfcf2	1
-P0137	[94]	Separating translation units, part 8 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/Rec98/compare/07bfcf2...8d953dc	1
-P0138	[94, 86]	Separating translation units, part 9 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/Rec98/compare/8d953dc...864e864	1
+P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/Rec98/compare/dc9e3ee...045450c	1
+P0133	[90]	Separating translation units, part 4/10 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	nmlgc/Rec98/compare/045450c...1d5db71	1
+P0134	[92]	Separating translation units, part 5/10 (TH05 .PI functions)	2021-02-21T13:36:38Z	nmlgc/Rec98/compare/1d5db71...a6eed55	1
+P0135	[88, 90]	Separating translation units, part 6/10 (TH05 PMD loading / Music Room piano)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/a6eed55...252c13d	1
+P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up with TH04)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/252c13d...07bfcf2	1
+P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/Rec98/compare/07bfcf2...8d953dc	1
+P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/Rec98/compare/8d953dc...864e864	1
+P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initialization / TH04 PMD loading)	2021-05-12T18:01:20Z	nmlgc/ReC98/compare/864e864...d985811	1

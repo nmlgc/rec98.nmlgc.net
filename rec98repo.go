@@ -62,14 +62,11 @@ func (cm componentMetric) Cutscenes() float64 { return cm[3] }
 
 // REMetric stores a number for each component in each binary,
 // together with the per-game, per-component, and total sums.
-// progress_table.html uses this structure as its data source.
 type REMetric struct {
 	CMetrics     [5]componentMetric // Every individual component in each game
 	ComponentSum componentMetric    // All games per component
 	GameSum      [5]float64         // All components per game
 	Total        float64            // Everything
-	// Since subtemplate calls can only take a single parameter…
-	Format func(float64) template.HTML
 }
 
 // Sum updates the sums of m, based on its CMetrics.
@@ -93,11 +90,6 @@ func (m *REMetric) Sum() *REMetric {
 // In case we'll ever need addition or subtraction... good that closures
 // actually save us from needing a separate function for scalars.
 func metricOp(a, b REMetric, op func(a, b float64) float64) (ret REMetric) {
-	if a.Format != nil {
-		ret.Format = a.Format
-	} else {
-		ret.Format = b.Format
-	}
 	for i := range a.CMetrics {
 		for j := range a.ComponentSum {
 			ret.CMetrics[i][j] = op(a.CMetrics[i][j], b.CMetrics[i][j])
@@ -118,6 +110,23 @@ func (m REMetric) DivByCeil(v float64) (ret REMetric) {
 	return metricOp(m, m, func(a, b float64) float64 {
 		return math.Ceil(a / v)
 	})
+}
+
+func (m REMetric) FormattedAsInt() REMetricWithFormatter {
+	return REMetricWithFormatter{m, func(val float64) template.HTML {
+		return template.HTML(fmt.Sprintf("%.0f", val))
+	}}
+}
+
+func (m REMetric) FormattedAsPct() REMetricWithFormatter {
+	return REMetricWithFormatter{m, HTMLPercentage}
+}
+
+// REMetricWithFormatter bundles a metric with a format function.
+// progress_table.html uses this structure as its data source.
+type REMetricWithFormatter struct {
+	REMetric
+	Format func(float64) template.HTML
 }
 
 // REProgress collects all progress-indicating metrics across all of ReC98.
@@ -148,7 +157,6 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 		}
 		pct.ComponentSum = componentFormula(p.ComponentSum, base.ComponentSum)
 		pct.Total = formula(p.Total, base.Total)
-		pct.Format = HTMLPercentage
 		return
 	}
 
@@ -242,10 +250,6 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		for i := range pi.ComponentSum {
 			progressFor(&pi.CMetrics[game][i], &pr.CMetrics[game][i], sources[i])
 		}
-		pi.Format = func(val float64) template.HTML {
-			return template.HTML(fmt.Sprintf("%.0f", val))
-		}
-		pr.Format = pi.Format
 	}
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c

@@ -12,26 +12,26 @@
 <div class="progress-grid">
 	<figure class="progress">
 		<figcaption>Not yet reverse-engineered x86 instructions</figcaption>
-		{{template "progress_table.html" $progress.Instructions}}
+		{{template "progress_table.html" $progress.Instructions.FormattedAsInt}}
 	</figure>
 	<figure class="progress">
 		<figcaption>Completion percentage
 			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
 		</figcaption>
-		{{template "progress_table.html" $pct.Instructions}}
+		{{template "progress_table.html" $pct.Instructions.FormattedAsPct}}
 	</figure>
 </div>
 <hr />
 <div class="progress-grid">
 	<figure class="progress">
 		<figcaption>Maximum number of unlabeled memory addresses</figcaption>
-		{{template "progress_table.html" $progress.AbsoluteRefs}}
+		{{template "progress_table.html" $progress.AbsoluteRefs.FormattedAsInt}}
 	</figure>
 	<figure class="progress">
 		<figcaption>Probability of position independence
 			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
 		</figcaption>
-		{{template "progress_table.html" $pct.AbsoluteRefs}}
+		{{template "progress_table.html" $pct.AbsoluteRefs.FormattedAsPct}}
 	</figure>
 </div>
 {{template "footer.html"}}

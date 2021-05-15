@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"html/template"
 	"log"
 	"math"
+	"os"
 	"strings"
 
 	"github.com/go-git/go-git/v5/plumbing"
@@ -267,13 +269,40 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 // REProgressAtTree parses the ASM dump files for every game at the given Git
 // tree, and returns the progress for each.
 var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
-	cache := make(map[plumbing.Hash]*REProgress)
+	const CACHE_FN = "progress_cache.gob"
+
+	load := func(fn string) (ret map[plumbing.Hash]*REProgress, err error) {
+		f, err := os.Open(fn)
+		if err != nil {
+			return make(map[plumbing.Hash]*REProgress), err
+		}
+		dec := gob.NewDecoder(f)
+		if err := dec.Decode(&ret); err != nil {
+			return make(map[plumbing.Hash]*REProgress), err
+		}
+		FatalIf(f.Close())
+		return ret, nil
+	}
+
+	save := func(fn string, cache map[plumbing.Hash]*REProgress) {
+		f, err := os.Create(fn)
+		FatalIf(err)
+		enc := gob.NewEncoder(f)
+		FatalIf(enc.Encode(cache))
+		FatalIf(f.Close())
+	}
+
+	cache, err := load(CACHE_FN)
+	if err != nil {
+		log.Printf("Progress cache invalid (%s), will be regenerated", err)
+	}
 	return func(tree *object.Tree) REProgress {
 		if progress, ok := cache[tree.Hash]; ok {
 			return *progress
 		}
 		progress := reProgressAtTree(tree)
 		cache[tree.Hash] = &progress
+		save(CACHE_FN, cache)
 		return progress
 	}
 }()

@@ -1,0 +1,93 @@
+{{$pic1 := printf "%v%v" .FilePrefix "PC98-8x16-font-ROM.png" -}}
+{{$pic2 := printf "%v%v" .FilePrefix "PC98-text-modes.png" -}}
+
+<p>
+	Alright, onto Konngara! Let's quickly move the escape sequences used later
+	in the battle to C land, and then we can immediately decompile the loading
+	and entrance animation function together with its filenames. Might as well
+	reverse-engineer those escape sequences while I'm at it, though – even if
+	they aren't implemented in DOSBox-X, they're well documented in all those
+	Japanese PDFs, so this should be no big deal…
+</p><p>
+	…wait, <kbd>ESC )3</kbd> switches to <i>"graph mode"</i>? As opposed to the
+	default <i>"kanji mode"</i>, which can be re-entered via <kbd>ESC )0</kbd>?
+	Let's look up graph mode in the <i>PC-9801 Programmers' Bible</i> then…
+	<blockquote>> Kanji cannot be handled in this mode.</blockquote>
+	…and that's apparently all it has to say. Why have it then, on a platform
+	whose main selling point is a kanji ROM, and where Shift-JIS (and, well,
+	7-bit ASCII) are the only native encodings? No support for graph mode in
+	DOSBox-X either… yeah, let's take a deep dive into NEC's
+	<code>IO.SYS</code>, and get to the bottom of this.
+</p><p>
+	And yes, graph mode pretty much just disables Shift-JIS decoding for
+	characters written via <code>INT 29h</code>, the lowest-level way of "just
+	printing a <code>char</code>" on DOS, which every <code>printf()</code>
+	will ultimately end up calling. Turns out there is a use for it though,
+	which we can spot by looking at the 8×16 half-width section of font ROM:</p>
+	<p class="gallery"><a href="{{$pic1}}"><img
+		src="{{$pic1}}"
+		alt="8×16 half-width section of font ROM, with the characters in the Shift-JIS lead byte range highlighted in red"
+	/></a></p><p>
+	The half-width glyphs marked in <span style="color: red;">red</span>
+	correspond to the byte ranges from 0x80-0x9F and 0xE0-0xFF… which Shift-JIS
+	defines as lead bytes for two-byte, full-width characters. But if we turn
+	<i>off</i> Shift-JIS decoding…</p>
+	<p class="gallery"><a href="{{$pic2}}"><img
+		src="{{$pic2}}"
+		alt="Visible differences between the kanji and graph modes on PC-98 DOS"
+	/></a>
+	</p><p class="gallery">
+		<small>(Yes, that <code>g</code> in the function row is how NEC DOS
+		indicates that graph mode is active. Try it yourself by pressing
+		<kbd>Ctrl+F4</kbd>!)</small>
+	</p><p>
+	Jackpot, we get those half-width characters when printing their
+	corresponding bytes.<br />
+	<a href="https://github.com/joncampbell123/dosbox-x/pull/2547">I've
+	re-implemented all my findings into DOSBox-X</a>, which will include graph
+	mode in the upcoming 0.83.14 release. If P0140 looks a bit empty as a
+	result, that's why – most of the immediate feature work went into
+	DOSBox-X, not into ReC98. That's the beauty of "anything" pushes.
+	{{HTML_Emoji "tannedcirno"}}
+</p><p>
+	So, after switching to graph mode, TH01 does… one of the slowest possible
+	<code>memset()</code>s over all of text RAM – one <code>printf(" ")</code>
+	call for every single one of its 80×25 half-width cells – before switching
+	back to kanji mode. What a waste of RE time…? Oh well, at least we've now
+	got plenty of proof that these weird escape sequences <i>actually</i> do
+	nothing of interest.
+</p><hr /><p>
+	As for the Konngara code itself… well, it's script-like code, what can you
+	say. Maybe minimally sloppy in some places, but ultimately harmless.<br />
+	One small thing that might not be widely known though: The large,
+	blue-green Siddhaṃ seed syllables are supposed to show up immediately, with
+	no delay between them? Good to know. Clocking your emulator too low tends
+	to roll them down from the top of the screen, and will certainly add a
+	noticeable delay between the four individual images.
+</p><p>
+	… Wait, but this means that ZUN could have <i>intended</i> this "effect".
+	Why else would he not only put those syllables into four individual images
+	(and therefore add at least the latency of disk I/O between them), but also
+	show them on the foreground VRAM page, rather than on the "back buffer"?
+</p><p>
+	Meanwhile, in {{Blog_PostLink "2020-11-16" "another"}} instance of "maybe
+	having gone too far in a few places":
+	<a href="https://github.com/nmlgc/ReC98/blob/08bc188e7dae7da9598f389d0bd8fa9da84db02d/th01/main/boss/b20j.cpp#L496">Expressing distances on the playfield as fractions of its width
+	and height, just to avoid absolute numbers</a>? Raw numbers are bad because
+	they're in screen space in this game. But we've already been throwing
+	<code>PLAYFIELD_</code> constants into the mix as a way of explicitly
+	communicating screen space, and keeping raw number literals for the actual
+	playfield coordinates is looking increasingly sloppy… I don't know,
+	fractions really seemed like the most sensible thing to do with what we're
+	given here. 😐
+</p><hr /><p>
+	So, 2 pushes in, and we've got the loading code, the entrance animation,
+	facial expression rendering, and the first one out of Konngara's 12
+	danmaku patterns. Might not sound like much, but since that first pattern
+	involves those
+	<img src="data:image/gif;base64,R0lGODlhCAAIAIABAACZqv///yH5BAEKAAEALAAAAAAIAAgAAAINjAGmiMv9okzSNRVuKAA7" alt="◆" />
+	blue-green diamond sprites and therefore is one of the more complicated
+	ones, it all amounts to roughly 21.6% of Konngara's code. That's 7 more
+	pushes to get Konngara done, then? Next up though: Two pushes of website
+	improvements.
+</p>

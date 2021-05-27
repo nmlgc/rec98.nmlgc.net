@@ -135,3 +135,6 @@ P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up wit
 P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/Rec98/compare/07bfcf2...8d953dc	1
 P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/Rec98/compare/8d953dc...864e864	1
 P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initialization / TH04 PMD loading)	2021-05-12T18:01:20Z	nmlgc/ReC98/compare/864e864...d985811	1
+P0140	[98]	PC-98 DOS graph mode RE, with implementation into DOSBox-X 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d985811...d856f7d	0
+P0141	[98, 102]	TH01 decompilation (Konngara, part 1) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d856f7d...5afee78	1
+P0142	[99]	TH01 decompilation (Konngara, part 2) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/5afee78...08bc188	1

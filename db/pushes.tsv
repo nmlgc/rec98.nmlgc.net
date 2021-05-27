@@ -70,7 +70,7 @@ P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	nmlgc/Rec98/compa
 P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/4bb04ab...cea3ea6	1
 P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/cea3ea6...5286417	1
 P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/5286417...1807906	1
-P0075	[34, 41]	TH04/TH05 RE (Bullet pattern types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1
+P0075	[34, 41]	TH04/TH05 RE (Bullet group types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1
 P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/222fc99...9ae9754	1
 P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/9ae9754...f4eb7a8	1
 P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/f4eb7a8...9e52cb1	1
@@ -104,7 +104,7 @@ P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-
 P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/11b776b...1f1829d	1
 P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1f1829d...1650241	1
 P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1650241...dcf4e2c	1
-P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet pattern tuning)	2020-08-16T19:48:44Z	nmlgc/Rec98/compare/dcf4e2c...2c7d86b	1
+P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet group tuning)	2020-08-16T19:48:44Z	nmlgc/Rec98/compare/dcf4e2c...2c7d86b	1
 P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/Rec98/compare/2c7d86b...8b5c146	1
 P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/8b5c146...4ef4c9e	1
 P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/4ef4c9e...e447a2d	1

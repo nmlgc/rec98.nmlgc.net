@@ -25,8 +25,8 @@
 </p><hr /><p>
 	Except that TH05 then just throws more of its infamous micro-optimized and
 	undecompilable ASM at you. 🙄 This push covered the function that adjusts
-	the bullet pattern template based on rank and the selected difficulty,
-	called every time such a pattern is configured. Which, just like pretty
+	the bullet group template based on rank and the selected difficulty,
+	called every time such a group is configured. Which, just like pretty
 	much all of TH05's bullet spawning code, is one of those undecompilable
 	functions. If C allowed labels of other functions as <code>goto</code>
 	targets, it <i>might</i> have been decompilable into something useful to
@@ -51,21 +51,21 @@
 	Dropping down to ASM also makes it easier to introduce weird quirks.
 	Decompiled, one of TH05's tuning conditions for
 	<a href="https://sparen.github.io/ph3tutorials/ddsga3.html#sub5">stack
-	patterns</a> on Easy Mode would look something like:
+	groups</a> on Easy Mode would look something like:
 	<pre>case BP_STACK:
 	// […]
 	if(spread_angle_delta >= 2) {
 		stack_bullet_count--;
 	}</pre>
-	The fields of the bullet pattern template aren't typically reset when
-	setting up a new pattern. So, <code>spread_angle_delta</code> in the
-	context of a stack pattern effectively refers to "the delta angle of the
-	last spread pattern that was fired before this stack – whenever that was".
+	The fields of the bullet group template aren't typically reset when
+	setting up a new group. So, <code>spread_angle_delta</code> in the context
+	of a <i>stack</i> group effectively refers to "the delta angle of the last
+	<i>spread</i> group that was fired before this stack – whenever that was".
 	uth05win also spotted this quirk, considered it a bug, and wrote
 	fanfiction by changing <code>spread_angle_delta</code> to
 	<code>stack_bullet_count</code>.<br />
 	As usual for functions that occur in more than one game, I also decompiled
-	the TH04 bullet pattern tuning function, and it's perfectly sane, with no
+	the TH04 bullet group tuning function, and it's perfectly sane, with no
 	such quirks.
 </p><hr /><p>
 	In the more PI-focused parts of this push, we got the TH05-exclusive

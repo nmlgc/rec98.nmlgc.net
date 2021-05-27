@@ -19,7 +19,7 @@
 	220 in TH05. These are by far the most common types of… err, "things the
 	player can collide with", and so ZUN provides a whole bunch of pre-made
 	motion, animation, and <a href="https://sparen.github.io/ph3tutorials/ddsga3.html">
-	n-way spread / ring / stack</a> pattern options for those, which can be
+	n-way spread / ring / stack</a> group options for those, which can be
 	selected by simply setting a few fields in the bullet template. All the
 	other "non-bullets" have to be fired and controlled individually.
 </p><p>
@@ -27,20 +27,20 @@
 	I don't think <i>anyone</i> could just make up these structure member
 	overloads. The interesting insights here all come from applying this
 	research to TH04, and figuring out its differences compared to TH05. The
-	most notable one there is in the default patterns: TH05 allows you to add
+	most notable one there is in the default groups: TH05 allows you to add
 	a <a href="https://sparen.github.io/ph3tutorials/ddsga3.html#sub5">stack</a>
 	to any single bullet, n-way spread or ring, but TH04 only lets you create
 	stacks separately from n-way spreads and rings, and thus gets by with
 	fewer fields in its bullet template structure. On the other hand, TH04 has
 	a separate "n-way spread with random angles, yet still aimed at the
-	player" pattern? Which <i>seems</i> to be unused, at least as far as
+	player" group? Which <i>seems</i> to be unused, at least as far as
 	midbosses and bosses are concerned; can't say anything about stage enemies
 	yet.
 </p><p>
 	In fact, TH05's larger bullet template structure illustrates that these
-	distinct pattern types actually are a rather redundant piece of
+	distinct group types actually are a rather redundant piece of
 	over-engineering. You can perfectly indicate any permutation of the basic
-	patterns through just the stack bullet count (1 = no stack), spread bullet
+	groups through just the stack bullet count (1 = no stack), spread bullet
 	count (1 = no spread), and spread delta angle (0 = ring instead of
 	spread). Add a 4-flag bitfield to cover the rest (aim to player, randomize
 	angle, randomize speed, force single bullet regardless of difficulty or

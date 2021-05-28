@@ -423,7 +423,7 @@ func tsvPath(table string) string {
 	return filepath.Join(dbPath, table+".tsv")
 }
 
-func loadTSV(slice interface{}, table string) {
+func loadTSV(slice interface{}, table string, unmarshaler func(gocsv.CSVReader, interface{}) error) {
 	f, err := os.Open(tsvPath(table))
 	// TODO: Unfortunately, this has to compile with Go 1.12 for the time
 	// being, so we can't use `errors.Is(err, os.ErrNotExist)` 🙁
@@ -433,7 +433,7 @@ func loadTSV(slice interface{}, table string) {
 	FatalIf(err)
 	reader := csv.NewReader(f)
 	reader.Comma = '\t'
-	FatalIf(gocsv.UnmarshalCSV(reader, slice))
+	FatalIf(unmarshaler(reader, slice))
 }
 
 func saveTSV(slice interface{}, table string) error {
@@ -464,13 +464,13 @@ func init() {
 	devLocation, err = time.LoadLocation(devLocationName)
 	FatalIf(err)
 
-	loadTSV(&customers, "customers")
-	loadTSV(&transactions, "transactions")
-	loadTSV(&tsvPushes, "pushes")
-	loadTSV(&pushprices, "pushprices")
-	loadTSV(&freetime, "freetime")
-	loadTSV(&incoming.data, "incoming")
-	loadTSV(&paypalAuths, "paypal_auth")
+	loadTSV(&customers, "customers", gocsv.UnmarshalCSV)
+	loadTSV(&transactions, "transactions", gocsv.UnmarshalCSV)
+	loadTSV(&tsvPushes, "pushes", gocsv.UnmarshalCSV)
+	loadTSV(&pushprices, "pushprices", gocsv.UnmarshalCSV)
+	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
+	loadTSV(&incoming.data, "incoming", gocsv.UnmarshalCSV)
+	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
 
 	if len(paypalAuths) > 0 {
 		paypal_auth = *paypalAuths[0]

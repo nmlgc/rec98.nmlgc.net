@@ -382,7 +382,7 @@ func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 // given diffs, and caches the result.
 func RESpeedPerPushFrom(diffs []DiffInfoWeighted) func() RESpeed {
 	log.Printf("Calculating the crowdfunding target...")
-	spp := reSpeedPerPushFrom(DiffsForEstimate())
+	spp := reSpeedPerPushFrom(diffs)
 	log.Printf("Done!")
 	return func() RESpeed {
 		return spp

@@ -27,23 +27,21 @@ func (e eHashTooShort) Error() string {
 	return ""
 }
 
-func testShortLength(r *git.Repository, sl int, branches []plumbing.Hash) map[string]plumbing.Hash {
+func testShortLength(r *git.Repository, sl int) map[string]plumbing.Hash {
 	ret := make(map[string]plumbing.Hash)
-	for _, branch := range branches {
-		logIter, err := r.Log(&git.LogOptions{From: branch})
-		FatalIf(err)
-		err = logIter.ForEach(func(c *object.Commit) error {
-			curFull := c.Hash
-			curShort := curFull.String()[:sl]
-			if prevFull, ok := ret[curShort]; ok && prevFull != curFull {
-				return eHashTooShort{}
-			}
-			ret[curShort] = curFull
-			return nil
-		})
-		if _, ok := err.(eHashTooShort); ok {
-			return nil
+	commitIter, err := r.CommitObjects()
+	FatalIf(err)
+	err = commitIter.ForEach(func(c *object.Commit) error {
+		curFull := c.Hash
+		curShort := curFull.String()[:sl]
+		if _, ok := ret[curShort]; ok {
+			return eHashTooShort{}
 		}
+		ret[curShort] = curFull
+		return nil
+	})
+	if _, ok := err.(eHashTooShort); ok {
+		return nil
 	}
 	return ret
 }
@@ -57,21 +55,10 @@ func NewRepository(url string) (ret Repository) {
 	}
 	log.Printf("Done.")
 
-	// Collect all branches
-	var branches []plumbing.Hash
-	branchIter, err := r.Branches()
-	FatalIf(err)
-	FatalIf(
-		branchIter.ForEach(func(ref *plumbing.Reference) error {
-			branches = append(branches, ref.Hash())
-			return nil
-		}),
-	)
-
 	testlen := 0
 	for testlen < 40 && ret.ShortToLong == nil {
 		testlen++
-		ret.ShortToLong = testShortLength(r, testlen, branches)
+		ret.ShortToLong = testShortLength(r, testlen)
 	}
 	log.Printf("shortest unique hash length is %v characters", testlen)
 

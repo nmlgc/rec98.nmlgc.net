@@ -8,9 +8,9 @@ import (
 	"time"
 )
 
-// CustomerByID returns a HTML representation of the given customer.
-func CustomerByID(id CustomerID) template.HTML {
-	c := customers.ByID(id)
+// HTMLByID returns a HTML representation of the given customer.
+func (t tCustomers) HTMLByID(id CustomerID) template.HTML {
+	c := t.ByID(id)
 	if len(c.URL) == 0 {
 		return template.HTML(c.Name)
 	}

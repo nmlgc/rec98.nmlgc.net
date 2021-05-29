@@ -88,7 +88,7 @@ func (e BlogEntry) Render() Post {
 	}
 	pagesExecute(&b, e.templateName, &ctx)
 
-	pushes := PushesDeliveredAt(e.Date)
+	pushes := pushes.DeliveredAt(e.Date)
 	post := Post{
 		Date: e.Date,
 		Body: template.HTML(b.String()),

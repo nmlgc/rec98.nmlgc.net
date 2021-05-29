@@ -196,7 +196,7 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	// Database view, safe
 	"DB_CustomerByID":       CustomerByID,
 	"DB_TransactionBacklog": TransactionBacklog,
-	"DB_Pushes":             Pushes,
+	"DB_Pushes":             func() []Push { return pushes.All() },
 	"DB_CapCurrent":         CapCurrent,
 
 	// Blog, safe
@@ -294,7 +294,7 @@ func main() {
 	}
 	log.Printf("That worked!")
 
-	sppFunc := RESpeedPerPushFrom(DiffsForEstimate())
+	sppFunc := RESpeedPerPushFrom(pushes.DiffsForEstimate())
 	estimateFunc := REProgressEstimateAtTree(baselineFunc())
 
 	pages.Funcs(map[string]interface{}{

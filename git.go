@@ -70,14 +70,14 @@ func NewRepository(url string) (ret Repository) {
 var repo Repository
 
 func getCommit(rev string) (*object.Commit, error) {
-	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
-	if err == nil {
-		return repo.R.CommitObject(*hash)
-	}
 	if len(rev) >= repo.UniqueLen {
 		if hash, ok := repo.ShortToLong[rev[:repo.UniqueLen]]; ok {
 			return repo.R.CommitObject(hash)
 		}
+	}
+	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
+	if err == nil {
+		return repo.R.CommitObject(*hash)
 	}
 	return nil, err
 }

@@ -17,8 +17,8 @@ import (
 type Repository struct {
 	R *git.Repository
 
-	UniqueLen   int // Shortest possible but still unique commit hash length
-	ShortToLong map[string]plumbing.Hash
+	UniqueLen         int // Shortest possible but still unique commit hash length
+	ShortHashToCommit map[string]*object.Commit
 }
 
 type eHashTooShort struct{}
@@ -27,8 +27,8 @@ func (e eHashTooShort) Error() string {
 	return ""
 }
 
-func testShortLength(r *git.Repository, sl int) map[string]plumbing.Hash {
-	ret := make(map[string]plumbing.Hash)
+func testShortLength(r *git.Repository, sl int) map[string]*object.Commit {
+	ret := make(map[string]*object.Commit)
 	commitIter, err := r.CommitObjects()
 	FatalIf(err)
 	err = commitIter.ForEach(func(c *object.Commit) error {
@@ -37,7 +37,7 @@ func testShortLength(r *git.Repository, sl int) map[string]plumbing.Hash {
 		if _, ok := ret[curShort]; ok {
 			return eHashTooShort{}
 		}
-		ret[curShort] = curFull
+		ret[curShort] = c
 		return nil
 	})
 	if _, ok := err.(eHashTooShort); ok {
@@ -56,9 +56,9 @@ func NewRepository(url string) (ret Repository) {
 	log.Printf("Done.")
 
 	testlen := 0
-	for testlen < 40 && ret.ShortToLong == nil {
+	for testlen < 40 && ret.ShortHashToCommit == nil {
 		testlen++
-		ret.ShortToLong = testShortLength(r, testlen)
+		ret.ShortHashToCommit = testShortLength(r, testlen)
 	}
 	log.Printf("shortest unique hash length is %v characters", testlen)
 
@@ -71,8 +71,8 @@ var repo Repository
 
 func getCommit(rev string) (*object.Commit, error) {
 	if len(rev) >= repo.UniqueLen {
-		if hash, ok := repo.ShortToLong[rev[:repo.UniqueLen]]; ok {
-			return repo.R.CommitObject(hash)
+		if commit, ok := repo.ShortHashToCommit[rev[:repo.UniqueLen]]; ok {
+			return commit, nil
 		}
 	}
 	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))

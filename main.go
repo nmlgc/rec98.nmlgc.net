@@ -144,14 +144,10 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 	)
 }
 
-var pages = template.Must(template.New("").Funcs(map[string]interface{}{
+var pages = template.New("").Funcs(map[string]interface{}{
 	// Git, initialization
 	"git_getCommit": getCommit,
 	"git_getLogAt":  getLogAt,
-
-	// Blog, initialization
-	// Added later to avoid a initialization loop
-	"Blog_GetPost": func() int { return 0 },
 
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
@@ -182,16 +178,10 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"git_commits":        commits,
 	"git_makeCommitInfo": makeCommitInfo,
 	"git_CommitLink":     CommitLink,
-	// Added after the repository was successfully opened
-	"git_MasterCommit": func() int { return 0 },
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
 	"ReC98_REBaselineRev":    REBaselineRev,
-	// Added after the repository was successfully opened
-	"ReC98_REProgressBaseline":       func() int { return 0 },
-	"ReC98_RESpeedPerPush":           func() int { return 0 },
-	"ReC98_REProgressEstimateAtTree": func() int { return 0 },
 
 	// Database view, safe
 	"DB_CustomerByID": func(id CustomerID) template.HTML {
@@ -202,13 +192,11 @@ var pages = template.Must(template.New("").Funcs(map[string]interface{}{
 	"DB_CapCurrent":         CapCurrent,
 
 	// Blog, safe
-	// Added later to avoid a initialization loop
-	"Blog_Posts":    func() int { return 0 },
 	"Blog_PostLink": PostLink,
 
 	// PayPal, safe
 	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
-}).ParseGlob("*.html"))
+})
 
 // pagesParseSubdirectory parses all files in `dir` that match glob into
 // subtemplates of [pages], prefixing their name with `dir` (unlike Go's own
@@ -306,6 +294,13 @@ func main() {
 	})
 	// -------------------------------------------------------
 
+	pages.Funcs(map[string]interface{}{
+		"Blog_Posts":   Posts,
+		"Blog_GetPost": GetPost,
+	})
+
+	pages = template.Must(pages.ParseGlob("*.html"))
+
 	// Badge data
 	// ----------
 	masterTree, err := master.Tree()
@@ -316,11 +311,6 @@ func main() {
 		Fallback: pagesHandler("badges.html"),
 	}
 	// ----------
-
-	pages.Funcs(map[string]interface{}{
-		"Blog_Posts":   Posts,
-		"Blog_GetPost": GetPost,
-	})
 
 	log.Printf("Got everything, starting the server.")
 

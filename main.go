@@ -301,7 +301,7 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes)
+	blog := NewBlog(pages, pushes, blogTags)
 	pages.Funcs(map[string]interface{}{
 		"Blog_Posts":            blog.Posts,
 		"Blog_FindEntryForPush": blog.FindEntryForPush,

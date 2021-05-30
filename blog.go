@@ -18,6 +18,7 @@ var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 type BlogEntry struct {
 	Date         string
 	Pushes       []Push
+	Tags         []string
 	templateName string
 }
 
@@ -26,7 +27,7 @@ type Blog []BlogEntry
 
 // NewBlog parses all HTML files in the blog path into t, and returns a new
 // sorted Blog.
-func NewBlog(t *template.Template, pushes tPushes) (ret Blog) {
+func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
 	templates := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
 	for _, tmpl := range templates {
@@ -35,6 +36,7 @@ func NewBlog(t *template.Template, pushes tPushes) (ret Blog) {
 		ret = append(ret, BlogEntry{
 			Date:         date,
 			Pushes:       pushes.DeliveredAt(date),
+			Tags:         tags[date],
 			templateName: tmpl,
 		})
 	}
@@ -80,6 +82,7 @@ type Post struct {
 	PushIDs  []PushID
 	FundedBy []CustomerID
 	Diffs    []DiffInfo
+	Tags     []string
 	Body     template.HTML
 }
 
@@ -104,6 +107,7 @@ func (e BlogEntry) Render() Post {
 
 	post := Post{
 		Date: e.Date,
+		Tags: e.Tags,
 		Body: template.HTML(b.String()),
 	}
 	if e.Pushes != nil {

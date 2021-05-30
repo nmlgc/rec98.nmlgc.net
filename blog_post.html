@@ -21,6 +21,8 @@
 {{else}}
 		<dd><a href="/blog/{{.Date}}">{{HTML_Date .Time}}</a></dd>
 {{end}}
+		<dt><span class="emoji">🏷</span> Tags:</dt>
+		<dd>{{range .Tags}}<a class="tag">{{.}}</a> {{end}}</dd>
 	</dl>
 	<section>
 {{.Body}}</section>

@@ -20,8 +20,8 @@
 			<td>{{.Goal}}</td>
 			<td>🚚 {{HTML_Time .Delivered}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
-			<td class="icon-cell">{{if .Summary -}}
-				{{Blog_PostLink .Summary.Date ""}}
+			<td class="icon-cell">{{with Blog_FindEntryForPush . -}}
+				{{Blog_PostLink .Date ""}}
 			{{- end}}</td>
 		</tr>{{end}}
 	</tbody>

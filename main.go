@@ -295,8 +295,9 @@ func main() {
 	// -------------------------------------------------------
 
 	pages.Funcs(map[string]interface{}{
-		"Blog_Posts":   Posts,
-		"Blog_GetPost": GetPost,
+		"Blog_Posts":            Posts,
+		"Blog_FindEntryForPush": blog.FindEntryForPush,
+		"Blog_GetPost":          GetPost,
 	})
 
 	pages = template.Must(pages.ParseGlob("*.html"))

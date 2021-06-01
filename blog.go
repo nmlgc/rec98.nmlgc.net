@@ -51,6 +51,12 @@ func (b Blog) FindEntryByTime(date time.Time) *BlogEntry {
 	return b.FindEntryByString(date.Format("2006-01-02"))
 }
 
+// FindEntryForPush looks for and returns a potential blog entry which
+// summarizes the given Push.
+func (b Blog) FindEntryForPush(p Push) *BlogEntry {
+	return b.FindEntryByTime(p.Delivered)
+}
+
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
 	HostedPath hostedPath    // Value of [blogHP]

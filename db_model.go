@@ -230,7 +230,6 @@ type Push struct {
 	Transactions      []*Transaction
 	Goal              string
 	Delivered         time.Time
-	Summary           *BlogEntry
 	Diff              *DiffInfo
 	IncludeInEstimate bool
 }
@@ -413,7 +412,6 @@ func (p *pushTSV) toActualPush() *Push {
 			}
 			return
 		}(),
-		Summary: blog.FindEntryByTime(p.Delivered),
 	}
 }
 

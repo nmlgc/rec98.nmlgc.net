@@ -11,6 +11,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -144,6 +145,13 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 	)
 }
 
+// HTMLTag returns a rendered blog tag.
+func HTMLTag(tag string) template.HTML {
+	return template.HTML(
+		fmt.Sprintf(`<a class="tag" href="/blog/tag/%s">%s</a>`, tag, tag),
+	)
+}
+
 var pages = template.New("").Funcs(map[string]interface{}{
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
@@ -169,6 +177,7 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_Currency":     HTMLCurrency,
 	"HTML_PushPrice":    HTMLPushPrice,
 	"HTML_Download":     HTMLDownload,
+	"HTML_Tag":          HTMLTag,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
@@ -306,6 +315,9 @@ func main() {
 		"Blog_Posts":            blog.Posts,
 		"Blog_FindEntryForPush": blog.FindEntryForPush,
 		"Blog_GetPost":          blog.GetPost,
+		"Blog_ParseTags": func(t string) []string {
+			return strings.FieldsFunc(t, func(c rune) bool { return c == '/' })
+		},
 	})
 	// ----
 
@@ -335,6 +347,9 @@ func main() {
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(blogURLPrefix, pagesHandler("blog.html"))
 	r.Handle(blogURLPrefix+"/{date}", pagesHandler("blog_single.html"))
+	r.Handle(
+		blogURLPrefix+"/tag/{tags:(?:.+/?)+}", pagesHandler("blog_tagged.html"),
+	)
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	if paypal_auth.Initialized() {

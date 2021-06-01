@@ -1,0 +1,10 @@
+{{$filters := Blog_ParseTags .Vars.tags -}}
+
+{{template "header.html" -}}
+<h2><a href="/blog">⮜ Blog</a></h2>
+<h3>Showing all posts tagged {{range $i, $filter := $filters -}}
+	{{- if $i}}{{if eq (inc $i) (len $filters)}} and {{else}}, {{end}}{{end -}}
+	{{- HTML_Tag $filter -}}
+{{- end}}</h3>
+{{range Blog_Posts $filters}}{{template "blog_post.html" .}}{{end}}
+{{- template "footer.html" -}}

@@ -1,4 +1,4 @@
 {{template "header.html" -}}
 <h2>Blog</h2>
-{{range Blog_Posts}}{{template "blog_post.html" .}}{{end}}
+{{range Blog_Posts nil}}{{template "blog_post.html" .}}{{end}}
 {{- template "footer.html" -}}

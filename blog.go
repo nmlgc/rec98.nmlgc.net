@@ -137,12 +137,23 @@ func (b Blog) GetPost(date string) (*Post, error) {
 	return &post, nil
 }
 
-// Posts renders all blog posts.
-func (b Blog) Posts() chan Post {
+// Posts renders all blog posts that match the given slice of filters. Pass an
+// empty slice to get all posts.
+func (b Blog) Posts(filters []string) chan Post {
 	ret := make(chan Post)
 	go func() {
 		for _, entry := range b {
-			ret <- entry.Render()
+			filtersSeen := 0
+			for _, tag := range entry.Tags {
+				for _, filter := range filters {
+					if filter == tag {
+						filtersSeen++
+					}
+				}
+			}
+			if filtersSeen == len(filters) {
+				ret <- entry.Render()
+			}
 		}
 		close(ret)
 	}()

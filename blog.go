@@ -17,11 +17,13 @@ var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 // oldest.
 type Blog []string
 
-var blog = func() Blog {
-	ret := pagesParseSubdirectory(blogHP.LocalPath, "*.html")
+// NewBlog parses all HTML files in the blog path into t, and returns a new
+// sorted Blog.
+func NewBlog(t *template.Template) Blog {
+	ret := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
 	sort.Slice(ret, func(i, j int) bool { return ret[i] > ret[j] })
 	return Blog(ret)
-}()
+}
 
 // BlogEntry identifies an existing blog entry.
 type BlogEntry struct {
@@ -117,8 +119,8 @@ func (e BlogEntry) Render() Post {
 }
 
 // GetPost returns the post that was originally posted on the given date.
-func GetPost(date string) (*Post, error) {
-	entry := blog.FindEntryByString(date)
+func (b Blog) GetPost(date string) (*Post, error) {
+	entry := b.FindEntryByString(date)
 	if entry == nil {
 		return nil, eNoPost{date}
 	}
@@ -127,10 +129,10 @@ func GetPost(date string) (*Post, error) {
 }
 
 // Posts renders all blog posts.
-func Posts() chan Post {
+func (b Blog) Posts() chan Post {
 	ret := make(chan Post)
 	go func() {
-		for _, tmpl := range blog {
+		for _, tmpl := range b {
 			basename := filepath.Base(tmpl)
 			date := strings.TrimSuffix(basename, path.Ext(basename))
 			ret <- BlogEntry{

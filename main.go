@@ -198,16 +198,16 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
 })
 
-// pagesParseSubdirectory parses all files in `dir` that match glob into
-// subtemplates of [pages], prefixing their name with `dir` (unlike Go's own
+// ParseSubdirectory parses all files in `dir` that match glob into
+// subtemplates of t, prefixing their name with `dir` (unlike Go's own
 // template.ParseGlob function), and returns a slice of the file names parsed.
-func pagesParseSubdirectory(dir string, glob string) (templates []string) {
+func ParseSubdirectory(t *template.Template, dir string, glob string) (templates []string) {
 	matches, err := filepath.Glob(filepath.Join(dir, glob))
 	FatalIf(err)
 	for _, m := range matches {
 		buf, err := ioutil.ReadFile(m)
 		FatalIf(err)
-		template.Must(pages.New(m).Parse(string(buf)))
+		template.Must(t.New(m).Parse(string(buf)))
 	}
 	return matches
 }
@@ -294,11 +294,15 @@ func main() {
 	})
 	// -------------------------------------------------------
 
+	// Blog
+	// ----
+	blog := NewBlog(pages)
 	pages.Funcs(map[string]interface{}{
-		"Blog_Posts":            Posts,
+		"Blog_Posts":            blog.Posts,
 		"Blog_FindEntryForPush": blog.FindEntryForPush,
-		"Blog_GetPost":          GetPost,
+		"Blog_GetPost":          blog.GetPost,
 	})
+	// ----
 
 	pages = template.Must(pages.ParseGlob("*.html"))
 

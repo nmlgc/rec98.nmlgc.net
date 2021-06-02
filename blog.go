@@ -13,9 +13,11 @@ import (
 var blogURLPrefix = "/blog"
 var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 
-// BlogEntry identifies an existing blog entry.
+// BlogEntry describes an existing blog entry, together with information about
+// its associated pushes parsed from the database.
 type BlogEntry struct {
 	Date         string
+	Pushes       []Push
 	templateName string
 }
 
@@ -24,7 +26,7 @@ type Blog []BlogEntry
 
 // NewBlog parses all HTML files in the blog path into t, and returns a new
 // sorted Blog.
-func NewBlog(t *template.Template) (ret Blog) {
+func NewBlog(t *template.Template, pushes tPushes) (ret Blog) {
 	templates := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
 	for _, tmpl := range templates {
@@ -32,6 +34,7 @@ func NewBlog(t *template.Template) (ret Blog) {
 		date := strings.TrimSuffix(basename, path.Ext(basename))
 		ret = append(ret, BlogEntry{
 			Date:         date,
+			Pushes:       pushes.DeliveredAt(date),
 			templateName: tmpl,
 		})
 	}
@@ -69,8 +72,8 @@ type PostDot struct {
 	FilePrefix template.HTML // [HostedPath.URLPrefix] + [DatePrefix]
 }
 
-// Post bundles the rendered HTML body of a post, together with information
-// about its associated pushes, parsed from the database.
+// Post bundles the rendered HTML body of a post with all necessary header
+// data.
 type Post struct {
 	Date     string
 	Time     time.Time // Full post time
@@ -99,19 +102,18 @@ func (e BlogEntry) Render() Post {
 	}
 	pagesExecute(&b, e.templateName, &ctx)
 
-	pushes := pushes.DeliveredAt(e.Date)
 	post := Post{
 		Date: e.Date,
 		Body: template.HTML(b.String()),
 	}
-	if pushes != nil {
-		post.Time = pushes[0].Delivered
+	if e.Pushes != nil {
+		post.Time = e.Pushes[0].Delivered
 	} else {
 		post.Time = DateInDevLocation(e.Date).Time
 	}
 
-	for i := len(pushes) - 1; i >= 0; i-- {
-		push := &pushes[i]
+	for i := len(e.Pushes) - 1; i >= 0; i-- {
+		push := &e.Pushes[i]
 		post.PushIDs = append(post.PushIDs, push.ID)
 		post.Diffs = append(post.Diffs, *push.Diff)
 		post.FundedBy = append(post.FundedBy, push.FundedBy()...)

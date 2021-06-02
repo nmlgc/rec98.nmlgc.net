@@ -65,58 +65,58 @@ P0066	[25, 22]	TH01 RE (Palettes) / decompilation (Graphics functions, part 1)	2
 P0067	[22]	TH01 decompilation (Graphics functions, part 2)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e55a48b...ebb30ce	1
 P0068	[30]	TH01 decompilation (Graphics functions, part 3)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/ebb30ce...2ac00d4	1
 P0069	[30, 24]	TH01 decompilation (Graphics functions, part 4)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e0d0dcd...0f18dbc	1
-P0070	[27]	TH03 RE (Score and combo variables)	2020-01-20T21:51:25Z	nmlgc/Rec98/compare/a931758...327021b	1
-P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	nmlgc/Rec98/compare/327021b...4bb04ab	1
-P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/4bb04ab...cea3ea6	1
-P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/cea3ea6...5286417	1
-P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/5286417...1807906	1
-P0075	[34, 41]	TH04/TH05 RE (Bullet group types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/Rec98/compare/1807906...222fc99	1
-P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/222fc99...9ae9754	1
-P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	nmlgc/Rec98/compare/9ae9754...f4eb7a8	1
-P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/f4eb7a8...9e52cb1	1
-P0079	[28]	TH05 PI/RE (Mai's, Yuki's, and Shinki's 32×32 balls, Yumeko's swords)	2020-02-29T15:05:39Z	nmlgc/Rec98/compare/9e52cb1...cd48aa3	1
-P0080	[38, 36]	TH01 decompilation (Graphics functions, part 5)	2020-03-03T12:17:54Z	nmlgc/Rec98/compare/cd48aa3...0252da2	1
-P0081	[36]	TH01 decompilation (.GRZ format)	2020-03-07T20:45:20Z	nmlgc/Rec98/compare/0252da2...5ac9b30	1
-P0082	[46]	TH01 decompilation (.GRP format)	2020-03-13T18:56:50Z	nmlgc/Rec98/compare/5ac9b30...f6cbff0	1
-P0083	[47]	TH01 decompilation (.PTN format, part 1)	2020-03-18T19:39:32Z	nmlgc/Rec98/compare/f6cbff0...dfac2f2	1
-P0084	[47]	TH01 decompilation (REYHI*.DAT loading and creation)	2020-03-22T09:18:27Z	nmlgc/Rec98/compare/dfac2f2...110d6dd	1
-P0085	[49]	TH02/TH04/TH05 RE (Pellet rendering + TH04/TH05 gather circles)	2020-04-03T15:46:03Z	nmlgc/Rec98/compare/110d6dd...54ee99b	1
-P0086	[48, 45]	TH04/TH05 RE (Random PI blockers)	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/54ee99b...24b96cd	1
-P0087	[49]	TH04/TH05 RE (Score popup numbers)	2020-04-16T13:09:16Z	nmlgc/Rec98/compare/24b96cd...97ce7b7	1
-P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/97ce7b7...da6b856	1
-P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/Rec98/compare/da6b856...90252cc	1
-P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/90252cc...07dab29	1
-P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	nmlgc/Rec98/compare/07dab29...29c5a73	1
-P0092	[56]	TH01 decompilation (Score menu, part 2)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/29c5a73...4403308	1
-P0093	[57]	TH01 decompilation (Score menu, part 3)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/4403308...0e73029	1
-P0094	[56]	TH01 decompilation (Score menu, part 4 + Endings, part 1)	2020-05-25T14:05:11Z	nmlgc/Rec98/compare/0e73029...57a8487	1
-P0095	[42]	TH01 PI (Completing OP and FUUIN, .BOS pointers, scrolling)	2020-05-31T15:47:00Z	nmlgc/Rec98/compare/57a8487...8ddb778	1
-P0096	[46, 52]	TH01 decompilation (.PTN format, part 2)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/8ddb778...8283c5e	1
-P0097	[52, 57]	TH01 decompilation (Orb physics)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/8283c5e...600f036	1
-P0098	[51]	TH01 decompilation (Player shots)	2020-06-13T19:25:59Z	nmlgc/Rec98/compare/600f036...ad06748	1
-P0099	[61]	TH01 decompilation (Pellets, part 1)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/1799d67...1b25830	1
-P0100	[60]	TH01 decompilation (Pellets, part 2)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/1b25830...ceb81db	1
-P0101	[42, 61]	TH01 decompilation (Pellets, part 3)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/ceb81db...c11a956	1
-P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	nmlgc/Rec98/compare/c11a956...b60f38d	1
-P0103	[61, 65]	TH01 decompilation (HUD, part 1)	2020-07-27T15:27:03Z	nmlgc/Rec98/compare/b60f38d...05c0028	1
-P0104	[65]	TH01 decompilation (HUD, part 2)	2020-07-27T15:27:03Z	nmlgc/Rec98/compare/05c0028...3622eb6	1
-P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/3622eb6...11b776b	1
-P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/11b776b...1f1829d	1
-P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1f1829d...1650241	1
-P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	nmlgc/Rec98/compare/1650241...dcf4e2c	1
-P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet group tuning)	2020-08-16T19:48:44Z	nmlgc/Rec98/compare/dcf4e2c...2c7d86b	1
-P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/Rec98/compare/2c7d86b...8b5c146	1
-P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/8b5c146...4ef4c9e	1
-P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/Rec98/compare/4ef4c9e...e447a2d	1
-P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/150d2c6...6204fdd	1
-P0114	[72]	Separating translation units, part 1/10 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/Rec98/compare/6204fdd...967bb8b	1
-P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/967bb8b...e5328a3	1
-P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/Rec98/compare/e5328a3...03048c3	1
-P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/Rec98/compare/03048c3...0bb5bc3	1
-P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/Rec98/compare/0bb5bc3...cbf14eb	1
-P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/Rec98/compare/cbf14eb...453dd3c	1
-P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/453dd3c...3c008b6	1
-P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/Rec98/compare/3c008b6...5c42fcd	1
+P0070	[27]	TH03 RE (Score and combo variables)	2020-01-20T21:51:25Z	nmlgc/ReC98/compare/a931758...327021b	1
+P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	nmlgc/ReC98/compare/327021b...4bb04ab	1
+P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/4bb04ab...cea3ea6	1
+P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/cea3ea6...5286417	1
+P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/5286417...1807906	1
+P0075	[34, 41]	TH04/TH05 RE (Bullet group types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/1807906...222fc99	1
+P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	nmlgc/ReC98/compare/222fc99...9ae9754	1
+P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	nmlgc/ReC98/compare/9ae9754...f4eb7a8	1
+P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	nmlgc/ReC98/compare/f4eb7a8...9e52cb1	1
+P0079	[28]	TH05 PI/RE (Mai's, Yuki's, and Shinki's 32×32 balls, Yumeko's swords)	2020-02-29T15:05:39Z	nmlgc/ReC98/compare/9e52cb1...cd48aa3	1
+P0080	[38, 36]	TH01 decompilation (Graphics functions, part 5)	2020-03-03T12:17:54Z	nmlgc/ReC98/compare/cd48aa3...0252da2	1
+P0081	[36]	TH01 decompilation (.GRZ format)	2020-03-07T20:45:20Z	nmlgc/ReC98/compare/0252da2...5ac9b30	1
+P0082	[46]	TH01 decompilation (.GRP format)	2020-03-13T18:56:50Z	nmlgc/ReC98/compare/5ac9b30...f6cbff0	1
+P0083	[47]	TH01 decompilation (.PTN format, part 1)	2020-03-18T19:39:32Z	nmlgc/ReC98/compare/f6cbff0...dfac2f2	1
+P0084	[47]	TH01 decompilation (REYHI*.DAT loading and creation)	2020-03-22T09:18:27Z	nmlgc/ReC98/compare/dfac2f2...110d6dd	1
+P0085	[49]	TH02/TH04/TH05 RE (Pellet rendering + TH04/TH05 gather circles)	2020-04-03T15:46:03Z	nmlgc/ReC98/compare/110d6dd...54ee99b	1
+P0086	[48, 45]	TH04/TH05 RE (Random PI blockers)	2020-04-16T13:09:16Z	nmlgc/ReC98/compare/54ee99b...24b96cd	1
+P0087	[49]	TH04/TH05 RE (Score popup numbers)	2020-04-16T13:09:16Z	nmlgc/ReC98/compare/24b96cd...97ce7b7	1
+P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/ReC98/compare/97ce7b7...da6b856	1
+P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/ReC98/compare/da6b856...90252cc	1
+P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/ReC98/compare/90252cc...07dab29	1
+P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	nmlgc/ReC98/compare/07dab29...29c5a73	1
+P0092	[56]	TH01 decompilation (Score menu, part 2)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/29c5a73...4403308	1
+P0093	[57]	TH01 decompilation (Score menu, part 3)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/4403308...0e73029	1
+P0094	[56]	TH01 decompilation (Score menu, part 4 + Endings, part 1)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/0e73029...57a8487	1
+P0095	[42]	TH01 PI (Completing OP and FUUIN, .BOS pointers, scrolling)	2020-05-31T15:47:00Z	nmlgc/ReC98/compare/57a8487...8ddb778	1
+P0096	[46, 52]	TH01 decompilation (.PTN format, part 2)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/8ddb778...8283c5e	1
+P0097	[52, 57]	TH01 decompilation (Orb physics)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/8283c5e...600f036	1
+P0098	[51]	TH01 decompilation (Player shots)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/600f036...ad06748	1
+P0099	[61]	TH01 decompilation (Pellets, part 1)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/1799d67...1b25830	1
+P0100	[60]	TH01 decompilation (Pellets, part 2)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/1b25830...ceb81db	1
+P0101	[42, 61]	TH01 decompilation (Pellets, part 3)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/ceb81db...c11a956	1
+P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/c11a956...b60f38d	1
+P0103	[61, 65]	TH01 decompilation (HUD, part 1)	2020-07-27T15:27:03Z	nmlgc/ReC98/compare/b60f38d...05c0028	1
+P0104	[65]	TH01 decompilation (HUD, part 2)	2020-07-27T15:27:03Z	nmlgc/ReC98/compare/05c0028...3622eb6	1
+P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/3622eb6...11b776b	1
+P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/11b776b...1f1829d	1
+P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/1f1829d...1650241	1
+P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/1650241...dcf4e2c	1
+P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet group tuning)	2020-08-16T19:48:44Z	nmlgc/ReC98/compare/dcf4e2c...2c7d86b	1
+P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/ReC98/compare/2c7d86b...8b5c146	1
+P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/ReC98/compare/8b5c146...4ef4c9e	1
+P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/ReC98/compare/4ef4c9e...e447a2d	1
+P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/ReC98/compare/150d2c6...6204fdd	1
+P0114	[72]	Separating translation units, part 1/10 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/ReC98/compare/6204fdd...967bb8b	1
+P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/ReC98/compare/967bb8b...e5328a3	1
+P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/ReC98/compare/e5328a3...03048c3	1
+P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/ReC98/compare/03048c3...0bb5bc3	1
+P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/ReC98/compare/0bb5bc3...cbf14eb	1
+P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/ReC98/compare/cbf14eb...453dd3c	1
+P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/ReC98/compare/453dd3c...3c008b6	1
+P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/ReC98/compare/3c008b6...5c42fcd	1
 P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98/compare/164591f...4406c3d	1
 P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc/ReC98/compare/4406c3d...72dfa09	1
 P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/72dfa09...056b1c7	1
@@ -127,13 +127,13 @@ P0128	[84]	TH01 decompilation (Card-flipping stages, part 1) 	2020-11-30T23:48:2
 P0129	[84]	TH01 decompilation (Card-flipping stages, part 2) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
 P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/6d69ea8...576def5	1
 P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/576def5...dc9e3ee	1
-P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/Rec98/compare/dc9e3ee...045450c	1
-P0133	[90]	Separating translation units, part 4/10 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	nmlgc/Rec98/compare/045450c...1d5db71	1
-P0134	[92]	Separating translation units, part 5/10 (TH05 .PI functions)	2021-02-21T13:36:38Z	nmlgc/Rec98/compare/1d5db71...a6eed55	1
-P0135	[88, 90]	Separating translation units, part 6/10 (TH05 PMD loading / Music Room piano)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/a6eed55...252c13d	1
-P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up with TH04)	2021-03-20T20:19:56Z	nmlgc/Rec98/compare/252c13d...07bfcf2	1
-P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/Rec98/compare/07bfcf2...8d953dc	1
-P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/Rec98/compare/8d953dc...864e864	1
+P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/ReC98/compare/dc9e3ee...045450c	1
+P0133	[90]	Separating translation units, part 4/10 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	nmlgc/ReC98/compare/045450c...1d5db71	1
+P0134	[92]	Separating translation units, part 5/10 (TH05 .PI functions)	2021-02-21T13:36:38Z	nmlgc/ReC98/compare/1d5db71...a6eed55	1
+P0135	[88, 90]	Separating translation units, part 6/10 (TH05 PMD loading / Music Room piano)	2021-03-20T20:19:56Z	nmlgc/ReC98/compare/a6eed55...252c13d	1
+P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up with TH04)	2021-03-20T20:19:56Z	nmlgc/ReC98/compare/252c13d...07bfcf2	1
+P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/ReC98/compare/07bfcf2...8d953dc	1
+P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/ReC98/compare/8d953dc...864e864	1
 P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initialization / TH04 PMD loading)	2021-05-12T18:01:20Z	nmlgc/ReC98/compare/864e864...d985811	1
 P0140	[98]	PC-98 DOS graph mode RE, with implementation into DOSBox-X 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d985811...d856f7d	0
 P0141	[98, 102]	TH01 decompilation (Konngara, part 1) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d856f7d...5afee78	1

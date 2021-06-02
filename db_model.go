@@ -364,7 +364,6 @@ func (i *tIncoming) Insert(new *Incoming) error {
 
 var customers = tCustomers{}
 var transactions = tTransactions{}
-var pushes = tPushes{}
 var pushprices = tPushPrices{}
 var freetime = tFreeTime{}
 var incoming = tIncoming{}
@@ -415,6 +414,20 @@ func (p *pushTSV) toActualPush() *Push {
 	}
 }
 
+var tsvPushes []*pushTSV
+
+// NewPushes parses tsv into a tPushes object, consuming the given transactions
+// and validating their assignment to the respective pushes.
+func NewPushes(transactions tTransactions, tsv []*pushTSV) (ret tPushes) {
+	for i := range transactions {
+		transactions[i].Outstanding = transactions[i].Cents
+	}
+	for _, p := range tsvPushes {
+		ret = append(ret, p.toActualPush())
+	}
+	return
+}
+
 // --------------------
 
 func tsvPath(table string) string {
@@ -457,7 +470,6 @@ func saveTSV(slice interface{}, table string) error {
 
 func init() {
 	var err error
-	var tsvPushes []*pushTSV
 	var paypalAuths []*PayPalAuth
 
 	devLocation, err = time.LoadLocation(devLocationName)
@@ -471,12 +483,6 @@ func init() {
 	loadTSV(&incoming.data, "incoming")
 	loadTSV(&paypalAuths, "paypal_auth")
 
-	for i := range transactions {
-		transactions[i].Outstanding = transactions[i].Cents
-	}
-	for _, p := range tsvPushes {
-		pushes = append(pushes, p.toActualPush())
-	}
 	if len(paypalAuths) > 0 {
 		paypal_auth = *paypalAuths[0]
 		log.Println("Using PayPal auth", paypal_auth)

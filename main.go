@@ -183,14 +183,6 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"ReC98_REProgressAtTree": REProgressAtTree,
 	"ReC98_REBaselineRev":    REBaselineRev,
 
-	// Database view, safe
-	"DB_CustomerByID": func(id CustomerID) template.HTML {
-		return customers.HTMLByID(id)
-	},
-	"DB_TransactionBacklog": TransactionBacklog,
-	"DB_Pushes":             func() []Push { return pushes.All() },
-	"DB_CapCurrent":         CapCurrent,
-
 	// Blog, safe
 	"Blog_PostLink": PostLink,
 
@@ -275,6 +267,20 @@ func main() {
 	pages.Funcs(map[string]interface{}{
 		"git_MasterCommit": func() *object.Commit { return master },
 	})
+
+	// Late database initialization
+	// ----------------------------
+	pushes := NewPushes(transactions, tsvPushes)
+
+	pages.Funcs(map[string]interface{}{
+		"DB_CustomerByID": func(id CustomerID) template.HTML {
+			return customers.HTMLByID(id)
+		},
+		"DB_TransactionBacklog": TransactionBacklog,
+		"DB_Pushes":             pushes.All,
+		"DB_CapCurrent":         CapCurrent,
+	})
+	// ----------------------------
 
 	// Calculate the baseline for reverse-engineering progress
 	// -------------------------------------------------------

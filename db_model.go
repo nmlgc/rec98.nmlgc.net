@@ -75,10 +75,10 @@ func NewDiffInfo(url string, repo *Repository) DiffInfo {
 			if len(revs) == 1 && strings.Contains(rev, "..") {
 				fatal("two-dot ranges not supported")
 			}
-			bottom = must(getCommit(revs[0]))
-			top = must(getCommit(revs[1]))
+			bottom = must(repo.GetCommit(revs[0]))
+			top = must(repo.GetCommit(revs[1]))
 		case "commit":
-			top = must(getCommit(rev))
+			top = must(repo.GetCommit(rev))
 			if len(top.ParentHashes) > 1 {
 				fatal("more than one parent; use the \"compare\" mode instead!")
 			}

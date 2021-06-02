@@ -145,10 +145,6 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 }
 
 var pages = template.New("").Funcs(map[string]interface{}{
-	// Git, initialization
-	"git_getCommit": getCommit,
-	"git_getLogAt":  getLogAt,
-
 	// Arithmetic, safe
 	"inc": func(i int) int { return i + 1 },
 
@@ -173,11 +169,6 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_Currency":     HTMLCurrency,
 	"HTML_PushPrice":    HTMLPushPrice,
 	"HTML_Download":     HTMLDownload,
-
-	// Git, safe
-	"git_commits":        commits,
-	"git_makeCommitInfo": makeCommitInfo,
-	"git_CommitLink":     CommitLink,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
@@ -259,13 +250,21 @@ func main() {
 		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
 	}
 
-	repo = NewRepository(os.Args[1])
-	master, err := getCommit("master")
+	repo := NewRepository(os.Args[1])
+	master, err := repo.GetCommit("master")
 	if err != nil {
 		log.Fatal(err)
 	}
 	pages.Funcs(map[string]interface{}{
-		"git_MasterCommit": func() *object.Commit { return master },
+		// Can fail
+		"git_getCommit": repo.GetCommit,
+		"git_getLogAt":  repo.GetLogAt,
+
+		// Safe
+		"git_commits":        commits,
+		"git_makeCommitInfo": makeCommitInfo,
+		"git_CommitLink":     CommitLink,
+		"git_MasterCommit":   func() *object.Commit { return master },
 	})
 
 	// Late database initialization
@@ -284,7 +283,7 @@ func main() {
 
 	// Calculate the baseline for reverse-engineering progress
 	// -------------------------------------------------------
-	baselineFunc, err := REProgressBaseline()
+	baselineFunc, err := REProgressBaseline(&repo)
 	if err != nil {
 		log.Fatalln("Error retrieving the baseline for reverse-engineering progress:", err)
 	}

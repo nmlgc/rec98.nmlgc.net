@@ -67,23 +67,23 @@ func NewRepository(url string) (ret Repository) {
 	return
 }
 
-var repo Repository
-
-func getCommit(rev string) (*object.Commit, error) {
-	if len(rev) >= repo.UniqueLen {
-		if commit, ok := repo.ShortHashToCommit[rev[:repo.UniqueLen]]; ok {
+// GetCommit returns a potential Commit object for the given rev.
+func (r *Repository) GetCommit(rev string) (*object.Commit, error) {
+	if len(rev) >= r.UniqueLen {
+		if commit, ok := r.ShortHashToCommit[rev[:r.UniqueLen]]; ok {
 			return commit, nil
 		}
 	}
-	hash, err := repo.R.ResolveRevision(plumbing.Revision(rev))
+	hash, err := r.R.ResolveRevision(plumbing.Revision(rev))
 	if err == nil {
-		return repo.R.CommitObject(*hash)
+		return r.R.CommitObject(*hash)
 	}
 	return nil, err
 }
 
-func getLogAt(c *object.Commit) (object.CommitIter, error) {
-	return repo.R.Log(&git.LogOptions{From: c.Hash})
+// GetLogAt returns an in-order log iterator for the given rev.
+func (r *Repository) GetLogAt(c *object.Commit) (object.CommitIter, error) {
+	return r.R.Log(&git.LogOptions{From: c.Hash})
 }
 
 type commitInfo struct {

@@ -30,10 +30,20 @@ const FreeTimeDecisionPoint = time.Duration(time.Hour * 16)
 /// Custom types
 /// ------------
 
+// ProjectInfo bundles information on a repository that has been added to.
+type ProjectInfo struct {
+	Name string
+}
+
+var projectMap = map[string]*ProjectInfo{
+	"ReC98":           {""},
+	"rec98.nmlgc.net": {"Website"},
+}
+
 // DiffInfo contains all pieces of information parsed from a GitHub diff URL.
 type DiffInfo struct {
 	URL     string
-	Project string
+	Project *ProjectInfo
 	Rev     string
 	Top     *object.Commit // Can be nil if not belonging to ReC98
 	Bottom  *object.Commit // Can be nil if not belonging to ReC98
@@ -59,14 +69,14 @@ func NewDiffInfo(url string, repo *Repository) DiffInfo {
 	if len(s) != 4 {
 		fatal("expected 3 slashes")
 	}
-	project := ""
-	if s[1] == "rec98.nmlgc.net" {
-		project = "Website"
+	project, ok := projectMap[s[1]]
+	if !ok {
+		fatal("unknown project")
 	}
 	rev := s[3]
 
 	top, bottom := func() (top *object.Commit, bottom *object.Commit) {
-		if project != "" {
+		if project.Name != "" {
 			return nil, nil
 		}
 		switch s[2] {

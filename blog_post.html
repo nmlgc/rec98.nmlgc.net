@@ -11,7 +11,7 @@
 		<dd>{{range $i, $diff := .Diffs -}}
 			{{- if $i}}, {{end -}}
 			<a href="https://github.com/{{$diff.URL}}">
-			{{- if $diff.Project}}({{$diff.Project}}) {{end -}}
+			{{- if $diff.Project.Name}}({{$diff.Project.Name}}) {{end -}}
 			<code>{{$diff.Rev}}</code></a>
 		{{- end}}</dd>
 		<dt><span class="emoji">💰</span> Funded by:</dt>

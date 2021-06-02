@@ -71,7 +71,11 @@ func NewRepository(url string) (ret Repository) {
 func (r *Repository) GetCommit(rev string) (*object.Commit, error) {
 	if len(rev) >= r.UniqueLen {
 		if commit, ok := r.ShortHashToCommit[rev[:r.UniqueLen]]; ok {
-			return commit, nil
+			// Verify that the rest of the hash matches what we expect, and
+			// fall through to ResolveRevision otherwise.
+			if rev == commit.Hash.String()[:len(rev)] {
+				return commit, nil
+			}
 		}
 	}
 	hash, err := r.R.ResolveRevision(plumbing.Revision(rev))

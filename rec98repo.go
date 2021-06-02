@@ -10,10 +10,12 @@ import (
 	"log"
 	"math"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-git/go-git/v5/plumbing/storer"
 )
 
 type eInvalidGame struct{}
@@ -483,4 +485,56 @@ func (m REMetricEstimate) ForComponents(game int) chan REEstimate {
 		close(ret)
 	}()
 	return ret
+}
+
+// AutogenerateTags adds auto-generated tags from the associated commits of a
+// blog post to all entries in the given blog. Returns b itself.
+func (b Blog) AutogenerateTags(repo *Repository) Blog {
+	log.Println("Auto-generating blog post tags from associated commits…")
+
+	var rxGames = regexp.MustCompile(` \[(th0[1-5]/?)+\]`)
+
+	for i := range b {
+		entry := &b[i]
+		var gameSeen [5]bool
+		var projectTag string
+		for _, p := range entry.Pushes {
+			if (p.Diff.Top != nil) && (p.Diff.Bottom != nil) {
+				iter, err := repo.GetLogAt(p.Diff.Top)
+				FatalIf(err)
+				err = iter.ForEach(func(c *object.Commit) error {
+					if c.Hash == p.Diff.Bottom.Hash {
+						return storer.ErrStop
+					}
+					subject := strings.SplitN(c.Message, "\n", 2)[0]
+
+					if strings.HasPrefix(subject, "[Maintenance]") {
+						return nil
+					}
+					if m := rxGames.FindString(subject); m != "" {
+						for _, c := range m {
+							if c >= '1' && c <= '5' {
+								gameSeen[c-'1'] = true
+							}
+						}
+					}
+					return nil
+				})
+				FatalIf(err)
+			}
+			projectTag = p.Diff.Project.BlogTag
+		}
+		for i := len(gameSeen) - 1; i >= 0; i-- {
+			if gameSeen[i] {
+				gameTag, _ := GameAbbrev(i)
+				entry.Tags = append(
+					[]string{strings.ToLower(gameTag)}, entry.Tags...,
+				)
+			}
+		}
+		if projectTag != "" {
+			entry.Tags = append([]string{projectTag}, entry.Tags...)
+		}
+	}
+	return b
 }

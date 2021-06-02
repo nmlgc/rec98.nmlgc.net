@@ -32,12 +32,13 @@ const FreeTimeDecisionPoint = time.Duration(time.Hour * 16)
 
 // ProjectInfo bundles information on a repository that has been added to.
 type ProjectInfo struct {
-	Name string
+	Name    string
+	BlogTag string
 }
 
 var projectMap = map[string]*ProjectInfo{
-	"ReC98":           {""},
-	"rec98.nmlgc.net": {"Website"},
+	"ReC98":           {"", "rec98"},
+	"rec98.nmlgc.net": {"Website", "website"},
 }
 
 // DiffInfo contains all pieces of information parsed from a GitHub diff URL.

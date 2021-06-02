@@ -310,7 +310,7 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes, blogTags)
+	blog := NewBlog(pages, pushes, blogTags).AutogenerateTags(&repo)
 	pages.Funcs(map[string]interface{}{
 		"Blog_Posts":            blog.Posts,
 		"Blog_FindEntryForPush": blog.FindEntryForPush,

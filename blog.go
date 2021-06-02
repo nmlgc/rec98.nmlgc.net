@@ -115,7 +115,7 @@ func (e BlogEntry) Render() Post {
 	for i := len(e.Pushes) - 1; i >= 0; i-- {
 		push := &e.Pushes[i]
 		post.PushIDs = append(post.PushIDs, push.ID)
-		post.Diffs = append(post.Diffs, *push.Diff)
+		post.Diffs = append(post.Diffs, push.Diff)
 		post.FundedBy = append(post.FundedBy, push.FundedBy()...)
 	}
 	RemoveDuplicates(&post.Diffs)

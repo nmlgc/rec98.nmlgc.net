@@ -35,78 +35,66 @@ type DiffInfo struct {
 	URL     string
 	Project string
 	Rev     string
-	IsRange bool
+	Top     *object.Commit // Can be nil if not belonging to ReC98
+	Bottom  *object.Commit // Can be nil if not belonging to ReC98
 }
 
-type eInvalidDiffURL struct {
-	url string
-	err string
-}
+// NewDiffInfo parses a GitHub diff URL into a DiffInfo structure, resolving
+// its top and bottom commits using the given repo.
+func NewDiffInfo(url string, repo *Repository) DiffInfo {
+	fatal := func(err string) {
+		log.Fatalf("%s: %s\n", url, err)
+	}
+	must := func(ret *object.Commit, err error) *object.Commit {
+		if err != nil {
+			fatal(err.Error())
+		}
+		return ret
+	}
 
-func (e eInvalidDiffURL) Error() string {
-	return fmt.Sprintf("invalid diff URL format: \"%s\": %s", e.url, e.err)
-}
-
-// UnmarshalCSV parses a GitHub diff URL into a DiffInfo structure.
-func (d *DiffInfo) UnmarshalCSV(url string) error {
 	if len(url) == 0 {
-		return nil
+		fatal("no diff URL provided")
 	}
 	s := strings.Split(url, "/")
 	if len(s) != 4 {
-		return eInvalidDiffURL{url, "expected 3 slashes"}
+		fatal("expected 3 slashes")
 	}
 	project := ""
 	if s[1] == "rec98.nmlgc.net" {
 		project = "Website"
 	}
-	var isRange bool
-	switch s[2] {
-	case "compare":
-		isRange = true
-	case "commit":
-		isRange = false
-	default:
-		return eInvalidDiffURL{url,
-			"mode must be either \"compare\" or \"commit\"",
+	rev := s[3]
+
+	top, bottom := func() (top *object.Commit, bottom *object.Commit) {
+		if project != "" {
+			return nil, nil
 		}
-	}
-	*d = DiffInfo{
+		switch s[2] {
+		case "compare":
+			revs := strings.Split(rev, "...")
+			if len(revs) == 1 && strings.Contains(rev, "..") {
+				fatal("two-dot ranges not supported")
+			}
+			bottom = must(getCommit(revs[0]))
+			top = must(getCommit(revs[1]))
+		case "commit":
+			top = must(getCommit(rev))
+			if len(top.ParentHashes) > 1 {
+				fatal("more than one parent; use the \"compare\" mode instead!")
+			}
+			bottom = must(top.Parent(0))
+		default:
+			fatal("mode must be either \"compare\" or \"commit\"")
+		}
+		return
+	}()
+	return DiffInfo{
 		URL:     url,
 		Project: project,
-		Rev:     s[3],
-		IsRange: isRange,
+		Rev:     rev,
+		Top:     top,
+		Bottom:  bottom,
 	}
-	return nil
-}
-
-// Range retrieves the commits at the top and bottom of the range described by
-// d.
-func (d *DiffInfo) Range() (top, bottom *object.Commit) {
-	must := func(ret *object.Commit, err error) *object.Commit {
-		FatalIf(err)
-		return ret
-	}
-
-	if d.IsRange {
-		revs := strings.Split(d.Rev, "...")
-		if len(revs) == 1 && strings.Contains(d.Rev, "..") {
-			log.Fatalln("two-dot ranges not supported:", d.Rev)
-		}
-		bottom = must(getCommit(revs[0]))
-		top = must(getCommit(revs[1]))
-		return
-	}
-	// Single commit...
-	top = must(getCommit((d.Rev)))
-	if len(top.ParentHashes) > 1 {
-		log.Fatalf(
-			"%s has more than one parent; use the \"compare\" mode instead!",
-			d.Rev,
-		)
-	}
-	bottom = must(top.Parent(0))
-	return
 }
 
 type eInvalidID struct {
@@ -230,7 +218,7 @@ type Push struct {
 	Transactions      []*Transaction
 	Goal              string
 	Delivered         time.Time
-	Diff              *DiffInfo
+	Diff              DiffInfo
 	IncludeInEstimate bool
 }
 
@@ -378,16 +366,16 @@ type pushTSV struct {
 	Transactions      []TransactionID
 	Goal              string
 	Delivered         time.Time
-	Diff              *DiffInfo
+	Diff              string
 	IncludeInEstimate bool
 }
 
-func (p *pushTSV) toActualPush() *Push {
+func (p *pushTSV) toActualPush(repo *Repository) *Push {
 	return &Push{
 		ID:                p.ID,
 		Goal:              p.Goal,
 		Delivered:         p.Delivered,
-		Diff:              p.Diff,
+		Diff:              NewDiffInfo(p.Diff, repo),
 		IncludeInEstimate: p.IncludeInEstimate,
 
 		Transactions: func() (ret []*Transaction) {
@@ -417,13 +405,14 @@ func (p *pushTSV) toActualPush() *Push {
 var tsvPushes []*pushTSV
 
 // NewPushes parses tsv into a tPushes object, consuming the given transactions
-// and validating their assignment to the respective pushes.
-func NewPushes(transactions tTransactions, tsv []*pushTSV) (ret tPushes) {
+// and validating their assignment to the respective pushes. Commit references
+// are directly resolved using the given repo.
+func NewPushes(transactions tTransactions, tsv []*pushTSV, repo *Repository) (ret tPushes) {
 	for i := range transactions {
 		transactions[i].Outstanding = transactions[i].Cents
 	}
 	for _, p := range tsvPushes {
-		ret = append(ret, p.toActualPush())
+		ret = append(ret, p.toActualPush(repo))
 	}
 	return
 }

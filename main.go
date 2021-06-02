@@ -270,7 +270,7 @@ func main() {
 
 	// Late database initialization
 	// ----------------------------
-	pushes := NewPushes(transactions, tsvPushes)
+	pushes := NewPushes(transactions, tsvPushes, &repo)
 
 	pages.Funcs(map[string]interface{}{
 		"DB_CustomerByID": func(id CustomerID) template.HTML {

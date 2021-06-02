@@ -358,10 +358,9 @@ type RESpeed struct {
 
 func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 	for _, diff := range diffs {
-		top, bottom := diff.Range()
-		tp, err := REProgressAtCommit(top)
+		tp, err := REProgressAtCommit(diff.Top)
 		FatalIf(err)
-		bp, err := REProgressAtCommit(bottom)
+		bp, err := REProgressAtCommit(diff.Bottom)
 		FatalIf(err)
 
 		// Yup, one value for all games, despite uth05win...

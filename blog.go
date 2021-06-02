@@ -13,38 +13,41 @@ import (
 var blogURLPrefix = "/blog"
 var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 
-// Blog contains the names of all blog post templates, sorted from newest to
-// oldest.
-type Blog []string
-
-// NewBlog parses all HTML files in the blog path into t, and returns a new
-// sorted Blog.
-func NewBlog(t *template.Template) Blog {
-	ret := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
-	sort.Slice(ret, func(i, j int) bool { return ret[i] > ret[j] })
-	return Blog(ret)
-}
-
 // BlogEntry identifies an existing blog entry.
 type BlogEntry struct {
 	Date         string
 	templateName string
 }
 
+// Blog bundles all blog entires, sorted from newest to oldest.
+type Blog []BlogEntry
+
+// NewBlog parses all HTML files in the blog path into t, and returns a new
+// sorted Blog.
+func NewBlog(t *template.Template) (ret Blog) {
+	templates := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
+	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
+	for _, tmpl := range templates {
+		basename := filepath.Base(tmpl)
+		date := strings.TrimSuffix(basename, path.Ext(basename))
+		ret = append(ret, BlogEntry{
+			Date:         date,
+			templateName: tmpl,
+		})
+	}
+	return
+}
+
 // FindEntryByString looks for and returns a potential blog entry posted
 // during the given ISO 8601-formatted date, or nil if there is none.
 func (b Blog) FindEntryByString(date string) *BlogEntry {
-	filename := filepath.Join(blogHP.LocalPath, date+".html")
 	// Note that we don't use sort.SearchStrings() here, since we're sorted
 	// in descending order!
-	i := sort.Search(len(b), func(i int) bool { return b[i] <= filename })
-	if i >= len(b) || b[i] != filename {
+	i := sort.Search(len(b), func(i int) bool { return b[i].Date <= date })
+	if i >= len(b) || b[i].Date != date {
 		return nil
 	}
-	return &BlogEntry{
-		Date:         date,
-		templateName: filename,
-	}
+	return &b[i]
 }
 
 // FindEntryByTime looks for and returns a potential blog entry posted during
@@ -132,13 +135,8 @@ func (b Blog) GetPost(date string) (*Post, error) {
 func (b Blog) Posts() chan Post {
 	ret := make(chan Post)
 	go func() {
-		for _, tmpl := range b {
-			basename := filepath.Base(tmpl)
-			date := strings.TrimSuffix(basename, path.Ext(basename))
-			ret <- BlogEntry{
-				Date:         date,
-				templateName: tmpl,
-			}.Render()
+		for _, entry := range b {
+			ret <- entry.Render()
 		}
 		close(ret)
 	}()

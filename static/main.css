@@ -55,6 +55,13 @@ img[src*="emoji-"] {
 	vertical-align: -.4em;
 }
 
+tbody tr:nth-child(even) {
+	background-color: #ffffff;
+}
+tbody tr:nth-child(odd) {
+	background-color: var(--c-bg);
+}
+
 aside {
 	text-align: center;
 	display: grid;
@@ -556,13 +563,6 @@ td, th {
    ---------- */
 .pushes thead tr {
 	background-color: #fcfcfc;
-}
-
-.pushes tbody tr:nth-child(even) {
-	background-color: #ffffff;
-}
-.pushes tbody tr:nth-child(odd) {
-	background-color: var(--c-bg);
 }
 
 .pushes th:not(:first-child),

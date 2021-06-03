@@ -164,7 +164,7 @@ func HTMLTag(tag string, filters []string) template.HTML {
 		}
 	}
 
-	body := linkFor([]string{tag}, tagDescriptions[tag], tag)
+	body := linkFor([]string{tag}, tagDescriptions.Map[tag], tag)
 	class := "tag"
 
 	// Any append() call that involves filters, or any sub-slice of it, will

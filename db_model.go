@@ -278,6 +278,12 @@ type Incoming struct {
 	Time  *time.Time
 }
 
+// TagDescription bundles a blog tag with a descriptive sentence.
+type TagDescription struct {
+	Tag  string
+	Desc string
+}
+
 // PayPalAuth collects all data required for authenticating with PayPal.
 type PayPalAuth struct {
 	APIBase  string
@@ -296,7 +302,10 @@ type tPushes []*Push
 type tPushPrices []*PushPrice
 type tFreeTime []*FreeTime
 type tBlogTags map[string][]string
-type tTagDescriptions map[string]string
+type tTagDescriptions struct {
+	Ordered []*TagDescription
+	Map     map[string]string
+}
 
 type tIncoming struct {
 	data  []*Incoming
@@ -487,8 +496,13 @@ func init() {
 	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
 	loadTSV(&incoming.data, "incoming", gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
-	loadTSV(&tagDescriptions, "tag_descriptions", gocsv.UnmarshalCSVToMap)
+	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
 	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
+
+	tagDescriptions.Map = make(map[string]string)
+	for _, td := range tagDescriptions.Ordered {
+		tagDescriptions.Map[td.Tag] = td.Desc
+	}
 
 	if len(paypalAuths) > 0 {
 		paypal_auth = *paypalAuths[0]

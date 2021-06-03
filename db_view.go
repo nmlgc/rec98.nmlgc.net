@@ -141,6 +141,7 @@ type Cap struct {
 	Then            time.Time
 	FirstFree       *time.Time
 	Pushes          int
+	PushPrice       float64
 	Cap             float64
 	Outstanding     float64
 	Incoming        float64
@@ -157,7 +158,7 @@ func (c Cap) Reached() bool {
 
 // CapCurrent calculates the cap from the current point in time.
 func CapCurrent(ctx interface{}) (ret Cap) {
-	price := pushprices.Current()
+	ret.PushPrice = pushprices.Current()
 	ret.Now = time.Now()
 	ret.Then = ret.Now.Add(CapWindow)
 
@@ -165,7 +166,7 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 	end := freetime.IndexBefore(ret.Then)
 
 	ret.Pushes = end - start
-	ret.Cap = float64(ret.Pushes) * price
+	ret.Cap = float64(ret.Pushes) * ret.PushPrice
 
 	backlog := TransactionBacklog()
 	for _, tpg := range backlog {
@@ -174,14 +175,14 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 			continue
 		}
 		for _, fpc := range tpg.PerCustomer {
-			ret.Outstanding += fpc.PushFraction * price
+			ret.Outstanding += fpc.PushFraction * ret.PushPrice
 		}
 	}
 
 	ret.Incoming = float64(incoming.Total())
 	sum := ret.Outstanding + ret.Incoming
 	if sum >= ret.Cap {
-		firstfree := start + int(sum/price)
+		firstfree := start + int(sum/ret.PushPrice)
 		if firstfree < len(freetime) {
 			ret.FirstFree = &freetime[firstfree].Date.Time
 		}

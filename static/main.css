@@ -549,6 +549,12 @@ td, th {
 	font-size: 175%;
 }
 
+#order form #push_amount,
+#order form #push_noun {
+	font-size: 110%;
+	font-weight: bold;
+}
+
 #order form input[type="text"],
 #order form select {
 	justify-self: stretch;

@@ -111,12 +111,21 @@ function onCycle() {
 	let button_container = document.getElementById(button_id);
 
 	let amount = document.getElementById("amount");
+	let push_amount = document.getElementById("push_amount");
+	let push_noun = document.getElementById("push_noun");
+
+	const updatePushes = function(amount) {
+		const price = (push_amount.dataset.price / 100);
+		push_amount.innerHTML = (Math.round((amount / price) * 100) / 100);
+		push_noun.innerHTML = ((amount == price) ? " push" : " pushes");
+	}
 
 	button_container.innerHTML = "";
 	if(isOneTime()) {
 		paypal.Buttons(order).render(button_selector);
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 2);
+			updatePushes(amount.value);
 		}
 		amount.min = 1.00;
 		amount.step = 0.01;
@@ -124,6 +133,7 @@ function onCycle() {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 0);
+			updatePushes(amount.value);
 		}
 		amount.min = 1;
 		amount.step = 1;

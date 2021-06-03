@@ -58,6 +58,12 @@
 				<input id="amount" type="number" max="{{$cap.FreeEuros}}">
 				<span class="amount">€</span>
 			</div>
+			<div>
+				that will pay for
+				<span id="push_amount" data-price="{{$cap.PushPrice}}"></span>
+				<span id="push_noun"></span>,
+				not including special offers.
+			</div>
 			<div id="paypal-button-container"></div>
 			<div id="error" hidden></div>
 		</form>

@@ -296,6 +296,7 @@ type tPushes []*Push
 type tPushPrices []*PushPrice
 type tFreeTime []*FreeTime
 type tBlogTags map[string][]string
+type tTagDescriptions map[string]string
 
 type tIncoming struct {
 	data  []*Incoming
@@ -368,6 +369,7 @@ var pushprices = tPushPrices{}
 var freetime = tFreeTime{}
 var incoming = tIncoming{}
 var blogTags = tBlogTags{}
+var tagDescriptions = tTagDescriptions{}
 var paypal_auth = PayPalAuth{}
 
 /// -------
@@ -485,6 +487,7 @@ func init() {
 	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
 	loadTSV(&incoming.data, "incoming", gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
+	loadTSV(&tagDescriptions, "tag_descriptions", gocsv.UnmarshalCSVToMap)
 	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
 
 	if len(paypalAuths) > 0 {

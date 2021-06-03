@@ -1,0 +1,68 @@
+Tag	Desc
+rec98	PC-98 Touhou source code reconstruction.
+website	Code behind this website.
+th01	東方靈異伝　～  The Highly Responsive to Prayers
+th02	東方封魔録　～  the Story of Eastern Wonderland
+th03	東方夢時空　～  Phantasmagoria of Dim.Dream
+th04	東方幻想郷　～  Lotus Land Story
+th05	東方怪綺談　～  Mystic Square
+animation	Colorful, crisp images that are played in a sequence.
+blitting	Getting pixel data to and from VRAM.
+bomb	Limited-use item that damages enemies and grants temporary invulnerability, while playing a flashy animation specific to the player character.
+bug	Bugs in the original code that cause catastrophic effects when given malformed input. Modders beware!
+build-process	Dealing with the difficulties of building a mixed C++/assembly project with ancient compilers.
+bullet	Projectiles fired by enemies.
+card-flipping	TH01's regular, non-boss stages.
+contribution-ideas	Potential improvements that volunteers could meaningfully contribute to this project. Mostly minor issues, or slightly out of scope of the main project.
+cutscene	Endings or staff roll animations. Also applies to the cutscenes before stages 8 and 9 in TH03.
+danmaku-pattern	A complete danmaku animation over a specified period of time.
+dosbox-x	A DOSBox fork with support for PC-98 emulation.
+enemy	Common stage enemies with simple scripts, in contrast to midbosses or bosses.
+file-format	Structure of an on-disk file format.
+gaiji	Custom 16×16 glyphs that can be used on the PC-98's 8-color text layer.
+gameplay	Code that defines the main in-game experience.
+glitch	Bugs in the original code that affect visuals or gameplay in minor ways.
+good-code	Things that ZUN implemented surprisingly well.
+hidden-content	Hidden features in the original games.
+hud	The area of the screen that displays the current score, lives, and bombs.
+input	Processing data entered from the keyboard or a joypad.
+item	Collectables, dropped from enemies and (mid)bosses.
+jank	Code of questionable quality.
+kaja	The PMD and MMD sound drivers by Masahiro Kajihara (梶原 正裕).
+laser	Beams that can collide with the player. Sometimes difficult.
+master.lib	A library providing an abstraction layer for all components of a PC-98 DOS system, collected and extended by Akihiko Koizuka (恋塚 昭彦). Written entirely in 16-bit x86 assembly.
+menu	Any window offering multiple options to be selected or configured.
+meta	Thoughts and news about this entire project.
+micro-optimization	Needlessly complicated code, achieving minimal performance gains at the cost of maintainability.
+midboss	A single bigger enemy with a slightly more complicated, hardcoded script, occasionally fought halfway through a stage.
+mod	Pre-compiled mod downloads, changing all sorts of things in the binaries.
+palette	Manipulation of the PC-98's 16-color palette for graphics.
+pc98	Details on PC-98 hardware and software.
+pipeline	Additional, helpful code generation steps, beyond regular compiler/assembler invocations.
+player	Player-controlled characters.
+portability	Notes about future ports of the games away from x86 and the PC-98 platform.
+position-independence	Reducing the number of unlabeled memory references, to make life easier for modders. Also a requirement for using any other compiler on the reconstructed source code.
+resident	Data passed between the individual executables of each game.
+rng	Pseudo-randomness, in a gameplay sense. Emphasis on "pseudo".
+score	Points collected during gameplay, and stored in high score files.
+shot	Projectiles fired by the player.
+tasm	Discoveries about Turbo Assembler.
+tcc	Discoveries about Turbo C++ 4.0J, the C++ compiler ZUN originally used for PC-98 Touhou.
+thief	Things that ZUN stole from others, without crediting them.
+unused	Unused remnants of code. Might tell something about a game's development history.
+waste	Consuming memory or disk space for no reason, or wrong reasons. Decent optimization opportunities for mods.
+boss	A bigger enemy with an extensive hardcoded script, fought at the end of a stage. Sometimes has personality.
+singyoku	TH01's Stage 5 boss.
+yuugenmagan	TH01's Stage 10 boss, on the 魔界/Makai route.
+mima-th01	TH01's Stage 10 boss, on the 地獄/Jigoku route.
+elis	TH01's Stage 15 boss, on the 魔界/Makai route.
+kikuri	TH01's Stage 15 boss, on the 地獄/Jigoku route.
+sariel	TH01's Stage 20 boss, on the 魔界/Makai route.
+konngara	TH01's Stage 20 boss, on the 地獄/Jigoku route.
+yuuka-6	TH04's Stage 6 boss.
+alice	TH05's Stage 3 boss.
+mai	TH05's Stage 4 boss (one of them).
+yuki	TH05's Stage 4 boss (one of them).
+yumeko	TH05's Stage 5 boss.
+shinki	TH05's Stage 6 boss.
+ex-alice	TH05's Extra Stage boss.

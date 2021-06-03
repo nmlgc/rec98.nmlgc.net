@@ -627,8 +627,6 @@ article h5 {
 .tag {
 	display: inline-block;
 	font-size: 80%;
-	padding-left: 0.25em;
-	padding-right: 0.25em;
 	background-color: #f8f8ff;
 	border: 1px solid blue;
 }
@@ -637,8 +635,13 @@ article h5 {
 	font-weight: bold;
 }
 
-.tag::before {
+.tag a::before {
+	padding-left: 0.25em;
 	content: "○ ";
+}
+
+.tag a {
+	padding-right: 0.25em;
 }
 
 .tag:hover {

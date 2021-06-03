@@ -154,12 +154,8 @@ func HTMLTag(tag string, filters []string) template.HTML {
 			class += " active"
 		}
 	}
-	return template.HTML(
-		fmt.Sprintf(
-			`<a class="%s" href="/blog/tag/%s">%s</a>`,
-			class, tag, tag,
-		),
-	)
+	body := `<a href="/blog/tag/` + tag + `">` + tag + `</a>`
+	return template.HTML(`<span class="` + class + `">` + body + `</span>`)
 }
 
 var pages = template.New("").Funcs(map[string]interface{}{

@@ -223,6 +223,14 @@ a:not(.customer)[href^="https://twitter.com/"]:before {
 	content:"";
 }
 
+a[href^="mailto"] {
+	display: inline-block;
+}
+
+a[href^="mailto"]:before {
+	content: "📧 ";
+}
+
 a.download {
 	display: table;
 	border: var(--header-border);

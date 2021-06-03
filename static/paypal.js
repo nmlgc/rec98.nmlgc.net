@@ -3,8 +3,8 @@
 let mailto_support = "support@nmlgc.net";
 
 function HTMLSupportMail() {
-	return `<span class="emoji">📧</span>
-<a href="mailto:` + mailto_support + `"><kbd>`+ mailto_support + `</kbd></a>`;
+	return `
+<a href="mailto:` + mailto_support + `"><kbd>` + mailto_support + `</kbd></a>`;
 }
 
 function isOneTime() {

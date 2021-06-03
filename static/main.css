@@ -633,6 +633,10 @@ article h5 {
 	border: 1px solid blue;
 }
 
+.tag.active {
+	font-weight: bold;
+}
+
 .tag::before {
 	content: "○ ";
 }

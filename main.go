@@ -145,10 +145,20 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 	)
 }
 
-// HTMLTag returns a rendered blog tag.
-func HTMLTag(tag string) template.HTML {
+// HTMLTag returns a rendered blog tag, styled depending on its presence in the
+// given filters.
+func HTMLTag(tag string, filters []string) template.HTML {
+	class := "tag"
+	for _, filter := range filters {
+		if filter == tag {
+			class += " active"
+		}
+	}
 	return template.HTML(
-		fmt.Sprintf(`<a class="tag" href="/blog/tag/%s">%s</a>`, tag, tag),
+		fmt.Sprintf(
+			`<a class="%s" href="/blog/tag/%s">%s</a>`,
+			class, tag, tag,
+		),
 	)
 }
 

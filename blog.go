@@ -83,6 +83,7 @@ type Post struct {
 	FundedBy []CustomerID
 	Diffs    []DiffInfo
 	Tags     []string
+	Filters  []string
 	Body     template.HTML
 }
 
@@ -95,7 +96,7 @@ func (e eNoPost) Error() string {
 }
 
 // Render builds a new Post instance from e.
-func (e BlogEntry) Render() Post {
+func (e BlogEntry) Render(filters []string) Post {
 	var b strings.Builder
 	datePrefix := e.Date + "-"
 	ctx := PostDot{
@@ -106,9 +107,10 @@ func (e BlogEntry) Render() Post {
 	pagesExecute(&b, e.templateName, &ctx)
 
 	post := Post{
-		Date: e.Date,
-		Tags: e.Tags,
-		Body: template.HTML(b.String()),
+		Date:    e.Date,
+		Tags:    e.Tags,
+		Filters: filters,
+		Body:    template.HTML(b.String()),
 	}
 	if e.Pushes != nil {
 		post.Time = e.Pushes[0].Delivered
@@ -133,7 +135,7 @@ func (b Blog) GetPost(date string) (*Post, error) {
 	if entry == nil {
 		return nil, eNoPost{date}
 	}
-	post := entry.Render()
+	post := entry.Render([]string{})
 	return &post, nil
 }
 
@@ -152,7 +154,7 @@ func (b Blog) Posts(filters []string) chan Post {
 				}
 			}
 			if filtersSeen == len(filters) {
-				ret <- entry.Render()
+				ret <- entry.Render(filters)
 			}
 		}
 		close(ret)

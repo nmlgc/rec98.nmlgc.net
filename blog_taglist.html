@@ -1,0 +1,10 @@
+{{template "header.html" -}}
+<h2><a href="/blog">⮜ Blog</a></h2>
+<h3>List of tags</h3>
+<table>{{range Blog_TagDescriptions -}}
+	<tr>
+		<td>{{HTML_Tag .Tag nil}}</td>
+		<td>{{.Desc}}</td>
+	</tr>
+{{- end}}</table>
+{{- template "footer.html" -}}

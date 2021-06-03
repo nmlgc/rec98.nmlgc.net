@@ -149,9 +149,9 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 // given filters, and with additional links to manipulate the filters.
 func HTMLTag(tag string, filters []string) template.HTML {
 	linkFor := func(allTags []string, title string, text string) string {
-		url := "/blog"
+		url := "/blog/tag"
 		if len(allTags) >= 1 {
-			url += `/tag/` + strings.Join(allTags, "/")
+			url += `/` + strings.Join(allTags, "/")
 		}
 		return `<a href="` + url + `" title="` + title + `">` + text + `</a>`
 	}
@@ -348,6 +348,9 @@ func main() {
 		"Blog_ParseTags": func(t string) []string {
 			return strings.FieldsFunc(t, func(c rune) bool { return c == '/' })
 		},
+		"Blog_TagDescriptions": func() []*TagDescription {
+			return tagDescriptions.Ordered
+		},
 	})
 	// ----
 
@@ -376,6 +379,7 @@ func main() {
 	r.Handle("/faq", pagesHandler("faq.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(blogURLPrefix, pagesHandler("blog.html"))
+	r.Handle(blogURLPrefix+"/tag", pagesHandler("blog_taglist.html"))
 	r.Handle(blogURLPrefix+"/{date}", pagesHandler("blog_single.html"))
 	r.Handle(
 		blogURLPrefix+"/tag/{tags:(?:.+/?)+}", pagesHandler("blog_tagged.html"),

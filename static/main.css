@@ -625,7 +625,8 @@ article h5 {
 }
 
 .tag {
-	display: inline-block;
+	display: inline-flex;
+	align-items: stretch;
 	font-size: 80%;
 	background-color: #f8f8ff;
 	border: 1px solid blue;
@@ -636,6 +637,8 @@ article h5 {
 }
 
 .tag * {
+	display: flex;
+	align-items: center;
 	padding-left: 0.25em;
 }
 

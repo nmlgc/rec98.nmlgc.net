@@ -117,6 +117,10 @@ aside .icon-cell {
 	cursor: wait;
 }
 
+.hovertext {
+	text-decoration: underline dotted;
+}
+
 /* Header
    ------ */
 body {

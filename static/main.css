@@ -635,12 +635,18 @@ article h5 {
 	font-weight: bold;
 }
 
-.tag a::before {
+.tag * {
 	padding-left: 0.25em;
-	content: "○ ";
 }
 
-.tag a {
+.tag :first-child::before {
+	padding-right: 0.25em;
+	content: "○";
+}
+
+.tag :last-child {
+	/* Since we want the links of these small + and - "icons" to take up as
+	 * much space as possible, we assign `padding-right` to them. */
 	padding-right: 0.25em;
 }
 

@@ -146,15 +146,39 @@ func HTMLDownload(hp hostedPath, basename string) template.HTML {
 }
 
 // HTMLTag returns a rendered blog tag, styled depending on its presence in the
-// given filters.
+// given filters, and with additional links to manipulate the filters.
 func HTMLTag(tag string, filters []string) template.HTML {
-	class := "tag"
-	for _, filter := range filters {
+	linkFor := func(allTags []string, title string, text string) string {
+		url := "/blog"
+		if len(allTags) >= 1 {
+			url += `/tag/` + strings.Join(allTags, "/")
+		}
+		return `<a href="` + url + `" title="` + title + `">` + text + `</a>`
+	}
+
+	indexInFilters := -1
+	for i, filter := range filters {
 		if filter == tag {
-			class += " active"
+			indexInFilters = i
+			break
 		}
 	}
-	body := `<a href="/blog/tag/` + tag + `">` + tag + `</a>`
+
+	body := linkFor([]string{tag}, "", tag)
+	class := "tag"
+
+	// Any append() call that involves filters, or any sub-slice of it, will
+	// modify the underlying array!
+	if indexInFilters != -1 {
+		class += " active"
+		filterMod := append([]string{}, filters[:indexInFilters]...)
+		filterMod = append(filterMod, filters[indexInFilters+1:]...)
+		body += linkFor(filterMod, "Remove from filters", "-")
+	} else if len(filters) >= 1 {
+		filterMod := append([]string{}, filters...)
+		filterMod = append(filterMod, tag)
+		body += linkFor(filterMod, "Add to filters", "+")
+	}
 	return template.HTML(`<span class="` + class + `">` + body + `</span>`)
 }
 

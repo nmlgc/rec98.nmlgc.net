@@ -138,3 +138,6 @@ P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initializat
 P0140	[98]	PC-98 DOS graph mode RE, with implementation into DOSBox-X 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d985811...d856f7d	0
 P0141	[98, 102]	TH01 decompilation (Konngara, part 1) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d856f7d...5afee78	1
 P0142	[99]	TH01 decompilation (Konngara, part 2) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/5afee78...08bc188	1
+P0143	[109]	Website (Progress number caching) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/9069fb7...c8ac7e5	0
+P0144	[100, 109]	Website (Blog tag system, part 1: Manual and automatic tag assignment, blog filtering, design) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/c8ac7e5...69dd597	0
+P0145	[103, 109]	Website (Blog tag system, part 2: Combining tags, per-tag descriptions) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/69dd597...71417b6	0

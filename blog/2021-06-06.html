@@ -1,0 +1,150 @@
+<p>
+	Who said working on the website was "fun"? That code is a mess.
+	{{HTML_Emoji "tannedcirno"}} This right here is the first time I seriously
+	wrote a website from (almost) scratch. Its main job is to parse over a Git
+	repository and calculate numbers, so any additional bulky frameworks would
+	only be in the way, and probably need to be run on some sort of wobbly,
+	unmaintainable "stack" anyway, right? 😛
+	{{Blog_PostLink "2020-09-17" "As with the main project"}} though, I'm only
+	beginning to figure out the best structure for this, and these new features
+	prompted quite a lot of upfront refactoring…
+</p><p>
+	Before I start ranting though, let's quickly summarize the most visible
+	change, the new tag system for this blog!
+	<ul>
+		<li>Yes, I manually went through every one of the 82 posts I've written
+		so far, and assigned labels to them.</li>
+		<li>The per-project ({{HTML_Tag "rec98" nil}} and
+		{{HTML_Tag "website" nil}}) and per-game ({{HTML_Tag "th01" nil}}
+		{{HTML_Tag "th02" nil}}
+		{{HTML_Tag "th03" nil}}
+		{{HTML_Tag "th04" nil}}
+		{{HTML_Tag "th05" nil}}) tags are automatically generated from the
+		database and the Git commit history, respectively. That might have
+		ended us up with a fair bit of category clutter, as any single change
+		to a tiny aspect is enough for a blog post to be tagged with an
+		otherwise unrelated game. For now, it doesn't seem <i>too</i> much of
+		an issue though.</li>
+		<li>Filtering already works for an arbitrary number of tags. Right now,
+		these are always combined with <code class="hovertext"
+			title="Or, if formal logic is your thing, a conjunction. ∧"
+		>AND</code> – no arbitrary boolean expressions for tag filtering yet.
+		{{HTML_Emoji "onricdennat"}}</li>
+		<li>Adding filters simply works by adding components to the URL path:
+		<kbd>https://rec98.nmlgc.net/blog/tag/tag1/tag2/tag3/</kbd>… and so
+		on.</li>
+		<li>Hovering over any tag shows a brief description of what that tag is
+		about. Some of the terms really needed a definition, so I just added
+		one for all of them. Hope you all enjoy them!</li>
+		<li>These descriptions are also shown on the new
+		<a href="/blog/tag">tag overview page</a>, which now kind of doubles
+		as a glossary.</li>
+	</ul>
+	Finally, the order page now shows the exact number of pushes a contribution
+	will fund – no more manual <a href="/faq#duration">divisions</a> required.
+	Shoutout to the one email I received, which pointed out this potential
+	improvement!
+</p><hr /><p>
+	As for the "invisible" changes: The one main feature of this website, the
+	aforementioned calculation of the progress metrics, also turned out as its
+	biggest annoyance over the years. It takes a little while to parse all the
+	big .ASM files in the source tree, once for every push that can affect the
+	average number of removed instructions and unlabeled addresses. And without
+	a cache, we've had to do <i>that</i> every time we re-launch the app server
+	process.<br />
+	Fundamentally, this is – you might have guessed it – a dependency tracking
+	problem, with two inputs: the .ASM files from the ReC98 repo, and the
+	Golang code that calculates the instruction and PI numbers. Sure, the code
+	has been pretty stable, but what if we do end up extending it one day? I've
+	always disliked manually specified version numbers for use cases like this
+	one, where the problem at hand could be exactly solved with a hashing
+	function, without being prone to human error.
+</p><p>
+	(Sidenote: That's why I never actively supported thcrap mods that affected
+	gameplay while I was still working on that project. We still want to be
+	able to save and share replays made on modded games, but I do <i>not</i>
+	want to subject users to the unacceptable burden of manually remembering
+	which version of which patch stack they've recorded a given replay with.
+	So, we'd somehow need to calculate a hash of everything that defines the
+	{{HTML_Tag "gameplay" nil}}, exclude the things that don't, and only show
+	replays that were recorded on the hash that matches the currently running
+	patch stack. Well, turns out that True Touhou Fans™ quite enjoy watching
+	the games get broken in every possible way. That's the way ZUN intended the
+	games to be experienced, after all. Otherwise, he'd be constantly
+	maintaining the games and shipping bugfix patches… 🤷)
+</p><p>
+	Now, why haven't I been caching the progress numbers all along? Well,
+	parallelizing that parsing process onto all available CPU cores seemed
+	enough in 2019 when this site launched. Back then, the estimates were
+	calculated from slightly over 10 million lines of ASM, which took about 7
+	seconds to be parsed on my mid-range dev system.<br />
+	Fast forward to P0142 though, and we have to parse 34.3 million lines of
+	ASM, which takes about 26 seconds on my dev system. That would have only
+	got worse with every new delivery, especially since this production server
+	doesn't have as many cores.
+</p><p>
+	I was thinking about a "doing less" approach for a while: Parsing only the
+	files that had changed between the start and end commit of a push, and
+	keeping those deltas across push boundaries. However, that turned out to be
+	<i>slightly</i> more complex than the few hours I wanted to spend on it.
+	And who knows how well <i>that</i> would have scaled. We've still got a few
+	hundred pushes left to go before we're done here, after all.
+</p><p>
+	So with the tag system, as always, taking longer and consuming more pushes
+	than I had planned, the time had come to finally address the underlying
+	dependency tracking problem.<br />
+	Initially, this sounded like a nail that was tailor-made for
+	{{Blog_PostLink "2020-09-03" "my favorite hammer, Tup"}}: Move the parser
+	to a separate binary, gather the list of all commits via <code>git
+	rev-list</code>, and run that parser binary on every one of the commits
+	returned. That should end up correctly tracking the relevant parts of
+	<code>.git/</code> and the new binary as inputs, and cause the commits to
+	be re-parsed if the parser binary changes, right? Too bad that Tup both
+	<a href="https://github.com/gittup/tup/issues/238">refuses to track
+	anything inside <code>.git/</code></a>, and can't track a Golang binary
+	either, due to all of the compiler's unpredictable outputs into its build
+	cache. But can't we at least turn off–
+	<blockquote>> The build cache is now required as a step toward eliminating <code>$GOPATH/pkg</code>.
+	— <a href="https://golang.org/doc/go1.12#gocache">Go 1.12 release notes</a></blockquote>
+	Oh, <i>wonderful</i>. Hey, I always liked <code>$GOPATH</code>! 🙁
+</p><p>
+	But sure, Golang is too smart anyway to require an external build system.
+	The compiler's
+	<a href="https://golang.org/src/cmd/go/internal/work/buildid.go">build
+	ID</a> is exactly what we need to correctly invalidate the progress number
+	cache. Surely there is a way to retrieve the build ID for any package that
+	makes up a binary at runtime via some kind of reflection, right? Right? …Of
+	<i>course</i> not, in the great Unix tradition, this functionality is only
+	available as a CLI tool that prints its result to <code>stdout</code>.
+	🙄<br />
+	But sure, no problem, let's just <code>exec()</code> a separate process on
+	the parser's library package file… oh wait, such a thing doesn't exist
+	anymore, unless you manually <kbd>install</kbd> the package. This would
+	have added another complication to the build process, <i>and</i> you'd
+	still have to manually locate the package file, with its version-specific
+	directory name. That <i>might</i> have worked out in the end, but figuring
+	all this out would have probably gone way beyond the budget.
+</p><p>
+	OK, but who cares about packages? We just care about one single file here,
+	anyway. Didn't they put the official Golang source code parser into the
+	standard library? Maybe <i>that</i> can give us something close to the
+	build ID, by hashing the abstract syntax tree of that file. Well, for
+	starters, one does not simply <i>serialize</i> the returned AST. At least
+	into Golang's own, most "native" <a hreF="https://blog.golang.org/gob">Gob
+	format</a>, which requires all types from the <code>go/ast</code> package
+	to be manually registered first.<br />
+	That leaves
+	<a href="https://golang.org/pkg/go/ast/#Fprint">ast.Fprint()</a> as the
+	only thing close to a ready-made serialization function… and guess what,
+	that one suffers from Golang's typical non-deterministic order when
+	rendering any map to a string. 🤦
+</p><p>
+	Guess there's no way around the simplest, most stupid way of simply
+	calculating any cryptographically secure hash over the ASM parser file. 😶
+	It's not like we frequently change comments in this file, but still, this
+	could have been so much nicer.<br />
+	Oh well, at least I <i>did</i> get that issue resolved now, in an
+	acceptable way. If you ever happened to see this website rebuilding: That
+	should now be a matter of seconds, rather than minutes. Next up: Shinki's
+	background animations!
+</p>

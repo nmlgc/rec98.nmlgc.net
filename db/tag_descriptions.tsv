@@ -50,6 +50,7 @@ tasm	Discoveries about Turbo Assembler.
 tcc	Discoveries about Turbo C++ 4.0J, the C++ compiler ZUN originally used for PC-98 Touhou.
 thief	Things that ZUN stole from others, without crediting them.
 unused	Unused remnants of code. Might tell something about a game's development history.
+uth05win	Open-source Windows rewrite of TH05, based on reverse-engineered code from the original. Slightly inaccurate in places, but overall still a great help for this project.
 waste	Consuming memory or disk space for no reason, or wrong reasons. Decent optimization opportunities for mods.
 boss	A bigger enemy with an extensive hardcoded script, fought at the end of a stage. Sometimes has personality.
 singyoku	TH01's Stage 5 boss.

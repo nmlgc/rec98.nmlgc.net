@@ -1,0 +1,69 @@
+<p>
+	Y'know, I kinda prefer the pending crowdfunded workload to stay more near
+	the middle of the cap, rather than being sold out all the time. So to reach
+	this point more quickly, let's do the most relaxing thing that can be
+	easily done in TH05 right now: The boss backgrounds, starting with Shinki's,
+	{{Blog_PostLink "2020-08-19" "now that we've got the time to look at it in detail"}}.
+</p><p>
+	… Oh <i>come on</i>, more things that are borderline undecompilable, and
+	require new workarounds to be developed? Yup, Borland C++ always optimizes
+	any comparison of a register with a literal 0 to <code>OR reg, reg</code>,
+	no matter how many calculations and inlined function calls you replace the
+	0 with. Shinki's background particle rendering function contains a
+	<code>CMP AX, 0</code> instruction though… so yeah,
+	{{Blog_PostLink "2021-02-21" "yet another piece of custom ASM that's worse"}}
+	than what Turbo C++ 4.0J would have generated if ZUN had just written
+	readable C. This was probably motivated by ZUN insisting that his modified
+	master.lib function for blitting particles takes its X and Y parameters as
+	registers. If he had just used the <code>__fastcall</code> convention, he
+	also would have got the sprite ID passed as a register. 🤷<br />
+	So, we <i>really</i> don't want to be forced into inline assembly just
+	because of the third comparison in the otherwise perfectly decompilable
+	four-comparison <code>if()</code> expression that prevents invisible
+	particles from being drawn. The workaround: Comparing to a <i>pointer</i>
+	instead, which only the linker gets to resolve to the actual value of 0.
+	{{HTML_Emoji "tannedcirno"}} This way, the compiler has to make room for
+	any 16-bit literal, and can't optimize anything.
+</p><hr /><p>
+	And then we go straight from {{HTML_Tag "micro-optimization" nil}} to
+	{{HTML_Tag "waste" nil}}, with all the duplication in the code that
+	animates all those particles together with the zooming and spinning lines.
+	This push decompiled 1.31% of all code in TH05, and thanks to alignment,
+	we're still missing Shinki's high-level background rendering function that
+	calls all the subfunctions I decompiled here.<br />
+	With all the manipulated state involved here, it's not at all trivial to
+	see how this code produces what you see in-game. Like:<ol>
+	<li>If all lines have the same Y velocity, how do the other three lines in
+	background type B get pushed down into this vertical formation while the
+	top one stays still? (Answer: This velocity is only applied to the top
+	line, the other lines are only pushed based on some delta.)</li>
+	<li>How can this delta be calculated based on the distance of the top line
+	with its supposed target point around Shinki's wings? (Answer: The velocity
+	is never set to 0, so the top line overshoots this target point in every
+	frame. After calculating the delta, the top line itself is pushed down as
+	well, canceling out the movement. {{HTML_Emoji "zunpet"}})</li>
+	<li>Why don't they get pushed down infinitely, but stop eventually?
+	(Answer: We only see four lines out of 20, at indices #0, #6, #12, and
+	#18. In each frame, lines [0..17] are copied to lines [1..18], before
+	anything gets moved. The invisible lines are pushed down based on the delta
+	as well, which defines a distance between the visible lines of (velocity *
+	array gap). And since the velocity is capped at -14 pixels per frame, this
+	also means a maximum distance of 84 pixels between the midpoints of each
+	line.)</li>
+	<li>And why are the lines moving back up when switching to background type
+	C, before moving down? (Answer: Because type C <i>increases</i> the
+	velocity rather than decreasing it. Therefore, it relies on the previous
+	velocity state from type B to show a gapless animation.)</li>
+	</ol>So yeah, it's a nice-looking effect, just <i>very</i> hard to
+	understand. 😵
+</p><p>
+	With the amount of effort I'm putting into this project, I typically
+	gravitate towards more descriptive function names. Here, however,
+	uth05win's simple and seemingly tiny-brained "background type A/B/C/D" was
+	quite a smart choice. It clearly defines the sequence in which these
+	animations are intended to be shown, and as we've seen with point 4
+	from the list above, that does indeed matter.
+</p><p>
+	Next up: At least EX-Alice's background animations, and probably also the
+	high-level parts of the background rendering for all the other TH05 bosses.
+</p>

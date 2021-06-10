@@ -52,7 +52,7 @@ Date	Tags
 2020-07-27	["hud", "file-format", "jank", "waste"]
 2020-08-12	["meta", "file-format", "animation", "blitting", "boss", "singyoku", "yuugenmagan", "elis", "kikuri", "konngara", "waste"]
 2020-08-16	["gameplay", "bullet", "micro-optimization", "glitch", "uth05win", "tasm"]
-2020-08-19	["animation", "tcc"]
+2020-08-19	["animation", "tcc", "shinki", "ex-alice"]
 2020-08-28	["gameplay", "player", "bomb", "boss", "ex-alice", "animation", "glitch", "jank"]
 2020-09-03	["build-process", "tcc", "tasm"]
 2020-09-07	["build-process", "pipeline", "tasm", "blitting", "file-format", "input"]
@@ -76,3 +76,4 @@ Date	Tags
 2021-05-12	["kaja", "jank", "bug", "contribution-ideas"]
 2021-05-13	["rec98", "meta"]
 2021-05-27	["pc98", "dosbox-x", "gameplay", "boss", "konngara", "danmaku-pattern"]
+2021-06-10	["tcc", "animation", "boss", "shinki", "micro-optimization", "waste", "uth05win"]

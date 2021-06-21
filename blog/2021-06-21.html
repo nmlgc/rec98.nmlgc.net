@@ -1,0 +1,62 @@
+<p>
+	Didn't <i>quite</i> get to cover background rendering for TH05's Stage 1-5
+	bosses in this one, as I had to reverse-engineer two more fundamental parts
+	involved in boss background rendering before.
+</p><p>
+	First, we got the those blocky transitions from stage tiles to bomb and
+	boss backgrounds, loaded from <code>BB*.BB</code> and <code>ST*.BB</code>,
+	respectively. These files store up to 8 frames of animation, with every bit
+	corresponding to a 16×16 tile on the playfield. With 384×368 pixels to be
+	covered, that would require 69 bytes per frame. But since that's a very odd
+	number to work with in micro-optimized ASM, ZUN instead stores 512×512
+	pixels worth of bits, ending up with a frame size of 128 bytes, and a
+	per-frame waste of 59 bytes. {{HTML_Emoji "tannedcirno"}} At least it was
+	possible to decompile the core blitting function as <code>__fastcall</code>
+	for once. <br />
+	But wait, TH05 comes with, and loads, a bomb .BB file for every character,
+	not just for the Reimu and Yuuka bomb transitions you see in-game… 🤔
+	Restoring those unused stage tile&nbsp;→&nbsp;bomb image transition
+	animations for Mima and Marisa isn't that trivial without having decompiled
+	their actual bomb animation functions before, so stay tuned!
+</p><p>
+	Interestingly though, the code leaves out what would look like the most
+	obvious optimization: <i>All</i> stage tiles are unconditionally redrawn
+	each frame before they're erased again with the 16×16 blocks, no matter if
+	they weren't covered by such a block in the previous frame, or <i>are</i>
+	going to be covered by such a block in <i>this</i> frame. The same is true
+	for the static bomb and boss background images, where ZUN simply didn't
+	write a .CDG blitting function that takes the dirty tile array into
+	account. If VRAM writes on PC-98 really were as slow as the games'
+	<code>README.TXT</code> files claim them to be, shouldn't <i>all</i> the
+	optimization work have gone towards minimizing them? {{HTML_Emoji "thonk"}}
+	Oh well, it's not like I have any idea what I'm talking about here. I'd
+	better stop talking about anything relating to VRAM performance on PC-98…
+	{{HTML_Emoji "onricdennat"}}
+</p><hr /><p>
+	Second, it finally was time to solve the long-standing confusion about all
+	those callbacks that are supposed to render the playfield background. Given
+	the aforementioned static bomb background images, ZUN chose to make this
+	needlessly complicated. And so, we have <i>two</i> callback function
+	pointers: One <i>during</i> bomb animations, one <i>outside</i> of bomb
+	animations, and each boss update function is responsible for keeping the
+	former in sync with the latter. {{HTML_Emoji "zunpet"}}
+</p><p>
+	Other than that, this was one of the smoothest pushes we've had in a while;
+	the hardest parts of boss background rendering all were part of
+	{{Blog_PostLink "2021-06-10" "the last push"}}. Once you figured out that
+	ZUN does indeed dynamically change hardware color #0 based on the current
+	boss phase, the remaining one function for Shinki, and all of EX-Alice's
+	background rendering becomes very straightforward and understandable.
+</p><hr /><p>
+	Meanwhile, {{DB_CustomerByID 2}} told me about his plans to publicly
+	release {{Blog_PostLink "2020-09-17" "his TH05 scripting toolkit"}} once
+	TH05's <code>MAIN.EXE</code> would hit around 50% RE! That pretty much
+	defines what the next bunch of generic TH05 pushes will go towards:
+	{{HTML_Tag "bullet" nil}}s, shared {{HTML_Tag "boss" nil}} code, and one
+	full, concrete boss script to demonstrate how it's all combined. Next up,
+	therefore: TH04's bullet firing code…? Yes, TH04's. I want to see what I'm
+	doing before I tackle the undecompilable mess that is TH05's bullet firing
+	code, and <i>you</i> all probably want readable code for that feature as
+	well. Turns out it's also the perfect place for {{DB_CustomerByID 15}}'s
+	pending contributions.
+</p>

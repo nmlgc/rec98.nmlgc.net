@@ -143,3 +143,4 @@ P0144	[100, 109]	Website (Blog tag system, part 1: Manual and automatic tag assi
 P0145	[103, 109]	Website (Blog tag system, part 2: Combining tags, per-tag descriptions) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/69dd597...71417b6	0
 P0146	[106, 107]	TH05 decompilation (Shinki's background animations) 	2021-06-10T20:56:05Z	nmlgc/ReC98/compare/08bc188...456b621	1
 P0147	[110, 111]	TH04/TH05 RE (.BB 16×16 tile animations) / TH05 decompilation (Shinki + EX-Alice backgrounds)	2021-06-21T13:49:31Z	nmlgc/ReC98/compare/456b621...c940059	1
+P0148	[117]	TH04/TH05 decompilation (Text popups, gather circle rendering, player position clamping)	2021-07-20T22:35:20Z	nmlgc/ReC98/compare/c940059...e1a26bb	1

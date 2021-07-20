@@ -1,0 +1,79 @@
+<p>
+	Back after taking way too long to get {{DB_CustomerByID 9}}'s MediaWiki
+	update feature complete… I'm still waiting for more translators to test and
+	review the new translation interface before delivering and deploying it
+	all, which will most likely lead to another break from ReC98 within the
+	next few months. For now though, I'm happy to have mostly addressed the
+	nagging responsibility I still had after willing that site into existence,
+	and to be back working on ReC98. 🙂
+</p><p>
+	As announced, the next few pushes will focus on TH04's and TH05's bullet
+	spawning code, before I get to put all that accumulated TH01 money towards
+	finishing all of {{HTML_Tag "konngara" nil}}'s code in TH01. For a full
+	picture of what's happening with bullets, we'd <i>really</i> also like to
+	have the bullet update function as readable C code though.<br />
+	Clearing all bullets on the playfield will trigger a <i>Bonus!!</i> popup,
+	displayed as {{Blog_PostLink "2020-09-16" "gaiji"}} in that proportional
+	font. Unfortunately, TLINK refused to link the code as soon as I referenced
+	the function for animating the popups at the top of the playfield? Which
+	can only mean that we have to decompile that function first…
+	{{HTML_Emoji "thonk"}}
+</p><p>
+	So, let's turn that piece of technical debt into a full push, and first
+	decompile another random set of previously reverse-engineered TH04 and TH05
+	functions. Most of these are stored in a different place within the two
+	<code>MAIN.EXE</code> binaries, and the tried-and-true method of matching
+	segment names would therefore have introduced several unnecessary
+	translation units. So I resorted to a segment splitting technique I should
+	have started using way earlier: Simply creating new segments with names
+	derived from their functions, at the exact positions they're needed. All
+	the new segment start and end directives do bloat the ASM code somewhat,
+	and certainly contributed to this push barely removing any actual lines of
+	code. However, what we get in return is total freedom as far as
+	decompilation order is concerned,
+	{{Blog_PostLink "2020-08-16" "which should be the case for any ReC project, really"}}.
+	And in the end, all these tiny code segments will cancel out anyway.<br />
+	If only we could do the same with the data segment…
+</p><hr /><p>
+	The popup function happened to be the final one I RE'd before my long break
+	in the spring of 2019. Back then, I didn't even bother looking into that
+	64-frame delay between changing popups, and what that meant for the game.
+	<br />
+	Each of these popups stays on screen for 128 frames, during which, of
+	course, another popup-worthy event might happen. Handling this cleanly
+	without removing previous popups too early would involve some sort of event
+	queue, whose size might even be meaningfully limited to the number of
+	distinct events that can happen. But still, that'd be a data structure, and
+	we're not gonna have <i>that</i>! {{HTML_Emoji "zunpet"}} Instead, ZUN
+	simply keeps two variables for the new and current popup ID. During an
+	active popup, any change to that ID will only be committed once the current
+	popup has been shown for at least 64 frames. And during <i>that</i> time,
+	that new ID can be freely overwritten with a different one, which drops any
+	previous, undisplayed event. But surely, there won't be more than two
+	events happening within 63 frames, right? {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	The rest was fairly uneventful – no newly RE'd functions in this push,
+	after all – until I reached the widely used helper function for applying
+	the current vertical scrolling offset to a Y coordinate. Its combination of
+	a function parameter, the <code>pascal</code> calling convention, and no
+	stack frame was previously thought to be undecompilable… except that it
+	isn't, and the decompilation didn't even require any new workarounds to be
+	developed? Good thing that I already forgot how impossible it was to
+	decompile the first function I looked at that fell into this category!<br />
+	Oh well, this discovery wasn't <i>too</i> groundbreaking. Looking back at
+	all the other functions with that combination only revealed a grand total
+	of 1 additional one where a decompilation made sense: TH05's version of
+	<code>snd_kaja_interrupt()</code>, which is now compiled from the same C++
+	file for all 4 games that use it. And well, looks like some quirks really
+	remain unnoticed and undocumented until you look at a function for the 11th
+	time: Its return value is undefined if BGM is inactive – that is, if the
+	user disabled it, or if no FM board is installed. Not that it matters for
+	the original code, which never uses this function to retrieve anything from
+	KAJA's drivers. But people apparently do copy ReC98 code into their own
+	projects, so it <i>is</i> something to keep in mind.
+</p><hr /><p>
+	All in all, nothing quite at {{HTML_Tag "jank" nil}} level in this one, but
+	we were surely <i>grazing</i> that tag. Next up, with that out of the way:
+	The bullet update/step function! Very soon in fact, since I've mostly got
+	it done already.
+</p>

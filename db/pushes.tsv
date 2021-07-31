@@ -144,3 +144,7 @@ P0145	[103, 109]	Website (Blog tag system, part 2: Combining tags, per-tag descr
 P0146	[106, 107]	TH05 decompilation (Shinki's background animations) 	2021-06-10T20:56:05Z	nmlgc/ReC98/compare/08bc188...456b621	1
 P0147	[110, 111]	TH04/TH05 RE (.BB 16×16 tile animations) / TH05 decompilation (Shinki + EX-Alice backgrounds)	2021-06-21T13:49:31Z	nmlgc/ReC98/compare/456b621...c940059	1
 P0148	[117]	TH04/TH05 decompilation (Text popups, gather circle rendering, player position clamping)	2021-07-20T22:35:20Z	nmlgc/ReC98/compare/c940059...e1a26bb	1
+P0149	[89, 113, 115]	TH04/TH05 RE (Incompletely or wrongly RE'd bullet mechanics)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/e1a26bb...05e4c4a	1
+P0150	[91, 93, 95]	TH04 decompilation (Bullet spawning)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/05e4c4a...768251d	1
+P0151	[97, 108, 115]	TH04/TH05 decompilation (Bullet updates)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/768251d...4d24ca5	1
+P0152	[101, 104]	TH05 RE (Undecompilable bullet spawning code)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/4d24ca5...81fc861	1

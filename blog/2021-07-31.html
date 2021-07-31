@@ -1,0 +1,186 @@
+{{$vid1 := printf "%v%v" .FilePrefix "TH04-Bullet-clear" -}}
+{{$vid2 := printf "%v%v" .FilePrefix "TH04-Bullet-zap" -}}
+
+<p>
+	…or maybe not <i>that</i> soon, as it would have only wasted time to
+	untangle the bullet update commits from the rest of the progress. So,
+	here's <i>all</i> the bullet spawning code in TH04 and TH05 instead. I hope
+	you're ready for this, there's a lot to talk about!
+</p><p>
+	(For the sake of readability, "bullets" in this blog post refers to the
+	white 8×8 pellets
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgMAAAC5YVYYAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAAlQTFRFAAAAqqr/////38h8nAAAAAF0Uk5TAEDm2GYAAAAeSURBVAjXY+BawKC1gmHVKoZVK0EoaymDaAgDawAAXhcHRDMdG+8AAAAASUVORK5CYII=" />
+	and all 16×16 bullets loaded from <code>MIKO16.BFT</code>, nothing else.)
+</p><hr /><p>
+	But first, what was going <i>on</i>
+	{{Blog_PostLink "2020-02-16" "in 2020"}}? Spent 4 pushes on the basic types
+	and constants back then, still ended up confusing a couple of things, and
+	even getting some wrong. Like how TH05's "bullet slowdown" flag actually
+	always <i>prevents</i> slowdown and fires bullets at a constant speed
+	instead. {{HTML_Emoji "tannedcirno"}} Or how "random spread" is not the
+	best term to describe that unused bullet group type in TH04.<br />
+	Or that there are two distinct ways of clearing all bullets on screen,
+	which deserve different names:
+</p><div class="gallery">
+	<figure style="max-width: min(640px, 100%);">
+		<video controls loop>
+			<source src="{{$vid1}}.webm" type="video/webm"> <!-- For decent players -->
+			<source src="{{$vid1}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+		</video>
+		<figcaption>Mechanic #1: <i>Clearing</i> bullets for a custom amount of
+		time, awarding 1000 points for all bullets alive on the first frame,
+		and 100 points for all bullets spawned during the clear time.
+		</figcaption>
+	</figure><figure style="max-width: min(640px, 100%);">
+		<video controls loop>
+			<source src="{{$vid2}}.webm" type="video/webm"> <!-- For decent players -->
+			<source src="{{$vid2}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+		</video>
+		<figcaption>Mechanic #2: <i>Zapping</i> bullets for a fixed 16 frames,
+		awarding a semi-exponential and loudly announced <i>Bonus!!</i> for all
+		bullets alive on the first frame, and preventing new bullets from being
+		spawned during those 16 frames. In TH04 at least; thanks to a ZUN bug,
+		zapping got reduced to 1 frame and no animation in TH05…</figcaption>
+	</figure>
+</div><p>
+	Bullets are <i>zapped</i> at the end of most midboss and boss phases, and
+	<i>cleared</i> everywhere else – most notably, during bombs, when losing a
+	life, or as rewards for extends or a maximized Dream bonus. The <i>
+	Bonus!!</i> points awarded for zapping bullets are calculated iteratively,
+	so it's not trivial to give an exact formula for these. For a small number
+	𝑛 of bullets, it would exactly be 5𝑛³&nbsp;-&nbsp;10𝑛²&nbsp;+&nbsp;15𝑛
+	points – or, using uth05win's (correct) recursive definition, <code>
+	Bonus(𝑛) = Bonus(𝑛-1)&nbsp;+&nbsp;15𝑛²&nbsp;-&nbsp;5𝑛&nbsp;+&nbsp;10</code>.
+	However, one of the internal step variables is capped at a different number
+	of points for each difficulty (and game), after which the points only
+	increase linearly. Hence, "semi-exponential".
+</p><hr /><p>
+	On to TH04's bullet spawn code then, because that one can at least be
+	decompiled. And immediately, we have to deal with a pointless distinction
+	between <i>regular</i> bullets, with either a decelerating or constant
+	velocity, and <i>special</i> bullets, with preset velocity changes during
+	their lifetime. That preset has to be set <i>somewhere</i>, so why have
+	separate functions? In TH04, this separation continues even down to the
+	lowest level of functions, where values are written into the global bullet
+	array. TH05 merges those two functions into one, but then goes too far and
+	uses self-modifying code to save a grand total of two local variables…
+	Luckily, the rest of its actual code is identical to TH04.
+</p><p>
+	Most of the complexity in bullet spawning comes from the (thankfully
+	shared) helper function that calculates the velocities of the individual
+	bullets within a group. Both games handle each group type via a large
+	<code>switch</code> statement, which is where TH04 shows off another Turbo
+	C++ 4.0 optimization: If the range of <code>case</code> values is too
+	sparse to be meaningfully expressed in a jump table, it usually generates a
+	linear search through a second value table. But with the <code>-G</code>
+	command-line option, it instead generates branching code for a binary
+	search through the set of cases. 𝑂(log&nbsp;𝑛) as the worst case for a
+	<code>switch</code> statement in a C++ compiler from 1994… that's so cool.
+	But still, why are the values in TH04's group type <code>enum</code> all
+	over the place to begin with? {{HTML_Emoji "onricdennat"}}<br />
+	Unfortunately, this optimization is pretty rare in PC-98 Touhou. It only
+	shows up here and in a few places in TH02, compared to at least 50
+	<code>switch</code> value tables.
+</p><p>
+	In all of its micro-optimized pointlessness, TH05's undecompilable version
+	at least fixes some of TH04's redundancy. While it's still not even
+	<i>optimal</i>, it's at least a decently <i>written</i> piece of ASM…
+	<i>if</i> you take the time to understand what's going on there, because it
+	certainly took quite a bit of that to verify that all of the things which
+	looked like bugs or quirks were in fact correct. And that's how the code
+	for this function ended up with 35% comments and blank lines before I could
+	confidently call it "reverse-engineered"…<br />
+	Oh well, at least it finally fixes a correctness issue from TH01 and TH04,
+	where an invalid bullet group type would fill all remaining slots in the
+	bullet array with identical versions of the first bullet.
+</p><p>
+	Something that both games also share in these functions is an over-reliance
+	on globals for return values or other local state. The most ridiculous
+	example here: Tuning the speed of a bullet based on rank actually mutates
+	the global bullet template… which ZUN then works around by adding a wrapper
+	function around both regular and special bullet spawning, which saves the
+	base speed before executing that function, and restores it afterward.
+	{{HTML_Emoji "zunpet"}} Add another set of wrappers to bypass that exact
+	tuning, and you've expanded your nice 1-function interface to 4 functions.
+	Oh, and did I mention that TH04 pointlessly duplicates the first set of
+	wrapper functions for 3 of the 4 difficulties, which can't even be
+	explained with "debugging reasons"? That's 10 functions then… and probably
+	explains why I've procrastinated this feature for so long.
+</p><p>
+	At this point, I also finally stopped decompiling ZUN's original ASM just
+	for the sake of it. All these small TH05 functions would look horribly
+	unidiomatic, are identical to their decompiled TH04 counterparts anyway,
+	except for some unique constant… and, in the case of TH05's rank-based
+	speed tuning function, actually <i>become</i> undecompilable as soon as we
+	want to return a C++ class to preserve the semantic meaning of the return
+	value. Mainly, this is because Turbo C++ does not allow register
+	pseudo-variables like <code>_AX</code> or <code>_AL</code> to be cast into
+	class types, even if their size matches. Decompiling that function would
+	have therefore lowered the quality of the rest of the decompiled code, in
+	exchange for the additional maintenance and compile-time cost of another
+	translation unit. Not worth it – and for a TH05 port, you'd already have to
+	decompile all the rest of the bullet spawning code anyway!
+</p><hr /><p>
+	The only thing in there that <i>was</i> still somewhat worth being
+	decompiled was the pre-spawn clipping and collision detection function. Due
+	to what's probably a micro-optimization mistake, the TH05 version continues
+	to spawn a bullet even if it was spawned on top of the player. This might
+	sound like it has a different effect on gameplay… until you realize that
+	the player got hit in this case and will either lose a life or deathbomb,
+	both of which will cause all on-screen bullets to be <i>cleared</i> anyway.
+	So it's at most a visual glitch.
+</p><p>
+	But while we're at it, can we please stop talking about hitboxes? At least
+	in the context of TH04 and TH05 bullets. The actual collision detection is
+	described way better as a kill <i>delta</i> of 8×8 pixels between the
+	center points of the player and a bullet. You can distribute these pixels
+	to any combination of bullet and player "hitboxes" that make up 8×8. 4×4
+	around both the player and bullets? 1×1 for bullets, and 8×8 for the
+	player? All equally valid… or perhaps none of them, once you keep in mind
+	that other entity types might have different kill deltas. With that in
+	mind, the concept of a "hitbox" turns into just a confusing abstraction.
+</p><p>
+	The same is true for the 36×44 graze <s>box</s> delta. For some reason,
+	this one is not exactly  around the center of a bullet, but shifted to the
+	right by 2 pixels. So, a bullet can be grazed up to 20 pixels right of the
+	player, but only up to 16 pixels left of the player. uth05win also spotted
+	this… and rotated the deltas clockwise by 90°?!
+</p><hr /><p>
+	Which brings us to the bullet updates… for which I <i>still</i> had to
+	research a decompilation workaround, because
+	{{Blog_PostLink "2021-07-20" "P0148"}} turned out to not help at all?
+	Instead, the solution was to lie to the compiler about the true segment
+	distance of the popup function and declare its signature <code>far</code>
+	rather than <code>near</code>. This allowed ZUN to save that <span
+		class="hovertext"
+		title="Hint: There is no difference in the amount of x86 opcode bytes.">
+	<i>ridiculous</i> overhead</span> of 1 additional <code>far</code> function
+	call/return per frame, and those <i>precious</i> 2 bytes in the BSS segment
+	that he didn't have to spend on a segment value.
+	{{Blog_PostLink "2020-05-04" "Another function"}} that didn't have just a
+	single declaration in a common header file… really,
+	{{Blog_PostLink "2021-01-06" "how were these games even <i>built</i>???"}}
+</p><p>
+	The function itself is among the longer ones in both games. It especially
+	stands out in the indentation department, with 7 levels at its most
+	indented point – and that's the <i>minimum</i> of what's possible without
+	<code>goto</code>. Only two more notable discoveries there:<ol>
+		<li>Bullets are the only entity affected by Slow Mode. If the number of
+		bullets on screen is ≥ <code>(24 + (difficulty * 8) + rank)</code> in
+		TH04, or <code>(42 + (difficulty * 8))</code> in TH05, Slow Mode
+		reduces the frame rate by 33%, by waiting for one additional VSync
+		event every two frames.<br />
+		The code also reveals a second tier, with 50% slowdown for a slightly
+		higher number of bullets, but that conditional branch can never be
+		executed {{HTML_Emoji "zunpet"}}</li>
+		<li>Bullets must have been grazed in a previous frame before they can
+		be collided with. (Note how this does not apply to bullets that spawned
+		on top of the player, as explained earlier!)</li>
+	</ol>
+</p><p>
+	Whew… When did ReC98 turn into a full-on code review?! 😅 And after all
+	this, we're <i>still</i> not done with TH04 and TH05 bullets, with all the
+	special movement types still missing. That should be less than one push
+	though, once we get to it. Next up: Back to TH01 and Konngara! Now have fun
+	rewriting the Touhou Wiki Gameplay pages 😛
+</p>

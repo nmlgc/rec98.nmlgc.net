@@ -148,7 +148,7 @@ P0149	[89, 113, 115]	TH04/TH05 RE (Incompletely or wrongly RE'd bullet mechanics
 P0150	[91, 93, 95]	TH04 decompilation (Bullet spawning)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/05e4c4a...768251d	1
 P0151	[97, 108, 115]	TH04/TH05 decompilation (Bullet updates)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/768251d...4d24ca5	1
 P0152	[101, 104]	TH05 RE (Undecompilable bullet spawning code)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/4d24ca5...81fc861	1
-P0153	[105]	TH01 decompilation (Konngara, part 3/5.5: Patterns 2-4)	2021-08-22T19:19:27Z	nmlgc/ReC98/compare/624e0cb...d05c9ba	1
-P0154	[105]	TH01 decompilation (Konngara, part 4/5.5: Patterns 5-8)	2021-08-22T19:19:27Z	nmlgc/ReC98/compare/d05c9ba...031b526	1
-P0154	[114]	TH01 decompilation (Konngara, part 5/5.5: Patterns 9-12)	2021-08-22T19:19:27Z	nmlgc/ReC98/compare/031b526...9ad578e	1
-P0155	[114]	TH01 decompilation (Konngara, part 5.5/5.5: Main function + Sariel entrance animation + HARRY UP pelletss)	2021-08-22T19:19:27Z	nmlgc/ReC98/compare/9ad578e...499c6da	1
+P0153	[105]	TH01 decompilation (Konngara, part 3/5.5: Patterns 2-4)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/624e0cb...d05c9ba	1
+P0154	[105]	TH01 decompilation (Konngara, part 4/5.5: Patterns 5-8)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/d05c9ba...031b526	1
+P0155	[114]	TH01 decompilation (Konngara, part 5/5.5: Patterns 9-12)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/031b526...9ad578e	1
+P0156	[114]	TH01 decompilation (Konngara, part 5.5/5.5: Main function + Sariel entrance animation + HARRY UP pellets)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/9ad578e...4bc6405	1

@@ -165,6 +165,6 @@ func (b Blog) Posts(filters []string) chan Post {
 // PostLink returns a nicely formatted link to the given blog post.
 func PostLink(date string, text string) template.HTML {
 	return template.HTML(fmt.Sprintf(
-		`<a href="%s/%s">📝 %s</code></a>`, blogURLPrefix, date, text,
+		`<a href="%s/%s">📝 %s</a>`, blogURLPrefix, date, text,
 	))
 }

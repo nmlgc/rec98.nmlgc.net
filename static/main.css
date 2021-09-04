@@ -94,6 +94,14 @@ aside .icon-cell {
 	image-rendering: crisp-edges; /* For Firefox */
 }
 
+.gallery.fullres figure {
+	max-width: min(640px, 100%);
+}
+
+.gallery.fullres figure img {
+	min-height: 400px;
+}
+
 .gallery img, video.gallery, .gallery video {
 	max-width: 100%; /* Important for phones! */
 	box-shadow: var(--blog-shadow);

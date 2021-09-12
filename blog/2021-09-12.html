@@ -1,0 +1,50 @@
+{{$jist0x28 := printf "%v%v" .DatePrefix "jist0x28.com.zip" -}}
+
+<p>
+	Yup, there still are features that can be fully covered in a single push
+	and don't lead to sprawling blog posts. The giant
+	<span style="color: red">STAGE number</span> and
+	<span style="color: red">HARRY UP</span> messages, as well as the
+	flashing transparent 東方★靈異伝 at the beginning of each scene are drawn
+	by retrieving the glyphs for each letter from font ROM, and then "blitting"
+	them to text RAM by placing a colored fullwidth 16×16 square at every pixel
+	that is set in the font bitmap.<br />
+	And {{Blog_PostLink "2020-05-31" "once again"}}, ZUN's code there matches
+	the mediocre example code for the related hardware interrupt from the
+	<i>PC-9801 Programmers' Bible</i>. It's not 100% copied this time, but
+	definitely inspired by the code on page 121. Therefore, we can conclude
+	that these letters are probably only displayed as these 16× scaled glyphs
+	because that book had code on how to achieve this effect.
+</p><p>
+	ZUN "improved" on the example code by implementing a write-only cursor over
+	the entire text RAM that fills every 16×16 cell with a differently colored
+	space character, fully clearing the text RAM as a side effect. For once, he
+	even removed some redundancy here by using helper functions! It's all still
+	far from {{HTML_Tag "good-code" nil}} though. For example, there's a
+	function for filling 5 rows worth of cells, which he uses for both the top
+	and bottom margin of these letters. But since the bottom margin starts at
+	the 22nd line, the code writes past the 25th line and into the second TRAM
+	page. Good that this page is not used by either the hardware or the game.
+</p><p>
+	These cursor functions can actually write any fullwidth JIS code point to
+	text RAM… and seem to do that in a rather simplified way, because shouldn't
+	you set the most significant bit to indicate the right half of a fullwidth
+	character? That's what's written in the same book that ZUN copied all
+	functions out of, after all. 🤔 Researching this led me down quite the
+	rabbit hole, where I found an oddity in PC-98 text RAM rendering that no
+	single one of the widely-used PC-98 emulators gets completely right. I'm
+	<i>almost</i> done with the 2-push research into this issue, which will
+	include fixes for DOSBox-X and Neko Project II. The only thing I'm missing
+	to get these fully accurate is a screenshot of the output created by this binary, on any PC-98 model made by EPSON:
+	{{HTML_Download .HostedPath $jist0x28}}
+	That's the reason why this push was rather delayed. Thanks in advance to
+	anyone	who'd like to help with this!
+</p><hr /><p>
+	In maybe more disappointing news: Sariel is going to be delayed for a while
+	longer. 😕 The player- and HUD-related functions, which previously delayed
+	further progress there, turned out to call a lot of not yet RE'd functions
+	themselves. Seems as if we're doing most of the
+	{{HTML_Tag "card-flipping" nil}} code second, after all? Next up: Point and
+	bomb items, which at least are a significant step in terms of position
+	independence.
+</p>

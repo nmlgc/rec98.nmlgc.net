@@ -1,0 +1,70 @@
+<p>
+	Of course, Sariel's potentially bloated and copy-pasted code is blocked by
+	even more definitely bloated and copy-pasted code. It's TH01, what did you
+	expect? {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	But even then, TH01's item code is on a new level of software architecture
+	ridiculousness. First, ZUN uses distinct arrays for both types of items,
+	with their own caps of 4 for bomb items, and 10 for point items. Since that
+	obviously makes any type-related <code>switch</code> statement redundant,
+	he also used distinct <i>functions</i> for both types, with copy-pasted
+	boilerplate code. The main per-item update and render function <i>is</i>
+	shared though… and takes <i>every single accessed member of the item
+	structure as its own reference parameter</i>. Like, why, you have a
+	structure, right there?! That's one way to really practice the C++ language
+	concept of passing arbitrary structure fields by mutable reference…
+	{{HTML_Emoji "zunpet"}}<br />
+	To complete the unwarranted grand generic design of this function, it calls
+	back into per-type collision detection, drop, and collect functions with
+	another three reference parameters. Yeah, why use C++ virtual methods when
+	you can also implement the effectively same polymorphism functionality by
+	hand? Oh, and the coordinate clamping code in one of these callbacks could
+	only possibly have come from nested <code>min()</code> and
+	<code>max()</code> preprocessor macros. And that's how you extend such
+	dead-simple functionality to 1¼ pushes…
+</p><p>
+	Amidst all this jank, we've at least got a sensible item↔player hitbox this
+	time, with 24 pixels around Reimu's center point to the left and right, and
+	extending from 24 pixels above Reimu down to the bottom of the playfield.
+	It absolutely didn't look like that from the initial naive decompilation
+	though. Changing entity coordinates from left/top to center was one of the
+	better lessons from TH01 that ZUN implemented in later games, it really
+	makes collision detection code much more intuitive to grasp.
+</p><hr /><p>
+	The card flip code is where we find out some slightly more interesting
+	aspects about item drops in this game, and how they're controlled by a
+	hidden cycle variable: <ul>
+		<li>At the beginning of every 5-stage scene, this variable is set to a
+		random value in the [0..59] range</li>
+		<li>Point items are dropped at every multiple of 10</li>
+		<li>Every card flip adds 1 to its value after this <code>mod 10</code>
+		check</li>
+		<li>At a value of 140, the point item is replaced with a bomb item, but
+		only if no damaging bomb is active. In any case, its value is then
+		reset to 1.</li>
+	</ul>
+	Then again, score players largely ignore point items anyway, as card combos
+	simply have a much bigger effect on the score. With this, I should have
+	RE'd all information necessary to construct a tool-assisted score run,
+	though? The Orb↔card hitbox also makes perfect sense, with 24 pixels around
+	the center point of a card in every direction.
+</p><p>
+	The rest of the code confirms the
+	<a href="https://en.touhouwiki.net/wiki/Highly_Responsive_to_Prayers/Gameplay#Cards">card
+	flip score formula documented on Touhou Wiki</a>, as well as the way cards
+	are flipped by bombs: During every of the 90 "damaging" frames of the
+	140-frame bomb animation, there is a 75% chance to flip the card at the
+	<code>[bomb_frame % total_card_count_in_stage]</code> array index. Since
+	stages can only have up to 50 cards
+	{{Blog_PostLink "2020-11-30" "thanks to a bug"}}, even a 75% chance is high
+	enough to typically flip most cards during a bomb. Each of these flips
+	still only removes a single card HP, just like after a regular collision
+	with the Orb.<br />
+	Also, why are the card score popups rendered <i>before</i> the cards
+	themselves? That's two needless frames of flicker during that 25-frame
+	animation. Not all too noticeable, but still.
+</p><hr /><p>
+	And that's over 50% of <code>REIIDEN.EXE</code> decompiled as well! Next
+	up: More HUD update and rendering code… with a direct dependency on
+	<s>rank</s> pellet speed modifications?
+</p>

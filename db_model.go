@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 	"path/filepath"
@@ -197,7 +198,7 @@ type Transaction struct {
 	Time     time.Time
 	Customer CustomerID
 	Cents    int
-	Goal     string
+	Goal     template.HTML
 
 	// Calculated after the push table has loaded
 	Outstanding int

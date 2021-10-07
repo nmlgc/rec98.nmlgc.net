@@ -36,7 +36,7 @@ type ContribPerCustomer struct {
 
 // TransactionsPerGoal lists all contributions towards a specific goal.
 type TransactionsPerGoal struct {
-	Goal        string
+	Goal        template.HTML
 	PerCustomer []ContribPerCustomer
 }
 
@@ -53,7 +53,7 @@ func (t *TransactionsPerGoal) forCustomer(c CustomerID) *ContribPerCustomer {
 // TransactionBacklog returns all transactions that haven't been consumed by
 // pushes, sorted by goal and customer.
 func TransactionBacklog() (ret []TransactionsPerGoal) {
-	transactionsForGoal := func(goal string) *TransactionsPerGoal {
+	transactionsForGoal := func(goal template.HTML) *TransactionsPerGoal {
 		for i := range ret {
 			if ret[i].Goal == goal {
 				return &ret[i]

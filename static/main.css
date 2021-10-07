@@ -470,6 +470,10 @@ section.overall, section.game, section.binary {
 	color: gray;
 	font-size: 75%;
 }
+
+#fundlog .delayed {
+	color: darkgray;
+}
 /* ---------------- */
 
 /* Legal notice

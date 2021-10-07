@@ -199,6 +199,7 @@ type Transaction struct {
 	Customer CustomerID
 	Cents    int
 	Goal     template.HTML
+	Delayed  bool
 
 	// Calculated after the push table has loaded
 	Outstanding int

@@ -37,6 +37,7 @@ type ContribPerCustomer struct {
 // TransactionsPerGoal lists all contributions towards a specific goal.
 type TransactionsPerGoal struct {
 	Goal        template.HTML
+	Delayed     bool
 	PerCustomer []ContribPerCustomer
 }
 
@@ -67,6 +68,7 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 		t := transactions[i]
 		if t.Outstanding > 0 {
 			tfg := transactionsForGoal(t.Goal)
+			tfg.Delayed = tfg.Delayed || t.Delayed
 			fpc := tfg.forCustomer(t.Customer)
 			pushprice := pushprices.At(t.Time)
 			opf := OutstandingPushFraction{
@@ -170,8 +172,7 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 
 	backlog := TransactionBacklog()
 	for _, tpg := range backlog {
-		// Yes, a very ugly hack...
-		if tpg.Goal == "ReC98 having a good future" {
+		if tpg.Delayed {
 			continue
 		}
 		for _, fpc := range tpg.PerCustomer {

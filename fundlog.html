@@ -6,8 +6,9 @@
 <dl>
 	{{range $goal := $backlog -}}<dt>
 		<span class="emoji">🥅</span> Goal:
-	</dt><dd>
+	</dt><dd {{if $goal.Delayed}}class="delayed"{{end}}>
 		<strong>{{$goal.Goal}}</strong>
+		{{- if $goal.Delayed}}<small> (delayed)</small>{{end -}}
 		<ul>
 			{{range $perCustomer := $goal.PerCustomer}}<li>
 				{{$frac := $perCustomer.PushFraction -}}

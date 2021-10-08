@@ -94,7 +94,7 @@ Time	Customer	Cents	Goal	ID	Delayed
 2021-03-02T15:10:07Z	15	1000	TH04 reverse-engineering	T0093	0
 2021-03-05T10:50:26Z	0	5000	Anything (including tooling)	T0094	0
 2021-04-02T11:54:27Z	15	1000	TH04 reverse-engineering	T0095	0
-2021-04-05T11:55:43Z	0	5000	Anything (including tooling)	T0096	0
+2021-04-05T11:55:43Z	0	5000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research and emulator bugfixes (waiting on screenshots from Epson hardware)</a>	T0096	1
 2021-05-02T10:27:30Z	15	1000	TH04 reverse-engineering	T0097	0
 2021-05-05T12:19:18Z	0	5000	Anything (including tooling)	T0098	0
 2021-05-13T10:59:59Z	10	3000	TH01	T0099	0
@@ -115,11 +115,11 @@ Time	Customer	Cents	Goal	ID	Delayed
 2021-06-28T11:36:31Z	13	6000	TH01 > anything	T0114	0
 2021-06-28T13:39:52Z	2	2000	TH05 reverse-engineering	T0115	0
 2021-07-02T11:20:41Z	15	1000	Reverse-engineering	T0116	0
-2021-07-05T11:46:53Z	0	5000	Anything (including tooling)	T0117	0
+2021-07-05T11:46:53Z	0	5000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research and emulator bugfixes (waiting on screenshots from Epson hardware)</a>	T0117	1
 2021-07-13T11:26:48Z	10	3000	TH01	T0118	0
 2021-07-28T10:35:46Z	13	6000	TH01 > anything	T0119	0
 2021-08-02T15:16:08Z	15	1000	Reverse-engineering	T0120	0
-2021-08-05T10:10:32Z	0	5000	Anything (including tooling)	T0121	0
+2021-08-05T10:10:32Z	0	5000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research and emulator bugfixes (waiting on screenshots from Epson hardware)</a>	T0121	1
 2021-08-13T12:46:45Z	10	3000	TH01	T0122	0
 2021-08-28T12:27:55Z	13	6000	TH01 > anything	T0123	0
 2021-09-02T12:19:16Z	15	1000	Reverse-engineering	T0124	0

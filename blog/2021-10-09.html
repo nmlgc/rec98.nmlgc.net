@@ -1,0 +1,139 @@
+{{$vid := printf "%v%v" .FilePrefix "TH01-Particle-bug" -}}
+
+<p>
+	Nothing really noteworthy in TH01's stage timer code, just yet another HUD
+	element that is needlessly drawn into VRAM. Sure, ZUN applies his custom
+	boldfacing effect on top of the glyphs retrieved from font ROM, but he could
+	have easily installed those modified glyphs as gaiji.<br />
+	Well, OK, halfwidth gaiji aren't exactly well documented, and sometimes not
+	even correctly emulated
+	{{Blog_PostLink "2021-09-12" "due to the same PC-98 hardware oddity I was researching last month"}}.
+	I've reserved two of the pending anonymous "anything" pushes for the
+	conclusion of this research, just in case you were wondering why the
+	outstanding workload is now lower after the two delivered here.
+</p><p>
+	And since it doesn't seem to be clearly documented elsewhere: Every 2 ticks
+	on the stage timer correspond to 4 frames.
+</p><hr /><p>
+	So, TH01 <s>rank</s> pellet speed. The resident pellet speed value is a
+	factor ranging from a minimum of -0.375 up to a maximum of 0.5 (pixels per
+	frame), multiplied with the difficulty-adjusted base speed for each pellet
+	and added on top of that same speed. This multiplier is modified<ul>
+		<li>every time the stage timer reaches 0 and
+		<span style="color: red">HARRY UP</span> is shown (+0.05)</li>
+		<li>for every score-based extra life granted below the maximum number of
+		lives (+0.025)</li>
+		<li>every time a bomb is used (+0.025)</li>
+		<li>on every frame in which the <code>rand</code> value (shown in debug
+		mode) is evenly divisible by
+		<code>(1800 - (lives × 200) - (bombs × 50))</code> (+0.025)</li>
+		<li>every time Reimu got hit (set to 0 if higher, then -0.05)</li>
+		<li>when using a continue (set to -0.05 if higher, then -0.125)</li>
+	</ul>
+	Apparently, ZUN noted that these deltas couldn't be losslessly stored in an
+	IEEE 754 floating-point variable, and therefore didn't store the pellet
+	speed factor exactly in a way that would correspond to its gameplay effect.
+	Instead, it's stored similar to Q12.4 subpixels: as a simple integer,
+	pre-multiplied by 40. This results in a raw range of -15 to 20, which is
+	what the undecompiled ASM calls still use. When spawning a new pellet, its
+	base speed is first multiplied by that factor, and then divided by 40 again.
+	This is actually quite smart: The calculation doesn't need to be aware of
+	either Q12.4 <i>or</i> the 40× format, as
+	<code>((Q12﻿.﻿4 * factor×40) / factor×40)</code> still comes out as a
+	Q12.4 subpixel  even if all numbers are integers. The only limiting issue
+	here would be the potential overflow of the 16-bit multiplication at
+	unadjusted base speeds of more than 50 pixels per frame, but that'd be
+	<i>seriously</i> unplayable.<br />
+	So yeah, pellet speed modifications are indeed gradual, and don't just fall
+	into the coarse three "high, normal, and low" categories.
+</p><hr /><p>
+	That's ⅝ of P0160 done, and the continue and pause menus would make good
+	candidates to fill up the remaining ⅜… except that it seemed impossible to
+	figure out the correct compiler options for this code?<br />
+	The issues centered around the two effects of Turbo C++ 4.0J's
+	<code>-O</code> switch:<ol>
+		<li>Optimizing jump instructions: merging duplicate successive jumps
+		into a single one, and merging duplicated instructions at the end of
+		conditional branches into a single place under a single branch, which
+		the other branches then jump to</li>
+		<li>Compressing <code>ADD SP</code> and <code>POP CX</code>
+		stack-clearing instructions after multiple successive <code>CALL</code>s
+		to <code>__cdecl</code> functions into a single <code>ADD SP</code> with
+		the combined parameter stack size of all function calls</li>
+	</ol>
+	But how can the ASM for these functions exhibit #1 but <i>not</i> #2? How
+	can it be seemingly optimized <i>and</i> unoptimized at the same time? The
+	only option that gets somewhat close would be <code>-O- -y</code>, which
+	emits line number information into the .OBJ files for debugging. This
+	combination provides its own kind of #1, but these functions clearly need
+	the real deal.
+</p><p>
+	The research into this issue ended up consuming a full push on its own.
+	In the end, this solution turned out to be completely unrelated to compiler
+	options, and instead came from the effects of a compiler bug in a totally
+	different place. Initializing a local structure instance or array like
+	<pre>const uint4_t flash_colors[3] = { 3, 4, 5 };</pre>
+	always emits the <code>{ 3, 4, 5 }</code> array into the program's data
+	segment, and then generates a call to the internal <code>SCOPY@</code>
+	function which copies this data array to the local variable on the stack.
+	And as soon as this <code>SCOPY@</code> call is emitted, the <code>-O</code>
+	optimization #1 is disabled <i>for the entire rest of the translation
+	unit</i>?!<br />
+	So, any code segment with an <code>SCOPY@</code> call followed by
+	<code>__cdecl</code> functions must strictly be decompiled from top to
+	bottom, mirroring the original layout of translation units. That means no
+	TH01 continue and pause menus before we haven't decompiled the bomb
+	animation, which contains such an <code>SCOPY@</code> call. 😕<br />
+	Luckily, TH01 is the only game where this bug leads to significant
+	restrictions in decompilation order, as later games predominantly use the
+	<code>pascal</code> calling convention, in which each function itself clears
+	its stack as part of its <code>RET</code> instruction.
+</p><hr /><p>
+	What now, then? With 51% of <code>REIIDEN.EXE</code> decompiled, we're
+	slowly running out of small features that can be decompiled within ⅜ of a
+	push. Good that I haven't been looking a lot into <code>OP.EXE</code> and
+	<code>FUUIN.EXE</code>, which pretty much <i>only</i> got easy pieces of
+	code left to do. Maybe I'll end up finishing their decompilations entirely
+	within these smaller gaps?<br /> I still ended up finding one more small
+	piece in <code>REIIDEN.EXE</code> though: The particle system, seen in the
+	Mima fight.
+</p><div class="gallery">
+	<video controls loop>
+		<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
+		<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+		(Video of the particle system seen in the TH01 Mima fight that demonstrates its off-by-one bug; <a href="{{$vid}}.webm">download here</a>)
+	</video>
+</div><p>
+	I like how everything about this animation is contained within a single
+	function that is called once per frame, but ZUN could have really
+	consolidated the spawning code for new particles a bit. In Mima's fight,
+	particles are only spawned from the top and right edges of the screen, but
+	the function in fact contains unused code for all other 7 possible
+	directions, written in quite a bloated manner. This wouldn't feel quite as
+	{{HTML_Tag "unused" nil}} if ZUN had used an angle parameter instead…
+	{{HTML_Emoji "thonk"}} Also, why unnecessarily waste another 40 bytes of
+	the BSS segment?
+</p><p>
+	But wait, what's going on with the very first spawned particle that just
+	stops near the bottom edge of the screen in the video above? Well, even in
+	such a simple and self-contained function, ZUN managed to include an
+	off-by-one error. This one then results in an out-of-bounds array access on
+	the 80th frame, where the code attempts to spawn a 41<sup>st</sup>
+	particle. If the first particle was unlucky to be both slow enough and
+	spawned away far enough from the bottom and right edges, the spawning code
+	will then kill it off before its unblitting code gets to run, leaving its
+	pixel on the screen until something else overlaps it and causes it to be
+	unblitted.<br />
+	Which, during regular gameplay, will quickly happen with the Orb, all the
+	pellets flying around, and your own player movement. Also, the RNG can
+	easily spawn this particle at a position and velocity that causes it to
+	leave the screen more quickly. Kind of impressive how ZUN laid out the
+	<a href="https://en.wikipedia.org/wiki/ AoS_and_SoA#Structure_of_Arrays">structure
+	of arrays</a> in a way that ensured practically no effect of this bug on the
+	game; this glitch could have easily happened <i>every</i> 80 frames instead.
+	He <i>almost</i> got close to all bugs canceling out each other here!
+	{{HTML_Emoji "godzun"}}
+</p><p>
+	Next up: The player control functions, including the second-biggest function
+	in all of PC-98 Touhou.
+</p>

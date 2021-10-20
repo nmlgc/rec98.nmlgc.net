@@ -1,0 +1,458 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1329" height="1009"
+	viewBox="-0.5 -0.5 1329 1009" xmlns:v="https://vecta.io/nano">
+	<style>
+		<![CDATA[
+		text {
+			font-family: sans-serif;
+			font-size: 12px;
+		}
+
+		image {
+			image-rendering: pixelated; /* For Chrome */
+			image-rendering: crisp-edges; /* For Firefox */
+		}
+
+		g {
+			stroke-miterlimit: 10
+		}
+
+		.o {
+			fill: none
+		}
+
+		.p {
+			fill: #000
+		}
+
+		.q {
+			fill: #aaa
+		}
+
+		.t {
+			text-anchor: middle
+		}
+
+		.v {
+			stroke: #000
+		}
+
+		.y {
+			stroke: #aaa
+		}
+
+		.z {
+			stroke-dasharray: 3 3
+		}
+
+		.AB {
+			text-anchor: end
+		}
+
+		.AC {
+			fill: #f8cecc
+		}
+
+		.AD {
+			stroke: #b85450
+		}
+
+		.AE {
+			fill: #ccc
+		}
+
+		.AF {
+			fill: #60a917;
+			stroke: #2d7600
+		}
+
+		.AG {
+			fill: #fff
+		}
+		]]>
+	</style>
+	<g class="y">
+		<path d="M830 240v20.03q0 10-10 10h-70q-10 0-10-10v-22q0-10-6.82-10h-6.81" class="o z AA" />
+		<path d="M721.12 228.03l7-3.5-1.75 3.5 1.75 3.5z" class="q" />
+	</g><text x="831.5" y="262.5" class="q r">Frame 23</text>
+	<rect x="780" y="180" width="200" height="60" rx="9" class="AC AD" /><text x="880" y="205.811" class="p t">
+		<tspan x="880" y="205.811">Swing</tspan>
+		<tspan x="880" y="220.811">(not deflecting)</tspan>
+	</text>
+	<g class="y">
+		<path d="M900 60v50.03q0 10-10 10H700q-10 0-10 10v43" class="o z AA" />
+		<use xlink:href="#A" class="q" />
+	</g><text x="897.5" y="82.5" class="q AB">Frame 2</text>
+	<rect x="780" width="200" height="60" rx="9" class="AC AD" /><text x="880.12" y="33.311" class="p t">Shoot
+		(stationary)</text>
+	<g class="y">
+		<path d="M150 540v-19.97q0-10 10-10h140q10 0 10 10v13.6" class="o z AA" />
+		<use xlink:href="#A" x="-380" y="360.6" class="q" />
+	</g><text x="229.5" y="527.5" class="q AB">Frame 12</text>
+	<rect y="540" width="200" height="60" rx="9" class="AF" /><text x="99.5" y="573.5" class="t AG">Slide,
+		combo enabled</text>
+	<rect x="260" y="360" width="200" height="60" rx="9" class="AC AD" /><text x="359.5" y="393.5"
+		class="p t">Slide, frame 12</text>
+	<g class="y">
+		<path
+			d="M1090 360l.02-49.97q.01-10-9.99-10h-310q-10 0-10-10v-17c3.9 0 3.9-6 0-6h0v-47q0-10-10-10.01l-23.66-.02"
+			class="o z AA" />
+		<path d="M721.12 210l7-3.49-1.75 3.49 1.75 3.51z" class="q" />
+	</g><text x="1087.5" y="346.5" class="q AB">Frame 19</text>
+	<rect x="1040" y="360" width="200" height="60" rx="9" class="AC AD" /><text x="1139.5" y="393.5"
+		class="p t">8-shot combo (not deflecting)</text>
+	<g class="y">
+		<path d="M620 540v-69.97q0-10-10-10H510q-10 0-10-10v-110q0-10 10-10h100q10 0 10-10v-73.66" class="o z AA" />
+		<use xlink:href="#B" class="q" />
+	</g><text x="621.5" y="531.5" class="q r">Frame 13</text>
+	<rect x="520" y="540" width="200" height="60" rx="9" class="AC AD" /><text x="619.622" y="574.474"
+		class="p t">Slide kick</text>
+	<g class="v">
+		<path d="M670 720v-19.97q0-10 10-10h140q10 0 10 10v13.6" class="o AA" />
+		<use xlink:href="#A" x="140" y="540.6" />
+	</g><text x="667.5" y="706.5" class="p AB">Z and X released</text>
+	<g class="v">
+		<path d="M570 720v-49.97q0-10-10-10h-50q-10 0-10-10v-140q0-10 10-10h50q10 0 10-10v-27c3.9 0 3.9-6 0-6h0v-30.66"
+			class="o AA" />
+		<use xlink:href="#B" x="-50" y="180" />
+	</g><text x="567.5" y="679.5" class="p AB">Z or X held</text>
+	<rect x="520" y="720" width="200" height="60" rx="9" class="AC AD" /><text x="619.81" y="753.311"
+		class="p t">Flip kick (#1), frame 20</text>
+	<g class="v">
+		<path d="M1140 780v50.03q0 10-10 10H110q-10 0-10 10v43.6" class="o AA" />
+		<use xlink:href="#A" x="-590" y="720.6" />
+	</g><text x="1127.5" y="836.5" class="p AB">Opposite direction + X</text>
+	<g class="v">
+		<path d="M1190 720v-49.97q0-10-10-10H630q-10 0-10-10v-43.66" class="o AA" />
+		<use xlink:href="#B" y="360" />
+	</g><text x="1187.5" y="706.5" class="p AB">Same direction + X</text>
+	<g class="v">
+		<path d="M1190 780v80.03q0 10-10 10H364q-10 0-10 10v14.62" class="o AA" />
+		<use xlink:href="#A" x="-336" y="721.62" />
+	</g><text x="1139.5" y="866.5" class="p t">No direction + X</text>
+	<g class="v">
+		<path d="M1240 750l30.03.02q10 .01 10-9.99v-270q0-10-10-10h-330q-10 0-10.01-10l-.02-23.66"
+			class="o AA" />
+		<use xlink:href="#E" />
+	</g><text x="1250.5" y="746.5" class="p t">Z</text>
+	<g class="y">
+		<path
+			d="M1090 720v-19.97q0-10-10-10h-50q-10 0-10-10v-17c3.9 0 3.9-6 0-6h0v-167q0-10-10-10h-80q-10 0-10-10v-5q0-5-10-5H770q-10 0-10-10v-5q0-5-10-5h-5q-5 0-5-10v-120q0-10-10-10h-30.57q-10 0-10.01-10l-.02-42.52"
+			class="o z AA" />
+		<use xlink:href="#B" x="69.4" y="1.14" class="q" />
+	</g>
+	<rect x="1040" y="720" width="200" height="60" rx="9" class="AC AD" /><text x="1139.821" y="753.311"
+		class="p t">Flip kick (#1), frame 28</text>
+	<g class="v">
+		<use xlink:href="#C" class="o AA" />
+		<use xlink:href="#B" x="210" y="720" />
+	</g><text x="749.5" y="996.5" class="p t">Z and X released</text>
+	<g class="v">
+		<path
+			d="M719.2 935.28H730q10 .01 10-9.99v-52.26c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-144c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-187q0-10-10-10H630q-10 0-10-10v-23.66"
+			class="o AA" />
+		<use xlink:href="#B" y="180" />
+	</g><text x="737.5" y="892.5" class="p AB">Z or X held</text>
+	<rect x="520" y="900" width="200" height="60" rx="9" class="AC AD" /><text x="619.81" y="933.311"
+		class="p t">Flip kick (#2), frame 20</text>
+	<rect y="360" width="200" height="60" rx="9" class="AC AD" /><text x="100.129" y="393.861" class="p t">Slide,
+		frame 5</text>
+	<g class="y">
+		<path d="M100 780v20.03q0 10 10 10h500q10 0 10-10v-13.66" class="o z AA" />
+		<use xlink:href="#B" y="540" class="q" />
+	</g><text x="97.5" y="804.5" class="q AB">Frame 20</text>
+	<rect y="720" width="200" height="60" rx="9" class="v AE" /><text x="99.933" y="746.268" class="p t">
+		<tspan x="99.933" y="746.268">Stationary flip</tspan>
+		<tspan x="99.933" y="761.268">kick (#1)</tspan>
+	</text>
+	<g class="y">
+		<path d="M410 360v-79.97q0-10 10-10h122q10 0 10-10v-14.44" class="o z AA" />
+		<use xlink:href="#B" x="-68" y="-.78" class="q" />
+	</g><text x="407.5" y="347.5" class="q AB">Frame 12</text>
+	<rect x="260" y="360" width="200" height="60" rx="9" fill="#a20025" stroke="#6f0000" /><text x="360.149"
+		y="393.861" class="t AG">Slide, combo disabled</text>
+	<g class="v">
+		<path d="M652.4 178.2v-78.17q0-10 10-10H740q10 0 10-10v-40q0-10 10-10.01l13.63-.01" class="o AA" />
+		<path d="M778.88 30l-6.99 3.51 1.74-3.5-1.75-3.5z" />
+	</g><text x="653.5" y="171.5" class="p r">Z</text>
+	<rect x="520" y="180" width="200" height="60" rx="9" stroke-width="2" class="v AC" /><text x="620.167" y="214.474"
+		class="p t">Stand still</text>
+	<g class="y">
+		<path d="M460 750h53.63" class="o z AA" />
+		<path d="M518.88 750l-7 3.5 1.75-3.5-1.75-3.5z" class="q" />
+	</g><text x="489.5" y="767.5" class="q t">Frame 20</text>
+	<rect x="260" y="720" width="200" height="60" rx="9" class="v AE" /><text x="359.739" y="746.268" class="p t">
+		<tspan x="359.739" y="746.268">Moving flip</tspan>
+		<tspan x="359.739" y="761.268">kick (#1)</tspan>
+	</text>
+	<g class="y">
+		<path d="M880 360v-20q0-10 10-10h197c0-4 6-4 6 0h0 87q10 0 10 10l-0 13.6" class="o z AA" />
+		<use xlink:href="#A" x="500" y="180.6" class="q" />
+	</g><text x="877.5" y="347.5" class="q AB">Frame 4</text>
+	<rect x="780" y="360" width="200" height="60" rx="9" class="v AE" /><text x="880" y="385.811" class="p t">
+		<tspan x="880" y="385.811">8-shot combo</tspan>
+		<tspan x="880" y="400.811">(deflecting)</tspan>
+	</text>
+	<g class="y">
+		<path d="M460 930h53.63" class="o z AA" />
+		<path d="M518.88 930l-7 3.5 1.75-3.5-1.75-3.5z" class="q" />
+	</g><text x="489.5" y="947.5" class="q t">Frame 20</text>
+	<rect x="260" y="900" width="200" height="60" rx="9" class="v AE" /><text x="359.739" y="926.268" class="p t">
+		<tspan x="359.739" y="926.268">Moving flip</tspan>
+		<tspan x="359.739" y="941.268">kick (#2)</tspan>
+	</text>
+	<g class="y">
+		<path d="M410 180v-9.99q0-9.98 10-9.98h122q10 0 10 6.29v6.29" class="o z AA" />
+		<use xlink:href="#A" x="-138" y="-.42" class="q" />
+	</g>
+	<g class="v">
+		<path d="M310 180V66.37" class="o AA" />
+		<use xlink:href="#B" x="-310" y="-180" />
+	</g><text x="311.5" y="175.5" class="p r">Z</text>
+	<rect x="260" y="180" width="200" height="60" rx="9" class="AC AD" /><text x="359.555" y="213.311"
+		class="p t">Move left or right</text>
+	<rect y="180" width="200" height="60" rx="9" class="AC AD" /><text x="99.924" y="214.474"
+		class="p t">Slide</text>
+	<g class="y">
+		<path d="M410 60v40.03q0 10 10 10h155.2q10 0 10 10v54.62" class="o z AA" />
+		<use xlink:href="#A" x="-104.8" y="1.62" class="q" />
+	</g><text x="407.5" y="83.5" class="q AB">Frame 1</text>
+	<rect x="260" width="200" height="60" rx="9" class="AC AD" /><text x="360.12" y="33.311" class="p t">Shoot
+		(moving)</text>
+	<rect x="780" y="540" width="200" height="60" rx="9" class="v AE" /><text x="879.933" y="566.268" class="p t">
+		<tspan x="879.933" y="566.268">Stationary flip</tspan>
+		<tspan x="879.933" y="581.268">kick (#3)</tspan>
+	</text>
+	<g class="y">
+		<use xlink:href="#C" x="260" class="o z" />
+		<use xlink:href="#B" x="470" y="720" class="q" />
+	</g><text x="927.5" y="982.5" class="q AB">Frame 28</text>
+	<rect x="780" y="900" width="200" height="60" rx="9" class="AF" /><text x="879.956" y="933.311"
+		class="t AG">Flip kick (#2), combo continued</text>
+	<g class="v">
+		<path d="M1240 945h50q10 0 10-10V450 q0-10-10-10h-260q-10 0-10-10v-30q0-10-10-10l-23.66-.02" class="o" />
+		<use xlink:href="#D" x="260" y="180" />
+	</g><text x="1250.5" y="941.5" class="p t">Z</text>
+	<g class="v">
+		<path
+			d="M1040 915h-10q-10 0-10-10v-31.97c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-137q0-10-10-10H890q-10 0-10-10v-17c3.9 0 3.9-6 0-6h0v-50.66"
+			class="o" />
+		<use xlink:href="#B" x="260" y="360" />
+	</g><text x="1021.5" y="892.5" class="p r">Opposite direction + X</text>
+	<g class="v">
+		<path d="M1240 915h10q10 0 10-10V753.01c3.9 0 3.9-6 0-6h0V580.03q0-10-6.82-10.01l-6.81-.01" class="o" />
+		<path d="M1241.12 570l7-3.49-1.75 3.5 1.74 3.5z" />
+	</g><text x="1257.5" y="891.5" class="p AB">No direction + X</text>
+	<g class="v">
+		<path
+			d="M1140 960v30.03q0 10 10 10h160q10 0 10-10v-350q0-10-8.5-10h-8.5c0-3.9-6-3.9-6 0h0-14c0-3.9-6-3.9-6 0h0-14c0-3.9-6-3.9-6 0h0-234c0-3.9-6-3.9-6 0h0-134c0-3.9-6-3.9-6 0h0-134c0-3.9-6-3.9-6 0h0-57q-10 0-10-10v-13.66"
+			class="o" />
+		<use xlink:href="#B" x="50" y="360" />
+	</g><text x="1229.5" y="996.5" class="p t">Same direction + X</text>
+	<g class="y">
+		<path
+			d="M1040 945h-30q-10 0-10-10v-61.97c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-144c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-117q0-10-10-10H743c0-3.9-6-3.9-6 0h0-57q-10 0-10-10v-5q0-5-10-5h-37c0-3.9-6-3.9-6 0h0-44c0-3.9-6-3.9-6 0h0-77q-10 0-10-10v-197c3.9 0 3.9-6 0-6h0V233q0-10 10-10h23.23"
+			class="o z" />
+		<path d="M518.48 223l-7 3.5 1.75-3.5-1.75-3.5z" class="q" />
+	</g>
+	<rect x="1040" y="900" width="200" height="60" rx="9" class="AC AD" /><text x="1139.821" y="933.311"
+		class="p t">Flip kick (#2), frame 28</text>
+	<g class="y">
+		<path d="M100 960v30.03q0 10 10 10h450q10 0 10-10v-23.66" class="o z" />
+		<use xlink:href="#B" x="-50" y="720" class="q" />
+	</g><text x="97.5" y="981.5" class="q AB">Frame 20</text>
+	<rect y="900" width="200" height="60" rx="9" class="v AE" /><text x="99.933" y="926.268" class="p t">
+		<tspan x="99.933" y="926.268">Stationary flip</tspan>
+		<tspan x="99.933" y="941.268">kick (#2)</tspan>
+	</text>
+	<g class="v">
+		<path d="M520 195h-53.63" class="o" />
+		<path d="M461.12 195l7-3.5-1.75 3.5 1.75 3.5z" />
+	</g><text x="489.5" y="212.5" class="p t">← or →</text>
+	<g class="v">
+		<path d="M720 195h20q10 0 10-10v-24.97q0-10 10-10h410q10 0 10 10v13.6" class="o" />
+		<use xlink:href="#A" x="490" y=".6" />
+	</g><text x="739.5" y="191.5" class="p t">X</text>
+	<g class="y">
+		<path d="M1140 240v20.03q0 10-10 10H940q-10 0-10-10v-13.66" class="o z" />
+		<use xlink:href="#B" x="310" class="q" />
+	</g><text x="1141.5" y="257.5" class="q r">
+		<tspan x="1141.5" y="257.5">Frame 15 (Easy)</tspan>
+		<tspan x="1141.5" y="271.25">Frame 12 (Normal)</tspan>
+		<tspan x="1141.5" y="285">Frame 10 (Hard)</tspan>
+		<tspan x="1141.5" y="298.75">Frame 8 (Lunatic)</tspan>
+	</text>
+	<rect x="1040" y="180" width="200" height="60" rx="9" class="v AE" /><text x="1140" y="205.811" class="p t">
+		<tspan x="1140" y="205.811">Swing</tspan>
+		<tspan x="1140" y="220.811">(deflecting)</tspan>
+	</text>
+	<g class="v">
+		<path d="M150 420v20.03q0 10 10 10h190q10 0 10-10v-13.66" class="o" />
+		<use xlink:href="#B" x="-260" y="180" />
+	</g><text x="151.5" y="441.5" class="p r">Z or X held</text>
+	<g class="v">
+		<path d="M50 420v113.63" class="o" />
+		<use xlink:href="#A" x="-640" y="360.6" />
+	</g><text x="51.5" y="453.5" class="p r">Z and X released</text>
+	<g class="v">
+		<path d="M260 210h-53.63" class="o" />
+		<path d="M201.12 210l7-3.5-1.75 3.5 1.75 3.5z" />
+	</g><text x="229.5" y="227.5" class="p t">X</text>
+	<g class="y">
+		<path d="M50 240v113.63" class="o z" />
+		<use xlink:href="#A" x="-640" y="180.6" class="q" />
+	</g><text x="51.5" y="262.5" class="q r">Frame 5</text>
+	<g class="v">
+		<path
+			d="M410 540v-9.99q0-9.98 10-9.98h77c0-3.9 6-3.9 6 0h0 114c0-3.9 6-3.9 6 0h0 114c0-3.9 6-3.9 6 0h0 66.03q10 0 10.03-8.5l.03-8.5c3.9.01 3.92-5.99.02-6h0l.13-34c3.9.01 3.92-5.99.02-6h0l-.23-30.18"
+			class="o" />
+		<use xlink:href="#B" x="199.03" y="180.48" />
+	</g><text x="411.5" y="538.5" class="p r">Z</text>
+	<g class="v">
+		<path d="M360 600v20.03q0 10 10 10h127c0-3.9 6-3.9 6 0h0 57q10 0 10-10v-13.66" class="o" />
+		<use xlink:href="#B" x="-50" y="360" />
+	</g><text x="361.5" y="617.5" class="p r">Same direction + X</text>
+	<g class="y">
+		<path
+			d="M360 540v-49.97q0-10-10-10H240q-10 0-10-10v-17c3.9 0 3.9-6 0-6h0v-137q0-10 10-10h167c0-3.9 6-3.9 6 0h0 64c0-3.9 6-3.9 6 0h0 93q10 0 10-10v-42.88"
+			class="o z" />
+		<use xlink:href="#B" x="-34" y=".78" class="q" />
+	</g>
+	<g class="v">
+		<path d="M260 570l-20 .02q-10 .01-10 10.01v70q0 10-10 10H110q-10 0-10 10v43.6" class="o" />
+		<use xlink:href="#A" x="-590" y="540.6" />
+	</g><text x="159.5" y="656.5" class="p t">Opposite direction + X</text>
+	<g class="v">
+		<path d="M310 600v50.03q0 10 10 10h30q10 0 10 10v43.6" class="o" />
+		<use xlink:href="#A" x="-330" y="540.6" />
+	</g><text x="357.5" y="677.5" class="p AB">No direction + X</text>
+	<rect x="260" y="540" width="200" height="60" rx="9" class="AC AD" /><text x="360.205" y="573.861"
+		class="p t">Slide, frame 12</text>
+	<g class="y">
+		<path d="M652 360l.38-114.05" class="o z" />
+		<path d="M652.4 240.7l3.47 7.01-3.49-1.76-3.51 1.74z" class="q" />
+	</g><text x="653.5" y="347.5" class="q r">Frame 28</text>
+	<rect x="520" y="360" width="200" height="60" rx="9" fill="#a20025" stroke="#6f0000" /><text x="619.956"
+		y="393.311" class="t AG">Flip kick, combo disabled</text>
+	<g class="y">
+		<path
+			d="M1140 540v-9.99q0-9.98-10-9.98h-107c0-3.9-6-3.9-6 0h0-14c0-3.9-6-3.9-6 0h0-107q-10 0-10-8.5v-8.5c3.9 0 3.9-6 0-6h0v-34c3.9 0 3.9-6 0-6h0v-8.5q0-8.5-10-8.5h-47.67c0-3.9-6-3.9-6 0h0H770q-10 0-10-10v-30q0-10-8.5-10.01H743c0-3.9-6-3.91-6-.01h0l-10.63-.01"
+			class="o z" />
+		<path d="M721.12 390l7-3.49-1.75 3.49 1.75 3.51z" class="q" />
+	</g><text x="1141.5" y="523.5" class="q r">Frame 20</text>
+	<rect x="1040" y="540" width="200" height="60" rx="9" class="v AE" /><text x="1139.5" y="566.268" class="p t">
+		<tspan x="1139.5" y="566.268">Moving flip</tspan>
+		<tspan x="1139.5" y="581.268">kick (#3)</tspan>
+	</text>
+	<g class="y">
+		<path d="M880 780v20.03q0 10 10 10h107c0-3.9 6-3.9 6 0h0 14c0-3.9 6-3.9 6 0h0 57q10 0 10-10v-13.66"
+			class="o z" />
+		<use xlink:href="#B" x="470" y="540" class="q" />
+	</g><text x="877.5" y="794.5" class="q AB">Frame 28</text>
+	<rect x="780" y="720" width="200" height="60" rx="9" class="AF" /><text x="879.956" y="753.311"
+		class="t AG">Flip kick (#1), combo continued</text>
+	<g class="y">
+		<path d="M620 60v113.63" class="o z" />
+		<use xlink:href="#A" x="-70" y=".6" class="q" />
+	</g><text x="617.5" y="83.5" class="q AB">Frame 140</text>
+	<rect x="520" width="200" height="60" rx="9" class="v AE" /><text x="620" y="25.811" class="p t">
+		<tspan x="620" y="25.811">Bomb</tspan>
+		<tspan x="620" y="40.811">(not possible during #1)</tspan>
+	</text>
+	<g class="y">
+		<path
+			d="M780 570l-10 .01q-10 .02-10-9.98v-37c3.9 0 3.9-6 0-6h0v-14c3.9 0 3.9-6 0-6h0v-27q0-10-10-10h-5q-5 0-5-10v-5q0-5-10-5h-50q-10 0-10-6.83v-6.83"
+			class="o z" />
+		<use xlink:href="#B" x="50" y="180" class="q" />
+	</g><text x="761.5" y="532.5" class="q r">Frame 20</text>
+	<defs>
+		<path id="A" d="M690 178.28l-3.5-7 3.5 1.75 3.5-1.75z" />
+		<path id="B" d="M620 241.12l3.5 7-3.5-1.75-3.5 1.75z" />
+		<path id="C" d="M670 960v30.03q0 10 10 10h140q10 0 10-10v-23.66" />
+		<path id="D" d="M721.12 210l7-3.5-1.75 3.5 1.75 3.5z" />
+		<path id="E" d="M930 421.12l3.51 7-3.51-1.75-3.49 1.75z" />
+	</defs>
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwYGBg8AAAoAAAAAAA/fkatQAAAAF0Uk5TAEDm2GYAAAEOSURBVHic5ZJNjoUgEISbBXvLxAPoxAPM9HACnT1I6v5XmYCPBDq+E7zaiPVR/WMU+XSJiAOA6dF9Is23pLmWOAxqtria0BCF333GOYdJfNZIahqLlWMmqRpdn5jKkSRzAe22gysPf4PU7tfeRbxu0DeoZ64bSbt5BdjJwa8v/loxb4z92g0Acw9eYc/9WucxIW1abnsP0AB57Xakd0BeX4R8k3gCqfpXtL7HQjLBAs8EpoR1GfcoVZBKpgfTDdJC1bSMhaIn05wtENYmW9ZgQCzFfjZqwAik/Dv6pTnMdl6vRYGbAc6r/h6qytWCrOfxd2q8bBPoeeip0ZseDjyPfB5BrODJDKj1XxTP/qB/u1FEhP1WShUAAAAASUVORK5CYII="
+		x="1045.5" y="186" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwYGBg8AAAoAAAAAAA/fkatQAAAAF0Uk5TAEDm2GYAAAERSURBVHja5ZPBbcYgDIXNgTtO5QFClQXqMEEZAELf/qtUQCPFqL/Ue9/N/rCfjYDov4scM3N4kV/ZM8/8Km8IGwV7/g3km46K8ASigNdUyHEIN3HMwasCSD16mneQAKADF54uMkHpUXj6T3BgRMFsAiBuAzhj44CLJ7DyiDtvxzBxFux8Axcs2I5rjmVq/BXvee1YdB03IOJXwAj4uZPfwVpB5EcnyJonzwKg8lpCdWMRsKzNqPbzwnOA5x5VVFFlAreAtAtQvG1WpWmKw8IuU7kp4ntv5O20e0v6of0FLWtENO1awQZVPT9Vi33v9fCav86saQG+eM16ZrXfoKudOZ0Z688hUuYElLVi/BL6i74BF+5CO1zM69kAAAAASUVORK5CYII="
+		x="1186.5" y="186" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAGbSURBVHictZJNiuQwDIUlCrz2w+AD1KLWGQI5gfAJZvZOJ7z7H2GQbQ3d2Y8WRUqfnv4skf9l7CKJT6/7KHJbf/qFZE83QyISXzzYSWvrbyWX+Cokb1tx53kskOjWV40EcGadfoY+oZJt+Su5Mc04BXm3Tp4ofJPbS2YVraQZgYry9f5ceGWydREXmLVr547j63NBsvSbA5iZ0ScgeaFsYy0KFzjgCRRyvw4R6QGskQBw8FgbUaSRylyAUrmGEmSJXCi8fgAZmkYeFyZI7AMIb++4HphA6/szgT+EtcruoNJ/BSKSnTjwgHO9ArIoRNIfa3VIwS4L5JwH4Fxx6qsrBeDA7nkiSaLdofht5i+XeoCoMWb8DjSPrtIYsfv2Vg3N84HvJ/A8bre/Iv3EHoDWiDqKrCNbIFnjWeMqY72jyAJhUV3YyCoa7igy7+3n/a9cT3uCZ66w/D0EORxzdfGZde7RHVqybJEIPuNSYEMAFyOqoIgGGBlWY4pd9BVghg6/5k3wUnkQlVyyll+x1zAXlBd2eS7Ct5n1n/cvNjp9uTq3QLsAAAAASUVORK5CYII="
+		x="5.5" y="726" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAGbSURBVHictZJNiuQwDIUlCrz2w+AD1KLWGQI5gfAJZvZOJ7z7H2GQbQ3d2Y8WRUqfnv4skf9l7CKJT6/7KHJbf/qFZE83QyISXzzYSWvrbyWX+Cokb1tx53kskOjWV40EcGadfoY+oZJt+Su5Mc04BXm3Tp4ofJPbS2YVraQZgYry9f5ceGWydREXmLVr547j63NBsvSbA5iZ0ScgeaFsYy0KFzjgCRRyvw4R6QGskQBw8FgbUaSRylyAUrmGEmSJXCi8fgAZmkYeFyZI7AMIb++4HphA6/szgT+EtcruoNJ/BSKSnTjwgHO9ArIoRNIfa3VIwS4L5JwH4Fxx6qsrBeDA7nkiSaLdofht5i+XeoCoMWb8DjSPrtIYsfv2Vg3N84HvJ/A8bre/Iv3EHoDWiDqKrCNbIFnjWeMqY72jyAJhUV3YyCoa7igy7+3n/a9cT3uCZ66w/D0EORxzdfGZde7RHVqybJEIPuNSYEMAFyOqoIgGGBlWY4pd9BVghg6/5k3wUnkQlVyyll+x1zAXlBd2eS7Ct5n1n/cvNjp9uTq3QLsAAAAASUVORK5CYII="
+		x="265.5" y="726" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAF+SURBVHicdZJBasUwDEQVCl5bfPC+XXQfAjmB6xu0a/vHzP2PUCR7IP60WoREzyONI4kwRC3kHpFpi8isyKbMx5XYO4vYS6pUqPCcSEDTREncRt4eACh2PXsFAC1Rvo0jMUYJvQDKJqPQZgZCzsBVF4Eres4FqHeBHwg9mwSLwFw5KAT0YGazxSylsjFvLZg3wCYSTFHoiQoA8N683TyO/vX903NGYyXmczZQsC/AfQ6rKxg+/XIEkT4J2gLcUAGQKtIKkDNUm2J/BTBF07TPmRMoUMO1a9IVqKJKwKXpcYJARJom+2zQdGJMKs7f58e2U9MTcA3/rGPr8HzHwyQreOznxydOA/f9huoDHxhNOL5xF4YQjB1kuCsOClNyHdyr6beKhARcux5zfeak3JSNQ2VKWMsunoDm3e61Zt/j7awlV9ayzoMdKj33UYuVnFRbjH73ZSAO2rGsltmyRxFuL30JDKDwHGtZsrriNUSeVaTXv0Eo/wDgNTl/cZiCX9N/f9N/iEYSAAAAAElFTkSuQmCC"
+		x="5.5" y="906" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAF+SURBVHicdZJBasUwDEQVCl5bfPC+XXQfAjmB6xu0a/vHzP2PUCR7IP60WoREzyONI4kwRC3kHpFpi8isyKbMx5XYO4vYS6pUqPCcSEDTREncRt4eACh2PXsFAC1Rvo0jMUYJvQDKJqPQZgZCzsBVF4Eres4FqHeBHwg9mwSLwFw5KAT0YGazxSylsjFvLZg3wCYSTFHoiQoA8N683TyO/vX903NGYyXmczZQsC/AfQ6rKxg+/XIEkT4J2gLcUAGQKtIKkDNUm2J/BTBF07TPmRMoUMO1a9IVqKJKwKXpcYJARJom+2zQdGJMKs7f58e2U9MTcA3/rGPr8HzHwyQreOznxydOA/f9huoDHxhNOL5xF4YQjB1kuCsOClNyHdyr6beKhARcux5zfeak3JSNQ2VKWMsunoDm3e61Zt/j7awlV9ayzoMdKj33UYuVnFRbjH73ZSAO2rGsltmyRxFuL30JDKDwHGtZsrriNUSeVaTXv0Eo/wDgNTl/cZiCX9N/f9N/iEYSAAAAAElFTkSuQmCC"
+		x="265.5" y="906" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFvSURBVHjatZI7juUgEEUvelLFrsQL6KDjtp7kFdSwg5dDG539L2ECIABpwqkEw6E+vlxpRHJ3dz+0hftYNjL3SitJc7flJNe2GdD3suPmcp6UfNRLx3bfj56xFkpSch39a48+2A72Kf8FJBlQNiEkSRUauxKSVE9aLlstBoiyaGGyIlWnBUsTK0LCicg7MMloEbPJDiJKV2WMVWRFIjqYuk8gi4g/RSmlCVREkSxHfIrcp+6y0sWgxWfJMBwk1RafpQf1BERtAf0hJoDq1gFTLEkA1f2pLSJndnA/0CKCsoKbyyEiIrOAy91PIiKCMkSEh8fdvdeKjB8ySc/9hsv9ZNbyQxTpdfkNgHUALpFNSX7/fj/+5n23iAwuWYP04/fv1/fl1Z0IqIckIuvnBV9cfoK1DH0oKLygDr81qF6mBXuU8VM+Qdg8l2Q85zncFhm47mlh6rBhCzAepiunPQW52HiI1f+RpdliCYpk6H/FX9pTfVS5cJuMAAAAAElFTkSuQmCC"
+		x="785.5" y="546" />
+	<image width="48" height="48"
+		xlink:href="data:data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFvSURBVHjatZI7juUgEEUvelLFrsQL6KDjtp7kFdSwg5dDG539L2ECIABpwqkEw6E+vlxpRHJ3dz+0hftYNjL3SitJc7flJNe2GdD3suPmcp6UfNRLx3bfj56xFkpSch39a48+2A72Kf8FJBlQNiEkSRUauxKSVE9aLlstBoiyaGGyIlWnBUsTK0LCicg7MMloEbPJDiJKV2WMVWRFIjqYuk8gi4g/RSmlCVREkSxHfIrcp+6y0sWgxWfJMBwk1RafpQf1BERtAf0hJoDq1gFTLEkA1f2pLSJndnA/0CKCsoKbyyEiIrOAy91PIiKCMkSEh8fdvdeKjB8ySc/9hsv9ZNbyQxTpdfkNgHUALpFNSX7/fj/+5n23iAwuWYP04/fv1/fl1Z0IqIckIuvnBV9cfoK1DH0oKLygDr81qF6mBXuU8VM+Qdg8l2Q85zncFhm47mlh6rBhCzAepiunPQW52HiI1f+RpdliCYpk6H/FX9pTfVS5cJuMAAAAAElFTkSuQmCC"
+		x="1045.5" y="546" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAGYSURBVHicrZJBquMwEERLGLRWMZADZPHXFgGfQKMbzF6KTd3/CENLbkgEsxttEvS6q1rlBv7vUQOi1lsglgrI6Nqg2qK0tgBXkaJOB/4LqFRJ+biFpe4exYTcJOp8PLzmPm06irz/NW1Sv8kl9QFUKvZNeirzIcWrSkxAvKSw83g/fzI7qVKkngDViAAe75+TL72Oq9iMnHFsmcdwj1Ip1kIgAjiPl5RpFgPUYTLmOnWSpHQtQOqZ1lKGVPsEhzJdCYGIahPwOKeSjROI97OnCXh2m7VauoGwK4ujM6rbBxipB94526CYAAgABkAUR2G/yp8GMM0OILYZrAYIIThAm4tSiwGSyUFDNFBK+b12GBivWzwsyzie18ZUIa2gzo1w0GyZZF+vTu07xDgsOnUVfYG5ff2hq9wLzM9NNeAWDgAkdOm6lUL67Ii+i26xnlXpH2B8BD+uZPVeNPKgC2BDyGkKWoKeugFu9A4QdLENCdmrSBcGtj3hdVeNS/dIO7GFlJaYCPzKKeQwzL+fihf3fLesMaTwld1fIk2C4UbwH20AAAAASUVORK5CYII="
+		x="146.5" y="726" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAGYSURBVHicrZJBquMwEERLGLRWMZADZPHXFgGfQKMbzF6KTd3/CENLbkgEsxttEvS6q1rlBv7vUQOi1lsglgrI6Nqg2qK0tgBXkaJOB/4LqFRJ+biFpe4exYTcJOp8PLzmPm06irz/NW1Sv8kl9QFUKvZNeirzIcWrSkxAvKSw83g/fzI7qVKkngDViAAe75+TL72Oq9iMnHFsmcdwj1Ip1kIgAjiPl5RpFgPUYTLmOnWSpHQtQOqZ1lKGVPsEhzJdCYGIahPwOKeSjROI97OnCXh2m7VauoGwK4ujM6rbBxipB94526CYAAgABkAUR2G/yp8GMM0OILYZrAYIIThAm4tSiwGSyUFDNFBK+b12GBivWzwsyzie18ZUIa2gzo1w0GyZZF+vTu07xDgsOnUVfYG5ff2hq9wLzM9NNeAWDgAkdOm6lUL67Ii+i26xnlXpH2B8BD+uZPVeNPKgC2BDyGkKWoKeugFu9A4QdLENCdmrSBcGtj3hdVeNS/dIO7GFlJaYCPzKKeQwzL+fihf3fLesMaTwld1fIk2C4UbwH20AAAAASUVORK5CYII="
+		x="406.5" y="726" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAF5SURBVHjabZNBbsUgDETNhnXcSBygi79uFCknQJyg3UOTzv2PUBkzC9D3Ln4ee8BEhKEWsoYEHdE/lnwg0W2kY2MXa2hVAzRNqNSqUmFlANg76MYZoSXAJF7JRiJRgadUCcFL2UniBeRcbfDmzQiAJ+dCBSUiMEEulQlKpAsM0A0roglyBtMiYeMQA4Vp2YTjo/Xi4W0EgfTp8PN3BXsl5Fz+fr4LliE7HgMmG74I3LK7XoB7pmuCREDX46wNscFvbBgj2KFJFTljArHttl08GSvQpvtVI6ATwH00vVAlQpWg7wl3UyQraZoIBDfwanpvvptKEHHg42VTeLsEuPH7ee/HCmwEPnFwLC+xvwUGka1kSBhst413dV5DMC0KOHW/gFZFIt26QNQW0m1xTz68SgJamt9VzE+8v85puHcquYiengUXO0Dtnut0ChEUzwUC7jVCHsvxrvhELB5rzbviM+ygduHcyQ2IxJesYb9BfQ/M/3tgd4cp8w8zo3yp+0TyqwAAAABJRU5ErkJggg=="
+		x="146.5" y="906" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAF5SURBVHjabZNBbsUgDETNhnXcSBygi79uFCknQJyg3UOTzv2PUBkzC9D3Ln4ee8BEhKEWsoYEHdE/lnwg0W2kY2MXa2hVAzRNqNSqUmFlANg76MYZoSXAJF7JRiJRgadUCcFL2UniBeRcbfDmzQiAJ+dCBSUiMEEulQlKpAsM0A0roglyBtMiYeMQA4Vp2YTjo/Xi4W0EgfTp8PN3BXsl5Fz+fr4LliE7HgMmG74I3LK7XoB7pmuCREDX46wNscFvbBgj2KFJFTljArHttl08GSvQpvtVI6ATwH00vVAlQpWg7wl3UyQraZoIBDfwanpvvptKEHHg42VTeLsEuPH7ee/HCmwEPnFwLC+xvwUGka1kSBhst413dV5DMC0KOHW/gFZFIt26QNQW0m1xTz68SgJamt9VzE+8v85puHcquYiengUXO0Dtnut0ChEUzwUC7jVCHsvxrvhELB5rzbviM+ygduHcyQ2IxJesYb9BfQ/M/3tgd4cp8w8zo3yp+0TyqwAAAABJRU5ErkJggg=="
+		x="406.5" y="906" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFwSURBVHjarZM9igMxDIVlAq4tDD5AitSBgE8gfIJN74nNu/8RFvkHZkTYatVMMp+k96QoRCscjwhkwjGP53rsILdTyfG3/PF5pzhtcG69v3Aw5cS7i7JgiVY4tpJhamjT8LWZHWrl2Wn/BOdOHkC1FjRQgHRxMIHvBccVrE6yAIwEpIATka9UL6CLgKEFvp61fRcp6qqeQVAJC9bWFQiGhN9uKYRA/kdE6hXofZB/i3QFsBVvKZiLMRpvKWM88NoYzyUDUhIIwJGwK0biAJUTcAboOl/KrAAbqOIYD7ldAfqYDhzRNtAljnwRHMwcz2AWFED/BhnZADXKHIFXy6S7JAYmqNoFjeNzbEaBem0vvDh/Ho0pUO0gcklLwJw4fu6PxrcAlDpE0EtViYg78LxRl7FPHaqsi0vAE3768szLuseKdZDHkdfHSarsS007h1qEetw3t6+PCFmnkWIPX3+W6jtg39Pw06Xa90SYh/K/8QseCniVzUDajQAAAABJRU5ErkJggg=="
+		x="926.5" y="546" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFwSURBVHjarZM9igMxDIVlAq4tDD5AitSBgE8gfIJN74nNu/8RFvkHZkTYatVMMp+k96QoRCscjwhkwjGP53rsILdTyfG3/PF5pzhtcG69v3Aw5cS7i7JgiVY4tpJhamjT8LWZHWrl2Wn/BOdOHkC1FjRQgHRxMIHvBccVrE6yAIwEpIATka9UL6CLgKEFvp61fRcp6qqeQVAJC9bWFQiGhN9uKYRA/kdE6hXofZB/i3QFsBVvKZiLMRpvKWM88NoYzyUDUhIIwJGwK0biAJUTcAboOl/KrAAbqOIYD7ldAfqYDhzRNtAljnwRHMwcz2AWFED/BhnZADXKHIFXy6S7JAYmqNoFjeNzbEaBem0vvDh/Ho0pUO0gcklLwJw4fu6PxrcAlDpE0EtViYg78LxRl7FPHaqsi0vAE3768szLuseKdZDHkdfHSarsS007h1qEetw3t6+PCFmnkWIPX3+W6jtg39Pw06Xa90SYh/K/8QseCniVzUDajQAAAABJRU5ErkJggg=="
+		x="1186.5" y="546" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwYGBg8AAAoAAAAAAA/fkatQAAAAF0Uk5TAEDm2GYAAAGPSURBVHjapZRBbgMhDEWNRuz5nfgAQ5V9IsoBqqZ7GOr7X6Uy4Cozyq5WpFF4fH/b44ToX+HL63Op5dVNEYBPoDJ5AQD2JwCp6FHlkAlgTAB5DRgoz5n0qgEuB2CSamRkMsl4WNGeYZL5mAWU3oLMgBEi6YnNbwjVxlcF5QB4elcwLTqtMivheaeiULpRSzJnViZgpmVZqKU83YsNpFBK6dZSzilbpg7IFCeg0nTz2kbKVmI3KUQLiVzbexYD2seQSoxNUvHWLNXRp+zb1vb2DEY7EoFWWybblblNVbYIhjyD4SRRQ6dyXC3sUeIehY7AVcguV7nKcbGCApGrzvcM3sYLPJ674Gp8CcgU+0iFCUDDQ/oPwZELZkFubsnGCkxgQBVMBBMo8Gg676YgODt3HaQKTpW1RAOq2PomqMKR60fj47c1DQ8XyJGZBN3Tbh4BImfd9fJcX6qob9Oq7e7Brx/yk3URgiUaEn+/fD/uYWdCoIBhoJKW8PVAOfxrqAS4YP1c8/xuQUQNWIH0J/gFGd5jsyQZlmYAAAAASUVORK5CYII="
+		x="785.5" y="366" />
+	<image width="48" height="48"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwYGBg8AAAoAAAAAAA/fkatQAAAAF0Uk5TAEDm2GYAAAGPSURBVHicnZLBbuUgDEUvemLPTesPaKTsk1I+oJp2D4/x///KyBBL70XtZlgk4JN7jR0D/7sAxPobEP0ZNFL1qgRQG0lqRZOnuArHEuUTUJ6AjXQv8x2BKwBiczCE8hh3p/YIGh2cr+qJ6U7z1arHrYBzjX08L0T3nbZC9a2D+Z1QqgPLF61TO5pdoLqX9UhzwS0jGhAHlrvngn3f0Zobm1fPvedyyzmPcusFDAUcjIv0bEXUW57WDija38tdFfs8elGsMWtZVy9MqoMay1aWZdM6HFwRBb1IIVcdofYIlI3rMoHPCWD9WG3pdHdgG123VdeN13GE3vWum1LSBUTVu/0nSeEqGevtN7BKCm7GabW5Ag7C2EaZsyDp/HJIEtCWc0oSPAlCorXhCgDYRZr1SrSwPoGEJrlR8gAju2HL3qSMeVhcYSghpJkjHxOcLAH2L0Zu9ehZYhyg5zSPZ40h2AT0b/1z1ABvCQMC0bbw8vX386U+CubfjPz6YC5T4Mnt0Y/Xg5/kswCImTzI4ud/xuxiADTb19IAAAAASUVORK5CYII="
+		x="926.5" y="366" />
+	<image width="48" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgBAMAAACm+uYvAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAELSURBVHjavVK7joQwEBuElDqjRXzAFdSgSOlXyvIFZOvJhfP/f8JpElIQrXTdTRd7HraB6L+LaPjj3XNEZOQjO+MUsv0AESGEfkJR4AwBd8YWXAkxfb/zwKdV6YFSPW5ygaW3RabgThnctBpBArLvV1klFsC5/jiREn5j3+PA1wK3sb+fICR8L8j80Pum2df+NAPIxaWguSeTN+bEorLUZBsw2THPYKlu4GsATMjOOeayHcWNEoMtXdltjJpArtGwOUMIe4uqEfo5pxDjAc29HoUpm/Cc4hvHLtmBaG3ZDvNzer3xc+wCeLlgS8SJXxGIYZfRVJX1L2EOMQJHAI0FWC+GWfUXQeuo6FW/ANBbqQgctTEAAAAASUVORK5CYII="
+		x="5.5" y="194" />
+	<image width="48" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgBAMAAACm+uYvAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAEKSURBVHicvZExbsMwEARXEHC1DjL4gBSpbRBgb4DyC6zUlKjM/5+QQiIQC27ShCX3lpg5Sv91JA1/nLDyttfJHixv+5Yz7ypGzg/gPK9ie4DUnZ/KQI3njgQAt3AGlwyAVF7HJSMC8BpIoiYIWDkRW4ywBqycqKqPlTWcoUT1MbJ+/FY0iox488T6SaBhSgUDakzAElpHkgmgJsyD+9hMBHW3LuYs7rElUNNuZrjHGBPyYxVpN8bHmADohhZAW9aWc34UlyQKB3eNMM1zvrdv1iD1EjHZNvE93y8MOr5skKyCbdMX38/7Zdklux2vXG3LM8xPD37c95Kkq8gTzHN2b/5Sr2svAwx39x8U8VbqPsHqtgAAAABJRU5ErkJggg=="
+		x="146.5" y="194" />
+	<image width="48" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgBAMAAACm+uYvAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFaSURBVHhepZKxjiQhDERNQkypdx2PJiBvMSIfycsXXOfQ9Pn/P2FlaIKb9Bx04Keyq3AT/U95rev7b+ks+QTU0ySfwO+w9iVldUgXSFlVFiBVzEop7Wjt3Sg46zesApiZUYOjQH71nWuqrbV+L/c7xxgfj0eMUc+ouevKo3qVqtqwGUg9XaJ3KhEFGNv5fHYkcLGMw7mUnjQhn89uDuqlA4iIqNaRumPLufoBLpmkAZtq6jnriDwEImXEzJpNR95sXbcEwMbjESdYw0rbtE/g74hzfdHcweoXWEQKZ4BJqwGERX6ksKX05shXF5bmMLCDKZC6NcqcLUDka2jk1q1+Dinad3CgZprRdQO85BrAblSJ7h18dHlLB5TIhRAIt+Q6XvIWTVnrmk6m8tfxeotwO5/RoiPM7c7//fOSAuAcRwXCivH9hR2sIT6IQqCAuSN4+z0YNgI0Qjv6BZgpeaLDxUXYAAAAAElFTkSuQmCC"
+		x="525.5" y="554" />
+	<image width="48" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgBAMAAACm+uYvAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8MCgYGBg8AAAoAAAAAAAly9ZyQAAAAF0Uk5TAEDm2GYAAAFhSURBVHhenZI9ruMwDITJFKpFONABUrg3BKhfhM/9AvHW+jHm/kdYkLKblI+FC37mcMY00a8qoN7PL6CY9Q3CbOfyDU7dDcjyrXWqAiPf4FKMTOmZkiw5Z5nly5giB2mttatrla6hgJJSAlKMN7n8owz0Fb33x+PRe2++Dbrnkg1skoBwmsVq6c4mWcrrtW7SRGAWbT32YHvLax2SkcupnooINYyxSfHwAVD1EYuDMUoGNrPpfRshqmSvDgyPdjpQy1HJBIC2GZgDu3+bUCco2JIPuNANKpqUMZU8BbEYCKAmMpqB2SeOoZqzatnaqZ+r71IRxNRkMXDcfYqUOFS6wTEdOQFxIm6yFJx6fK5bMFHwaxnY9e0gGhFi5kgEkaJPLUe7paZewMjQp76PfQ5EYrHg/bWmpvp823b2JSziB15F5NT3z7/qEyTCxEz06Iwmi/z5e/k1zNE8CKTZz1JN6T/9kXw27gtCTgAAAABJRU5ErkJggg=="
+		x="666.5" y="554" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwoKCg8AAAoAAAAAAAdEvgdAAAAAF0Uk5TAEDm2GYAAAC+SURBVHjabdHRbcMwDATQ++EADKABxEILVOEEbf5lsbf/KoWcEFCM6O8eDifBBj4dIUGOjEB0Z3R/g98L8NJwdu5ARjgTTlkFZgIkvs187O+oVW1vmKreLCMg0+xmLSMgzWhzB0427hvkFdYZl7w35plnViD1hCMBom1BLQlSnhsJkOKHKj0BUvqh+vUGJMNLrrL4mnBN4Gs0AZOxKpYgZX3QP2dNaNIf7n3MvGbEEyQ3EPfi/rP/OdU4tJ+Ff2NUOYOGwt9VAAAAAElFTkSuQmCC"
+		x="531" y="194" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwoKCg8AAAoAAAAAAAdEvgdAAAAAF0Uk5TAEDm2GYAAAC/SURBVHjabdHBTQQxDIXhd3EBjjQFrFEaIKQC4D4Z8/ffCofFUmZFbv4UPTuO9O8xEJxVSjkmOeYNvl4B7sAgdyDnhColcjDY22bE26y2kghvbZ8jHu4eBZKueET0HXoQ157BRecFbo8zuAPcxToAvWrZAUCrG1oN4PICrWfEKtBK3I/c4d39GAWylRMokMwTIFetyPwvtMA8gJw1mayR3+SovlrdRubPOGsjdj5hWs2h/Mhcn/VRkg0/pvuUpF/1Tz5+29hrQQAAAABJRU5ErkJggg=="
+		x="677" y="194" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8PCgoKCg8AAAoAAAAAAAtUvnvAAAAAF0Uk5TAEDm2GYAAADoSURBVHhebdExagQxDIXhV6kXBh8gxdQxBp9AmRvM1p4d73//I6TwGnZC1PnjwTOS9P8YcANG7DcYcQPjDsZ7FgBULIIVgFoyjOgrcFVPyMYuSVZSo7q3LpvgCTgbSEiS1frcoEKXuiQ1yNtnLeDbE6C/a4Vvnz+jP78meJ8t2RbQJZ2eBTQ4nTYBz1T6mSld5u7unO7N4PqWFS8TMgFdllJyx93TmFBK9Yy7e4PeZTVVuBolpdfxkHTVJhhxljLB6NKIvab0WpuWReylruNMOC4i3kuVRsTxiPgM/BzjLzzWhiQJ9/X6BZl2WnU819MrAAAAAElFTkSuQmCC"
+		x="271.5" y="194" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8PCgoKCg8AAAoAAAAAAAtUvnvAAAAAF0Uk5TAEDm2GYAAADtSURBVHhebZFBasUwDEQFBe2FwQfoInshyAmET9D8tR0nc/8jFNkxtJ+vnR6jkT0i+lwA6j9wecEb8PIOyhqaDqMWgXuFBZk9ewFasiWhq1SCiu1LclXiLmLomoYE4dozAJUATMQIz3Mzq2stgLMB/VkT/XbKMn3edQpoTrBM8L0x5sACtY0tHZKBHgZNMhEntMwwNMEAXztQu0iGRNXY6WgTJEkTFBURiKhqJWaghxhNLMXv7uOlmtB3wNQmSClHSNRtH/m+VO2K1HlEFiexdLmviNndsR8LzJv4faxLPaAcP0sy87n/gslEZly/m+pej3S7q6wAAAAASUVORK5CYII="
+		x="416.5" y="194" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8PCgoKCg8AAAoAAAAAAAtUvnvAAAAAF0Uk5TAEDm2GYAAADtSURBVHhefY89igMxDIUFA6qjNfgAKbaeweATaNIH1qlHGeXd/wiL/yDZYtXY+nh6TyIaxTjmtxVcPwC7/gH6P2A4as2eAKSDXCdhIG2xGo8p4EwSQOy3LggZSSRXaQMWAFiemxKdKVfXCapFxvM9FbCvBmYG0ycw0PPaFh3EIvi7g3hUZBJ7CxPkBiR2ZBHbQcQiXWMCnCsRbxWYIFr37UBEAhzcXTsQgbaYU0I0vMpdordNuB7nquUuY7X6uLo+5n1EK7sW3R+jXWhZfS+6l3HeshL5/uNapmRZybVgStoQ6w3Aa7rWKLkQRI5fhmhYHMm6jCEAAAAASUVORK5CYII="
+		x="271.5" y="14" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABVQTFRFAAAA8PDw8PCgoKCg8AAAoAAAAAAAtUvnvAAAAAF0Uk5TAEDm2GYAAADoSURBVHicfZGxbsMwDERZGOBOGNGeDpltGPAXsPwCK7NYJff/n1AwNovWQ27j4+mkg4hCjEb/xGo4AbV2AvoWIGQZTAQ14gXIXI5AHxek5WGNMMuypiUWXWRBnzOFGL0AmEsCRmT2Zf177w09Q4hf4FrOoFBDzqHPGyFSmX0H3w0eoEPKTuBSiHiE78BdAgwrDouLSNsTiwdzkTFAg2EWkQTMCpEDvLqwuVzqHcVnWfdnyaWqWpRrR7OnmlqsjirPTataG7I7103rZsNE02Goal+bEQ1TGhRVLWfCHcBDWx5gEdCH/H7+D00zU+SVFN3NAAAAAElFTkSuQmCC"
+		x="416.5" y="14" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwoKCg8AAAoAAAAAAAdEvgdAAAAAF0Uk5TAEDm2GYAAADSSURBVHheXdBBisQwDATAhkEPkMEPWIHvYRW9YDz3ONr+/1f2kNEh8c1FtwQCAABCAhu+jwfogZcXJJke2LaKpGd6vNz9BrcESR41A2D+xknWFkCcYcb6AhIjWhs8CjJ6qBp7QVKXWisAhGZmxl4d0IbRhhaAJ08OanUg5EkWAABJkj9PsALIeCSkk7cZq12d2ovVn9BDtTMKsLov7R6tYPUg8wYk6WFfELVraB3tgvQqQBrzw3cBsIb4/JsFgBzic58eBUDuc9d3ASCuuqsGAPwD2pI++GCIWVEAAAAASUVORK5CYII="
+		x="936.5" y="14" />
+	<image width="32" height="32"
+		xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAAXNSR0IArs4c6QAAABJQTFRFAAAA8PDwoKCg8AAAoAAAAAAAdEvgdAAAAAF0Uk5TAEDm2GYAAADTSURBVHicXZFRasQwDEQHgg6gQg5gl/wvaH2CZP9jq3P/qxRvOtCs/vQYz0gyAGAByBMqIB7IIIx//bIsyGhkkyDikdFatLtC4O1hJCkwU8gtv5tMAbDWZCgZxlFKjhRAZ3XPnvJAZ6m+uuaAddZZmh7mo7KOqhB05+DG7T8gN+07wRffpR69foJLMc6bB9kF7OpZ1g/QBcyTfe4iYCWj+xo30EgpAKsZNw9cnqyuXNh8cgdP/jQWAVgcryPOIRNkHPsRp0mBfPp+7LroBO67+/Utv9FDQSO6JZXEAAAAAElFTkSuQmCC"
+		x="791.5" y="14" />
+</svg>

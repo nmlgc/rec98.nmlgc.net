@@ -157,3 +157,6 @@ P0158	[118]	TH01 decompilation (Items, part 1/2)	2021-09-28T16:05:58Z	nmlgc/ReC9
 P0159	[122]	TH01 decompilation (Items, part 2/2 + Cards)	2021-09-28T16:05:58Z	nmlgc/ReC98/compare/c0c0ebc...e491cd7	1
 P0160	[126]	TH01 decompilation (Pellet speed modification + HUD, part 3 (Stage timer) + Particle system)	2021-10-09T21:29:12Z	nmlgc/ReC98/compare/e491cd7...42ba4a5	1
 P0161	[121]	Research (Turbo C++ 4.0J's jump optimization bug after SCOPY@)	2021-10-09T21:29:21Z	nmlgc/ReC98/compare/42ba4a5...81dd96e	1
+P0162	[119]	TH01 decompilation (Player control, part 1/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/81dd96e...24b3a0d	1
+P0163	[119]	TH01 decompilation (Player control, part 2/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/24b3a0d...6d572b3	1
+P0164	[130]	TH01 decompilation (Player control, part 3/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/6d572b3...7a0e5d8	1

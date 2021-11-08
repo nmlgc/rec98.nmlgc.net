@@ -89,6 +89,7 @@ aside .icon-cell {
 }
 
 .gallery.pixelated img {
+	max-height: unset;
 	image-rendering: pixelated; /* For Chrome */
 	image-rendering: crisp-edges; /* For Firefox */
 }

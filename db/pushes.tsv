@@ -160,3 +160,6 @@ P0161	[121]	Research (Turbo C++ 4.0J's jump optimization bug after SCOPY@)	2021-
 P0162	[119]	TH01 decompilation (Player control, part 1/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/81dd96e...24b3a0d	1
 P0163	[119]	TH01 decompilation (Player control, part 2/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/24b3a0d...6d572b3	1
 P0164	[130]	TH01 decompilation (Player control, part 3/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/6d572b3...7a0e5d8	1
+P0165	[123]	TH01 decompilation (Missiles, part 1/2 + large boss sprites, part 1/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/7a0e5d8...f2bca01	1
+P0166	[123]	TH01 decompilation (Large boss sprites, part 2/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/f2bca01...e697907	1
+P0167	[127]	TH01 decompilation (Large boss sprites, part 3/3 + Stage initialization + Defeat animation + Route selection)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/e697907...c2de6ab	1

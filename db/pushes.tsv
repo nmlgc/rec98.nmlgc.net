@@ -163,3 +163,5 @@ P0164	[130]	TH01 decompilation (Player control, part 3/3)	2021-10-20T09:58:26Z	n
 P0165	[123]	TH01 decompilation (Missiles, part 1/2 + large boss sprites, part 1/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/7a0e5d8...f2bca01	1
 P0166	[123]	TH01 decompilation (Large boss sprites, part 2/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/f2bca01...e697907	1
 P0167	[127]	TH01 decompilation (Large boss sprites, part 3/3 + Stage initialization + Defeat animation + Route selection)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/e697907...c2de6ab	1
+P0168 	[102, 116, 120]	TH04/TH05 decompilation (EMS swap area, part 1/2)	2021-11-29T01:56:18Z	nmlgc/ReC98/compare/c2de6ab...8b046da	1
+P0169 	[124, 128, 132]	TH04/TH05 decompilation (EMS swap area, part 2/2) + Research (TH04 No-EMS Reimu Stage 5 crash)	2021-11-29T01:56:18Z	nmlgc/ReC98/compare/8b046da...479b766	1

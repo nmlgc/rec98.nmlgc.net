@@ -1,0 +1,218 @@
+{{$pic := printf "%v%v" .FilePrefix "TH04-NoEMS-Crash-screen.png" -}}
+{{$patch := printf "%v%v" .DatePrefix "Memory-limit-fixes.zip" -}}
+
+<p></p>
+	<a href="https://en.wikipedia.org/wiki/Expanded_memory">EMS memory</a>! The
+	infamous stopgap measure between the 640 KiB ("ought to be enough for
+	everyone") of <a
+	href="https://en.wikipedia.org/wiki/Conventional_memory">conventional
+	memory</a> offered by DOS from the very beginning, and the later <a
+	href="https://en.wikipedia.org/wiki/Extended_memory">XMS standard</a> for
+	accessing all the rest of memory up to 4 GiB in the x86 Protected Mode. With
+	an optionally active EMS driver, TH04 and TH05 will make use of EMS memory
+	to preload a bunch of situational .CDG images at the beginning of
+	<code>MAIN.EXE</code>:
+	<ol>
+		<li>The "eye catch" game title image, shown while stages are loaded</li>
+		<li>The character-specific background image, shown while bombing</li>
+		<li>The player character dialog portraits</li>
+		<li>TH05 additionally stores the boss portraits there, preloading them
+		at the beginning of each stage. (TH04 instead keeps them in conventional
+		memory during the entire stage.)</li>
+	</ol>
+	Once these images are needed, they can then be copied into conventional
+	memory and accessed as usual.
+</p><p>
+	Uh… wait, <i>copied</i>? It certainly would have been possible to map EMS
+	memory to a regular 16-bit Real Mode segment for direct access,
+	bank-switching out rarely used system or peripheral memory in exchange for
+	the EMS data. However, master.lib doesn't expose this functionality, and
+	only provides functions for copying data from EMS to regular memory and vice
+	versa.<br />
+	But even that still makes EMS an excellent fit for the large image files
+	it's used for, as it's possible to directly copy their pixel data from EMS
+	to VRAM. (Yes, I tried!) Well… <i>would</i>, because ZUN doesn't do
+	<i>that</i> either, and always naively copies the images to newly allocated
+	conventional memory first. In essence, this dumbs down EMS into just another
+	layer of the memory hierarchy, inserted between conventional memory and
+	disk: Not quite as slow as disk, but still requiring that
+	<code>memcpy()</code> to retrieve the data. Most importantly though: Using
+	EMS in this way does <i>not</i> increase the total amount of memory
+	simultaneously accessible to the game. After all, some other data will have
+	to be freed from conventional memory to make room for the newly loaded data.
+</p><hr /><p>
+	The most idiomatic way to define the game-specific layout of the EMS area
+	would be either a <code>struct</code> or an <code>enum</code>.
+	Unfortunately, the total size of all these images exceeds the range of a
+	16-bit value, and Turbo C++ 4.0J supports neither 32-bit <code>enum</code>s
+	(which are silently degraded to 16-bit) nor 32-bit <code>struct</code>s
+	(which simply don't compile). That still leaves raw compile-time constants
+	though, you only have to manually define the offset to each image in terms
+	of the size of its predecessor. But instead of doing that, ZUN just placed
+	each image at a nice round decimal offset, each slightly larger than the
+	actual memory required by the previous image, just to make sure that
+	everything fits. {{HTML_Emoji "tannedcirno"}} This results not only in quite
+	a bit of unnecessary padding, but also in <i>technically</i> the single
+	biggest amount of "wasted" memory in PC-98 Touhou: Out of the 180,000 (TH04)
+	and 320,000 (TH05) EMS bytes requested, the game only uses 135,552 (TH04)
+	and 175,904 (TH05) bytes. But hey, it's EMS, so who cares, right? Out of all
+	the opportunities to take shortcuts during development, this is among the
+	most acceptable ones. Any actual PC-98 model that could run these two games
+	comes with plenty of memory for this to not turn into an actual issue.
+<p><p>
+	On to the EMS-using functions themselves, which are the definition of
+	"cross-cutting concerns". Most of these have a fallback path for the non-EMS
+	case, and keep the loaded .CDG images in memory if they are immediately
+	needed. Which totally makes sense, but also makes it difficult to find names
+	that reflect all the global state changed by these functions. Every one of
+	these is also just called from a single place, so <a
+	href="http://number-none.com/blow/john_carmack_on_inlined_code.html">inlining
+	them</a> would have saved me a lot of naming and documentation trouble
+	there.<br />
+	The TH04 version of the EMS allocation code was actually <a
+	href="https://youtu.be/g3C5jMbTtps?t=577">displayed on ZUN's monitor in the
+	2010 MAG・ネット documentary</a>; <a
+	href="https://twitter.com/WindowsTiger">WindowsTiger</a> already <a
+	href="https://pastebin.com/hgPQTBqW">transcribed the low-quality video image
+	in 2019</a>. By 2015 ReC98 standards, I would have just run with that, but
+	the current project goal is to write better code than ZUN, so I didn't. 😛
+	We sure ain't going to use magic numbers for EMS offsets.
+</p><p>
+	The dialog init and exit code then is completely different in both games,
+	yet equally cross-cutting. TH05 goes even further in saving conventional
+	memory, loading each individual player or boss portrait into a single .CDG
+	slot immediately before blitting it to VRAM and freeing the pixel data
+	again. People who play TH05 without an active EMS driver are surely going to
+	enjoy the hard drive access lag between each portrait change…
+	{{HTML_Emoji "godzun"}} TH04, on the other hand, also abuses the dialog
+	exit function to preload the Mugetsu defeat / Gengetsu entrance and
+	Gengetsu defeat portraits, using a static variable to track how often the
+	function has been called during the Extra Stage… who needs function
+	parameters anyway, right? {{HTML_Emoji "zunpet"}}
+<p></p>
+	This is also the function in which TH04 infamously crashes after the Stage 5
+	pre-boss dialog when playing with Reimu and without any active EMS driver.
+	That crash is what motivated this look into the games' EMS usage… but the
+	code looks perfectly fine? Oh well, guess the crash is not related to EMS
+	then. Next u–
+<p></p>
+	OK, of course I can't leave it like that. Everyone is expecting a fix now,
+	and I still got half of a push left over after decompiling the regular EMS
+	code. Also, I've now RE'd every function that could possibly be involved in
+	the crash, and this is very likely to be the last time I'll be looking at
+	them.
+</p><hr /><p>
+	Turns out that the bug has little to do with EMS, and everything to do with
+	ZUN limiting the amount of conventional RAM that TH04's
+	<code>MAIN.EXE</code> is allowed to use, and then slightly miscalculating
+	this upper limit. Playing Stage 5 with Reimu is the most asset-intensive
+	configuration in this game, due to the combination of<ul>
+		<li>6 player portraits (Marisa has only 5), at 128×128 pixels each</li>
+		<li>a 288×256 background for the boss fight, tied in size only with the
+		ones in the Extra Stage</li>
+		<li>the additional 96×80 image for the vertically scrolling stars during
+		the stage, wastefully stored as 4 bitplanes rather than a single one.
+		This image is never freed, not even at the end of the stage.</li>
+	</ul>
+</p><p class="gallery checkerboard">
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABQAQMAAADcLOLWAAAABlBMVEVVABAAAACpPXcUAAAAAXRSTlMAQObYZgAAAOJJREFUeF6tkjFuxSAQRJ9FQekLROIaqcLFouCj+Sg+gksXlifFMlL+V5xPkS3wPgnPzgAwWkBa3QF5G4J5v4NyDEE9h6BddyCNwCQtv0OS1p/gdJAlB4JZsm0oks1BkwdBkbyvqdcFuJf+hId/iuGI8VF7uIxaI0zUguVsqEZ/2prFLNfjJYthOZ/PA2DlF9DUAzxD+Dn/C+7mjBq9S/p0IEna/EZI0jIZsi5o/cFknVA7zNr7AszaIBu0wNShCKBfSbkAWofDK1B3gDly1xUgBbQFYIrcX/gDfAZ8APAe8AbfrNNSOKJbw2wAAAAASUVORK5CYII="
+		alt="The star image used in TH04's Stage 5."/>
+</p><p class="gallery">
+	<small>The star image used in TH04's Stage 5.</small>
+</p><p>
+	Remove any single one of the above points, and this crash would have never
+	occurred. But with all of them combined, the total amount of memory consumed
+	by TH04's <code>MAIN.EXE</code> just barely exceeds ZUN's limit of 320,000
+	bytes, by no more than 3.840 bytes, the size of the star image.
+</p><p>
+	But wait: As we established earlier, EMS does nothing to reduce the amount
+	of conventional memory used by the game. In fact, if you disabled TH04's EMS
+	handling, you'd still get this crash even if you <i>are</i> running an EMS
+	driver and loaded DOS into the High Memory Area to free up as much
+	conventional RAM as possible. How can EMS then prevent this crash in the
+	first place?
+</p><p>
+	The answer: It's only because ZUN's usage of EMS bypasses the need to load
+	the cached images back out of the XOR-encrypted <code>東方幻想.郷</code>
+	packfile. Leaving aside the <span
+		class="hovertext"
+		title="Please, don't ever do this! Think of all the constructive things that hackers could do in the time they spend reverse-engineering your packfile encryption!">general
+	stupidity of any game data file encryption*</span>, master.lib's decryption
+	implementation is also quite wasteful: It uses a separate buffer that
+	receives fixed-size chunks of the file, before decrypting every individual
+	byte and copying it to its intended destination buffer. That really
+	resembles the typical slowness of a C <code>fread()</code> implementation
+	more than it does the highly optimized ASM code that master.lib purports to
+	be… And how large is this well-hidden decryption buffer? 4 KiB.
+	{{HTML_Emoji "onricdennat"}}
+</p><p>
+	So, looking back at the game, here is what happens once the Stage 5
+	pre-battle dialog ends:
+	<ol>
+		<li>Reimu's bomb background image, which was previously freed to make
+		space for her dialog portraits, has to be loaded back into conventional
+		memory from disk</li>
+		<li><code>BB0.CDG</code> is found inside the <code>東方幻想.郷</code>
+		packfile</li>
+		<li><code>file_ropen</code> ends up allocating a 4 KiB buffer for the
+		encrypted packfile data, getting us the decisive ~4 KiB closer to the
+		memory limit</li>
+		<li>The .CDG loader tries to allocate 52.608 contiguous bytes for the
+		pixel data of Reimu's bomb image</li>
+		<li>This would exceed the memory limit, so <code>hmem_allocbyte()</code>
+		fails and returns a <code>nullptr</code></li>
+		<li>ZUN doesn't check for this case (as usual)</li>
+		<li>The pixel data is loaded to address <code>0000:0000</code>,
+		overwriting the Interrupt Vector Table and whatever comes after</li>
+		<li>The game crashes</li>
+	</ol>
+</p><p class="gallery"><a href="{{$pic}}"><img
+	src="{{$pic}}"
+	alt="The final frame rendered before the TH04 Stage 5 Reimu No-EMS crash"
+/></a></p><p class="gallery">
+	<small>The final frame rendered by a crashing TH04.</small>
+</p><p>
+	The 4 KiB encryption buffer would only be released by the corresponding
+	<code>file_close()</code> call, which of course never happens because the
+	game crashes before it gets there. At one point, I really did suspect the
+	cause to be some kind of memory leak or fragmentation inside master.lib,
+	which would have been quite delightful to fix.<br />
+	Instead, the most straightforward fix here is to bump up that memory limit
+	by at least 4 KiB. Certainly easier than squeezing in a
+	<code>cdg_free()</code> call for the star image before the pre-boss dialog
+	without breaking position dependence.
+</p><p>
+	<i>Or</i>, even better, let's nuke all these memory limits from orbit
+	because they make little sense to begin with, and fix every other potential
+	out-of-memory crash that modders would encounter when adding enough data to
+	any of the 4 games that impose such limits on themselves. Unless you want to
+	launch other binaries (which need to do their own memory allocations) after
+	launching the game, there's really no reason to restrict the amount of
+	memory available to a DOS process. Heck, whenever DOS creates a new one, it
+	assigns all remaining free memory by default anyway.<br />
+	Removing the memory limits also removes one of ZUN's few error checks, which
+	end up quitting the game if there isn't at least a given maximum amount of
+	conventional RAM available. While it might be tempting to reserve enough
+	memory at the beginning of execution and then never check any allocation for
+	a potential failure, that's <i>exactly</i> where something like TH04's crash
+	comes from.<br />
+	This game is also still running on DOS, where such an initial allocation
+	failure is very unlikely to happen – no one fills close to half of
+	conventional RAM with TSRs and then tries running one of these games. It
+	<i>might</i> have been useful to detect systems with less than 640 KiB of
+	actual, physical RAM, but none of the PC-98 models with that little amount
+	of memory are fast enough to run these games to begin with. How ironic… a
+	place where ZUN actually added an error check, and then it's mostly
+	pointless.
+</p><p>
+	Here's an archive that contains both fix variants, just in case. These were
+	compiled from the <a
+	href="https://github.com/nmlgc/ReC98/tree/th04_noems_crash_fix"><code>th04_noems_crash_fix</code></a>
+	and <a
+	href="https://github.com/nmlgc/ReC98/tree/mem_assign_all"><code>mem_assign_all</code></a>
+	branches, and contain as little code changes as possible:
+	{{HTML_Download .HostedPath $patch}}
+</p><p>
+	So yeah, quite a complex bug, leaving no time for the TH03 scorefile format
+	research after all. Next up: Raising prices.
+</p>

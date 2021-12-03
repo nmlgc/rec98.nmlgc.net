@@ -28,15 +28,15 @@
 	that still only contain a single version of each sprite. But, uh…, wait,
 	in this sprite sheet, the second row for 1-pixel lasers is accidentally
 	shifted right by one more pixel that it should have been?! Which means
-	that<ol>
-		<li>we can't use the auto-preshift feature here, and have to store
-		this weird-looking (and quite frankly, completely unnecessary)
-		sprite sheet in its entirety</li>
-		<li>ZUN did, at least during TH01's development, <i>not</i> have a
-		sprite converter, and directly hardcoded these dot patterns in the C++
-		code {{HTML_Emoji "zunpet"}}</li>
-	</ol>
-</p><hr /><p>
+	that
+</p><ol>
+	<li>we can't use the auto-preshift feature here, and have to store this
+	weird-looking (and quite frankly, completely unnecessary) sprite sheet in
+	its entirety</li>
+	<li>ZUN did, at least during TH01's development, <i>not</i> have a sprite
+	converter, and directly hardcoded these dot patterns in the C++ code
+	{{HTML_Emoji "zunpet"}}</li>
+</ol><hr /><p>
 	The waste continues with the class itself. 69 bytes, with 22 bytes
 	outright unused, and 11 not really necessary. As for actual innovations
 	though, we've got

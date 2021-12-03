@@ -33,16 +33,17 @@
 </p><hr /><p>
 	The card flip code is where we find out some slightly more interesting
 	aspects about item drops in this game, and how they're controlled by a
-	hidden cycle variable: <ul>
-		<li>At the beginning of every 5-stage scene, this variable is set to a
-		random value in the [0..59] range</li>
-		<li>Point items are dropped at every multiple of 10</li>
-		<li>Every card flip adds 1 to its value after this <code>mod 10</code>
-		check</li>
-		<li>At a value of 140, the point item is replaced with a bomb item, but
-		only if no damaging bomb is active. In any case, its value is then
-		reset to 1.</li>
-	</ul>
+	hidden cycle variable:
+</p><ul>
+	<li>At the beginning of every 5-stage scene, this variable is set to a
+	random value in the [0..59] range</li>
+	<li>Point items are dropped at every multiple of 10</li>
+	<li>Every card flip adds 1 to its value after this <code>mod 10</code>
+	check</li>
+	<li>At a value of 140, the point item is replaced with a bomb item, but only
+	if no damaging bomb is active. In any case, its value is then reset to
+	1.</li>
+</ul><p>
 	<s>Then again, score players largely ignore point items anyway, as card
 	combos simply have a much bigger effect on the score. With this, I should
 	have RE'd all information necessary to construct a tool-assisted score run,
@@ -55,7 +56,7 @@
 		externalRegister('2021-09-28', 'vid', 'https://youtube.com/embed/IJrYfHTaNCE');
 	</script>
 </p><p class="gallery">
-	<iframe id="2021-09-28-vid" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<iframe id="2021-09-28-vid" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p><p>
 	The Orb↔card hitbox also makes perfect sense, with 24 pixels around
 	the center point of a card in every direction.

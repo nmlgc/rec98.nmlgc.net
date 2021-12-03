@@ -18,18 +18,19 @@
 	So, TH01 <s>rank</s> pellet speed. The resident pellet speed value is a
 	factor ranging from a minimum of -0.375 up to a maximum of 0.5 (pixels per
 	frame), multiplied with the difficulty-adjusted base speed for each pellet
-	and added on top of that same speed. This multiplier is modified<ul>
-		<li>every time the stage timer reaches 0 and
-		<span style="color: red">HARRY UP</span> is shown (+0.05)</li>
-		<li>for every score-based extra life granted below the maximum number of
-		lives (+0.025)</li>
-		<li>every time a bomb is used (+0.025)</li>
-		<li>on every frame in which the <code>rand</code> value (shown in debug
-		mode) is evenly divisible by
-		<code>(1800 - (lives × 200) - (bombs × 50))</code> (+0.025)</li>
-		<li>every time Reimu got hit (set to 0 if higher, then -0.05)</li>
-		<li>when using a continue (set to -0.05 if higher, then -0.125)</li>
-	</ul>
+	and added on top of that same speed. This multiplier is modified
+</p><ul>
+	<li>every time the stage timer reaches 0 and
+	<span style="color: red">HARRY UP</span> is shown (+0.05)</li>
+	<li>for every score-based extra life granted below the maximum number of
+	lives (+0.025)</li>
+	<li>every time a bomb is used (+0.025)</li>
+	<li>on every frame in which the <code>rand</code> value (shown in debug
+	mode) is evenly divisible by
+	<code>(1800 - (lives × 200) - (bombs × 50))</code> (+0.025)</li>
+	<li>every time Reimu got hit (set to 0 if higher, then -0.05)</li>
+	<li>when using a continue (set to -0.05 if higher, then -0.125)</li>
+</ul><p>
 	Apparently, ZUN noted that these deltas couldn't be losslessly stored in an
 	IEEE 754 floating-point variable, and therefore didn't store the pellet
 	speed factor exactly in a way that would correspond to its gameplay effect.
@@ -40,7 +41,7 @@
 	This is actually quite smart: The calculation doesn't need to be aware of
 	either Q12.4 <i>or</i> the 40× format, as
 	<code>((Q12﻿.﻿4 * factor×40) / factor×40)</code> still comes out as a
-	Q12.4 subpixel  even if all numbers are integers. The only limiting issue
+	Q12.4 subpixel even if all numbers are integers. The only limiting issue
 	here would be the potential overflow of the 16-bit multiplication at
 	unadjusted base speeds of more than 50 pixels per frame, but that'd be
 	<i>seriously</i> unplayable.<br />
@@ -51,16 +52,17 @@
 	candidates to fill up the remaining ⅜… except that it seemed impossible to
 	figure out the correct compiler options for this code?<br />
 	The issues centered around the two effects of Turbo C++ 4.0J's
-	<code>-O</code> switch:<ol>
-		<li>Optimizing jump instructions: merging duplicate successive jumps
-		into a single one, and merging duplicated instructions at the end of
-		conditional branches into a single place under a single branch, which
-		the other branches then jump to</li>
-		<li>Compressing <code>ADD SP</code> and <code>POP CX</code>
-		stack-clearing instructions after multiple successive <code>CALL</code>s
-		to <code>__cdecl</code> functions into a single <code>ADD SP</code> with
-		the combined parameter stack size of all function calls</li>
-	</ol>
+	<code>-O</code> switch:
+</p><ol>
+	<li>Optimizing jump instructions: merging duplicate successive jumps into a
+	single one, and merging duplicated instructions at the end of conditional
+	branches into a single place under a single branch, which the other branches
+	then jump to</li>
+	<li>Compressing <code>ADD SP</code> and <code>POP CX</code>
+	stack-clearing instructions after multiple successive <code>CALL</code>s to
+	<code>__cdecl</code> functions into a single <code>ADD SP</code> with the
+	combined parameter stack size of all function calls</li>
+</ol><p>
 	But how can the ASM for these functions exhibit #1 but <i>not</i> #2? How
 	can it be seemingly optimized <i>and</i> unoptimized at the same time? The
 	only option that gets somewhat close would be <code>-O- -y</code>, which
@@ -72,7 +74,7 @@
 	In the end, this solution turned out to be completely unrelated to compiler
 	options, and instead came from the effects of a compiler bug in a totally
 	different place. Initializing a local structure instance or array like
-	<pre>const uint4_t flash_colors[3] = { 3, 4, 5 };</pre>
+</p><pre>const uint4_t flash_colors[3] = { 3, 4, 5 };</pre><p>
 	always emits the <code>{ 3, 4, 5 }</code> array into the program's data
 	segment, and then generates a call to the internal <code>SCOPY@</code>
 	function which copies this data array to the local variable on the stack.
@@ -128,7 +130,7 @@
 	pellets flying around, and your own player movement. Also, the RNG can
 	easily spawn this particle at a position and velocity that causes it to
 	leave the screen more quickly. Kind of impressive how ZUN laid out the
-	<a href="https://en.wikipedia.org/wiki/ AoS_and_SoA#Structure_of_Arrays">structure
+	<a href="https://en.wikipedia.org/wiki/AoS_and_SoA#Structure_of_Arrays">structure
 	of arrays</a> in a way that ensured practically no effect of this bug on the
 	game; this glitch could have easily happened <i>every</i> 80 frames instead.
 	He <i>almost</i> got close to all bugs canceling out each other here!

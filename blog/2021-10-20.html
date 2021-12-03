@@ -48,11 +48,13 @@
 	would have just obscured the control flow too badly, making it even harder
 	to understand what's going on.<br />
 	In the end, I spotted a total of 8 bugs in this function, all of which leave
-	Reimu invisible for one or more frames:<ul>
-		<li>2 frames after all special attacks</li>
-		<li>2 frames after swing attacks, and</li>
-		<li><i>4 frames</i> before swing attacks</li>
-	</ul>Thanks to the last one, Reimu's first swing animation frame is never
+	Reimu invisible for one or more frames:
+</p><ul>
+	<li>2 frames after all special attacks</li>
+	<li>2 frames after swing attacks, and</li>
+	<li><i>4 frames</i> before swing attacks</li>
+</ul><p>
+	Thanks to the last one, Reimu's first swing animation frame is never
 	actually rendered. So whenever someone complains about TH01 sprite
 	flickering on an emulator: That emulator is accurate, it's the game that's
 	poorly written. {{HTML_Emoji "tannedcirno"}}

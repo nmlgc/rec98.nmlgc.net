@@ -18,19 +18,18 @@
 	But even <i>if</i> we assume VRAM writes to be the bottleneck here, it would
 	have been totally possible to render every missile in every frame at roughly
 	the same amount of CPU time that the original game uses for interlaced
-	rendering:<ul>
-		<li>Note that all missile sprites only use two colors, white and
-		green.</li>
-		<li>Instead of naively going with the usual four bitplanes, extract the
-		pixels drawn in each of the two used colors into their own bitplanes.
-		master.lib calls this the "tiny format".</li>
-		<li>Use the GRCG to draw these two bitplanes in the intended white and
-		green colors, halving the amount of VRAM writes compared to the original
-		function.</li>
-		<li>(Not using the .PTN format would have also avoided the
-		inconsistency of storing the missile sprites in boss-specific sprite
-		slots.)</li>
-	</ul>
+	rendering:
+</p><ul>
+	<li>Note that all missile sprites only use two colors, white and green.</li>
+	<li>Instead of naively going with the usual four bitplanes, extract the
+	pixels drawn in each of the two used colors into their own bitplanes.
+	master.lib calls this the "tiny format".</li>
+	<li>Use the GRCG to draw these two bitplanes in the intended white and green
+	colors, halving the amount of VRAM writes compared to the original
+	function.</li>
+	<li>(Not using the .PTN format would have also avoided the inconsistency of
+	storing the missile sprites in boss-specific sprite slots.)</li>
+</ul><p>
 	That's an optimization that would have significantly benefitted the game, in
 	contrast to <a href="/blog/tag/micro-optimization">all of the fake ones
 	introduced in later games</a>. Then again, this optimization <i>is</i>
@@ -149,13 +148,12 @@
 	proper website. While this first release is already quite good (and much
 	better than my attempt from 2014), there is still a bit of room for
 	improvement to be gained from specific ReC98 research. Next up,
-	therefore:<ul>
-		<li>Researching how TH04 and TH05 use EMS memory, together with the
-		cause behind TH04's crash in Stage 5 when playing as Reimu without an
-		EMS driver loaded, and</li>
-		<li>reverse-engineering TH03's score data file format
-		(<code>YUME.NEM</code>), which hopefully also comes with a way of
-		building a file that unlocks all characters without any high
-		scores.</li>
-	</ul>
-</p>
+	therefore:
+</p><ul>
+	<li>Researching how TH04 and TH05 use EMS memory, together with the cause
+	behind TH04's crash in Stage 5 when playing as Reimu without an EMS driver
+	loaded, and</li>
+	<li>reverse-engineering TH03's score data file format
+	(<code>YUME.NEM</code>), which hopefully also comes with a way of building a
+	file that unlocks all characters without any high scores.</li>
+</ul>

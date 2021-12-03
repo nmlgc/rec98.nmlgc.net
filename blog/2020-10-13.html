@@ -29,75 +29,74 @@
 	overview of all of them, together with .PTN to show that there really was
 	no reason for not using the .BOS API for all of Reimu's sprites:
 </p><table id="bos-formats-2020-10-13">
-		<thead>
-			<tr>
-				<th></th>
-				<th>CBossEntity</th>
-				<th>CBossAnim</th>
-				<th>CPlayerAnim</th>
-				<th>ptn_* (32×32)</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>Format</th>
-				<td>.BOS</td>
-				<td>.BOS</td>
-				<td>.BOS</td>
-				<td>.PTN</td>
-			</tr>
-			<tr>
-				<th>Hitbox</th>
-				<td>✔</td>
-				<td>✘</td>
-				<td>✘</td>
-				<td>✘</td>
-			</tr>
-			<tr>
-				<th>Byte-aligned blitting</th>
-				<td>✔</td>
-				<td>✔</td>
-				<td>✔</td>
-				<td>✔</td>
-			</tr>
-			<tr>
-				<th>Byte-aligned unblitting</th>
-				<td>✔</td>
-				<td>✘</td>
-				<td>✔</td>
-				<td>✔</td>
-			</tr>
-			<tr>
-				<th>Unaligned blitting</th>
-				<td>Single-line and wave only</td>
-				<td>✘</td>
-				<td>✘</td>
-				<td>✘</td>
-			</tr>
-			<tr>
-				<th>Precise unblitting</th>
-				<td>✔</td>
-				<td>✘</td>
-				<td>✔</td>
-				<td>✔</td>
-			</tr>
-			<tr>
-				<th>Per-file sprite limit</th>
-				<td>8</td>
-				<td>8</td>
-				<td>32</td>
-				<td>64</td>
-			</tr>
-			<tr>
-				<th>Pixels blitted at once</th>
-				<td>16</td>
-				<td>16</td>
-				<td>8</td>
-				<td>32</td>
-			</tr>
-		</tbody>
-	</table>
-</p><p>
+	<thead>
+		<tr>
+			<th></th>
+			<th>CBossEntity</th>
+			<th>CBossAnim</th>
+			<th>CPlayerAnim</th>
+			<th>ptn_* (32×32)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>Format</th>
+			<td>.BOS</td>
+			<td>.BOS</td>
+			<td>.BOS</td>
+			<td>.PTN</td>
+		</tr>
+		<tr>
+			<th>Hitbox</th>
+			<td>✔</td>
+			<td>✘</td>
+			<td>✘</td>
+			<td>✘</td>
+		</tr>
+		<tr>
+			<th>Byte-aligned blitting</th>
+			<td>✔</td>
+			<td>✔</td>
+			<td>✔</td>
+			<td>✔</td>
+		</tr>
+		<tr>
+			<th>Byte-aligned unblitting</th>
+			<td>✔</td>
+			<td>✘</td>
+			<td>✔</td>
+			<td>✔</td>
+		</tr>
+		<tr>
+			<th>Unaligned blitting</th>
+			<td>Single-line and wave only</td>
+			<td>✘</td>
+			<td>✘</td>
+			<td>✘</td>
+		</tr>
+		<tr>
+			<th>Precise unblitting</th>
+			<td>✔</td>
+			<td>✘</td>
+			<td>✔</td>
+			<td>✔</td>
+		</tr>
+		<tr>
+			<th>Per-file sprite limit</th>
+			<td>8</td>
+			<td>8</td>
+			<td>32</td>
+			<td>64</td>
+		</tr>
+		<tr>
+			<th>Pixels blitted at once</th>
+			<td>16</td>
+			<td>16</td>
+			<td>8</td>
+			<td>32</td>
+		</tr>
+	</tbody>
+</table><p>
 	And even that last property could simply be handled by branching based on
 	the sprite width, and wouldn't be a reason for switching formats. But
 	well, it just wouldn't be TH01 without all that redundant bloat though,

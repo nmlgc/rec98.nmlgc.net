@@ -13,13 +13,12 @@
 	the .MRS functions, used to render the gauge attack portraits and bomb
 	backgrounds. The blitting code there uses the additional FS and GS segment
 	registers provided by the Intel 386… which
-	<ol>
-		<li>are not supported by Turbo C++'s inline assembler, and</li>
-		<li>can't be turned into pointers, due to a compiler bug in Turbo C++
-		that generates wrong segment prefix opcodes for the <code>_FS</code>
-		and <code>_GS</code> pseudo-registers.</li>
-	</ol>
-</p><p>
+</p><ol>
+	<li>are not supported by Turbo C++'s inline assembler, and</li>
+	<li>can't be turned into pointers, due to a compiler bug in Turbo C++ that
+	generates wrong segment prefix opcodes for the <code>_FS</code> and
+	<code>_GS</code> pseudo-registers.</li>
+</ol><p>
 	Apparently I'm the first one to even try doing that with this compiler? I
 	haven't found any other mention of this bug…<br />
 	Compiling via assembly (<code>#pragma inline</code>) would work around
@@ -48,28 +47,25 @@
 	couldn't have <strong>possibly</strong> written such unreasonable C++ code.
 	So why pretend he did, and not just keep it all in its more natural ASM
 	form?"</i> Well, there are several reasons:
-	<ul>
-		<li>Future port authors will merely have to translate all the
-		pseudo-registers and inline assembly to C++. For the former, this is
-		typically as easy as replacing them with newly declared local
-		variables. No need to bother with function prolog and epilog code,
-		calling conventions, or the build system.</li>
-		<li>No duplication of constants and structures in ASM land.</li>
-		<li>As a more expressive language, C++ can document the code much
-		better. Meticulous documentation seems to have become the main
-		attraction of ReC98 these days – I've seen it appreciated quite a
-		number of times, and the continued financial support of all the
-		backers speaks volumes. Mods, on the other hand, are still a rather
-		rare sight.</li>
-		<li>Having as few .ASM files in the source tree as possible looks
-		better to casual visitors who just look at GitHub's repo language
-		breakdown. This way, ReC98 will also turn from an <i>"Assembly
-		project"</i> to its rightful state of <i>"C++ project"</i> much
-		sooner.</li>
-		<li>And finally, it's not like the ASM versions are
-		<i>gone</i>&nbsp;– they're still part of the Git history.</li>
-	</ul>
-</p><p>
+</p><ul>
+	<li>Future port authors will merely have to translate all the
+	pseudo-registers and inline assembly to C++. For the former, this is
+	typically as easy as replacing them with newly declared local variables. No
+	need to bother with function prolog and epilog code, calling conventions, or
+	the build system.</li>
+	<li>No duplication of constants and structures in ASM land.</li>
+	<li>As a more expressive language, C++ can document the code much better.
+	Meticulous documentation seems to have become the main attraction of ReC98
+	these days – I've seen it appreciated quite a number of times, and the
+	continued financial support of all the backers speaks volumes. Mods, on the
+	other hand, are still a rather rare sight.</li>
+	<li>Having as few .ASM files in the source tree as possible looks better to
+	casual visitors who just look at GitHub's repo language breakdown. This way,
+	ReC98 will also turn from an <i>"Assembly project"</i> to its rightful state
+	of <i>"C++ project"</i> much sooner.</li>
+	<li>And finally, it's not like the ASM versions are
+	<i>gone</i>&nbsp;– they're still part of the Git history.</li>
+</ul><p>
 	Unfortunately, these pushes also demonstrated a second disadvantage in
 	trying to decompile everything possible: Since Turbo C++ lacks TASM's
 	fine-grained ability to enforce code alignment on certain multiples of

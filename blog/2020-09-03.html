@@ -97,38 +97,35 @@
 	So I've kept using Tup for only my own development, but indefinitely
 	shelved the idea of making it the official build system, due to those
 	drawbacks. Recently though, it all came together:
-	<ul>
-		<li>The <code>tup generate</code> sub-command can generate a
-		<code>.bat</code> file that does a full dumb rebuild of everything,
-		which can serve as a fallback option for systems that can't run Tup.
-		All we have to do is to commit that <code>.bat</code> file to the
-		ReC98 Git repository as well, and tell <code>build32b.bat</code> to
-		fall back on that if Tup can't be run. That alone would have given us
-		the benefits of Tup without being worse than the current dumb build
-		process.</li>
-		<li>In the meantime, other contributors improved Tup's own build
-		process to the point where 32-bit builds were simple enough to
-		accomplish from the comfort of a WSL terminal.</li>
-		<li><a href="https://github.com/gittup/tup/pull/406">Two commits of
-		mine later</a>, and 32-bit Windows Tup was fully functional. Another
-		one later, and 32-bit Windows Tup even gained one potential advantage
-		over its 64-bit counterpart. Since it only has to support DLL
-		injection into 32-bit programs, it doesn't need a separate 32-bit
-		binary for retrieving function pointers to the 32-bit version of
-		Windows' DLL loading syscalls. Weirdly enough, Windows Defender on
-		current Windows 10 falsely flags that binary as malware, despite it
-		doing <i>nothing but printing those pointer values to stdout</i>.
-		🤷</li>
-		<li>And that <code>TLINK</code> bug?
-		<a href="http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html">Easily
-		solved by a Google search</a>, and by editing
-		<code>%WINDIR%\System32\autoexec.nt</code> and rebooting afterwards:
-		<pre class="chroma"> REM Install DPMI support
+</p><ul>
+	<li>The <code>tup generate</code> sub-command can generate a
+	<code>.bat</code> file that does a full dumb rebuild of everything, which
+	can serve as a fallback option for systems that can't run Tup. All we have
+	to do is to commit that <code>.bat</code> file to the ReC98 Git repository
+	as well, and tell <code>build32b.bat</code> to fall back on that if Tup
+	can't be run. That alone would have given us the benefits of Tup without
+	being worse than the current dumb build process.</li>
+	<li>In the meantime, other contributors improved Tup's own build process to
+	the point where 32-bit builds were simple enough to accomplish from the
+	comfort of a WSL terminal.</li>
+	<li><a href="https://github.com/gittup/tup/pull/406">Two commits of mine
+	later</a>, and 32-bit Windows Tup was fully functional. Another one later,
+	and 32-bit Windows Tup even gained one potential advantage over its 64-bit
+	counterpart. Since it only has to support DLL injection into 32-bit
+	programs, it doesn't need a separate 32-bit binary for retrieving function
+	pointers to the 32-bit version of Windows' DLL loading syscalls. Weirdly
+	enough, Windows Defender on current Windows 10 falsely flags that binary as
+	malware, despite it doing <i>nothing but printing those pointer values to
+	stdout</i>. 🤷</li>
+	<li>And that <code>TLINK</code> bug?
+	<a href="http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html">Easily
+	solved by a Google search</a>, and by editing
+	<code>%WINDIR%\System32\autoexec.nt</code> and rebooting afterwards:
+	<pre class="chroma"> REM Install DPMI support
 <span class="gd">-LH %SystemRoot%\system32\dosx
 </span><span class="gi">+%SystemRoot%\system32\dosx</span></pre>
-		</li>
-	</ul>
-</p><p>
+	</li>
+</ul><p>
 	As I'm writing this post, the pull request has unfortunately not yet been
 	merged. So, here's my own custom build instead:
 </p><p>
@@ -163,24 +160,23 @@
 	Now, it might look like a waste of time to improve a 32-bit build part
 	that won't even exist anymore once this project is done. However, a fully
 	16-bit DOS build will only make sense after
-	<ul>
-		<li>master.lib has been turned into a proper library, linked in by
-		<code>TLINK</code> rather than <code>#include</code>d in the big .ASM
-		files.</li>
-		<li>This affects all games. If master.lib's data was consistently
-		placed at the beginning or end of each data segment, this would be no
-		big deal, but it's placed somewhere else in every binary.</li>
-		<li>So, this will only make sense sometime around 90% overall PI, and
-		maybe ~50% RE <i>in each game</i>. Which is something else than 50%
-		overall – <i>especially</i> since it includes TH02, the objectively
-		worst Touhou game, which hasn't received <i>any</i> dedicated funding
-		ever.</li>
-		<li>Then, it will probably still require a couple of dedicated pushes
-		to move all the remaining data to C land.</li>
-		<li>Oh, and my 16-bit build system project also needs to be done
-		before, because, again, Makefiles are trash and we shouldn't rely on
-		them even more.</li>
-	</ul>
+</p><ul>
+	<li>master.lib has been turned into a proper library, linked in by
+	<code>TLINK</code> rather than <code>#include</code>d in the big .ASM
+	files.</li>
+	<li>This affects all games. If master.lib's data was consistently placed at
+	the beginning or end of each data segment, this would be no big deal, but
+	it's placed somewhere else in every binary.</li>
+	<li>So, this will only make sense sometime around 90% overall PI, and maybe
+	~50% RE <i>in each game</i>. Which is something else than 50% overall –
+	<i>especially</i> since it includes TH02, the objectively worst Touhou game,
+	which hasn't received <i>any</i> dedicated funding ever.</li>
+	<li>Then, it will probably still require a couple of dedicated pushes to
+	move all the remaining data to C land.</li>
+	<li>Oh, and my 16-bit build system project also needs to be done before,
+	because, again, Makefiles are trash and we shouldn't rely on them even
+	more.</li>
+</ul><p>
 	And who knows whether this project will get funded for that long. So yeah,
 	the 32-bit build part will stay with us for quite some more time, and for
 	all upcoming PI milestones. And with the current build process, it's

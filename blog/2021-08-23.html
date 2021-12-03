@@ -24,27 +24,27 @@
 	occur in two patterns – one with two snakes and one with four – with
 	<i>all</i> of the spawn, aim, update, and render code copy-pasted between
 	the two. {{HTML_Emoji "zunpet"}} Three gameplay-related discoveries
-	here:<ul>
-		<li>The homing target is locked once the Y position of a snake's white
-		head diamond is below 300 pixels.</li>
-		<li>That diamond is also the only one with collision detection…</li>
-		<li>…but comes with a gigantic 30×30 pixel hitbox, reduced to 30×20
-		while Reimu is sliding. For comparison: Reimu's regular sprite is 32×32
-		pixels, including transparent areas. This time, there <i>is</i> a
-		clearly defined hitbox around Reimu's center pixel that the single
-		top-left pixel can collide with. No imagination necessary, which people
-		apparently {{Blog_PostLink "2021-07-31" "still"}} prefer over actually
-		understanding an algorithm… Then again, this hitbox is <i>still</i> not
-		intuitive at all, because…
-		</p><p class="gallery pixelated"><img
-			src="data:image/gif;base64,R0lGODlhCAAIAKEBAAAAAP8AAP8AAP8AACH5BAEKAAIALAAAAAAIAAgAAAIOjARwm8ntoJxqPreQOgUAOw=="
-			style="height: 64px;"
-			alt="Snake head with collision pixel" />
-		</p>… the exact collision pixel, marked in
-		<span style="color: red">red</span>, is part of the diamond sprite's
-		transparent background {{HTML_Emoji "tannedcirno"}}</li>
-	</ul>
-</p><hr /><p>
+	here:
+</p><ul>
+	<li>The homing target is locked once the Y position of a snake's white head
+	diamond is below 300 pixels.</li>
+	<li>That diamond is also the only one with collision detection…</li>
+	<li>…but comes with a gigantic 30×30 pixel hitbox, reduced to 30×20 while
+	Reimu is sliding. For comparison: Reimu's regular sprite is 32×32 pixels,
+	including transparent areas. This time, there <i>is</i> a clearly defined
+	hitbox around Reimu's center pixel that the single top-left pixel can
+	collide with. No imagination necessary, which people apparently
+	{{Blog_PostLink "2021-07-31" "still"}} prefer over actually understanding an
+	algorithm… Then again, this hitbox is <i>still</i> not intuitive at all,
+	because…
+	<p></p><p class="gallery pixelated"><img
+		src="data:image/gif;base64,R0lGODlhCAAIAKEBAAAAAP8AAP8AAP8AACH5BAEKAAIALAAAAAAIAAgAAAIOjARwm8ntoJxqPreQOgUAOw=="
+		style="height: 64px;"
+		alt="Snake head with collision pixel" />
+	</p>… the exact collision pixel, marked in
+	<span style="color: red">red</span>, is part of the diamond sprite's
+	transparent background {{HTML_Emoji "tannedcirno"}}</li>
+</ul><hr /><p>
 	This was followed by <i>really</i> weird aiming code for the "sprayed
 	pellets from cup" pattern… which can only possibly have been done on
 	purpose, but is sort of mitigated by the spraying motion anyway.<br />
@@ -57,7 +57,7 @@
 	resembles the sword slash. But once I tried to express these numbers in
 	terms of the slash animation's keyframes, it all worked out perfectly, and
 	resulted in this:
-<p
+</p><p
 	id="2021-08-23-easter-egg-container"
 	class="gallery"
 	style="display: grid; justify-items: center;"
@@ -81,41 +81,42 @@
 	fight. Third-longest function in both TH01 and all of PC-98 Touhou, only
 	behind some player-related stuff and YuugenMagan's gigantic main function…
 	and it's even more of a copy-pasta, making it feel not nearly as long as it
-	is. Key insights there:<ul>
-		<li>The fight consists of 7 phases, with the entire defeat sequence
-		being part of the <code>if(boss_phase&nbsp;==&nbsp;7) {…}</code>
-		branch.</li>
-		<li>The three even-numbered phases, however, only light up the Siddhaṃ
-		seed syllables and then progress to the next phase.</li>
-		<li>Odd-numbered phases are completed after passing an HP threshold or
-		after seeing a predetermined number of patterns, whatever happens
-		first. No possibility of skipping anything there.</li>
-		<li>Patterns are chosen randomly, but the available <i>pool</i> of
-		patterns is limited to 3 specific "easier" patterns in phases 1 and 5,
-		and 4 patterns in phase 3. Once Phase 7 is reached at 9 HP remaining,
-		all 12 patterns can potentially appear. Fittingly, that's also the
-		point where the red section of the HP bar starts.<ul>
-			<li>Every time a pattern is chosen, the code only makes a maximum
-			of two attempts at picking a pattern that's different from the one
-			that Konngara just completed. Therefore, it seems entirely possible
-			to see the same pattern twice. Calculating an actual seed to prove
-			that is out of the scope of this project, though.</li>
-			<li>Due to what looks like a copy-paste mistake, the pool for the
-			second RNG attempt in phases 5 and 7 is reduced to only the first
-			two patterns of the respective phases? That's already quite some
-			bias right there, and we haven't even analyzed the RNG in detail
-			yet… {{HTML_Emoji "onricdennat"}} (For anyone interested, it's a
-			<a href="https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use">LCG,
-			using the <i>Borland C/C++</i> parameters as shown here</a>.)</li>
-		</ul></li>
-		<li>The difficulty level only affects the speed and firing intervals
-		(and thus, number) of pellets, as well as the number of lasers in the
-		one pattern that uses them.</li>
-		<li>After the {{Blog_PostLink "2020-03-07" "kuji-in defeat sequence"}},
-		the fight ends in an attempted double-<code>free</code> of Konngara's
-		image data. {{HTML_Emoji "godzun"}} Thankfully, the format-specific
-		<code>_free()</code> functions defend against such a thing.</li>
-	</ul>
+	is. Key insights there:
+</p><ul>
+	<li>The fight consists of 7 phases, with the entire defeat sequence being
+	part of the <code>if(boss_phase&nbsp;==&nbsp;7) {…}</code>
+	branch.</li>
+	<li>The three even-numbered phases, however, only light up the Siddhaṃ seed
+	syllables and then progress to the next phase.</li>
+	<li>Odd-numbered phases are completed after passing an HP threshold or after
+	seeing a predetermined number of patterns, whatever happens first. No
+	possibility of skipping anything there.</li>
+	<li>Patterns are chosen randomly, but the available <i>pool</i> of patterns
+	is limited to 3 specific "easier" patterns in phases 1 and 5, and 4 patterns
+	in phase 3. Once Phase 7 is reached at 9 HP remaining, all 12 patterns can
+	potentially appear. Fittingly, that's also the point where the red section
+	of the HP bar starts.<ul>
+		<li>Every time a pattern is chosen, the code only makes a maximum of two
+		attempts at picking a pattern that's different from the one that
+		Konngara just completed. Therefore, it seems entirely possible to see
+		the same pattern twice. Calculating an actual seed to prove that is out
+		of the scope of this project, though.</li>
+		<li>Due to what looks like a copy-paste mistake, the pool for the second
+		RNG attempt in phases 5 and 7 is reduced to only the first two patterns
+		of the respective phases? That's already quite some bias right there,
+		and we haven't even analyzed the RNG in detail yet…
+		{{HTML_Emoji "onricdennat"}} (For anyone interested, it's a
+		<a href="https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use">LCG,
+		using the <i>Borland C/C++</i> parameters as shown here</a>.)</li>
+	</ul></li>
+	<li>The difficulty level only affects the speed and firing intervals (and
+	thus, number) of pellets, as well as the number of lasers in the one pattern
+	that uses them.</li>
+	<li>After the {{Blog_PostLink "2020-03-07" "kuji-in defeat sequence"}}, the
+	fight ends in an attempted double-<code>free</code> of Konngara's image
+	data. {{HTML_Emoji "godzun"}} Thankfully, the format-specific
+	<code>_free()</code> functions defend against such a thing.</li>
+</ul><p>
 	Seriously, {{Blog_PostLink "2020-01-14" "line drawing"}} was much harder to
 	decompile.
 </p><hr /><p>

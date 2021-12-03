@@ -118,14 +118,15 @@
 	Well, we've had a heap overflow above, and the cause here is nothing but a
 	stack buffer overflow – a perhaps more <i>modern</i> kind of classic C bug,
 	given its prevalence in the Windows Touhou games. Explained in a few lines
-	of code: <pre>void stageobjs_init_and_render()
+	of code:
+</p><pre>void stageobjs_init_and_render()
 {
 	int card_animation_frames[50]; // even though there can be up to 200?!
 	int total_frames = 0;
 
 	(code that would end up resetting total_frames if it ever tried to reset
 	card_animation_frames[50]…)
-}</pre>
+}</pre><p>
 	The number of cards in "Stage 22"? 76. There you have it.
 </p><p>
 	But of course, it's trivial to disable this animation and fix these stage

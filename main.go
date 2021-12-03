@@ -153,7 +153,8 @@ func HTMLTag(tag string, filters []string) template.HTML {
 		if len(allTags) >= 1 {
 			url += `/` + strings.Join(allTags, "/")
 		}
-		return `<a href="` + url + `" title="` + title + `">` + text + `</a>`
+		escTitle := template.HTMLEscapeString(title)
+		return `<a href="` + url + `" title="` + escTitle + `">` + text + `</a>`
 	}
 
 	indexInFilters := -1

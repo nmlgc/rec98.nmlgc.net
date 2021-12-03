@@ -11,35 +11,35 @@
 </p><p>
 	Before I start ranting though, let's quickly summarize the most visible
 	change, the new tag system for this blog!
-	<ul>
-		<li>Yes, I manually went through every one of the 82 posts I've written
-		so far, and assigned labels to them.</li>
-		<li>The per-project ({{HTML_Tag "rec98" nil}} and
-		{{HTML_Tag "website" nil}}) and per-game ({{HTML_Tag "th01" nil}}
-		{{HTML_Tag "th02" nil}}
-		{{HTML_Tag "th03" nil}}
-		{{HTML_Tag "th04" nil}}
-		{{HTML_Tag "th05" nil}}) tags are automatically generated from the
-		database and the Git commit history, respectively. That might have
-		ended us up with a fair bit of category clutter, as any single change
-		to a tiny aspect is enough for a blog post to be tagged with an
-		otherwise unrelated game. For now, it doesn't seem <i>too</i> much of
-		an issue though.</li>
-		<li>Filtering already works for an arbitrary number of tags. Right now,
-		these are always combined with <code class="hovertext"
-			title="Or, if formal logic is your thing, a conjunction. ∧"
-		>AND</code> – no arbitrary boolean expressions for tag filtering yet.
-		{{HTML_Emoji "onricdennat"}}</li>
-		<li>Adding filters simply works by adding components to the URL path:
-		<kbd>https://rec98.nmlgc.net/blog/tag/tag1/tag2/tag3/</kbd>… and so
-		on.</li>
-		<li>Hovering over any tag shows a brief description of what that tag is
-		about. Some of the terms really needed a definition, so I just added
-		one for all of them. Hope you all enjoy them!</li>
-		<li>These descriptions are also shown on the new
-		<a href="/blog/tag">tag overview page</a>, which now kind of doubles
-		as a glossary.</li>
-	</ul>
+</p><ul>
+	<li>Yes, I manually went through every one of the 82 posts I've written so
+	far, and assigned labels to them.</li>
+	<li>The per-project ({{HTML_Tag "rec98" nil}} and
+	{{HTML_Tag "website" nil}}) and per-game ({{HTML_Tag "th01" nil}}
+	{{HTML_Tag "th02" nil}}
+	{{HTML_Tag "th03" nil}}
+	{{HTML_Tag "th04" nil}}
+	{{HTML_Tag "th05" nil}}) tags are automatically generated from the
+	database and the Git commit history, respectively. That might have
+	ended us up with a fair bit of category clutter, as any single change
+	to a tiny aspect is enough for a blog post to be tagged with an
+	otherwise unrelated game. For now, it doesn't seem <i>too</i> much of
+	an issue though.</li>
+	<li>Filtering already works for an arbitrary number of tags. Right now,
+	these are always combined with <code class="hovertext"
+		title="Or, if formal logic is your thing, a conjunction. ∧"
+	>AND</code> – no arbitrary boolean expressions for tag filtering yet.
+	{{HTML_Emoji "onricdennat"}}</li>
+	<li>Adding filters simply works by adding components to the URL path:
+	<kbd>https://rec98.nmlgc.net/blog/tag/tag1/tag2/tag3/</kbd>… and so
+	on.</li>
+	<li>Hovering over any tag shows a brief description of what that tag is
+	about. Some of the terms really needed a definition, so I just added one for
+	all of them. Hope you all enjoy them!</li>
+	<li>These descriptions are also shown on the new
+	<a href="/blog/tag">tag overview page</a>, which now kind of doubles as a
+	glossary.</li>
+</ul><p>
 	Finally, the order page now shows the exact number of pushes a contribution
 	will fund – no more manual <a href="/faq#duration">divisions</a> required.
 	Shoutout to the one email I received, which pointed out this potential
@@ -104,8 +104,9 @@
 	anything inside <code>.git/</code></a>, and can't track a Golang binary
 	either, due to all of the compiler's unpredictable outputs into its build
 	cache. But can't we at least turn off–
-	<blockquote>> The build cache is now required as a step toward eliminating <code>$GOPATH/pkg</code>.
-	— <a href="https://golang.org/doc/go1.12#gocache">Go 1.12 release notes</a></blockquote>
+</p><blockquote>> The build cache is now required as a step toward eliminating <code>$GOPATH/pkg</code>.
+	— <a href="https://golang.org/doc/go1.12#gocache">Go 1.12 release notes</a>
+</blockquote><p>
 	Oh, <i>wonderful</i>. Hey, I always liked <code>$GOPATH</code>! 🙁
 </p><p>
 	But sure, Golang is too smart anyway to require an external build system.

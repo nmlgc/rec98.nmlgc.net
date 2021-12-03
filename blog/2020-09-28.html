@@ -14,16 +14,16 @@
 	(?) sprites
 	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAIAQMAAADZb60gAAAABlBMVEUAAH4AAAAuh25gAAAAAXRSTlMAQObYZgAAACZJREFUeAEFwTEBACAAw7DKmJhdyEAAMma9JCShLfOi4mS79JWcfK+gCvOAwD5hAAAAAElFTkSuQmCC" alt="" />,
 	prominently seen in the Konngara, Elis, and Sariel fights, respectively.
-	Now, we've also got:<ul>
-		<li>ellipse arcs with a customizable angle distance between the
-		individual dots – mostly just used for drawing full circles,
-		though</li>
-		<li>line loops – which are only used for the rotating white squares
-		around Mima, meaning that the white star in the YuugenMagan fight got
-		a completely redundant reimplementation</li>
-		<li>and the surprisingly weirdest one, drawing the red invincibility
-		sprites.</li>
-	</ul>
+	Now, we've also got:
+</p><ul>
+	<li>ellipse arcs with a customizable angle distance between the individual
+	dots – mostly just used for drawing full circles, though</li>
+	<li>line loops – which are only used for the rotating white squares around
+	Mima, meaning that the white star in the YuugenMagan fight got a completely
+	redundant reimplementation</li>
+	<li>and the surprisingly weirdest one, drawing the red invincibility
+	sprites.</li>
+</ul><p>
 	The weirdness becomes obvious with just a single screenshot:
 </p><p class="gallery"><a
 	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness" /></a></p
@@ -74,23 +74,22 @@
 </p><hr /><p>
 	After all that, the remaining time wouldn't have been enough for the next
 	few essential classes, so I closed out the push with three more VRAM
-	effects instead:<ul>
-		<li>Single-bitplane pixel inversion inside a 32×32 square – the main
-		effect behind the discoloration seen in the bomb animation, as well as
-		the exploding squares at the end of Kikuri's and Sariel's entrance
-		animation</li>
-		<li>EGC-accelerated VRAM row copies – the second half of smooth and
-		fully hardware-accelerated scrolling for backgrounds that are twice
-		the size of VRAM</li>
-		<li>And finally, the VRAM page content transition function using
-		meshed 8×8 squares, used for the blocky transition to Sariel's first
-		and second phases. Which is quite ridiculous in just how needlessly
-		bloated it is. I'm positive that this sort of thing could have also
-		been accelerated using the PC-98's EGC… although simply writing better
-		C would have already gone a long way. The function also comes with
-		three unused mesh patterns.</li>
-	</ul>
-</p><hr /><p>
+	effects instead:
+</p><ul>
+	<li>Single-bitplane pixel inversion inside a 32×32 square – the main effect
+	behind the discoloration seen in the bomb animation, as well as the
+	exploding squares at the end of Kikuri's and Sariel's entrance
+	animation</li>
+	<li>EGC-accelerated VRAM row copies – the second half of smooth and fully
+	hardware-accelerated scrolling for backgrounds that are twice the size of
+	VRAM</li>
+	<li>And finally, the VRAM page content transition function using meshed 8×8
+	squares, used for the blocky transition to Sariel's first and second phases.
+	Which is quite ridiculous in just how needlessly bloated it is. I'm positive
+	that this sort of thing could have also been accelerated using the PC-98's
+	EGC… although simply writing better C would have already gone a long way.
+	The function also comes with three unused mesh patterns.</li>
+</ul><hr /><p>
 	And with that, ReC98, as a whole, is not only ⅓ done, but I've also fully
 	caught up with the feature backlog for the first time in the history of
 	this crowdfunding! Time to go into maintenance mode then, while we wait

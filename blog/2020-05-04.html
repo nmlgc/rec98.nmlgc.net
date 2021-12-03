@@ -23,12 +23,13 @@
 	.STD enemy script interpreter is even immediately ready for decompilation,
 	in one single future push.
 </p><p>
-	As far as I can tell, that now only leaves<ul>
-		<li>.MPN file loading</li>
-		<li>player bomb animations</li>
-		<li>some structures specific to the Shinki and EX-Alice battles</li>
-		<li>plus some smaller things I've missed over the years</li>
-	</ul>
+	As far as I can tell, that now only leaves
+</p><ul>
+	<li>.MPN file loading</li>
+	<li>player bomb animations</li>
+	<li>some structures specific to the Shinki and EX-Alice battles</li>
+	<li>plus some smaller things I've missed over the years</li>
+</ul><p>
 	until TH05's <code>MAIN.EXE</code> is completely position-independent.
 	<br />
 	Which, however, won't be all it needs for that 100% PI rating on the front
@@ -51,12 +52,13 @@
 	redrawn this frame. And this one must have had the hardest function
 	signature to figure out in all of PC-98 Touhou, because <i>it actually
 	seems impossible</i>. Looking at all the ways the game passes the center
-	coordinate to this function, we have<ol>
-		<li>X and Y as 16-bit integer literals, merged into a single
-		<code>PUSH</code> of a 32-bit immediate</li>
-		<li>X and Y calculated and pushed independently from each other</li>
-		<li>by-value copies of entire <code>Point</code> instances</li>
-	</ol>
+	coordinate to this function, we have
+</p><ol>
+	<li>X and Y as 16-bit integer literals, merged into a single
+	<code>PUSH</code> of a 32-bit immediate</li>
+	<li>X and Y calculated and pushed independently from each other</li>
+	<li>by-value copies of entire <code>Point</code> instances</li>
+</ol><p>
 	Any single declaration would only lead to at most two of the three cases
 	generating the original instructions. No way around separately declaring
 	the function in every translation unit then, with the correct parameter

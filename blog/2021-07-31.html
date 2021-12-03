@@ -164,20 +164,20 @@
 	The function itself is among the longer ones in both games. It especially
 	stands out in the indentation department, with 7 levels at its most
 	indented point – and that's the <i>minimum</i> of what's possible without
-	<code>goto</code>. Only two more notable discoveries there:<ol>
-		<li>Bullets are the only entity affected by Slow Mode. If the number of
-		bullets on screen is ≥ <code>(24 + (difficulty * 8) + rank)</code> in
-		TH04, or <code>(42 + (difficulty * 8))</code> in TH05, Slow Mode
-		reduces the frame rate by 33%, by waiting for one additional VSync
-		event every two frames.<br />
-		The code also reveals a second tier, with 50% slowdown for a slightly
-		higher number of bullets, but that conditional branch can never be
-		executed {{HTML_Emoji "zunpet"}}</li>
-		<li>Bullets must have been grazed in a previous frame before they can
-		be collided with. (Note how this does not apply to bullets that spawned
-		on top of the player, as explained earlier!)</li>
-	</ol>
-</p><p>
+	<code>goto</code>. Only two more notable discoveries there:
+</p><ol>
+	<li>Bullets are the only entity affected by Slow Mode. If the number of
+	bullets on screen is ≥ <code>(24 + (difficulty * 8) + rank)</code> in TH04,
+	or <code>(42 + (difficulty * 8))</code> in TH05, Slow Mode reduces the frame
+	rate by 33%, by waiting for one additional VSync event every two frames.
+	<br />
+	The code also reveals a second tier, with 50% slowdown for a slightly
+	higher number of bullets, but that conditional branch can never be executed
+	{{HTML_Emoji "zunpet"}}</li>
+	<li>Bullets must have been grazed in a previous frame before they can
+	be collided with. (Note how this does not apply to bullets that spawned
+	on top of the player, as explained earlier!)</li>
+</ol><p>
 	Whew… When did ReC98 turn into a full-on code review?! 😅 And after all
 	this, we're <i>still</i> not done with TH04 and TH05 bullets, with all the
 	special movement types still missing. That should be less than one push

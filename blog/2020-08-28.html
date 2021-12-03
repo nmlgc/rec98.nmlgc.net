@@ -55,26 +55,26 @@
 	simple <code>struct { int x, y; } pos</code>, storing the current position
 	of the character-specific bomb animation entity. But all 4 characters use
 	this field differently:
-	<ul>
-		<li>For Reimu's blue stars, it's the top-left position of each star,
-		in the 12.4 fixed-point format. But unlike the vast majority of these
-		values in TH04 and TH05, it's relative to the top-left corner of the
-		<i>screen</i>, not the playfield. Much better represented as
-		<code>struct { Subpixel screen_x, screen_y; } topleft</code>.</li>
-		<li>For Marisa's lasers, it's the center of each circle, as a regular
-		12.4 fixed-point coordinate, relative to the top-left corner of the
-		playfield. Much better represented as
-		<code>struct { Subpixel x, y; } center</code>.</li>
-		<li>For Mima's shrinking circles, it's the center of each circle in
-		regular pixel coordinates. Much better represented as
-		<code>struct { screen_x_t x; screen_y_t y; } center</code>.</li>
-		<li>For Yuuka's spinning heart, it's the top-left corner in regular pixel coordinates. Much better represented as
-		<code>struct { screen_x_t x; screen_y_t y; } topleft</code>.<br />
-		And yes, singular. The game is actually smart enough to only store a
-		single heart, and then create the rest of the circle on the fly.
-		(If it were even smarter, it wouldn't even use this structure member,
-		but oh well.)</li>
-	</ul>
+</p><ul>
+	<li>For Reimu's blue stars, it's the top-left position of each star, in the
+	12.4 fixed-point format. But unlike the vast majority of these values in
+	TH04 and TH05, it's relative to the top-left corner of the
+	<i>screen</i>, not the playfield. Much better represented as
+	<code>struct { Subpixel screen_x, screen_y; } topleft</code>.</li>
+	<li>For Marisa's lasers, it's the center of each circle, as a regular 12.4
+	fixed-point coordinate, relative to the top-left corner of the playfield.
+	Much better represented as
+	<code>struct { Subpixel x, y; } center</code>.</li>
+	<li>For Mima's shrinking circles, it's the center of each circle in regular
+	pixel coordinates. Much better represented as
+	<code>struct { screen_x_t x; screen_y_t y; } center</code>.</li>
+	<li>For Yuuka's spinning heart, it's the top-left corner in regular pixel
+	coordinates. Much better represented as
+	<code>struct { screen_x_t x; screen_y_t y; } topleft</code>.<br />
+	And yes, singular. The game is actually smart enough to only store a single
+	heart, and then create the rest of the circle on the fly. (If it were even
+	smarter, it wouldn't even use this structure member, but oh well.)</li>
+</ul><p>
 	Therefore, I decompiled it as 4 separate structures once again, bundled
 	into an <code>union</code> of arrays.
 </p><p>

@@ -127,6 +127,7 @@ aside .icon-cell {
 	width: calc((15em / 9) * 16);
 	height: 480px;
 	max-width: 100%;
+	border: 0;
 }
 
 .gallery figcaption {

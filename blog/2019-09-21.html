@@ -15,17 +15,17 @@
 	Turns out we actually can! It's kinda annoying, though: After splitting
 	the segment after the function we want to decompile, we then need to group
 	the two new segments back together into one "virtual segment" matching the
-	original one. </i>But</i> since all ASM in ReC98 heavily relies on being
+	original one. <i>But</i> since all ASM in ReC98 heavily relies on being
 	assembled in MASM mode, we then start to suffer from MASM's group
 	addressing quirk. Which then forces us to manually prefix every single
 	function call
-	<ul>
-		<li>from inside the group</li>
-		<li>to anywhere else within the newly created segment</li>
-	</ul>
+</p><ul>
+	<li>from inside the group</li>
+	<li>to anywhere else within the newly created segment</li>
+</ul><p>
 	with the group name. It's stupidly boring busywork, because of all the
-    function calls you <i>mustn't</i> prefix. Special tooling might make this
-    easier, but I don't have it, and I'm not getting crowdfunded for it.
+	function calls you <i>mustn't</i> prefix. Special tooling might make this
+	easier, but I don't have it, and I'm not getting crowdfunded for it.
 </p><p>
 	So while you now definitely <i>can</i> request any specific thing in any
 	of the 5 games to be decompiled <i>right now</i>, it will take slightly

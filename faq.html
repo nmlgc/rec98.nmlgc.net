@@ -122,10 +122,10 @@
 	Position <i>dependence</i> means that a binary's references to global
 	variables are expressed as raw number constants, rather than being named
 	with identifiers:
-<pre>mov ax, some_data   ; Position-independent
+</p><pre>mov ax, some_data   ; Position-independent
 mov ax, 1234h       ; Position-dependent; assumes that
                     ; [some_data] is at address 1234h
-</pre>
+</pre><p>
 	If you increase or decrease the number of bytes anywhere in the non-header
 	parts of an executable, you'll end up breaking most of these
 	position-dependent references, since global variables no longer are where

@@ -10,7 +10,7 @@
 	for the middle section.<br />
 	This one pattern is drawn by making surprisingly good use of the GRCG. So
 	far, we've only seen it used for fast monochrome drawing:
-	<pre>// Setting up fast drawing using color #9 (1001 in binary)
+</p><pre>// Setting up fast drawing using color #9 (1001 in binary)
 grcg_setmode(GC_RMW);
 outportb(0x7E, 0xFF); // Plane 0: (B): (********)
 outportb(0x7E, 0x00); // Plane 1: (R): (        )
@@ -20,16 +20,16 @@ outportb(0x7E, 0xFF); // Plane 3: (E): (********)
 // Write a checkerboard pattern (* * * * ) in color #9 to the top-left corner,
 // with transparent blanks. Requires only 1 VRAM write to a single bitplane:
 // The GRCG automatically writes to the correct bitplanes, as specified above
-*(uint8_t *)(MK_FP(0xA800, 0)) = 0xAA;</pre>
+*(uint8_t *)(MK_FP(0xA800, 0)) = 0xAA;</pre><p>
 	But since this is actually an 8-pixel <i>tile register</i>, we can set any
 	8-pixel pattern for any bitplane. This way, we can get different colors
 	for every one of the 8 pixels, with still just a single VRAM write of the
 	alpha mask to a single bitplane:
-	<pre>grcg_setmode(GC_RMW); //  Final color: (A7A7A7A7)
+</p><pre>grcg_setmode(GC_RMW); //  Final color: (A7A7A7A7)
 outportb(0x7E, 0x55); // Plane 0: (B): ( * * * *)
 outportb(0x7E, 0xFF); // Plane 1: (R): (********)
 outportb(0x7E, 0x55); // Plane 2: (G): ( * * * *)
-outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre>
+outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre><p>
 	And I thought TH01 only suffered the drawbacks of PC-98 hardware, making
 	so little use of its actual features that it's perhaps not fair to even
 	call it "a PC-98 game"… Still, I'd say that "bad PC-98 port of an idea"
@@ -37,12 +37,14 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre>
 </p><p>
 	However, after that tiny flash of brilliance, the surrounding HP rendering
 	code goes right back to being the typical sort of confusing TH01 jank.
-	There's only a single function for the three distinct jobs of<ul>
-		<li>incrementing HP during the boss entrance animation,</li>
-		<li>decrementing HP if hit by the Orb, and</li>
-		<li>redrawing the entire bar, because it's still all in VRAM, and
-		Sariel wants different backgrounds,</li>
-	</ul> with magic numbers to select between all of these.
+	There's only a single function for the three distinct jobs of
+</p><ul>
+	<li>incrementing HP during the boss entrance animation,</li>
+	<li>decrementing HP if hit by the Orb, and</li>
+	<li>redrawing the entire bar, because it's still all in VRAM, and Sariel
+	wants different backgrounds,</li>
+</ul><p>
+	with magic numbers to select between all of these.
 </p><p>
 	VRAM of course also means that the backgrounds behind the individual hit
 	points have to be stored, so that they can be unblitted later as the boss
@@ -67,7 +69,7 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre>
 	self-restriction of only unblitting 16×16 pixels at a time requires any
 	remaining odd hit point at the last position to, of course, be rendered
 	again {{HTML_Emoji "onricdennat"}}
-</p><hr /></p>
+</p><hr /><p>
 	After stumbling over the weakest imaginable random number
 	<s>generator</s>, we finally arrive at the shared boss↔orb collision
 	handling function, the final blocker among the final blockers. This

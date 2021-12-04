@@ -13,6 +13,12 @@ import (
 	"strings"
 )
 
+// ByteRange defines a range of bytes by its start and end address.
+type ByteRange struct {
+	Start uint
+	End   uint
+}
+
 type keywords []string
 
 func (k keywords) match(s string) bool {
@@ -76,7 +82,14 @@ type asmStats struct {
 	absoluteRefs int
 }
 
-func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
+// ASMParser collects all optional parameters for ASM parsing.
+type ASMParser struct {
+	// If nonzero, the parser will count absolute memory references within this
+	// range.
+	DataRange ByteRange
+}
+
+func (p *ASMParser) ParseStats(file io.ReadCloser) (ret asmStats) {
 	maybeAddress := func(s string) bool {
 		addr, err := strconv.ParseInt(s, 16, 64)
 		FatalIf(err)
@@ -85,7 +98,8 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 		if addr < 0 {
 			addr = 0x10000 + addr
 		}
-		return addr >= int64(dataRange.Start) && addr <= int64(dataRange.End)
+		return addr >= int64(p.DataRange.Start) &&
+			addr <= int64(p.DataRange.End)
 	}
 
 	type SegmentType int
@@ -160,7 +174,7 @@ func asmParseStats(file io.ReadCloser, dataRange ByteRange) (ret asmStats) {
 			!rxEquals.MatchString(line) {
 			// OK, got an instruction that counts towards the total.
 
-			if dataRange.Start > 0 {
+			if p.DataRange.Start > 0 {
 				m := rxAddress.FindStringSubmatch(line)
 				if m != nil && maybeAddress(m[1]) &&
 					!rxNoAddressInstruction.MatchString(params[0]) {

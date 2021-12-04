@@ -30,12 +30,6 @@ func GameAbbrev(gameNum0Based int) (string, error) {
 	return fmt.Sprintf("TH%02d", gameNum0Based+1), nil
 }
 
-// ByteRange defines a range of bytes by its start and end address.
-type ByteRange struct {
-	Start uint
-	End   uint
-}
-
 type gameComponent struct {
 	binary string
 	files  []string
@@ -231,10 +225,10 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 				continue
 			}
 			go func() {
-				c <- progressTuple{
-					instructions, absoluteRefs,
-					asmParseStats(fr, comp.dataRange),
+				p := ASMParser{
+					DataRange: comp.dataRange,
 				}
+				c <- progressTuple{instructions, absoluteRefs, p.ParseStats(fr)}
 			}()
 			filesParsed++
 		}

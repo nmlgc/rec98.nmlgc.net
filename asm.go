@@ -82,14 +82,32 @@ type asmStats struct {
 	absoluteRefs int
 }
 
-// ASMParser collects all optional parameters for ASM parsing.
+type SegmentType int
+
+const (
+	None SegmentType = iota
+	Code
+	Data
+)
+
+// ASMParser collects all optional parameters and state for one ASM parse run.
 type ASMParser struct {
+	/// Parameters
+	/// ----------
+
 	// If nonzero, the parser will count absolute memory references within this
 	// range.
 	DataRange ByteRange
 
 	// Callback function for loading included files.
 	LoadFile func(fn string) (io.ReadCloser, error)
+	/// ----------
+
+	/// State
+	/// -----
+
+	inSeg SegmentType
+	/// -----
 }
 
 func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
@@ -110,15 +128,6 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 			addr <= int64(p.DataRange.End)
 	}
 
-	type SegmentType int
-
-	const (
-		None SegmentType = iota
-		Code
-		Data
-	)
-
-	inSeg := None
 	procCount := 0
 	unnamedProcName := func() string {
 		return fmt.Sprintf("unnamed_%v", procCount)
@@ -126,17 +135,17 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 	procName := unnamedProcName()
 
 	isCodeLine := func(line string) bool {
-		if inSeg != Code && rxCodeSegment.MatchString(line) {
-			inSeg = Code
+		if p.inSeg != Code && rxCodeSegment.MatchString(line) {
+			p.inSeg = Code
 			return false // Ignore *this* line
-		} else if inSeg != Data && rxDataSegment.MatchString(line) {
-			inSeg = Data
+		} else if p.inSeg != Data && rxDataSegment.MatchString(line) {
+			p.inSeg = Data
 		}
-		return inSeg == Code
+		return p.inSeg == Code
 	}
 
 	scanner := bufio.NewScanner(file)
-	for inSeg != Data && scanner.Scan() {
+	for p.inSeg != Data && scanner.Scan() {
 		line := scanner.Text()
 
 		// Remove comments

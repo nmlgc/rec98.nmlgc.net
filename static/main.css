@@ -361,9 +361,18 @@ span.incoming { color: red; }
 
 /* Estimate
    -------- */
-#estimate h1,
-#estimate h2 {
+#estimate {
 	text-align: center;
+}
+
+#estimate h2 {
+	margin-bottom: 0;
+}
+
+#estimate h2 + small {
+	display: block;
+	margin-bottom: 1.75em;
+	color: dimgray;
 }
 
 section.overall, section.game, section.binary {

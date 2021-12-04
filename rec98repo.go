@@ -5,11 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"math"
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -211,25 +213,30 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
+	loadMutex := sync.Mutex{}
+
+	loadFromTree := func(fn string) (io.ReadCloser, error) {
+		loadMutex.Lock()
+		defer loadMutex.Unlock()
+		f, err := tree.File(fn)
+		if err != nil {
+			return nil, err
+		}
+		return f.Reader()
+	}
 
 	progressFor := func(
 		instructions *float64, absoluteRefs *float64, comp gameComponent,
 	) {
-		for _, file := range comp.files {
-			f, err := tree.File(file)
-			if err != nil {
-				continue
+		for _, fn := range comp.files {
+			p := ASMParser{
+				DataRange: comp.dataRange,
+				LoadFile:  loadFromTree,
 			}
-			fr, err := f.Reader()
-			if err != nil {
-				continue
-			}
-			go func() {
-				p := ASMParser{
-					DataRange: comp.dataRange,
-				}
-				c <- progressTuple{instructions, absoluteRefs, p.ParseStats(fr)}
-			}()
+			// https://github.com/golang/go/wiki/CommonMistakes#using-goroutines-on-loop-iterator-variables
+			go func(fn string) {
+				c <- progressTuple{instructions, absoluteRefs, p.ParseStats(fn)}
+			}(fn)
 			filesParsed++
 		}
 	}

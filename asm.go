@@ -87,9 +87,17 @@ type ASMParser struct {
 	// If nonzero, the parser will count absolute memory references within this
 	// range.
 	DataRange ByteRange
+
+	// Callback function for loading included files.
+	LoadFile func(fn string) (io.ReadCloser, error)
 }
 
-func (p *ASMParser) ParseStats(file io.ReadCloser) (ret asmStats) {
+func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
+	file, err := p.LoadFile(fn)
+	if err != nil {
+		return ret
+	}
+
 	maybeAddress := func(s string) bool {
 		addr, err := strconv.ParseInt(s, 16, 64)
 		FatalIf(err)

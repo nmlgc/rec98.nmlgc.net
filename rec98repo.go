@@ -231,8 +231,9 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	progressFor := func(m metricPointers, comp gameComponent) {
 		for _, fn := range comp.files {
 			p := ASMParser{
-				DataRange: comp.dataRange,
-				LoadFile:  loadFromTree,
+				DataRange:                comp.dataRange,
+				LoadFile:                 loadFromTree,
+				ShouldRecurseIntoInclude: func(string) bool { return false },
 			}
 			// https://github.com/golang/go/wiki/CommonMistakes#using-goroutines-on-loop-iterator-variables
 			go func(fn string) { c <- progressTuple{m, p.ParseStats(fn)} }(fn)

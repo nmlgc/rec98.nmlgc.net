@@ -78,8 +78,9 @@ type asmProc struct {
 }
 
 type asmStats struct {
-	procs        []asmProc
-	absoluteRefs int
+	procs             []asmProc
+	procsFromIncludes []asmProc
+	absoluteRefs      int
 }
 
 type SegmentType int
@@ -101,6 +102,9 @@ type ASMParser struct {
 
 	// Callback function for loading included files.
 	LoadFile func(fn string) (io.ReadCloser, error)
+	/// ----------
+
+	ShouldRecurseIntoInclude func(fn string) bool
 	/// ----------
 
 	/// State
@@ -185,6 +189,13 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 			if kwIgnoredDirectives.match(params[1]) || kwData.match(params[1]) {
 				continue
 			}
+		}
+		if strings.EqualFold(params[0], "include") &&
+			p.ShouldRecurseIntoInclude(params[1]) {
+			includeStats := p.ParseStats(params[1])
+			ret.procsFromIncludes = append(
+				ret.procsFromIncludes, includeStats.procs...,
+			)
 		}
 		if !kwIgnoredInstructions.match(params[0]) &&
 			!kwData.match(params[0]) &&

@@ -206,10 +206,13 @@ func REProgressAtCommit(commit *object.Commit) (*REProgress, error) {
 }
 
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
-	type progressTuple struct {
+	type metricPointers struct {
 		instructions *float64
 		absoluteRefs *float64
-		result       asmStats
+	}
+	type progressTuple struct {
+		metricPointers
+		result asmStats
 	}
 	c := make(chan progressTuple)
 	filesParsed := 0
@@ -225,26 +228,24 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		return f.Reader()
 	}
 
-	progressFor := func(
-		instructions *float64, absoluteRefs *float64, comp gameComponent,
-	) {
+	progressFor := func(m metricPointers, comp gameComponent) {
 		for _, fn := range comp.files {
 			p := ASMParser{
 				DataRange: comp.dataRange,
 				LoadFile:  loadFromTree,
 			}
 			// https://github.com/golang/go/wiki/CommonMistakes#using-goroutines-on-loop-iterator-variables
-			go func(fn string) {
-				c <- progressTuple{instructions, absoluteRefs, p.ParseStats(fn)}
-			}(fn)
+			go func(fn string) { c <- progressTuple{m, p.ParseStats(fn)} }(fn)
 			filesParsed++
 		}
 	}
 	for game, sources := range gameSources {
-		pi := &progress.Instructions
-		pr := &progress.AbsoluteRefs
-		for i := range pi.ComponentSum {
-			progressFor(&pi.CMetrics[game][i], &pr.CMetrics[game][i], sources[i])
+		for i := range progress.Instructions.ComponentSum {
+			m := metricPointers{
+				instructions: &progress.Instructions.CMetrics[game][i],
+				absoluteRefs: &progress.AbsoluteRefs.CMetrics[game][i],
+			}
+			progressFor(m, sources[i])
 		}
 	}
 	for ; filesParsed > 0; filesParsed-- {

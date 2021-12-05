@@ -265,9 +265,11 @@ var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 	const CACHE_FN = "progress_cache.gob"
 
 	parserHashCur := CryptHashOfFile("asm.go")
+	repoHashCur := CryptHashOfFile("rec98repo.go")
 
 	load := func(fn string) (ret map[plumbing.Hash]*REProgress, err error) {
 		var parserHashPrev CryptHash
+		var repoHashPrev CryptHash
 
 		f, err := os.Open(fn)
 		if err != nil {
@@ -277,7 +279,10 @@ var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 		if err := dec.Decode(&parserHashPrev); err != nil {
 			return make(map[plumbing.Hash]*REProgress), err
 		}
-		if parserHashCur != parserHashPrev {
+		if err := dec.Decode(&repoHashPrev); err != nil {
+			return make(map[plumbing.Hash]*REProgress), err
+		}
+		if parserHashCur != parserHashPrev || repoHashCur != repoHashPrev {
 			return make(map[plumbing.Hash]*REProgress), errors.New(
 				"ASM parser has changed",
 			)
@@ -294,6 +299,7 @@ var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 		FatalIf(err)
 		enc := gob.NewEncoder(f)
 		FatalIf(enc.Encode(parserHashCur))
+		FatalIf(enc.Encode(repoHashCur))
 		FatalIf(enc.Encode(cache))
 		FatalIf(f.Close())
 	}

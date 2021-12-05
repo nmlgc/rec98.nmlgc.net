@@ -245,6 +245,8 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 				DataRange:                comp.dataRange,
 				LoadFile:                 loadFromTree,
 				ShouldRecurseIntoInclude: ifNotLibOrComponent,
+				ProcStartMacros:          keywords{"func", "proc_defconv"},
+				ProcEndMacros:            keywords{"endfunc", "endp_defconv"},
 			}
 			// https://github.com/golang/go/wiki/CommonMistakes#using-goroutines-on-loop-iterator-variables
 			go func(fn string) { c <- progressTuple{m, p.ParseStats(fn)} }(fn)

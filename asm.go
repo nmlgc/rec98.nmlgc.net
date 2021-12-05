@@ -111,6 +111,10 @@ type ASMParser struct {
 	/// ----------
 
 	ShouldRecurseIntoInclude func(fn string) bool
+
+	// Horrible hack, but quicker than implementing macro expansion…
+	ProcStartMacros keywords
+	ProcEndMacros   keywords
 	/// ----------
 
 	/// State
@@ -200,6 +204,15 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 					continue
 				}
 			}
+			if p.ProcStartMacros != nil && p.ProcStartMacros.match(params[0]) {
+				procEnter(params[1])
+				continue
+			}
+			if p.ProcEndMacros != nil && p.ProcEndMacros.match(params[0]) {
+				procLeave()
+				continue
+			}
+
 			if kwIgnoredDirectives.match(params[1]) || kwData.match(params[1]) {
 				continue
 			}

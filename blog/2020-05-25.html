@@ -1,4 +1,4 @@
-{{$pic1 := printf "%v%v" .FilePrefix "alphabet.png" -}}
+{{$pic1 := (call .PostFileURL "alphabet.png") -}}
 
 <p>
 	Three pushes to decompile the TH01 high score menu… because it's

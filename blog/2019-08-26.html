@@ -1,5 +1,5 @@
-{{$pic1 := printf "%v%v" .FilePrefix "MemRef-Upper-at-6023f5c.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "Position-independence-at-6023f5c.png" -}}
+{{$pic1 := (call .PostFileURL "MemRef-Upper-at-6023f5c.png") -}}
+{{$pic2 := (call .PostFileURL "Position-independence-at-6023f5c.png") -}}
 
 <p>Website development time: 7/12</p>
 <p>So yeah, "upper bound" and "probability". In reality it's certainly better than the numbers suggest, but as I keep saying, we can't say much about position independence without having reverse-engineered everything.</p>

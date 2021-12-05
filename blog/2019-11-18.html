@@ -1,6 +1,6 @@
-{{$pic1 := printf "%v%v" .FilePrefix "egc_shift_left-before.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "egc_shift_left-after.png" -}}
-{{$pic3 := printf "%v%v" .FilePrefix "Priorities-given.svg" -}}
+{{$pic1 := (call .PostFileURL "egc_shift_left-before.png") -}}
+{{$pic2 := (call .PostFileURL "egc_shift_left-after.png") -}}
+{{$pic3 := (call .PostFileURL "Priorities-given.svg") -}}
 
 <p>
 	With no feedback to {{Blog_PostLink "2019-11-13" "last week's blog post"}},

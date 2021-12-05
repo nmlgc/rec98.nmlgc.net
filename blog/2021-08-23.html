@@ -1,5 +1,5 @@
-{{$pic := printf "%v%v" .FilePrefix "TH01-Konngara-slash-triangle.png" -}}
-{{$vid := printf "%v%v" .FilePrefix "TH01-Konngara-four_homing_snakes" -}}
+{{$pic := (call .PostFileURL "TH01-Konngara-slash-triangle.png") -}}
+{{$vid := (call .PostFileURL "TH01-Konngara-four_homing_snakes") -}}
 
 <p>
 	{{Blog_PostLink "2021-05-27" "7 pushes to get Konngara done, according to my previous estimate?"}}

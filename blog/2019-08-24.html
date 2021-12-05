@@ -1,5 +1,5 @@
-{{$pic1 := printf "%v%v" .FilePrefix "Stats-at-6023f5c.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "Percentages-at-6023f5c.png" -}}
+{{$pic1 := (call .PostFileURL "Stats-at-6023f5c.png") -}}
+{{$pic2 := (call .PostFileURL "Percentages-at-6023f5c.png") -}}
 
 <p>Website development time: 6/12</p>
 <p>Here we go, overall ReC98 reverse-engineering progress. Now viewable for every commit on the page.</p>

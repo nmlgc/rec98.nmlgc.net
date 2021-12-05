@@ -1,5 +1,5 @@
-{{$pic := printf "%v%v" .FilePrefix "TH01-Invincibility-sprites.png" -}}
-{{$vid := printf "%v%v" .FilePrefix "TH01-Invincibility-naive-unblitting" -}}
+{{$pic := (call .PostFileURL "TH01-Invincibility-sprites.png") -}}
+{{$vid := (call .PostFileURL "TH01-Invincibility-naive-unblitting") -}}
 
 <p>
 	Back to TH01, and its boss sprite format… with a separate class for

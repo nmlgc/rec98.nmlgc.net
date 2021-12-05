@@ -1,4 +1,3 @@
-{{$prefix := .FilePrefix -}}
 {{$grzview := printf "%v%v" .DatePrefix "grzview.zip" -}}
 
 <p>
@@ -31,7 +30,7 @@
 	Also, have some rips of all the images this format is used for:
 </p><p class="gallery small">{{range loop 0 16 -}}
 	{{- $pic := printf "boss8.grz-%1X.png" . -}}
-	{{- $picFN := printf "%v%v" $prefix $pic -}}
+	{{- $picFN := (call $.PostFileURL $pic) -}}
 	<a href="{{$picFN}}"><img
 		src="{{$picFN}}"
 		alt="<code>boss8.grz</code>, image {{inc .}}/16"

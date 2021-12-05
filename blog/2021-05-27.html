@@ -1,5 +1,5 @@
-{{$pic1 := printf "%v%v" .FilePrefix "PC98-8x16-font-ROM.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "PC98-text-modes.png" -}}
+{{$pic1 := (call .PostFileURL "PC98-8x16-font-ROM.png") -}}
+{{$pic2 := (call .PostFileURL "PC98-text-modes.png") -}}
 
 <p>
 	Alright, onto Konngara! Let's quickly move the escape sequences used later

@@ -1,5 +1,5 @@
 {{$patch := printf "%v%v" .DatePrefix "TH01OrbPhysicsDebug.zip" -}}
-{{$pic   := printf "%v%v" .FilePrefix "TH01OrbPhysicsDebug.png" -}}
+{{$pic   := (call .PostFileURL "TH01OrbPhysicsDebug.png") -}}
 
 <p>
 	So, let's finally look at some TH01 gameplay structures! The obvious

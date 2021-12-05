@@ -69,9 +69,10 @@ func (b Blog) FindEntryForPush(p Push) *BlogEntry {
 
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
-	HostedPath hostedPath    // Value of [blogHP]
-	DatePrefix string        // Date prefix for potential post-specific files
-	FilePrefix template.HTML // [HostedPath.URLPrefix] + [DatePrefix]
+	HostedPath hostedPath // Value of [blogHP]
+	DatePrefix string     // Date prefix for potential post-specific files
+	// Generates [HostedPath.URLPrefix] + [DatePrefix]
+	PostFileURL func(fn string) template.HTML
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -102,7 +103,10 @@ func (e BlogEntry) Render(filters []string) Post {
 	ctx := PostDot{
 		HostedPath: blogHP,
 		DatePrefix: datePrefix,
-		FilePrefix: template.HTML(blogHP.URLPrefix + datePrefix),
+		PostFileURL: func(fn string) template.HTML {
+			datePrefixedFN := datePrefix + fn
+			return template.HTML(blogHP.URLPrefix + datePrefixedFN)
+		},
 	}
 	pagesExecute(&b, e.templateName, &ctx)
 

@@ -1,6 +1,6 @@
-{{$pic1 := printf "%v%v" .FilePrefix "TH01-Mima-three-arms.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "TH01-Route-selection-Makai.png" -}}
-{{$pic3 := printf "%v%v" .FilePrefix "TH01-Route-selection-Jigoku.png" -}}
+{{$pic1 := (call .PostFileURL "TH01-Mima-three-arms.png") -}}
+{{$pic2 := (call .PostFileURL "TH01-Route-selection-Makai.png") -}}
+{{$pic3 := (call .PostFileURL "TH01-Route-selection-Jigoku.png") -}}
 
 <p>
 	OK, TH01 missile bullets. Can we maybe have a well-behaved entity type,

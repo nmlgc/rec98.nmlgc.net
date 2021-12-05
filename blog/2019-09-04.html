@@ -1,5 +1,5 @@
-{{$pic1 := printf "%v%v" .FilePrefix "Fundlog.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "Blog.png" -}}
+{{$pic1 := (call .PostFileURL "Fundlog.png") -}}
+{{$pic2 := (call .PostFileURL "Blog.png") -}}
 
 <p>Website development time: 10/12</p>
 <p>In order to be able to calculate how many instructions and absolute memory references are actually being removed with each push, we first need the database with the previous pushes from the Discord crowdfunding days. And while I was at it, I also imported the summary posts from back then.</p>

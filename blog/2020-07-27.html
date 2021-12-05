@@ -1,5 +1,5 @@
-{{$pic1 := printf "%v%v" .FilePrefix "Life-wrapping.png" -}}
-{{$pic2 := printf "%v%v" .FilePrefix "mask.grf.png" -}}
+{{$pic1 := (call .PostFileURL "Life-wrapping.png") -}}
+{{$pic2 := (call .PostFileURL "mask.grf.png") -}}
 
 <p>
 	It's vacation time! Which, for ReC98, means "relaxing by looking at

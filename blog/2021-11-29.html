@@ -1,4 +1,4 @@
-{{$pic := printf "%v%v" .FilePrefix "TH04-NoEMS-Crash-screen.png" -}}
+{{$pic := (call .PostFileURL "TH04-NoEMS-Crash-screen.png") -}}
 {{$patch := printf "%v%v" .DatePrefix "Memory-limit-fixes.zip" -}}
 
 <p>

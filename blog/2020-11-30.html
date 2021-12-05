@@ -1,5 +1,4 @@
-{{$prefix := .FilePrefix -}}
-{{$pic := printf "%v%v" .FilePrefix "TH01-Overlapping-obstacles-and-cards.png" -}}
+{{$pic := (call .PostFileURL "TH01-Overlapping-obstacles-and-cards.png") -}}
 
 <p>
 	So, only one card-flipping function missing, and then we can start
@@ -135,7 +134,7 @@
 </p>
 <p class="gallery medium">{{range loop 21 25 -}}
 	{{- $pic := printf "TH01-Stage-%d.png" . -}}
-	{{- $picFN := printf "%v%v" $prefix $pic -}}
+	{{- $picFN := (call $.PostFileURL $pic) -}}
 	<a href="{{$picFN}}"><img
 		src="{{$picFN}}"
 		alt="TH01 stage {{.}}, loaded from <code>STAGE7.DAT</code>"

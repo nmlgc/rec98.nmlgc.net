@@ -454,6 +454,14 @@ func (e REProgressEstimate) ForCodeNotREd() REMetricEstimate {
 	}
 }
 
+// ForCodeNotFinal returns e's finalized instruction values.
+func (e REProgressEstimate) ForCodeNotFinal() REMetricEstimate {
+	return REMetricEstimate{
+		Done:  e.Done.CodeNotFinal,
+		Money: e.Money.CodeNotFinal,
+	}
+}
+
 // ForAbsoluteRefs returns e's position independence values.
 func (e REProgressEstimate) ForAbsoluteRefs() REMetricEstimate {
 	return REMetricEstimate{

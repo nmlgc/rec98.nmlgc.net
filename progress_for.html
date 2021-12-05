@@ -11,11 +11,11 @@
 
 <div class="progress-grid">
 	<figure class="progress">
-		<figcaption>Not yet reverse-engineered x86 instructions</figcaption>
+		<figcaption>x86 instructions needing reverse-engineering</figcaption>
 		{{template "progress_table.html" $progress.CodeNotREd.FormattedAsInt}}
 	</figure>
 	<figure class="progress">
-		<figcaption>Completion percentage
+		<figcaption>Completion, excluding technical debt
 			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
 		</figcaption>
 		{{template "progress_table.html" $pct.CodeNotREd.FormattedAsPct}}
@@ -34,4 +34,17 @@
 		{{template "progress_table.html" $pct.AbsoluteRefs.FormattedAsPct}}
 	</figure>
 </div>
+{{if $notBaseline -}}
+<hr />
+<div class="progress-grid">
+	<figure class="progress">
+		<figcaption>x86 instructions with unknown decompilability</figcaption>
+		{{template "progress_table.html" $progress.CodeNotFinal.FormattedAsInt}}
+	</figure>
+	<figure class="progress">
+		<figcaption>Completion, including technical debt</figcaption>
+		{{template "progress_table.html" $pct.CodeNotFinal.FormattedAsPct}}
+	</figure>
+</div>
+{{end -}}
 {{template "footer.html"}}

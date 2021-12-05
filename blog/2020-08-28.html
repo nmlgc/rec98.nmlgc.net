@@ -1,4 +1,5 @@
-{{$vid := (call .PostFileURL "TH05-Reimu-bomb") -}}
+{{$vid_vp9 := (call .PostFileURL "TH05-Reimu-bomb.webm") -}}
+{{$vid_vp8 := (call .PostFileURL "TH05-Reimu-bomb-vp8.webm") -}}
 
 <p>
 	Only one newly ordered push since I've reopened the store? Great, that's
@@ -95,11 +96,11 @@
 	bugged circles, consistently growing from the top-left corner (0,&nbsp;0)
 	of the playfield:
 </p><video class="gallery" controls loop>
-	<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
-	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+	<source src="{{$vid_vp9}}" type="video/webm"> <!-- For decent players -->
+	<source src="{{$vid_vp8}}" type="video/webm"> <!-- For outdated garbage -->
 	(Video of Reimu's bomb animation in TH05, demonstrating the consistent
 	circles growing from the top-left corner of the playfield;
-	<a href="{{$vid}}.webm">download here</a>)
+	<a href="{{$vid_vp9}}">download here</a>)
 </video><hr /><p>
 	After all that, there was barely enough remaining time to filter out and
 	label the final few memory references. But now, TH05's

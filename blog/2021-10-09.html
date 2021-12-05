@@ -1,4 +1,5 @@
-{{$vid := (call .PostFileURL "TH01-Particle-bug") -}}
+{{$vid_vp9 := (call .PostFileURL "TH01-Particle-bug.webm") -}}
+{{$vid_vp8 := (call .PostFileURL "TH01-Particle-bug-vp8.webm") -}}
 
 <p>
 	Nothing really noteworthy in TH01's stage timer code, just yet another HUD
@@ -101,9 +102,9 @@
 	Mima fight.
 </p><div class="gallery">
 	<video controls loop>
-		<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
-		<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
-		(Video of the particle system seen in the TH01 Mima fight that demonstrates its off-by-one bug; <a href="{{$vid}}.webm">download here</a>)
+		<source src="{{$vid_vp9}}" type="video/webm"> <!-- For decent players -->
+		<source src="{{$vid_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+		(Video of the particle system seen in the TH01 Mima fight that demonstrates its off-by-one bug; <a href="{{$vid_vp9}}">download here</a>)
 	</video>
 </div><p>
 	I like how everything about this animation is contained within a single

@@ -1,4 +1,5 @@
-{{$vid := (call .PostFileURL "Curvebullet-Speed-11") -}}
+{{$vid_vp9 := (call .PostFileURL "Curvebullet-Speed-11.webm") -}}
+{{$vid_vp8 := (call .PostFileURL "Curvebullet-Speed-11-vp8.webm") -}}
 
 <p>
 	To finish this TH05 stretch, we've got a feature that's exclusive to TH05
@@ -51,10 +52,10 @@
 	gaps between the fragments once their speed exceeds roughly 11 pixels per
 	second:
 </p><video class="gallery" controls loop>
-	<source src="{{$vid}}.webm" type="video/webm"> <!-- For decent players -->
-	<source src="{{$vid}}-vp8.webm" type="video/webm"> <!-- For outdated garbage -->
+	<source src="{{$vid_vp9}}" type="video/webm"> <!-- For decent players -->
+	<source src="{{$vid_vp8}}" type="video/webm"> <!-- For outdated garbage -->
 	(Video of EX-Alice hacked to exclusively shoot curve bullets with a speed
-	of 11 pixels a second; <a href="{{$vid}}.webm">download here</a>)
+	of 11 pixels a second; <a href="{{$vid_vp9}}">download here</a>)
 </video><p>
 	And that brings us to the last 20% of TH05 position independence! But
 	first, we'll have more cheap and fast TH01 progress.

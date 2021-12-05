@@ -133,6 +133,7 @@ type REMetricWithFormatter struct {
 // REProgress collects all progress-indicating metrics across all of ReC98.
 type REProgress struct {
 	CodeNotREd   REMetric
+	CodeNotFinal REMetric
 	AbsoluteRefs REMetric
 }
 
@@ -162,6 +163,8 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 	}
 
 	pct.CodeNotREd = metricFormula(p.CodeNotREd, base.CodeNotREd)
+	// Yes, not base.CodeNotFinal, since it may be larger than base.CodeNotREd.
+	pct.CodeNotFinal = metricFormula(p.CodeNotFinal, base.CodeNotREd)
 	pct.AbsoluteRefs = metricFormula(p.AbsoluteRefs, base.AbsoluteRefs)
 	return
 }
@@ -208,6 +211,7 @@ func REProgressAtCommit(commit *object.Commit) (*REProgress, error) {
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type metricPointers struct {
 		codeNotREd   *float64
+		codeNotFinal *float64
 		absoluteRefs *float64
 	}
 	type progressTuple struct {
@@ -228,12 +232,19 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		return f.Reader()
 	}
 
+	ifNotLibOrComponent := func(fn string) bool {
+		return (len(fn) >= 5 && !strings.EqualFold(fn[:5], "libs/")) &&
+			!strings.EqualFold(fn, "th01_reiiden_2.inc") &&
+			!strings.EqualFold(fn, "th04_main_seg3+4.inc") &&
+			!strings.EqualFold(fn, "th05_main_seg3+4.inc")
+	}
+
 	progressFor := func(m metricPointers, comp gameComponent) {
 		for _, fn := range comp.files {
 			p := ASMParser{
 				DataRange:                comp.dataRange,
 				LoadFile:                 loadFromTree,
-				ShouldRecurseIntoInclude: func(string) bool { return false },
+				ShouldRecurseIntoInclude: ifNotLibOrComponent,
 			}
 			// https://github.com/golang/go/wiki/CommonMistakes#using-goroutines-on-loop-iterator-variables
 			go func(fn string) { c <- progressTuple{m, p.ParseStats(fn)} }(fn)
@@ -244,6 +255,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		for i := range progress.CodeNotREd.ComponentSum {
 			m := metricPointers{
 				codeNotREd:   &progress.CodeNotREd.CMetrics[game][i],
+				codeNotFinal: &progress.CodeNotFinal.CMetrics[game][i],
 				absoluteRefs: &progress.AbsoluteRefs.CMetrics[game][i],
 			}
 			progressFor(m, sources[i])
@@ -254,10 +266,15 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		for _, proc := range pt.result.procs {
 			*(pt.codeNotREd) += float64(proc.instructionCount)
 		}
+		*(pt.codeNotFinal) = *(pt.codeNotREd)
+		for _, proc := range pt.result.procsFromIncludes {
+			*(pt.codeNotFinal) += float64(proc.instructionCount)
+		}
 		*(pt.absoluteRefs) += float64(pt.result.absoluteRefs)
 	}
 
 	progress.CodeNotREd.Sum()
+	progress.CodeNotFinal.Sum()
 	progress.AbsoluteRefs.Sum()
 	return
 }
@@ -352,6 +369,7 @@ func REProgressBaseline(repo *Repository) (func() (baseline REProgress), error) 
 // references per unit of time.
 type RESpeed struct {
 	CodeNotREd   float64
+	CodeNotFinal float64
 	AbsoluteRefs float64
 }
 
@@ -365,13 +383,17 @@ func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 		// Yup, one value for all games, despite uth05win...
 		diffCodeNotREd := bp.CodeNotREd.Total - tp.CodeNotREd.Total
 		diffCodeNotREd /= diff.Pushes
+		diffCodeNotFinal := bp.CodeNotFinal.Total - tp.CodeNotFinal.Total
+		diffCodeNotFinal /= diff.Pushes
 		diffAbsoluteRefs := bp.AbsoluteRefs.Total - tp.AbsoluteRefs.Total
 		diffAbsoluteRefs /= diff.Pushes
 
 		spp.CodeNotREd += diffCodeNotREd
+		spp.CodeNotFinal += diffCodeNotFinal
 		spp.AbsoluteRefs += diffAbsoluteRefs
 	}
 	spp.CodeNotREd /= float64(len(diffs))
+	spp.CodeNotFinal /= float64(len(diffs))
 	spp.AbsoluteRefs /= float64(len(diffs))
 	return
 }
@@ -404,6 +426,7 @@ func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgres
 		Done: done.Pct(baseline),
 		Money: REProgress{
 			done.CodeNotREd.DivByCeil(spp.CodeNotREd).MulBy(price),
+			done.CodeNotFinal.DivByCeil(spp.CodeNotFinal).MulBy(price),
 			done.AbsoluteRefs.DivByCeil(spp.AbsoluteRefs).MulBy(price),
 		},
 	}

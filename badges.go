@@ -85,6 +85,7 @@ func (e eInvalidBadge) Error() string {
 
 var typeMetric = map[string]func(Badger) *REMetric{
 	"re": func(b Badger) *REMetric { return &b.Done.CodeNotREd },
+	"td": func(b Badger) *REMetric { return &b.Done.CodeNotFinal },
 	"pi": func(b Badger) *REMetric { return &b.Done.AbsoluteRefs },
 }
 

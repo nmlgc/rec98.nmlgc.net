@@ -30,7 +30,7 @@ func (k keywords) match(s string) bool {
 	return false
 }
 
-var rxLabel = regexp.MustCompile(`^\s*[@\w]+:`)
+var rxLabel = regexp.MustCompile(`^\s*[@\w\?]+:`)
 
 // These come first in a line, are separated by whitespace, and may be
 // followed by an argument.

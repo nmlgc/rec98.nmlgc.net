@@ -144,6 +144,18 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 	}
 	procName := unnamedProcName()
 
+	procEnter := func(name string) {
+		if procCount < len(ret.procs) {
+			procCount++
+		}
+		procName = name
+	}
+
+	procLeave := func() {
+		procCount++
+		procName = unnamedProcName()
+	}
+
 	isCodeLine := func(line string) bool {
 		if p.inSeg != Code && rxCodeSegment.MatchString(line) {
 			p.inSeg = Code
@@ -181,14 +193,10 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 			if len(params[1]) >= 4 {
 				// Captures PROC and PROCDESC
 				if strings.EqualFold(params[1][:4], "proc") {
-					if procCount < len(ret.procs) {
-						procCount++
-					}
-					procName = params[0]
+					procEnter(params[0])
 					continue
 				} else if strings.EqualFold(params[1], "endp") {
-					procCount++
-					procName = unnamedProcName()
+					procLeave()
 					continue
 				}
 			}

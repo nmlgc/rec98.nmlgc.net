@@ -92,8 +92,9 @@ var typeMetric = map[string]func(Badger) *REMetric{
 func (b Badger) Parse(typ string, game string) (*BadgeContent, error) {
 	if typ == "cap" && game == "" {
 		cap := CapCurrent(nil)
+		outstandingUncapped := (cap.Outstanding / cap.Cap) * 100.0
 		return &BadgeContent{
-			"4-week crowdfunding goal", cap.FracOutstanding, " reached",
+			"4-week crowdfunding goal", outstandingUncapped, " reached",
 		}, nil
 	}
 

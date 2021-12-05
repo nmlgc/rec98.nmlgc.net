@@ -36,11 +36,17 @@ var rxLabel = regexp.MustCompile(`^\s*[@\w\?]+:`)
 // followed by an argument.
 var kwIgnoredInstructions = keywords{
 	"nop", "include", "public", "extern", "assume", "end",
+
+	// Since we ignore DB 0, we also must ignore these, so that one may be
+	// turned into the other without "adding new instructions".
+	"even", "evendata", "align",
+
+	"if", "else", "endif", "arg", "local",
 }
 
 // These are prefixed by a symbol name, and surrounded with whitespace.
 var kwIgnoredDirectives = keywords{
-	"equ", "label", "segment", "ends",
+	"equ", "label", "segment", "struc", "ends",
 }
 
 // May appear either in "instruction" or "directive" form.

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"html/template"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -26,7 +28,8 @@ func FatalIf(err error) {
 
 // hostedPath stores the corresponding URL prefix for a local filesystem path.
 type hostedPath struct {
-	srv http.Handler
+	srv        http.Handler
+	fileToHash sync.Map
 
 	LocalPath string // must end with a slash
 	URLPrefix string // must start *and* end with a slash
@@ -36,9 +39,14 @@ type hostedPath struct {
 func newHostedPath(LocalPath string, URLPrefix string) *hostedPath {
 	absoluteLocalPath, err := filepath.Abs(LocalPath)
 	FatalIf(err)
-	dir := http.Dir(absoluteLocalPath)
+	dir := http.FileServer(http.Dir(absoluteLocalPath))
 	ret := &hostedPath{
-		srv:       http.FileServer(dir),
+		srv: http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+			if len(req.URL.RawQuery) > 0 {
+				wr.Header().Set("Cache-Control", "max-age: 31536000, immutable")
+			}
+			dir.ServeHTTP(wr, req)
+		}),
 		LocalPath: (absoluteLocalPath + "/"),
 		URLPrefix: URLPrefix,
 	}
@@ -55,6 +63,23 @@ func (hp *hostedPath) Server() http.Handler {
 func (hp *hostedPath) RegisterFileServer(r *mux.Router) {
 	stripped := http.StripPrefix(hp.URLPrefix, hp.srv)
 	r.PathPrefix(hp.URLPrefix).Handler(stripped)
+}
+
+// VersionQueryFor returns the current hash of fn as a query string suffix.
+func (hp *hostedPath) VersionQueryFor(fn string) string {
+	hash, ok := hp.fileToHash.Load(fn)
+	if !ok {
+		fullHash := CryptHashOfFile(hp.LocalPath + fn)
+		hash = hex.EncodeToString(fullHash[:4])
+		hp.fileToHash.Store(fn, hash)
+	}
+	return "?" + hash.(string)
+}
+
+// VersionURLFor returns the full URL of fn, with a version-based query string
+// suffix.
+func (hp *hostedPath) VersionURLFor(fn string) string {
+	return (hp.URLPrefix + fn + hp.VersionQueryFor(fn))
 }
 
 var staticHP = newHostedPath("static/", "/static/")

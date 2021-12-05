@@ -1,12 +1,10 @@
 package main
 
 import (
-	"crypto/sha512"
 	"encoding/gob"
 	"errors"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"math"
 	"os"
@@ -266,14 +264,10 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 	const CACHE_FN = "progress_cache.gob"
 
-	parserHashCur := func() [sha512.Size]byte {
-		f, err := ioutil.ReadFile("asm.go")
-		FatalIf(err)
-		return sha512.Sum512(f)
-	}()
+	parserHashCur := CryptHashOfFile("asm.go")
 
 	load := func(fn string) (ret map[plumbing.Hash]*REProgress, err error) {
-		var parserHashPrev [sha512.Size]byte
+		var parserHashPrev CryptHash
 
 		f, err := os.Open(fn)
 		if err != nil {

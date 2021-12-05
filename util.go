@@ -1,6 +1,10 @@
 package main
 
-import "reflect"
+import (
+	"crypto/sha512"
+	"io/ioutil"
+	"reflect"
+)
 
 // RemoveDuplicates was adapted from
 // https://www.rosettacode.org/wiki/Remove_duplicate_elements#Any_type_using_reflection
@@ -39,4 +43,16 @@ func RemoveDuplicates(x interface{}) {
 		v.Index(int(idx.Int())).Set(key)
 	}
 	v.SetLen(m.Len())
+}
+
+// CryptHash represents a hash created by a current cryptographically secure
+// algorithm.
+type CryptHash [sha512.Size]byte
+
+// CryptHashOfFile hashes the file with the given name using a current
+// cryptographically secure algorithm.
+func CryptHashOfFile(fn string) CryptHash {
+	f, err := ioutil.ReadFile(fn)
+	FatalIf(err)
+	return sha512.Sum512(f)
 }

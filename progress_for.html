@@ -12,13 +12,13 @@
 <div class="progress-grid">
 	<figure class="progress">
 		<figcaption>Not yet reverse-engineered x86 instructions</figcaption>
-		{{template "progress_table.html" $progress.Instructions.FormattedAsInt}}
+		{{template "progress_table.html" $progress.CodeNotREd.FormattedAsInt}}
 	</figure>
 	<figure class="progress">
 		<figcaption>Completion percentage
 			{{- if $notBaseline}} (<a href="/progress/{{ReC98_REBaselineRev}}">reference values</a>){{end}}
 		</figcaption>
-		{{template "progress_table.html" $pct.Instructions.FormattedAsPct}}
+		{{template "progress_table.html" $pct.CodeNotREd.FormattedAsPct}}
 	</figure>
 </div>
 <hr />

@@ -58,7 +58,7 @@ var gradientPoints = GradientTable{
 
 // Badger collects all data we want to generate badges for.
 type Badger struct {
-	Done REProgressPct
+	Done     REProgressPct
 	Fallback http.Handler
 }
 
@@ -84,7 +84,7 @@ func (e eInvalidBadge) Error() string {
 }
 
 var typeMetric = map[string]func(Badger) *REMetric{
-	"re": func(b Badger) *REMetric { return &b.Done.Instructions },
+	"re": func(b Badger) *REMetric { return &b.Done.CodeNotREd },
 	"pi": func(b Badger) *REMetric { return &b.Done.AbsoluteRefs },
 }
 

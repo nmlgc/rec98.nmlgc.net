@@ -11,7 +11,7 @@
 
 <h2>Reverse-engineered</h2>
 <small>Code with clarified purpose and named identifiers. Mostly also decompiled to C++, but not necessarily.</small>
-{{template "estimate_metrics.html" $pe.ForInstructions}}
+{{template "estimate_metrics.html" $pe.ForCodeNotREd}}
 
 <h2><a href="/faq#pi-what">Position independence</a></h2>
 <small>Probability that adding or removing data anywhere in the binary doesn't cause issues. Click the link for more info.</small>
@@ -24,7 +24,7 @@
 </aside>
 <aside>
 	<span class="icon-cell">📉</span>
-	<p>Currently calculating with an average speed of <b>{{printf "%.0f" $spp.Instructions}} instructions</b> and <b>{{printf "%.0f" $spp.AbsoluteRefs}} potential unlabeled addresses</b> removed per push. <a href="/progress">Raw, per-commit metrics are here.</a></p>
+	<p>Currently calculating with an average speed of <b>{{printf "%.0f" $spp.CodeNotREd}} instructions</b> and <b>{{printf "%.0f" $spp.AbsoluteRefs}} potential unlabeled addresses</b> removed per push. <a href="/progress">Raw, per-commit metrics are here.</a></p>
 	<span class="icon-cell">📉</span>
 </aside>
 <hr />

@@ -132,7 +132,7 @@ type REMetricWithFormatter struct {
 
 // REProgress collects all progress-indicating metrics across all of ReC98.
 type REProgress struct {
-	Instructions REMetric
+	CodeNotREd   REMetric
 	AbsoluteRefs REMetric
 }
 
@@ -161,7 +161,7 @@ func (p REProgress) Pct(base REProgress) (pct REProgressPct) {
 		return
 	}
 
-	pct.Instructions = metricFormula(p.Instructions, base.Instructions)
+	pct.CodeNotREd = metricFormula(p.CodeNotREd, base.CodeNotREd)
 	pct.AbsoluteRefs = metricFormula(p.AbsoluteRefs, base.AbsoluteRefs)
 	return
 }
@@ -207,7 +207,7 @@ func REProgressAtCommit(commit *object.Commit) (*REProgress, error) {
 
 func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	type metricPointers struct {
-		instructions *float64
+		codeNotREd   *float64
 		absoluteRefs *float64
 	}
 	type progressTuple struct {
@@ -241,9 +241,9 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 		}
 	}
 	for game, sources := range gameSources {
-		for i := range progress.Instructions.ComponentSum {
+		for i := range progress.CodeNotREd.ComponentSum {
 			m := metricPointers{
-				instructions: &progress.Instructions.CMetrics[game][i],
+				codeNotREd:   &progress.CodeNotREd.CMetrics[game][i],
 				absoluteRefs: &progress.AbsoluteRefs.CMetrics[game][i],
 			}
 			progressFor(m, sources[i])
@@ -252,12 +252,12 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 	for ; filesParsed > 0; filesParsed-- {
 		pt := <-c
 		for _, proc := range pt.result.procs {
-			*(pt.instructions) += float64(proc.instructionCount)
+			*(pt.codeNotREd) += float64(proc.instructionCount)
 		}
 		*(pt.absoluteRefs) += float64(pt.result.absoluteRefs)
 	}
 
-	progress.Instructions.Sum()
+	progress.CodeNotREd.Sum()
 	progress.AbsoluteRefs.Sum()
 	return
 }
@@ -351,7 +351,7 @@ func REProgressBaseline(repo *Repository) (func() (baseline REProgress), error) 
 // RESpeed represents the total reverse-engineering speed in instructions and
 // references per unit of time.
 type RESpeed struct {
-	Instructions float64
+	CodeNotREd   float64
 	AbsoluteRefs float64
 }
 
@@ -363,15 +363,15 @@ func reSpeedPerPushFrom(diffs []DiffInfoWeighted) (spp RESpeed) {
 		FatalIf(err)
 
 		// Yup, one value for all games, despite uth05win...
-		diffInstructions := bp.Instructions.Total - tp.Instructions.Total
-		diffInstructions /= diff.Pushes
+		diffCodeNotREd := bp.CodeNotREd.Total - tp.CodeNotREd.Total
+		diffCodeNotREd /= diff.Pushes
 		diffAbsoluteRefs := bp.AbsoluteRefs.Total - tp.AbsoluteRefs.Total
 		diffAbsoluteRefs /= diff.Pushes
 
-		spp.Instructions += diffInstructions
+		spp.CodeNotREd += diffCodeNotREd
 		spp.AbsoluteRefs += diffAbsoluteRefs
 	}
-	spp.Instructions /= float64(len(diffs))
+	spp.CodeNotREd /= float64(len(diffs))
 	spp.AbsoluteRefs /= float64(len(diffs))
 	return
 }
@@ -403,7 +403,7 @@ func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgres
 	return REProgressEstimate{
 		Done: done.Pct(baseline),
 		Money: REProgress{
-			done.Instructions.DivByCeil(spp.Instructions).MulBy(price),
+			done.CodeNotREd.DivByCeil(spp.CodeNotREd).MulBy(price),
 			done.AbsoluteRefs.DivByCeil(spp.AbsoluteRefs).MulBy(price),
 		},
 	}
@@ -423,11 +423,11 @@ type REMetricEstimate struct {
 	Money REMetric
 }
 
-// ForInstructions returns e's reverse-engineering values.
-func (e REProgressEstimate) ForInstructions() REMetricEstimate {
+// ForCodeNotREd returns e's reverse-engineering values.
+func (e REProgressEstimate) ForCodeNotREd() REMetricEstimate {
 	return REMetricEstimate{
-		Done:  e.Done.Instructions,
-		Money: e.Money.Instructions,
+		Done:  e.Done.CodeNotREd,
+		Money: e.Money.CodeNotREd,
 	}
 }
 

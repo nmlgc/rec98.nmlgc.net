@@ -122,9 +122,9 @@ func HTMLEmoji(emoji string) template.HTML {
 	if len(style) > 0 {
 		style = `style="` + style + `" `
 	}
+	url := staticHP.VersionURLFor("emoji-" + fn + ".png")
 	return template.HTML(fmt.Sprintf(
-		`<img src="%semoji-%s.png" alt=":%s:" %s/>`,
-		staticHP.URLPrefix, fn, emoji, style,
+		`<img src="%s" alt=":%s:" %s/>`, url, emoji, style,
 	))
 }
 
@@ -168,7 +168,7 @@ func HTMLDownload(hp *hostedPath, basename string) template.HTML {
 	return template.HTML(
 		fmt.Sprintf(
 			`<a class="download" href="%s" data-kb="%.1f">%s </a>`,
-			(hp.URLPrefix + basename), (float64(fi.Size()) / 1024.0), basename,
+			hp.VersionURLFor(basename), (float64(fi.Size()) / 1024.0), basename,
 		),
 	)
 }

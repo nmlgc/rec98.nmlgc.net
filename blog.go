@@ -104,8 +104,7 @@ func (e BlogEntry) Render(filters []string) Post {
 		HostedPath: blogHP,
 		DatePrefix: datePrefix,
 		PostFileURL: func(fn string) template.HTML {
-			datePrefixedFN := datePrefix + fn
-			return template.HTML(blogHP.URLPrefix + datePrefixedFN)
+			return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
 		},
 	}
 	pagesExecute(&b, e.templateName, &ctx)

@@ -240,7 +240,7 @@ footer * {
 /* Link icons
    ---------- */
 a:not(.customer)[href^="https://github.com/"]:before {
-	background-image: url('/static/github.svg');
+	background-image: url('/static/github.svg?29bc319c');
 	display: inline-block;
 	width: 1em;
 	height: 1em;
@@ -250,7 +250,7 @@ a:not(.customer)[href^="https://github.com/"]:before {
 }
 
 a:not(.customer)[href^="https://twitter.com/"]:before {
-	background-image: url('/static/twitter.svg');
+	background-image: url('/static/twitter.svg?4403429f');
 	display: inline-block;
 	width: 1em;
 	height: 1em;

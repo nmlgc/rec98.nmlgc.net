@@ -13,9 +13,10 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/narqo/go-badge v0.0.0-20190124110329-d9415e4e1e9f
 	github.com/plutov/paypal/v4 v4.1.0
+	github.com/rjeczalik/notify v0.9.2
 	github.com/sergi/go-diff v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect
 	golang.org/x/image v0.0.0-20210504121937-7319ad40d33e // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
-	golang.org/x/sys v0.0.0-20210601080250-7ecdf8ef093b // indirect
+	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
 )

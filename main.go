@@ -17,6 +17,7 @@ import (
 
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gorilla/mux"
+	"github.com/rjeczalik/notify"
 )
 
 // FatalIf removes the boilerplate for cases where errors are fatal.
@@ -50,7 +51,32 @@ func newHostedPath(LocalPath string, URLPrefix string) *hostedPath {
 		LocalPath: (absoluteLocalPath + "/"),
 		URLPrefix: URLPrefix,
 	}
+	go ret.watch()
 	return ret
+}
+
+// watch watches the LocalPath for file changes in order to purge hashes as
+// necessary.
+func (hp *hostedPath) watch() {
+	// Make the channel buffered to ensure no event is dropped. Notify will
+	// drop an event if the receiver is not able to keep up the sending pace.
+	c := make(chan notify.EventInfo, 1)
+
+	err := notify.Watch(hp.LocalPath+"...", c, notify.Write)
+	FatalIf(err)
+
+	for e := range c {
+		fn, err := filepath.Rel(hp.LocalPath, e.Path())
+		FatalIf(err)
+
+		// At least on Windows, I always get multiple events each time I save a
+		// file. At the first event, the file is still locked for concurrent
+		// reads, so we can't immediately rehash it. So, let's just delete the
+		// old hash, and let the new one be generated on demand…
+		if _, deleted := hp.fileToHash.LoadAndDelete(fn); deleted {
+			log.Printf("%s: \"%s\" changed", hp.LocalPath, fn)
+		}
+	}
 }
 
 // Server returns hp's file serving handler, e.g. to be re-used elsewhere.

@@ -359,17 +359,17 @@ span.confirmed { color: green; }
 span.incoming { color: red; }
 /* --- */
 
-/* Estimate
-   -------- */
-#estimate {
+/* Main page
+   --------- */
+#index {
 	text-align: center;
 }
 
-#estimate h2 {
+#index h2 {
 	margin-bottom: 0;
 }
 
-#estimate h2 + small {
+#index h2 + small {
 	display: block;
 	margin-bottom: 1.75em;
 	color: dimgray;
@@ -382,41 +382,41 @@ section.overall, section.game, section.binary {
 	margin-bottom: 1em;
 }
 
-#estimate section h3 {
+#index section h3 {
 	text-align: right;
 	font-size: inherit;
 }
 
-#estimate section.overall h3 {
+#index section.overall h3 {
 	font-size: 80%;
 }
 
-#estimate section * {
+#index section * {
 	margin: 0;
 }
 
-#estimate .overall { font-size: 150%; }
-#estimate .game    { font-size: 125%; margin-top: .5em; margin-bottom: .5em; }
+#index .overall { font-size: 150%; }
+#index .game    { font-size: 125%; margin-top: .5em; margin-bottom: .5em; }
 
-#estimate code {
+#index code {
 	font-size: 80%;
 }
 
-#estimate div {
+#index div {
 	position: relative;
 	margin-left: .25em;
 	margin-right: .25em;
 }
 
-#estimate progress {
+#index progress {
 	width: 100%;
 	height: 0.75em;
 }
 
-#estimate    .game progress { height: 1.25em; }
-#estimate .overall progress { height: 1.75em; }
+#index    .game progress { height: 1.25em; }
+#index .overall progress { height: 1.75em; }
 
-#estimate div .number {
+#index div .number {
 	position: absolute;
 	margin: 0;
 	text-shadow:
@@ -430,16 +430,16 @@ section.overall, section.game, section.binary {
 	font-size: 90%;
 }
 
-#estimate .overall .number {
+#index .overall .number {
 	font-size: 112.5%;
 }
 
-#estimate .overall .number,
-#estimate    .game .number {
+#index .overall .number,
+#index    .game .number {
 	font-weight: bold;
 }
 
-#estimate .cost {
+#index .cost {
 	text-align: right;
 }
 
@@ -447,10 +447,10 @@ section.overall, section.game, section.binary {
 	font-weight: bold;
 }
 
-#estimate .warning {
+#index .warning {
 	font-size: 110%;
 }
-/* -------- */
+/* --------- */
 
 /* FAQ
    --- */

@@ -34,22 +34,25 @@ type hostedPath struct {
 }
 
 // newHostedPath sets up a new hostedPath instance.
-func newHostedPath(LocalPath string, URLPrefix string) (ret hostedPath) {
-	ret.LocalPath = path.Clean(LocalPath) + "/"
-	ret.URLPrefix = URLPrefix
-	dir := http.Dir(ret.LocalPath)
-	ret.srv = http.FileServer(dir)
-	return
+func newHostedPath(LocalPath string, URLPrefix string) *hostedPath {
+	localPath := path.Clean(LocalPath) + "/"
+	dir := http.Dir(localPath)
+	ret := &hostedPath{
+		srv:       http.FileServer(dir),
+		LocalPath: localPath,
+		URLPrefix: URLPrefix,
+	}
+	return ret
 }
 
 // Server returns hp's file serving handler, e.g. to be re-used elsewhere.
-func (hp hostedPath) Server() http.Handler {
+func (hp *hostedPath) Server() http.Handler {
 	return hp.srv
 }
 
 // RegisterFileServer registers a HTTP route on the given router at hp's
 // URLPrefix, serving any local files in hp's LocalPath.
-func (hp hostedPath) RegisterFileServer(r *mux.Router) {
+func (hp *hostedPath) RegisterFileServer(r *mux.Router) {
 	stripped := http.StripPrefix(hp.URLPrefix, hp.srv)
 	r.PathPrefix(hp.URLPrefix).Handler(stripped)
 }
@@ -133,7 +136,7 @@ func HTMLPushPrice() template.HTML {
 }
 
 // HTMLDownload returns a file download link for basename, hosted at hp.
-func HTMLDownload(hp hostedPath, basename string) template.HTML {
+func HTMLDownload(hp *hostedPath, basename string) template.HTML {
 	localFN := hp.LocalPath + basename
 	fi, err := os.Stat(localFN)
 	FatalIf(err)

@@ -69,8 +69,8 @@ func (b Blog) FindEntryForPush(p Push) *BlogEntry {
 
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
-	HostedPath hostedPath // Value of [blogHP]
-	DatePrefix string     // Date prefix for potential post-specific files
+	HostedPath *hostedPath // Value of [blogHP]
+	DatePrefix string      // Date prefix for potential post-specific files
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
 }

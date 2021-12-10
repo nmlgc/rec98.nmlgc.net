@@ -9,7 +9,6 @@ import (
 	"math"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -35,11 +34,12 @@ type hostedPath struct {
 
 // newHostedPath sets up a new hostedPath instance.
 func newHostedPath(LocalPath string, URLPrefix string) *hostedPath {
-	localPath := path.Clean(LocalPath) + "/"
-	dir := http.Dir(localPath)
+	absoluteLocalPath, err := filepath.Abs(LocalPath)
+	FatalIf(err)
+	dir := http.Dir(absoluteLocalPath)
 	ret := &hostedPath{
 		srv:       http.FileServer(dir),
-		LocalPath: localPath,
+		LocalPath: (absoluteLocalPath + "/"),
 		URLPrefix: URLPrefix,
 	}
 	return ret

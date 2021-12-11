@@ -28,7 +28,7 @@
 			<label>
 				This contribution should go towards…
 			</label>
-			<select id="metric">
+			<select id="metric" onchange="handleSelect(this.options[this.selectedIndex])">
 				<option>Anything (including tooling)</option>
 				<option>Reverse-engineering</option>
 				<option>Position independence</option>
@@ -40,6 +40,11 @@
 				Any specific game or aspect?
 			</label>
 			<input type="text" id="goal">
+			<aside id="info" class="info" style="display: none;">
+				<span class="icon-cell">ℹ️</span>
+				<p id="info_text"></p>
+				<span class="icon-cell">ℹ️</span>
+			</aside>
 			<label>
 				This is a…
 			</label>
@@ -76,4 +81,22 @@
 		</div>
 		<span class="icon-cell">❓</span>
 	</aside>
+
+	<script>
+		const metric = document.getElementById("metric");
+		const info = document.getElementById("info");
+		const info_text = document.getElementById("info_text");
+
+		function handleSelect(option) {
+			const message = option.getAttribute("data-info");
+			if(message) {
+				metric.classList.add("info");
+				info_text.textContent = message;
+				info.style.display = null;
+			} else {
+				metric.classList.remove("info");
+				info.style.display = "none";
+			}
+		}
+	</script>
 {{end}}

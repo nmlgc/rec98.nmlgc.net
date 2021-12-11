@@ -617,6 +617,15 @@ td, th {
 	justify-self: stretch;
 }
 
+#order #info {
+	color: orangered;
+}
+
+#order select.info {
+	border-color: orangered;
+	outline-color: orangered;
+}
+
 #error {
 	color: red;
 }

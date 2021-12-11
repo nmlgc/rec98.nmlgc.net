@@ -33,11 +33,6 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
 	// with their local path.
 	templates, err := filepath.Glob(filepath.Join(blogHP.LocalPath, "*.html"))
 	FatalIf(err)
-	for _, m := range templates {
-		buf, err := ioutil.ReadFile(m)
-		FatalIf(err)
-		template.Must(t.New(m).Parse(string(buf)))
-	}
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
 	for _, tmpl := range templates {
 		basename := filepath.Base(tmpl)
@@ -48,6 +43,11 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
 			Tags:         tags[date],
 			templateName: tmpl,
 		})
+	}
+	for _, tmpl := range templates {
+		buf, err := ioutil.ReadFile(tmpl)
+		FatalIf(err)
+		template.Must(t.New(tmpl).Parse(string(buf)))
 	}
 	return
 }

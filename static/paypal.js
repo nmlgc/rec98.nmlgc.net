@@ -20,6 +20,10 @@ function startTransaction() {
 	document.querySelector("html").classList.add("wait");
 }
 
+function endTransaction() {
+	document.querySelector("html").classList.remove("wait");
+}
+
 function thankyou() {
 	return document.querySelector("form").submit();
 }
@@ -47,7 +51,7 @@ async function sendIncoming(orderID, amount) {
 			"I should have received your order though, and will confirm it " +
 			"as soon as I see it.";
 		error.hidden = false;
-		document.querySelector("html").classList.remove("wait");
+		endTransaction();
 	} else {
 		thankyou();
 	}
@@ -79,7 +83,8 @@ let subscription = {
 		// the subscription amount, so for now, let's just send it ourselves…
 		// At least the server bails out if the order ID doesn't exist, so… 🤷
 		await sendIncoming(data.orderID, document.getElementById("amount").value);
-	}
+	},
+	onCancel: endTransaction,
 };
 
 let order = {
@@ -96,7 +101,8 @@ let order = {
 	onApprove: async function(data, actions) {
 		await actions.order.capture();
 		await sendIncoming(data.orderID, 0);
-	}
+	},
+	onCancel: endTransaction,
 };
 
 function formatNumber(obj, digits) {

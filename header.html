@@ -6,14 +6,14 @@
 	{{if eq .TemplateName "legal" -}}
 		<meta name="robots" content="noindex, noarchive" />
 	{{- end}}
-	<link rel="stylesheet" href="/static/main.css" />
-	<script src="/static/main.js"></script>
+	<link rel="stylesheet" href="{{call $.StaticFileURL "main.css"}}" />
+	<script src="{{call $.StaticFileURL "main.js"}}"></script>
 	<title>ReC98</title>
 </head>
 <body>
 	<header>
 		<a href="/" class="logo">
-			<img src="/static/logo.png" alt="Richard Stallman cosplaying as a shrine maiden" class="logo"/>
+			<img src="{{call $.StaticFileURL "logo.png"}}" alt="Richard Stallman cosplaying as a shrine maiden" class="logo"/>
 		</a>
 		<div class="logo"></div>
 		<div><nav>

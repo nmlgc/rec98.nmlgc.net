@@ -626,6 +626,11 @@ td, th {
 	outline-color: orangered;
 }
 
+#order :invalid {
+	border-color: red;
+	outline-color: red;
+}
+
 #error {
 	color: red;
 }

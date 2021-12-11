@@ -39,7 +39,7 @@
 			<label>
 				Any specific game or aspect?
 			</label>
-			<input type="text" id="goal">
+			<input type="text" id="goal" onInput="this.reportValidity()">
 			<aside id="info" class="info" style="display: none;">
 				<span class="icon-cell">ℹ️</span>
 				<p id="info_text"></p>
@@ -84,10 +84,12 @@
 
 	<script>
 		const metric = document.getElementById("metric");
+		const goal = document.getElementById("goal");
 		const info = document.getElementById("info");
 		const info_text = document.getElementById("info_text");
 
 		function handleSelect(option) {
+			const goal_mandatory = option.getAttribute("data-goal-mandatory");
 			const message = option.getAttribute("data-info");
 			if(message) {
 				metric.classList.add("info");
@@ -97,6 +99,9 @@
 				metric.classList.remove("info");
 				info.style.display = "none";
 			}
+
+			goal.required = (goal_mandatory !== null);
+			goal.reportValidity();
 		}
 	</script>
 {{end}}

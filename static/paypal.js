@@ -1,6 +1,7 @@
 "use strict";
 
 let mailto_support = "support@nmlgc.net";
+const form = document.querySelector("form");
 
 function HTMLSupportMail() {
 	return `
@@ -15,6 +16,16 @@ function cycle() {
 	return isOneTime() ? "onetime" : "monthly";
 }
 
+function validateForm(data, actions) {
+	for (const el of form.querySelectorAll("[required]")) {
+		if (!el.reportValidity()) {
+			actions.reject();
+			return false;
+		}
+	}
+	return true;
+}
+
 function startTransaction() {
 	document.getElementById("error").hidden = true;
 	document.querySelector("html").classList.add("wait");
@@ -25,7 +36,7 @@ function endTransaction() {
 }
 
 function thankyou() {
-	return document.querySelector("form").submit();
+	return form.submit();
 }
 
 async function sendIncoming(orderID, amount) {
@@ -85,6 +96,7 @@ let subscription = {
 		await sendIncoming(data.orderID, document.getElementById("amount").value);
 	},
 	onCancel: endTransaction,
+	onClick: validateForm,
 };
 
 let order = {
@@ -103,6 +115,7 @@ let order = {
 		await sendIncoming(data.orderID, 0);
 	},
 	onCancel: endTransaction,
+	onClick: validateForm,
 };
 
 function formatNumber(obj, digits) {

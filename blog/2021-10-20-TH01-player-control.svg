@@ -90,8 +90,6 @@
 	</g><text x="229.5" y="527.5" class="q AB">Frame 12</text>
 	<rect y="540" width="200" height="60" rx="9" class="AF" /><text x="99.5" y="573.5" class="t AG">Slide,
 		combo enabled</text>
-	<rect x="260" y="360" width="200" height="60" rx="9" class="AC AD" /><text x="359.5" y="393.5"
-		class="p t">Slide, frame 12</text>
 	<g class="y">
 		<path
 			d="M1090 360l.02-49.97q.01-10-9.99-10h-310q-10 0-10-10v-17c3.9 0 3.9-6 0-6h0v-47q0-10-10-10.01l-23.66-.02"
@@ -114,9 +112,9 @@
 		<path d="M570 720v-49.97q0-10-10-10h-50q-10 0-10-10v-140q0-10 10-10h50q10 0 10-10v-27c3.9 0 3.9-6 0-6h0v-30.66"
 			class="o AA" />
 		<use xlink:href="#B" x="-50" y="180" />
-	</g><text x="567.5" y="679.5" class="p AB">Z or X held</text>
+	</g><text x="567.5" y="679.5" class="p AB">Z or X held until frame 28</text>
 	<rect x="520" y="720" width="200" height="60" rx="9" class="AC AD" /><text x="619.81" y="753.311"
-		class="p t">Flip kick (#1), frame 20</text>
+		class="p t">Flip kick (#1), frame ≥20 and ≤27</text>
 	<g class="v">
 		<path d="M1140 780v50.03q0 10-10 10H110q-10 0-10 10v43.6" class="o AA" />
 		<use xlink:href="#A" x="-590" y="720.6" />
@@ -151,11 +149,11 @@
 			d="M719.2 935.28H730q10 .01 10-9.99v-52.26c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-144c3.9 0 3.9-6 0-6h0v-24c3.9 0 3.9-6 0-6h0v-187q0-10-10-10H630q-10 0-10-10v-23.66"
 			class="o AA" />
 		<use xlink:href="#B" y="180" />
-	</g><text x="737.5" y="892.5" class="p AB">Z or X held</text>
+	</g><text x="737.5" y="892.5" class="p AB">Z or X held until frame 28</text>
 	<rect x="520" y="900" width="200" height="60" rx="9" class="AC AD" /><text x="619.81" y="933.311"
-		class="p t">Flip kick (#2), frame 20</text>
+		class="p t">Flip kick (#2), frame ≥20 and ≤27</text>
 	<rect y="360" width="200" height="60" rx="9" class="AC AD" /><text x="100.129" y="393.861" class="p t">Slide,
-		frame 5</text>
+		frame ≥5 and ≤11</text>
 	<g class="y">
 		<path d="M100 780v20.03q0 10 10 10h500q10 0 10-10v-13.66" class="o z AA" />
 		<use xlink:href="#B" y="540" class="q" />
@@ -288,7 +286,7 @@
 	<g class="v">
 		<path d="M150 420v20.03q0 10 10 10h190q10 0 10-10v-13.66" class="o" />
 		<use xlink:href="#B" x="-260" y="180" />
-	</g><text x="151.5" y="441.5" class="p r">Z or X held</text>
+	</g><text x="151.5" y="441.5" class="p r">Z or X held until frame 12</text>
 	<g class="v">
 		<path d="M50 420v113.63" class="o" />
 		<use xlink:href="#A" x="-640" y="360.6" />

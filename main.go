@@ -200,9 +200,17 @@ func HTMLDownload(hp *hostedPath, basename string) template.HTML {
 	)
 }
 
+type eNoDescription struct {
+	Tag string
+}
+
+func (e eNoDescription) Error() string {
+	return fmt.Sprintf("no description for tag \"%s\"", e.Tag)
+}
+
 // HTMLTag returns a rendered blog tag, styled depending on its presence in the
 // given filters, and with additional links to manipulate the filters.
-func HTMLTag(tag string, filters []string) template.HTML {
+func HTMLTag(tag string, filters []string) (template.HTML, error) {
 	linkFor := func(allTags []string, title string, text string) string {
 		url := "/blog/tag"
 		if len(allTags) >= 1 {
@@ -220,7 +228,13 @@ func HTMLTag(tag string, filters []string) template.HTML {
 		}
 	}
 
-	body := linkFor([]string{tag}, tagDescriptions.Map[tag], tag)
+	desc, ok := tagDescriptions.Map[tag]
+	if !ok {
+		// Nope, no log.Fatalf() here, don't want a mistyped or outdated tag
+		// filter URL to crash the entire server process.
+		return "", eNoDescription{tag}
+	}
+	body := linkFor([]string{tag}, desc, tag)
 	class := "tag"
 
 	// Any append() call that involves filters, or any sub-slice of it, will
@@ -235,7 +249,7 @@ func HTMLTag(tag string, filters []string) template.HTML {
 		filterMod = append(filterMod, tag)
 		body += linkFor(filterMod, "Add to filters", "+")
 	}
-	return template.HTML(`<span class="` + class + `">` + body + `</span>`)
+	return template.HTML(`<span class="` + class + `">` + body + `</span>`), nil
 }
 
 var pages = template.New("").Funcs(map[string]interface{}{

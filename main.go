@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
@@ -289,20 +288,6 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	// PayPal, safe
 	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
 })
-
-// ParseSubdirectory parses all files in `dir` that match glob into
-// subtemplates of t, prefixing their name with `dir` (unlike Go's own
-// template.ParseGlob function), and returns a slice of the file names parsed.
-func ParseSubdirectory(t *template.Template, dir string, glob string) (templates []string) {
-	matches, err := filepath.Glob(filepath.Join(dir, glob))
-	FatalIf(err)
-	for _, m := range matches {
-		buf, err := ioutil.ReadFile(m)
-		FatalIf(err)
-		template.Must(t.New(m).Parse(string(buf)))
-	}
-	return matches
-}
 
 // pagesExecute wraps template execution on [pages], logging any errors
 // using the facilities from package log.

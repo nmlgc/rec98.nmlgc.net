@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"path"
 	"path/filepath"
 	"sort"
@@ -28,7 +29,15 @@ type Blog []BlogEntry
 // NewBlog parses all HTML files in the blog path into t, and returns a new
 // sorted Blog.
 func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
-	templates := ParseSubdirectory(t, blogHP.LocalPath, "*.html")
+	// Unlike Go's own template.ParseGlob, we want to prefix template names
+	// with their local path.
+	templates, err := filepath.Glob(filepath.Join(blogHP.LocalPath, "*.html"))
+	FatalIf(err)
+	for _, m := range templates {
+		buf, err := ioutil.ReadFile(m)
+		FatalIf(err)
+		template.Must(t.New(m).Parse(string(buf)))
+	}
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
 	for _, tmpl := range templates {
 		basename := filepath.Base(tmpl)

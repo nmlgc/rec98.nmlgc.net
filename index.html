@@ -3,8 +3,6 @@
 {{$spp := ReC98_RESpeedPerPush -}}
 {{$pe := ReC98_REProgressEstimateAtTree $master.Tree $spp -}}
 
-{{- template "header.html" $.TemplateName -}}
-
 {{template "cap.html" DB_CapCurrent false}}
 
 <h1 id="status">Completion status, as of <a href="/progress/{{$ci.Hash.String}}">{{HTML_Date $ci.Time}}</a>:</h1>
@@ -32,5 +30,3 @@
 	<span class="icon-cell">📉</span>
 </aside>
 <hr />
-
-{{template "footer.html"}}

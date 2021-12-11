@@ -1,6 +1,5 @@
 {{$log := git_getLogAt git_MasterCommit -}}
 
-{{template "header.html" $.TemplateName -}}
 <h2>Per-commit progress metrics</h2>
 <p>For comparison, <a href="/progress/{{ReC98_REBaselineRev}}">here are the total numbers of game code instructions, with all third-party code filtered</a>.</p>
 <table><tbody>
@@ -10,4 +9,3 @@
 		<td>{{git_CommitLink .Hash.String}}</td>
 	</tr>{{end}}
 </tbody></table>
-{{template "footer.html"}}

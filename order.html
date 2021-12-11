@@ -1,7 +1,5 @@
 {{$cap := DB_CapCurrent true}}
 
-{{- template "header.html" $.TemplateName -}}
-
 {{- template "cap.html" $cap -}}
 {{- if not $cap.Reached -}}
 	<script src="https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR">
@@ -79,5 +77,3 @@
 		<span class="icon-cell">❓</span>
 	</aside>
 {{end}}
-
-{{- template "footer.html" -}}

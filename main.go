@@ -318,16 +318,23 @@ func NewPageDot(req *http.Request, templateName string) PageDot {
 // pagesHandler returns a handler that executes the given template of [pages],
 // with a map of the request variables as the value of dot.
 func pagesHandler(template string) http.Handler {
+	header := pages.Lookup("header.html")
+	footer := pages.Lookup("footer.html")
 	tmpl := pages.Lookup(template)
 	if tmpl == nil {
 		log.Fatalf("couldn't find template %s", template)
 	}
 
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-		dot := NewPageDot(req, strings.TrimSuffix(template, path.Ext(template)))
-		if err := tmpl.Execute(wr, dot); err != nil {
-			respondWithError(wr, err)
+		errorIf := func(err error) {
+			if err != nil {
+				respondWithError(wr, err)
+			}
 		}
+		dot := NewPageDot(req, strings.TrimSuffix(template, path.Ext(template)))
+		errorIf(header.Execute(wr, dot))
+		errorIf(tmpl.Execute(wr, dot))
+		errorIf(footer.Execute(wr, dot))
 	})
 }
 

@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{{if .}}{{if eq . "legal" -}}
+	{{if eq .TemplateName "legal" -}}
 		<meta name="robots" content="noindex, noarchive" />
-	{{- end}}{{end -}}
+	{{- end}}
 	<link rel="stylesheet" href="/static/main.css" />
 	<script src="/static/main.js"></script>
 	<title>ReC98</title>
@@ -26,4 +26,4 @@
 			<a href="https://twitter.com/ReC98Project">Twitter</a>
 		</nav></div>
 	</header>
-	<main{{if .}} id="{{.}}"{{end}}>
+	<main id="{{.TemplateName}}">

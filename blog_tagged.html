@@ -1,6 +1,5 @@
 {{$filters := Blog_ParseTags .Vars.tags -}}
 
-{{template "header.html" -}}
 <h2><a href="/blog">⮜ Blog</a></h2>
 <h3><a href="/blog/tag">⮜ List of tags</a></h3>
 <h4>Showing all posts tagged {{range $i, $filter := $filters -}}
@@ -8,4 +7,3 @@
 	{{- HTML_Tag $filter $filters -}}
 {{- end}}</h4>
 {{range Blog_Posts $filters}}{{template "blog_post.html" .}}{{end}}
-{{- template "footer.html" -}}

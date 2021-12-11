@@ -5,7 +5,6 @@
 {{$pct := $progress.Pct ReC98_REProgressBaseline -}}
 {{$notBaseline := ne $rev ReC98_REBaselineRev -}}
 
-{{template "header.html" $.TemplateName -}}
 <h2><a href="/progress">⮜ Per-commit progress metrics</a></h2>
 <h3>{{HTML_Time $ci.Time}} – {{$ci.Desc}} ({{git_CommitLink $rev}})</h3>
 
@@ -47,4 +46,3 @@
 	</figure>
 </div>
 {{end -}}
-{{template "footer.html"}}

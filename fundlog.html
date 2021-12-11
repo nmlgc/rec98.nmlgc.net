@@ -1,6 +1,5 @@
 {{$backlog := DB_TransactionBacklog -}}
 
-{{- template "header.html" $.TemplateName -}}
 <h2>Backlog</h2>
 {{if $backlog -}}
 <dl>
@@ -30,4 +29,3 @@
 {{end}}
 <h2>Delivered</h2>
 {{template "push_table.html" DB_Pushes}}
-{{- template "footer.html" -}}

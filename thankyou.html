@@ -1,7 +1,5 @@
 {{$cap := DB_CapCurrent true}}
 
-{{- template "header.html" $.TemplateName -}}
-
 {{- template "cap.html" $cap -}}
 <h2>Thank you!</h2>
 <p>
@@ -14,5 +12,3 @@
 	You can cancel your subscription at any time through PayPal's web
 	interface.
 </p>{{end}}{{end}}
-
-{{- template "footer.html" -}}

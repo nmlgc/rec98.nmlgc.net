@@ -22,7 +22,7 @@ type BlogEntry struct {
 	templateName string
 }
 
-// Blog bundles all blog entires, sorted from newest to oldest.
+// Blog bundles all blog entries, sorted from newest to oldest.
 type Blog []BlogEntry
 
 // NewBlog parses all HTML files in the blog path into t, and returns a new

@@ -123,7 +123,7 @@
 	Remove any single one of the above points, and this crash would have never
 	occurred. But with all of them combined, the total amount of memory consumed
 	by TH04's <code>MAIN.EXE</code> just barely exceeds ZUN's limit of 320,000
-	bytes, by no more than 3.840 bytes, the size of the star image.
+	bytes, by no more than 3,840 bytes, the size of the star image.
 </p><p>
 	But wait: As we established earlier, EMS does nothing to reduce the amount
 	of conventional memory used by the game. In fact, if you disabled TH04's EMS
@@ -154,11 +154,11 @@
 	from disk</li>
 	<li><code>BB0.CDG</code> is found inside the <code>東方幻想.郷</code>
 	packfile</li>
-	<li><code>file_ropen</code> ends up allocating a 4 KiB buffer for the
+	<li><code>file_ropen()</code> ends up allocating a 4 KiB buffer for the
 	encrypted packfile data, getting us the decisive ~4 KiB closer to the memory
 	limit</li>
-	<li>The .CDG loader tries to allocate 52.608 contiguous bytes for the pixel
-	data of Reimu's bomb image</li>
+	<li>The .CDG loader tries to allocate 52&nbsp;608 contiguous bytes for the
+	pixel data of Reimu's bomb image</li>
 	<li>This would exceed the memory limit, so <code>hmem_allocbyte()</code>
 	fails and returns a <code>nullptr</code></li>
 	<li>ZUN doesn't check for this case (as usual)</li>
@@ -171,7 +171,7 @@
 /></a></p><p class="gallery">
 	<small>The final frame rendered by a crashing TH04.</small>
 </p><p>
-	The 4 KiB encryption buffer would only be released by the corresponding
+	The 4 KiB encryption buffer would only be freed by the corresponding
 	<code>file_close()</code> call, which of course never happens because the
 	game crashes before it gets there. At one point, I really did suspect the
 	cause to be some kind of memory leak or fragmentation inside master.lib,

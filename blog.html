@@ -1,4 +1,4 @@
-{{template "header.html" -}}
+{{template "header.html" $.TemplateName -}}
 <h2>Blog</h2>
 <h3><a href="/blog/tag">⮞ List of tags</a></h3>
 {{range Blog_Posts nil}}{{template "blog_post.html" .}}{{end}}

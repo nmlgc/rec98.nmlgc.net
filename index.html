@@ -3,7 +3,7 @@
 {{$spp := ReC98_RESpeedPerPush -}}
 {{$pe := ReC98_REProgressEstimateAtTree $master.Tree $spp -}}
 
-{{- template "header.html" "index" -}}
+{{- template "header.html" $.TemplateName -}}
 
 {{template "cap.html" DB_CapCurrent false}}
 

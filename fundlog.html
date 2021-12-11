@@ -1,6 +1,6 @@
 {{$backlog := DB_TransactionBacklog -}}
 
-{{- template "header.html" "fundlog" -}}
+{{- template "header.html" $.TemplateName -}}
 <h2>Backlog</h2>
 {{if $backlog -}}
 <dl>

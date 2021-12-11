@@ -10,6 +10,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -302,16 +303,16 @@ func respondWithError(wr http.ResponseWriter, err error) {
 	fmt.Fprintln(wr, err)
 }
 
-// MuxedRequest wraps a http.Request together with the request vars from
-// gorilla/mux.
-type MuxedRequest struct {
+// PageDot bundles all data handed to a page template via dot.
+type PageDot struct {
 	*http.Request
-	Vars map[string]string
+	Vars         map[string]string // from gorilla/mux
+	TemplateName string
 }
 
-// NewMuxedRequest wraps req into a MuxedRequest.
-func NewMuxedRequest(req *http.Request) MuxedRequest {
-	return MuxedRequest{req, mux.Vars(req)}
+// NewPageDot builds a new PageDot structure.
+func NewPageDot(req *http.Request, templateName string) PageDot {
+	return PageDot{req, mux.Vars(req), templateName}
 }
 
 // pagesHandler returns a handler that executes the given template of [pages],
@@ -323,7 +324,8 @@ func pagesHandler(template string) http.Handler {
 	}
 
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-		if err := tmpl.Execute(wr, NewMuxedRequest(req)); err != nil {
+		dot := NewPageDot(req, strings.TrimSuffix(template, path.Ext(template)))
+		if err := tmpl.Execute(wr, dot); err != nil {
 			respondWithError(wr, err)
 		}
 	})

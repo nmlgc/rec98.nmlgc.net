@@ -406,18 +406,21 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes, blogTags).AutogenerateTags(&repo)
-	pages.Funcs(map[string]interface{}{
-		"Blog_Posts":            blog.Posts,
-		"Blog_FindEntryForPush": blog.FindEntryForPush,
-		"Blog_GetPost":          blog.GetPost,
-		"Blog_ParseTags": func(t string) []string {
-			return strings.FieldsFunc(t, func(c rune) bool { return c == '/' })
-		},
-		"Blog_TagDescriptions": func() []*TagDescription {
-			return tagDescriptions.Ordered
-		},
-	})
+	NewBlog(pages, pushes, blogTags, func(blog Blog) map[string]interface{} {
+		return map[string]interface{}{
+			"Blog_Posts":            blog.Posts,
+			"Blog_FindEntryForPush": blog.FindEntryForPush,
+			"Blog_GetPost":          blog.GetPost,
+			"Blog_ParseTags": func(t string) []string {
+				return strings.FieldsFunc(t, func(c rune) bool {
+					return c == '/'
+				})
+			},
+			"Blog_TagDescriptions": func() []*TagDescription {
+				return tagDescriptions.Ordered
+			},
+		}
+	}).AutogenerateTags(&repo)
 	// ----
 
 	pages = template.Must(pages.ParseGlob("*.html"))

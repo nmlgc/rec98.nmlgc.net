@@ -27,8 +27,9 @@ type BlogEntry struct {
 type Blog []BlogEntry
 
 // NewBlog parses all HTML files in the blog path into t, and returns a new
-// sorted Blog.
-func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
+// sorted Blog. funcs can be used to add any template functions that rely on
+// a Blog instance.
+func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, funcs func(b Blog) map[string]interface{}) (ret Blog) {
 	// Unlike Go's own template.ParseGlob, we want to prefix template names
 	// with their local path.
 	templates, err := filepath.Glob(filepath.Join(blogHP.LocalPath, "*.html"))
@@ -44,6 +45,7 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags) (ret Blog) {
 			templateName: tmpl,
 		})
 	}
+	t.Funcs(funcs(ret))
 	for _, tmpl := range templates {
 		buf, err := ioutil.ReadFile(tmpl)
 		FatalIf(err)

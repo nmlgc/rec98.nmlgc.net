@@ -282,9 +282,6 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"ReC98_REProgressAtTree": REProgressAtTree,
 	"ReC98_REBaselineRev":    REBaselineRev,
 
-	// Blog, safe
-	"Blog_PostLink": PostLink,
-
 	// PayPal, safe
 	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
 })
@@ -409,6 +406,7 @@ func main() {
 	NewBlog(pages, pushes, blogTags, func(blog Blog) map[string]interface{} {
 		return map[string]interface{}{
 			"Blog_Posts":            blog.Posts,
+			"Blog_PostLink":         blog.PostLink,
 			"Blog_FindEntryForPush": blog.FindEntryForPush,
 			"Blog_GetPost":          blog.GetPost,
 			"Blog_ParseTags": func(t string) []string {

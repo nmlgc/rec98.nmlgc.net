@@ -1,0 +1,121 @@
+{{$pic1 := (call .PostFileURL "Repaid.png") -}}
+{{$pic2 := (call .PostFileURL "Finalized.png") -}}
+
+<p>
+	The "bad" news first: Expanding to Stripe in order to support Google Pay
+	requires bureaucratic effort that is not quite justified yet, and would only
+	be worth it after the next price increase.
+</p><p>
+	Visualizing technical debt has definitely been overdue for a while though.
+	With 1 of these 2 pushes being focused on this topic, it makes sense to
+	summarize once again what "<a
+	href="https://en.wikipedia.org/wiki/Technical_debt">technical debt</a>"
+	means in the context of ReC98, as this info was previously kind of scattered
+	over multiple blog posts. Mainly, it encompasses
+</p><ul>
+	<li>any ZUN-written code</li>
+	<li>that we did name and reverse-engineer,</li>
+	<li>but which we simply moved out into dedicated files that are then
+	<code>#include</code>d back into the big .ASM translation units,</li>
+	<li>without worrying about decompilation or proving undecompilability for
+	now.</li>
+</ul><p>
+	<i>Technically</i> (ha), it would also include all of master.lib, which has
+	always been compiled into the binaries in this way, and which will require
+	quite a bit of dedicated effort to be moved out into a properly linkable
+	library, once it's feasible. But this code has never been part of any
+	progress metric – in fact, <a href="/progress/re-baseline">0% RE</a> is
+	defined as the total number of x86 instructions in the binary <i>minus</i>
+	any library code. There is also no relation between instruction numbers and
+	the time it will take to finalize master.lib code, let alone a precedent of
+	how much it would cost.
+</p><p>
+	If we now want to express technical debt as a percentage, it's clear where
+	the 100% point would be: when all RE'd code is also compiled in from a
+	translation unit outside the big .ASM one. But where would 0% be? Logically,
+	it would be the point where no reverse-engineered code has ever been moved
+	out of the big translation units yet, and nothing has ever been decompiled.
+	With these boundary points, this is what we get:
+</p><p class="gallery"><a
+	href="{{$pic1}}"><img src="{{$pic1}}" alt="Visualizing technical debt in terms of the total amount of instructions that could possibly be not finalized" /></a>
+</p><p>
+	Not too bad! So it's 6.22% of total RE that we will have to revisit at some
+	point, concentrated mostly around TH04 and TH05 where it resulted from a
+	focus on position independence. The prices also give an accurate impression
+	of how much more work would be required there.
+</p><p>
+	But is that really the best visualization? After all, it requires an
+	understanding of our definition of technical debt, so it's maybe not the
+	most useful measurement to have on a front page. But how about subtracting
+	those 6.22% from the number shown on the RE% bars? Then, we get this:
+</p><p class="gallery"><a
+	href="{{$pic2}}"><img src="{{$pic2}}" alt="Visualizing technical debt in terms of the absolute number of 'finalized' instructions per binary" /></a>
+</p><p>
+	Which is where we get to the good news: Twitter surprisingly helped me out
+	in choosing one visualization over the other, <a
+	href="https://twitter.com/ReC98Project/status/1470109509699973125">voting
+	7:2 in favor of the <i>Finalized</i> version</a>. While this one requires
+	you to manually calculate <i>€&nbsp;finalized&nbsp;-&nbsp;€&nbsp;RE'd</i> to
+	obtain the raw financial cost of technical debt, it clearly shows, for the
+	first time, how far away we are from the main goal of fully decompiling all
+	5 games… at least to the extent it's possible.
+</p><hr /><p>
+	Now that the parser is looking at these recursively included .ASM files for
+	the first time, it needed a small number of improvements to correctly handle
+	the more advanced directives used there, which no automatic disassembler
+	would ever emit. Turns out I've been counting some directives as
+	instructions that never should have been, which is where the additional
+	0.02% total RE came from.
+</p><p>
+	One more overcounting issue remains though. Some of the RE'd assembly slices
+	included by multiple games contain different <code>if</code> branches for
+	each game, like this:
+</p><pre>; An example assembly file included by both TH04's and TH05's MAIN.EXE:
+if (GAME eq 5)
+	; (Code for TH05)
+else
+	; (Code for TH04)
+endif</pre><p>
+	Currently, the parser simply ignores <code>if</code>, <code>else</code>, and
+	<code>endif</code>, leading to the combined code of all branches being
+	counted for every game that includes such a file. This also affects the
+	calculated speed, and is the reason why finalization seems to be slightly
+	faster than reverse-engineering, at currently 471 instructions per push
+	compared to 463. However, it's not that bad of a signal to send: Most of the
+	not yet finalized code is shared between TH04 and TH05, so finalizing it
+	will roughly be twice as fast as regular reverse-engineering to begin with.
+	(Unless the code then turns out to be twice as complex than average code…
+	{{HTML_Emoji "tannedcirno"}}).
+</p><p>
+	For completeness, finalization is now also shown as part of the <a
+	href="/progress">per-commit metrics</a>. Now it's clearly visible what I was
+	doing in those very slow five months between <a
+	href="/progress/dc9e3ee47599dc02d737602c22a5bfa75eeaae34">P0131</a> and <a
+	href="/progress/d9858113d8135d265b88e0325d40fc237e6b9763">P0140</a>, where
+	the progress bar didn't move at all: Repaying 3.49% of previously
+	accumulated technical debt across all games. 👌
+</p><hr /><p>
+	As announced, I've also implemented a new caching system for this website,
+	as the second main feature of these two pushes. By appending a hash string
+	to the URLs of static resources, your browser should now both cache them
+	forever <i>and</i> re-download them once they did change on the server. This
+	avoids the unnecessary (and quite frankly, embarrassing) re-requests for all
+	static resources that typically just return a <code>304 Not Modified</code>
+	response. As a result, the blog should now load a bit faster on repeated
+	visits, especially on slower connections. That should allow me to
+	deliberately not paginate it for another few years, without it getting all
+	<i>too</i> slow – and should prepare us for the day when our first game
+	reaches 100% and the server will get smashed. {{HTML_Emoji "onricdennat"}}
+	However, I am open to changing the <i>progress blog</i> link in the
+	navigation bar at the top to the <a href="/blog/tag">list of tags</a>, once
+	people start complaining.
+</p><p>
+	Apart frome some more invisible correctness and QoL improvements, I've also
+	prepared some new funding goals, but I'll cover those once the store
+	reopens, next year. Syntax highlighting for code snippets would have also
+	been cool, but unfortunately didn't make it into those two pushes. It's
+	still on the list though!
+</p><p>
+	Next up: Back to RE with the TH03 score file format, and other code that
+	surrounds it.
+</p>

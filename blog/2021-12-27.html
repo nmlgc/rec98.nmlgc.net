@@ -1,0 +1,73 @@
+{{$pic := (call .PostFileURL "TH03-Alphabet.png") -}}
+{{$dl := printf "%v%v" .DatePrefix "Fully-unlocked-clean-score-files.zip" -}}
+
+<p>
+	TH03 finally passed 20% RE, and the newly decompiled code contains no
+	serious ZUN bugs! What a nice way to end the year.
+</p><p>
+	There's only a single unlockable feature in TH03: Chiyuri and Yumemi as
+	playable characters, unlocked after a 1CC on any difficulty. Just like the
+	Extra Stages in TH04 and TH05, <code>YUME.NEM</code> contains a single
+	designated variable for this unlocked feature, making it trivial to craft a
+	fully unlocked score file without recording any high scores that others
+	would have to compete against. So, we can now put together a complete set
+	for all PC-98 Touhou games: {{HTML_Download .HostedPath $dl}}
+	It would have been cool to set the randomly generated encryption keys in
+	these files to a fixed value so that they cancel out and end up not actually
+	encrypting the file. Too bad that TH03 also started feeding each encrypted
+	byte back into its stream cipher, which makes this impossible.
+</p><p>
+	The main loading and saving code turned out to be the second-cleanest
+	implementation of a score file format in PC-98 Touhou, just behind TH02.
+	Only two of the <code>YUME.NEM</code> functions come with nonsensical
+	differences between <code>OP.EXE</code> and <code>MAINL.EXE</code>, rather
+	than {{Blog_PostLink "2020-03-22" "all of them, as in TH01"}} or
+	{{Blog_PostLink "2019-12-28" "too many of them, as in TH04 and TH05"}}. As
+	for the rest of the per-difficulty structure though… well, it quickly
+	becomes clear why this was the final score file format to be RE'd. The name,
+	score, and stage fields are directly stored in terms of the internal
+	<code>REGI*.BFT</code> sprite IDs used on the high score screen. TH03 also
+	stores 10 score digits for each place rather than the 9 possible ones, keeps
+	any leading 0 digits, and stores the letters of entered names in reverse
+	order… yeah, let's decompile the high score screen as well, for a full
+	understanding of why ZUN might have done all that. (Answer: For no reason at
+	all. {{HTML_Emoji "zunpet"}})
+</p><hr /><p>
+	And wow, what a breath of fresh air. It's surely not
+	{{HTML_Tag "good-code" nil}}: The overlapping shadows resulting from using
+	a 24-pixel letterspacing with 32-pixel glyphs in the name column led ZUN to
+	do quite a lot of unnecessary and slightly confusing rendering work when
+	moving the cursor back and forth, and he even forgot about the EGC there.
+	But it's nowhere close to the level of jank we saw in
+	{{Blog_PostLink "2020-05-25" "TH01's high score menu"}} last year. Good to
+	see that ZUN had learned a thing or two by his third game – especially when
+	it comes to storing the character map cursor in terms of a character ID,
+	and improving the layout of the character map:
+</p><p class="gallery"><a
+	href="{{$pic}}"><img src="{{$pic}}" alt="The alphabet available for TH03 high score names." /></a>
+</p><p>
+	That's almost a nicely regular grid there. With the question mark and the
+	double-wide <i>SP</i>, <i>BS</i>, and <i>END</i> options, the cursor
+	movement code only comes with a reasonable two exceptions, which are easily
+	handled. And while I didn't get this screen <i>completely</i> decompiled,
+	one additional push was enough to cover all important code there.
+</p><p>
+	The only potential glitch on this screen is a result of ZUN's continued use
+	of <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">binary-coded
+	decimal</a> digits without any bounds check or cap. Like the in-game HUD
+	score display in TH04 and TH05, TH03's high score screen simply uses the
+	next glyph in the character set for the most significant digit of any score
+	above 1,000,000,000 points – in this case, the period. Still, it only
+	<i>really</i> gets bad at 8,000,000,000 points: Once the glyphs are
+	exhausted, the blitting function ends up accessing garbage data and filling
+	the entire screen with garbage pixels. For comparison though, <a
+	href="https://www.youtube.com/watch?v=LeoY6MEuDdA">the current world record
+	is 133,650,710 points</a>, so good luck getting 8 billion in the first
+	place.
+</p><p>
+	Next up: Starting 2022 with the long-awaited decompilation of TH01's Sariel
+	fight! Due to the {{Blog_PostLink "2021-12-01" "recent price increase"}},
+	we now got a <script>formatCurrency(3000)</script> window in the cap that
+	is going to remain open until tomorrow, providing an early opportunity to
+	set a new priority after Sariel is done.
+</p>

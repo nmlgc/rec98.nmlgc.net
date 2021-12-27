@@ -167,3 +167,5 @@ P0168 	[102, 116, 120]	TH04/TH05 decompilation (EMS swap area, part 1/2)	2021-11
 P0169 	[124, 128, 132]	TH04/TH05 decompilation (EMS swap area, part 2/2) + Research (TH04 No-EMS Reimu Stage 5 crash)	2021-11-29T01:56:18Z	nmlgc/ReC98/compare/8b046da...479b766	1
 P0170	[125]	Website (Technical debt visualization)	2021-12-15T23:21:58Z	nmlgc/rec98.nmlgc.net/compare/0c4ab41...4f04091	0
 P0171	[125, 129]	Website (Resource caching + new funding goals)	2021-12-15T23:21:58Z	nmlgc/rec98.nmlgc.net/compare/4f04091...e12cf26	0
+P0172 	[136, 137]	TH03 decompilation (YUME.NEM)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/49e6789...2d5491e	1
+P0173 	[129]	TH03 decompilation (High score menu, part 1/2)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/2d5491e...27f901c	1

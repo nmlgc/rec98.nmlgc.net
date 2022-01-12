@@ -622,6 +622,10 @@ td, th {
 	color: orangered;
 }
 
+#order #info * {
+	text-align: left;
+}
+
 #order select.info {
 	border-color: orangered;
 	outline-color: orangered;

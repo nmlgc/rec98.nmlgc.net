@@ -458,6 +458,7 @@ func main() {
 		r.Handle("/order", pagesHandler("order.html"))
 		r.Handle("/thankyou", pagesHandler("thankyou.html"))
 	}
+	r.Handle("/donate", pagesHandler("donate.html"))
 	r.Handle("/badges", badger.Fallback)
 	r.Handle("/badge/{type}", badger)
 	r.Handle("/badge/{type}/{game}", badger)

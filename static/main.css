@@ -306,8 +306,9 @@ a.download:after {
 	text-align: center;
 }
 
-#cap small {
+#cap .desc {
 	color: gray;
+	font-size: smaller;
 }
 
 #cap .amount {
@@ -473,7 +474,7 @@ section.overall, section.game, section.binary {
 	top: 2.25em;
 }
 
-#faq form button {
+form button {
 	font-size: 125%;
 	padding: 0.5em;
 	width: 100%;

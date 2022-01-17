@@ -1,4 +1,6 @@
 <p>
+	<strong>Last updated: {{Blog_PostLink "2022-01-31" "2022-01-31"}}</strong>
+</p><p>
 	Secured a 30-hour RL workweek to leave plenty of time for this project,
 	{{DB_CustomerByID 9}}'s commissioned MediaWiki update work is also nearing
 	completion, time to reopen the store! Since it's been a long time, here's
@@ -7,7 +9,7 @@
 </p><ul>
 	<li><strong>TH01:</strong><ul>
 		<li><code>OP.EXE:</code> Main menu and game initialization.</li>
-		<li><code>REIIDEN.EXE:</code> Konngara's boss script code. We finished 2020 by reverse-engineering everything it references, so Konngara is expected to get done quite quickly – especially in terms of RE% numbers.</li>
+		<li><code>REIIDEN.EXE:</code> In order: Elis, Kikuri, SinGyoku, remaining code for missile bullets, cards and obstacles, Mima, YuugenMagan, the end-of-stage and TOTLE tallys, the bomb animation, the debug menu, <code>main()</code>, and we're done!</li>
 		<li><code>FUUIN.EXE:</code> The verdict screen, followed by the boss slideshow.</li>
 	</ul></li>
 	<li><strong>TH02:</strong><ul>
@@ -15,15 +17,15 @@
 		<li><code>MAINE.EXE:</code> The ending sequences.</li>
 	</ul></li>
 	<li><strong>TH03:</strong><ul>
-		<li><code>OP.EXE:</code> Story Mode initialization.</li>
+		<li><code>OP.EXE:</code> Story Mode initialization, or the title screen.</li>
 		<li><code>MAIN.EXE:</code> The enemy structure? Or the bullet structure, maybe? Either way, we're still missing a lot of essential gameplay structures. At least we did make {{Blog_PostLink "2020-01-20" "first"}} {{Blog_PostLink "2020-01-29" "steps"}} in this game, in contrast to TH02.</li>
-		<li><code>MAINL.EXE:</code> The stage end / VS dialogue followed by the stage start screen, or the High Score menu, after some groundwork.</li>
+		<li><code>MAINL.EXE:</code> The stage end / VS dialogue followed by the stage start screen.</li>
 	</ul></li>
 	<li><strong>TH04:</strong><ul>
 		<li><code>OP.EXE:</code> The game title slide-in animation, followed by the High Score menu and the Music Room. The latter will be done in parallel with the TH05 version.</li>
 		<li><code>MAIN.EXE:</code><ul>
 			<li>Turns out that this game has a {{Blog_PostLink "2020-02-29" "shared structure for custom entity types"}} after all. Looking at that one would also get us pretty close to 100% PI.</li>
-			<li>Otherwise, we could decompile the main bullet update functions, …</li>
+			<li>Otherwise, we could decompile the last missing piece of bullet update code, in parallel with TH05</li>
 			<li>… or the big "Master Spark" laser, with Gengetsu's boss script afterward, …</li>
 			<li>… or HUD rendering (in parallel with TH05).</li>
 		</ul></li>
@@ -32,12 +34,12 @@
 	<li><strong>TH05:</strong><ul>
 		<li><code>OP.EXE:</code> High Score menu, followed by the Music Room. Will be done in parallel with TH04's version.</li>
 		<li><code>MAIN.EXE:</code> Finishing PI created quite a lot of segment splits where we could immediately continue: <ul>
-			<li>bullet spawning (self-modifying code that can't be decompiled to C++ in this game, unfortunately)</li>
+			<li>the last missing piece of bullet update code, in parallel with TH04</li>
 			<li>items and extends</li>
 			<li>the Mai & Yuki fight script</li>
 			<li>the EX-Alice fight script</li>
 			<li>bomb rendering</li>
-			<li>Shinki's background animations</li>
+			<li>The boss background animations of Stage ≤5</li>
 			<li>HUD rendering (in parallel with TH04, and getting us right in front of some boss sprite animations)</li>
 			<li>player shot collision detection and rendering</li>
 		</ul></li>
@@ -48,19 +50,11 @@
 	We're now at a pretty good place as far as arbitrary requests are
 	concerned, as I simply can't decide myself where to put all the current
 	pending contributions in the <a href="/fundlog">funding backlog</a>. 😅 By
-	spending the missing {{HTML_Currency 1000}} or {{HTML_Currency 2000}}, you
-	can capture any of those "fractional" contributions towards a specific
-	goal.
+	spending only the missing amount of muny to complete any of those, you can
+	capture any of those "fractional" contributions towards a specific goal.
 </p><p>
 	The next specific requests are going to set the priorities of this project
 	for quite some time! The best strategy: Spend a low amount of money on
 	something very specific, and watch as existing generic contributions will
 	necessarily have to be put towards making that specific goal happen 😛
-</p><p>
-	(Wait, with {{DB_CustomerByID 2}}'s 66% discount on TH05, does that mean
-	you could secure that a pending 0.66 contribution will go towards TH05 by
-	spending as little as {{HTML_Currency 334}}, with {{DB_CustomerByID 2}}
-	providing the remaining {{HTML_Currency 666}} to make a full push?
-	{{HTML_Emoji "thonk"}} Same with a pending 0.33 contribution and spending
-	{{HTML_Currency 667}}…)
 </p>

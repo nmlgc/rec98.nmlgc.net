@@ -142,22 +142,13 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 			addr <= int64(p.DataRange.End)
 	}
 
-	procCount := 0
-	unnamedProcName := func() string {
-		return fmt.Sprintf("unnamed_%v", procCount)
-	}
-	procName := unnamedProcName()
-
-	procEnter := func(name string) {
-		if procCount < len(ret.procs) {
-			procCount++
-		}
-		procName = name
+	procEnter := func(name string) *asmProc {
+		ret.procs = append(ret.procs, asmProc{name: name})
+		return &ret.procs[len(ret.procs)-1]
 	}
 
-	procLeave := func() {
-		procCount++
-		procName = unnamedProcName()
+	procLeave := func() *asmProc {
+		return nil
 	}
 
 	isCodeLine := func(line string) bool {
@@ -170,6 +161,7 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 		return p.inSeg == Code
 	}
 
+	var proc *asmProc
 	scanner := bufio.NewScanner(file)
 	for p.inSeg != Data && scanner.Scan() {
 		line := scanner.Text()
@@ -197,19 +189,19 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 			if len(params[1]) >= 4 {
 				// Captures PROC and PROCDESC
 				if strings.EqualFold(params[1][:4], "proc") {
-					procEnter(params[0])
+					proc = procEnter(params[0])
 					continue
 				} else if strings.EqualFold(params[1], "endp") {
-					procLeave()
+					proc = procLeave()
 					continue
 				}
 			}
 			if p.ProcStartMacros != nil && p.ProcStartMacros.match(params[0]) {
-				procEnter(params[1])
+				proc = procEnter(params[1])
 				continue
 			}
 			if p.ProcEndMacros != nil && p.ProcEndMacros.match(params[0]) {
-				procLeave()
+				proc = procLeave()
 				continue
 			}
 
@@ -237,10 +229,9 @@ func (p *ASMParser) ParseStats(fn string) (ret asmStats) {
 				}
 			}
 
-			if procCount >= len(ret.procs) {
-				ret.procs = append(ret.procs, asmProc{name: procName})
+			if proc == nil {
+				proc = procEnter(fmt.Sprintf("unnamed_%v", len(ret.procs)))
 			}
-			proc := &ret.procs[procCount]
 			proc.hashString += params[0] + " "
 			if len(params) > 1 {
 				if i := strings.IndexByte(params[1], ','); i > 0 {

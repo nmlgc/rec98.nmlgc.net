@@ -1,8 +1,8 @@
 <style>
-	#bos-formats-2020-10-13 thead {
+	#bos-formats-{{.Date}} thead {
 		font-family: monospace;
 	}
-	#bos-formats-2020-10-13 td {
+	#bos-formats-{{.Date}} td {
 		text-align: center;
 	}
 </style>
@@ -28,7 +28,7 @@
 	Now that we've decompiled all the .BOS implementations in TH01, here's an
 	overview of all of them, together with .PTN to show that there really was
 	no reason for not using the .BOS API for all of Reimu's sprites:
-</p><table id="bos-formats-2020-10-13">
+</p><table id="bos-formats-{{.Date}}">
 	<thead>
 		<tr>
 			<th></th>

@@ -3,12 +3,12 @@
 	milestone, {{DB_CustomerByID 2}} coded a little demo, which we recorded on
 	both an emulator and on real PC-98 hardware:
 	<script>
-		externalRegister('2020-09-17', 'hw', 'https://youtube.com/embed/0BmzWRgv27A');
-		externalRegister('2020-09-17', 'emu', 'https://youtube.com/embed/7-UYGhZ1sB8');
+		externalRegister('{{.Date}}', 'hw', 'https://youtube.com/embed/0BmzWRgv27A');
+		externalRegister('{{.Date}}', 'emu', 'https://youtube.com/embed/7-UYGhZ1sB8');
 	</script>
 </p><p class="gallery">
-	<iframe id="2020-09-17-hw" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	<iframe id="2020-09-17-emu" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<iframe id="{{.Date}}-hw" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	<iframe id="{{.Date}}-emu" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </p><p>
 	For all the new people who are unfamiliar with PC-98 Touhou internals:
 	<a href="/faq#three">Boss behavior is hardcoded into

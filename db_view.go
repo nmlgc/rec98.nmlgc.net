@@ -116,7 +116,7 @@ func (t tPushes) DiffsForEstimate() (ret []DiffInfoWeighted) {
 		return selected[i].Delivered.After(selected[j].Delivered)
 	})
 	for _, p := range selected {
-		if len(ret) > 0 && ret[len(ret)-1].DiffInfo == p.Diff {
+		if len(ret) > 0 && ret[len(ret)-1].DiffInfo.Rev == p.Diff.Rev {
 			ret[len(ret)-1].Pushes += 1.0
 		} else {
 			ret = append(ret, DiffInfoWeighted{p.Diff, 1.0})

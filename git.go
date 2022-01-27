@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -17,8 +18,16 @@ import (
 type Repository struct {
 	R *git.Repository
 
-	UniqueLen         int // Shortest possible but still unique commit hash length
+	// Shortest possible but still unique commit hash length
+	UniqueLen int
+
+	// Not modified after initialization
 	ShortHashToCommit map[string]*object.Commit
+
+	// Separate cache for anything that wasn't included in go-git's
+	// CommitObjects() iterator, for whatever reason
+	FullRevToCommit     map[string]*object.Commit
+	FullRevToCommitLock sync.RWMutex
 }
 
 type eHashTooShort struct{}
@@ -62,6 +71,7 @@ func NewRepository(url string) (ret Repository) {
 	}
 	log.Printf("shortest unique hash length is %v characters", testlen)
 
+	ret.FullRevToCommit = make(map[string]*object.Commit)
 	ret.UniqueLen = testlen
 	ret.R = r
 	return
@@ -72,17 +82,32 @@ func (r *Repository) GetCommit(rev string) (*object.Commit, error) {
 	if len(rev) >= r.UniqueLen {
 		if commit, ok := r.ShortHashToCommit[rev[:r.UniqueLen]]; ok {
 			// Verify that the rest of the hash matches what we expect, and
-			// fall through to ResolveRevision otherwise.
+			// fall through to full rev resolution otherwise.
 			if rev == commit.Hash.String()[:len(rev)] {
 				return commit, nil
 			}
 		}
 	}
-	hash, err := r.R.ResolveRevision(plumbing.Revision(rev))
-	if err == nil {
-		return r.R.CommitObject(*hash)
+
+	r.FullRevToCommitLock.RLock()
+	commit, ok := r.FullRevToCommit[rev]
+	r.FullRevToCommitLock.RUnlock()
+	if ok {
+		return commit, nil
 	}
-	return nil, err
+
+	hash, err := r.R.ResolveRevision(plumbing.Revision(rev))
+	if err != nil {
+		return nil, err
+	}
+	commit, err = r.R.CommitObject(*hash)
+	if err != nil {
+		return nil, err
+	}
+	r.FullRevToCommitLock.Lock()
+	r.FullRevToCommit[rev] = commit
+	r.FullRevToCommitLock.Unlock()
+	return commit, err
 }
 
 // GetLogAt returns an in-order log iterator for the given rev.

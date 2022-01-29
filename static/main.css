@@ -5,6 +5,9 @@
 	--c-border: silver;
 	--c-bg: #f8f8f8;
 
+	--c-link: blue;
+	--c-link-hover: red;
+
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
 	--logo-width: 3.5em;
@@ -24,12 +27,12 @@ html, a.download::after {
 }
 
 a {
-	color: blue;
+	color: var(--c-link);
 	text-decoration: none;
 }
 
 a:hover {
-	color: red;
+	color: var(--c-link-hover);
 }
 
 blockquote {
@@ -723,7 +726,7 @@ article h5 {
 	align-items: stretch;
 	font-size: 80%;
 	background-color: #f8f8ff;
-	border: 1px solid blue;
+	border: 1px solid var(--c-link);
 }
 
 .tag.active {
@@ -749,7 +752,7 @@ article h5 {
 
 .tag:hover {
 	background-color: #fff8f8;
-	border-color: red;
+	border-color: var(--c-link-hover);
 }
 /* ---- */
 

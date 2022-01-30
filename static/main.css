@@ -87,6 +87,23 @@ aside .icon-cell {
 	display: inline-block;
 }
 
+.gallery button {
+	border: 0;
+	background: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: var(--c-link);
+}
+
+.gallery button:hover {
+	color: var(--c-link-hover);
+	cursor: pointer;
+}
+
+.gallery button.active {
+	color: black
+}
+
 .gallery.small {
 	line-height: 0;
 }

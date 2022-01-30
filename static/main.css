@@ -358,6 +358,10 @@ span.confirmed { color: green; }
 }
 
 span.incoming { color: red; }
+
+#cap .discounts li {
+	text-align: left!important;
+}
 /* --- */
 
 /* Main page

@@ -114,12 +114,30 @@ aside .icon-cell {
 	image-rendering: crisp-edges; /* For Firefox */
 }
 
-.gallery.fullres figure {
-	max-width: min(640px, 100%);
+.videoswitch {
+	position: relative;
 }
 
-.gallery.fullres figure img {
-	min-height: 400px;
+.videoswitch video {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 0;
+}
+
+.videoswitch video.active {
+	z-index: 1;
+}
+
+.gallery.fullres figure,
+.gallery.fullres .videoswitch {
+	max-width: min(640px, 100%);
+	aspect-ratio: 16 / 10;
+}
+
+.gallery.fullres figure img,
+.gallery.fullres .videoswitch {
+	margin-bottom: 0.5em;
 }
 
 .gallery img, video.gallery, .gallery video {

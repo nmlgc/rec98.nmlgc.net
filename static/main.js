@@ -57,3 +57,32 @@ function externalEnable(hostname) {
 	}
 }
 // -------------------------
+
+// Video switcher
+// --------------
+function switchButton(id, subvid) {
+	return `<button id="${id}-switch" onclick="switchTo('${id}', ${subvid})"
+		>(Switch to ${subvid === 1 ? "fixed version" : "original"})</button>`;
+}
+
+function switchLink(id) {
+	document.write(switchButton(id, 1));
+}
+
+function switchTo(id, subvid) {
+	const vidOld = document.getElementById(`${id}-vid-${1 - subvid}`);
+	const vidNew = document.getElementById(`${id}-vid-${subvid}`);
+	const paused = vidOld.paused;
+	vidOld.pause();
+	vidNew.currentTime = vidOld.currentTime;
+	vidNew.onseeked = () => {
+		vidNew.onseeked = null;
+		vidOld.classList.remove("active");
+		vidNew.classList.add("active");
+		!paused && vidNew.play();
+		document.getElementById(`${id}-switch`).outerHTML = switchButton(
+			id, (1 - subvid)
+		);
+	}
+}
+// --------------

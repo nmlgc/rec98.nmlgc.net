@@ -169,3 +169,11 @@ P0170	[125]	Website (Technical debt visualization)	2021-12-15T23:21:58Z	nmlgc/re
 P0171	[125, 129]	Website (Resource caching + new funding goals)	2021-12-15T23:21:58Z	nmlgc/rec98.nmlgc.net/compare/4f04091...e12cf26	0
 P0172 	[136, 137]	TH03 decompilation (YUME.NEM)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/49e6789...2d5491e	1
 P0173 	[129]	TH03 decompilation (High score menu, part 1/2)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/2d5491e...27f901c	1
+P0174	[127]	TH01 decompilation (Sariel, part 2/9: Preparation + birds)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/27f901c...a0fe812	1
+P0175	[131]	TH01 decompilation (Sariel, part 3/9: Shield/wand/dress animation + patterns 1-3)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/a0fe812...40ac9a7	1
+P0176	[131]	TH01 decompilation (Sariel, part 4/9: Background transition animation + vertical 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/40ac9a7...c5dc45b	1
+P0177	[134]	TH01 decompilation (Sariel, part 5/9: Patterns 4-9 + wavy 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/c5dc45b...5f0cabc	1
+P0178	[135]	TH01 decompilation (Sariel, part 6/9: Patterns 10-11)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/5f0cabc...60621f8	1
+P0179	[135]	TH01 decompilation (Sariel, part 7/9: Patterns 12-13 + horizontal 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/60621f8...9e5b344	1
+P0180	[138, 143]	TH01 decompilation (Sariel, part 8/9: Patterns 14-16)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/9e5b344...091f19f	1
+P0181	[140]	TH01 decompilation (Sariel, part 9/9: Main function)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/091f19f...313450f	1

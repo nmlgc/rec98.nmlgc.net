@@ -1,0 +1,307 @@
+{{$pic1 := (call .PostFileURL "TH01-BOSS6_2.png") -}}
+{{$pic2 := (call .PostFileURL "TH01-Sariel-wand-raise-1.png") -}}
+{{$pic3 := (call .PostFileURL "TH01-Sariel-wand-raise-2.png") -}}
+{{$vid1_vp9 := (call .PostFileURL "TH01-Sariel-pattern-3-original.webm") -}}
+{{$vid1_vp8 := (call .PostFileURL "TH01-Sariel-pattern-3-original-vp8.webm") -}}
+{{$vid2_vp9 := (call .PostFileURL "TH01-Sariel-pattern-3-fixed.webm") -}}
+{{$vid2_vp8 := (call .PostFileURL "TH01-Sariel-pattern-3-fixed-vp8.webm") -}}
+{{$vid3_vp9 := (call .PostFileURL "TH01-Sariel-leaf-splash-original.webm") -}}
+{{$vid3_vp8 := (call .PostFileURL "TH01-Sariel-leaf-splash-original-vp8.webm") -}}
+{{$vid4_vp9 := (call .PostFileURL "TH01-Sariel-leaf-splash-fixed.webm") -}}
+{{$vid4_vp8 := (call .PostFileURL "TH01-Sariel-leaf-splash-fixed-vp8.webm") -}}
+
+<p>
+	Here we go, TH01 Sariel! This is the single biggest boss fight in all of
+	PC-98 Touhou: If we include all custom effect code we previously decompiled,
+	it amounts to a total of <span class="hovertext" title="And that's just raw instruction numbers. Those might be not that representative as they include code shared between the executables, with single C++ translation units being counted two or three times.">10.31% of all code in TH01 (and 3.14%
+	overall)</span>. These 8 pushes cover the final 8.10% (or 2.47% overall),
+	and are likely to be the single biggest delivery this project will ever see.
+	Considering that I only managed to decompile 6.00% across all games in 2021,
+	2022 is already off to a much better start!
+</p><p>
+	So, how can Sariel's code be that large? Well, we've got:
+</p><ul>
+	<li>16 danmaku patterns; including the one snowflake detonating into a giant
+	94×32 hitbox</li>
+	<li>Gratuitous usage of floating-point variables, bloating the binary thanks
+	to Turbo C++ 4.0J's particularly horrid code generation</li>
+	<li>The hatching birds that shoot pellets</li>
+	<li>3 separate particle systems, sharing the general idea, overall code
+	structure, and blitting algorithm, but differing in every little detail</li>
+	<li>The "gust of wind" background transition animation</li>
+	<li>5 sets of custom monochrome sprite animations, loaded from
+	<code>BOSS6GR?.GRC</code></li>
+	<li>A further 3 hardcoded monochrome 8×8 sprites for the "swaying leaves"
+	pattern during the second form</li>
+</ul><p>
+	In total, it's 3,020 lines of C++ code, containing a total of 8 definite ZUN
+	bugs, 3 of them being subpixel/pixel confusions. That might not look all
+	<i>too</i> bad if you compare it to the
+	{{Blog_PostLink "2021-10-20" "player control function's 8 bugs in 900 lines of code"}},
+	but given that Konngara had 0… And no, the code doesn't make it obvious
+	whether ZUN coded Konngara or Sariel first; there's just as much evidence
+	for either.
+</p><p>
+	Some terminology before we start: Sariel's first <i>form</i> is separated
+	into four <i>phases</i>, indicated by different background images, that
+	cycle until Sariel's HP reach 0 and the second, single-phase <i>form</i>
+	starts. The danmaku <i>patterns</i> within each phase are also on a cycle,
+	and the game picks a random but limited number of patterns per phase before
+	transitioning to the next one. The fight always starts at pattern 1 of phase
+	1 (the random purple lasers), and each new phase also starts at its
+	respective first pattern.
+</p><hr /><p>
+	Sariel's bugs already start at the graphics asset level, before any code
+	gets to run. Some of the patterns include a wand raise animation, which is
+	stored in <code>BOSS6_2.BOS</code>:
+</p><p class="gallery pixelated">
+	<a href="{{$pic1}}"><img
+		src="{{$pic1}}" alt="TH01 BOSS6_2.BOS" style="height: 192px"/></a>
+</p><p class="gallery">
+	<small>Umm… OK? The same sprite twice, just with slightly different colors?
+	So how is the wand lowered again?</small>
+</p><p>
+	The "lowered wand" sprite is missing in this file simply because it's
+	captured from the regular background image in VRAM, at the beginning of the
+	fight and after every background transition. What I previously thought to be
+	{{Blog_PostLink "2021-11-08" "background storage code"}} has therefore a
+	different meaning in Sariel's case. Since this captured sprite is fully
+	opaque, it will reset the entire 128×128 wand area… wait, 128×128, rather
+	than 96×96? Yup, this lowered sprite is larger than necessary, wasting 1,967
+	bytes of conventional memory.<br /> That still doesn't quite explain the
+	second sprite in <code>BOSS6_2.BOS</code> though. Turns out that the black
+	part is indeed <i>meant to unblit the purple reflection (?) in the first
+	sprite</i>. But… that's not how you would correctly unblit that?
+</p><p class="gallery pixelated">
+	<a href="{{$pic2}}"><img
+		src="{{$pic2}}"
+		alt="VRAM after blitting the first sprite of TH01's BOSS6_2.BOS"
+		style="height: 224px;"/></a>
+	<a href="{{$pic3}}"><img
+		src="{{$pic3}}"
+		alt="VRAM after blitting the second sprite of TH01's BOSS6_2.BOS"
+		style="height: 224px;"/></a>
+</p></p>
+	The first sprite already eats up part of the red HUD line, and the second
+	one additionally fails to recover the seal pixels underneath, leaving a nice
+	little black hole and some stray purple pixels until the next background
+	transition. {{HTML_Emoji "tannedcirno"}} Quite ironic given that both
+	sprites do include the right part of the seal, which isn't even part of the
+	animation.
+</p><hr /><p>
+	Just like Konngara, Sariel continues the approach of using a single function
+	per danmaku pattern or custom entity. While I appreciate that this allows
+	all pattern- and entity-specific state to be scoped locally to that one
+	function, it quickly gets ugly as soon as such a function has to do more than one thing.<br />
+	The "bird function" is particularly awful here: It's just one <code>if(…)
+	{…} else&nbsp;if(…) {…} else&nbsp;if(…) {…}</code> chain with different
+	branches for the subfunction parameter, with zero shared code between any of
+	these branches. It also uses 64-bit floating-point <code>double</code> as
+	its subpixel type… and since it also takes four of those as parameters
+	(y'know, just in case the "spawn new bird" subfunction is called), every
+	call site has to also push four <code>double</code> values onto the stack.
+	Thanks to Turbo C++ even using the FPU for <i>pushing a 0.0 constant</i>, we
+	have already reached maximum floating-point decadence before even having
+	seen a single danmaku pattern. Why decadence? Every possible spawn position
+	and velocity in both bird patterns just uses pixel resolution, with no
+	fractional component in sight. And there goes another 720 bytes of
+	conventional memory.
+</p><p>
+	Speaking about bird patterns, the red-bird one is where we find the first
+	code-level ZUN bug: The spawn cross circle sprite suddenly disappears after
+	it finished spawning all the bird eggs. How can we tell it's a bug? Because
+	there <i>is</i> code to smoothly fly this sprite off the playfield, that
+	code just suddenly forgets that the sprite's position is stored in Q12.4
+	subpixels, and treats it as raw screen pixels instead.
+	{{HTML_Emoji "zunpet"}} As a result, the well-intentioned 640×400
+	screen-space clipping rectangle effectively shrinks to 38×23 pixels in the
+	top-left corner of the screen. Which the sprite is always outside of, and
+	thus never rendered again.<br />
+	The intended animation is easily restored though:
+</p><div class="gallery fullres">
+	<figure id="{{.Date}}-pattern3">
+		<div class="videoswitch">
+			<video id="{{.Date}}-pattern3-vid-0" controls loop class="active">
+				<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
+				<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				(Video of TH01 Sariel's "birds on ellipse arc" pattern in its
+				original version; <a href="{{$vid1_vp9}}">download here</a>)
+			</video>
+			<video id="{{.Date}}-pattern3-vid-1" controls loop>
+				<source src="{{$vid2_vp9}}" type="video/webm"> <!-- For decent players -->
+				<source src="{{$vid2_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				(Video of TH01 Sariel's "birds on ellipse arc" pattern with
+				fixed spawn cross cirle movement and bird hatch animations; <a
+				href="{{$vid2_vp9}}">download here</a>)
+			</video>
+		</div>
+		<figcaption><script>switchLink("{{.Date}}-pattern3");</script>Sariel's
+		third pattern, and the first to spawn birds, in its original and fixed
+		versions. Note that I somewhat fixed the bird hatch animation as well:
+		ZUN's code never unblits any frame of animation there, and simply blits
+		every new one on top of the previous one.</figcaption>
+	</figure>
+</div><p>
+	Also, did you know that birds actually have a quite unfair 14×38-pixel
+	hitbox? Not that you'd ever collide with them in any of the patterns…
+</p><p>
+	Another 3 of the 8 bugs can be found in the symmetric, interlaced spawn rays
+	used in three of the patterns, and the 32×32 debris "sprites" <img
+		src="data:image/gif;base64,R0lGODlhYAAgAPABAAAAAP///yH5BAUKAAEALAAAAABgACAAAAJVjI+py+0Po5y0Wgqu3jHzD4biSJaNZ6bqyrauhL4yEs+2XN/6zvda7gtegEOhEXdMKpdMDvHzNESP06a1V736shOuyKsNf8XkCriM3p3TbNO6DW8XAAA7"
+		style="vertical-align: middle;" alt="" /> shown at their endpoint, at
+	the edge of the screen. You kinda have to commend ZUN's attention to detail
+	here, and how he wrote a lot of code for those few rapidly animated pixels
+	that you most likely <span class="hovertext" title="And your brain probably didn't either, with all the sloppy unblitting everywhere…">don't
+	even notice</span>, especially with all the other <i>wrong</i> pixels
+	resulting from rendering glitches. One of the bugs in the very final pattern
+	of phase 4 even turns them into the vortex sprites from the second pattern
+	in phase 1 <img
+		src="data:image/gif;base64,R0lGODlhYAAgAPABAAAAAP///yH5BAUKAAEALAAAAABgACAAAAK0jI+py+0Pozyggomz3sj6y3VgSE5WqVToCqks5b4yNQeePOK1HbP5/roFgbuTjjgzDpGan8j5VDqkqQ9z2kt8hA1uNAZdLrKM7cO7DRexEevZaL52sOpoO11PrcghN53atpeX4dXCx1Zy2Kc4xtiY6Fh2RhgpQoJ2N4kBiMhBNch5WQkzWPZZFyraNGqnpVYouMrKw1kIizL75YN3qyp6UvqXJkdsGFeMnKy8zNzs/Awd7VwAADs="
+		style="vertical-align: middle;" alt="" /> during the first 5 frames of
+	the first time the pattern is active, and I had to single-step the blitting
+	calls to verify it.<br />
+	It certainly was annoying how much time I spent making sense of these bugs,
+	and all weird blitting offsets, for just <i>a few pixels</i>… Let's look at
+	something more wholesome, shall we?
+</p><hr /><p>
+	So far, we've only seen the PC-98 GRCG being used in RMW (read-modify-write)
+	mode, which I previously
+	{{Blog_PostLink "2020-12-18" "explained in the context of TH01's red-white HP pattern"}}.
+	The second of its three modes, TCR (Tile Compare Read), affects VRAM reads
+	rather than writes, and performs "color extraction" across all 4 bitplanes:
+	Instead of returning raw 1bpp data from one plane, a VRAM read will instead
+	return a bitmask, with a 1 bit at every pixel whose full 4-bit color exactly
+	matches the color at that offset in the GRCG's tile register, and 0
+	everywhere else. Sariel uses this mode to make sure that the 2×2 particles
+	and the wind effect are only blitted on top of "air color" pixels, with
+	other parts of the background behaving like a mask. The algorithm:
+</p><ol>
+	<li>Set the GRCG to TCR mode, and all 8 tile register dots to the air
+	color</li>
+	<li>Read N bits from the target VRAM position to obtain an N-bit mask where
+	all 1 bits indicate air color pixels at the respective position</li>
+	<li>AND that mask with the alpha plane of the sprite to be drawn, shifted to
+	the correct start bit within the 8-pixel VRAM byte</li>
+	<li>Set the GRCG to RMW mode, and all 8 tile register dots to the color that
+	should be drawn</li>
+	<li>Write the previously obtained bitmask to the same position in VRAM</li>
+</ol><p>
+	Quite clever how the extracted colors double as a secondary alpha plane,
+	making for another well-earned {{HTML_Tag "good-code" nil}} tag. The wind effect really doesn't deserve it, though:
+</p><ul>
+	<li>ZUN calculates <i>every</i> intermediate result inside this function
+	<i>over</i> and <i>over</i> and <i>over</i> again… Together with some ugly
+	pointer arithmetic, this function turned into one of the most tedious
+	decompilations in a long while.</li>
+	<li>This gradual effect is blitted exclusively to the front page of VRAM,
+	since parts of it need to be unblitted to create the illusion of a gust of
+	wind. Then again, anything that moves on top of air-colored background –
+	most likely the Orb – will also unblit whatever it covered of the effect…
+	{{HTML_Emoji "thonk"}}</li>
+</ul><p>
+	As far as I can tell, ZUN didn't use TCR mode anywhere else in PC-98 Touhou.
+	Tune in again later during a TH04 or TH05 push to learn about TDW, the final
+	GRCG mode!
+</p><hr /><p>
+	Speaking about the 2×2 particle systems, why do we need three of them? Their
+	only observable difference lies in the way they move their particles:
+</p><ol>
+	<li>Up or down in a straight line (used in phases 4 and 2,
+	respectively)</li>
+	<li>Left or right in a straight line (used in the second form)</li>
+	<li>Left and right in a sinusoidal motion (used in phase 3, the "dark
+	orange" one)</li>
+</ol><p>
+	Out of all possible formats ZUN could have used for storing the positions
+	and velocities of individual particles, he chose a) 64-bit /
+	double-precision floating-point, and b) raw screen pixels. Want to take a
+	guess at which data type is used for which particle system?
+</p><p>
+	If you picked <code>double</code> for 1) and 2), and raw screen pixels for
+	3), you are of course correct! {{HTML_Emoji "godzun"}} Not that I'm implying
+	that it should have been the other way round – screen pixels would have
+	perfectly fit all three <s>systems</s> use cases, as all 16-bit coordinates
+	are extended to 32 bits for trigonometric calculations anyway. That's what,
+	another 1.080 bytes of wasted conventional memory? And that's even
+	calculated <i>while</i> keeping the current architecture, which allocates
+	space for 3×30 particles as part of the game's global data, although only
+	one of the three particle systems is active at any given time.
+</p><p>
+	That's it for the first form, time to put on <span lang="ja">"Civilization
+	of Magic"</span>! Or <span lang="ja">"死なばもろとも"</span>? Or <span
+	lang="ja">"Theme of 地獄めくり"</span>? Or whatever <code>SYUGEN</code> is
+	supposed to mean…
+<p><hr /><p>
+	… and the code of these final patterns comes out roughly as exciting as
+	their in-game impact. With the big exception of the very final "swaying
+	leaves" pattern: After {{Blog_PostLink "2019-12-05" "Q4.4"}},
+	{{Blog_PostLink "2020-09-12" "Q28.4"}},
+	{{Blog_PostLink "2020-10-06" "Q24.8"}}, and <code>double</code> variables,
+	this pattern uses… <i>decimal</i> subpixels? Like, multiplying the number by
+	10, and using the decimal one's digit to represent the fractional part?
+	Well, sure, if you <i>really</i> insist on moving the leaves in cleanly
+	represented integer multiples of ⅒, which is infamously impossible in IEEE
+	754. Aside from aesthetic reasons, it only really combines less precision
+	(10 possible fractions rather than the usual 16) with the inferior
+	performance of having to use integer divisions and multiplications rather
+	than simple bit shifts. And it's surely not because the leaf sprites needed
+	an extended integer value range of [﻿-3276,&nbsp;+3276﻿], compared to
+	Q12.4's [﻿-2047,&nbsp;+2048﻿]: They are clipped to 640×400 screen space
+	anyway, and are removed as soon as they leave this area.
+</p><p>
+	This pattern also contains the second bug in the "subpixel/pixel confusion
+	hiding an entire animation" category, causing all of
+	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
+</p><div class="gallery fullres">
+	<figure id="{{.Date}}-leafsplash">
+		<div class="videoswitch">
+			<video id="{{.Date}}-leafsplash-vid-0" controls loop class="active">
+				<source src="{{$vid3_vp9}}" type="video/webm"> <!-- For decent players -->
+				<source src="{{$vid3_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				(Video of the missing animation in TH01 Sariel's "swaying
+				leaves" pattern; <a href="{{$vid3_vp9}}">download here</a>)
+			</video>
+			<video id="{{.Date}}-leafsplash-vid-1" controls loop>
+				<source src="{{$vid4_vp9}}" type="video/webm"> <!-- For decent players -->
+				<source src="{{$vid4_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				(Video of the restored animation in TH01 Sariel's "swaying
+				leaves" pattern; <a href="{{$vid4_vp9}}">download here</a>)
+			</video>
+		</div>
+		<figcaption><script>switchLink("{{.Date}}-leafsplash");</script>The
+		"swaying leaves" pattern. ZUN intended a splash animation to be shown
+		once each leaf "spark" reaches the top of the playfield, which is never
+		displayed in the original game.</figcaption>
+	</figure>
+</div><p>
+	At least their hitboxes are what you would expect, exactly covering the
+	30×30 pixels of Reimu's sprite. Both animation fixes are available on the <a
+	href="https://github.com/nmlgc/ReC98/tree/th01_sariel_fixes"><code>th01_sariel_fixes</code></a>
+	branch.
+</p><p>
+	After all that, Sariel's main function turned out fairly unspectacular, just
+	putting everything together and adding some shake, transition, and color
+	pulse effects with a bunch of unnecessary hardware palette changes. There is
+	one reference to a missing <code>BOSS6.GRP</code> file during the
+	first→second form transition, suggesting that Sariel originally had a
+	separate "first form defeat" graphic, before it was replaced with just the
+	shaking effect in the final game.<br />
+	Speaking about the transition code, it is kind of funny how the… um,
+	<i>imperative</i> and <i>concrete</i> nature of TH01 leads to these 2×24
+	lines of straight-line code. They kind of look like ZUN rattling off a
+	laundry list of subsystems and raw variables to be reinitialized, making
+	damn sure to not forget anything.
+</p><hr /><p>
+	Whew! Second PC-98 Touhou boss completely decompiled, 29 to go, and they'll
+	only get easier from here! 🎉 The next one in line, Elis, is somewhere
+	between Konngara and Sariel as far as x86 instruction count is concerned, so
+	that'll need to wait for some additional funding. Next up, therefore:
+	Looking at <i>a thing</i> in TH03's main game code – really, I have little
+	idea what it will be!
+</p><p>
+	Now that the store is open again, also check out the
+	{{Blog_PostLink "2021-05-13" "updated RE progress overview"}} I've posted
+	together with this one. In addition to more RE, you can now also directly
+	order a variety of mods; all of these are further explained in the order
+	form itself.
+</p>

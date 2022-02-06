@@ -204,6 +204,23 @@ figure {
 	text-underline-position: under;
 }
 
+.y {
+	border-bottom: 1px dotted black;
+}
+
+.y::after {
+	vertical-align: super;
+	font-size: 50%;
+}
+
+.y.screen::after {
+	content:"👁"
+}
+
+.y.vram200::after {
+	content:"2×"
+}
+
 /* Header
    ------ */
 body {

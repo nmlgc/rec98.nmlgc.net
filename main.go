@@ -199,6 +199,23 @@ func HTMLDownload(hp *hostedPath, basename string) template.HTML {
 	)
 }
 
+func HTMLPC98Y(class string, title string, v int) template.HTML {
+	return template.HTML(fmt.Sprintf(
+		`<span class="y %s" title="%s">%v</span>`, class, title, v,
+	))
+}
+
+// HTMLScreenY formats v as a Y coordinate in the PC-98 640×400 screen space.
+func HTMLScreenY(v int) template.HTML {
+	return HTMLPC98Y("screen", "Y coordinate in on-screen 640×400 space", v)
+}
+
+// HTML200Y formats v as a Y coordinate in the PC-98 VRAM space, in
+//  line-doubled 640×200 mode.
+func HTML200Y(v int) template.HTML {
+	return HTMLPC98Y("vram200", "Y coordinate in 640×200 VRAM space", v)
+}
+
 type eNoDescription struct {
 	Tag string
 }
@@ -277,6 +294,8 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_PushPrice":    HTMLPushPrice,
 	"HTML_Download":     HTMLDownload,
 	"HTML_Tag":          HTMLTag,
+	"HTML_Screen_Y":     HTMLScreenY,
+	"HTML_200_Y":        HTML200Y,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,

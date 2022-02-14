@@ -120,7 +120,7 @@
 	The intended animation is easily restored though:
 </p><div class="gallery fullres">
 	<figure id="{{.Date}}-pattern3">
-		<div class="videoswitch">
+		<div class="multilayer">
 			<video id="{{.Date}}-pattern3-vid-0" controls loop class="active">
 				<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
 				<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
@@ -135,11 +135,11 @@
 				href="{{$vid2_vp9}}">download here</a>)
 			</video>
 		</div>
-		<figcaption><script>switchLink("{{.Date}}-pattern3");</script>Sariel's
-		third pattern, and the first to spawn birds, in its original and fixed
-		versions. Note that I somewhat fixed the bird hatch animation as well:
-		ZUN's code never unblits any frame of animation there, and simply blits
-		every new one on top of the previous one.</figcaption>
+		<figcaption><script>switchVideoLink("{{.Date}}-pattern3");</script>
+		Sariel's third pattern, and the first to spawn birds, in its original
+		and fixed versions. Note that I somewhat fixed the bird hatch animation
+		as well: ZUN's code never unblits any frame of animation there, and
+		simply blits every new one on top of the previous one.</figcaption>
 	</figure>
 </div><p>
 	Also, did you know that birds actually have a quite unfair 14×38-pixel
@@ -254,7 +254,7 @@
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
 </p><div class="gallery fullres">
 	<figure id="{{.Date}}-leafsplash">
-		<div class="videoswitch">
+		<div class="multilayer">
 			<video id="{{.Date}}-leafsplash-vid-0" controls loop class="active">
 				<source src="{{$vid3_vp9}}" type="video/webm"> <!-- For decent players -->
 				<source src="{{$vid3_vp8}}" type="video/webm"> <!-- For outdated garbage -->
@@ -268,7 +268,7 @@
 				leaves" pattern; <a href="{{$vid4_vp9}}">download here</a>)
 			</video>
 		</div>
-		<figcaption><script>switchLink("{{.Date}}-leafsplash");</script>The
+		<figcaption><script>switchVideoLink("{{.Date}}-leafsplash");</script>The
 		"swaying leaves" pattern. ZUN intended a splash animation to be shown
 		once each leaf "spark" reaches the top of the playfield, which is never
 		displayed in the original game.</figcaption>

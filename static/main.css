@@ -114,29 +114,29 @@ aside .icon-cell {
 	image-rendering: crisp-edges; /* For Firefox */
 }
 
-.videoswitch {
+.multilayer {
 	position: relative;
 }
 
-.videoswitch video {
+.multilayer video {
 	position: absolute;
 	left: 0;
 	top: 0;
 	z-index: 0;
 }
 
-.videoswitch video.active {
+.multilayer video.active {
 	z-index: 1;
 }
 
 .gallery.fullres figure,
-.gallery.fullres .videoswitch {
+.gallery.fullres .multilayer {
 	max-width: min(640px, 100%);
 	aspect-ratio: 16 / 10;
 }
 
 .gallery.fullres figure img,
-.gallery.fullres .videoswitch {
+.gallery.fullres .multilayer {
 	margin-bottom: 0.5em;
 }
 

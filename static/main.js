@@ -58,18 +58,18 @@ function externalEnable(hostname) {
 }
 // -------------------------
 
-// Video switcher
-// --------------
-function switchButton(id, subvid) {
-	return `<button id="${id}-switch" onclick="switchTo('${id}', ${subvid})"
+// Multi-layer galleries
+// ---------------------
+function switchVideoButton(id, subvid) {
+	return `<button id="${id}-switch" onclick="switchVideo('${id}', ${subvid})"
 		>(Switch to ${subvid === 1 ? "fixed version" : "original"})</button>`;
 }
 
-function switchLink(id) {
-	document.write(switchButton(id, 1));
+function switchVideoLink(id) {
+	document.write(switchVideoButton(id, 1));
 }
 
-function switchTo(id, subvid) {
+function switchVideo(id, subvid) {
 	const vidOld = document.getElementById(`${id}-vid-${1 - subvid}`);
 	const vidNew = document.getElementById(`${id}-vid-${subvid}`);
 	const paused = vidOld.paused;
@@ -80,9 +80,9 @@ function switchTo(id, subvid) {
 		vidOld.classList.remove("active");
 		vidNew.classList.add("active");
 		!paused && vidNew.play();
-		document.getElementById(`${id}-switch`).outerHTML = switchButton(
+		document.getElementById(`${id}-switch`).outerHTML = switchVideoButton(
 			id, (1 - subvid)
 		);
 	}
 }
-// --------------
+// ---------------------

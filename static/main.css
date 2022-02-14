@@ -77,6 +77,11 @@ aside .icon-cell {
 	font-size: 150%;
 }
 
+figure {
+	margin-block: 0;
+	margin-inline: 0;
+}
+
 .gallery {
 	text-align: center;
 	margin: 0 auto;

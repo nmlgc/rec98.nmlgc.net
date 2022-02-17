@@ -205,10 +205,10 @@ type Transaction struct {
 	Outstanding int
 }
 
-// Consumes up to pushpriceRem outstanding cents from p, and returns the new
-// remaining push price.
-func (t *Transaction) consume(p *pushTSV, pushpriceRem int) int {
-	if pushpriceRem <= 0 {
+// Consumes outstanding cents up to the remaining fraction from p, and returns
+// the new remaining push fraction.
+func (t *Transaction) consume(p *pushTSV, fractionNeeded float64) float64 {
+	if fractionNeeded <= 0 {
 		log.Fatalf(
 			"%s consumed more transactions than it should have (%s)",
 			p.ID, p.Transactions,
@@ -216,13 +216,19 @@ func (t *Transaction) consume(p *pushTSV, pushpriceRem int) int {
 	} else if t.Outstanding <= 0 {
 		log.Fatalf("more pushes associated with %s than it paid for", t.ID)
 	}
+	// Get out of floating-point as soon as possible
+	pushprice := float64(pushprices.At(t.Time))
+	pushpriceRem := int(pushprice * fractionNeeded)
+
 	if t.Outstanding >= pushpriceRem {
 		t.Outstanding -= pushpriceRem
 		return 0
 	}
-	pushpriceRem -= t.Outstanding
+	// Subtracting would also introduce rounding errors here, which are avoided
+	// by rebuilding the fraction.
+	fractionNeeded = (float64(pushpriceRem-t.Outstanding) / pushprice)
 	t.Outstanding = 0
-	return pushpriceRem
+	return fractionNeeded
 }
 
 // Push represents a single unit of work.
@@ -408,19 +414,15 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 			if len(p.Transactions) == 0 {
 				log.Fatalf("%s has no transactions associated with it", p.ID)
 			}
-			earliest := time.Now()
+			fractionNeeded := float64(1)
 			for _, tid := range p.Transactions {
 				t := transactions.ByID(tid)
-				if t.Time.Before(earliest) {
-					earliest = t.Time
-				}
 				ret = append(ret, t)
 			}
-			pushpriceRem := pushprices.At(earliest)
 			for _, t := range ret {
-				pushpriceRem = t.consume(p, pushpriceRem)
+				fractionNeeded = t.consume(p, fractionNeeded)
 			}
-			if pushpriceRem != 0 {
+			if fractionNeeded != 0 {
 				log.Fatalf("%s is not fully paid for", p.ID)
 			}
 			return

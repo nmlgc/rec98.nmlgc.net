@@ -123,20 +123,22 @@ figure {
 	position: relative;
 }
 
-.multilayer video {
+.multilayer video,
+.multilayer img {
 	position: absolute;
 	left: 0;
 	top: 0;
 	z-index: 0;
 }
 
-.multilayer video.active {
+.multilayer .active {
 	z-index: 1;
 }
 
 .gallery.fullres figure,
 .gallery.fullres .multilayer {
-	max-width: min(640px, 100%);
+	max-width: 100%;
+	width: 640px;
 	aspect-ratio: 16 / 10;
 }
 
@@ -163,15 +165,15 @@ figure {
 	max-height: unset;
 }
 
-.gallery.medium img {
+.gallery.small img,
+.gallery.medium img,
+.gallery .multilayer img {
 	margin-left: 0;
 	margin-right: 0;
 }
 
 .gallery.small img {
 	max-height: 5em;
-	margin-left: 0;
-	margin-right: 0;
 }
 
 .gallery iframe {

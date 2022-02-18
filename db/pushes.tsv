@@ -177,3 +177,5 @@ P0178	[135]	TH01 decompilation (Sariel, part 6/9: Patterns 10-11)	2022-01-31T09:
 P0179	[135]	TH01 decompilation (Sariel, part 7/9: Patterns 12-13 + horizontal 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/60621f8...9e5b344	1
 P0180	[138, 143]	TH01 decompilation (Sariel, part 8/9: Patterns 14-16)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/9e5b344...091f19f	1
 P0181	[140]	TH01 decompilation (Sariel, part 9/9: Main function)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/091f19f...313450f	1
+P0182	[139, 133]	TH03 RE (Collision bitmap)	2022-02-18T19:40:52Z	nmlgc/ReC98/compare/313450f...1e2c7ad	1
+P0183	[145, 133]	TH03 decompilation (Player collision detection)	2022-02-18T19:40:52Z	nmlgc/ReC98/compare/1e2c7ad...f9d983e	1

@@ -1,0 +1,281 @@
+{{$pic1 := (call .PostFileURL "TH03-200line.png") -}}
+{{$pic2 := (call .PostFileURL "TH03-400line.png") -}}
+{{$pic3 := (call .PostFileURL "TH03-text-layer.png") -}}
+{{$pic4 := (call .PostFileURL "TH03-action.png") -}}
+{{$pic5 := (call .PostFileURL "TH03-collmap.png") -}}
+{{$mod := printf "%v%v" .DatePrefix "TH03-real-hitbox.zip" -}}
+
+<p>
+	Been {{Blog_PostLink "2020-02-23" "a while"}} since we last looked at any of
+	TH03's game code! But before that, we need to talk about Y coordinates.
+</p><p>
+	During TH03's <code>MAIN.EXE</code>, the PC-98 graphics GDC runs in its
+	line-doubled 640×200 resolution, which gives the in-game portion its
+	distinctive stretched low-res look. This lower resolution is a consequence
+	of using {{Blog_PostLink "2019-11-06" "Promisence Soft's SPRITE16 driver"}}:
+	Its performance simply stems from the fact that it expects sprites to be
+	stored in the bottom half of VRAM, which allows them to be blitted using the
+	same EGC-accelerated VRAM-to-VRAM copies we've seen again and again in all
+	other games. Reducing the visible resolution also means that the sprites can
+	be stored on both VRAM pages, allowing the game to still be double-buffered.
+	If you force the graphics chip to run at 640×400, you can see them:
+</p><div class="gallery pixelated fullres">
+	<figure class="multilayer">
+		<img
+			id="{{.Date}}-200"
+			src="{{$pic1}}"
+			alt="TH03's VRAM at regular line-doubled 640×200 resolution"
+		/><img
+			id="{{.Date}}-400"
+			class="active"
+			src="{{$pic2}}"
+			alt="TH03's VRAM at full 640×400 resolution, including the SPRITE16 sprite area"
+		/><img
+			id="{{.Date}}-tram"
+			class="active"
+			src="{{$pic3}}"
+			alt="TH03's text layer during an in-game round."
+		/>
+	</figure>
+	<figcaption>
+		{{$desc_200 := "The upper half of VRAM during TH03's in-game portion, at the original line-doubled 640×200 resolution."}}
+		{{$desc_400 := "The full VRAM contents during TH03's in-game portion, as seen when forcing the system into a 640×400 resolution."}}
+		<span id="{{.Date}}-resolution-caption">{{$desc_400}}</span><br />
+		<button id="{{.Date}}-200-set" onclick="
+			document.getElementById('{{.Date}}-400').classList.remove('active');
+			document.getElementById('{{.Date}}-200').classList.add('active');
+			document.getElementById('{{.Date}}-200-set').hidden = true;
+			document.getElementById('{{.Date}}-400-set').hidden = false;
+			document.getElementById('{{.Date}}-resolution-caption').innerHTML = {{$desc_200}};
+		">(Switch to line-doubled 640×200)</button>
+		<button id="{{.Date}}-400-set" onclick="
+			document.getElementById('{{.Date}}-400').classList.add('active');
+			document.getElementById('{{.Date}}-200').classList.remove('active');
+			document.getElementById('{{.Date}}-400-set').hidden = true;
+			document.getElementById('{{.Date}}-200-set').hidden = false;
+			document.getElementById('{{.Date}}-resolution-caption').innerHTML = {{$desc_400}};
+		" hidden>(Switch to 640×400)</button> •
+		<button id="{{.Date}}-tram-hide" onclick="
+			document.getElementById('{{.Date}}-tram').classList.remove('active');
+			document.getElementById('{{.Date}}-tram-hide').hidden = true;
+			document.getElementById('{{.Date}}-tram-show').hidden = false;
+		">(Hide text layer)</button>
+		<button id="{{.Date}}-tram-show" onclick="
+			document.getElementById('{{.Date}}-tram').classList.add('active');
+			document.getElementById('{{.Date}}-tram-show').hidden = true;
+			document.getElementById('{{.Date}}-tram-hide').hidden = false;
+		" hidden>(Show text layer)</button>
+	</figcaption>
+</div></p><p>
+	Note that the text chip still displays its overlaid contents at 640×400,
+	which means that TH03's in-game portion <i>technically</i> runs at two
+	resolutions at the same time.
+</p><p>
+	But that means that any mention of a Y coordinate is ambiguous: Does it
+	refer to undoubled VRAM pixels, or on-screen stretched pixels? Especially
+	people who have known about the line doubling for years might almost expect
+	technical blog posts on this game to use undoubled VRAM coordinates. So,
+	let's introduce a new formatting convention for both on-screen
+	640×{{HTML_Screen_Y 400}} and undoubled 640×{{HTML_200_Y 200}} coordinates,
+	and always write out both to minimize the confusion.
+</p><hr /><p>
+	Alright, now what's <i>the thing</i> gonna be? The enemy structure is highly
+	overloaded, being used for enemies, fireballs, and explosions with seemingly
+	different semantics for each. Maybe a bit too much to be figured out in what
+	should ideally be a single push, especially with all the functions that
+	would need to be decompiled? Bullet code would be easier, but not exactly
+	single-push material either. As it turns out though, there's something more
+	fundamental left to be done first, which both of these subsystems depend on:
+	collision detection!
+</p><p>
+	And it's implemented exactly how I always naively imagined collision
+	detection to be implemented in a fixed-resolution 2D bullet hell game with
+	small hitboxes: By keeping a separate 1bpp bitmap of both playfields in
+	memory, drawing in the collidable regions of all entities on every frame,
+	and then checking whether any pixels at the current location of the player's
+	hitbox are set to 1. It's probably not done in the other games because their
+	single data segment was already too packed for the necessary 17,664 bytes to
+	store such a bitmap at pixel resolution, and 282,624 bytes for a bitmap at
+	Q12.4 subpixel resolution would have been prohibitively expensive in 16-bit
+	Real Mode DOS anyway. In TH03, on the other hand, this bitmap is doubly
+	useful, as the AI also uses it to elegantly learn what's on the playfield.
+	By halving the resolution and only tracking tiles of 2×{{HTML_Screen_Y
+	2}}&nbsp;/ 2×{{HTML_200_Y 1}} pixels, TH03 only requires an adequate total
+	of 6,624 bytes of memory for the collision bitmaps of both playfields.
+</p><p>
+	So how did the implementation not earn the {{HTML_Tag "good-code" nil}} tag
+	this time? Because the code for drawing into these bitmaps is undecompilable
+	hand-written x86 assembly. {{HTML_Emoji "zunpet"}} And not just your usual
+	ASM that was basically compiled from C and then edited to maybe optimize
+	register allocation and maybe replace a bunch of local variables with
+	self-modifying code, oh no. This code is full of overly clever bit
+	twiddling, abusing the fact that the 16-bit <code>AX</code>,
+	<code>BX</code>, <code>CX</code>, and <code>DX</code> registers can also be
+	accessed as two 8-bit registers, calculations that change the semantic
+	meaning behind the value of a register, or just straight-up reassignments of
+	different values to the same small set of registers. Sure, in some way it is
+	impressive, and it all <i>does</i> work and correctly covers every edge
+	case, but <i>come on</i>. This could have all been a lot more readable in
+	exchange for just a few CPU cycles.
+</p><p>
+	What's most interesting though are the actual shapes that these functions
+	draw into the collision bitmap. On the surface, we have:
+</p><ol>
+	<li>vertical slopes at any angle across the whole playfield; exclusively
+	used for Chiyuri's diagonal laser EX attack</li>
+	<li>straight vertical lines, with a width of 1 tile; exclusively used for
+	the 2×{{HTML_Screen_Y 2}}&nbsp;/ 2×{{HTML_200_Y 1}} hitboxes of bullets</li>
+	<li>rectangles at arbitrary sizes</li>
+</ol><p>
+	But only 2) actually draws a full solid line. 1) and 3) are only ever drawn
+	as horizontal <i>stripes</i>, with a hardcoded distance of 2 vertical tiles
+	between every stripe of a slope, and 4 vertical tiles between every stripe
+	of a rectangle. That's 66-75% of each rectangular entity's intended hitbox
+	not actually taking part in collision detection. Now, if player hitboxes
+	were ≤ {{HTML_Screen_Y 6}}&nbsp;/ {{HTML_200_Y 3}} pixels, we'd have one
+	possible explanation of how the AI can "cheat", because it could just
+	precisely move through those blank regions at TAS speeds. So, let's make
+	this two pushes after all and tell the complete story, since this is one of
+	the more interesting aspects to still be documented in this game.
+</p><hr /><p>
+	And the code only gets worse. {{HTML_Emoji "godzun"}} While the player
+	collision detection function <i>is</i> decompilable, it might as well not
+	have been, because it's just more of the same "optimized", hard-to-follow
+	assembly. With the four splittable 16-bit registers having a total of 20
+	different meanings in this function, I would have almost <i>preferred</i>
+	self-modifying code…
+</p><p>
+	In fact, it was so bad that it prompted some maintenance work on my inline
+	assembly coding standards as a whole. Turns out that the <code>_asm</code>
+	keyword is not only still supported in modern Visual Studio compilers, but
+	also in Clang with the <code>-fms-extensions</code> flag, and compiles fine
+	there even for 64-bit targets. While that might sound like amazing news at
+	first <i>("awesome, no need to rewrite this stuff for my x86_64 Linux
+	port!")</i>, you quickly realize that almost all inline assembly in this
+	codebase assumes either PC-98 hardware, segmented 16-bit memory addressing,
+	or is a temporary hack that will be removed with further RE progress.<br />
+	That's mainly because most of the raw arithmetic code uses Turbo C++'s
+	register pseudovariables where possible. While they certainly have their
+	drawbacks, being a non-standard extension that's not supported in other
+	x86-targeting C compilers, their advantages are quite significant: They
+	allow this code to stay in the same language, and provide slightly more
+	immediate portability to any other architecture, together with
+	{{Blog_PostLink "2021-03-20" "readability and maintainability improvements that can get quite significant when combined with inlining"}}:
+</p><pre>// This one line compiles to five ASM instructions, which would need to be
+// spelled out in any C compiler that doesn't support register pseudovariables.
+// By adding typed aliases for these registers via `#define`, this code can be
+// both made even more readable, and be prepared for an easier transformation
+// into more portable local variables.
+_ES = (((_AX * 4) + _BX) + SEG_PLANE_B);
+</pre><p>
+	However, register pseudovariables might cause potential portability issues
+	as soon as they are mixed with inline assembly instructions that rely on
+	their state. The lazy way of "supporting pseudo-registers" in other
+	compilers would involve declaring the full set as global variables, which
+	would immediately break every one of those instances:
+</p><pre>_DI = 0;
+_AX = 0xFFFF;
+
+// Special x86 instruction doing the equivalent of
+//
+// 	*reinterpret_cast<uint16_t far *>(MK_FP(_ES, _DI)) = _AX;
+// 	_DI += sizeof(uint16_t);
+//
+// Only generated by Turbo C++ in very specific cases, and therefore only
+// reliably available through inline assembly.
+asm { movsw; }
+</pre><p>
+	What's <i>also</i> not all too standardized, though, are certain variants of
+	the <code>asm</code> keyword. That's why I've now introduced a distinction
+	between the <code>_asm</code> keyword for "decently sane" inline assembly,
+	and the slightly less standard <code>asm</code> keyword for inline assembly
+	that relies on the contents of pseudo-registers, and <i>should</i> break on
+	compilers that don't support them.<br /> So yeah, have some minor
+	portability work in exchange for these two pushes not having all that much
+	in RE'd content.
+</p><p>
+	With that out of the way and the function deciphered, we can confirm the
+	player hitboxes to be a constant 8×{{HTML_Screen_Y 8}}&nbsp;/
+	8×{{HTML_200_Y 4}} pixels, and prove that the hit stripes are nothing but
+	an adequate optimization that doesn't affect gameplay in any way.
+</p><hr /><p>
+	And what's the obvious thing to immediately do if you have both the
+	collision bitmap and the player hitbox? Writing a "real hitbox" mod, of
+	course:
+</p><ol>
+	<li>Reorder the calls to rendering functions so that player and shot sprites
+	are rendered after bullets</li>
+	<li>Blank out all player sprite pixels outside an
+	8×{{HTML_Screen_Y 8}}&nbsp;/ 8×{{HTML_200_Y 4}} box around the center
+	point</li>
+	<li>After the bullet rendering function, turn on the GRCG in RMW mode and
+	set the tile register set to the background color</li>
+	<li>Stretch the negated contents of collision bitmap onto each playfield,
+	leaving only collidable pixels untouched</li>
+	<li>Do the same with the actual, non-negated contents and a white color, for
+	extra contrast against the background. This also makes sure to show any
+	collidable areas whose sprite pixels are transparent, such as with the moon
+	enemy. (Yeah, how unfair.) Doing that also loses a lot of information about
+	the playfield, such as enemy HP indicated by their color, but what can you
+	do:</li>
+</ol><div class="gallery pixelated fullres">
+	<figure class="multilayer">
+		<img
+			id="{{.Date}}-action"
+			class="active"
+			src="{{$pic4}}"
+			alt="A decently busy TH03 in-game frame."
+		/><img
+			id="{{.Date}}-collmap"
+			src="{{$pic5}}"
+			alt="The underlying content of the collision bitmap, showing off all three different shapes together with the player hitboxes."
+		/>
+	</figure>
+	<figcaption>
+		A decently busy TH03 in-game frame and its underlying collision bitmap,
+		showing off all three different collision shapes together with the
+		player hitboxes.<br />
+		<button id="{{.Date}}-collmap-set" onclick="
+			document.getElementById('{{.Date}}-action').classList.remove('active');
+			document.getElementById('{{.Date}}-collmap').classList.add('active');
+			document.getElementById('{{.Date}}-collmap-set').hidden = true;
+			document.getElementById('{{.Date}}-action-set').hidden = false;
+		">(Show collision bitmap contents and player hitboxes)</button>
+		<button id="{{.Date}}-action-set" onclick="
+			document.getElementById('{{.Date}}-collmap').classList.remove('active');
+			document.getElementById('{{.Date}}-action').classList.add('active');
+			document.getElementById('{{.Date}}-action-set').hidden = true;
+			document.getElementById('{{.Date}}-collmap-set').hidden = false;
+		" hidden>(Hide collision bitmap contents and player hitboxes)</button>
+	</figcaption>
+</div><p>{{HTML_Download .HostedPath $mod}}
+	The secret for writing such mods before having reached a sufficient level of
+	position independence? Put your new code segment into <code>DGROUP</code>,
+	past the end of the uninitialized data section. That's why this modded
+	<code>MAIN.EXE</code> is a lot larger than you would expect from the raw amount of new code: The file now actually needs to <i>store</i> all these
+	uninitialized 0 bytes between the end of the data segment and the first
+	instruction of the mod code – normally, this number is simply a part of the
+	MZ EXE header, and doesn't need to be redundantly stored on disk. Check the
+	<a href="https://github.com/nmlgc/ReC98/tree/th03_real_hitbox"><code>th03_real_hitbox</code></a>
+	branch for the code.
+</p><p>
+	And now we know why so many "real hitbox" mods for the Windows Touhou games
+	are inaccurate: The games would simply be unplayable otherwise – or can
+	<i>you</i> dodge rapidly moving 2×{{HTML_Screen_Y 2}}&nbsp;/
+	2×{{HTML_200_Y 1}} blocks as an 8×{{HTML_Screen_Y 8}}&nbsp;/
+	8×{{HTML_200_Y 4}} rectangle that is smaller than your shot sprites,
+	especially without focused movement? I can't. {{HTML_Emoji "tannedcirno"}}
+	Maybe it will feel more playable after making explosions visible, but that
+	would need more RE groundwork first.<br
+	/>
+	It's also interesting how adding two full GRCG-accelerated redraws of both
+	playfields per frame doesn't significantly drop the game's frame rate – so
+	why did the drawing functions have to be micro-optimized again? It
+	<i>would</i> be possible in one pass by using the GRCG's TDW mode, which
+	should theoretically be 8× faster, but I have to stop <i>somewhere</i>.
+	{{HTML_Emoji "onricdennat"}}
+</p><p>
+	Next up: The final missing piece of TH04's and TH05's
+	{{HTML_Tag "bullet" nil}}-moving code, which will include a certain other
+	type of projectile as well.
+</p>

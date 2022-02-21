@@ -270,6 +270,7 @@ func HTMLTag(tag string, filters []string) (template.HTML, error) {
 
 var pages = template.New("").Funcs(map[string]interface{}{
 	// Arithmetic, safe
+	"pct": func(f float64) float64 { return (f * 100.0) },
 	"inc": func(i int) int { return i + 1 },
 
 	// Control flow, safe
@@ -395,6 +396,9 @@ func main() {
 	pages.Funcs(map[string]interface{}{
 		"DB_CustomerByID": func(id CustomerID) template.HTML {
 			return customers.HTMLByID(id)
+		},
+		"DB_DiscountOffers": func() []DiscountOfferView {
+			return DiscountOffers(pushprices.Current())
 		},
 		"DB_TransactionBacklog": TransactionBacklog,
 		"DB_Pushes":             pushes.All,

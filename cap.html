@@ -1,3 +1,5 @@
+{{- $discounts := DB_DiscountOffers -}}
+
 <section id="cap">
 	<p>
 		<small>Currently outstanding workload / cap:</small>
@@ -30,17 +32,18 @@
 		FAQ page</a>, and place your order there.
 	</p>
 	{{end}}{{end}}
-	<hr style="width: 100%;" />
-	<small>
-		Current discounts:
-	</small><ul class="discounts"><li>
-		<strong>33% (= {{HTML_Currency 4000}} per push), offered by {{DB_CustomerByID 2}} for the following goals:</strong><ul>
-			<li>{{HTML_Emoji "th05"}} TH05 reverse-engineering</li>
-			<li>{{HTML_Emoji "th05"}} TH05 replay support</li>
-			<li>C89 conformance (any game)</li>
-			<li>Compatibility with pre-386 PC-98 models (any game)</li>
-		</ul>
-		{{HTML_Emoji "th05"}} TH05 danmaku scripting toolkit release planned around 50% RE of <code>MAIN.EXE</code>!
-	</li></ul>
+	<hr style="width: 100%;" />{{if len $discounts -}}
+		<small>Current discounts:</small>
+		<ul class="discounts">{{range $discounts -}}
+			<li>
+				<strong>{{HTML_FloatMaxPrec (pct .FractionCovered) 0}}%
+				(= {{HTML_Currency .PushpriceRemaining}} per push)</strong>,
+				offered by {{DB_CustomerByID .Sponsor}} for the following goals:
+				<ul>{{range .Goals -}}
+					<li>{{.}}</li>
+				{{- end}}</ul>
+				{{.Ad}}
+			</li>{{- end}}</ul>
+	{{- end}}
 </section>
 <hr />

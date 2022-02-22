@@ -17,15 +17,15 @@
 	<aside>
 		<span></span>
 		<form action="/thankyou" method="post">
-			<label>
+			<label for="cust-name">
 				Name (leave blank to stay anonymous)
 			</label>
 			<input type="text" id="cust-name">
-			<label>
+			<label for="cust-url">
 				URL (optional, will turn your name into a link)
 			</label>
 			<input type="text" id="cust-url">
-			<label>
+			<label for="metric">
 				This contribution should go towards…
 			</label>
 			<select id="metric" onchange="handleSelect(this.options[this.selectedIndex])">
@@ -52,7 +52,7 @@
 				<option>Build server experiments</option>
 				<option>Something else?</option>
 			</select>
-			<label>
+			<label for="goal">
 				Any specific game or aspect?
 			</label>
 			<input type="text" id="goal" onInput="this.reportValidity()">
@@ -61,9 +61,9 @@
 				<p id="info_text"></p>
 				<span class="icon-cell">ℹ️</span>
 			</aside>
-			<label>
+			<div>
 				This is a…
-			</label>
+			</div>
 			<div>
 				<input type="radio" id="onetime" onChange="onCycle()" name="cycle" value="onetime" checked>
 				<label for="onetime">… one-time contribution</label>

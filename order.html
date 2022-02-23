@@ -78,10 +78,16 @@
 				<span class="amount">€</span>
 			</div>
 			<div>
-				that will pay for
-				<span id="push_amount" data-price="{{$cap.PushPrice}}"></span>
-				<span id="push_noun"></span>,
+				that will pay for <span class="push_amount"><span
+					id="push_amount"
+					data-price="{{$cap.PushPrice}}"></span><span
+					id="push_noun">
+				</span></span>,
 				not including special offers.
+			</div>
+			<div id="discount_text" hidden>
+				If the goal is part of <span id="discount_sponsor"></span>'s
+				discount offer, they are going to fund an additional
 			</div>
 			<div id="paypal-button-container"></div>
 			<div id="error" hidden></div>

@@ -133,10 +133,11 @@ function onCycle() {
 	let push_amount = document.getElementById("push_amount");
 	let push_noun = document.getElementById("push_noun");
 
-	const updatePushes = function(amount) {
-		const price = (push_amount.dataset.price / 100);
-		push_amount.innerHTML = (Math.round((amount / price) * 100) / 100);
-		push_noun.innerHTML = ((amount == price) ? " push" : " pushes");
+	const pushprice = (push_amount.dataset.price / 100);
+
+	const updatePushAmount = function(target_amount, target_noun, money) {
+		target_amount.innerHTML = (Math.round((money / pushprice) * 100) / 100);
+		target_noun.innerHTML = ((money == pushprice) ? " push" : " pushes");
 	}
 
 	button_container.innerHTML = "";
@@ -144,7 +145,7 @@ function onCycle() {
 		paypal.Buttons(order).render(button_selector);
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 2);
-			updatePushes(amount.value);
+			updatePushAmount(push_amount, push_noun, amount.value);
 		}
 		amount.min = 1.00;
 		amount.step = 0.01;
@@ -152,7 +153,7 @@ function onCycle() {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 0);
-			updatePushes(amount.value);
+			updatePushAmount(push_amount, push_noun, amount.value);
 		}
 		amount.min = 1;
 		amount.step = 1;

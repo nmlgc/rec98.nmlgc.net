@@ -681,8 +681,7 @@ td, th {
 	font-size: 175%;
 }
 
-#order form #push_amount,
-#order form #push_noun {
+#order form .push_amount {
 	font-size: 110%;
 	font-weight: bold;
 }

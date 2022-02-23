@@ -2,6 +2,8 @@
 
 let mailto_support = "support@nmlgc.net";
 const form = document.querySelector("form");
+/** @type {HTMLInputElement} */
+const amount = document.getElementById("amount");
 
 function HTMLSupportMail() {
 	return `
@@ -79,14 +81,14 @@ let subscription = {
 		startTransaction();
 		return actions.subscription.create(Object.assign({
 			'plan_id': 'P-9AN20019EU9300502LW47CUI',
-			'quantity': document.getElementById("amount").value
+			'quantity': amount.value
 		}, params_shared));
 	},
 	onApprove: async function(data, actions) {
 		// For some reason, PayPal's /v2/checkout/orders/ API doesn't return
 		// the subscription amount, so for now, let's just send it ourselves…
 		// At least the server bails out if the order ID doesn't exist, so… 🤷
-		await sendIncoming(data.orderID, document.getElementById("amount").value);
+		await sendIncoming(data.orderID, amount.value);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,
@@ -96,11 +98,7 @@ let order = {
 	createOrder: function(data, actions) {
 		startTransaction();
 		return actions.order.create(Object.assign({
-			purchase_units: [{
-				amount: {
-					value: document.getElementById("amount").value
-				}
-			}]
+			purchase_units: [{ amount: { value: amount.value } }]
 		}, params_shared));
 	},
 	onApprove: async function(data, actions) {
@@ -122,7 +120,6 @@ function onCycle() {
 	let button_selector = '#' + button_id;
 	let button_container = document.getElementById(button_id);
 
-	let amount = document.getElementById("amount");
 	let push_amount = document.getElementById("push_amount");
 	let push_noun = document.getElementById("push_noun");
 

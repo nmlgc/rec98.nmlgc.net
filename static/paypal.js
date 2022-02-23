@@ -77,13 +77,6 @@ let params_shared = {
 let subscription = {
 	createSubscription: function(data, actions) {
 		startTransaction();
-		let p = {
-			purchase_units: [{
-				amount: {
-					value: document.getElementById("amount").value
-				}
-			}]
-		};
 		return actions.subscription.create(Object.assign({
 			'plan_id': 'P-9AN20019EU9300502LW47CUI',
 			'quantity': document.getElementById("amount").value

@@ -4,6 +4,8 @@ let mailto_support = "support@nmlgc.net";
 const form = document.querySelector("form");
 /** @type {HTMLInputElement} */
 const amount = document.getElementById("amount");
+/** @type {HTMLSelectElement} */
+const discount = document.getElementById("discount");
 
 function HTMLSupportMail() {
 	return `
@@ -139,6 +141,8 @@ function onCycle() {
 		}
 		amount.min = 1.00;
 		amount.step = 0.01;
+
+		discount.disabled = false;
 	} else {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
@@ -147,6 +151,9 @@ function onCycle() {
 		}
 		amount.min = 1;
 		amount.step = 1;
+
+		discount.disabled = true;
+		discount.selectedIndex = 0;
 	}
 	amount.onchange();
 }

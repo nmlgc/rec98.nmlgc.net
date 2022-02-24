@@ -1,4 +1,5 @@
 {{$cap := DB_CapCurrent true}}
+{{$discounts := DB_DiscountOffers}}
 
 {{- template "cap.html" $cap -}}
 {{- if not $cap.Reached -}}
@@ -56,6 +57,22 @@
 				Any specific game or aspect?
 			</label>
 			<input type="text" id="goal" onInput="this.reportValidity()">
+			{{- if len $discounts -}}
+				<label id="discount_label" for="discount">
+					Any discount offer?
+					(Only available for the goals listed above.)
+				</label>
+				<select id="discount">
+					<option selected>(none)</option>
+					{{- range $discounts -}}
+						{{$name := DB_CustomerByID .Sponsor}}<option
+							value="{{.Sponsor}}"
+							data-name="{{$name}}"
+							data-fraction="{{.FractionCovered}}"
+						>{{$name}}</option>
+					{{- end -}}
+				</select>
+			{{- end -}}
 			<aside id="info" class="info" style="display: none;">
 				<span class="icon-cell">ℹ️</span>
 				<p id="info_text"></p>

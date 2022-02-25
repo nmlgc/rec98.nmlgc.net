@@ -6,10 +6,38 @@ const form = document.querySelector("form");
 const amount = document.getElementById("amount");
 /** @type {HTMLSelectElement} */
 const discount = document.getElementById("discount");
+/** @type {HTMLSpanElement} */
+const discount_breakdown = document.getElementById("discount_breakdown");
+/** @type {HTMLSpanElement} */
+const discount_sponsor = document.getElementById("discount_sponsor");
+/** @type {HTMLSpanElement} */
+const roundup_amount = document.getElementById("roundup_amount");
+/** @type {HTMLSpanElement} */
+const roundup_pushes = document.getElementById("roundup_pushes");
+/** @type {HTMLSpanElement} */
+const roundup_noun = document.getElementById("roundup_noun");
 
 function HTMLSupportMail() {
 	return `
 <a href="mailto:` + mailto_support + `"><kbd>` + mailto_support + `</kbd></a>`;
+}
+
+/**
+ * @param {number} capRemainingBeforeAmount In €.
+ * @param {number} amount In €.
+ * @param {number} pushprice In €.
+ * @param {number} discountFraction Fraction of a push covered by the sponsor.
+ * @returns {number} Round-up € funded by the sponsor, limited to the cap.
+ */
+function discountRoundupValue(
+	capRemainingBeforeAmount, amount, pushprice, discountFraction
+) {
+	const pushprice_discounted = (pushprice * (1 - discountFraction));
+	const roundup_value = (pushprice - pushprice_discounted);
+	return Math.min(
+		((amount / pushprice_discounted) * roundup_value),
+		(capRemainingBeforeAmount - amount)
+	);
 }
 
 function isOneTime() {
@@ -111,9 +139,13 @@ let order = {
 	onClick: validateForm,
 };
 
-function formatNumber(obj, digits) {
+function clampNumber(obj) {
 	obj.value = Math.max(obj.value, obj.min);
 	obj.value = Math.min(obj.value, obj.max);
+	return obj
+}
+
+function formatNumber(obj, digits) {
 	return parseFloat(obj.value).toFixed(digits);
 }
 
@@ -136,13 +168,29 @@ function onCycle() {
 	if(isOneTime()) {
 		paypal.Buttons(order).render(button_selector);
 		amount.onchange = function() {
-			amount.value = formatNumber(amount, 2);
+			const value_from_customer = clampNumber(amount);
 			updatePushAmount(push_amount, push_noun, amount.value);
+
+			const discount_offer = discount.options[discount.selectedIndex];
+			const discount_fraction = discount_offer.dataset.fraction;
+			if(discount_offer.index === 0) {
+				discount_breakdown.hidden = true;
+			} else {
+				discount_breakdown.hidden = false;
+				discount_sponsor.innerHTML = discount_offer.dataset.name;
+				const roundup_value = discountRoundupValue(
+					amount.max, amount.value, pushprice, discount_fraction
+				)
+				updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
+				roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
+			}
+			amount.value = formatNumber(value_from_customer, 2);
 		}
 		amount.min = 1.00;
 		amount.step = 0.01;
 
 		discount.disabled = false;
+		discount_breakdown.hidden = false;
 	} else {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
@@ -154,6 +202,7 @@ function onCycle() {
 
 		discount.disabled = true;
 		discount.selectedIndex = 0;
+		discount_breakdown.hidden = true;
 	}
 	amount.onchange();
 }

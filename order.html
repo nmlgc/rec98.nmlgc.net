@@ -63,7 +63,7 @@
 					(Only available for one-time contributions matching the
 					goals listed above.)
 				</label>
-				<select id="discount">
+				<select id="discount" onchange="amount.onchange()">
 					<option selected>(none)</option>
 					{{- range $discounts -}}
 						{{$name := DB_CustomerByID .Sponsor}}<option
@@ -100,12 +100,15 @@
 					id="push_amount"
 					data-price="{{$cap.PushPrice}}"></span><span
 					id="push_noun">
-				</span></span>,
-				not including special offers.
-			</div>
-			<div id="discount_text" hidden>
-				If the goal is part of <span id="discount_sponsor"></span>'s
-				discount offer, they are going to fund an additional
+				</span></span>.
+				<span id="discount_breakdown" hidden>
+					If the goal is part of <span id="discount_sponsor"></span>'s
+					discount offer, they are going to fund an additional <span
+						class="push_amount" id="roundup_amount">
+					</span>, or <span class="push_amount"><span
+						id="roundup_pushes"></span><span
+						id="roundup_noun"></span></span>.
+				</span>
 			</div>
 			<div id="paypal-button-container"></div>
 			<div id="error" hidden></div>

@@ -2,9 +2,14 @@
 
 // Currency
 // --------
-let numFmt = new Intl.NumberFormat(
+const integerNumFmt = new Intl.NumberFormat(
 	navigator.language || navigator.userLanguage,
-	{style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }
+	{ style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }
+)
+
+const fractionNumFmt = new Intl.NumberFormat(
+	navigator.language || navigator.userLanguage,
+	{ style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }
 )
 
 /**
@@ -12,7 +17,7 @@ let numFmt = new Intl.NumberFormat(
  * @returns {string} Formatted currency string.
  */
 function valueInCurrency(cents) {
-	return numFmt.format(cents / 100);
+	return ((cents % 100) ? fractionNumFmt : integerNumFmt).format(cents / 100);
 }
 
 /**

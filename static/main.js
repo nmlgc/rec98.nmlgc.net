@@ -7,8 +7,19 @@ let numFmt = new Intl.NumberFormat(
 	{style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }
 )
 
+/**
+ * @param {number} cents
+ * @returns {string} Formatted currency string.
+ */
+function valueInCurrency(cents) {
+	return numFmt.format(cents / 100);
+}
+
+/**
+ * @param {number} cents
+ */
 function formatCurrency(cents) {
-	document.write(numFmt.format(cents / 100))
+	document.write(valueInCurrency(cents))
 }
 // --------
 

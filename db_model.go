@@ -281,6 +281,8 @@ type Incoming struct {
 	Metric   string
 	Goal     string
 	Cycle    string
+	// 1-based index into the discountOffers array, or 0 for none.
+	Discount DiscountID
 	// Retrieved from PayPal
 	Cents int
 	Time  *time.Time

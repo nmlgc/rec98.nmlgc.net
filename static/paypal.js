@@ -71,7 +71,7 @@ function thankyou() {
 	return form.submit();
 }
 
-async function sendIncoming(orderID, amount) {
+async function sendIncoming(orderID, amount, discountID) {
 	let response = await fetch('/api/transaction-incoming', {
 		method: 'post',
 		headers: {
@@ -84,6 +84,7 @@ async function sendIncoming(orderID, amount) {
 			Metric: document.getElementById("metric").value,
 			Goal: document.getElementById("goal").value,
 			Cycle: cycle(),
+			Discount: discountID,
 			Cents: amount * 100,
 		})
 	});
@@ -118,7 +119,7 @@ let subscription = {
 		// For some reason, PayPal's /v2/checkout/orders/ API doesn't return
 		// the subscription amount, so for now, let's just send it ourselves…
 		// At least the server bails out if the order ID doesn't exist, so… 🤷
-		await sendIncoming(data.orderID, amount.value);
+		await sendIncoming(data.orderID, amount.value, 0);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,
@@ -133,7 +134,7 @@ let order = {
 	},
 	onApprove: async function(data, actions) {
 		await actions.order.capture();
-		await sendIncoming(data.orderID, 0);
+		await sendIncoming(data.orderID, 0, discount.selectedIndex);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,

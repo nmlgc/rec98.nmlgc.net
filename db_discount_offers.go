@@ -1,6 +1,10 @@
 package main
 
-import "html/template"
+import (
+	"fmt"
+	"html/template"
+	"strconv"
+)
 
 // DiscountOffer represents an offer by a customer to financially support a
 // given goal by covering a part of every push purchased by other customers.
@@ -42,4 +46,39 @@ func DiscountOffers(pushprice float64) (ret []DiscountOfferView) {
 		})
 	}
 	return
+}
+
+type eDiscountIDOutOfRange struct {
+	ID uint
+}
+
+func (e eDiscountIDOutOfRange) Error() string {
+	return fmt.Sprintf("discount ID out of range: %d", e.ID)
+}
+
+// DiscountID represents a 1-based index into discountOffers, or 0 for no
+// discount.
+type DiscountID uint
+
+func NewDiscountID(s string) (DiscountID, error) {
+	parsed, err := strconv.ParseUint(s, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	if int(parsed) > len(discountOffers) {
+		return 0, eDiscountIDOutOfRange{uint(parsed)}
+	}
+	return DiscountID(uint(parsed)), nil
+}
+
+// UnmarshalCSV decodes a DiscountID from its CSV string representation.
+func (i *DiscountID) UnmarshalCSV(s string) (err error) {
+	*i, err = NewDiscountID(s)
+	return err
+}
+
+// UnmarshalJSON decodes a DiscountID from its JSON representation.
+func (i *DiscountID) UnmarshalJSON(s []byte) (err error) {
+	*i, err = NewDiscountID(string(s))
+	return err
 }

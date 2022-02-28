@@ -23,6 +23,8 @@ function HTMLSupportMail() {
 }
 
 /**
+ * Must match the implementation in db_discount_offers.go!
+ *
  * @param {number} capRemainingBeforeAmount In €.
  * @param {number} amount In €.
  * @param {number} pushprice In €.

@@ -42,3 +42,15 @@ func TestNewDiscountID(t *testing.T) {
 		verify(&tc, id, id.UnmarshalJSON([]byte(tc.s)), "JSON")
 	}
 }
+
+func TestDiscountRoundupValue(t *testing.T) {
+	assert.Equal(t,
+		DiscountRoundupValue(1000, 40, 60, (1/3.0)), 20.0, "Full round-up",
+	)
+	assert.Equal(t,
+		DiscountRoundupValue(10, 40, 60, (1/3.0)), 10.0, "Limited round-up",
+	)
+	assert.Equal(t,
+		DiscountRoundupValue(0, 40, 60, (1/3.0)), 0.0, "No round-up",
+	)
+}

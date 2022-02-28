@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"math"
 	"strconv"
 )
 
@@ -81,4 +82,16 @@ func (i *DiscountID) UnmarshalCSV(s string) (err error) {
 func (i *DiscountID) UnmarshalJSON(s []byte) (err error) {
 	*i, err = NewDiscountID(string(s))
 	return err
+}
+
+// Calculates the amount of money rounded up by a sponsor for a transaction
+// with the given amount, limited to the cap.
+// Must match the implementation in static/paypal.js!
+func DiscountRoundupValue(capRemainingAfterAmount, amount, pushprice, discountFraction float64) float64 {
+	pushpriceDiscounted := (pushprice * (1 - discountFraction))
+	roundupValue := (pushprice - pushpriceDiscounted)
+	return math.RoundToEven(math.Min(
+		((amount / pushpriceDiscounted) * roundupValue),
+		capRemainingAfterAmount,
+	))
 }

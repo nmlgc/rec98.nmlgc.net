@@ -352,9 +352,22 @@ func (f tFreeTime) IndexBefore(t time.Time) int {
 	return len(f)
 }
 
-func (i *tIncoming) Total() (cents int) {
+// Total calculates the total amount of incoming and reserved cents, with
+// discount round-ups being calculated relative to the given remaining amount
+// of money in the cap.
+func (i *tIncoming) Total(capRemaining int, pushprice float64) (cents int, reserved int) {
 	for _, in := range i.data {
 		cents += in.Cents
+		capRemaining -= in.Cents
+		if in.Discount != 0 {
+			offer := discountOffers[in.Discount-1]
+			fraction := offer.FractionCovered(pushprice)
+			roundupValue := int(DiscountRoundupValue(
+				float64(capRemaining), float64(in.Cents), pushprice, fraction,
+			))
+			reserved += roundupValue
+			capRemaining -= roundupValue
+		}
 	}
 	return
 }

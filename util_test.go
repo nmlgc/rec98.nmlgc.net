@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRemoveDuplicates(t *testing.T) {
@@ -10,9 +11,6 @@ func TestRemoveDuplicates(t *testing.T) {
 	exp := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	RemoveDuplicates(&in)
-	if !reflect.DeepEqual(in, exp) {
-		t.Errorf("removeDuplicates:\n"+
-			"wanted %v,\n"+
-			"   got %v\n", exp, in)
-	}
+
+	assert.Equal(t, in, exp)
 }

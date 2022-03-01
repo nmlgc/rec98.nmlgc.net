@@ -8,13 +8,18 @@
 			+ <span class="amount incoming">
 				{{HTML_Currency .Incoming}} unconfirmed
 			</span>
+		</small>{{end}}{{if .Reserved}}<small>
+			+ <span class="amount reserved">
+				{{HTML_Currency .Reserved}} reserved for discounts
+			</span>
 		</small>{{end}}
 		out of
 		<span class="amount">{{HTML_Currency .Cap}}</span>
 	</p>
 	<div class="meter">
 		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div><!--
-		--><div class="incoming" style="width: {{.FracIncoming}}%;"></div>
+		--><div class="incoming" style="width: {{.FracIncoming}}%;"></div><!--
+		--><div class="reserved" style="width: {{.FracReserved}}%;"></div>
 	</div><p class="desc">
 	{{- if .Reached -}}
 		{{- if .FirstFree -}}

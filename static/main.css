@@ -429,6 +429,18 @@ span.confirmed { color: green; }
 
 span.incoming { color: red; }
 
+#cap div.meter .reserved {
+	background: linear-gradient(
+		#ffefc7,
+		#fff1cc 20%,
+		#ddb246 45%,
+		#ddb246 55%,
+		#ffefc7
+	);
+}
+
+span.reserved { color: orange; }
+
 #cap .discounts li {
 	text-align: left!important;
 }

@@ -151,6 +151,7 @@ type Cap struct {
 	FreeEuros       float64
 	FracOutstanding float64
 	FracIncoming    float64
+	FracReserved    float64
 	Ctx             interface{}
 }
 
@@ -204,8 +205,9 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 
 	ret.FracOutstanding = fraction(ret.Outstanding, ret.Cap)
 	ret.FracIncoming = fraction(ret.Incoming, ret.Cap)
-	if (ret.FracOutstanding + ret.FracIncoming) > 100.0 {
-		ret.FracIncoming = 100.0 - ret.FracOutstanding
+	ret.FracReserved = fraction(ret.Reserved, ret.Cap)
+	if (ret.FracOutstanding + ret.FracIncoming + ret.FracReserved) > 100.0 {
+		ret.FracIncoming = ((100.0 - ret.FracOutstanding) - ret.FracReserved)
 	}
 
 	ret.FreeEuros = (ret.Cap - sum) / 100.0

@@ -286,6 +286,8 @@ type Incoming struct {
 	// Retrieved from PayPal
 	Cents int
 	Time  *time.Time
+	// Will only render the associated discount reserve as part of the cap.
+	ConfirmedAndWaitingForDiscount bool
 }
 
 // TagDescription bundles a blog tag with a descriptive sentence.
@@ -357,8 +359,10 @@ func (f tFreeTime) IndexBefore(t time.Time) int {
 // of money in the cap.
 func (i *tIncoming) Total(capRemaining int, pushprice float64) (cents int, reserved int) {
 	for _, in := range i.data {
-		cents += in.Cents
-		capRemaining -= in.Cents
+		if !in.ConfirmedAndWaitingForDiscount {
+			cents += in.Cents
+			capRemaining -= in.Cents
+		}
 		if in.Discount != 0 {
 			offer := discountOffers[in.Discount-1]
 			fraction := offer.FractionCovered(pushprice)

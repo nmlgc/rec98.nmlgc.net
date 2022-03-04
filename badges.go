@@ -74,6 +74,7 @@ func (b BadgeContent) Render(wr http.ResponseWriter) {
 	col := badge.Color(gradientPoints.GetInterpolatedColorFor(b.Status).Hex())
 
 	wr.Header().Add("Content-Type", "image/svg+xml")
+	wr.Header().Add("Cache-Control", "max-age=0")
 	badge.Render(b.Subject, fmt.Sprintf("%.0f %%", b.Status)+b.Unit, col, wr)
 }
 

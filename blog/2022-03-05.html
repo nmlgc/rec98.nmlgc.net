@@ -1,0 +1,161 @@
+{{$vid1_vp9 := (call .PostFileURL "TH05-Louise-final-original.webm") -}}
+{{$vid1_vp8 := (call .PostFileURL "TH05-Louise-final-original-vp8.webm") -}}
+{{$vid2_vp9 := (call .PostFileURL "TH05-Louise-final-regular-movement.webm") -}}
+{{$vid2_vp8 := (call .PostFileURL "TH05-Louise-final-regular-movement-vp8.webm") -}}
+{{$vid3_vp9 := (call .PostFileURL "TH05-Curve-bullet-dodge-strategy.webm") -}}
+{{$vid3_vp8 := (call .PostFileURL "TH05-Curve-bullet-dodge-strategy-vp8.webm") -}}
+
+<p>
+	Two years after
+	{{Blog_PostLink "2020-02-16" "the first look at TH04's and TH05's bullets"}},
+	we finally get to finish their logic code by looking at the special motion
+	types. Bullets as a whole still aren't <i>completely</i> finished as the
+	rendering code is still waiting to be RE'd, but now we've got everything
+	about them that's required for decompiling the midboss and boss fights of
+	these games.
+</p><p>
+	Just like the motion types of TH01's pellets, the ones we've got here really
+	<i>are</i> special enough to warrant an <code>enum</code>, despite all the
+	overlap in the "slow down and turn" and "bounce at certain edges of the
+	playfield" types. Sure, including them in the bitfield I proposed two years
+	ago would have allowed greater variety, but it wouldn't have saved any
+	memory. On the contrary: These types use a single global state variable for
+	the maximum turn count and delta speed, which a proper customizable
+	architecture would have to integrate into the bullet structure. Maybe it is
+	possible to stuff everything into the same amount of bytes, but not without
+	first completely rearchitecting the bullet structure and removing every
+	single piece of redundancy in there. Simply extending the system by adding a
+	new <code>enum</code> value for a new motion type would be way more
+	straightforward for modders.
+</p><p>
+	Speaking about memory, TH05 already extends the bullet structure by 6 bytes
+	for the "exact linear movement" type exclusive to that game. This type is
+	particularly interesting for all the prospective PC-98 game developers out
+	there, as it nicely points out the precision limits of Q12.4 subpixels.
+	<br/>
+	Regular bullet movement works by adding a Q12.4 velocity to a Q12.4 position
+	every frame, with the velocity typically being calculated only once on spawn
+	time from an 8-bit angle and a Q12.4 speed. Quantization errors from this
+	initial calculation can quickly compound over all the frames a bullet spends
+	moving across the playfield. If a bullet is only supposed to move on a
+	straight line though, there is a more precise way of calculating its
+	position: By storing the origin point, movement angle, and total distance
+	traveled, you can perform a full polar→Cartesian transformation every frame.
+	Out of the 10 danmaku patterns in TH05 that use this motion type, the
+	difference to regular bullet movement can be best seen in Louise's final
+	pattern:
+</p><div class="gallery singleplayer_playfield">
+	<figure>
+		<video controls loop>
+			<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
+			<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+		</video>
+		<figcaption>Louise's final pattern in its original form, demonstrating
+		exact linear bullet movement. Note how each bullet spawns slightly
+		behind the delay cloud: ZUN simply forgot to shift the fixed origin
+		point along with it.</figcaption>
+	</figure><figure>
+		<video controls loop>
+			<source src="{{$vid2_vp9}}" type="video/webm"> <!-- For decent players -->
+			<source src="{{$vid2_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+		</video>
+		<figcaption>The same pattern with standard bullet movement, corrupting
+		its intended appearance. No delay cloud-related oversights here though,
+		at least.</figcaption>
+	</figure>
+</div><hr /><p>
+	Not far away from the regular bullet code, we've also got the movement
+	function for the infamous curve&nbsp;/ "cheeto" bullets. I would have almost
+	called them "cheetos" in the code as well, which surely fits more nicely
+	into 8.3 filenames than "curve bullets" does, but eh, trademarks…
+</p><p>
+	As for hitboxes, we got a 16×16 one on the head node, and a 12×12 one on the
+	16 trail nodes. The latter simply store the position of the head node during
+	the last 16 frames, Snake style. But what you're all here for is probably
+	the turning and homing algorithm, right? Boiled down to its essence, it
+	works like this:
+</p><pre>// [head] points to the controlled "head" part of a curve bullet entity.
+// Angles are stored with 8 bits representing a full circle, providing free
+// normalization on arithmetic overflow.
+// The directions are ordered as you would expect:
+// • 0x00: right	(sin(0x00) =  0, cos(0x00) = +1)
+// • 0x40: down 	(sin(0x40) = +1, cos(0x40) =  0)
+// • 0x80: left 	(sin(0x80) =  0, cos(0x80) = -1)
+// • 0xC0: up   	(sin(0xC0) = -1, cos(0xC0) =  0)
+uint8_t angle_delta = (head->angle - player_angle_from(
+	head->pos.cur.x, head->pos.cur.y
+));
+
+// Stop turning if the player is 1/128ths of a circle away from this bullet
+const uint8_t SNAP = 0x02;
+
+// Else, turn either clockwise or counterclockwise by 1/256th of a circle,
+// depending on what would reach the player the fastest.
+if((angle_delta > SNAP) && (angle_delta < static_cast<uint8_t>(-SNAP))) {
+	angle_delta = (angle_delta >= 0x80) ? -0x01 : +0x01;
+}
+head_p->angle -= angle_delta;
+</pre><p>
+	5 lines of code, and not all too difficult to follow once you are familiar
+	with 8-bit angles… unlike what ZUN <i>actually</i> wrote. Which is 26 lines,
+	and includes an unused "friction" variable that is never set to any value
+	that makes a difference in the formula. {{HTML_Emoji "zunpet"}}. uth05win
+	correctly saw through that all and simplified this code to something
+	equivalent to my explanation. Redoing that work certainly wasted a bit of my
+	time, and means that I now definitely need to spend another push on RE'ing
+	all the shared boss functions before I can start with Shinki.
+</p><p>
+	So while a curve bullet's <i>speed</i> does get faster over time, its
+	angular velocity is always limited to <sup>1</sup>/<sub>256</sub>th of a
+	circle per frame. This reveals the optimal strategy for dodging them:
+	Maximize this delta angle by staying as close to 180° away from their
+	current direction as possible, and let their acceleration do the rest.
+</p><div class="gallery singleplayer_playfield">
+	<figure>
+		<video controls loop class="active">
+			<source src="{{$vid3_vp9}}" type="video/webm"> <!-- For decent players -->
+			<source src="{{$vid3_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			Video demonstrating the optimal strategy for dodging TH05's curved
+			bullets during the Shinki fight; <a href="{{$vid3_vp9}}">download
+			here</a>)
+		</video>
+	</figure>
+</div><p>
+	At least that's the theory for dodging a <i>single</i> one. As a danmaku
+	designer, you can now of course place other bullets at these technically
+	optimal places to prevent a curve bullet pattern from being cheesed like
+	that. I certainly didn't record the video above in a single take either…
+	{{HTML_Emoji "tannedcirno"}}
+</p><hr /><p>
+	After another bunch of boring entity spawn and update functions, the
+	playfield shaking feature turned out as the most notable (and tricky) one to
+	round out these two pushes. It's actually implemented quite well in how it
+	simply "un-shakes" the screen by just marking every stage tile to be
+	redrawn. In the context of all the other tile invalidation that can take
+	place during a frame, that's definitely more performant than
+	{{Blog_PostLink "2019-11-18" "doing another EGC-accelerated <code>memmove()	</code>"}}.
+	Due to these two games being double-buffered via page flipping, this
+	invalidation only really <i>needs</i> to happen for the frame after the next
+	one though. The immediately next frame will show the regular, un-shaken
+	playfield on the other VRAM page first, <i>except</i> during the multi-frame
+	shake animation when defeating a midboss, where it will also appear shifted
+	in a different direction… 😵 Yeah, no wonder why ZUN just always invalidates
+	all stage tiles for the next two frames after every shaking animation, which
+	is guaranteed to handle both sporadic single-frame shakes and continuous
+	ones. <i>So</i> close to {{HTML_Tag "good-code" nil}} here.
+</p><p>
+	Finally, this delivery was delayed a bit because {{DB_CustomerByID 2}}
+	requested his round-up amount to be limited to the cap in the future. Since
+	that makes it kind of hard to explain on a static page how much money he
+	will exactly provide, I now properly modeled these discounts in the website
+	code. The exact round-up amount is now included in both the pre-purchase
+	breakdown, as well as the cap bar on the main page.<br />
+	With that in place, the system is now also set up for round-up offers from
+	other patrons. If you'd also like to support certain goals in this way, with
+	any amount of money, now's the time for getting in touch with me about that.
+	Known contributors only, though! 😛
+</p><p>
+	Next up: The final bunch of shared boring boss functions. Which certainly
+	will give me a break from all the maintenance and research work, and speed
+	up delivery progress again… right?
+</p>

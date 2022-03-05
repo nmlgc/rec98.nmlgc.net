@@ -135,16 +135,26 @@ figure {
 	z-index: 1;
 }
 
+.gallery figure,
+.gallery .multilayer {
+	max-width: 100%;
+	margin-bottom: 0.5em;
+}
+
+.gallery figure img {
+	margin-bottom: 0.5em;
+}
+
 .gallery.fullres figure,
 .gallery.fullres .multilayer {
-	max-width: 100%;
 	width: 640px;
 	aspect-ratio: 16 / 10;
 }
 
-.gallery.fullres figure img,
-.gallery.fullres .multilayer {
-	margin-bottom: 0.5em;
+.gallery.singleplayer_playfield figure,
+.gallery.singleplayer_playfield .multilayer {
+	width: 384px;
+	aspect-ratio: 24 / 23;
 }
 
 .gallery img, video.gallery, .gallery video {

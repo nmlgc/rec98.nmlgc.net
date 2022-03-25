@@ -1,5 +1,5 @@
 <p>
-	<strong>Last updated: {{Blog_PostLink "2022-01-31" "2022-01-31"}}</strong>
+	<strong>Last updated: {{Blog_PostLink "2022-03-27" "2022-03-27"}}</strong>
 </p><p>
 	Secured a 30-hour RL workweek to leave plenty of time for this project,
 	{{DB_CustomerByID 9}}'s commissioned MediaWiki update work is also nearing
@@ -9,7 +9,7 @@
 </p><ul>
 	<li><strong>TH01:</strong><ul>
 		<li><code>OP.EXE:</code> Main menu and game initialization.</li>
-		<li><code>REIIDEN.EXE:</code> In order: Elis, Kikuri, SinGyoku, remaining code for missile bullets, cards and obstacles, Mima, YuugenMagan, the end-of-stage and TOTLE tallys, the bomb animation, the debug menu, <code>main()</code>, and we're done!</li>
+		<li><code>REIIDEN.EXE:</code> In order: Elis (already funded for the most part, only needing 1 more push to cover the entire fight in a single delivery), Kikuri, SinGyoku, remaining code for missile bullets, cards and obstacles, Mima, YuugenMagan, the end-of-stage and TOTLE tallys, the bomb animation, the debug menu, <code>main()</code>, and we're done!</li>
 		<li><code>FUUIN.EXE:</code> The verdict screen, followed by the boss slideshow.</li>
 	</ul></li>
 	<li><strong>TH02:</strong><ul>
@@ -23,23 +23,31 @@
 	</ul></li>
 	<li><strong>TH04:</strong><ul>
 		<li><code>OP.EXE:</code> The game title slide-in animation, followed by the High Score menu and the Music Room. The latter will be done in parallel with the TH05 version.</li>
-		<li><code>MAIN.EXE:</code><ul>
-			<li>Turns out that this game has a {{Blog_PostLink "2020-02-29" "shared structure for custom entity types"}} after all. Looking at that one would also get us pretty close to 100% PI.</li>
-			<li>Otherwise, we could decompile the last missing piece of bullet update code, in parallel with TH05</li>
-			<li>… or the big "Master Spark" laser, with Gengetsu's boss script afterward, …</li>
-			<li>… or HUD rendering (in parallel with TH05).</li>
+		<li><code>MAIN.EXE:</code>
+			Turns out that this game has a {{Blog_PostLink "2020-02-29" "shared structure for custom entity types"}} after all. Looking at that one would also get us pretty close to both 100% PI and a deeper understanding of the crashes in the Kurumi and <a href="https://github.com/spaztron64/th98tuc_site/issues/11">Stage 4 Marisa</a> fights. Otherwise, we could go for either<ul>
+				<li>the big "Master Spark" laser, with Gengetsu's boss script afterward</li>
+				<li>HUD rendering (in parallel with TH05)</li>
+				<li>in-game dialog (in parallel with TH05)</li>
+				<li>player update code (in parallel with TH05), required for all midbosses in this game</li>
+				<li>player shot control functions</li>
+				<li>the end-of-stage bonus calculation</li>
 		</ul></li>
 		<li><code>MAINE.EXE:</code> High score name entry, or ending script parsing in parallel with TH05.</li>
 	</ul></li>
 	<li><strong>TH05:</strong><ul>
 		<li><code>OP.EXE:</code> High Score menu, followed by the Music Room. Will be done in parallel with TH04's version.</li>
-		<li><code>MAIN.EXE:</code> Finishing PI created quite a lot of segment splits where we could immediately continue: <ul>
-			<li>the last missing piece of bullet update code, in parallel with TH04</li>
+		<li><code>MAIN.EXE:</code> Got quite a lot of segment splits where we could immediately continue:<ul>
+			<li>midboss and boss script code, either in order starting with Stage 1, or going directly for<ul>
+				<li>Shinki (already funded for the most part, only needing 1 more push to cover the entire fight in a single delivery),</li>
+				<li>Mai & Yuki,</li>
+				<li>or EX-Alice</li>
+			</ul></li>
+			<li>stage tile rendering</li>
+			<li>in-game dialog (in parallel with TH04)</li>
+			<li>player update code (in parallel with TH04)</li>
 			<li>items and extends</li>
-			<li>the Mai & Yuki fight script</li>
-			<li>the EX-Alice fight script</li>
 			<li>bomb rendering</li>
-			<li>The boss background animations of Stage ≤5</li>
+			<li>boss backgrounds of Stage ≤5, including the single-color areas which use the GRCG's TDW mode</li>
 			<li>HUD rendering (in parallel with TH04, and getting us right in front of some boss sprite animations)</li>
 			<li>player shot collision detection and rendering</li>
 		</ul></li>

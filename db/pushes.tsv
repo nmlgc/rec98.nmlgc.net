@@ -181,3 +181,6 @@ P0182	[139, 133]	TH03 RE (Collision bitmap)	2022-02-18T19:40:52Z	nmlgc/ReC98/com
 P0183	[145, 133]	TH03 decompilation (Player collision detection)	2022-02-18T19:40:52Z	nmlgc/ReC98/compare/1e2c7ad...f9d983e	1
 P0184	[148]	TH04/TH05 decompilation (Bullets: Special motion and sprite selection + item spawn splash circle)	2022-03-05T22:55:32Z	nmlgc/ReC98/compare/f9d983e...f918298	1
 P0185	[148, 141, 142]	TH04/TH05 decompilation (Curve bullet motion + laser control + playfield shaking)	2022-03-05T22:55:32Z	nmlgc/ReC98/compare/f918298...a21ab3d	1
+P0186	[149, 150]	TH04/TH05 decompilation (Stage transition animation + smaller boss blockers)	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/a21ab3d...bab5634	1
+P0187	[153, 154]	TH04 RE (Shared boss state bytes)	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/bab5634...426a531	1
+P0188	[133, 142, 147]	TH04/TH05 decompilation (Boss defeat sequence / collision + Shinki's 32×32 balls (logic))	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/426a531...e881f95	1

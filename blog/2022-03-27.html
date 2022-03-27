@@ -1,0 +1,186 @@
+{{$pic1 := (call .PostFileURL "TH04-No-boss-collision.png") -}}
+{{$pic2 := (call .PostFileURL "TH04-Marisa-4-bit-crash.png") -}}
+
+<p>
+	Did you know that moving on top of a boss sprite doesn't kill the player in
+	TH04, only in TH05?
+</p><figure class="gallery pixelated singleplayer_playfield"><img
+	src="{{$pic1}}"
+	alt="Screenshot of Reimu moving on top of Stage 6 Yuuka, demonstrating the lack of boss↔player collision in TH04"/>
+	<figcaption>Yup, Reimu is not getting hit… yet.</figcaption>
+</figure><p>
+	That's the first of only three interesting discoveries in these 3 pushes,
+	all of which concern TH04. But yeah, 3 for something as seemingly simple as
+	these shared boss functions… that's still not quite the speed-up I had hoped
+	for. While most of this can be blamed, again, on TH04 and all of its
+	hardcoded complexities, there still was a lot of work to be done on the
+	maintenance front as well.  These functions reference a bunch of code I RE'd
+	years ago and that still had to be brought up to current standards, with the
+	dependencies reaching from {{Blog_PostLink "2019-03-06" "boss explosions"}}
+	over {{Blog_PostLink "2020-05-04" "text RAM overlay functionality"}} up to
+	in-game dialog loading.
+</p><p>
+	The latter provides a good opportunity to talk a bit about <a
+	href="https://en.wikipedia.org/wiki/X86_memory_segmentation">x86 memory
+	segmentation</a>. Many aspiring PC-98 developers these days are very scared
+	of it, with some even going as far as to rather mess with Protected Mode and
+	DOS extenders just so that they don't have to deal with it. I wonder where
+	that fear comes from… Could it be because every modern programming language
+	I know of assumes memory to be flat, and lacks any standard language-level
+	features to even express something like segments and offsets? That's why
+	compilers have a hard time targeting 16-bit x86 these days: Doing anything
+	interesting on the architecture <i>requires</i> giving the programmer full
+	control over segmentation, which <i>always</i> comes down to adding the
+	typical non-standard language extensions of compilers from back in the day.
+	And as soon as DOS stopped being used, these extensions no longer made sense
+	and were subsequently removed from newer tools. A good example for this can
+	be found in an <a
+	href="https://cs.fit.edu/~mmahoney/cse3101/nasmdoc1.html">old version of the
+	NASM manual</a>: The project started as an attempt to make x86 assemblers
+	simple again by throwing out most of the segmentation features from
+	MASM-style assemblers, which made complete sense in 1996 when 16-bit DOS and
+	Windows were already on their way out. But there <i>was</i> a point to all
+	those features, and that's why ReC98 still has to use the supposedly
+	inferior TASM.
+</p><p>
+	Not that this fear of segmentation is completely unfounded: All the
+	segmentation-related keywords, directives, and <code>#pragma</code>s
+	provided by Borland C++ and TASM absolutely <i>can</i> be the cause of many
+	weird runtime bugs. Even if the compiler or linker catches them, you are
+	often left with confusing error messages that aged just as poorly as memory
+	segmentation itself.<br />
+	However, embracing the concept does provide quite the opportunity for
+	optimizations. While it definitely was a very crazy idea, there is a small
+	bit of brilliance to be gained from making proper use of all these
+	segmentation features. Case in point: The buffer for the in-game dialog
+	scripts in TH04 and TH05.
+</p><pre>// Thanks to the semantics of `far` pointers, we only need a single 32-bit
+// pointer variable for the following code.
+extern unsigned char far *dialog_p;
+
+// This master.lib function returns a `void __seg *`, which is a 16-bit
+// segment-only pointer. Converting to a `far *` yields a full segment:offset
+// pointer to offset 0000h of that segment.
+dialog_p = (unsigned char far *)hmem_allocbyte(/* … */);
+
+// Running the dialog script involves pointer arithmetic. On a far pointer,
+// this only affects the 16-bit offset part, complete with overflow at 64 KiB,
+// from FFFFh back to 0000h.
+dialog_p += /* … */;
+dialog_p += /* … */;
+dialog_p += /* … */;
+
+// Since the segment part of the pointer is still identical to the one we
+// allocated above, we can later correctly free the buffer by pulling the
+// segment back out of the pointer.
+hmem_free((void __seg *)dialog_p);</pre><p>
+	If <code>dialog_p</code> was a <code>huge</code> pointer, any pointer
+	arithmetic would have also adjusted the segment part, requiring a second
+	pointer to store the base address for the <code>hmem_free</code> call. Doing
+	that will also be necessary for any port to a flat memory model. Depending
+	on how you look at it, this compression of two logical pointers into a
+	single variable is either quite nice, or really, <i>really</i> dumb in its
+	reliance on the precise memory model of one single architecture.
+	{{HTML_Emoji "tannedcirno"}}
+</p><hr /><p>
+	Why look at dialog loading though, wasn't this supposed to be all about
+	shared boss functions? Well, TH04 unnecessarily puts certain stage-specific
+	code into the boss defeat function, such as loading the alternate Stage 5
+	Yuuka defeat dialog before a Bad Ending, or initializing Gengetsu after
+	Mugetsu's defeat in the Extra Stage.<br />
+	That's TH04's second core function with an explicit conditional branch for
+	Gengetsu, after the
+	{{Blog_PostLink "2021-11-29" "dialog exit code we found last year during EMS research"}}.
+	And I've heard people say that Shinki was the most hardcoded fight in PC-98
+	Touhou… Really, Shinki is a perfectly regular boss, who makes proper use of
+	all internal mechanics in the way they were intended, and doesn't blast
+	holes into the architecture of the game. Even within TH05, it's Mai and Yuki
+	who rely on hacks and duplicated code, not Shinki.
+</p><p>
+	The worst part about this though? How the function distinguishes Mugetsu
+	from Gengetsu. Once again, it uses its own global variable to track whether
+	it is called the first or the second time within TH04's Extra Stage,
+	unrelated to the same variable used in the dialog exit function. But this
+	time, it's not just any newly created, single-use variable, oh no. In a
+	misguided attempt to micro-optimize away a few bytes of conventional memory,
+	TH04 reserves 16 bytes of "generic boss state", which can (and are) freely
+	used for anything a boss doesn't want to store in a more dedicated
+	variable.<br />
+	It might have been worth it if the bosses actually <i>used</i> most of these
+	16 bytes, but the majority just use (the same) two, with only Stage 4 Reimu
+	using a whopping seven different ones. To reverse-engineer the various uses
+	of these variables, I pretty much had to map out which of the undecompiled
+	{{HTML_Tag "danmaku-pattern" nil}} functions corresponds to which boss
+	fight. In the end, I assigned 29 different variable names for each of the
+	semantically different use cases, which made up another full push on its
+	own.
+</p><p>
+	Now, 16 bytes of wildly shared state, isn't that the perfect recipe for
+	bugs? At least during this cursory look, I haven't found any obvious ones
+	yet. If they do exist, it's more likely that they involve reused state from
+	earlier bosses – just how the <a
+	href="https://www.youtube.com/watch?v=b1k82w1VzUc">Shinki death glitch in
+	TH05 is caused by reusing cheeto data from way back in Stage 4</a> – and
+	hence require much more boss-specific progress.<br />
+	And yes, it might have been way too early to look into all these tiny
+	details of specific boss scripts… but then, this happened:
+</p><p class="gallery pixelated"><a
+	href="{{$pic2}}"><img src="{{$pic2}}" alt="TH04 crashing to the DOS prompt in the Stage 4 Marisa fight, right as the last of her bits is destroyed" /></a>
+</p><p>
+	Looks similar to <a
+	href="https://github.com/spaztron64/th98tuc_site/issues/11">another
+	screenshot of a crash in the same fight that was reported in December</a>,
+	doesn't it? I was too much in a hurry to figure it out exactly, but notice
+	how both crashes happen right as the last of Marisa's four <span
+	class="hovertext" title="Yes, ビット is the correct technical term for
+	those, according to OMAKE.TXT.">bits</span> is destroyed.
+	{{DB_CustomerByID 11}} has <a
+	href="https://en.touhouwiki.net/wiki/User:KirbyComment/Lotus_Land_Story_Info#Divide_Error_Crash">suspected
+	this to be the cause for a while</a>, and now I can pretty much confirm it
+	to be an unguarded division by the number of on-screen bits in
+	Marisa-specific pattern code. But what's the cause for Kurumi then?
+	{{HTML_Emoji "thonk"}}<br />
+	As for fixing it, I can go for either a fast or a slow option:
+</p><ol>
+	<li>Superficially fixing only this crash will probably just take a fraction
+	of a push.</li>
+	<li>But I could also go for a deeper understanding by looking at TH04's
+	version of the {{Blog_PostLink "2020-02-29" "custom entity structure"}}. It
+	not only stores the data of Marisa's bits, but is also very likely to be
+	involved in Kurumi's crash, <i>and</i> would get TH04 a lot closer to 100%
+	PI. Taking that look will probably need at least 2 pushes, and might require
+	another 3-4 to completely decompile Marisa's fight, and 2-3 to decompile
+	Kurumi's.</li>
+</ol><hr /><p>
+	OK, now that that's out of the way, time to finish the boss defeat function…
+	but not without stumbling over the third of TH04's quirks, relating to the
+	Clear Bonus for the main game or the Extra Stage:
+</p><ul>
+	<li>To achieve the incremental addition effect for the in-game score display
+	in the HUD, all new points are first added to a <code>score_delta</code>
+	variable, which is then added to the actual score at a maximum rate of
+	61,110 points per frame.</li>
+	<li>There are a fixed 416 frames between showing the score tally and
+	launching into <code>MAINE.EXE</code>.</li>
+	<li>As a result, TH04's Clear Bonus is effectively limited to
+	(416&nbsp;×&nbsp;61,110)&nbsp;=&nbsp;25,421,760 points.</li>
+	<li>Only TH05 makes sure to commit the entirety of the
+	<code>score_delta</code> to the actual score before switching binaries,
+	which fixes this issue.</li>
+</ul><p>
+	And after another few collision-related functions, we're now <i>truly</i>,
+	finally ready to decompile bosses in both TH04 and TH05! Just as the
+	<i>anything</i> funds were running out… {{HTML_Emoji "onricdennat"}} The
+	remaining ¼ of the third push then went to Shinki's 32×32 ball bullets,
+	rounding out this delivery with a small self-contained piece of the first
+	TH05 boss we're probably going to look at.
+</p><p>
+	Next up, though: I'm not sure, actually. Both Shinki and Elis seem just a
+	little bit larger than the 2¼ or 4 pushes purchased so far, respectively.
+	Now that there's a bunch of room left in the cap again, I'll just let the
+	next contribution decide – with a preference for Shinki in case of a tie.
+	And if it will take longer than usual for the store to sell out again this
+	time (heh), there's still the
+	{{Blog_PostLink "2021-09-12" "PC-98 text RAM JIS trail word rendering research"}}
+	waiting to be documented.
+</p>

@@ -1,7 +1,5 @@
-{{$vid1_vp9 := (call .PostFileURL "TH04-Bullet-clear.webm") -}}
-{{$vid1_vp8 := (call .PostFileURL "TH04-Bullet-clear-vp8.webm") -}}
-{{$vid2_vp9 := (call .PostFileURL "TH04-Bullet-zap.webm") -}}
-{{$vid2_vp8 := (call .PostFileURL "TH04-Bullet-zap-vp8.webm") -}}
+{{$vid1 := (call .Video "TH04-Bullet-clear") -}}
+{{$vid2 := (call .Video "TH04-Bullet-zap") -}}
 
 <p>
 	…or maybe not <i>that</i> soon, as it would have only wasted time to
@@ -26,8 +24,8 @@
 </p><div class="gallery fullres">
 	<figure>
 		<video controls loop>
-			<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
-			<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			<source src="{{$vid1.VP9}}" type="video/webm">
+			<source src="{{$vid1.VP8}}" type="video/webm">
 		</video>
 		<figcaption>Mechanic #1: <i>Clearing</i> bullets for a custom amount of
 		time, awarding 1000 points for all bullets alive on the first frame,
@@ -35,8 +33,8 @@
 		</figcaption>
 	</figure><figure>
 		<video controls loop>
-			<source src="{{$vid2_vp9}}" type="video/webm"> <!-- For decent players -->
-			<source src="{{$vid2_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			<source src="{{$vid2.VP9}}" type="video/webm">
+			<source src="{{$vid2.VP8}}" type="video/webm">
 		</video>
 		<figcaption>Mechanic #2: <i>Zapping</i> bullets for a fixed 16 frames,
 		awarding a semi-exponential and loudly announced <i>Bonus!!</i> for all

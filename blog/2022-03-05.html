@@ -1,9 +1,6 @@
-{{$vid1_vp9 := (call .PostFileURL "TH05-Louise-final-original.webm") -}}
-{{$vid1_vp8 := (call .PostFileURL "TH05-Louise-final-original-vp8.webm") -}}
-{{$vid2_vp9 := (call .PostFileURL "TH05-Louise-final-regular-movement.webm") -}}
-{{$vid2_vp8 := (call .PostFileURL "TH05-Louise-final-regular-movement-vp8.webm") -}}
-{{$vid3_vp9 := (call .PostFileURL "TH05-Curve-bullet-dodge-strategy.webm") -}}
-{{$vid3_vp8 := (call .PostFileURL "TH05-Curve-bullet-dodge-strategy-vp8.webm") -}}
+{{$vid1 := (call .Video "TH05-Louise-final-original") -}}
+{{$vid2 := (call .Video "TH05-Louise-final-regular-movement") -}}
+{{$vid3 := (call .Video "TH05-Curve-bullet-dodge-strategy") -}}
 
 <p>
 	Two years after
@@ -47,8 +44,8 @@
 </p><div class="gallery singleplayer_playfield">
 	<figure>
 		<video controls loop>
-			<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
-			<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			<source src="{{$vid1.VP9}}" type="video/webm">
+			<source src="{{$vid1.VP8}}" type="video/webm">
 		</video>
 		<figcaption>Louise's final pattern in its original form, demonstrating
 		exact linear bullet movement. Note how each bullet spawns slightly
@@ -56,8 +53,8 @@
 		point along with it.</figcaption>
 	</figure><figure>
 		<video controls loop>
-			<source src="{{$vid2_vp9}}" type="video/webm"> <!-- For decent players -->
-			<source src="{{$vid2_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			<source src="{{$vid2.VP9}}" type="video/webm">
+			<source src="{{$vid2.VP8}}" type="video/webm">
 		</video>
 		<figcaption>The same pattern with standard bullet movement, corrupting
 		its intended appearance. No delay cloud-related oversights here though,
@@ -113,10 +110,10 @@ head_p->angle -= angle_delta;
 </p><div class="gallery singleplayer_playfield">
 	<figure>
 		<video controls loop class="active">
-			<source src="{{$vid3_vp9}}" type="video/webm"> <!-- For decent players -->
-			<source src="{{$vid3_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+			<source src="{{$vid3.VP9}}" type="video/webm">
+			<source src="{{$vid3.VP8}}" type="video/webm">
 			Video demonstrating the optimal strategy for dodging TH05's curved
-			bullets during the Shinki fight; <a href="{{$vid3_vp9}}">download
+			bullets during the Shinki fight; <a href="{{$vid3.VP9}}">download
 			here</a>)
 		</video>
 	</figure>

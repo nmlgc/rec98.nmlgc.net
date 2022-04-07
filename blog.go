@@ -14,6 +14,12 @@ import (
 var blogURLPrefix = "/blog"
 var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 
+// BlogVideo collects static file URLs to all encodings of a video.
+type BlogVideo struct {
+	VP9 template.HTML // Lossless
+	VP8 template.HTML // Fallback for outdated garbage
+}
+
 // BlogEntry describes an existing blog entry, together with information about
 // its associated pushes parsed from the database.
 type BlogEntry struct {
@@ -86,6 +92,7 @@ type PostDot struct {
 	DatePrefix string      // Date prefix for potential post-specific files
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
+	Video       func(fn string) *BlogVideo
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -113,12 +120,19 @@ func (e eNoPost) Error() string {
 func (e BlogEntry) Render(filters []string) Post {
 	var b strings.Builder
 	datePrefix := e.Date + "-"
+	postFileURL := func(fn string) template.HTML {
+		return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
+	}
 	ctx := PostDot{
-		Date:       e.Date,
-		HostedPath: blogHP,
-		DatePrefix: datePrefix,
-		PostFileURL: func(fn string) template.HTML {
-			return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
+		Date:        e.Date,
+		HostedPath:  blogHP,
+		DatePrefix:  datePrefix,
+		PostFileURL: postFileURL,
+		Video: func(fn string) *BlogVideo {
+			return &BlogVideo{
+				VP9: postFileURL(fn + ".webm"),
+				VP8: postFileURL(fn + "-vp8.webm"),
+			}
 		},
 	}
 	pagesExecute(&b, e.templateName, &ctx)

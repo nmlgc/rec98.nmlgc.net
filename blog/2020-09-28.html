@@ -1,6 +1,5 @@
 {{$pic := (call .PostFileURL "TH01-Invincibility-sprites.png") -}}
-{{$vid_vp9 := (call .PostFileURL "TH01-Invincibility-naive-unblitting.webm") -}}
-{{$vid_vp8 := (call .PostFileURL "TH01-Invincibility-naive-unblitting-vp8.webm") -}}
+{{$vid := (call .Video "TH01-Invincibility-naive-unblitting") -}}
 
 <p>
 	Back to TH01, and its boss sprite format… with a separate class for
@@ -65,10 +64,10 @@
 	unblitter for 8×8 sprites, it becomes obvious why you wouldn't want to use
 	it:
 </p><video class="gallery" controls loop>
-	<source src="{{$vid_vp9}}" type="video/webm"> <!-- For decent players -->
-	<source src="{{$vid_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+	<source src="{{$vid.VP9}}" type="video/webm">
+	<source src="{{$vid.VP8}}" type="video/webm">
 	(Video of naively unblitted TH01 invincibility sprites;
-	<a href="{{$vid_vp9}}">download here</a>)
+	<a href="{{$vid.VP9}}">download here</a>)
 </video><p>
 	Because Reimu would barely be visible under all that flicker. In
 	comparison, those fully filled diamonds actually look pretty good.

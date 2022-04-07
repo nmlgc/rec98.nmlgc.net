@@ -1,6 +1,5 @@
 {{$pic := (call .PostFileURL "TH01-Konngara-slash-triangle.png") -}}
-{{$vid_vp9 := (call .PostFileURL "TH01-Konngara-four_homing_snakes.webm") -}}
-{{$vid_vp8 := (call .PostFileURL "TH01-Konngara-four_homing_snakes-vp8.webm") -}}
+{{$vid := (call .Video "TH01-Konngara-four_homing_snakes") -}}
 
 <p>
 	{{Blog_PostLink "2021-05-27" "7 pushes to get Konngara done, according to my previous estimate?"}}
@@ -15,9 +14,9 @@
 	are also part of Sariel's code, though.
 </p><div class="gallery">
 	<video controls loop>
-		<source src="{{$vid_vp9}}" type="video/webm"> <!-- For decent players -->
-		<source src="{{$vid_vp8}}" type="video/webm"> <!-- For outdated garbage -->
-		(Video of Konngara's "four homing snakes" pattern; <a href="{{$vid_vp9}}">download here</a>)
+		<source src="{{$vid.VP9}}" type="video/webm">
+		<source src="{{$vid.VP8}}" type="video/webm">
+		(Video of Konngara's "four homing snakes" pattern; <a href="{{$vid.VP9}}">download here</a>)
 	</video>
 </div><p>
 	On to the remaining 11 patterns then! Konngara's homing snakes, shown in

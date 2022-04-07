@@ -1,14 +1,10 @@
 {{$pic1 := (call .PostFileURL "TH01-BOSS6_2.png") -}}
 {{$pic2 := (call .PostFileURL "TH01-Sariel-wand-raise-1.png") -}}
 {{$pic3 := (call .PostFileURL "TH01-Sariel-wand-raise-2.png") -}}
-{{$vid1_vp9 := (call .PostFileURL "TH01-Sariel-pattern-3-original.webm") -}}
-{{$vid1_vp8 := (call .PostFileURL "TH01-Sariel-pattern-3-original-vp8.webm") -}}
-{{$vid2_vp9 := (call .PostFileURL "TH01-Sariel-pattern-3-fixed.webm") -}}
-{{$vid2_vp8 := (call .PostFileURL "TH01-Sariel-pattern-3-fixed-vp8.webm") -}}
-{{$vid3_vp9 := (call .PostFileURL "TH01-Sariel-leaf-splash-original.webm") -}}
-{{$vid3_vp8 := (call .PostFileURL "TH01-Sariel-leaf-splash-original-vp8.webm") -}}
-{{$vid4_vp9 := (call .PostFileURL "TH01-Sariel-leaf-splash-fixed.webm") -}}
-{{$vid4_vp8 := (call .PostFileURL "TH01-Sariel-leaf-splash-fixed-vp8.webm") -}}
+{{$vid1 := (call .Video "TH01-Sariel-pattern-3-original") -}}
+{{$vid2 := (call .Video "TH01-Sariel-pattern-3-fixed") -}}
+{{$vid3 := (call .Video "TH01-Sariel-leaf-splash-original") -}}
+{{$vid4 := (call .Video "TH01-Sariel-leaf-splash-fixed") -}}
 
 <p>
 	Here we go, TH01 Sariel! This is the single biggest boss fight in all of
@@ -122,17 +118,17 @@
 	<figure id="{{.Date}}-pattern3">
 		<div class="multilayer">
 			<video id="{{.Date}}-pattern3-vid-0" controls loop class="active">
-				<source src="{{$vid1_vp9}}" type="video/webm"> <!-- For decent players -->
-				<source src="{{$vid1_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				<source src="{{$vid1.VP9}}" type="video/webm">
+				<source src="{{$vid1.VP8}}" type="video/webm">
 				(Video of TH01 Sariel's "birds on ellipse arc" pattern in its
-				original version; <a href="{{$vid1_vp9}}">download here</a>)
+				original version; <a href="{{$vid1.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-pattern3-vid-1" controls loop>
-				<source src="{{$vid2_vp9}}" type="video/webm"> <!-- For decent players -->
-				<source src="{{$vid2_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				<source src="{{$vid2.VP9}}" type="video/webm">
+				<source src="{{$vid2.VP8}}" type="video/webm">
 				(Video of TH01 Sariel's "birds on ellipse arc" pattern with
 				fixed spawn cross cirle movement and bird hatch animations; <a
-				href="{{$vid2_vp9}}">download here</a>)
+				href="{{$vid2.VP9}}">download here</a>)
 			</video>
 		</div>
 		<figcaption><script>switchVideoLink("{{.Date}}-pattern3");</script>
@@ -256,16 +252,16 @@
 	<figure id="{{.Date}}-leafsplash">
 		<div class="multilayer">
 			<video id="{{.Date}}-leafsplash-vid-0" controls loop class="active">
-				<source src="{{$vid3_vp9}}" type="video/webm"> <!-- For decent players -->
-				<source src="{{$vid3_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				<source src="{{$vid3.VP9}}" type="video/webm">
+				<source src="{{$vid3.VP8}}" type="video/webm">
 				(Video of the missing animation in TH01 Sariel's "swaying
-				leaves" pattern; <a href="{{$vid3_vp9}}">download here</a>)
+				leaves" pattern; <a href="{{$vid3.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-leafsplash-vid-1" controls loop>
-				<source src="{{$vid4_vp9}}" type="video/webm"> <!-- For decent players -->
-				<source src="{{$vid4_vp8}}" type="video/webm"> <!-- For outdated garbage -->
+				<source src="{{$vid4.VP9}}" type="video/webm">
+				<source src="{{$vid4.VP8}}" type="video/webm">
 				(Video of the restored animation in TH01 Sariel's "swaying
-				leaves" pattern; <a href="{{$vid4_vp9}}">download here</a>)
+				leaves" pattern; <a href="{{$vid4.VP9}}">download here</a>)
 			</video>
 		</div>
 		<figcaption><script>switchVideoLink("{{.Date}}-leafsplash");</script>The

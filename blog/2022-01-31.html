@@ -118,14 +118,12 @@
 	<figure id="{{.Date}}-pattern3">
 		<div class="multilayer">
 			<video id="{{.Date}}-pattern3-vid-0" controls loop class="active">
-				<source src="{{$vid1.VP9}}" type="video/webm">
-				<source src="{{$vid1.VP8}}" type="video/webm">
+				{{- $vid1.Body -}}
 				(Video of TH01 Sariel's "birds on ellipse arc" pattern in its
 				original version; <a href="{{$vid1.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-pattern3-vid-1" controls loop>
-				<source src="{{$vid2.VP9}}" type="video/webm">
-				<source src="{{$vid2.VP8}}" type="video/webm">
+				{{- $vid2.Body -}}
 				(Video of TH01 Sariel's "birds on ellipse arc" pattern with
 				fixed spawn cross cirle movement and bird hatch animations; <a
 				href="{{$vid2.VP9}}">download here</a>)
@@ -252,14 +250,12 @@
 	<figure id="{{.Date}}-leafsplash">
 		<div class="multilayer">
 			<video id="{{.Date}}-leafsplash-vid-0" controls loop class="active">
-				<source src="{{$vid3.VP9}}" type="video/webm">
-				<source src="{{$vid3.VP8}}" type="video/webm">
+				{{- $vid3.Body -}}
 				(Video of the missing animation in TH01 Sariel's "swaying
 				leaves" pattern; <a href="{{$vid3.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-leafsplash-vid-1" controls loop>
-				<source src="{{$vid4.VP9}}" type="video/webm">
-				<source src="{{$vid4.VP8}}" type="video/webm">
+				{{- $vid4.Body -}}
 				(Video of the restored animation in TH01 Sariel's "swaying
 				leaves" pattern; <a href="{{$vid4.VP9}}">download here</a>)
 			</video>

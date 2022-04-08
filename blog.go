@@ -20,6 +20,13 @@ type BlogVideo struct {
 	VP8 template.HTML // Fallback for outdated garbage
 }
 
+// Body generates the <source> tags for the video.
+func (b *BlogVideo) Body() (ret template.HTML) {
+	ret += template.HTML(`<source src="` + b.VP9 + `" type="video/webm">`)
+	ret += template.HTML(`<source src="` + b.VP8 + `" type="video/webm">`)
+	return ret
+}
+
 // BlogEntry describes an existing blog entry, together with information about
 // its associated pushes parsed from the database.
 type BlogEntry struct {

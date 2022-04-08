@@ -43,19 +43,13 @@
 	pattern:
 </p><div class="gallery singleplayer_playfield">
 	<figure>
-		<video controls loop>
-			<source src="{{$vid1.VP9}}" type="video/webm">
-			<source src="{{$vid1.VP8}}" type="video/webm">
-		</video>
+		<video controls loop>{{$vid1.Body}}</video>
 		<figcaption>Louise's final pattern in its original form, demonstrating
 		exact linear bullet movement. Note how each bullet spawns slightly
 		behind the delay cloud: ZUN simply forgot to shift the fixed origin
 		point along with it.</figcaption>
 	</figure><figure>
-		<video controls loop>
-			<source src="{{$vid2.VP9}}" type="video/webm">
-			<source src="{{$vid2.VP8}}" type="video/webm">
-		</video>
+		<video controls loop>{{$vid2.Body}}</video>
 		<figcaption>The same pattern with standard bullet movement, corrupting
 		its intended appearance. No delay cloud-related oversights here though,
 		at least.</figcaption>
@@ -110,8 +104,7 @@ head_p->angle -= angle_delta;
 </p><div class="gallery singleplayer_playfield">
 	<figure>
 		<video controls loop class="active">
-			<source src="{{$vid3.VP9}}" type="video/webm">
-			<source src="{{$vid3.VP8}}" type="video/webm">
+			{{- $vid3.Body -}}
 			Video demonstrating the optimal strategy for dodging TH05's curved
 			bullets during the Shinki fight; <a href="{{$vid3.VP9}}">download
 			here</a>)

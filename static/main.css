@@ -770,8 +770,8 @@ td, th {
 	flex-wrap: wrap;
 }
 
-/* Progress table
-   -------------- */
+/* Number tables
+   ------------- */
 .progress figcaption {
 	text-align: center;
 	padding-top: 0.5em;
@@ -781,26 +781,26 @@ td, th {
 	margin-bottom: 1em;
 }
 
-.progress td,
-.progress th {
+.numbers td,
+.numbers th {
 	text-align: right;
 }
 
-.progress th:first-child,
-.progress td:first-child {
+.numbers th:first-child,
+.numbers td:first-child {
 	border-right: 1px solid gray;
 }
 
-.progress th:last-child,
-.progress td:last-child {
+#progress_for .numbers th:last-child,
+#progress_for .numbers td:last-child {
 	border-left: 1px solid gray;
 }
 
-.progress tfoot th,
-.progress tfoot td {
+.numbers tfoot th,
+.numbers tfoot td {
 	border-top: 1px solid gray;
 }
-/* -------------- */
+/* ------------- */
 
 /* Blog
    ---- */

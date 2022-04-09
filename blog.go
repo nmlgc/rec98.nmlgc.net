@@ -18,12 +18,19 @@ var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
 type BlogVideo struct {
 	VP9 template.HTML // Lossless
 	VP8 template.HTML // Fallback for outdated garbage
+
+	Alt string
 }
 
-// Body generates the <source> tags for the video.
+// Body generates the <source> tags and alternate text for a video.
 func (b *BlogVideo) Body() (ret template.HTML) {
 	ret += template.HTML(`<source src="` + b.VP9 + `" type="video/webm">`)
 	ret += template.HTML(`<source src="` + b.VP8 + `" type="video/webm">`)
+
+	if b.Alt != "" {
+		ret += template.HTML(b.Alt + ". ")
+	}
+	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.VP9))
 	return ret
 }
 
@@ -99,7 +106,7 @@ type PostDot struct {
 	DatePrefix string      // Date prefix for potential post-specific files
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
-	Video       func(fn string) *BlogVideo
+	Video       func(fn string, alt string) *BlogVideo
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -135,10 +142,11 @@ func (e BlogEntry) Render(filters []string) Post {
 		HostedPath:  blogHP,
 		DatePrefix:  datePrefix,
 		PostFileURL: postFileURL,
-		Video: func(fn string) *BlogVideo {
+		Video: func(fn string, alt string) *BlogVideo {
 			return &BlogVideo{
 				VP9: postFileURL(fn + ".webm"),
 				VP8: postFileURL(fn + "-vp8.webm"),
+				Alt: alt,
 			}
 		},
 	}

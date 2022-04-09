@@ -1,4 +1,4 @@
-{{$vid := (call .Video "TH01-Particle-bug") -}}
+{{$vid := (call .Video "TH01-Particle-bug" "Video of the particle system seen in the TH01 Mima fight that demonstrates its off-by-one bug") -}}
 
 <p>
 	Nothing really noteworthy in TH01's stage timer code, just yet another HUD
@@ -99,12 +99,7 @@
 	within these smaller gaps?<br /> I still ended up finding one more small
 	piece in <code>REIIDEN.EXE</code> though: The particle system, seen in the
 	Mima fight.
-</p><div class="gallery">
-	<video controls loop>
-		{{- $vid.Body -}}
-		(Video of the particle system seen in the TH01 Mima fight that demonstrates its off-by-one bug; <a href="{{$vid.VP9}}">download here</a>)
-	</video>
-</div><p>
+</p><div class="gallery"><video controls loop>{{$vid.Body}}</video></div><p>
 	I like how everything about this animation is contained within a single
 	function that is called once per frame, but ZUN could have really
 	consolidated the spawning code for new particles a bit. In Mima's fight,

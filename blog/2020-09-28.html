@@ -1,5 +1,5 @@
 {{$pic := (call .PostFileURL "TH01-Invincibility-sprites.png") -}}
-{{$vid := (call .Video "TH01-Invincibility-naive-unblitting") -}}
+{{$vid := (call .Video "TH01-Invincibility-naive-unblitting" "Video of naively unblitted TH01 invincibility sprites") -}}
 
 <p>
 	Back to TH01, and its boss sprite format… with a separate class for
@@ -63,11 +63,7 @@
 	you know about the EGC, and you can't be bothered to write a perfect
 	unblitter for 8×8 sprites, it becomes obvious why you wouldn't want to use
 	it:
-</p><video class="gallery" controls loop>
-	{{- $vid.Body -}}
-	(Video of naively unblitted TH01 invincibility sprites;
-	<a href="{{$vid.VP9}}">download here</a>)
-</video><p>
+</p><video class="gallery" controls loop>{{$vid.Body}}</video><p>
 	Because Reimu would barely be visible under all that flicker. In
 	comparison, those fully filled diamonds actually look pretty good.
 </p><hr /><p>

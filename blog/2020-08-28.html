@@ -1,4 +1,4 @@
-{{$vid := (call .Video "TH05-Reimu-bomb") -}}
+{{$vid := (call .Video "TH05-Reimu-bomb" "Video of Reimu's bomb animation in TH05, demonstrating the consistent circles growing from the top-left corner of the playfield") -}}
 
 <p>
 	Only one newly ordered push since I've reopened the store? Great, that's
@@ -94,12 +94,7 @@
 	most of the game. If you look at the animation, you can easily spot these
 	bugged circles, consistently growing from the top-left corner (0,&nbsp;0)
 	of the playfield:
-</p><video class="gallery" controls loop>
-	{{- $vid.Body -}}
-	(Video of Reimu's bomb animation in TH05, demonstrating the consistent
-	circles growing from the top-left corner of the playfield;
-	<a href="{{$vid.VP9}}">download here</a>)
-</video><hr /><p>
+</p><video class="gallery" controls loop>{{$vid.Body}}</video><hr /><p>
 	After all that, there was barely enough remaining time to filter out and
 	label the final few memory references. But now, TH05's
 	<code>MAIN.EXE</code> is <i>technically</i> position-independent! 🎉

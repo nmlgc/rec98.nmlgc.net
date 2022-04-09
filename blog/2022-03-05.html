@@ -1,6 +1,6 @@
-{{$vid1 := (call .Video "TH05-Louise-final-original") -}}
-{{$vid2 := (call .Video "TH05-Louise-final-regular-movement") -}}
-{{$vid3 := (call .Video "TH05-Curve-bullet-dodge-strategy") -}}
+{{$vid1 := (call .Video "TH05-Louise-final-original" "") -}}
+{{$vid2 := (call .Video "TH05-Louise-final-regular-movement" "") -}}
+{{$vid3 := (call .Video "TH05-Curve-bullet-dodge-strategy" "Video demonstrating the optimal strategy for dodging TH05's curved bullets during the Shinki fight") -}}
 
 <p>
 	Two years after
@@ -102,14 +102,7 @@ head_p->angle -= angle_delta;
 	Maximize this delta angle by staying as close to 180° away from their
 	current direction as possible, and let their acceleration do the rest.
 </p><div class="gallery singleplayer_playfield">
-	<figure>
-		<video controls loop class="active">
-			{{- $vid3.Body -}}
-			Video demonstrating the optimal strategy for dodging TH05's curved
-			bullets during the Shinki fight; <a href="{{$vid3.VP9}}">download
-			here</a>)
-		</video>
-	</figure>
+	<figure><video controls loop class="active">{{$vid3.Body}}</video></figure>
 </div><p>
 	At least that's the theory for dodging a <i>single</i> one. As a danmaku
 	designer, you can now of course place other bullets at these technically

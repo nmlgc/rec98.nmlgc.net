@@ -1,4 +1,4 @@
-{{$vid := (call .Video "Curvebullet-Speed-11") -}}
+{{$vid := (call .Video "Curvebullet-Speed-11" "Video of EX-Alice hacked to exclusively shoot curve bullets with a speed of 11 pixels a second") -}}
 
 <p>
 	To finish this TH05 stretch, we've got a feature that's exclusive to TH05
@@ -50,11 +50,7 @@
 	acceptable optimization though – you only start to notice jagged edges and
 	gaps between the fragments once their speed exceeds roughly 11 pixels per
 	second:
-</p><video class="gallery" controls loop>
-	{{- $vid.Body -}}
-	(Video of EX-Alice hacked to exclusively shoot curve bullets with a speed
-	of 11 pixels a second; <a href="{{$vid.VP9}}">download here</a>)
-</video><p>
+</p><video class="gallery" controls loop>{{$vid.Body}}</video><p>
 	And that brings us to the last 20% of TH05 position independence! But
 	first, we'll have more cheap and fast TH01 progress.
 </p>

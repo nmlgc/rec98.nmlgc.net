@@ -1,5 +1,5 @@
 {{$pic := (call .PostFileURL "TH01-Konngara-slash-triangle.png") -}}
-{{$vid := (call .Video "TH01-Konngara-four_homing_snakes") -}}
+{{$vid := (call .Video "TH01-Konngara-four_homing_snakes" "Video of Konngara's \"four homing snakes\" pattern") -}}
 
 <p>
 	{{Blog_PostLink "2021-05-27" "7 pushes to get Konngara done, according to my previous estimate?"}}
@@ -12,12 +12,7 @@
 	<span style="color: red">STAGE #</span> and
 	<span style="color: red">HARRY UP</span> strings? Those three strings
 	are also part of Sariel's code, though.
-</p><div class="gallery">
-	<video controls loop>
-		{{- $vid.Body -}}
-		(Video of Konngara's "four homing snakes" pattern; <a href="{{$vid.VP9}}">download here</a>)
-	</video>
-</div><p>
+</p><div class="gallery"><video controls loop>{{$vid.Body}}</video></div><p>
 	On to the remaining 11 patterns then! Konngara's homing snakes, shown in
 	the video above, are one of the more notorious parts of this battle. They
 	occur in two patterns – one with two snakes and one with four – with

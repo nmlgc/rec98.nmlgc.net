@@ -1,8 +1,5 @@
-{{$vid := (call .Video "Homing_Mima") -}}
+{{$vid := (call .Video "Homing_Mima" "Video of Mima with Reimu's shot type") -}}
 
 <p>You could use this to get a homing Mima, for example.</p>
 
-<video class="gallery" controls loop>
-	{{- $vid.Body -}}
-(Video of Mima with Reimu's shot type; <a href="{{$vid.VP9}}">download here</a>)
-</video>
+<video class="gallery" controls loop>{{$vid.Body}}</video>

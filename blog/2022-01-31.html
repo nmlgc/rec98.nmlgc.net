@@ -1,10 +1,10 @@
 {{$pic1 := (call .PostFileURL "TH01-BOSS6_2.png") -}}
 {{$pic2 := (call .PostFileURL "TH01-Sariel-wand-raise-1.png") -}}
 {{$pic3 := (call .PostFileURL "TH01-Sariel-wand-raise-2.png") -}}
-{{$vid1 := (call .Video "TH01-Sariel-pattern-3-original") -}}
-{{$vid2 := (call .Video "TH01-Sariel-pattern-3-fixed") -}}
-{{$vid3 := (call .Video "TH01-Sariel-leaf-splash-original") -}}
-{{$vid4 := (call .Video "TH01-Sariel-leaf-splash-fixed") -}}
+{{$vid1 := (call .Video "TH01-Sariel-pattern-3-original" "Video of TH01 Sariel's \"birds on ellipse arc\" pattern in its original version") -}}
+{{$vid2 := (call .Video "TH01-Sariel-pattern-3-fixed" "Video of TH01 Sariel's \"birds on ellipse arc\" pattern with fixed spawn cross cirle movement and bird hatch animations") -}}
+{{$vid3 := (call .Video "TH01-Sariel-leaf-splash-original" "(Video of the missing animation in TH01 Sariel's \"swaying leaves\" pattern") -}}
+{{$vid4 := (call .Video "TH01-Sariel-leaf-splash-fixed" "Video of the restored animation in TH01 Sariel's \"swaying leaves\" pattern") -}}
 
 <p>
 	Here we go, TH01 Sariel! This is the single biggest boss fight in all of
@@ -119,14 +119,9 @@
 		<div class="multilayer">
 			<video id="{{.Date}}-pattern3-vid-0" controls loop class="active">
 				{{- $vid1.Body -}}
-				(Video of TH01 Sariel's "birds on ellipse arc" pattern in its
-				original version; <a href="{{$vid1.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-pattern3-vid-1" controls loop>
 				{{- $vid2.Body -}}
-				(Video of TH01 Sariel's "birds on ellipse arc" pattern with
-				fixed spawn cross cirle movement and bird hatch animations; <a
-				href="{{$vid2.VP9}}">download here</a>)
 			</video>
 		</div>
 		<figcaption><script>switchVideoLink("{{.Date}}-pattern3");</script>
@@ -251,13 +246,9 @@
 		<div class="multilayer">
 			<video id="{{.Date}}-leafsplash-vid-0" controls loop class="active">
 				{{- $vid3.Body -}}
-				(Video of the missing animation in TH01 Sariel's "swaying
-				leaves" pattern; <a href="{{$vid3.VP9}}">download here</a>)
 			</video>
 			<video id="{{.Date}}-leafsplash-vid-1" controls loop>
 				{{- $vid4.Body -}}
-				(Video of the restored animation in TH01 Sariel's "swaying
-				leaves" pattern; <a href="{{$vid4.VP9}}">download here</a>)
 			</video>
 		</div>
 		<figcaption><script>switchVideoLink("{{.Date}}-leafsplash");</script>The

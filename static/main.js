@@ -76,29 +76,46 @@ function externalEnable(hostname) {
 
 // Multi-layer galleries
 // ---------------------
-function switchVideoButton(id, subvid) {
-	return `<button id="${id}-switch" onclick="switchVideo('${id}', ${subvid})"
-		>(Switch to ${subvid === 1 ? "fixed version" : "original"})</button>`;
+/**
+ * @param {HTMLButtonElement} button
+ * @param {HTMLVideoElement[]} vids
+ * @param {0 | 1} subvid_on_click
+ */
+function switchVideoButtonSet(button, vids, subvid_on_click) {
+	button.textContent = `(Switch to ${
+		subvid_on_click === 1 ? "fixed version" : "original"
+	})`;
+	button.onclick = () => {
+		switchVideo(vids[1 - subvid_on_click], vids[subvid_on_click]);
+		switchVideoButtonSet(button, vids, (1 - subvid_on_click));
+	};
 }
 
-function switchVideoLink(id) {
-	document.write(switchVideoButton(id, 1));
+/**
+ * @param {string} id DOM element that receives the button
+ */
+function switchVideoButton(id) {
+	const vids = [
+		document.getElementById(`${id}-0`), document.getElementById(`${id}-1`),
+	];
+	const button = document.createElement('button');
+	switchVideoButtonSet(button, vids, 1);
+	document.getElementById(id).prepend(button);
 }
 
-function switchVideo(id, subvid) {
-	const vidOld = document.getElementById(`${id}-vid-${1 - subvid}`);
-	const vidNew = document.getElementById(`${id}-vid-${subvid}`);
+/**
+ * @param {HTMLVideoElement} vidOld
+ * @param {HTMLVideoElement} vidNew
+ */
+function switchVideo(vidOld, vidNew) {
 	const paused = vidOld.paused;
 	vidOld.pause();
 	vidNew.currentTime = vidOld.currentTime;
 	vidNew.onseeked = () => {
 		vidNew.onseeked = null;
-		vidOld.classList.remove("active");
-		vidNew.classList.add("active");
+		vidOld.classList.remove('active');
+		vidNew.classList.add('active');
 		!paused && vidNew.play();
-		document.getElementById(`${id}-switch`).outerHTML = switchVideoButton(
-			id, (1 - subvid)
-		);
 	}
 }
 // ---------------------

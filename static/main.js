@@ -153,4 +153,18 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 		getActive: () => activeTuple,
 	}
 }
+
+/**
+ * @param {string} id DOM element that receives the switch bar
+ */
+function switchMultipleVideos(id) {
+	const ret = switchMultiple(id, switchVideo);
+	return Object.assign({
+		frameStep: (fps, direction) => {
+			const vid = ret.getActive()[1];
+			vid.pause();
+			vid.currentTime += (direction / fps);
+		},
+	}, ret);
+}
 // ---------------------

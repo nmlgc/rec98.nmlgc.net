@@ -575,6 +575,19 @@ form button {
 	padding: 0.5em;
 	width: 100%;
 }
+
+form[action="/order"] .row {
+	display: table-row;
+}
+
+form[action="/order"] .row > * {
+	display: table-cell;
+	padding-bottom: 1em;
+}
+
+form[action="/order"] .row input[type="checkbox"] {
+	margin-right: 1em;
+}
 /* --- */
 
 /* Crowdfunding log

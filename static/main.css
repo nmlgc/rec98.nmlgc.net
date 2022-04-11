@@ -82,6 +82,10 @@ figure {
 	margin-inline: 0;
 }
 
+.active {
+	font-weight: bold!important;
+}
+
 .gallery {
 	text-align: center;
 	margin: 0 auto;
@@ -820,10 +824,6 @@ article h5 {
 	font-size: 80%;
 	background-color: #f8f8ff;
 	border: 1px solid var(--c-link);
-}
-
-.tag.active {
-	font-weight: bold;
 }
 
 .tag * {

@@ -118,4 +118,39 @@ function switchVideo(vidOld, vidNew) {
 		!paused && vidNew.play();
 	}
 }
+
+/**
+ * @param {string} id DOM element that receives the switch bar
+ */
+function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
+	const bar = document.getElementById(id);
+	let first = true;
+	let activeTuple = [null, null, ""]; // (button, controlled element, sub-ID)
+	return {
+		/**
+		 * @param {string} text
+		 * @param {string} subID
+		 */
+		add: (text, subID, active = false) => {
+			const controlledElement = document.getElementById(`${id}-${subID}`);
+			const newButton = document.createElement('button');
+			newButton.innerHTML = text;
+			if(active) {
+				activeTuple = [newButton, controlledElement, subID];
+				newButton.classList.add('active');
+			}
+			newButton.onclick = () => {
+				activeTuple[0].classList.remove('active');
+				newButton.classList.add('active');
+				onSwitch(activeTuple[1], controlledElement);
+				activeTuple = [newButton, controlledElement, subID];
+			};
+			!first
+				? bar.appendChild(document.createTextNode("•"))
+				: first = false;
+			bar.appendChild(newButton);
+		},
+		getActive: () => activeTuple,
+	}
+}
 // ---------------------

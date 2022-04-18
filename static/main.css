@@ -156,8 +156,10 @@ figure {
 }
 
 .gallery.singleplayer_playfield figure,
+.gallery.singleplayer_playfield figure img,
 .gallery.singleplayer_playfield .multilayer {
 	width: 384px;
+	max-height: 368px;
 	aspect-ratio: 24 / 23;
 }
 
@@ -170,7 +172,13 @@ figure {
 .gallery embed,
 .gallery iframe {
 	max-height: 15em;
+}
+
+.gallery img:not(:first-child) {
 	margin-left: 5%;
+}
+
+.gallery img:not(:last-child) {
 	margin-right: 5%;
 }
 

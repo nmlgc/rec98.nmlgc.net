@@ -165,6 +165,11 @@ function switchMultipleVideos(id) {
 			vid.pause();
 			vid.currentTime += (direction / fps);
 		},
+		seekAndStop: (time) => {
+			const vid = ret.getActive()[1];
+			vid.pause();
+			vid.currentTime = time;
+		},
 	}, ret);
 }
 // ---------------------

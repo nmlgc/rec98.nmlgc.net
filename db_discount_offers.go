@@ -28,14 +28,7 @@ type DiscountOfferView struct {
 	PushpriceRemaining float64
 }
 
-var discountOffers = []DiscountOffer{
-	{Sponsor: 2, CentsCovered: 2000, Goals: []template.HTML{
-		HTMLEmoji("th05") + " TH05 reverse-engineering",
-		HTMLEmoji("th05") + " TH05 replay support",
-		"C89 conformance (any game)",
-		"Compatibility with pre-386 PC-98 models (any game)",
-	}, Ad: HTMLEmoji("th05") + " TH05 danmaku scripting toolkit release planned around 50% RE of <code>MAIN.EXE</code>!"},
-}
+var discountOffers = []DiscountOffer{}
 
 func DiscountOffers(pushprice float64) (ret []DiscountOfferView) {
 	for _, offer := range discountOffers {

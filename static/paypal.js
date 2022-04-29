@@ -136,7 +136,9 @@ let order = {
 	},
 	onApprove: async function(data, actions) {
 		await actions.order.capture();
-		await sendIncoming(data.orderID, 0, discount.selectedIndex);
+		await sendIncoming(
+			data.orderID, 0, (discount) ? discount.selectedIndex : 0
+		);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,
@@ -173,6 +175,11 @@ function onCycle() {
 		amount.onchange = function() {
 			const value_from_customer = clampNumber(amount);
 			updatePushAmount(push_amount, push_noun, amount.value);
+			amount.value = formatNumber(value_from_customer, 2);
+
+			if(!discount) {
+				return;
+			}
 
 			const discount_offer = discount.options[discount.selectedIndex];
 			const discount_fraction = discount_offer.dataset.fraction;
@@ -187,13 +194,14 @@ function onCycle() {
 				updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
 				roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
 			}
-			amount.value = formatNumber(value_from_customer, 2);
 		}
 		amount.min = 1.00;
 		amount.step = 0.01;
 
-		discount.disabled = false;
-		discount_breakdown.hidden = false;
+		if(discount) {
+			discount.disabled = false;
+			discount_breakdown.hidden = false;
+		}
 	} else {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
@@ -203,9 +211,11 @@ function onCycle() {
 		amount.min = 1;
 		amount.step = 1;
 
-		discount.disabled = true;
-		discount.selectedIndex = 0;
-		discount_breakdown.hidden = true;
+		if(discount) {
+			discount.disabled = true;
+			discount.selectedIndex = 0;
+			discount_breakdown.hidden = true;
+		}
 	}
 	amount.onchange();
 }

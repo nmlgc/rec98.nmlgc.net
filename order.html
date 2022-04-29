@@ -30,7 +30,7 @@
 				This contribution should go towards…
 			</label>
 			<select id="metric" onchange="handleSelect(this.options[this.selectedIndex])">
-				<option>Anything (including tooling)</option>
+				<option data-info="Won't go to Seihou by default, unless you explicitly allow me to.">Anything (including tooling)</option>
 				<option>Reverse-engineering</option>
 				<option>Position independence</option>
 				<option>Stable English translation patches (on PC-98)</option>
@@ -55,6 +55,7 @@
 				<option data-info="Please specify which game(s) would be most important to you. Will be more efficient after that game reached 100% position independence, but definitely possible before. No guarantees that it will actually <i>perform</i> well on such old systems, though!" data-goal-mandatory>Compatibility with pre-386 PC-98 models</option>
 				<option>Improving the website</option>
 				<option>Build server experiments</option>
+				<option data-info="The first goal will be to get pbg's incomplete <a href='https://github.com/pbghogehoge/ssg'>Shuusou Gyoku</a> and <a href='https://github.com/pbghogehoge/kog'>Kioh Gyoku</a> source code releases into a working and compilable state, by adding clean-room reimplementations of missing functionality as necessary. Please tell me which one of the two I should do first. Once that's done, we can talk about what else I should do with these codebases." data-goal-mandatory>Seihou</option>
 				<option>Something else?</option>
 			</select>
 			<label for="goal">
@@ -150,5 +151,7 @@
 			goal.required = (goal_mandatory !== null);
 			goal.reportValidity();
 		}
+
+		handleSelect(metric.options[0]);
 	</script>
 {{end}}

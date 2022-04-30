@@ -1,0 +1,226 @@
+{{$pic1 := (call .PostFileURL "TH05-ST05.BB2.png") -}}
+{{$vid := (call .Video "TH05-Shinki-wing-preparation-lasers" "Video of the lasers at the end of TH05 Shinki's wing preparation pattern, demonstrating that they can kill the player in their last 2 frames") -}}
+
+<p>
+	The important things first:
+</p><ul>
+	<li>TH05 has passed the 50% RE mark, with both <code>MAIN.EXE</code> and the
+	game as a whole! With that, we've also reached what {{DB_CustomerByID 2}}
+	wanted out of the project, so he's suspending his discount offer for a
+	bit.</li>
+	<li><i>Curve bullets</i> are now officially called <i>cheetos</i>! <a
+	href="https://twitter.com/ReC98Project/status/1500256959785746434">76.7% of
+	fans prefer this term</a>, and it fits into the 8.3 DOS filename scheme much
+	better than <i>homing lasers</i> (as they're called in
+	<code>OMAKE.TXT</code>) or <i><a
+	href="https://twitter.com/armormodechang/status/1500907580914343943">Taito
+	lasers</a></i> (which would indeed have made sense as well).</li>
+	<li>…oh, and I managed to decompile Shinki within 2 pushes after all. That
+	left enough budget to also add the Stage 1 midboss on top.</li>
+</ul><p>
+	So, Shinki! As far as final boss code is concerned, she's surprisingly
+	economical, with {{Blog_PostLink "2021-06-10" "her background animations"}}
+	making up more than ⅓ of her entire code. Going straight from TH01's
+	{{Blog_PostLink "2021-08-23" "final"}}
+	{{Blog_PostLink "2022-01-31" "bosses"}}
+	to TH05's final boss definitely showed how much ZUN had streamlined
+	danmaku pattern code by the end of PC-98 Touhou. Don't get me wrong, there
+	is still room for improvement: TH05 not only
+	{{Blog_PostLink "2022-03-27" "reuses the same 16 bytes of generic boss state we saw in TH04 last month"}},
+	but also uses them 4× as often, and even for midbosses. Most importantly
+	though, defining danmaku patterns using a single global instance of the
+	group template structure is just bad no matter how you look at it:
+</p><ul>
+	<li>The script code ends up rather bloated, with a single <code>MOV</code>
+	instruction for setting one of the fields taking up 5 bytes. By comparison,
+	the entire structure for regular bullets is 14 bytes large, while the
+	template structure for Shinki's 32×32 ball bullets could have easily been
+	reduced to 8 bytes.</li>
+	<li>Since it's also one piece of global state, you can easily forget to set
+	one of the required fields for a group type. The resulting danmaku group
+	then reuses these values from the last time they were set… which might have
+	been as far back as another boss fight from a previous stage.
+	{{HTML_Emoji "tannedcirno"}} And of course, I wouldn't point this out if it
+	didn't actually happen in Shinki's pattern code. Twice.</li>
+</ul><p>
+	Declaring a separate structure instance with the static data for every
+	pattern would be both safer <i>and</i> more space-efficient, and there's
+	more than enough space left for that in the game's data segment.<br />
+	But all in all, the pattern functions are short, sweet, and easy to follow.
+	The <a href="https://www.youtube.com/watch?v=W8UHzPi4K7c&t=136s">"devil"
+	pattern</a> <i>is</i> significantly more complex than the others, but still
+	far from TH01's final bosses at their worst. I especially like the clear
+	architectural separation between "one-shot pattern" functions that return
+	<code>true</code> once they're done, and "looping pattern" functions that
+	run as long as they're being called from a boss's main function. Not many
+	all too interesting things in these pattern functions for the most part,
+	except for two pieces of evidence that Shinki was coded after Yumeko:
+</p><ul>
+	<li>The gather animation function in the first two phases contains a bullet
+	group configuration that <i>looks</i> like it's part of an unused danmaku
+	pattern. It quickly turns out to just be copy-pasted from a similar function
+	in Yumeko's fight though, where it <i>is</i> turned into actual
+	bullets.</li>
+	<li>As one of the two places where ZUN forgot to set a template field, the
+	lasers at the end of the white wing preparation pattern reuse the 6-pixel
+	width of Yumeko's final laser pattern. This actually has an effect on
+	gameplay: Since these lasers are active for the first 8 frames after
+	Shinki's wings appear on screen, the player can get hit by them in the last
+	2 frames after they grew to their final width.
+		<div class="gallery singleplayer_playfield"><figure>
+			<video controls loop>{{$vid.Body}}</video>
+			<figcaption>Of course, there are more than enough safespots <i>between</i> the lasers.</figcaption>
+		</figure>
+	</div></li>
+</ul><hr /><p>
+	Speaking about that wing sprite: If you look at <code>ST05.BB2</code> (or
+	any other file with a large sprite, for that matter), you notice a rather
+	weird file layout:
+</p><div class="gallery pixelated checkerboard"><figure>
+	<img
+	src="{{$pic1}}"
+	alt="Raw file layout of TH05's ST05.BB2, demonstrating master.lib's supposed BFNT width limit of 64 pixels"
+	style="height: 384px;" />
+	<figcaption>A large sprite split into multiple smaller ones with a width of
+	64 pixels each? What's this, hardware sprite limitations? On <i>my</i>
+	PC-98?!</figcaption>
+</figure></div><p>
+	And it's not a limitation of the sprite width field in the BFNT+ header
+	either. Instead, it's master.lib's BFNT functions which are limited to
+	sprite widths up to 64 pixels… or at least that's what
+	<code>MASTER.MAN</code> claims. Whatever the restriction was, it seems to be
+	completely nonexistent as of master.lib version 0.23, and none of the
+	master.lib functions used by the games have any issues with larger
+	sprites.<br />
+	Since ZUN stuck to the supposed 64-pixel width limit though, it's now the
+	<i>game</i> that expects Shinki's winged form to consist of 4 physical
+	sprites, not just 1. Any conversion from another, more logical sprite sheet
+	layout back into BFNT+ must therefore replicate the original number of
+	sprites. Otherwise, the sequential IDs ("patnums") assigned to every newly
+	loaded sprite no longer match ZUN's hardcoded IDs, causing the game to
+	crash. This is exactly what used to happen with {{DB_CustomerByID 2}}'s
+	<a href="http://lunarcast.net/mystictk.php">MysticTK automation scripts</a>,
+	which combined these exact sprites into a single large one. This issue has
+	now been fixed – just in case there are some underground modders out there
+	who used these scripts and wonder why their game crashed as soon as the
+	Shinki fight started.
+</p><hr /><p>
+	And then the code quality takes a nosedive with Shinki's main function.
+	{{HTML_Emoji "onricdennat"}} Even in TH05, these boss and midboss update
+	functions are still very imperative:
+</p><ul>
+	<li>The origin point of all bullet types used by a boss must be manually set
+	to the current boss/midboss position; there is no concept of a bullet type
+	tracking a certain entity.</li>
+	<li>The same is true for the target point of a player's homing shots…</li>
+	<li>… and updating the HP bar. At least the initial fill animation is
+	abstracted away rather decently.</li>
+	<li>Incrementing the phase frame variable also must be done manually. TH05
+	even "innovates" here by giving the boss update function exclusive ownership
+	of that variable, in contrast to TH04 where that ownership is given out to
+	the player shot collision detection (?!) and boss defeat helper
+	functions.</li>
+	<li>Speaking about collision detection: That is done by calling different
+	functions depending on whether the boss is supposed to be invincible or
+	not.</li>
+	<li>Timeout conditions? No standard way either, and all done with manual
+	<code>if</code> statements. In combination with the regular phase end
+	condition of lowering (mid)boss HP to a certain value, this leads to quite a
+	convoluted control flow.</li>
+	<li>The manual calls to the score bonus functions for cleared phases at least provide some sense of orientation. {{HTML_Emoji "zunpet"}}</li>
+	<li>One potentially nice aspect of all this imperative freedom is that
+	phases can end outside of HP boundaries… by manually incrementing the
+	phase variable and resetting the phase <i>frame</i> variable to 0.
+	{{HTML_Emoji "godzun"}}</li>
+</ul><p>
+	The biggest WTF in there, however, goes to using one of the 16 state bytes
+	as a "relative phase" variable for differentiating between boss phases that
+	share the same branch within the <code>switch(boss.phase)</code>
+	statement. While it's commendable that ZUN tried to reduce code duplication
+	for once, he could have just branched depending on the actual
+	<code>boss.phase</code> variable? The same state byte is then reused in the
+	"devil" pattern to track the activity state of the big jerky lasers in the
+	second half of the pattern. If you somehow managed to end the phase after
+	the first few bullets of the pattern, but before these lasers are up,
+	Shinki's update function would think that you're still in the phase
+	<i>before</i> the "devil" pattern. The main function then sequence-breaks
+	right to the defeat phase, skipping the final pattern with the burning Makai
+	background. Luckily, the HP boundaries are far away enough to make this
+	impossible.<br />
+	The takeaway here: If you <i>want</i> to use the state bytes for your custom
+	boss script mods, alias them to your own 16-byte structure, and limit each
+	of the bytes to a clearly defined meaning across your entire boss script.
+</p><p>
+	One final discovery that doesn't seem to be documented anywhere yet: Shinki
+	actually has a hidden bomb shield during her two purple-wing phases.
+	uth05win got this part slightly wrong though: It's not a <i>complete</i>
+	shield, and hitting Shinki will still deal 1 point of chip damage per
+	frame. For comparison, the first phase lasts for 3,000 HP, and the "devil"
+	pattern phase lasts for 5,800 HP.
+</p><p>
+	And there we go, 3rd PC-98 Touhou <span class="hovertext" title="The foreground sprite rendering is still in ASM, but that's 100% boilerplate code.">boss
+	script*</span> decompiled, 28 to go! 🎉 In case you were expecting a fix for
+	the <a href="https://youtu.be/b1k82w1VzUc">Shinki death glitch</a>: That one
+	is more appropriately fixed as part of the Mai & Yuki script. It also
+	requires new code, should ideally look a bit prettier than just removing
+	cheetos between one frame and the next, and I'd still like it to fit within
+	the original position-dependent code layout… Let's do that some other
+	time.<br />
+	Not much to say about the Stage 1 midboss, or midbosses in general even,
+	except that their update functions have to imperatively handle even more
+	subsystems, due to the relative lack of helper functions.
+</p><hr /><p>
+	The remaining ¾ of the third push went to a bunch of smaller RE and
+	finalization work that would have hardly got any attention otherwise, to
+	help secure that 50% RE mark. The nicest piece of code in there shows off
+	what looks like the optimal way of setting up the
+	{{Blog_PostLink "2020-12-18" "GRCG tile register"}} for monochrome blitting
+	in a variable color:
+</p><pre>mov ah, palette_index ; Any other non-AL 8-bit register works too.
+                      ; (x86 only supports AL as the source operand for OUTs.)
+
+rept 4                ; For all 4 bitplanes…
+    shr ah,  1        ; Shift the next color bit into the x86 carry flag
+    sbb al,  al       ; Extend the carry flag to a full byte
+                      ; (CF=0 → 0x00, CF=1 → 0xFF)
+    out 7Eh, al       ; Write AL to the GRCG tile register
+endm
+</pre><p>
+	Thanks to Turbo C++'s inlining capabilities, the loop body even decompiles
+	into a surprisingly nice one-liner. What a beautiful micro-optimization, at
+	a place where micro-optimization doesn't hurt and is almost expected.<br />
+	Unfortunately, the micro-optimizations went all downhill from there,
+	becoming increasingly dumb and undecompilable. Was it really necessary to
+	save 4 x86 instructions in the highly unlikely case of a new spark sprite
+	<img
+	src="data:image/gif;base64,R0lGODlhQAAIAPABAOy8qv///yH5BAUKAAEALAAAAABAAAgAAAJIjGGJye28nnygxuMu0hOrwE2h1yyRCZHeqaJgplhnVV6HDdIQrr/5LavxhsIMceVqqXwhlu/zZC6jTtIIBqV2rtFS5zsF53QFADs="
+	/> being spawned outside the playfield? That one 2D polar→Cartesian
+	conversion function then pointed out Turbo C++ 4.0J's woefully limited
+	support for 32-bit micro-optimizations. The code generation for 32-bit
+	{{Blog_PostLink "2022-02-18" "pseudo-registers"}} is so bad that they almost
+	aren't worth using for arithmetic operations, and the inline assembler just
+	flat out doesn't support anything 32-bit. No use in decompiling a function
+	that you'd have to entirely spell out in machine code, especially if the
+	same function already exists in multiple other, more idiomatic C++
+	variations.<br />
+	Rounding out the third push, we got the TH04/TH05 <code>DEMO?.REC</code>
+	replay file reading code, which should finally prove that nothing about the
+	game's original replay system could serve as even just the foundation for
+	community-usable replays. Just in case anyone was still thinking that.
+</p><hr /><p>
+	Next up: Back to TH01, with the Elis fight! Got a bit of room left in the
+	cap again, and there are <i>a lot</i> of things that would make a lot of
+	sense now:
+</p><ul>
+	<li>TH04 would really enjoy a large number of dedicated pushes to catch up
+	with TH05. This would greatly support the finalization of both games.</li>
+	<li>Continuing with TH05's bosses and midbosses has shown to be good value
+	for your money. Shinki would have taken even less than 2 pushes if she
+	hadn't been the first boss I looked at.</li>
+	<li>I've got a new idea for
+	{{Blog_PostLink "2020-09-07" "properly linking in master.lib and getting rid of the 32-bit build step"}}…</li>
+	<li>Oh, and I also added Seihou as a selectable goal, for the two people out
+	there who genuinely like it. If I ever want to quit my day job, I need to
+	branch out into safer territory that isn't threatened by takedowns, after
+	all.</li>
+</ul>

@@ -185,3 +185,6 @@ P0186	[149, 150]	TH04/TH05 decompilation (Stage transition animation + smaller b
 P0187	[153, 154]	TH04 RE (Shared boss state bytes)	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/bab5634...426a531	1
 P0188	[133, 142, 147]	TH04/TH05 decompilation (Boss defeat sequence / collision + Shinki's 32×32 balls (logic))	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/426a531...e881f95	1
 P0189	[156, 159]	TH04 RE (Kurumi + Stage 4 Marisa crashes) / TH05 decompilation (Stage 1-5 boss backgrounds)	2022-04-18T20:41:01Z	nmlgc/ReC98/compare/22abdd1...b4876b6	1
+P0190	[147]	TH05 decompilation (Shinki, part 1/2: Patterns 1-10)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/5734815...293e16a	1
+P0191	[147]	TH05 decompilation (Shinki, part 2/2: Pattern 11, main function)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/293e16a...71cb7b5	1
+P0192	[147, 160, 163]	TH05 decompilation (Stage 1 midboss + Replay file format) + Separating translation units, part 11	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/71cb7b5...e1f3f9f	1

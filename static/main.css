@@ -771,13 +771,14 @@ td, th {
 }
 /* ---------- */
 
-.progress-grid {
-	display: flex;
-	flex-wrap: wrap;
-}
-
 /* Number tables
    ------------- */
+figure.progress {
+	margin-left: 0;
+	margin-right: 0;
+	justify-content: left;
+}
+
 .progress figcaption {
 	text-align: center;
 	padding-top: 0.5em;

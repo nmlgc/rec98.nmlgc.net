@@ -150,6 +150,14 @@ figure button.active {
 	color: black
 }
 
+figure button:first-child {
+	padding-left: 0; /* Avoid space before any previous word */
+}
+
+figure button:last-child {
+	padding-right: 0; /* Avoid space in front of the likely period */
+}
+
 figure.pixelated img,
 figure.singleplayer_playfield img {
 	max-height: unset;

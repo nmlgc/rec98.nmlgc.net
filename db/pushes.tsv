@@ -188,3 +188,8 @@ P0189	[156, 159]	TH04 RE (Kurumi + Stage 4 Marisa crashes) / TH05 decompilation 
 P0190	[147]	TH05 decompilation (Shinki, part 1/2: Patterns 1-10)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/5734815...293e16a	1
 P0191	[147]	TH05 decompilation (Shinki, part 2/2: Pattern 11, main function)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/293e16a...71cb7b5	1
 P0192	[147, 160, 163]	TH05 decompilation (Stage 1 midboss + Replay file format) + Separating translation units, part 11	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/71cb7b5...e1f3f9f	1
+P0193	[144]	TH01 decompilation (Elis, part 1/4: Preparations + patterns 1-3)	2022-05-31T22:58:07Z	nmlgc/ReC98/compare/e1f3f9f...183d7a2	1
+P0194	[152]	TH01 decompilation (Elis, part 2/4: Patterns 4-6 + transformations)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/183d7a2...5d93a50	1
+P0195	[151, 155]	TH01 decompilation (Elis, part 3/4: Patterns 7-13)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/5d93a50...e18c53d	1
+P0196	[164, 169]	TH01 decompilation (Elis, part 4/4: Entrance animation + main function)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/e18c53d...57c9ac5	1
+P0197	[161, 167]	TH01 research (HP bar heap corruption + boss defeat crashes) + decompilation (Verdict screen)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/57c9ac5...48db0b7	1

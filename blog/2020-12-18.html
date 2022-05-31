@@ -59,10 +59,12 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre><p>
 	preferred copy-pasting the necessary ridiculous arithmetic expressions for
 	calculating positions, .PTN sprite IDs, and the ID of the 16×16 quarter
 	inside the 32×32 sprite, instead of just writing simple helper functions.
-	He <i>did</i> manage to make the result <i>mostly</i> bug-free this time
-	around, though! There's one minor hit point discoloration bug if the
-	red-white or white sections start at an odd number of hit points, but
-	that's never the case for any of the original 7 bosses.<br />
+	<s>He <i>did</i> manage to make the result <i>mostly</i> bug-free this time
+	around, though!</s> (<strong>Edit (2022-05-31):</strong> Nope, there's a
+	{{Blog_PostLink "2022-05-31" "potential heap corruption after all, which can be triggered in some fights in debug mode"}}.)
+	There's one minor hit point discoloration bug if the red-white or white
+	sections start at an odd number of hit points, but that's never the case for
+	any of the original 7 bosses.<br />
 	The remaining sloppiness is ultimately inconsequential as well: The game
 	always backs up <i>twice</i> the number of hit point backgrounds, and thus
 	uses twice the amount of memory actually required. Also, this

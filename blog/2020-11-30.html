@@ -36,10 +36,10 @@
 	bars, turrets, and portals. However, none of the card-flipping stages in
 	the final game come with any such overlaps. That's quite unfortunate, as it
 	would have made for some quite interesting level designs:</p>
-	<p class="gallery"><a href="{{$pic}}"><img
+	<figure><a href="{{$pic}}"><img
 		src="{{$pic}}"
 		alt="Experimenting with putting obstacles on top of cards in TH01"
-	/></a></p>
+	/></a></figure>
 	<p>As you can see, the final version of the blitting code was not written
 	with such overlaps in mind either, blitting the <i>cards</i> on top of all
 	the <i>obstacles</i>, and not the other way round.</p>
@@ -132,14 +132,14 @@
 	transitions. So here they are, Stages 21 to 24, as shipped with the game
 	in <code>STAGE7.DAT</code>:
 </p>
-<p class="gallery medium">{{range loop 21 25 -}}
+<figure class="side_by_side medium">{{range loop 21 25 -}}
 	{{- $pic := printf "TH01-Stage-%d.png" . -}}
 	{{- $picFN := (call $.PostFileURL $pic) -}}
 	<a href="{{$picFN}}"><img
 		src="{{$picFN}}"
 		alt="TH01 stage {{.}}, loaded from <code>STAGE7.DAT</code>"
 	/></a>
-{{- end}}</p><hr /><p>
+{{- end}}</figure><hr /><p>
 	Wow, what a mess. All that was just a bit too much to be covered in two
 	pushes… Next up, assuming the current subscriptions: Taking a vacation with
 	one smaller TH01 push, covering some smaller functions here and there to

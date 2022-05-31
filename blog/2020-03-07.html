@@ -28,14 +28,14 @@
 	in uncompressed form…
 </p><p>
 	Also, have some rips of all the images this format is used for:
-</p><p class="gallery small">{{range loop 0 16 -}}
+</p><figure class="side_by_side small">{{range loop 0 16 -}}
 	{{- $pic := printf "boss8.grz-%1X.png" . -}}
 	{{- $picFN := (call $.PostFileURL $pic) -}}
 	<a href="{{$picFN}}"><img
 		src="{{$picFN}}"
 		alt="<code>boss8.grz</code>, image {{inc .}}/16"
 	/></a>
-{{- end}}</p><p>
+{{- end}}</figure><p>
 	To make these, I just wrote a small viewer, calling the same decompiled
 	TH01 code: {{HTML_Download .HostedPath $grzview}}
 	Obviously, this means that it not only must to be run on a PC-98, but also

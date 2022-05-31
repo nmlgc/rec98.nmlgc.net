@@ -12,7 +12,7 @@
 	<span style="color: red">STAGE #</span> and
 	<span style="color: red">HARRY UP</span> strings? Those three strings
 	are also part of Sariel's code, though.
-</p><div class="gallery"><video controls loop>{{$vid.Body}}</video></div><p>
+</p><figure><video controls loop>{{$vid.Body}}</video></figure><p>
 	On to the remaining 11 patterns then! Konngara's homing snakes, shown in
 	the video above, are one of the more notorious parts of this battle. They
 	occur in two patterns – one with two snakes and one with four – with
@@ -31,11 +31,11 @@
 	{{Blog_PostLink "2021-07-31" "still"}} prefer over actually understanding an
 	algorithm… Then again, this hitbox is <i>still</i> not intuitive at all,
 	because…
-	<p></p><p class="gallery pixelated"><img
+	<figure class="pixelated"><img
 		src="data:image/gif;base64,R0lGODlhCAAIAKEBAAAAAP8AAP8AAP8AACH5BAEKAAIALAAAAAAIAAgAAAIOjARwm8ntoJxqPreQOgUAOw=="
 		style="height: 64px;"
 		alt="Snake head with collision pixel" />
-	</p>… the exact collision pixel, marked in
+	</figure>… the exact collision pixel, marked in
 	<span style="color: red">red</span>, is part of the diamond sprite's
 	transparent background {{HTML_Emoji "tannedcirno"}}</li>
 </ul><hr /><p>
@@ -51,10 +51,9 @@
 	resembles the sword slash. But once I tried to express these numbers in
 	terms of the slash animation's keyframes, it all worked out perfectly, and
 	resulted in this:
-</p><p
+</p><figure
 	id="{{.Date}}-easter-egg-container"
-	class="gallery"
-	style="display: grid; justify-items: center;"
+	class="pixelated"
 	onmouseover="document.getElementById('{{.Date}}-easter-egg').style.opacity = '0.5';"
 	onmouseout="document.getElementById('{{.Date}}-easter-egg').style.opacity = '0';"
 ><a href="{{$pic}}" style="grid-row: 1; grid-column: 1;"><img
@@ -65,7 +64,7 @@
 	id="{{.Date}}-easter-egg"
 	style="margin: 0; grid-row: 1; grid-column: 1; display: block; opacity: 0; transition: opacity 5s;"
 	src="data:image/gif;base64,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" /></a>
-</p><p>
+</figure><p>
 	Yup, the spawner always takes an exact path along this triangle. Sometimes,
 	I wonder whether I should just rush this project and don't bother about
 	naming these repeated number literals. Then I gain insights like these, and

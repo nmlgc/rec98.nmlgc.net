@@ -67,7 +67,7 @@
 	gameplay: Since these lasers are active for the first 8 frames after
 	Shinki's wings appear on screen, the player can get hit by them in the last
 	2 frames after they grew to their final width.
-		<div class="gallery singleplayer_playfield"><figure>
+		<figure class="singleplayer_playfield">
 			<video controls loop>{{$vid.Body}}</video>
 			<figcaption>Of course, there are more than enough safespots <i>between</i> the lasers.</figcaption>
 		</figure>
@@ -76,7 +76,7 @@
 	Speaking about that wing sprite: If you look at <code>ST05.BB2</code> (or
 	any other file with a large sprite, for that matter), you notice a rather
 	weird file layout:
-</p><div class="gallery pixelated checkerboard"><figure>
+</p><figure class="pixelated checkerboard">
 	<img
 	src="{{$pic1}}"
 	alt="Raw file layout of TH05's ST05.BB2, demonstrating master.lib's supposed BFNT width limit of 64 pixels"
@@ -84,7 +84,7 @@
 	<figcaption>A large sprite split into multiple smaller ones with a width of
 	64 pixels each? What's this, hardware sprite limitations? On <i>my</i>
 	PC-98?!</figcaption>
-</figure></div><p>
+</figure><p>
 	And it's not a limitation of the sprite width field in the BFNT+ header
 	either. Instead, it's master.lib's BFNT functions which are limited to
 	sprite widths up to 64 pixels… or at least that's what

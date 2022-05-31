@@ -112,7 +112,7 @@
 	{{Blog_PostLink "2022-03-05" "<code>0x100</code>"}}) by the total number of
 	bullets…</li>
 	<li>Boom, division by zero.</li>
-</ul><div class="gallery fullres"><figure>
+</ul><figure class="fullres">
 	<div class="multilayer">
 		<video id="{{.Date}}-k-4" controls class="active">{{$k_4.Body}}</video>
 		<video id="{{.Date}}-k-16" controls loop>{{$k_16.Body}}</video>
@@ -124,7 +124,7 @@
 		Easy Mode after the rank-based tuning, leading to just a 3-ring on
 		<code>playperf = 16</code>.</p>
 	</figcaption>
-</figure></div><p>
+</figure><p>
 	So, what should the workaround look like? Obviously, we want to modify
 	neither the default number of ring bullets nor the tuning algorithm – that
 	would change all other non-crashing variations of this pattern on other
@@ -147,7 +147,7 @@
 	softer and more controlled shutdown. Certainly the option that would be
 	closest to the behavior of the original games, and perhaps the only one to
 	be accepted in Serious, High-Level Play™.</li>
-</ol><div class="gallery singleplayer_playfield"><figure>
+</ol><figure class="singleplayer_playfield">
 	<div class="multilayer">
 		<video id="{{.Date}}-k-wa-0" controls loop class="active">
 			{{$k_wa_0.Body}}
@@ -157,7 +157,7 @@
 		<video id="{{.Date}}-k-wa-3" controls loop>{{$k_wa_3.Body}}</video>
 	</div>
 	<figcaption id="{{.Date}}-k-wa"></figcaption>
-</figure></div><p>
+</figure><p>
 	As I was writing this post, it felt increasingly wrong for me to make this
 	decision. So I once again went to Twitter, where <a
 	href="https://twitter.com/ReC98Project/status/1512941767162798090">56.3%
@@ -194,12 +194,12 @@
 	<li>In two of the bit-less patterns, Marisa gradually moves to the point
 	reflection of her position at the start of the pattern across the playfield
 	coordinate of (﻿192,&nbsp;112﻿), or (﻿224,&nbsp;128﻿) on screen.</li>
-</ul><div class="gallery singleplayer_playfield"><figure>
+</ul><figure class="singleplayer_playfield">
 	<img src="{{$m_pic}}" />
 	<figcaption>Reference points for Marisa's point-reflected movement. Cyan:
 	Marisa's position, green: (﻿192,&nbsp;112﻿), yellow: the intended end
 	point.</figcaption>
-</figure></div><ul>
+</figure><ul>
 	<li>The velocity of this movement is determined by both her distance to that
 	point and the total amount of frames that this instance of the bit-less
 	pattern will last.</li>
@@ -235,7 +235,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<code>duration</code> values of 8 or 4. These actually push Marisa
 	<i>away</i> from the intended point, as the divisor becomes negative.
 	{{HTML_Emoji "zunpet"}}</li>
-</ul><div class="gallery fullres"><figure>
+</ul><figure class="fullres">
 	<div class="multilayer">
 		<video id="{{.Date}}-m-152" controls class="active">
 			{{- $m_152.Body -}}
@@ -253,7 +253,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 		frame number-dependent point-reflected movement. The bits were hacked to
 		self-destruct on <span id="{{.Date}}-m"></span>.
 	</figcaption>
-</figure></div><p>
+</figure><p>
 	tl;dr: "Game crashes if last bit destroyed within 4-frame window near end of
 	two patterns". For an informed decision on a new movement behavior for these
 	last 8 frames, we definitely need to know all the details behind the crash
@@ -279,7 +279,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	have no idea… {{HTML_Emoji "tannedcirno"}}</li>
 	<li>Triggering an immediate Game O– hell no, this is the Stage 4 boss,
 	people <i>already</i> hate losing runs to this bug!</li>
-</ol><div class="gallery singleplayer_playfield"><figure>
+</ol><figure class="singleplayer_playfield">
 	<div class="multilayer">
 		<video id="{{.Date}}-m-wa-0" controls loop class="active">
 			{{- $m_wa_0.Body -}}
@@ -291,7 +291,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 		<p id="{{.Date}}-m-wa-controls"></p>
 		<span id="{{.Date}}-m-wa"></span>
 	</figcaption>
-</figure></div><p>
+</figure><p>
 	Asking Twitter worked great for the Kurumi workaround, so let's do it again!
 	Gotta attach a screenshot of an earlier draft of this blog post though,
 	since this stuff is impossible to explain in tweets…
@@ -351,9 +351,9 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	opaque bitmap data from <code>ST00.BB</code> is instead used as a transition
 	mask from stage tiles to the backdrop image, by making clever use of the
 	tile invalidation system:
-</p><div class="gallery singleplayer_playfield">
+</p><figure class="singleplayer_playfield">
 	<video controls loop>{{$sara.Body}}</video>
-</div><p>
+</figure><p>
 	TH04 uses the same effect a bit more frequently, for its first three bosses.
 </p><p>
 	Next up: Shinki, for real this time! I've already managed to decompile 10 of

@@ -114,12 +114,11 @@
 	<li>the additional 96×80 image for the vertically scrolling stars during
 	the stage, wastefully stored as 4 bitplanes rather than a single one.
 	This image is never freed, not even at the end of the stage.</li>
-</ul><p class="gallery checkerboard">
+</ul><figure class="checkerboard">
 	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABQAQMAAADcLOLWAAAABlBMVEVVABAAAACpPXcUAAAAAXRSTlMAQObYZgAAAOJJREFUeF6tkjFuxSAQRJ9FQekLROIaqcLFouCj+Sg+gksXlifFMlL+V5xPkS3wPgnPzgAwWkBa3QF5G4J5v4NyDEE9h6BddyCNwCQtv0OS1p/gdJAlB4JZsm0oks1BkwdBkbyvqdcFuJf+hId/iuGI8VF7uIxaI0zUguVsqEZ/2prFLNfjJYthOZ/PA2DlF9DUAzxD+Dn/C+7mjBq9S/p0IEna/EZI0jIZsi5o/cFknVA7zNr7AszaIBu0wNShCKBfSbkAWofDK1B3gDly1xUgBbQFYIrcX/gDfAZ8APAe8AbfrNNSOKJbw2wAAAAASUVORK5CYII="
 		alt="The star image used in TH04's Stage 5."/>
-</p><p class="gallery">
-	<small>The star image used in TH04's Stage 5.</small>
-</p><p>
+	<figcaption>The star image used in TH04's Stage 5.</figcaption>
+</figure><p>
 	Remove any single one of the above points, and this crash would have never
 	occurred. But with all of them combined, the total amount of memory consumed
 	by TH04's <code>MAIN.EXE</code> just barely exceeds ZUN's limit of 320,000
@@ -165,11 +164,12 @@
 	<li>The pixel data is loaded to address <code>0000:0000</code>,
 	overwriting the Interrupt Vector Table and whatever comes after</li>
 	<li>The game crashes</li>
-</ol><p class="gallery"><a href="{{$pic}}"><img
+</ol><figure><a href="{{$pic}}"><img
 	src="{{$pic}}"
 	alt="The final frame rendered before the TH04 Stage 5 Reimu No-EMS crash"
-/></a></p><p class="gallery">
-	<small>The final frame rendered by a crashing TH04.</small>
+/></a>
+	<figcaption>The final frame rendered by a crashing TH04.</figcaption>
+</figure>
 </p><p>
 	The 4 KiB encryption buffer would only be freed by the corresponding
 	<code>file_close()</code> call, which of course never happens because the

@@ -25,8 +25,8 @@
 	sprites.</li>
 </ul><p>
 	The weirdness becomes obvious with just a single screenshot:
-</p><p class="gallery"><a
-	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness" /></a></p
+</p><figure><a
+	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness" /></a></figure
 ><p>
 	First, we've got the obvious issue of the sprites not being clipped at the
 	right edge of VRAM, with the rightmost pixels in each row of the sprite
@@ -63,7 +63,7 @@
 	you know about the EGC, and you can't be bothered to write a perfect
 	unblitter for 8×8 sprites, it becomes obvious why you wouldn't want to use
 	it:
-</p><video class="gallery" controls loop>{{$vid.Body}}</video><p>
+</p><figure><video controls loop>{{$vid.Body}}</video></figure><p>
 	Because Reimu would barely be visible under all that flicker. In
 	comparison, those fully filled diamonds actually look pretty good.
 </p><hr /><p>

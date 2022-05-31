@@ -50,13 +50,12 @@
 	Sariel's bugs already start at the graphics asset level, before any code
 	gets to run. Some of the patterns include a wand raise animation, which is
 	stored in <code>BOSS6_2.BOS</code>:
-</p><p class="gallery pixelated">
+</p><figure class="pixelated">
 	<a href="{{$pic1}}"><img
 		src="{{$pic1}}" alt="TH01 BOSS6_2.BOS" style="height: 192px"/></a>
-</p><p class="gallery">
-	<small>Umm… OK? The same sprite twice, just with slightly different colors?
-	So how is the wand lowered again?</small>
-</p><p>
+	<figcaption>Umm… OK? The same sprite twice, just with slightly different
+	colors? So how is the wand lowered again?</figcaption>
+</figure><p>
 	The "lowered wand" sprite is missing in this file simply because it's
 	captured from the regular background image in VRAM, at the beginning of the
 	fight and after every background transition. What I previously thought to be
@@ -68,7 +67,7 @@
 	second sprite in <code>BOSS6_2.BOS</code> though. Turns out that the black
 	part is indeed <i>meant to unblit the purple reflection (?) in the first
 	sprite</i>. But… that's not how you would correctly unblit that?
-</p><p class="gallery pixelated">
+</p><figure class="side_by_side pixelated">
 	<a href="{{$pic2}}"><img
 		src="{{$pic2}}"
 		alt="VRAM after blitting the first sprite of TH01's BOSS6_2.BOS"
@@ -77,7 +76,7 @@
 		src="{{$pic3}}"
 		alt="VRAM after blitting the second sprite of TH01's BOSS6_2.BOS"
 		style="height: 224px;"/></a>
-</p></p>
+</figure></p>
 	The first sprite already eats up part of the red HUD line, and the second
 	one additionally fails to recover the seal pixels underneath, leaving a nice
 	little black hole and some stray purple pixels until the next background
@@ -114,7 +113,7 @@
 	top-left corner of the screen. Which the sprite is always outside of, and
 	thus never rendered again.<br />
 	The intended animation is easily restored though:
-</p><div class="gallery fullres"><figure>
+</p><figure class="fullres">
 	<div class="multilayer">
 		<video id="{{.Date}}-pattern3-0" controls loop class="active">
 			{{- $vid1.Body -}}
@@ -128,7 +127,7 @@
 		as well: ZUN's code never unblits any frame of animation there, and
 		simply blits every new one on top of the previous one.
 	</figcaption>
-</figure></div><p>
+</figure><p>
 	Also, did you know that birds actually have a quite unfair 14×38-pixel
 	hitbox? Not that you'd ever collide with them in any of the patterns…
 </p><p>
@@ -239,7 +238,7 @@
 	This pattern also contains the second bug in the "subpixel/pixel confusion
 	hiding an entire animation" category, causing all of
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
-</p><div class="gallery fullres"><figure>
+</p><figure class="fullres">
 	<div class="multilayer">
 		<video id="{{.Date}}-leafsplash-0" controls loop class="active">
 			{{- $vid3.Body -}}
@@ -252,7 +251,7 @@
 		shown once each leaf "spark" reaches the top of the playfield, which is
 		never displayed in the original game.
 	</figcaption>
-</figure></div><p>
+</figure><p>
 	At least their hitboxes are what you would expect, exactly covering the
 	30×30 pixels of Reimu's sprite. Both animation fixes are available on the <a
 	href="https://github.com/nmlgc/ReC98/tree/th01_sariel_fixes"><code>th01_sariel_fixes</code></a>

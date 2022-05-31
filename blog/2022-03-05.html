@@ -41,20 +41,20 @@
 	Out of the 10 danmaku patterns in TH05 that use this motion type, the
 	difference to regular bullet movement can be best seen in Louise's final
 	pattern:
-</p><div class="gallery singleplayer_playfield">
-	<figure>
+</p><figure class="side_by_side">
+	<figure class="singleplayer_playfield">
 		<video controls loop>{{$vid1.Body}}</video>
 		<figcaption>Louise's final pattern in its original form, demonstrating
 		exact linear bullet movement. Note how each bullet spawns slightly
 		behind the delay cloud: ZUN simply forgot to shift the fixed origin
 		point along with it.</figcaption>
-	</figure><figure>
+	</figure><figure class="singleplayer_playfield">
 		<video controls loop>{{$vid2.Body}}</video>
 		<figcaption>The same pattern with standard bullet movement, corrupting
 		its intended appearance. No delay cloud-related oversights here though,
 		at least.</figcaption>
 	</figure>
-</div><hr /><p>
+</figure><hr /><p>
 	Not far away from the regular bullet code, we've also got the movement
 	function for the infamous curve&nbsp;/ "cheeto" bullets. I would have almost
 	called them "cheetos" in the code as well, which surely fits more nicely
@@ -101,9 +101,9 @@ head_p->angle -= angle_delta;
 	circle per frame. This reveals the optimal strategy for dodging them:
 	Maximize this delta angle by staying as close to 180° away from their
 	current direction as possible, and let their acceleration do the rest.
-</p><div class="gallery singleplayer_playfield">
-	<figure><video controls loop class="active">{{$vid3.Body}}</video></figure>
-</div><p>
+</p><figure class="singleplayer_playfield">
+	<video controls loop class="active">{{$vid3.Body}}</video>
+</figure><p>
 	At least that's the theory for dodging a <i>single</i> one. As a danmaku
 	designer, you can now of course place other bullets at these technically
 	optimal places to prevent a curve bullet pattern from being cheesed like

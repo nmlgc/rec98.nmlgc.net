@@ -215,9 +215,9 @@ mov ax, 1234h       ; Position-dependent; assumes that
 	This means that <i>structure size independence</i> is an explicit non-goal
 	of PI. The reason becomes clear if you look at all the things a 16-bit
 	number literal can represent:
-</p><p class="gallery">
+</p><figure>
 	<embed src="{{call $.StaticFileURL "faq-pi-ranges.svg"}}" alt="Value ranges" />
-</p><p>
+</figure><p>
 	If we don't limit the value range to ZUN data,
 	<a href="https://en.wikipedia.org/wiki/Benford%27s_law">all the low
 	numbers</a> would vastly drown out the actual memory references we are

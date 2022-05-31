@@ -19,8 +19,8 @@
 	other games. Reducing the visible resolution also means that the sprites can
 	be stored on both VRAM pages, allowing the game to still be double-buffered.
 	If you force the graphics chip to run at 640×400, you can see them:
-</p><div class="gallery pixelated fullres">
-	<figure class="multilayer">
+</p><figure class="pixelated fullres">
+	<div class="multilayer">
 		<img
 			id="{{.Date}}-200"
 			src="{{$pic1}}"
@@ -36,7 +36,7 @@
 			src="{{$pic3}}"
 			alt="TH03's text layer during an in-game round."
 		/>
-	</figure>
+	</div>
 	<figcaption>
 		{{$desc_200 := "The upper half of VRAM during TH03's in-game portion, at the original line-doubled 640×200 resolution."}}
 		{{$desc_400 := "The full VRAM contents during TH03's in-game portion, as seen when forcing the system into a 640×400 resolution."}}
@@ -66,7 +66,7 @@
 			document.getElementById('{{.Date}}-tram-hide').hidden = false;
 		" hidden>(Show text layer)</button>
 	</figcaption>
-</div></p><p>
+</figure><p>
 	Note that the text chip still displays its overlaid contents at 640×400,
 	which means that TH03's in-game portion <i>technically</i> runs at two
 	resolutions at the same time.
@@ -218,8 +218,8 @@ asm { movsw; }
 	enemy. (Yeah, how unfair.) Doing that also loses a lot of information about
 	the playfield, such as enemy HP indicated by their color, but what can you
 	do:</li>
-</ol><div class="gallery pixelated fullres">
-	<figure class="multilayer">
+</ol><figure class="pixelated fullres">
+	<div class="multilayer">
 		<img
 			id="{{.Date}}-action"
 			class="active"
@@ -230,7 +230,7 @@ asm { movsw; }
 			src="{{$pic5}}"
 			alt="The underlying content of the collision bitmap, showing off all three different shapes together with the player hitboxes."
 		/>
-	</figure>
+	</div>
 	<figcaption>
 		A decently busy TH03 in-game frame and its underlying collision bitmap,
 		showing off all three different collision shapes together with the
@@ -248,7 +248,7 @@ asm { movsw; }
 			document.getElementById('{{.Date}}-collmap-set').hidden = false;
 		" hidden>(Hide collision bitmap contents and player hitboxes)</button>
 	</figcaption>
-</div><p>{{HTML_Download .HostedPath $mod}}
+</figure><p>{{HTML_Download .HostedPath $mod}}
 	The secret for writing such mods before having reached a sufficient level of
 	position independence? Put your new code segment into <code>DGROUP</code>,
 	past the end of the uninitialized data section. That's why this modded

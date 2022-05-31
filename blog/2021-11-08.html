@@ -68,9 +68,9 @@
 	that those sprite backgrounds existed. And once Mima's 🚫 casting sprite is
 	blitted on top of her regular sprite, using just regular sprite
 	transparency, she ends up with her infamous third arm:
-</p><p class="gallery pixelated"><a href="{{$pic1}}"><img
+</p><figure class="pixelated"><a href="{{$pic1}}"><img
 	src="{{$pic1}}" alt="TH01 Mima's third arm" style="height: 320px"/></a>
-</p><p>
+</figure><p>
 	Ironically, there's an unused code path in Mima's unblit function where ZUN
 	assumes a height of 48 pixels for Mima's animation sprites rather than the
 	actual 64. This leads to even clumsier .PTN function calls for the bottom
@@ -120,12 +120,12 @@
 	sprites. In this case, well… hover over the image below, and notice how
 	Reimu's hair and the bomb sprites in the HUD light up when Makai is
 	selected:
-<p class="gallery pixelated"><img
+<figure class="pixelated"><img
 	src="{{$pic3}}"
 	onmouseover="this.setAttribute('src', {{$pic2}});"
 	onmouseout ="this.setAttribute('src', {{$pic3}});"
 	alt="Demonstration of palette changes in TH01's route selection" />
-</p><p>
+</figure><p>
 	This push did end on a high note though, with the generic, non-SinGyoku
 	version of the defeat animation being an easily parametrizable copy. And
 	that's how you decompile another 2.58% of TH01 in just slightly over three

@@ -88,9 +88,10 @@
 	.PTN slot pointer overflows the heap buffer and overwrites whatever comes
 	after. {{Blog_PostLink "2020-11-30" "Sounds familiar, right?"}}
 </ul><p>
-	Since Elis has an even number of HP, this corruption is trivial to cause:
-	Simply hold  ↵&nbsp;Return from the beginning of the fight, and Elis' total
-	HP will never match the frame number.
+	Since Elis starts with 14 HP, which is an even number, this corruption is
+	trivial to cause: Simply hold  ↵&nbsp;Return from the beginning of the
+	fight, and the completion condition will never be <code>true</code>, as the
+	HP and frame numbers run past the off-by-one meeting point.
 </p><figure><video controls>{{$vid_heap.Body}}</video></figure><p>
 	Regular gameplay, however, entirely prevents this due to the fixed start
 	positions of Reimu and the Orb, the Orb's fixed initial trajectory, and the
@@ -102,8 +103,8 @@
 </p><hr /><p>
 	These wavy teleport animations point to a quite frustrating architectural
 	issue in this fight. It's not even the fact that unblitting the yellow star
-	sprites rips temporary holes into Elis sprite; that's almost expected from
-	TH01 at this point. Instead, its all because of this unused frame of the
+	sprites rips temporary holes into Elis' sprite; that's almost expected from
+	TH01 at this point. Instead, it's all because of this unused frame of the
 	animation:
 </p><figure class="pixelated"><img
 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgBAMAAAAnVGd6AAAAIVBMVEUAAADw8PDw0LDQoJCwoABgYGDQAACAEBAwMDCgAABwAFDmaxhHAAAAAXRSTlMAQObYZgAAAhpJREFUeAHtwUF24zgQBcEPAqzJyvsfeB4oyfZ095KahdsR+TMueQHI3wlAlUsSLj5A3gZwgwTIRpLgBcjtADdIQjckAZIEHyDvAF5IEqq7gK4iJPhE3gfwQrYqtsWWBFEFyNsBqkAurLUWQP1DJUG8APkL4BMhCQtYTBZAkoAPuRm+kEzCMRbMyXaQBPxAboIvJJmsNWHOybHgYPMTuZkXknCsCRxzcsBiHhP8BHkLVFGShAVyHHgUExIALwh5IwA3FBLmoo6DOY/jYC1ARcUN8p3hf8AEJsdRx3GwFguOAx/y4wZe1mROxqCLCc05xoA5WfiJvIGKyFprMU6qm+4qxhgs1gJVQBXyFoCAisBiMQZUFWdXcZ6DxVoLVEAVcj/8AhYLBnSdg0E15wDWWgtfcjt8QV24ZEAzBoNtKGstcMuPG/jpBDhPTp4EtzHEC7mf4guX7obm5EF1jIEXyLeGH/AJoLeqbs5T0KEOH3I3/B3Q3VVdVd1sw5d8A+AT+ELXh27cUAIoQSA3EV+or7q9kCRIkii5HYoCKvULVEkSyAXI94ZkA5IE7fpVq7mQ98A8QDao3yHZyL0gD+RC/QHkbpgHcqG+6rpANvIEuQ/ZqM2ytu6q0iIbeYH8eD/yRBJKyyqtS1tbk4S8EXkhoT5YCpZVBUnI/cgXXU9WVXV3VxWahNyMPBEeuru23kDJF5DbkShbPwCa/8G/V+gpftGVucEAAAAASUVORK5CYII="
@@ -146,10 +147,10 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	arc starts at the animation's current 8-bit angle and ends on the sum of
 	that angle and a hardcoded constant. In every other (copy-pasted, and
 	correct) instance of this animation, ZUN uses <code>0x02</code> as the
-	constant, but this one uses… 0.05 for the lower-right quarter? As in, a
-	64-bit <code>double</code> constant that truncates to 0 when added to an
-	8-bit integer, thus leading to the start and end angles being identical and
-	the game not drawing anything.</li>
+	constant, but this one uses… <code>0.05</code> for the lower-right quarter?
+	As in, a 64-bit <code>double</code> constant that truncates to 0 when added
+	to an 8-bit integer, thus leading to the start and end angles being
+	identical and the game not drawing anything.</li>
 	<li>On Easy and Normal, the pattern then spawns 32 bullets along the outline
 	of the circle, no problem there. On Lunatic though, every one of these
 	bullets is instead turned into a narrow-angled 5-spread, resulting in 160
@@ -314,9 +315,9 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 		(﻿0,&nbsp;0﻿). Why add clipping to VRAM offset calculations when
 		everything else is clipped already, right? {{HTML_Emoji "godzun"}}</li>
 	</ol></li>
-</ol><figure class="side_by_side pixelated">
-	<img src="{{$pic_1}}" style="width: 640px; height: 336px;"/>
-	<img src="{{$pic_2}}" style="width: 640px; height: 336px;"/>
+</ol><figure class="side_by_side">
+	<img src="{{$pic_1}}" class="th01_playfield" />
+	<img src="{{$pic_2}}" class="th01_playfield" />
 	<figcaption>Possible laser states that will cause the fault, with some debug
 	output to help understand the cause, and any pellets removed for better
 	readability. This can happen for all bosses that can potentially have

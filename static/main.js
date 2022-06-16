@@ -159,17 +159,41 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
  */
 function switchMultipleVideos(id) {
 	const ret = switchMultiple(id, switchVideo);
-	return Object.assign({
-		frameStep: (fps, direction) => {
-			const vid = ret.getActive()[1];
-			vid.pause();
-			vid.currentTime += (direction / fps);
-		},
-		seekAndStop: (time) => {
-			const vid = ret.getActive()[1];
-			vid.pause();
-			vid.currentTime = time;
-		},
-	}, ret);
+
+	const frameStep = (fps, direction) => {
+		const vid = ret.getActive()[1];
+		vid.pause();
+		vid.currentTime += (direction / fps);
+	};
+	const seekAndStop = (time) => {
+		const vid = ret.getActive()[1];
+		vid.pause();
+		vid.currentTime = time;
+	};
+	/**
+	 * @param {HTMLElement} containerID
+	 * @param {number} fps
+	 * @param {function | null} middleButton
+	 */
+	const addControls = (containerID, fps, middleButton = null) => {
+		const prev = document.createElement('button');
+		const next = document.createElement('button');
+
+		prev.textContent = `< Previous frame`;
+		next.textContent = `Next frame >`;
+
+		prev.onclick = () => frameStep(fps, -1);
+		next.onclick = () => frameStep(fps, +1);
+
+		const container = document.getElementById(containerID);
+		container.appendChild(prev);
+		if(middleButton) {
+			container.appendChild(document.createTextNode("•"));
+			container.appendChild(middleButton());
+		}
+		container.appendChild(document.createTextNode("•"));
+		container.appendChild(next);
+	}
+	return Object.assign({ frameStep, seekAndStop, addControls }, ret);
 }
 // ---------------------

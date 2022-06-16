@@ -364,36 +364,6 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 </p>
 
 <script>
-	/**
-	 * Since we need two of those, the first attempt involved { {define} }'ing
-	 * a nested template… but passing the switcher variable via dot and using
-	 * it in a JavaScript context causes Go to escape it for security reasons.
-	 * These controls only make sense with active JavaScript anyway, though,
-	 * so this might even be better.
-	 *
-	 * @param {string} containerID
-	 * @param {function} middleButton
-	 */
-	 const _2022_04_18_addControls = (containerID, switcher, middleButton) => {
-		const prev = document.createElement('button');
-		const next = document.createElement('button');
-
-		prev.textContent = `< Previous frame`;
-		next.textContent = `Next frame >`;
-
-		prev.onclick = () => switcher.frameStep(20, -1);
-		next.onclick = () => switcher.frameStep(20, +1);
-
-		const container = document.getElementById(containerID);
-		container.appendChild(prev);
-		if(middleButton) {
-			container.appendChild(document.createTextNode("•"));
-			container.appendChild(middleButton());
-		}
-		container.appendChild(document.createTextNode("•"));
-		container.appendChild(next);
-	};
-
 	const _2022_04_18_k = switchMultipleVideos("{{.Date}}-k");
 	_2022_04_18_k.add(
 		"<code>playperf = 4</code> (minimum rank on Easy mode)", "4", true
@@ -417,26 +387,23 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	_2022_04_18_m.add("frame 152 (Divide error)", "152", true);
 	_2022_04_18_m.add("frame 156", "156");
 	_2022_04_18_m.add("frame 160", "160");
-	_2022_04_18_addControls(
-		"{{.Date}}-m-controls", _2022_04_18_m, () => {
-			const frame = document.createElement('button');
-			frame.textContent = `Bit destruction frame`;
-			frame.onclick = () => _2022_04_18_m.seekAndStop(
-				(Number(_2022_04_18_m.getActive()[2]) - 30) / 20
-			);
-			return frame;
-		}
-	);
+	_2022_04_18_m.addControls("{{.Date}}-m-controls", 20, () => {
+		const frame = document.createElement('button');
+		frame.textContent = `Bit destruction frame`;
+		frame.onclick = () => _2022_04_18_m.seekAndStop(
+			(Number(_2022_04_18_m.getActive()[2]) - 30) / 20
+		);
+		return frame;
+	});
 
 	const _2022_04_18_m_wa = switchMultipleVideos("{{.Date}}-m-wa");
 	_2022_04_18_m_wa.add("1) Not moving at all", "0", true);
 	_2022_04_18_m_wa.add("2) Move and brake", "1");
 	_2022_04_18_m_wa.add("3) Warp", "2");
-	_2022_04_18_addControls("{{.Date}}-m-wa-controls", _2022_04_18_m_wa, () => {
-			const frame = document.createElement('button');
-			frame.textContent = `Bit destruction frame`;
-			frame.onclick = () => _2022_04_18_m_wa.seekAndStop(22 / 20);
-			return frame;
-		}
-	);
+	_2022_04_18_m_wa.addControls("{{.Date}}-m-wa-controls", 20, () => {
+		const frame = document.createElement('button');
+		frame.textContent = `Bit destruction frame`;
+		frame.onclick = () => _2022_04_18_m_wa.seekAndStop(22 / 20);
+		return frame;
+	});
 </script>

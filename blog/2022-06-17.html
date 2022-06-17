@@ -1,0 +1,375 @@
+{{$pic1 := (call .PostFileURL "TH01-Kikuri-playfield.png") -}}
+{{$pic2 := (call .PostFileURL "TH01-ED2A.GRP-2.png") -}}
+{{$vid_ripple := (call .Video "TH01-Kikuri-Ripple-hitboxes" "Video showing the disparity between the byte-aligned rendering of TH01 Kikuri's teardrop ripples, and their internal coordinate") -}}
+{{$vid_p4_e := (call .Video "TH01-Kikuri-phase-4-Easy" "Video of the phase 4 patterns in the TH01 Kikuri fight, on Easy Mode") -}}
+{{$vid_p4_n := (call .Video "TH01-Kikuri-phase-4-Normal" "Video of the phase 4 patterns in the TH01 Kikuri fight, on Normal Mode") -}}
+{{$vid_p4_h := (call .Video "TH01-Kikuri-phase-4-Hard" "Video of the phase 4 patterns in the TH01 Kikuri fight, on Hard Mode") -}}
+{{$vid_p4_l := (call .Video "TH01-Kikuri-phase-4-Lunatic" "Video of the phase 4 patterns in the TH01 Kikuri fight, on Lunatic Mode") -}}
+{{$vid_be2_0 := (call .Video "TH01-Jigoku-Bad-Ending-shake-boom-original" "Video of the original, slow shake/boom effect during the TH01 Jigoku Bad Ending") -}}
+{{$vid_be2_1 := (call .Video "TH01-Jigoku-Bad-Ending-shake-boom-optimized" "Video of an optimized shake/boom effect during the TH01 Jigoku Bad Ending") -}}
+
+<p>
+	What's this? A simple, straightforward, easy-to-decompile TH01 boss with
+	just a few minor quirks and only two rendering-related ZUN bugs? Yup, 2½
+	pushes, and Kikuri was done. Let's get right into the overview:
+</p><ul>
+	<li>Just like {{Blog_PostLink "2022-05-31" "Elis"}}, Kikuri's fight consists
+	of 5 phases, excluding the entrance animation. For some reason though, they
+	are numbered from 2 to 6 this time, skipping phase 1? For consistency, I'll
+	use the original phase numbers from the source code in this blog post.</li>
+	<li>The main phases (2, 5, and 6) also share Elis' HP boundaries of 10, 6,
+	and 0, respectively, and are once again indicated by different colors in the
+	HP bar. They immediately end upon reaching the given number of HP, making
+	Kikuri immune to the
+	{{Blog_PostLink "2022-05-31" "debug mode heap corruption that can happen with Elis and Konngara"}}.</li>
+	<li>Phase 2 solely consists of the infamous big symmetric spiral
+	pattern.</li>
+	<li>Phase 3 fades Kikuri's ball of light from its default <span
+	style="color: #bbbbff">bluish color</span> to <span style="color:
+	#ffbbaa">bronze</span> over 100 frames. Collision detection is deactivated
+	during this phase.</li>
+	<li>In Phase 4, Kikuri activates her two souls while shooting the spinning
+	8-pellet circles from the previously activated ball. The phase ends shortly
+	after the souls fired their third spread pellet group.<ul>
+		<li>Note that this is a timed phase without an HP boundary, which makes
+		it possible to reduce Kikuri's HP below the boundaries of the next
+		phases, effectively skipping them. Take <a
+		href="https://youtu.be/gh20KvvEgMM?t=39">this video</a> for example,
+		where Kikuri has 6 HP by the end of Phase 4, and therefore directly
+		starts Phase 6.<br />
+		(Obviously, Kikuri's HP can also be reduced to 0 or below, which will
+		end the fight immediately after this phase.)</li>
+	</ul></li>
+	<li>Phase 5 combines the teardrop/ripple "pattern" from the souls with the
+	"two crossed eye laser" pattern, on independent cycles.</li>
+	<li>Finally, Kikuri cycles through her remaining 4 patterns in Phase 6,
+	while the souls contribute single aimed pellets every 200 frames.</li>
+	<li>Interestingly, all HP-bounded phases come with an additional hidden
+	timeout condition:<ul>
+		<li>Phase 2 automatically ends after 6 cycles of the spiral pattern, or
+		5,400 frames in total.</li>
+		<li>Phase 5 ends after 1,600 frames, or the first frame of the
+		7<sup>th</sup> cycle of the two crossed red lasers.</li>
+		<li>If you manage to keep Kikuri alive for 29 of her Phase 6 patterns,
+		her HP are automatically set to 1. The HP bar isn't redrawn when this
+		happens, so there is no visual indication of this timeout condition even
+		existing – apart from the next Orb hit ending the fight regardless of
+		the displayed HP. Due to the deterministic order of patterns, this
+		always happens on the 8<sup>th</sup> cycle of the "symmetric gravity
+		pellet lines from both souls" pattern, or 11,800 frames. If dodging and
+		avoiding orb hits for 3½ minutes sounds tiring, you can always watch the
+		byte at <code>DS:0x1376</code> in your emulator's memory viewer. Once
+		it's at <code>0x1E</code>, you've reached this timeout.</li>
+	</ul></li>
+</ul><p>
+	So yeah, there's your new timeout challenge. {{HTML_Emoji "godzun"}}
+</p><hr /><p>
+	The few issues in this fight all relate to hitboxes, starting with the main
+	one of Kikuri against the Orb. The coordinates in the code clearly describe
+	a hitbox in the upper center of the disc, but then ZUN wrote a &lt; sign
+	instead of a &gt; sign, resulting in an in-game hitbox that's not
+	<i>quite</i> where it was intended to be…
+</p><figure class="pixelated th01_playfield">
+	<div class="multilayer">
+		<!-- Force onto z-index: 1 to cover the inactive transparent image -->
+		<img src="{{$pic1}}" class="active" alt="TODO" />
+		<img
+			id="{{.Date}}-intended"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVpRwDwAADVixDUAAAAAXRSTlMAQObYZgAAAJpJREFUeJzt2LENAjEURMFFBISUQKlQGqVQAgUgTHSSTeqP8EkzBbxoo00AAAAAAGDPTm3TWrvP1pJc+uBztpbk2gdfs7Ukfa+9Z2vJYQi22VxyHIO31YJfq6nYTXUw5zH4EBQUFBQUFBQUFBQUFBQUFFwyuPrNsoerqvqdq/4Pf/FwVn+w1S8xAAAAAAAAAAAAAAAAAADA33wA8BYPrD97Uz8AAAAASUVORK5CYII="
+			style="opacity: 0.5"
+			alt="TH01 Kikuri's intended hitbox"
+		/><img
+			id="{{.Date}}-actual"
+			class="active"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVARhnwAADlWXWPAAAAAXRSTlMAQObYZgAAAIdJREFUeNrt0rENg1AQBcFnOSCkBJdqSqMUSqAAyyblSBxc8pFmCthokz/mX7GlS1BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDwbsFMNbiOFkyeNbiMFkweNdjNJSm9b7eW5H0Ofrq1JK9zcO/Wrt90rwEAAAAAAAAAAAAAAAAAAAAAAACGcgD8KH1Pn8wO8QAAAABJRU5ErkJggg=="
+			style="opacity: 0.5"
+			alt="TH01 Kikuri's actual hitbox"
+		/>
+	</div>
+	<figcaption>
+		{{$desc_intended := "Kikuri's intended hitbox."}}
+		{{$desc_actual := "Kikuri's actual hitbox."}}
+		<button id="{{.Date}}-show-intended" onclick="
+			document.getElementById('{{.Date}}-actual').classList.remove('active');
+			document.getElementById('{{.Date}}-intended').classList.add('active');
+			document.getElementById('{{.Date}}-show-intended').hidden = true;
+			document.getElementById('{{.Date}}-show-actual').hidden = false;
+			document.getElementById('{{.Date}}-hitbox-caption').innerHTML = {{$desc_intended}};
+		">(Show intended hitbox)</button>
+		<button id="{{.Date}}-show-actual" onclick="
+			document.getElementById('{{.Date}}-actual').classList.add('active');
+			document.getElementById('{{.Date}}-intended').classList.remove('active');
+			document.getElementById('{{.Date}}-show-actual').hidden = true;
+			document.getElementById('{{.Date}}-show-intended').hidden = false;
+			document.getElementById('{{.Date}}-hitbox-caption').innerHTML = {{$desc_actual}};
+		" hidden>(Show actual hitbox)</button>
+		<span id="{{.Date}}-hitbox-caption">{{$desc_actual}}</span>
+		Since the Orb sprite doesn't change its shape, we can visualize the
+		hitbox in a pixel-perfect way here. The Orb must be completely within
+		the <span style="color: red">red area</span> for a hit to be registered.
+	</figcaption>
+</figure><p>
+	Much worse, however, are the teardrop ripples. It already starts with their
+	rendering routine, which places the sprites from <code>TAMAYEN.PTN</code>
+	<img
+	src="data:image/gif;base64,R0lGODlhIAAQAKEDAMAwoKDQ8PDw8P///yH5BAEKAAMALAAAAAAgABAAAAJlnI9pYXI+mJp0OCZzrQ5aC4Wbgn1BKWgjEqRpdGLtux7xmcYpENcHD7zFeAGAzwAEBJPK4ufRADWU1KpVCY0sYJ+rl6p5uXDIr7clTA/N1xtRfWK3h/SivSiv2sH8e/5vhQcIUAAAOw=="
+	/> at byte-aligned VRAM positions in the ultimate piece of <code>if(…) {…}
+	else&nbsp;if(…) {…} else&nbsp;if(…) {…}</code> meme code. Rather than
+	tracking the position of each of the five ripple sprites, ZUN suddenly went
+	purely functional and manually hardcoded the exact rendering and collision
+	detection calls for each frame of the animation, based on nothing but its
+	total frame counter. {{HTML_Emoji "zunpet"}}<br />
+	Each of the (up to) 5 columns is also unblitted and blitted individually
+	before moving to the next column, starting at the center and then
+	symmetrically moving out to the left and right edges. This wouldn't be a
+	problem <i>if ZUN's EGC-powered unblitting function didn't word-align its X
+	coordinates to a 16×1 grid</i>. If the ripple sprites happen to start at an
+	odd VRAM byte position, their unblitting coordinates get rounded both down
+	and up to the nearest 16 pixels, thus touching the adjacent 8 pixels of the
+	previously blitted columns and leaving the well-known black vertical bars in
+	their place. {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	OK, so where's the hitbox issue here? If you just look at the raw
+	calculation, it's a slightly confusingly expressed, but perfectly logical 17
+	pixels. But this is where byte-aligned blitting has a direct effect on
+	gameplay: These ripples can be spawned at any arbitrary, non-byte-aligned
+	VRAM position, and collisions are calculated relative to this internal
+	position. Therefore, the actual hitbox is shifted up to 7 pixels to the
+	right, compared to where you would expect it from a ripple sprite's
+	on-screen position:
+</p><figure class="th01_playfield">
+	<video loop controls>{{$vid_ripple.Body}}</video>
+	<figcaption>Due to the deterministic nature of this part of the fight, it's
+	always 5 pixels for this first set of ripples. These visualizations are
+	obviously not pixel-perfect due to the different potential, shapes of
+	Reimu's sprite, so they instead relate to her 32×32 bounding box, which
+	needs to be entirely inside the <span style="color: red">red
+	area</span>.</figcaption>
+</figure><p>
+	We've previously seen the same issue with the
+	{{Blog_PostLink "2022-05-31" "shot hitbox of Elis' bat form"}}, where
+	pixel-perfect collision detection against a byte-aligned sprite was merely a
+	sidenote compared to the more serious X=Y coordinate bug. So why do I
+	elevate it to bug status here? Because it directly affects dodging: Reimu's
+	regular movement speed is 4 pixels per frame, and with the internal position
+	of an on-screen ripple sprite varying by up to 7 pixels, any micrododging
+	(or "grazing") attempt turns into a coin flip. It's <i>sort of</i> mitigated
+	by the fact that Reimu is <i>also</i> only ever rendered at byte-aligned
+	VRAM positions, but I wouldn't say that these two bugs cancel out each
+	other.<br />
+	Oh well, another set of rendering issues to be fixed in the hypothetical
+	Anniversary Edition – obviously, the hitboxes should remain unchanged. Until
+	then, you can always memorize the exact internal positions. The sequence of
+	teardrop spawn points is completely deterministic and only controlled by the
+	fixed per-difficulty spawn interval.
+</p><hr /><p>
+	Aside from more minor coordinate inaccuracies, there's not much of interest
+	in the rest of the pattern code. In another parallel to Elis though, the
+	first soul pattern in phase 4 is aimed on every difficulty <i>except</i>
+	Lunatic, where the pellets are once again statically fired downwards. This
+	time, however, the pattern's difficulty is much more appropriately
+	distributed across the four levels, with the simultaneous spinning circle
+	pellets adding a constant aimed component to every difficulty level.
+</p><figure class="fullres">
+	<div class="multilayer">
+		<video id="{{.Date}}-p4-l" controls loop class="active">
+			{{$vid_p4_l.Body}}
+		</video>
+		<video id="{{.Date}}-p4-h" controls loop>{{$vid_p4_h.Body}}</video>
+		<video id="{{.Date}}-p4-n" controls loop>{{$vid_p4_n.Body}}</video>
+		<video id="{{.Date}}-p4-e" controls loop>{{$vid_p4_e.Body}}</video>
+	</div>
+	<figcaption>Kikuri's phase 4 patterns, on <span
+	id="{{.Date}}-p4"></span>.</figcaption>
+</figure>
+</p><hr /><p>
+	That brings us to 5 fully decompiled PC-98 Touhou bosses, with 26 remaining…
+	and another ½ of a push going to the cutscene code in
+	<code>FUUIN.EXE</code>.<br />
+	You wouldn't expect something as mundane as the boss slideshow code to
+	contain anything interesting, but there is in fact a slight bit of
+	speculation fuel there. The text typing functions take explicit string
+	lengths, which precisely match the corresponding strings… for the most part.
+	For the <code>"Gatekeeper 'SinGyoku'"</code> string though, ZUN passed 23
+	characters, not 22. Could that have been the "h" from the Hepburn
+	romanization of <span lang="ja">神玉</span>?!<br />
+	Also, <i>come on</i>, if this text is already blitted to VRAM for no reason,
+	you could have gone for perfect centering at unaligned byte positions; the
+	rendering function would have perfectly supported it. Instead, the X
+	coordinates are still rounded up to the nearest byte.
+</p><p>
+	The hardcoded ending cutscene functions should be even less interesting –
+	don't they just show a bunch of images followed by frame delays? Until they
+	don't, and we reach the <span lang="ja">地獄</span>/Jigoku Bad Ending with
+	its special shake/"boom" effect, and this picture:
+</p><figure>
+	<img src="{{$pic2}}" />
+	<figcaption>Picture #2 from <code>ED2A.GRP</code>.</figcaption>
+</figure><p>
+	Which is rendered by the following code:
+</p><pre>for(int i = 0; i <= boom_duration; i++) { // (yes, off-by-one)
+	if((i & 3) == 0) {
+		graph_scrollup(8);
+	} else {
+		graph_scrollup(0);
+	}
+
+	end_pic_show(1); // ← different picture is rendered
+	frame_delay(2);  // ← blocks until 2 VSync interrupts have occurred
+
+	if(i & 1) {
+		end_pic_show(2); // ← picture above is rendered
+	} else {
+		end_pic_show(1);
+	}
+}</pre><p>
+	Notice something? <i>You should never see this picture because it's
+	immediately overwritten before the frame is supposed to end.</i> And yet
+	it's clearly flickering up for about one frame with common emulation
+	settings as well as on my real PC-9821 Nw133, clocked at 133 MHz.
+	master.lib's <code>graph_scrollup()</code> doesn't block until VSync either,
+	and removing these calls doesn't change anything about the blitted images.
+	<code>end_pic_show()</code> uses the EGC to blit the given 320×200 quarter
+	of VRAM from page 1 to the visible page 0, so the bottleneck shouldn't be
+	there either…
+</p><p>
+	…or should it? After setting it up via a few I/O port writes, the common
+	method of EGC-powered blitting works like this:
+</p><ol>
+	<li>Read 16 bits from the source VRAM position on <i>any single</i>
+	bitplane. This fills the EGC's 4 16-bit tile registers with the VRAM
+	contents at that specific position on <i>every</i> bitplane. You do not care
+	about the value the CPU returns from the read – in optimized code, you would
+	make sure to just read into a register to avoid useless additional stores
+	into local variables.</li>
+	<li>Write <span class="hovertext" title="Yes, it doesn't even have to be the value you got back during the previous read."><i>any</i> 16 bits</span>
+	to the target VRAM position on <i>any single</i> bitplane. This copies the
+	contents of the EGC's tile registers to that specific position on
+	<i>every</i> bitplane.</li>
+</ol><p>
+	To transfer pixels from one VRAM page to another, you insert an additional
+	write to I/O port <code>0xA6</code> before 1) and 2) to set your source and
+	destination page… and that's where we find the bottleneck. Taking a look at
+	the i486 CPU and its <a
+	href="https://www2.math.uni-wuppertal.de/~fpf/Uebungen/GdR-SS02/opcode_i.html">cycle
+	counts</a>, a single one of these page switches costs 17 cycles – 1 for
+	<code>MOV</code>ing the page number into <code>AL</code>, and 16 for the
+	<code>OUT</code> instruction itself. Therefore, the 8,000 page switches
+	required for EGC-copying a 320×200-pixel image require 136,000 cycles in
+	total.
+</p><p>
+	And that's the <i>optimal</i> case of using <i>only</i> those two
+	instructions. {{Blog_PostLink "2022-05-31" "As I implied last time"}}, TH01
+	uses a <i>function call</i> for VRAM page switches, complete with creating
+	and destroying a useless stack frame and unnecessarily updating a global
+	variable in main memory. I tried optimizing ZUN's code by throwing out
+	unnecessary code and using {{Blog_PostLink "2022-02-18" "pseudo-registers"}}
+	to generate probably optimal assembly code, and that did speed up the
+	blitting to almost exactly 50% of the original version's run time. However,
+	it did little about the flickering itself. Here's a comparison of the first
+	loop with <code>boom_duration = 16</code>, recorded in DOSBox-X with
+	<code>cputype=auto</code> and <code>cycles=max</code>, and with
+	<code>i</code> overlaid using the text chip. Caution, flashing lights:
+</p><figure class="th01_ending">
+	<div class="multilayer">
+		<video id="{{.Date}}-be2-0" controls loop class="active">
+			{{$vid_be2_0.Body}}
+		</video>
+		<video id="{{.Date}}-be2-1" controls loop>{{$vid_be2_1.Body}}</video>
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-be2-controls"></div>
+			<div id="{{.Date}}-be2"></div>
+		</p>
+		<span id="{{.Date}}-be2-caption"></span>
+		(Note how the background of the <i lang="ja" style="color: red"
+		>ド﻿カ﻿ー﻿ン</i> image is shifted 1 pixel to the left compared to pic
+		#1.)
+	</figcaption>
+</figure><p>
+	I pushed the optimized code to the <a
+	href="https://github.com/nmlgc/ReC98/tree/th01_end_pic_optimize"><code>th01_end_pic_optimize</code></a>
+	branch, to also serve as an example of how to get close to optimal code out
+	of Turbo C++ 4.0J without writing a single ASM instruction.<br />
+	And if you really want to use the EGC for this, that's the best you can do.
+	It really sucks that it merely expanded the GRCG's 4×8-bit tile register to
+	4×16 bits. With 32 bits, ≥386 CPUs could have taken advantage of their wider
+	registers and instructions to double the blitting performance. Instead, we
+	now know the reason why
+	{{Blog_PostLink "2019-11-06" "Promisence Soft's EGC-powered sprite driver that ZUN later stole for TH03"}}
+	is called SPRITE16 and not SPRITE32. What a massive disappointment.
+</p><p>
+	But what's perhaps a bigger surprise: <i>Blitting <span
+	title="as seen in the on-disk layout of the .CDG and .CD2 files used in later games">planar
+	images</span> from main memory is much faster than EGC-powered inter-page
+	VRAM copies</i>, despite the required manual access to all 4 bitplanes. In
+	fact, the blitting functions for the .CDG/.CD2 format, used from TH03
+	onwards, would later demonstrate the optimal method of using <code>REP
+	MOVSD</code> for blitting every line in 32-pixel chunks. If that was also
+	used for these ending images, the core blitting operation would have taken
+	<code>((12&nbsp;+&nbsp;(3&nbsp;×&nbsp;(<span
+		class="hovertext"
+		title="width in pixels">320</span>&nbsp;/&nbsp;<span
+		class="hovertext"
+		title="1bpp pixels blitted per MOVSD instruction"
+	>32</span>)))&nbsp;×&nbsp;<span
+		class="hovertext" title="height in pixels">200</span>&nbsp;×&nbsp;<span
+		class="hovertext" title="number of bitplanes">4</span>) =
+	33,600</code> cycles, with not much more overhead for the surrounding row
+	and bitplane loops. Sure, this doesn't factor in the whole infamous issue of
+	VRAM being slow on PC-98, but the aforementioned 136,000 cycles don't even
+	include any <i>actual blitting</i> either. And as you move up to later PC-98
+	models with Pentium CPUs, the gap between <code>OUT</code> and <code>REP
+	MOVSD</code> only becomes larger. (Note that the page I linked above has a
+	typo in the cycle count of <code>REP MOVSD</code> on Pentium CPUs: According
+	to the original Intel <cite>Architecture and Programming Manual</cite>, it's
+	<code>13﻿+﻿𝑛</code>, not <code>3﻿+﻿𝑛</code>.)<br />
+	This difference explains why later games rarely use EGC-"accelerated"
+	inter-page VRAM copies, and keep all of their larger images in main memory.
+	It especially explains why TH04 and TH05 can get away with naively redrawing
+	boss backdrop images on every frame.
+</p><p>
+	In the end, the whole fact that ZUN did not define how long this image
+	should be visible is enough for me to increment the game's overall bug
+	counter. Who would have thought that looking at <i>endings</i> of all things
+	would teach us a PC-98 performance lesson… Sure, optimizing TH01 already
+	seemed promising just by looking at its bloated code, but I had no idea that
+	its performance issues extended so far past that level.
+</p><p>
+	That only leaves the common beginning part of all endings and a short
+	<code>main()</code> function before we're done with <code>FUUIN.EXE</code>,
+	and 98 functions until all of TH01 is decompiled! Next up: SinGyoku, who not
+	only is the quickest boss to defeat in-game, but also comes with the least
+	amount of code. See you very soon!
+</p><script>
+	const _2022_06_17_p4 = switchMultipleVideos("{{.Date}}-p4");
+	_2022_06_17_p4.add("Easy", "e");
+	_2022_06_17_p4.add("Normal", "n");
+	_2022_06_17_p4.add("Hard", "h");
+	_2022_06_17_p4.add("Lunatic", "l", true);
+
+	/**
+	 * @param {HTMLVideoElement} vidOld
+	 * @param {HTMLVideoElement} vidNew
+	 */
+	const _2022_06_17_be2_switch_func = (vidOld, vidNew) => {
+		const caption = document.getElementById("{{.Date}}-be2-caption");
+		switchVideo(vidOld, vidNew);
+		if(vidNew.id.endsWith('0')) {
+			caption.innerHTML = `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`;
+		} else {
+			caption.innerHTML = `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`;
+		}
+	}
+	const _2022_06_17_be2 = switchMultipleVideos(
+		"{{.Date}}-be2", _2022_06_17_be2_switch_func
+	);
+	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
+		"(Original version)", "0", true
+	);
+	const _2022_06_17_be2_1 = _2022_06_17_be2.add("(Optimized version)", "1");
+	_2022_06_17_be2.addControls("{{.Date}}-be2-controls", 56.423);
+
+	_2022_06_17_be2_switch_func(_2022_06_17_be2_1, _2022_06_17_be2_0);
+</script>

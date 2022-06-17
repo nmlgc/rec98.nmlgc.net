@@ -149,6 +149,7 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 				? bar.appendChild(document.createTextNode("•"))
 				: first = false;
 			bar.appendChild(newButton);
+			return controlledElement;
 		},
 		getActive: () => activeTuple,
 	}
@@ -156,9 +157,10 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 
 /**
  * @param {string} id DOM element that receives the switch bar
+ * @param {function} onSwitch Function called when clicking a switch button
  */
-function switchMultipleVideos(id) {
-	const ret = switchMultiple(id, switchVideo);
+function switchMultipleVideos(id, onSwitch = switchVideo) {
+	const ret = switchMultiple(id, onSwitch);
 
 	const frameStep = (fps, direction) => {
 		const vid = ret.getActive()[1];

@@ -115,6 +115,7 @@ figure.medium {
 	gap: 2.5%;
 }
 
+.th01_ending,
 .fullres,
 .th01_playfield,
 .singleplayer_playfield {
@@ -125,6 +126,11 @@ figure.fullres,
 figure.fullres img,
 figure.fullres video {
 	width: 640px;
+}
+figure.th01_ending,
+figure.th01_ending img,
+figure.th01_ending video {
+	width: 320px;
 }
 figure.th01_playfield,
 figure.th01_playfield img,
@@ -139,6 +145,9 @@ figure.singleplayer_playfield video {
 
 figure.fullres .multilayer {
 	aspect-ratio: 16 / 10;
+}
+figure.th01_ending .multilayer {
+	aspect-ratio: 20 / 13;
 }
 figure.th01_playfield .multilayer {
 	aspect-ratio: 40 / 21;

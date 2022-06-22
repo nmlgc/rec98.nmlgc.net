@@ -156,46 +156,65 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 }
 
 /**
+ *
+ * @param {HTMLVideoElement} vid
+ * @param {number} time
+ */
+function videoSeekAndStop(vid, time) {
+	vid.pause();
+	vid.currentTime = time;
+}
+
+/**
+ *
+ * @param {HTMLVideoElement} vid
+ * @param {number} fps
+ * @param {-1 | +1} direction
+ */
+function videoFrameStep(vid, fps, direction) {
+	videoSeekAndStop(vid, (vid.currentTime + (direction / fps)));
+}
+
+/**
+  * @param {HTMLElement} containerID
+  * @param {number} fps
+  * @param {function} vidFunc Function that returns the <video> to operate on
+  * @param {function | null} middleButton
+  */
+function videoAddControls(containerID, fps, vidFunc, middleButton = null) {
+	const prev = document.createElement('button');
+	const next = document.createElement('button');
+
+	prev.textContent = `< Previous frame`;
+	next.textContent = `Next frame >`;
+
+	prev.onclick = () => videoFrameStep(vidFunc(), fps, -1);
+	next.onclick = () => videoFrameStep(vidFunc(), fps, +1);
+
+	const container = document.getElementById(containerID);
+	container.appendChild(prev);
+	if(middleButton) {
+		container.appendChild(document.createTextNode("•"));
+		container.appendChild(middleButton());
+	}
+	container.appendChild(document.createTextNode("•"));
+	container.appendChild(next);
+}
+
+/**
  * @param {string} id DOM element that receives the switch bar
  * @param {function} onSwitch Function called when clicking a switch button
  */
 function switchMultipleVideos(id, onSwitch = switchVideo) {
 	const ret = switchMultiple(id, onSwitch);
 
-	const frameStep = (fps, direction) => {
-		const vid = ret.getActive()[1];
-		vid.pause();
-		vid.currentTime += (direction / fps);
-	};
-	const seekAndStop = (time) => {
-		const vid = ret.getActive()[1];
-		vid.pause();
-		vid.currentTime = time;
-	};
-	/**
-	 * @param {HTMLElement} containerID
-	 * @param {number} fps
-	 * @param {function | null} middleButton
-	 */
-	const addControls = (containerID, fps, middleButton = null) => {
-		const prev = document.createElement('button');
-		const next = document.createElement('button');
+	const vidFunc = () => ret.getActive()[1];
 
-		prev.textContent = `< Previous frame`;
-		next.textContent = `Next frame >`;
-
-		prev.onclick = () => frameStep(fps, -1);
-		next.onclick = () => frameStep(fps, +1);
-
-		const container = document.getElementById(containerID);
-		container.appendChild(prev);
-		if(middleButton) {
-			container.appendChild(document.createTextNode("•"));
-			container.appendChild(middleButton());
+	return Object.assign({
+		seekAndStop: (time) => videoSeekAndStop(vidFunc(), time),
+		addControls: (containerID, fps, middleButton = null) => {
+			videoAddControls(containerID, fps, vidFunc, middleButton);
 		}
-		container.appendChild(document.createTextNode("•"));
-		container.appendChild(next);
-	}
-	return Object.assign({ frameStep, seekAndStop, addControls }, ret);
+	}, ret);
 }
 // ---------------------

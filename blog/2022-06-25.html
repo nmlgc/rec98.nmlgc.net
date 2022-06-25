@@ -1,0 +1,180 @@
+{{$vid1 := (call .Video "TH01-SinGyoku-shot-hitbox" "Video of TH01 SinGyoku's weirdly aligned hitbox against player shots") -}}
+{{$vid2 := (call .Video "TH01-SinGyoku-sphere-slam-unblitting" "Video demonstrating both rendering glitches during TH01 SinGyoku's sphere movement") -}}
+{{$pic := (call .PostFileURL "TH01-SinGyoku-defeat.png") -}}
+
+<p>
+	The positive:
+</p><ul>
+	<li>It only took a record-breaking 1½ pushes to get SinGyoku done!</li>
+	<li>No {{Blog_PostLink "2022-05-31" "entity synchronization code"}} after
+	all! Since all of SinGyoku's sprites are 96×96 pixels, ZUN made the rather
+	smart decision of just using the sphere entity's position to render the
+	{{Blog_PostLink "2020-08-12" "flash and person entities"}} – and their only
+	appearance is encapsulated in a single sphere→person→sphere transformation
+	function.</li>
+	<li>Just like Kikuri, SinGyoku's code as a whole is not a complete
+	disaster.</li>
+</ul><p>
+	The negative:
+</p><ul>
+	<li>It's still exactly as buggy as Kikuri, with both of the ZUN bugs being
+	rendering glitches in a single function once again.</li>
+	<li>It also happens to come with a weird hitbox, …</li>
+	<li>… and some minor questionable and weird pieces of code.</li>
+</ul><p>
+	The overview:
+</p><ul>
+	<li>SinGyoku's fight consists of 2 phases, with the first one corresponding
+	to the white part from 8 to 6 HP, and the second one to the rest of the HP
+	bar. The distinction between the red-white and red parts is purely visual,
+	and doesn't reflect anything about the boss script.</li>
+	<li>Both phases cycle between a pellet pattern and SinGyoku's sphere form
+	slamming itself into the player, followed by it slightly overshooting its
+	intended base Y position on its way back up.</li>
+	<li>Phase 1 only consists of the sphere form's half-circle spray pattern.
+	Technically, the phase can only end <i>during</i> that pattern, but adding
+	that one additional condition to allow it to end during the slam+return
+	"pattern" wouldn't have made a difference anyway. The code doesn't rule out
+	negative HP during the slam (have fun in debug mode), but the sum of
+	invincibility frames alone makes it impossible to hit SinGyoku 7 times
+	during a single slam in regular gameplay.</li>
+	<li>Phase 2 features two patterns for both the female and male forms
+	respectively, which are selected randomly.</li>
+	<li>That's it – no hidden timeouts nor {{Blog_PostLink "2022-05-31" "debug mode heap corruption susceptibility"}}.</li>
+</ul><hr /><p>
+	This time, we're back to the Orb hitbox being a logical 49×49 pixels in
+	SinGyoku's center, and the shot hitbox being the weird one. What happens if
+	you want the shot hitbox to be <i>both</i> offset to the left a bit
+	<i>and</i> stretch the entire width of SinGyoku's sprite? You get a hitbox
+	that ends in mid-air, far away from the right edge of the sprite:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-v1" controls loop>{{$vid1.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-v1-controls"></p>
+		Due to VRAM byte alignment, all player shots fired between
+		<code>gx&nbsp;= 376</code> and <code>gx&nbsp;= 383</code> inclusive
+		appear at the same visual X position, but are internally already partly
+		outside the hitbox and therefore won't hit SinGyoku – compare <a
+		href="#{{.Date}}-v1" onclick="
+			_2022_06_25_v1.pause();
+			_2022_06_25_v1.currentTime = 0;
+			_2022_06_25_v1.play();
+		"><code>gx&nbsp;= 376</code></a> to <a
+		href="#{{.Date}}-v1" onclick="
+			_2022_06_25_v1.pause();
+			_2022_06_25_v1.currentTime = 2.853;
+			_2022_06_25_v1.play();
+		"><code>gx&nbsp;= 380</code></a>. So much for precisely visualizing
+		hitboxes in this game…
+	</figcaption>
+</figure><p>
+	Since the female and male forms also use the sphere entity's coordinates,
+	they share the same hitbox.
+</p><hr /><p>
+	Onto the rendering glitches then, which can – you guessed it – all be found
+	in the sphere form's slam movement:
+</p><ul>
+	<li>ZUN unblits the delta area between the sphere's previous and current
+	position on every frame, but reblits the sphere itself on… only every second
+	frame?</li>
+	<li>For negative X velocities, ZUN made a typo and subtracted the Y velocity
+	from the right edge of the area to be unblitted, rather than adding the X
+	velocity. On a cursory look, this shouldn't affect the game all <i>too</i>
+	much due to the unblitting function's word alignment. Except when it does:
+	If the Y velocity is much smaller than the X one, the left edge of the
+	unblitted area can, on certain frames, easily align to a word address past
+	the previous right edge of the sphere. As a result, not a single sphere
+	pixel will actually be unblitted, and a small stripe of the sphere will be
+	left in VRAM for one frame, until the alignment has caught up with the
+	sphere's movement in the next one.</li>
+</ul>
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-v2" controls loop>{{$vid2.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-v2-controls"></p>
+		<p>By having the sphere move from the right edge of the playfield to the
+		left, this video demonstrates both the <a href="#{{.Date}}-v2"
+		onclick="
+			_2022_06_25_v2.pause();
+			_2022_06_25_v2.currentTime = 0.089;
+		">lazy reblitting</a> and <a href="#{{.Date}}-v2"
+		onclick="
+			_2022_06_25_v2.pause();
+			_2022_06_25_v2.currentTime = 0.355;
+		">broken unblitting at the right edge for negative X velocities</a>.
+		Also, isn't it funny how <a href="#{{.Date}}-v2"
+		onclick="
+			_2022_06_25_v2.pause();
+			_2022_06_25_v2.currentTime = 1.861;
+		">Reimu can partly disappear</a> from all the sloppy SinGyoku-related
+		unblitting going on after her sprite was blitted?</p>
+	</figcaption>
+</figure><p>
+	Due to the low contrast of the sphere against the background, you typically
+	don't notice these glitches, but the white invincibility flashing after a
+	hit really does draw attention to them. This time, all of these glitches
+	aren't even directly <i>caused</i> by ZUN having never learned about the
+	EGC's bit length register – if he just wrote correct code for SinGyoku, none
+	of this would have been an issue. Sigh… I wonder how many more glitches will
+	be caused by improper use of this one function in the last 18% of
+	<code>REIIDEN.EXE</code>.
+</p><p>
+	There's even another bug here, with ZUN hardcoding a horizontal delta of 8
+	pixels rather than just passing the actual X velocity. Luckily, the maximum
+	movement speed is 6 pixels on Lunatic, and this would have only turned into
+	an additional observable glitch if the X velocity were to exceed 24 pixels.
+	But that just means it's the kind of bug that still drains RE attention to
+	prove that you <i>can't</i> actually observe it in-game under <i>some</i>
+	circumstances.
+</p><hr /><p>
+	The 5 pellet patterns are all pretty straightforward, with nothing to talk
+	about. The code architecture during phase 2 does hint towards ZUN having had
+	more creative patterns in mind – especially for the male form, which uses
+	the transformation function's three pattern callback slots for three
+	repetitions of the same pellet group.<br />
+	There is one more oddity to be found at the very end of the fight:
+</p><figure class="pixelated">
+	<img src="{{$pic}}" alt="The first frame of TH01 SinGyoku's defeat animation, showing the sphere blitted on top of a potentially active person form" />
+</figure><p>
+	Right before the defeat white-out animation, the sphere form is explicitly
+	reblitted for no reason, on top of the form that was blitted to VRAM in the
+	previous frame, and regardless of which form is currently active. If
+	SinGyoku was meant to immediately transform back to the sphere form before
+	being defeated, why isn't the person form unblitted before then? Therefore,
+	the visibility of both forms is undeniably canon, and there is <i>some</i>
+	lore meaning to be found here… {{HTML_Emoji "thonk"}}<br />
+	In any case, that's SinGyoku done! 6<sup>th</sup> PC-98 Touhou boss fully
+	decompiled, 25 remaining.
+</p><hr /><p>
+	No <code>FUUIN.EXE</code> code rounding out the last push for a change, as
+	the {{Blog_PostLink "2021-11-08" "remaining missile code"}} has been
+	waiting in front of SinGyoku for a while. It already looked bad in November,
+	but the angle-based sprite selection function definitely takes the cake when
+	it comes to unnecessary and decadent floating-point abuse in this game.
+	<br />
+	The algorithm itself is very trivial: Even with
+	{{Blog_PostLink "2020-07-27" ".PTN requiring an additional <code>quarter</code> parameter to access 16×16 sprites"}},
+	it's essentially just one bit shift, one addition, and one binary
+	<code>AND</code>. For whatever reason though, ZUN casts the 8-bit missile
+	angle into a 64-bit <code>double</code>, which turns the following explicit
+	comparisons (!) against all possible <span class="hovertext"
+	title="32×32 sprite">4</span> + <span class="hovertext"
+	title="16×16 quarter inside the 32×32 sprite">16</span> boundary angles (!!)
+	into FPU operations. {{HTML_Emoji "zunpet"}} Even with naive and readable
+	division and modulo operations, and the whole existence of this function not
+	playing well with Turbo C++ 4.0J's terrible code generation at all, this
+	could have been 3 lines of code and 35 un-inlined constant-time
+	instructions. Instead, we've got this 207-instruction monster… but hey, at
+	least it works. 🤷<br />
+	The remaining time then went to YuugenMagan's initialization code, which
+	allowed me to immediately remove more declarations from ASM land, but more
+	on that once we get to the rest of that boss fight.
+</p><p>
+	That leaves 76 functions until we're done with TH01! Next up: Card-flipping
+	stage obstacles.
+</p><script>
+	const _2022_06_25_v1 = document.getElementById("{{.Date}}-v1");
+	const _2022_06_25_v2 = document.getElementById("{{.Date}}-v2");
+	videoAddControls("{{.Date}}-v1-controls", 56.423, () => _2022_06_25_v1);
+	videoAddControls("{{.Date}}-v2-controls", 56.423, () => _2022_06_25_v2);
+</script>

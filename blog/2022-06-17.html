@@ -349,27 +349,12 @@
 	_2022_06_17_p4.add("Hard", "h");
 	_2022_06_17_p4.add("Lunatic", "l", true);
 
-	/**
-	 * @param {HTMLVideoElement} vidOld
-	 * @param {HTMLVideoElement} vidNew
-	 */
-	const _2022_06_17_be2_switch_func = (vidOld, vidNew) => {
-		const caption = document.getElementById("{{.Date}}-be2-caption");
-		switchVideo(vidOld, vidNew);
-		if(vidNew.id.endsWith('0')) {
-			caption.innerHTML = `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`;
-		} else {
-			caption.innerHTML = `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`;
-		}
-	}
-	const _2022_06_17_be2 = switchMultipleVideos(
-		"{{.Date}}-be2", _2022_06_17_be2_switch_func
-	);
+	const _2022_06_17_be2 = switchMultipleVideos("{{.Date}}-be2");
 	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
-		"(Original version)", "0", true
+		"(Original version)", "0", true, `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`
 	);
-	const _2022_06_17_be2_1 = _2022_06_17_be2.add("(Optimized version)", "1");
+	const _2022_06_17_be2_1 = _2022_06_17_be2.add(
+		"(Optimized version)", "1", false, `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`
+	);
 	_2022_06_17_be2.addControls("{{.Date}}-be2-controls", 56.423);
-
-	_2022_06_17_be2_switch_func(_2022_06_17_be2_1, _2022_06_17_be2_0);
 </script>

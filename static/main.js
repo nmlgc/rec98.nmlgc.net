@@ -124,24 +124,32 @@ function switchVideo(vidOld, vidNew) {
  */
 function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 	const bar = document.getElementById(id);
+	const captionContainer = document.getElementById(`${id}-caption`);
 	let first = true;
 	let activeTuple = [null, null, ""]; // (button, controlled element, sub-ID)
 	return {
 		/**
 		 * @param {string} text
 		 * @param {string} subID
+		 * @param {string?} caption
 		 */
-		add: (text, subID, active = false) => {
+		add: (text, subID, active = false, caption = null) => {
+			if(!captionContainer && caption) {
+				alert(`Caption given, but no container defined (${caption})`);
+				return;
+			}
 			const controlledElement = document.getElementById(`${id}-${subID}`);
 			const newButton = document.createElement('button');
 			newButton.innerHTML = text;
 			if(active) {
 				activeTuple = [newButton, controlledElement, subID];
 				newButton.classList.add('active');
+				caption && (captionContainer.innerHTML = caption);
 			}
 			newButton.onclick = () => {
 				activeTuple[0].classList.remove('active');
 				newButton.classList.add('active');
+				caption && (captionContainer.innerHTML = caption);
 				onSwitch(activeTuple[1], controlledElement);
 				activeTuple = [newButton, controlledElement, subID];
 			};

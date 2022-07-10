@@ -123,8 +123,8 @@ P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:
 P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1
 P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/6c22af7...8b01657	1
 P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2/10 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
-P0128	[84]	TH01 decompilation (Card-flipping stages, part 1) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
-P0129	[84]	TH01 decompilation (Card-flipping stages, part 2) 	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
+P0128	[84]	TH01 decompilation (Card-flipping stages, part 1/4)	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
+P0129	[84]	TH01 decompilation (Card-flipping stages, part 2/4)	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
 P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/6d69ea8...576def5	1
 P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/576def5...dc9e3ee	1
 P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/ReC98/compare/dc9e3ee...045450c	1
@@ -198,3 +198,5 @@ P0199	[173]	TH01 decompilation (Kikuri, part 2/3: Patterns)	2022-06-17T17:03:14Z
 P0200	[171, 176]	TH01 decompilation (Kikuri, part 3/3: Main function + Ending boss slideshow + Good/Bad endings)	2022-06-17T17:03:14Z	nmlgc/ReC98/compare/5af2048...67e46b5	1
 P0201	[175, 167]	TH01 decompilation (SinGyoku, part 1/2: Preparation + sphere movement + patterns 1-2)	2022-06-25T16:39:14Z	nmlgc/ReC98/compare/9342665...ff49e9e	1
 P0202	[177, 168]	TH01 decompilation (SinGyoku, part 2/2: Patterns 3-6 + main function + Missiles, part 2/2 + YuugenMagan setup)	2022-06-25T16:39:14Z	nmlgc/ReC98/compare/ff49e9e...4568bf7	1
+P0203	[178, 129, 163]	TH01 decompilation (Card-flipping stages, part 3/4: Bumpers and turrets)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/4568bf7...86cdf5f	1
+P0204	[174, 180]	TH01 decompilation (Card-flipping stages, part 4/4: Portals + Bomb animation)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/86cdf5f...0c682b5	1

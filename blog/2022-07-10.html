@@ -1,0 +1,351 @@
+{{$vid_b2_0 := (call .Video "TH01-Bumper-loop-dual-original" "Video demonstrating how a collision with TH01's round bumpers immediately teleports the Orb on the Y axis, which can lead to endless loops between two bumpers") -}}
+{{$vid_b2_1 := (call .Video "TH01-Bumper-loop-dual-no-teleport" "Video demonstrating how collision with TH01's round bumpers could look with no manual Y assignments, and just the game's usual physics at work") -}}
+{{$vid_b3_0 := (call .Video "TH01-Bumper-loop-triple-original" "Video demonstrating how TH01's immediate Y assignments on round bumper collisions can even facilitate infinite loops across three bumpers") -}}
+{{$vid_b3_1 := (call .Video "TH01-Bumper-loop-triple-no-teleport" "Video demonstrating how removing TH01's immediate Y assignments on round bumper collisions would affect previously infinite loops across three bumpers") -}}
+{{$vid_hbar := (call .Video "TH01-Shooting-Orb-through-horizontal-bar" "Video demonstrating how TH01's disabling of bumper bar collisions for the next 7 frames after a collision allows the Orb to be mashed through a horizontal bar") -}}
+{{$vid_rope := (call .Video "TH01-Hypothetical-vertical-bumper-bar-climb" "Video demonstrating how a column of vertical bumper bars would behave like a climbable rope if ZUN did not add the block flag workaround") -}}
+{{$vid_fall := (call .Video "TH01-Two-vertical-bumper-bars-without-blocking" "Video demonstrating how two adjacent columns of vertical bumper bars would have canceled out their respective effect if ZUN did not add the block flag workaround") -}}
+{{$vid_vbar := (call .Video "TH01-Shooting-Orb-through-two-vertical-bars" "Video demonstrating how all collision handling workarounds still allow the Orb to be mashed into two columns of adjacent vertical bumper bars, which end up raising the Orb to the top of the playfield") -}}
+{{$vid_p := (call .Video "TH01-Portal-Orb-kickout" "Video of TH01, demonstrating how an Orb is kicked out of its entered portal if Reimu gets hit during the teleport animation, only to re-enter it immediately afterwards") -}}
+
+<p>
+	Let's start right with the milestones:
+</p><ul>
+	<li>More than 50% of all PC-98 Touhou game code has now been
+	reverse-engineered! 🎉 While this number isn't equally distributed among the
+	games, we've got one game very close to 100% and reverse-engineered most of
+	the core features of two others. During the last 32 months of continuous
+	funding, I've averaged an overall speed of 1.11% total RE per month. That
+	looks like a decent prediction of how much more time it will take for 100%
+	across all games – unless, of course, I'd get to work towards some of the
+	non-RE goals in the meantime.</li>
+	<li>70 functions left in TH01, with less than 10,000 ASM instructions
+	remaining! Due to immense hype, I've temporarily raised the cap by 50% until
+	August 15. With the last TH01 pushes delivering at roughly 1.5× of the
+	currently calculated average speed, that should be more than enough to get
+	TH01 done – especially since I expect YuugenMagan to come with lots of
+	redundant code. Therefore, please also request a secondary priority for
+	these final TH01 RE contributions.</li>
+</ul><hr /><p>
+	So, how did this card-flipping stage obstacle delivery get so horribly
+	delayed? With all the different layouts showcased in the 28 card-flipping
+	stages, you'd expect this to be among the more stable and bug-free parts of
+	the codebase. Heck, with all stage objects being placed on a 32×32-pixel
+	grid, this is the first TH01-related blog post this year that doesn't have
+	to describe an alignment-related unblitting glitch!
+</p><p>
+	That alone doesn't mean that this code is free from quirky behavior though,
+	and we have to look no further than the first few lines of the collision
+	handling for round bumpers to already find a whole lot of that. Simplified,
+	they do the following:
+</p><pre>pixel_t delta_y_between_orb_and_bumper = (orb.top - bumper.top);
+if(delta_y_between_orb_and_bumper <= 0) {
+	orb.top = (bumper.top - 24);
+} else {
+	orb.top = (bumper.top + 24);
+}</pre><p>
+	Immediately, you wonder why these assignments only exist for the Y
+	coordinate. Sure, hitting a bumper from the left or right side should happen
+	less often, but it's definitely possible. Is it really a good idea to warp
+	the Orb to the top or bottom edge of a bumper regardless?<br />
+	What's more important though: The fact that these immediate assignments
+	exist at all. The game's regular Orb physics work by producing a Y velocity
+	from the single force acting on the Orb and a gravity factor, and are
+	completely independent of its current Y position. A bumper collision does
+	also apply a new force onto the Orb further down in the code, but these
+	assignments still bypass the physics system and are bound to have
+	<i>some</i> knock-on effect on the Orb's movement.
+</p><p>
+	To observe that effect, we just have to enter Stage 18 on the <span
+	lang="ja">地獄</span>/Jigoku route, where it's particularly trivial to
+	reproduce. At a {{Blog_PostLink "2020-06-13" "horizontal velocity"}} of ±4,
+	these assignments are <i>exactly</i> what can cause the Orb to endlessly
+	bounce between two bumpers. As rudimentary as the Orb's physics may be, just
+	letting them do their work would have entirely prevented these loops:
+</p><figure class="th01_playfield">
+	<div class="multilayer" style="aspect-ratio: 2 / 1;">
+		<video id="{{.Date}}-b2-0" controls loop class="active">
+			{{$vid_b2_0.Body}}
+		</video>
+		<video id="{{.Date}}-b2-1" controls loop>{{$vid_b2_1.Body}}</video>
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-b2-controls"></div>
+			<div id="{{.Date}}-b2"></div>
+		</p>
+		<span id="{{.Date}}-b2-caption"></span> The blue areas indicate the
+		<span class="hovertext" title="Within the usual caveat of the Orb's internal X position not corresponding to its on-screen one, as it's blitted on the byte-aligned 8×1-pixel VRAM grid.">pixel-perfect*</span>
+		hitboxes of each bumper.
+	</figcaption>
+</figure><p>
+	Now, you might be thinking that these Y assignments were just an attempt to
+	prevent the Orb from colliding with the same bumper again on the next frame.
+	After all, those 24 pixels exactly correspond to ⅓ of the height of a
+	bumper's hitbox with an additional pixel added on top. However, the game
+	already perfectly prevents repeated collisions by turning off collision
+	testing with the same bumper for the next 7 frames after a collision. Thus,
+	we can conclude that ZUN either explicitly coded bumper collision handling
+	to facilitate these loops, or just didn't take out that code after
+	inevitably discovering what it did. This is not janky code, it's not a
+	glitch, it's not sarcasm from my end, and it's not the game's physics being
+	bad.
+</p><p>
+	But wait. Couldn't these assignments just be a remnant from a time in
+	development <i>before</i> ZUN decided on the 7-frame delay on further
+	collisions? Well, even that explanation stops holding water after the next
+	few lines of code. Simplified, again:
+</p><pre>pixel_t delta_x_between_orb_and_bumper = (orb.left - bumper.left);
+if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
+	orb.velocity.x = -4;
+} else if((orb.velocity.x == -4) && (delta_x_between_orb_and_bumper > 0)) {
+	orb.velocity.x = +4;
+}
+</pre><p>
+	What's important here is the part that's <i>not</i> in the code – namely,
+	anything that handles X velocities of -8 or +8. In those cases, the Orb
+	simply continues in the same horizontal direction. The manual Y assignment
+	is the only part of the code that actually prevents a collision there, as
+	the newly applied force is not guaranteed to be enough:
+</p><figure class="th01_playfield">
+	<div class="multilayer" style="aspect-ratio: 2 / 1;">
+		<video id="{{.Date}}-b3-0" controls loop class="active">
+			{{$vid_b3_0.Body}}
+		</video>
+		<video id="{{.Date}}-b3-1" controls loop>{{$vid_b3_1.Body}}</video>
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-b3-controls"></div>
+			<div id="{{.Date}}-b3"></div>
+		</p>
+		<span id="{{.Date}}-b3-caption"></span>
+	</figcaption>
+</figure><p>
+	Forgetting to handle ⅖ of your discrete X velocity cases is simply not
+	something you do by accident. So we might as well say that ZUN deliberately
+	designed the game to behave exactly as it does in this regard.
+</p><hr /><p>
+	Bumpers also come in vertical or horizontal bar shapes. Their collision
+	handling also turns off further collision testing for the next 7 frames, and
+	doesn't do any manual coordinate assignment. That's definitely a step up in
+	cleanliness from round bumpers, but it doesn't seem to keep in mind that the
+	player can fire a new shot every 4 frames when standing still. That makes it
+	immediately obvious why this works:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-hbar" controls loop>{{$vid_hbar.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-hbar-controls"></p>
+		The <span style="color:green">green numbers</span> show the amount of
+		frames since the last detected collision with the respective bumper bar,
+		and indicate that collision testing with the bar below is currently
+		disabled.
+	</figcaption>
+</figure><p>
+	That's the most well-known case of reducing the Orb's horizontal velocity to
+	0 by exactly hitting it with shots in its center and then button-mashing it
+	through a horizontal bar. This also works with vertical bars and yields even
+	more interesting results there, but if we want to have any chance of
+	understanding what happens there, we have to first go over some basics:
+</p><ul>
+	<li>Collision detection for all stage obstacles is done in <a
+	href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">row-major
+	order</a> from the top-left to the bottom-right corner of the
+	playfield.</li>
+	<li>All obstacles are collision-tested independently from each other, with
+	the collision response code immediately following the test.</li>
+	<li>The hitboxes for bumper bars extend far past their 32×32 sprites to make
+	sure that the Orb can collide with them from any side. They are a
+	pixel-perfect* 87×56 pixels for horizontal bars, and 57×87 pixels for
+	vertical ones. Yes, that's no typo, they really do differ in one pixel.</li>
+	<li>Changing the Y velocity during such a collision just involves applying a
+	new force with the magnitude of the negated current Y velocity, which can be
+	done multiple times during a frame without changing the result. This
+	explains why the force is correctly inverted in the clip above, despite the
+	Orb colliding with two bumpers simultaneously.</li>
+	<li>Lacking a similar force system, the X coordinate is simply directly
+	inverted.</li>
+</ul><p>
+	However, if that were everything the game did, kicking the Orb into a column
+	of vertical bumper bars would lead them to behave more like a rope that the
+	Orb can climb, as the initial collision with two hitboxes cancels out the
+	intended sign change that reflects the Orb away from the bars:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-rope" controls loop>{{$vid_rope.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-rope-controls"></p>
+		This footage was recorded without the workaround I am about to describe.
+		It does not reflect the behavior of the original game. <strong>You
+		cannot do this in the original game.</strong><br />
+		While the visualization reveals small sections where three hitboxes
+		overlap, the Orb can never actually collide with three of them at the
+		same time, as those 3-hitbox regions are 2 pixels smaller than they
+		would need to be to fit the Orb. That's exactly the difference between
+		using <code>&lt;</code> rather than <code>&lt;=</code> in these hitbox
+		comparisons.
+	</figcaption>
+</figure><p>
+	While that would have been a fun gameplay mechanic on its own, it
+	immediately breaks apart once you place two vertical bumper bars next to
+	each other. Due to <i>how</i> these bumper bar hitboxes extend past their
+	sprites, any two adjacent vertical bars would exactly share one and the same
+	hitbox. Stage 17 on the <span class="ja">魔﻿界</span>/Makai route contains
+	exactly such a layout:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-fall" controls loop>{{$vid_fall.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-fall-controls"></p>
+		The collision handlers of adjacent vertical bars always activate in the
+		same frame, independently invert the Orb's X velocity, and therefore
+		fully cancel out their intended effect on the Orb… if the game did not
+		have the workaround I am about to describe. <strong>This cannot happen
+		in the original game.</strong>
+	</figcaption>
+</figure><p>
+	ZUN's workaround: Setting a "vertical bumper bar block flag" after any
+	collision with such a bar, which simply disables <i>any</i> collision with
+	<i>any</i> vertical bar for the next 7 frames. This quick hack made all
+	vertical bars work as intended, and avoided the need for involving the Orb's
+	X velocity in any kind of physics system. {{HTML_Emoji "zunpet"}}<br />
+	With that, we can now try mashing the Orb into these two vertical bars:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-vbar" controls loop>{{$vid_vbar.Body}}</video>
+	<figcaption id="{{.Date}}-vbar-controls"></figcaption>
+</figure><p>
+	At first, that workaround doesn't seem to make a difference here. As we
+	expect, the frame numbers now tell us that only one of the two bumper bars
+	in a row activates, but we couldn't have told otherwise as the number of
+	bars has no effect on newly applied Y velocity forces. On a closer look, the
+	Orb's rise to the top of the playfield is in fact <i>caused</i> by that
+	workaround though, combined with the unchanged top-to-bottom order of
+	collision testing. As soon as <i>any</i> bumper bar completed its 7
+	collision delay frames, it resets the aforementioned flag, which already
+	reactivates collision handling for any remaining vertical bumper bars during
+	the same frame. Look out for <a href='#{{.Date}}-vbar'
+	onclick='_2022_07_10_vbar.currentTime = 2.836;'>frames with both a <span
+	style="color: green;">7</span> and a <span style="color:
+	green;">1</span></a>: The <span style="color: green;">7</span> will always
+	appear <i>before</i> the <span style="color: green;">1</span> in the
+	row-major order. Whenever this happens, the current oscillation period is
+	cut down from 7 to 6 frames – and because collision testing runs from top to
+	bottom, this will always happen during the falling part. Depending on the Y
+	velocity, the rising part may also be cut down to 6 frames from time to
+	time, but that one at least has a <i>chance</i> to last for the full 7
+	frames. This difference adds those crucial extra frames of upward movement,
+	which add up to send the Orb to the top. Without the flag, you'd always see
+	the Orb oscillating between a fixed range of the bar column.<br />
+	Finally, it's the "top of playfield" force that gradually slows down the Orb
+	and makes sure it ultimately only moves at sub-pixel velocities, which have
+	no visible effect. Because
+	{{Blog_PostLink "2020-06-13" "the regular effect of gravity"}} is reset with
+	each newly applied force, it's completely negated during most of the climb.
+	This even holds true once the Orb reached the top: Since the Orb requires a
+	negative force to repeatedly arrive up there and be bounced back, this force
+	will stay active for the first 5 of the 7 collision frames and not move the
+	Orb at all. Once gravity kicks in at the 5<sup>th</sup> frame and adds 1 to
+	the Y velocity, it's already too late: The new velocity can't be larger than
+	0﻿.﻿5, and the Orb only has 1 or 2 frames before the flag reset causes it to
+	be bounced back up to the top again.
+</p><hr /><p>
+	Portals, on the other hand, turn out to be much simpler than the <a
+	href="https://en.touhouwiki.net/index.php?title=Highly_Responsive_to_Prayers%2FGameplay&type=revision&diff=56492&oldid=56491">old
+	description that ended up on Touhou Wiki in October 2005</a> might suggest.
+	Everything about their teleportations is random: The destination portal, the
+	exit force (as an integer between -9 and +9), as well as the exit X
+	velocity, with each of the
+	{{Blog_PostLink "2020-06-13" "5 distinct horizontal velocities"}} having an
+	equal chance of being chosen. Of course, if the destination portal is next
+	to the left or right edge of the playfield and it chooses to fire the Orb
+	towards that edge, it immediately bounces off into the opposite direction,
+	whereas the 0 velocity is always selected with a constant 20% probability.
+</p><p>
+	The selection process for the destination portal involves a bit more than a
+	single <code>rand()</code> call. The game bundles all obstacles in a single
+	structure of dynamically allocated arrays, and only knows how many obstacles
+	there are <i>in total</i>, not per type. Now, that alone wouldn't have much
+	of an impact on random portal selection, as you could simply roll a random
+	obstacle ID and try again if it's not a portal. But just to be extra cute,
+	ZUN instead iterates over all obstacles, selects any non-entered portal with
+	a chance of ¼, and just gives up if that dice roll wasn't successful after
+	16 loops over the whole array, defaulting to the entered portal in that
+	case.<br />
+	In all its silliness though, this works perfectly fine, and results in a
+	chance of 0.75<sup>16(𝑛&nbsp;-&nbsp;1)</sup> for the Orb exiting out of the
+	same portal it entered, with 𝑛 being the total number of portals in a
+	stage. That's 1% for two portals, and 0.01% for three. Pretty decent for a
+	random result you don't want to happen, but that hurts nobody if it does.
+</p><p>
+	The one tiny ZUN bug with portals is technically not even part of the newly
+	decompiled code here. If Reimu gets hit while the Orb is being sent through
+	a portal, the Orb is immediately kicked out of the portal it entered, no
+	matter whether it already shows up inside the sprite of the destination
+	portal. Neither of the two portal sprites is reset when this happens,
+	leading to "two Orbs" being visible simultaneously.
+	{{HTML_Emoji "tannedcirno"}}{{HTML_Emoji "onricdennat"}}<br />
+	This makes very little sense no matter how you look at it. The Orb doesn't
+	receive a new velocity or force when this happens, so it will simply
+	re-enter the same portal once the gameplay resumes on Reimu's next life:
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-p" controls loop>{{$vid_p.Body}}</video>
+	<figcaption id="{{.Date}}-p-controls"></figcaption>
+</figure><p>
+	And that's it! At least the turrets don't have anything notable to say about
+	them {{Blog_PostLink "2020-11-30" "that I haven't said before"}}.
+</p><hr /><p>
+	That left another ½ of a push over at the end. Way too much time to finish
+	<code>FUUIN.exe</code>, way too little time to start with Mima… but the bomb
+	animation fit perfectly in there. No secrets or bugs there, just a bunch of
+	sprite animation code wasting at least another 82 bytes in the data segment.
+	The special effect after the kuji-in sprites uses the same single-bitplane
+	32×32 square inversion effect seen at the end of Kikuri's and Sariel's
+	entrance animation, except that it's a 3-stack of 16-rings moving at 6, 7,
+	and 8 pixels per frame respectively. At these comparatively slow speeds, the
+	byte alignment of each square adds some further noise to the discoloration
+	pattern… if you even notice it below all the shaking and seizure-inducing
+	hardware palette manipulation.<br />
+	And yes, due to the very destructive nature of the effect, the game does in
+	fact rely on it only being applied to VRAM page 0. While that will cause
+	every moving sprite to tear holes into the inverted squares along its
+	trajectory, keeping a clean playfield on VRAM page 1 is what allows all that
+	pixel damage to be easily undone at the end of this 89-frame animation.
+</p><p>
+	Next up: Mima! Let's hope that stage obstacles already were the most complex
+	part remaining in TH01…
+</p><script>
+	const _2022_07_10_b2 = switchMultipleVideos("{{.Date}}-b2");
+	const _2022_07_10_b2_0 = _2022_07_10_b2.add(
+		"(Original version)", "0", true, "One of at least three infinite bumper loop constellations within just this 10×5-tile section of TH01's Stage 18 on the <span lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal pixels between both hitboxes, the Orb would have to travel an absolute Y distance of at least 16 vertical pixels within <code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the other bumper's hitbox. If the initial bounce reduces the Orb's Y velocity far enough for it to not manage that distance the first time, it will never reach the necessary speed again. In this loop, the bounce-off force even stabilizes, though this doesn't have to happen.");
+	const _2022_07_10_b2_1 = _2022_07_10_b2.add(
+		"(Y position assignments removed)", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still <a href='#{{.Date}}-b2-1' onclick='_2022_07_10_b2_1.currentTime = 4.413;'>bounces back and forth between two bumpers for a while</a>, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end."
+	);
+	_2022_07_10_b2.addControls("{{.Date}}-b2-controls", 56.423);
+
+	const _2022_07_10_b3 = switchMultipleVideos("{{.Date}}-b3");
+	const _2022_07_10_b3_0 = _2022_07_10_b3.add(
+		"(Original version)", "0", true, "An infinite loop across three bumpers, made possible by the edge of the playfield and bumper bars on opposite sides, an unchanged horizontal direction, and the Y assignments neatly placing the Orb on either the top or bottom side of a bumper. The alternating sign of the force further ensures that the Orb will travel upwards half the time, canceling out gravity during the short time between two hitboxes."
+	);
+	const _2022_07_10_b3_1 = _2022_07_10_b3.add(
+		"(Y position assignments removed)", "1", false, "With the unchanged horizontal direction and the Y assignments removed, nothing keeps an Orb at ±8 pixels per frame from flying into/over a bumper. The collision force pushes the Orb slightly, but not enough to truly matter. The <a href='#{{.Date}}-b3-1' onclick='_2022_07_10_b3_1.pause(); _2022_07_10_b3_1.currentTime = 1.081;'>final force sends the Orb on a significant downward trajectory</a> beyond the next bumper's hitbox, breaking the original loop."
+	);
+	_2022_07_10_b3.addControls("{{.Date}}-b3-controls", 56.423);
+
+	const _2022_07_10_hbar = document.getElementById("{{.Date}}-hbar");
+	videoAddControls("{{.Date}}-hbar-controls", 20, () => _2022_07_10_hbar);
+
+	const _2022_07_10_rope = document.getElementById("{{.Date}}-rope");
+	videoAddControls("{{.Date}}-rope-controls", 56.423, () => _2022_07_10_rope);
+
+	const _2022_07_10_fall = document.getElementById("{{.Date}}-fall");
+	videoAddControls("{{.Date}}-fall-controls", 20, () => _2022_07_10_fall);
+
+	const _2022_07_10_vbar = document.getElementById("{{.Date}}-vbar");
+	videoAddControls("{{.Date}}-vbar-controls", 56.423, () => _2022_07_10_vbar);
+
+	const _2022_07_10_p = document.getElementById("{{.Date}}-p");
+	videoAddControls("{{.Date}}-p-controls", 20, () => _2022_07_10_p, () => {
+		const frame = document.createElement('button');
+		frame.textContent = `Reimu getting hit`;
+		frame.onclick = () => _2022_07_10_p.currentTime = 2.8;
+		return frame;
+	});
+</script>

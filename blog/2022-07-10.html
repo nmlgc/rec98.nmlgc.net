@@ -7,6 +7,10 @@
 {{$vid_fall := (call .Video "TH01-Two-vertical-bumper-bars-without-blocking" "Video demonstrating how two adjacent columns of vertical bumper bars would have canceled out their respective effect if ZUN did not add the block flag workaround") -}}
 {{$vid_vbar := (call .Video "TH01-Shooting-Orb-through-two-vertical-bars" "Video demonstrating how all collision handling workarounds still allow the Orb to be mashed into two columns of adjacent vertical bumper bars, which end up raising the Orb to the top of the playfield") -}}
 {{$vid_p := (call .Video "TH01-Portal-Orb-kickout" "Video of TH01, demonstrating how an Orb is kicked out of its entered portal if Reimu gets hit during the teleport animation, only to re-enter it immediately afterwards") -}}
+{{$vid_realrope := (call .Video "TH01-Real-vertical-bumper-bar-climb" "Video of TH01's Orb actually climbing a column of vertical bumper bars, due the collision response only mirroring the X velocity and doing nothing else") -}}
+{{$vid_glide := (call .Video "TH01-Horizontal-bumper-bar-glide" "Video demonstrating how the naive collision response for horizontal bumper bars in TH01 can lead the Orb to glide along them") -}}
+{{$pic := (call .PostFileURL "TH01-Jigoku-Stage-19-bumper-bar-hitbox-overlay.png") -}}
+{{$mod := printf "%v%v" .DatePrefix "TH01OrbPhysicsDebug.zip" -}}
 
 <p>
 	Let's start right with the milestones:
@@ -187,10 +191,10 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </figure><p>
 	While that would have been a fun gameplay mechanic on its own, it
 	immediately breaks apart once you place two vertical bumper bars next to
-	each other. Due to <i>how</i> these bumper bar hitboxes extend past their
-	sprites, any two adjacent vertical bars would exactly share one and the same
-	hitbox. Stage 17 on the <span class="ja">魔﻿界</span>/Makai route contains
-	exactly such a layout:
+	each other. Due to how these bumper bar hitboxes extend past their sprites,
+	any two adjacent vertical bars will end up with the exact same hitbox in
+	absolute screen coordinates. Stage 17 on the <span class="ja">魔﻿界
+	</span>/Makai route contains exactly such a layout:
 </p><figure class="th01_playfield">
 	<video id="{{.Date}}-fall" controls loop>{{$vid_fall.Body}}</video>
 	<figcaption>
@@ -206,8 +210,51 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	collision with such a bar, which simply disables <i>any</i> collision with
 	<i>any</i> vertical bar for the next 7 frames. This quick hack made all
 	vertical bars work as intended, and avoided the need for involving the Orb's
-	X velocity in any kind of physics system. {{HTML_Emoji "zunpet"}}<br />
-	With that, we can now try mashing the Orb into these two vertical bars:
+	X velocity in any kind of physics system. {{HTML_Emoji "zunpet"}}
+</p><hr /><p>
+	<strong>Edit (2022-07-12):</strong> This flag only works around glitches
+	that would be caused by simultaneously colliding with more than one vertical
+	bar. The actual response to a bumper bar collision still remains unaffected,
+	and is <i>very</i> naive: <ul>
+		<li>Horizontal bars always invert the Orb's Y velocity</li>
+		<li>Vertical bars invert either the Y or X velocity depending on whether
+		the Orb's current X velocity is 0 (Y) or not (X)</li>
+	</ul>
+	These conditions are only correct if the Orb is perpendicular to the bar, or
+	any part of a larger row/column of bars. If it's anywhere close to parallel
+	to these, the response <i>will</i> be incorrect, and send the Orb straight
+	through the bar. Since the large hitboxes make this easily possible, you can
+	still get the Orb to climb a vertical column, or glide along a horizontal
+	row:
+</p><figure class="side_by_side">
+	<figure>
+		<video id="{{.Date}}-realrope" controls loop>
+			{{$vid_realrope.Body}}
+		</video>
+		<figcaption id="{{.Date}}-realrope-controls"></figcaption>
+	</figure>
+	<figure>
+		<video id="{{.Date}}-glide" controls loop>{{$vid_glide.Body}}</video>
+		<figcaption id="{{.Date}}-glide-controls"></figcaption>
+	</figure>
+</figure><p>
+	<a href="{{$pic}}">Here's the hitbox overlay for <span lang="ja">地﻿獄
+	</span>/Jigoku Stage 19</a>, and here's an updated version of the
+	{{Blog_PostLink "2020-06-13" "Orb physics debug mod"}} that now also shows
+	bumper bar collision frame numbers:
+	{{HTML_Download .HostedPath $mod}}
+	See the <a
+	href="https://github.com/nmlgc/ReC98/tree/th01_orb_debug">th01_orb_debug</a>
+	branch for the code. To use it, simply replace <code>REIIDEN.EXE</code>, and
+	run the game in debug mode, via <kbd>game d</kbd> on the DOS prompt. If you
+	encounter a gameplay situation that doesn't seem to be covered by this blog
+	post, you can now verify it for yourself. Thanks to <a
+	href="https://touhou-memories.com/">touhou-memories</a> for bringing these
+	issues to my attention! That definitely was a glaring omission from the
+	initial version of this blog post.
+</p><hr /><p>
+	With that clarified, we can now try mashing the Orb into these two vertical
+	bars:
 </p><figure class="th01_playfield">
 	<video id="{{.Date}}-vbar" controls loop>{{$vid_vbar.Body}}</video>
 	<figcaption id="{{.Date}}-vbar-controls"></figcaption>
@@ -337,6 +384,14 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 
 	const _2022_07_10_fall = document.getElementById("{{.Date}}-fall");
 	videoAddControls("{{.Date}}-fall-controls", 20, () => _2022_07_10_fall);
+
+	const _2022_07_10_realrope = document.getElementById("{{.Date}}-realrope");
+	videoAddControls(
+		"{{.Date}}-realrope-controls", 20, () => _2022_07_10_realrope
+	);
+
+	const _2022_07_10_glide = document.getElementById("{{.Date}}-glide");
+	videoAddControls("{{.Date}}-glide-controls", 20, () => _2022_07_10_glide);
 
 	const _2022_07_10_vbar = document.getElementById("{{.Date}}-vbar");
 	videoAddControls("{{.Date}}-vbar-controls", 56.423, () => _2022_07_10_vbar);

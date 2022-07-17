@@ -219,6 +219,7 @@ function switchMultipleVideos(id, onSwitch = switchVideo) {
 	const vidFunc = () => ret.getActive()[1];
 
 	return Object.assign({
+		seek: (time) => vidFunc().currentTime = time,
 		seekAndStop: (time) => videoSeekAndStop(vidFunc(), time),
 		addControls: (containerID, fps, middleButton = null) => {
 			videoAddControls(containerID, fps, vidFunc, middleButton);

@@ -30,13 +30,17 @@
 	<li>A further 3 hardcoded monochrome 8×8 sprites for the "swaying leaves"
 	pattern during the second form</li>
 </ul><p>
-	In total, it's 3,020 lines of C++ code, containing a total of 8 definite ZUN
-	bugs, 3 of them being subpixel/pixel confusions. That might not look all
-	<i>too</i> bad if you compare it to the
+	In total, it's just under 3,000 lines of C++ code, containing a total of 8
+	definite ZUN bugs, 3 of them being subpixel/pixel confusions. That might not
+	look all <i>too</i> bad if you compare it to the
 	{{Blog_PostLink "2021-10-20" "player control function's 8 bugs in 900 lines of code"}},
-	but given that Konngara had 0… And no, the code doesn't make it obvious
-	whether ZUN coded Konngara or Sariel first; there's just as much evidence
-	for either.
+	but given that Konngara had <s>0</s>… (<strong>Edit (2022-07-17):</strong>
+	Konngara contains two bugs after all: A
+	{{Blog_PostLink "2022-05-31" "possible heap corruption in debug mode"}},
+	and the infamous
+	{{Blog_PostLink "2022-07-17" "temporary green discoloration"}}.)
+	And no, the code doesn't make it obvious whether ZUN coded Konngara or
+	Sariel first; there's just as much evidence for either.
 </p><p>
 	Some terminology before we start: Sariel's first <i>form</i> is separated
 	into four <i>phases</i>, indicated by different background images, that

@@ -97,6 +97,7 @@ Date	Tags
 2022-04-18	["gameplay", "boss", "kurumi", "marisa-4", "bug", "danmaku-pattern", "mod", "sara", "blitting", "animation"]
 2022-04-30	["gameplay", "boss", "shinki", "danmaku-pattern", "midboss", "master.lib", "file-format", "tcc", "pc98", "micro-optimization"]
 2022-05-31	["gameplay", "boss", "elis", "mima-th01", "rng", "danmaku-pattern", "bug", "jank", "glitch", "unused", "pc98", "blitting", "mod", "score"]
-2022-06-17	["gameplay", "boss", "kikuri", "blitting", "glitch", "danmaku-pattern", "cutscene", "pc98", "tcc"]
+2022-06-17	["gameplay", "boss", "kikuri", "blitting", "glitch", "danmaku-pattern", "cutscene", "pc98", "performance", "tcc"]
 2022-06-25	["gameplay", "boss", "singyoku", "blitting", "glitch", "animation", "bullet"]
 2022-07-10	["meta", "gameplay", "card-flipping", "player", "shot", "mod", "rng", "bomb", "waste"]
+2022-07-17	["gameplay", "boss", "mima-th01", "danmaku-pattern", "rng", "performance", "palette", "glitch", "jank", "konngara", "meta"]

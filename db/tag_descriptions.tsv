@@ -38,6 +38,7 @@ midboss	A single bigger enemy with a slightly more complicated, hardcoded script
 mod	Pre-compiled mod downloads, changing all sorts of things in the binaries.
 palette	Manipulation of the PC-98's 16-color palette for graphics.
 pc98	Details on PC-98 hardware and software.
+performance	Evidence-based observations about programming a PC-98 with performance in mind. Does not include ramblings that aren't substantiated with measurements.
 pipeline	Additional, helpful code generation steps, beyond regular compiler/assembler invocations.
 player	Player-controlled characters.
 portability	Notes about future ports of the games away from x86 and the PC-98 platform.

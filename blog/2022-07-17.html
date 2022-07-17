@@ -1,0 +1,281 @@
+{{$vid_p0_0 := (call .Video "TH01-Mima-pattern-0-original" "Video of TH01-Mima's first pattern on Normal difficulty, in its original version with misaligned pellet spawn positions") -}}
+{{$vid_p0_1 := (call .Video "TH01-Mima-pattern-0-fixed" "Video of TH01-Mima's first pattern on Normal difficulty, in a fixed version with the pellets spawning exactly on the square corners") -}}
+{{$vid_p7 := (call .Video "TH01-Mima-pattern-7" "Video of TH01-Mima's laser pattern on Lunatic difficulty, featuring correct laser spawn positions even in the original game") -}}
+{{$vid_p4_h := (call .Video "TH01-Mima-pillars-hitboxes" "Video of TH01-Mima's flame pillars, showing the disparity between their internal coordinates and hitboxes, and their byte-aligned rendering") -}}
+{{$vid_p4_s := (call .Video "TH01-Mima-pillars-smooth" "Video of TH01-Mima's flame pillar pattern with all circle/pillar entities rendering at a full 56.423 FPS") -}}
+{{$vid_hop_0 := (call .Video "TH01-Mima-hop-original" "Video of TH01-Mima's hop pattern, in its original version with the external palette resets") -}}
+{{$vid_hop_1 := (call .Video "TH01-Mima-hop-expected" "Video of TH01-Mima's hop pattern, with external palette resets removed to reveal the pattern's own palette changes") -}}
+{{$vid_green := (call .Video "TH01-Konngara-green" "Video demonstrating the simplest way of reproducing the green discoloration bug during the TH01 Konngara fight") -}}
+
+<p>
+	Oh look, it's another rather short and straightforward boss with a rather
+	small number of bugs and quirks. Yup, contrary to the character's
+	popularity, Mima's premiere is really not all that special in terms of code,
+	and continues the trend established with
+	{{Blog_PostLink "2022-06-17" "Kikuri"}} and
+	{{Blog_PostLink "2022-06-25" "SinGyoku"}}. I've already covered
+	{{Blog_PostLink "2021-11-08" "the initial sprite-related bugs last November"}},
+	so this post focuses on the main code of the fight itself. The overview:
+</p><ul>
+	<li>The TH01 Mima fight consists of 3 phases, with phases 1 and 3 each
+	corresponding to one half of the 12-HP bar.
+	{{Blog_PostLink "2022-06-25" "Just like with SinGyoku"}}, the distinction
+	between the red-white and red parts is purely visual once again, and doesn't
+	reflect anything about the boss script. As usual, all of the phases have to
+	be completed in order.</li>
+	<li>Phases 1 and 3 cycle through 4 danmaku patterns each, for a total of 8.
+	The cycles always start on a fixed pattern.</li>
+	<li>3 of the patterns in each phase feature rotating white squares, thus
+	introducing a new sprite in need of being unblitted.</li>
+	<li>Phase 1 additionally features the "hop pattern" as the last one in its
+	cycle. This is the only pattern where Mima leaves the seal in the center of
+	the playfield to hop from one edge of the playfield towards the other, while
+	also moving slightly higher up on the Y axis, and staying on the final
+	position for the next pattern cycle. For the first time, Mima selects a
+	random starting edge, which is then alternated on successive cycles.</li>
+	<li>Since the square entities are local to the respective pattern function,
+	Phase 1 can only end once the current pattern is done, even if Mima's HP are
+	already below 6. This makes Mima susceptible to the
+	{{Blog_PostLink "2022-05-31" "debug mode HP bar heap corruption bug"}}.</li>
+	<li>Phase 2 simply consists of a spread-in teleport back to Mima's initial
+	position in the center of the playfield. This would only have been strictly
+	necessary if phase 1 ended on the hop pattern, but is done regardless of the
+	previous pattern, and does provide a nice visual separation between the two
+	main phases.</li>
+	<li>That's it – nothing special in Phase 3.</li>
+</ul><hr /><p>
+	And there aren't even any weird hitboxes this time. What <i>is</i> maybe
+	special about Mima, however, is how there's something to cover about all of
+	her patterns. Since this is TH01, it's won't surprise anyone that the
+	rotating square patterns are one giant copy-pasta of unblitting, updating,
+	and rendering code. At least ZUN placed the core polar→Cartesian
+	transformation in a separate function for creating <a
+	href="https://en.wikipedia.org/wiki/Regular_polygon">regular polygons</a>
+	with an arbitrary number of sides, which might hint toward some more varied
+	shapes having been planned at one point?<br />
+	5 of the 6 patterns even follow the exact same steps during square update
+	frames:
+</p><ol>
+	<li>Calculate square corner coordinates</li>
+	<li>Unblit the square</li>
+	<li>Update the square angle and radius</li>
+	<li>Use the square corner coordinates for spawning pellets or missiles</li>
+	<li>Recalculate square corner coordinates</li>
+	<li>Render the square</li>
+</ol><p>
+	Notice something? Bullets are spawned <i>before</i> the corner coordinates
+	are updated. That's why their initial positions seem to be a bit off – they
+	<i>are</i> spawned exactly in the corners of the square, it's just that it's
+	the square from 8 frames ago. {{HTML_Emoji "tannedcirno"}}
+</p><figure class="th01_playfield">
+	<div class="multilayer">
+		<video id="{{.Date}}-p0-0" controls loop class="active">
+			{{- $vid_p0_0.Body -}}
+		</video>
+		<video id="{{.Date}}-p0-1" controls loop>{{$vid_p0_1.Body}}</video>
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-p0-controls"></div>
+			<div id="{{.Date}}-p0"></div>
+		</p>
+		Mima's first pattern on Normal difficulty.
+	</figcaption>
+</figure><p>
+	Once ZUN reached the final laser pattern though, he must have noticed that
+	there's something wrong there… or maybe he just <i>wanted</i> to fire those
+	lasers independently from the square unblit/update/render timer for a
+	change. Spending an additional 16 bytes of the data segment for conveniently
+	remembering the square corner coordinates across frames was definitely a
+	decent investment.
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-p7" controls loop>{{$vid_p7.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-p7-controls"></p>
+		Mima's laser pattern on Lunatic difficulty, now with correct laser spawn
+		positions. If this pattern reminds you of the game crashing immediately
+		when defeating Mima,
+		{{Blog_PostLink "2022-05-31" "check out the Elis blog post for the details behind this bug, and grab the bugfix patch from there"}}.
+	</figcaption>
+</figure><hr /><p>
+	When Mima isn't shooting bullets from the corners of a square or hopping
+	across the playfield, she's raising flame pillars <img
+	src="data:image/gif;base64,R0lGODlhIAAQAIABAP8AAMCAACH5BAEKAAEALAAAAAAgABAAAAJEjI8ItgmvYmINsvDanDrn020gBVnlJyqLh3krqm2nS3+WWOd12up+jAH9fo7K0Md5HXWj3pLZEj5zUdWUmry6cFrWoQAAOw=="
+	/> from the bottom of the playfield within very specifically calculated
+	random ranges… which are then rendered at byte-aligned VRAM positions, while
+	collision detection still uses their actual pixel position. Since I  don't
+	want to sound like a broken record all too much, I'll just direct you to
+	{{Blog_PostLink "2022-06-17" "Kikuri, where we've seen the exact same issue with the teardrop ripple sprites"}}.
+	The conclusions are identical as well.
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-p4-h" controls loop>{{$vid_p4_h.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-p4-h-controls"></p>
+		Mima's flame pillar pattern. This video was recorded on a particularly
+		unlucky seed that resulted in great disparities between a pillar's
+		internal X coordinate and its byte-aligned on-screen appearance, leading
+		to lots of right-shifted hitboxes.<br />
+		Also note how the change from the <a href="#{{.Date}}-p4-h"
+		onclick='_2022_07_17_p4_h.pause(); _2022_07_17_p4_h.currentTime =
+		5.246'>meteor animation</a> to the <a href="#{{.Date}}-p4-h"
+		onclick='_2022_07_17_p4_h.pause(); _2022_07_17_p4_h.currentTime =
+		5.264'>three-arm 🚫 casting sprite</a> doesn't unblit the meteor, and
+		leaves that job to any sprite that happens to fly over those pixels.
+	</figcaption>
+</figure><p>
+	However, I'd say that the saddest part about this pattern is how choppy it
+	is, with the  circle/pillar entities updating and rendering at a meager 7
+	FPS. Why go that low on purpose when you can just make the game render ✨
+	<i>smoothly</i> ✨ instead?
+</p><figure class="th01_playfield">
+	<video id="{{.Date}}-p4-s" controls loop>{{$vid_p4_s.Body}}</video>
+	<figcaption>
+		<p id="{{.Date}}-p4-s-controls"></p>
+		So smooth it's almost uncanny.
+	</figcaption>
+</figure><p>
+	The reason quickly becomes obvious: With TH01's lack of optimization, going
+	for the full 56.4 FPS would have significantly slowed down the game on its
+	intended 33 MHz CPUs, requiring more than cheap surface-level ASM
+	optimization for a stable frame rate. That might very well have been ZUN's
+	reason for only ever rendering one circle per frame to VRAM, and designing
+	the pattern with these time offsets in mind. It's always been typical for
+	PC-98 developers to target the lowest-spec models that could possibly still
+	run a game, and implementing dynamic frame rates into such an engine-less
+	game is nothing I would wish on anybody. And it's not like TH01 is
+	particularly unique in its choppiness anyway; low frame rates are actually a
+	rather typical part of the PC-98 game aesthetic.
+</p><hr /><p>
+	The final piece of weirdness in this fight can be found in phase 1's hop
+	pattern, and specifically its palette manipulation. Just from looking at the
+	pattern code itself, each of the 4 hops is supposed to darken the hardware
+	palette by subtracting <code>#444</code> from every color. <a
+	id="{{.Date}}-hop-last" href='#{{.Date}}-hop-last'
+	onclick='_2022_07_17_hop.seek(2.552);'>At the last hop</a>, every color
+	should have therefore been reduced to a pitch-black <code>#000</code>,
+	leaving the player completely blind to the movement of the chasing pellets
+	for 30 frames and making the pattern quite ghostly indeed. However, that's
+	not what we see in the actual game:
+</p><figure class="th01_playfield">
+	<div class="multilayer">
+		<video id="{{.Date}}-hop-0" controls loop class="active">
+			{{$vid_hop_0.Body}}
+		</video>
+		<video id="{{.Date}}-hop-1" controls loop>{{$vid_hop_1.Body}}</video>
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-hop-controls"></div>
+			<div id="{{.Date}}-hop"></div>
+		</p>
+		<span id="{{.Date}}-hop-caption"></span>
+	</figcaption>
+</figure><p>
+	Looking at the frame counter, it appears that <i>something</i> outside the
+	pattern resets the palette every 40 frames. The only known constant with a
+	value of 40 would be the invincibility frames after hitting a boss with the
+	Orb, but we're not hitting Mima here… {{HTML_Emoji "thonk"}}<br />
+	But as it turns out, that's exactly where the palette reset comes from: The
+	hop animation darkens the hardware palette directly, while the
+	{{Blog_PostLink "2020-12-18" "infamous 12-parameter boss collision handler function"}}
+	unconditionally resets the hardware palette to the "default boss palette"
+	every 40 frames, regardless of whether the boss was hit or not. I'd classify
+	this as a bug: That function has no business doing periodic hardware palette
+	resets outside the invincibility flash effect, and it completely defies
+	common sense that it does.
+</p><p>
+	That explains one unexpected palette change, but could this function
+	possibly also explain the other infamous one, namely, the temporary green
+	discoloration in the Konngara fight? That glitch comes down to how the game
+	actually uses <i>two</i> global "default" palettes: a default <i>boss</i>
+	palette for undoing the invincibility flash effect, and a default
+	<i>stage</i> palette for returning the colors back to normal at the end of
+	the bomb animation or when leaving the Pause menu. And sure enough, the
+	<i>stage</i> palette is the one with the green color, while the <i>boss</i>
+	palette contains the intended colors used throughout the fight. Sending the
+	latter palette to the graphics chip every 40 frames is what <i>corrects</i>
+	the discoloration, which would otherwise be permanent.
+</p><p>
+	The green color comes from <code>BOSS7_D1.GRP</code>, the scroll background,
+	and that's what turns this into a clear bug: The <i>stage</i> palette is
+	only set a single time in the entire fight, at the beginning of the entrance
+	animation, to the palette of this image. Apart from consistency reasons, it
+	doesn't even make sense to set the stage palette there, as you can't enter
+	the Pause menu or bomb during a blocking animation function.<br />
+	And just 3 lines of code later, ZUN loads <code>BOSS8_A1.GRP</code>, the
+	main background image of the fight. Moving the stage palette assignment
+	there would have easily prevented the discoloration.
+</p><p>
+	But yeah, as you can tell, palette manipulation is complete jank in this
+	game. Why differentiate between a stage and a boss palette to begin with?
+	The blocking Pause menu function could have easily copied the original
+	palette to a local variable before darkening it, and then restored it after
+	closing the menu. It's not so easy for bombs as the intended palette could
+	change between the start and end of the animation, but the code could have
+	still been simplified a lot if there was just one global "default palette"
+	variable instead of two. Heck, even the other bosses who manipulate their
+	palettes correctly only do so because they manually synchronize the two
+	after every change. The proper defense against bugs that result from wild
+	mutation of global state is to get rid of global state, and not to put up
+	safety nets hidden in the middle of existing effect code.
+</p><figure class="pixelated fullres">
+	<video controls loop>{{$vid_green.Body}}</video>
+	<figcaption>The easiest way of reproducing the green discoloration bug in
+	the TH01 Konngara fight, timed to show the maximum amount of time the
+	discoloration can possibly last.</figcaption>
+</figure><p>
+	In any case, that's Mima done! 7<sup>th</sup> PC-98 Touhou boss fully
+	decompiled, 24 bosses remaining, and 59 functions left in all of TH01.
+</p><hr /><p>
+	In other thrilling news, my call for secondary funding priorities in new
+	TH01 contributions has given us three different priorities so far. This
+	raises an interesting question though: Which of these contributions should I
+	now put towards TH01 immediately, and which ones should I leave in the
+	backlog for the time being? Since I've never liked deciding on priorities,
+	let's turn this into a popularity contest instead: The contributions with
+	the least popular secondary priorities will go towards TH01 first, giving
+	the most popular priorities a higher chance to still be left over after TH01
+	is done. As of this delivery, we'd have the following popularity order:
+</p><ol>
+	<li>TH05 (1.67 pushes), from T0182</li>
+	<li>Seihou (1 push), from T0184</li>
+	<li>TH03 (0.67 pushes), from T0146</li>
+</ol><p>
+	Which means that T0146 will be consumed for TH01 next, followed by T0184 and
+	then T0182. I only assign transactions immediately before a delivery though,
+	so you all still have the chance to change up these priorities before the
+	next one.
+</p><p>
+	Next up: The final boss of TH01 decompilation, YuugenMagan… if the current
+	or newly incoming TH01 funds happen to be enough to cover the entire fight.
+	If they don't turn out to be, I will have to pass the time with some Seihou
+	work instead, missing the TH01 anniversary deadline as a result.
+</p><script>
+	const _2022_07_17_p0_buttons = document.getElementById("{{.Date}}-p0");
+	const _2022_07_17_p0 = switchMultipleVideos("{{.Date}}-p0");
+	_2022_07_17_p0.add("(Original version)", "0", true);
+	_2022_07_17_p0.add("(Fixed version)", "1");
+	_2022_07_17_p0.addControls("{{.Date}}-p0-controls", 56.423, () => {
+		const frame = document.createElement('button');
+		frame.textContent = `First pellets spawned`;
+		frame.onclick = () => {
+			_2022_07_17_p0_buttons.querySelector("button:not(.active)").click();
+			_2022_07_17_p0.seek(1.932);
+		};
+		return frame;
+	});
+
+	const _2022_07_17_p7 = document.getElementById("{{.Date}}-p7");
+	videoAddControls("{{.Date}}-p7-controls", 56.423, () => _2022_07_17_p7);
+
+	const _2022_07_17_p4_h = document.getElementById("{{.Date}}-p4-h");
+	videoAddControls("{{.Date}}-p4-h-controls", 56.423, () => _2022_07_17_p4_h);
+
+	const _2022_07_17_p4_s = document.getElementById("{{.Date}}-p4-s");
+	videoAddControls("{{.Date}}-p4-s-controls", 56.423, () => _2022_07_17_p4_s);
+
+	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
+	_2022_07_17_hop.add("(Actual palette changes)", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
+	_2022_07_17_hop.add("(Expected palette changes)", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
+	_2022_07_17_hop.addControls("{{.Date}}-hop-controls", 56.423);
+</script>

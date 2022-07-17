@@ -200,3 +200,5 @@ P0201	[175, 167]	TH01 decompilation (SinGyoku, part 1/2: Preparation + sphere mo
 P0202	[177, 168]	TH01 decompilation (SinGyoku, part 2/2: Patterns 3-6 + main function + Missiles, part 2/2 + YuugenMagan setup)	2022-06-25T16:39:14Z	nmlgc/ReC98/compare/ff49e9e...4568bf7	1
 P0203	[178, 129, 163]	TH01 decompilation (Card-flipping stages, part 3/4: Bumpers and turrets)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/4568bf7...86cdf5f	1
 P0204	[174, 180]	TH01 decompilation (Card-flipping stages, part 4/4: Portals + Bomb animation)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/86cdf5f...0c682b5	1
+P0205	[181, 180]	TH01 decompilation (Mima, part 1/2: Patterns 1-4)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/3259190...327730f	1
+P0206	[180, 183, 168]	TH01 decompilation (Mima, part 2/2: Patterns 5-8 + main function) + Research (TH01's unexpected palette changes)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/327730f...454c105	1

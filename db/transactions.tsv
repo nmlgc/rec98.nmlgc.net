@@ -144,7 +144,7 @@ Time	Customer	Cents	Goal	ID	Delayed
 2022-01-13T10:26:31Z	10	3000	TH01	T0143	0
 2022-01-28T12:00:34Z	13	6000	TH01 > anything	T0144	0
 2022-01-31T13:48:39Z	10	2000	Improving the website || TH03	T0145	0
-2022-01-31T13:49:40Z	10	4000	TH01 || TH03	T0146	0
+2022-01-31T13:49:40Z	10	4000	TH01 > TH03	T0146	0
 2022-01-31T15:27:48Z	17	15000	TH05 boss and miniboss patterns, scripts, and bullet-moving code, especially Shinki 	T0147	0
 2022-02-01T06:22:17Z	2	7500	TH05 boss and miniboss patterns, scripts, and bullet-moving code, especially Shinki 	T0148	0
 2022-02-02T10:08:37Z	15	1000	Reverse-engineering	T0149	0
@@ -183,3 +183,4 @@ Time	Customer	Cents	Goal	ID	Delayed
 2022-07-10T20:31:15Z	1	10000	TH01 > TH05	T0182	0
 2022-07-13T10:53:02Z	10	3000	TH01	T0183	0
 2022-07-14T05:39:33Z	18	6000	TH01 > (Seihou || other secondary priorities from the final TH01 stretch)	T0184	0
+2022-07-18T07:25:13Z	10	6000	TH01 > TH03	T0185	0

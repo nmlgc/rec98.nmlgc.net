@@ -220,9 +220,9 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 		<li>Vertical bars invert either the Y or X velocity depending on whether
 		the Orb's current X velocity is 0 (Y) or not (X)</li>
 	</ul>
-	These conditions are only correct if the Orb is perpendicular to the bar, or
-	any part of a larger row/column of bars. If it's anywhere close to parallel
-	to these, the response <i>will</i> be incorrect, and send the Orb straight
+	These conditions are only correct if the Orb comes in at an angle roughly
+	between 45° and 135° on either side of a bar. If it's anywhere close to 0°
+	or 180°, this response <i>will</i> be incorrect, and send the Orb straight
 	through the bar. Since the large hitboxes make this easily possible, you can
 	still get the Orb to climb a vertical column, or glide along a horizontal
 	row:

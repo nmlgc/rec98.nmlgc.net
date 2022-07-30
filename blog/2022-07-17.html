@@ -69,10 +69,8 @@
 	the square from 8 frames ago. {{HTML_Emoji "tannedcirno"}}
 </p><figure class="th01_playfield">
 	<div class="multilayer">
-		<video id="{{.Date}}-p0-0" controls loop class="active">
-			{{- $vid_p0_0.Body -}}
-		</video>
-		<video id="{{.Date}}-p0-1" controls loop>{{$vid_p0_1.Body}}</video>
+		{{$vid_p0_0.TagWithIDActive "p0-0"}}
+		{{$vid_p0_1.TagWithID "p0-1"}}
 	</div>
 	<figcaption>
 		<p>
@@ -89,7 +87,7 @@
 	remembering the square corner coordinates across frames was definitely a
 	decent investment.
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-p7" controls loop>{{$vid_p7.Body}}</video>
+	{{$vid_p7.TagWithID "p7"}}
 	<figcaption>
 		<p id="{{.Date}}-p7-controls"></p>
 		Mima's laser pattern on Lunatic difficulty, now with correct laser spawn
@@ -108,7 +106,7 @@
 	{{Blog_PostLink "2022-06-17" "Kikuri, where we've seen the exact same issue with the teardrop ripple sprites"}}.
 	The conclusions are identical as well.
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-p4-h" controls loop>{{$vid_p4_h.Body}}</video>
+	{{$vid_p4_h.TagWithID "p4-h"}}
 	<figcaption>
 		<p id="{{.Date}}-p4-h-controls"></p>
 		Mima's flame pillar pattern. This video was recorded on a particularly
@@ -128,7 +126,7 @@
 	FPS. Why go that low on purpose when you can just make the game render ✨
 	<i>smoothly</i> ✨ instead?
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-p4-s" controls loop>{{$vid_p4_s.Body}}</video>
+	{{$vid_p4_s.TagWithID "p4-s"}}
 	<figcaption>
 		<p id="{{.Date}}-p4-s-controls"></p>
 		So smooth it's almost uncanny.
@@ -158,10 +156,8 @@
 	not what we see in the actual game:
 </p><figure class="th01_playfield">
 	<div class="multilayer">
-		<video id="{{.Date}}-hop-0" controls loop class="active">
-			{{$vid_hop_0.Body}}
-		</video>
-		<video id="{{.Date}}-hop-1" controls loop>{{$vid_hop_1.Body}}</video>
+		{{$vid_hop_0.TagWithIDActive "hop-0"}}
+		{{$vid_hop_1.TagWithID "hop-1"}}
 	</div>
 	<figcaption>
 		<p>
@@ -219,7 +215,7 @@
 	mutation of global state is to get rid of global state, and not to put up
 	safety nets hidden in the middle of existing effect code.
 </p><figure class="pixelated fullres">
-	<video controls loop>{{$vid_green.Body}}</video>
+	{{$vid_green.Tag}}
 	<figcaption>The easiest way of reproducing the green discoloration bug in
 	the TH01 Konngara fight, timed to show the maximum amount of time the
 	discoloration can possibly last.</figcaption>

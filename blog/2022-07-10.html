@@ -68,10 +68,8 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	letting them do their work would have entirely prevented these loops:
 </p><figure class="th01_playfield">
 	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		<video id="{{.Date}}-b2-0" controls loop class="active">
-			{{$vid_b2_0.Body}}
-		</video>
-		<video id="{{.Date}}-b2-1" controls loop>{{$vid_b2_1.Body}}</video>
+		{{$vid_b2_0.TagWithIDActive "b2-0"}}
+		{{$vid_b2_1.TagWithID "b2-1"}}
 	</div>
 	<figcaption>
 		<p>
@@ -113,10 +111,8 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	the newly applied force is not guaranteed to be enough:
 </p><figure class="th01_playfield">
 	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		<video id="{{.Date}}-b3-0" controls loop class="active">
-			{{$vid_b3_0.Body}}
-		</video>
-		<video id="{{.Date}}-b3-1" controls loop>{{$vid_b3_1.Body}}</video>
+		{{$vid_b3_0.TagWithIDActive "b3-0"}}
+		{{$vid_b3_1.TagWithID "b3-1"}}
 	</div>
 	<figcaption>
 		<p>
@@ -137,7 +133,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	player can fire a new shot every 4 frames when standing still. That makes it
 	immediately obvious why this works:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-hbar" controls loop>{{$vid_hbar.Body}}</video>
+	{{$vid_hbar.TagWithID "hbar"}}
 	<figcaption>
 		<p id="{{.Date}}-hbar-controls"></p>
 		The <span style="color:green">green numbers</span> show the amount of
@@ -175,7 +171,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	Orb can climb, as the initial collision with two hitboxes cancels out the
 	intended sign change that reflects the Orb away from the bars:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-rope" controls loop>{{$vid_rope.Body}}</video>
+	{{$vid_rope.TagWithID "rope"}}
 	<figcaption>
 		<p id="{{.Date}}-rope-controls"></p>
 		This footage was recorded without the workaround I am about to describe.
@@ -196,7 +192,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	absolute screen coordinates. Stage 17 on the <span class="ja">魔﻿界
 	</span>/Makai route contains exactly such a layout:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-fall" controls loop>{{$vid_fall.Body}}</video>
+	{{$vid_fall.TagWithID "fall"}}
 	<figcaption>
 		<p id="{{.Date}}-fall-controls"></p>
 		The collision handlers of adjacent vertical bars always activate in the
@@ -228,13 +224,11 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	row:
 </p><figure class="side_by_side">
 	<figure>
-		<video id="{{.Date}}-realrope" controls loop>
-			{{$vid_realrope.Body}}
-		</video>
+		{{$vid_realrope.TagWithID "realrope"}}
 		<figcaption id="{{.Date}}-realrope-controls"></figcaption>
 	</figure>
 	<figure>
-		<video id="{{.Date}}-glide" controls loop>{{$vid_glide.Body}}</video>
+		{{$vid_glide.TagWithID "glide"}}
 		<figcaption id="{{.Date}}-glide-controls"></figcaption>
 	</figure>
 </figure><p>
@@ -256,7 +250,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-vbar" controls loop>{{$vid_vbar.Body}}</video>
+	{{$vid_vbar.TagWithID "vbar"}}
 	<figcaption id="{{.Date}}-vbar-controls"></figcaption>
 </figure><p>
 	At first, that workaround doesn't seem to make a difference here. As we
@@ -333,7 +327,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-p" controls loop>{{$vid_p.Body}}</video>
+	{{$vid_p.TagWithID "p"}}
 	<figcaption id="{{.Date}}-p-controls"></figcaption>
 </figure><p>
 	And that's it! At least the turrets don't have anything notable to say about

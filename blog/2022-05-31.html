@@ -1,4 +1,4 @@
-{{$vid_heap := (call .Video "TH01-Elis-heap-corruption" "Video demonstrating TH01 Elis' HP going below zero, and how rendering negative HP will cause heap corruption") -}}
+{{$vid_heap := (call .VideoNoLoop "TH01-Elis-heap-corruption" "Video demonstrating TH01 Elis' HP going below zero, and how rendering negative HP will cause heap corruption") -}}
 {{$vid_3_0 := (call .Video "TH01-Elis-pattern-3-original" "Video of TH01 Elis' \"pellets along circle\" pattern in its original version") -}}
 {{$vid_3_1 := (call .Video "TH01-Elis-pattern-3-fixed" "Video of TH01 Elis' \"pellets along circle\" pattern, with the pellet camp bumped to 160, fixed blitting for the 4th quadrant of the big circle, and a correctly centered pellet spawn point") -}}
 {{$vid_7_e := (call .Video "TH01-Elis-pattern-7-Easy" "Video of the \"slow spread\" pattern of TH01 Elis' bat form on Easy Mode") -}}
@@ -92,7 +92,7 @@
 	trivial to cause: Simply hold  ↵&nbsp;Return from the beginning of the
 	fight, and the completion condition will never be <code>true</code>, as the
 	HP and frame numbers run past the off-by-one meeting point.
-</p><figure><video controls>{{$vid_heap.Body}}</video></figure><p>
+</p><figure>{{$vid_heap.Tag}}</figure><p>
 	Regular gameplay, however, entirely prevents this due to the fixed start
 	positions of Reimu and the Orb, the Orb's fixed initial trajectory, and the
 	50 frames of delay until a bomb deals damage to a boss. These aspects make
@@ -130,10 +130,8 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	danmaku pattern, right in phase 1:
 </p><figure class="fullres">
 	<div class="multilayer">
-		<video id="{{.Date}}-p3-0" controls loop class="active">
-			{{$vid_3_0.Body}}
-		</video>
-		<video id="{{.Date}}-p3-1" controls loop>{{$vid_3_1.Body}}</video>
+		{{$vid_3_0.TagWithIDActive "p3-0"}}
+		{{$vid_3_1.TagWithID "p3-1"}}
 	</div>
 	<figcaption id="{{.Date}}-p3">
 		<script>switchVideoButton("{{.Date}}-p3");</script> The "pellets along
@@ -177,7 +175,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	which displays some rather unique hitboxes. The one against the Orb is fine,
 	but the one against player shots…
 </p><figure class="fullres">
-	<video controls loop>{{$vid_hitbox.Body}}</video>
+	{{$vid_hitbox.Tag}}
 </figure><p>
 	… uses the bat's X coordinate for both X and Y dimensions.
 	{{HTML_Emoji "zunpet"}} In regular gameplay, it's not <i>too</i> bad as most
@@ -195,12 +193,10 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	angle, leaving plenty of room for the player to move out of the way:
 </p><figure class="fullres">
 	<div class="multilayer">
-		<video id="{{.Date}}-p7-l" controls loop class="active">
-			{{$vid_7_l.Body}}
-		</video>
-		<video id="{{.Date}}-p7-h" controls loop>{{$vid_7_h.Body}}</video>
-		<video id="{{.Date}}-p7-n" controls loop>{{$vid_7_n.Body}}</video>
-		<video id="{{.Date}}-p7-e" controls loop>{{$vid_7_e.Body}}</video>
+		{{$vid_7_l.TagWithIDActive "p7-l"}}
+		{{$vid_7_h.TagWithID "p7-h"}}
+		{{$vid_7_n.TagWithID "p7-n"}}
+		{{$vid_7_e.TagWithID "p7-e"}}
 	</div>
 	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on <span
 	id="{{.Date}}-p7"></span>. Which version do you think is the easiest
@@ -209,7 +205,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
 </p><figure class="fullres">
-	<video id="{{.Date}}-p12" controls loop>{{$vid_12.Body}}</video>
+	{{$vid_12.TagWithID "p12"}}
 </figure><p>
 	After the circle spawned completely, you lose a life by moving outside it,
 	but doing that immediately advances the pattern <a href="#{{.Date}}-p12"

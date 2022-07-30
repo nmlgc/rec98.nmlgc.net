@@ -138,7 +138,7 @@
 	right, compared to where you would expect it from a ripple sprite's
 	on-screen position:
 </p><figure class="th01_playfield">
-	<video loop controls>{{$vid_ripple.Body}}</video>
+	{{$vid_ripple.Tag}}
 	<figcaption>Due to the deterministic nature of this part of the fight, it's
 	always 5 pixels for this first set of ripples. These visualizations are
 	obviously not pixel-perfect due to the different potential, shapes of
@@ -172,12 +172,10 @@
 	pellets adding a constant aimed component to every difficulty level.
 </p><figure class="fullres">
 	<div class="multilayer">
-		<video id="{{.Date}}-p4-l" controls loop class="active">
-			{{$vid_p4_l.Body}}
-		</video>
-		<video id="{{.Date}}-p4-h" controls loop>{{$vid_p4_h.Body}}</video>
-		<video id="{{.Date}}-p4-n" controls loop>{{$vid_p4_n.Body}}</video>
-		<video id="{{.Date}}-p4-e" controls loop>{{$vid_p4_e.Body}}</video>
+		{{$vid_p4_l.TagWithIDActive "p4-l"}}
+		{{$vid_p4_h.TagWithID "p4-h"}}
+		{{$vid_p4_n.TagWithID "p4-n"}}
+		{{$vid_p4_e.TagWithID "p4-e"}}
 	</div>
 	<figcaption>Kikuri's phase 4 patterns, on <span
 	id="{{.Date}}-p4"></span>.</figcaption>
@@ -272,10 +270,8 @@
 	<code>i</code> overlaid using the text chip. Caution, flashing lights:
 </p><figure class="th01_ending">
 	<div class="multilayer">
-		<video id="{{.Date}}-be2-0" controls loop class="active">
-			{{$vid_be2_0.Body}}
-		</video>
-		<video id="{{.Date}}-be2-1" controls loop>{{$vid_be2_1.Body}}</video>
+		{{$vid_be2_0.TagWithIDActive "be2-0"}}
+		{{$vid_be2_1.TagWithID "be2-1"}}
 	</div>
 	<figcaption>
 		<p>

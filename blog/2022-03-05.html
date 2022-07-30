@@ -43,13 +43,13 @@
 	pattern:
 </p><figure class="side_by_side">
 	<figure class="singleplayer_playfield">
-		<video controls loop>{{$vid1.Body}}</video>
+		{{$vid1.Tag}}
 		<figcaption>Louise's final pattern in its original form, demonstrating
 		exact linear bullet movement. Note how each bullet spawns slightly
 		behind the delay cloud: ZUN simply forgot to shift the fixed origin
 		point along with it.</figcaption>
 	</figure><figure class="singleplayer_playfield">
-		<video controls loop>{{$vid2.Body}}</video>
+		{{$vid2.Tag}}
 		<figcaption>The same pattern with standard bullet movement, corrupting
 		its intended appearance. No delay cloud-related oversights here though,
 		at least.</figcaption>
@@ -102,7 +102,7 @@ head_p->angle -= angle_delta;
 	Maximize this delta angle by staying as close to 180° away from their
 	current direction as possible, and let their acceleration do the rest.
 </p><figure class="singleplayer_playfield">
-	<video controls loop class="active">{{$vid3.Body}}</video>
+	{{$vid3.Tag}}
 </figure><p>
 	At least that's the theory for dodging a <i>single</i> one. As a danmaku
 	designer, you can now of course place other bullets at these technically

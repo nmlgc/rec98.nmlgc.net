@@ -48,7 +48,7 @@
 	<i>and</i> stretch the entire width of SinGyoku's sprite? You get a hitbox
 	that ends in mid-air, far away from the right edge of the sprite:
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-v1" controls loop>{{$vid1.Body}}</video>
+	{{$vid1.TagWithID "v1"}}
 	<figcaption>
 		<p id="{{.Date}}-v1-controls"></p>
 		Due to VRAM byte alignment, all player shots fired between
@@ -89,7 +89,7 @@
 	sphere's movement in the next one.</li>
 </ul>
 </p><figure class="th01_playfield">
-	<video id="{{.Date}}-v2" controls loop>{{$vid2.Body}}</video>
+	{{$vid2.TagWithID "v2"}}
 	<figcaption>
 		<p id="{{.Date}}-v2-controls"></p>
 		<p>By having the sphere move from the right edge of the playfield to the

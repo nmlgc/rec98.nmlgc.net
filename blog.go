@@ -19,11 +19,24 @@ type BlogVideo struct {
 	VP9 template.HTML // Lossless
 	VP8 template.HTML // Fallback for outdated garbage
 
-	Alt string
+	Date   string
+	Alt    string
+	NoLoop bool
 }
 
-// Body generates the <source> tags and alternate text for a video.
-func (b *BlogVideo) Body() (ret template.HTML) {
+// tag generates a complete HTML <video> tag for a video.
+func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
+	ret += `<video controls`
+	if id != "" {
+		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, id))
+	}
+	if !b.NoLoop {
+		ret += ` loop`
+	}
+	if active {
+		ret += ` class="active"`
+	}
+	ret += `>`
 	ret += template.HTML(`<source src="` + b.VP9 + `" type="video/webm">`)
 	ret += template.HTML(`<source src="` + b.VP8 + `" type="video/webm">`)
 
@@ -31,7 +44,20 @@ func (b *BlogVideo) Body() (ret template.HTML) {
 		ret += template.HTML(b.Alt + ". ")
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.VP9))
+	ret += `</video>`
 	return ret
+}
+
+func (b *BlogVideo) Tag() (ret template.HTML) {
+	return b.tag("", false)
+}
+
+func (b *BlogVideo) TagWithID(id string) (ret template.HTML) {
+	return b.tag(id, false)
+}
+
+func (b *BlogVideo) TagWithIDActive(id string) (ret template.HTML) {
+	return b.tag(id, true)
 }
 
 // BlogEntry describes an existing blog entry, together with information about
@@ -107,6 +133,7 @@ type PostDot struct {
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
 	Video       func(fn string, alt string) *BlogVideo
+	VideoNoLoop func(fn string, alt string) *BlogVideo
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -137,17 +164,24 @@ func (e BlogEntry) Render(filters []string) Post {
 	postFileURL := func(fn string) template.HTML {
 		return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
 	}
+	video := func(fn string, alt string) *BlogVideo {
+		return &BlogVideo{
+			VP9:  postFileURL(fn + ".webm"),
+			VP8:  postFileURL(fn + "-vp8.webm"),
+			Date: e.Date,
+			Alt:  alt,
+		}
+	}
 	ctx := PostDot{
 		Date:        e.Date,
 		HostedPath:  blogHP,
 		DatePrefix:  datePrefix,
 		PostFileURL: postFileURL,
-		Video: func(fn string, alt string) *BlogVideo {
-			return &BlogVideo{
-				VP9: postFileURL(fn + ".webm"),
-				VP8: postFileURL(fn + "-vp8.webm"),
-				Alt: alt,
-			}
+		Video:       video,
+		VideoNoLoop: func(fn string, alt string) *BlogVideo {
+			ret := video(fn, alt)
+			ret.NoLoop = true
+			return ret
 		},
 	}
 	pagesExecute(&b, e.templateName, &ctx)

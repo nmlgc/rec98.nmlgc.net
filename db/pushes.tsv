@@ -202,3 +202,8 @@ P0203	[178, 129, 163]	TH01 decompilation (Card-flipping stages, part 3/4: Bumper
 P0204	[174, 180]	TH01 decompilation (Card-flipping stages, part 4/4: Portals + Bomb animation)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/86cdf5f...0c682b5	1
 P0205	[181, 180]	TH01 decompilation (Mima, part 1/2: Patterns 1-4)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/3259190...327730f	1
 P0206	[180, 183, 168]	TH01 decompilation (Mima, part 2/2: Patterns 5-8 + main function) + Research (TH01's unexpected palette changes)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/327730f...454c105	1
+P0207	[182]	TH01 decompilation (YuugenMagan, part 1/5: Preparation)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/454c105...c26ef4b	1
+P0208	[182, 146]	TH01 decompilation (YuugenMagan, part 2/5: Helper functions)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/c26ef4b...239a3ec	1
+P0209	[185]	TH01 decompilation (YuugenMagan, part 3/5: Main function)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/239a3ec...5030867	1
+P0210	[146, 184]	TH01 decompilation (YuugenMagan, part 4/5: Eye opening/closing + 邪 colors)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/5030867...149fbca	1
+P0211	[184, 186]	TH01 decompilation (Data catch-up + common part of endings)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/149fbca...d398a94	1

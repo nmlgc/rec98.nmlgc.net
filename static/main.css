@@ -152,6 +152,9 @@ figure.th01_ending .multilayer {
 figure.th01_playfield .multilayer {
 	aspect-ratio: 40 / 21;
 }
+figure.th01_playfield.and_hp .multilayer {
+	aspect-ratio: 40 / 22;
+}
 figure.singleplayer_playfield .multilayer {
 	aspect-ratio: 24 / 23;
 }

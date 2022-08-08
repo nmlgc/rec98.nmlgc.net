@@ -1,0 +1,448 @@
+{{$pic_hitbox := (call .PostFileURL "TH01-YuugenMagan-eye-hitboxes.png") -}}
+{{$vid_p0_h := (call .Video "TH01-YuugenMagan-phase-0-Hard" "Video of TH01 YuugenMagan's phase 0 on Hard mode, with hitbox overlays") -}}
+{{$vid_p0_l := (call .Video "TH01-YuugenMagan-phase-0-Lunatic" "Video of TH01 YuugenMagan's phase 0 on Lunatic mode, with hitbox overlays") -}}
+{{$vid_p0_u := (call .Video "TH01-YuugenMagan-phase-0-Lunatic-unused" "Video of TH01 YuugenMagan's phase 0 on Lunatic mode, with hitbox overlays and the full intended pellet pattern") -}}
+{{$pic_coord_0 := (call .PostFileURL "TH01-YuugenMagan-inaccurate-bottom-center.png") -}}
+{{$pic_coord_1 := (call .PostFileURL "TH01-YuugenMagan-inaccurate-missiles.png") -}}
+{{$pic_coord_2 := (call .PostFileURL "TH01-YuugenMagan-inaccurate-3-pixel-laser.png") -}}
+{{$pic_coord_3 := (call .PostFileURL "TH01-YuugenMagan-inaccurate-pentagram.png") -}}
+{{$vid_p5_e := (call .Video "TH01-YuugenMagan-phase-5-reconstructed-Easy" "Video of TH01 YuugenMagan's phase 5 patterns on Easy Mode, with the second variation running for a full 360° rather than the original 162° to reveal an unused piece of danmaku design") -}}
+{{$vid_p5_n := (call .Video "TH01-YuugenMagan-phase-5-reconstructed-Normal" "Video of TH01 YuugenMagan's phase 5 patterns on Normal Mode, with the second variation running for a full 360° rather than the original 162° to reveal an unused piece of danmaku design") -}}
+{{$vid_p5_h := (call .Video "TH01-YuugenMagan-phase-5-reconstructed-Hard" "Video of TH01 YuugenMagan's phase 5 patterns on Hard Mode, with the second variation running for a full 360° rather than the original 162° to reveal an unused piece of danmaku design") -}}
+{{$vid_p5_l := (call .Video "TH01-YuugenMagan-phase-5-reconstructed-Lunatic" "Video of TH01 YuugenMagan's phase 5 patterns on Lunatic Mode, with the second variation running for a full 360° rather than the original 162° to reveal an unused piece of danmaku design") -}}
+{{$vid_blit := (call .Video "TH01-YuugenMagan-blitting-bugs" "Video demonstrating how ZUN's blitting-related laziness manifests itself in a total of 4 bugs in the TH01 YuugenMagan fight") -}}
+{{$vid_p := (call .Video "TH01-YuugenMagan-pentagram-hitboxes" "Video of the pentagram hitboxes in the TH01 YuugenMagan fight") -}}
+{{$vid_邪 := (call .Video "TH01-YuugenMagan-邪-color" "Video of the 邪 color shifts in the TH01 YuugenMagan fight, together with debug output to demonstrate how the final colors are a result of stage palette overflows") -}}
+
+<p>
+	Whew, TH01's boss code just had to end with another beast of a boss, taking
+	way longer than it should have and leaving uncomfortably little time for the
+	rest of the game. Let's get right into the overview of YuugenMagan, the most
+	sequential and scripted battle in this game:
+</p><ul>
+	<li>The fight consists of 14 phases, numbered (of course) from 0 to 13.
+	Unlike all other bosses, the "entrance phase" 0 is a proper gameplay-enabled
+	part of the fight itself, which is why I also count it here.</li>
+	<li>YuugenMagan starts with 16 HP, second only to Sariel's 18+6. The HP bar
+	visualizes the HP threshold for the end of phases 3 (white part) and 7
+	(red-white part), respectively.</li>
+	<li>All even-numbered phases change the color of the 邪 kanji in the stage
+	background, and don't check for collisions between the Orb and any eye.
+	Almost all of them consequently don't feature an attack, except for phase
+	0's 1-pixel lasers, spawning symmetrically from the left and right edges of
+	the playfield towards the center. Which means that yes, YuugenMagan is in
+	fact invincible during this first attack.</li>
+	<li>All other attacks are part of the odd-numbered phases:<ul>
+		<li><strong>Phase 1:</strong> Slow pellets from the lateral eyes. Ends
+		at 15 HP.</li>
+		<li><strong>Phase 3:</strong> Missiles from the southern eyes, whose
+		angles first shift away from Reimu's tracked position and then towards
+		it. Ends at 12 HP.</li>
+		<li><strong>Phase 5:</strong> Circular pellets sprayed from the lateral
+		eyes. Ends at 10 HP.</li>
+		<li><strong>Phase 7:</strong> Another missile pattern, but this time
+		with both eyes shifting their missile angles by the same
+		(counter-)clockwise delta angles. Ends at 8 HP.</li>
+		<li><strong>Phase 9:</strong> The 3-pixel 3-laser sequence from the
+		northern eye. Ends at 2 HP.</li>
+		<li><strong>Phase 11:</strong> Spawns the pentagram with one corner out
+		of every eye, then gradually shrinks and moves it towards the center of
+		the playfield. Not really an "attack" (surprise) as the pentagram can't
+		reach the player during this phase, but collision detection is
+		technically already active here. Ends at 0 HP, marking the earliest
+		point where the fight itself can possibly end.</li>
+		<li><strong>Phase 13:</strong> Runs through the parallel "pentagram
+		attack phases". The first five consist of the pentagram alternating its
+		spinning direction between clockwise and counterclockwise while firing
+		pellets from each of the five star corners. After that, the pentagram
+		slams itself into the player, before YuugenMagan <i>loops back to phase
+		10</i> to spawn a new pentagram. On the next run through phase 13, the
+		pentagram grows larger and immediately slams itself into the player,
+		before starting a new pentagram attack phase cycle with another loop
+		back to phase 10.</li>
+	</ul></li>
+	<li>Since the HP bar fills up in a phase with no collision detection,
+	YuugenMagan is immune to
+	{{Blog_PostLink "2022-05-31" "debug mode heap corruption"}}. It's generally
+	impossible to get YuugenMagan's HP into negative numbers, with collision
+	detection being disabled every other phase, and all odd-numbered phases
+	ending immediately upon reaching their HP threshold.</li>
+	<li>All phases until the very last one have a timeout condition, independent
+	from YuugenMagan's current HP:<ul>
+		<li><strong>Phase 0:</strong> 331 frames</li>
+		<li><strong>Phase 1:</strong> 1101 frames</li>
+		<li><strong>Phases 2, 4, 6, 8, 10, and 12:</strong> 70 frames each</li>
+		<li><strong>Phases 3 and 7:</strong> 5 iterations of the pattern, or
+		1845 frames each</li>
+		<li><strong>Phase 5:</strong> 5 iterations of the pattern, or 2230
+		frames</li>
+		<li><strong>Phase 9:</strong> The full duration of the sequence, or 491
+		frames</li>
+		<li><strong>Phase 11:</strong> Until the pentagram reached its target
+		position, or 221 frames</li>
+	</ul>
+	This makes it possible to reach phase 13 without dealing a single point of
+	damage to YuugenMagan, after almost exactly 2½ minutes on any difficulty.
+	Your actual time will certainly be higher though, as you <i>will</i> have to
+	<span style="color: red">HARRY UP</span> at least once during the attempt.
+	And let's be real, you're <i>very</i> likely to subsequently lose a
+	life.</li>
+</ul><hr /><p>
+	At a pixel-perfect 81×61 pixels, the Orb hitboxes are laid out rather
+	generously this time, reaching quite a bit outside the 64×48 eye sprites:
+</p><figure>
+	<img src="{{$pic_hitbox}}" alt="TH01 YuugenMagan's hitboxes."/>
+</figure><p>
+	And that's about the only positive thing I can say about a position
+	calculation in this fight. Phase 0 already starts with the lasers being off
+	by 1 pixel from the center of the iris. Sure, 28 may be a nicer number to
+	add than 29, but the result won't be byte-aligned either way? This is
+	followed by the eastern laser's hitbox somehow being 24 pixels larger than
+	the others, stretching a rather unexpected 70 pixels compared to the 46 of
+	every other laser.<br />
+	On a more hilarious note, the eye closing keyframe contains the following
+	(pseudo-)code, comprising the only real accidentally "unused" danmaku
+	subpattern in TH01:
+</p><pre>// Did you mean ">= RANK_HARD"?
+if(rank == RANK_HARD) {
+	eye_north.fire_aimed_wide_5_spread();
+	eye_southeast.fire_aimed_wide_5_spread();
+	eye_southwest.fire_aimed_wide_5_spread();
+
+	// Because this condition can never be true otherwise.
+	// As a result, no pellets will be spawned on Lunatic mode.
+	// (There is another Lunatic-exclusive subpattern later, though.)
+	if(rank == RANK_LUNATIC) {
+		eye_west.fire_aimed_wide_5_spread();
+		eye_east.fire_aimed_wide_5_spread();
+	}
+}</pre>
+</p><figure class="th01_playfield and_hp">
+	<div class="multilayer">
+		{{$vid_p0_u.TagWithIDActive "p0-u"}}
+		{{$vid_p0_l.TagWithID "p0-l"}}
+		{{$vid_p0_h.TagWithID "p0-h"}}
+	</div>
+	<figcaption>
+		<p id="{{.Date}}-p0"></p>
+		Featuring the weirdly extended hitbox for the eastern laser, as well as
+		an initial Reimu position that points out the disparity between
+		byte-aligned rendering and the internal coordinates one final time.
+	</figcaption>
+</figure><hr /><p>
+	After a few utility functions that look more like a quickly abandoned
+	refactoring attempt, we quickly get to the main attraction: YuugenMagan
+	combines the entire boss script and most of the pattern code into a single
+	2,634-instruction function, totaling 9,677 bytes inside
+	<code>REIIDEN.EXE</code>. For comparison, ReC98's version of this code
+	consists of at least 49 functions, excluding those I had to add to work
+	around ZUN's little inconsistencies, or the ones I added for stylistic
+	reasons.<br />
+	In fact, this function is so large that Turbo C++ 4.0J refuses to generate
+	assembly output for it via the <code>-S</code> command-line option, aborting
+	with a <code>Compiler table limit exceeded in function</code> error.
+	Contrary to what the <i>Borland C++ 4.0 User Guide</i> suggests, this
+	instance of the error is not at all related to the number of function bodies
+	or any metric of algorithmic complexity, but is simply a result of the
+	compiler's internal text representation for a single function overflowing a
+	64 KiB memory segment. Merely shortening the names of enough identifiers
+	within the function can help to get that representation down below 64 KiB.
+	If you encounter this error during regular software development, you might
+	interpret it as the compiler's roundabout way of telling you that it inlined
+	way more function calls than you probably wanted to have inlined. Because
+	<i>you</i> definitely <i>won't</i> explicitly spell out such a long function
+	in newly-written code, right?
+	{{HTML_Emoji "tannedcirno"}}<br />
+	At least it wasn't the worst copy-pasting job in this
+	game; that trophy still goes to {{Blog_PostLink "2022-05-31" "Elis"}}. And
+	while the tracking code for adjusting an eye's sprite according to the
+	player's relative position is one of the main causes behind all the bloat,
+	it's also 100% consistent, and might have been an inlined class method in
+	ZUN's original code as well.
+</p><p>
+	The clear highlight in this fight though? <i>Almost no coordinate is
+	precisely calculated where you'd expect it to be.</i> In particular, all
+	bullet spawn positions completely ignore the direction the eyes are facing
+	to:
+</p><figure class="th01_playfield">
+	<img src="{{$pic_coord_0}}" alt="Pellets unexpectedly spawned at the exact
+	bottom center of an eye" />
+	<figcaption>Combining the bottom of the pupil with the exact horizontal
+	center of the sprite as a whole might sound like a good idea, but looks
+	especially wrong if the eye is facing right.</figcaption>
+</figure><figure class="th01_playfield">
+	<img src="{{$pic_coord_1}}" alt="Missile spawn positions in the TH01
+	YuugenMagan fight" />
+	<figcaption>Here it's the other way round: OK for a right-facing eye, really
+	wrong for a left-facing one.</figcaption>
+</figure><figure class="th01_playfield">
+	<img src="{{$pic_coord_2}}" alt="Spawn position of the 3-pixel laser in the
+	TH01 YuugenMagan fight" />
+	<figcaption>Dude, the eye is even <i>supposed</i> to track the laser in this
+	one!</figcaption>
+</figure><figure class="th01_playfield">
+	<img src="{{$pic_coord_3}}" alt="The final center position of the regular
+	pentagram in the TH01 YuugenMagan fight" />
+	<figcaption>Hint: That's not the center of the playfield. At least the
+	pellets are sort of correct, but with the corner calculates precomputed, you
+	could only get them wrong on purpose.</figcaption>
+</figure><p>
+	Due to their effect on gameplay, these inaccuracies can't even be called
+	"bugs", and made me devise a new "quirk" category instead. More on that in
+	the TH01 100% blog post, though.
+</p><hr /><p>
+	While we did see an <i>accidentally</i> unused bullet pattern earlier, I can
+	now say with certainty that there are no <i>truly</i> unused danmaku
+	patterns in TH01, i.e., pattern code that exists but is never called.
+	However, the code for YuugenMagan's phase 5 reveals another small piece of
+	danmaku design <i>intention</i> that never shows up within the parameters of
+	the original game.<br />
+	By default, pellets are clipped when they fly past the top of the playfield,
+	which we can clearly observe for the first few pellets of this pattern.
+	Interestingly though, the second subpattern actually configures its pellets
+	to fall straight down from the top of the playfield instead. You never see
+	this happening in-game because ZUN limited that subpattern to a downwards
+	angle range of <code>0x73</code> or 162°, resulting in none of its pellets
+	ever getting close to the top of the playfield. If we extend that range to a
+	full 360° though, we can see how ZUN might have originally planned the
+	pattern to end:
+</p><figure class="th01_playfield and_hp">
+	<div class="multilayer">
+		{{$vid_p5_l.TagWithIDActive "p5-l"}}
+		{{$vid_p5_h.TagWithID "p5-h"}}
+		{{$vid_p5_n.TagWithID "p5-n"}}
+		{{$vid_p5_e.TagWithID "p5-e"}}
+	</div>
+	<figcaption>YuugenMagan's phase 5 patterns, on <span
+	id="{{.Date}}-p5"></span>, with the <a
+		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seek(4.094);'
+	>second subpattern</a> extended to reveal the different pellet behavior
+	that remained in the final game code. In the original game, the eyes would
+	stop spawning bullets on <a
+		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seekAndStop(6.150);'
+	>this frame</a>.</figcaption>
+</figure><hr /><p>
+	If we also disregard everything else about YuugenMagan that fits the
+	upcoming definition of <i>quirk</i>, we're left with 6 "fixable" bugs, all
+	of which are a symptom of general blitting and unblitting laziness. Funnily
+	enough, they can all be demonstrated within a short 9-second part of the
+	fight, from the end of phase 9 up until the pentagram starts spinning in
+	phase 13:
+</p><figure class="th01_playfield and_hp">
+	{{$vid_blit.TagWithID "blit"}}
+	<figcaption id="{{.Date}}-blit-controls"></figcaption>
+</figure><ol>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'videoSeekAndStop(_2022_08_08_blit, 0.089);'
+	>General flickering whenever any sprite overlaps an eye</a>. This is caused
+	by only reblitting each eye every 3 frames, and is an issue all throughout
+	the fight. You might have already spotted it in the videos above.</li>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'videoSeekAndStop(_2022_08_08_blit, 0.160);'
+	>Each of the two lasers is unblitted and blitted individually</a> instead of
+	each operation being done for both lasers together. Remember how
+	{{Blog_PostLink "2022-05-31" "ZUN unblits 32 horizontal pixels for every row of a line regardless of its width"}}?
+	That's why the top part of the left, right-moving laser is never visible,
+	because it's blitted before the other laser is unblitted.</li>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'_2022_08_08_blit.currentTime = 0.673; _2022_08_08_blit.play();'
+	>ZUN forgot to unblit the lasers when phase 9 ends.</a> This footage was
+	recorded by pressing ↵&nbsp;Return in debug mode, and it's probably
+	impossible to achieve this during actual gameplay without TAS techniques.
+	You would have to deal the required 6 points of damage within 491 frames,
+	with the eye being invincible during 240 of them. Simply shooting up an Orb
+	with a horizontal velocity of 0 would also only work a single time, as boss
+	entities always repel the Orb with a horizontal velocity of ±4.</li>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'_2022_08_08_blit.currentTime = 4.396;'
+	>The shrinking pentagram is unblitted after the eyes were blitted</a>,
+	adding another guaranteed frame of flicker on top of the ones in 1). Like in
+	2), the blockiness of the holes is another result of unblitting 32 pixels
+	per row at a time.</li>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'videoSeekAndStop(_2022_08_08_blit, 5.884);'
+	>Another missing unblitting call in a phase transition</a>, as the pentagram
+	switches from its not quite correctly interpolated shrunk form to a regular
+	star polygon with a radius of 64 pixels. Indirectly caused by the massively
+	bloated coordinate calculation for the shrink animation being done
+	separately for the unblitting and blitting calls. Instead of, y'know, just
+	doing it once and storing the result in variables that can later be
+	reused.</li>
+	<li><a href='#{{.Date}}-blit' onclick=
+		'_2022_08_08_blit.currentTime = 7.089; _2022_08_08_blit.play();
+	'>The pentagram is not reblitted at all during the first 100 frames of phase
+	13</a>. During that rather long time, it's easily possible to remove it from
+	VRAM completely by covering its area with player shots. Or <span
+	style="color: red">HARRY UP</span> pellets.</li>
+</ol><p>
+	Definitely an appropriate end for this game's entity blitting code.
+	{{HTML_Emoji "onricdennat"}} I'm <i>really</i> looking forward to writing a
+	proper sprite system for the Anniversary Edition…
+</p><p>
+	And just in case you were wondering about the hitboxes of these pentagrams
+	as they slam themselves into Reimu:
+</p><figure>{{$vid_p.Tag}}</figure><p>
+	62 pixels on the X axis, centered around each corner point of the star, 16
+	pixels below, and extending infinitely far up. The latter part becomes
+	especially devious because the game <i>always</i> collision-detects
+	<i>all</i> 5 corners, regardless of whether they've already clipped through
+	the bottom of the playfield. The simultaneously occurring shape distortions
+	are simply a result of the line drawing function's rather poor
+	re-interpolation of any line that runs past the 640×400 VRAM boundaries;
+	{{Blog_PostLink "2022-05-31" "I described that in detail back when I debugged the shootout laser crash"}}.
+	Ironically, using fixed-size hitboxes for a variable-sized pentagram means
+	that the larger one is easier to dodge.
+</p><hr /><p>
+	The final puzzle in TH01's boss code comes
+	{{Blog_PostLink "2022-07-17" "once again"}} in the form of weird hardware
+	palette changes. The <span class="ja">邪</span> kanji on the background
+	image goes through various colors throughout the fight, which ZUN
+	implemented by gradually incrementing and decrementing either a single one
+	or none of the color's three 4-bit components at the beginning of each
+	even-numbered phase. The resulting color sequence, however, doesn't
+	<i>quite</i> seem to follow these simple rules:
+</p><ul id="{{.Date}}-y-phases">
+	{{- define "邪" -}}
+		<code>{{.}}</code>
+		<strong lang="ja" style="
+			background: linear-gradient(135deg, #600 0%, #018 100%);
+			padding: 0.25em;
+			border-radius: 0.25em;
+			color: {{.}};
+			line-height: 2em;
+		">邪</strong>
+	{{- end -}}
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 0.000;"
+	>Phase 0</a>: {{template "邪" "#DD5"}}</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 0.000;"
+	>Phase 2</a>: {{template "邪" "#0DF"}}</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 1.259;"
+	>Phase 4</a>: {{template "邪" "#F0F"}}</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 2.499;"
+	>Phase 6</a>: {{template "邪" "#00F"}}, but at the <i>end</i> of the
+	phase?!</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 3.740;"
+	>Phase 8</a>: {{template "邪" "#0FF"}}, at the <i>start</i> of the phase,
+	{{template "邪" "#0F5"}}, at the <i>end</i>!?</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 4.981;"
+	>Phase 10</a>: {{template "邪" "#FF5"}}, at the start of the phase,
+	{{template "邪" "#F05"}}, at the end</li>
+	<li><a href="#{{.Date}}-y-phases" onclick=
+		"_2022_08_08_y.currentTime = 7.462;"
+	>Second repetition of phase 12</a>: {{template "邪" "#005"}}
+	shortly after the start of the phase?! {{HTML_Emoji "godzun"}}</li>
+</ul><p>
+	Adding some debug output sheds light on what's going on there:
+</p><figure class="th01_playfield">
+	{{$vid_邪.TagWithID "y"}}
+	<figcaption>
+		<p id="{{.Date}}-y-controls"></p>
+		Since each iteration of phase 12 adds 63 to the red component, integer
+		overflow will cause the color to infinitely alternate between dark-blue
+		and red colors on every 2.03 iterations of the pentagram phase loop. The
+		65th iteration will therefore be the first one with a dark-blue color
+		for a third iteration in a row – just in case you manage to stall the
+		fight for that long.
+	</figcaption>
+</figure><p>
+	Yup, ZUN had so much trust in the color clamping done by his hardware
+	palette functions that he did not clamp the increment operation on the
+	<code>stage_palette</code> itself. {{HTML_Emoji "zunpet"}} Therefore, the 邪
+	colors and even the timing of their changes from Phase 6 onwards are
+	"defined" by wildly incrementing color components beyond their intended
+	domain, so much that even the underlying signed 8-bit integer ends up
+	overflowing. Given that the decrement operation on the
+	<code>stage_palette</code> <i>is</i> clamped though, this might be another
+	one of those accidents that ZUN deliberately left in the game,
+	{{Blog_PostLink "2022-07-10" "similar to the conclusion I reached with infinite bumper loops"}}.<br />
+	But guess what, that's also the last time we're going to encounter this type
+	of palette component domain quirk! Later games use master.lib's 8-bit
+	palette system, which keeps the comfort of using a single byte per
+	component, but shifts the actual hardware color into the top 4 bits, leaving
+	the bottom 4 bits for added precision during fades.
+</p><p>
+	OK, but <i>now</i> we're done with TH01's bosses! 🎉That was the
+	8<sup>th</sup> PC-98 Touhou boss in total, leaving 23 to go.
+</p><hr /><p>
+	With all the necessary research into these quirks going well into a fifth
+	push, I spent the remaining time in that one with transferring most of the
+	data between YuugenMagan and the upcoming rest of <code>REIIDEN.EXE</code>
+	into C land. This included the one piece of technical debt in TH01 we've
+	been carrying around since March 2015, as well as the final piece of the
+	ending sequence in <code>FUUIN.EXE</code>. Decompiling that executable's
+	<code>main()</code> function in a meaningful way requires pretty much all
+	remaining data from <code>REIIDEN.EXE</code> to also be moved into C land,
+	just in case you were wondering why we're stuck at 99.46% there.<br />
+	On a more disappointing note, the static initialization code for the
+	{{Blog_PostLink "2020-08-12" "5 boss entity slots"}} ultimately revealed why
+	YuugenMagan's code is as bloated and redundant as it is: The 5 slots really
+	are 5 distinct variables rather than a single 5-element array. That's why
+	ZUN explicitly spells out all 5 eyes every time, because the array he could
+	have just looped over simply didn't exist. 😕 And while these slot variables
+	<i>are</i> stored in a contiguous area of memory that I could just have
+	taken the address of and then indexed it as <i>if</i> it were an array, I
+	didn't want to annoy future port authors with what would technically be
+	out-of-bounds array accesses for purely stylistic reasons. At least it
+	wasn't that big of a deal to rewrite all boss code to use these distinct
+	variables, although I certainly had to get a bit creative with Elis.
+</p><p>
+	Next up: Finding out how many points we got in totle, and hoping that ZUN
+	didn't hide more unexpected complexities in the remaining 45 functions of
+	this game. If you have {{HTML_Currency 1000}} to spare, there are two ways
+	in which that amount of money would help right:
+</p><ul>
+	<li>I'm expecting another {{HTML_Currency 3000}} subscription transaction
+	from Yanga before the 15th, which would leave {{HTML_Currency 1000}} to
+	round out one final TH01 RE push. With that, there'd be a total of 5 left in
+	the backlog, which should be enough to get the rest of this game done.</li>
+	<li>I <i>really</i> need to address the performance and usability issues
+	with all the small videos in this blog. Just look at the video immediately
+	above, where I disabled the controls because they would cover the debug text
+	at the bottom… I already reserved this month's anonymous {{HTML_Currency
+	5000}} contribution for this work, so it would take another {{HTML_Currency
+	1000}} to be turned into a full push.</li>
+</ul><script>
+	const _2022_08_08_p0 = switchMultipleVideos("{{.Date}}-p0");
+	_2022_08_08_p0.add("Hard, original", "h");
+	_2022_08_08_p0.add("Lunatic, original", "l");
+	_2022_08_08_p0.add("Lunatic, with fixed subpattern condition", "u", true);
+
+	const _2022_08_08_p5 = switchMultipleVideos("{{.Date}}-p5");
+	_2022_08_08_p5.add("Easy", "e");
+	_2022_08_08_p5.add("Normal", "n");
+	_2022_08_08_p5.add("Hard", "h");
+	_2022_08_08_p5.add("Lunatic", "l", true);
+
+	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
+	videoAddControls("{{.Date}}-blit-controls", 56.423, () => _2022_08_08_blit);
+
+	const _2022_08_08_y = document.getElementById("{{.Date}}-y");
+
+	// They cover the debug text… About time we implemented custom ones.
+	_2022_08_08_y.controls = false;
+
+	videoAddControls(
+		"{{.Date}}-y-controls", 56.423, () => _2022_08_08_y, () => {
+			const button = document.createElement('button');
+			const play = () => {
+				_2022_08_08_y.play();
+				button.textContent = "Pause";
+				button.onclick = pause;
+			}
+			const pause = () => {
+				_2022_08_08_y.pause();
+				button.textContent = "Play";
+				button.onclick = play;
+			}
+			pause();
+			return button;
+		}
+	);
+
+</script>

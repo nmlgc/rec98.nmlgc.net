@@ -1,0 +1,239 @@
+{{$vid_fx_0 := (call .Video "TH01-TOTLE-transition-original" "Video of TH01's transition to the TOTLE screen, recorded starting from a black background and without palette interpolation, at the original 28.2 FPS frame rate") -}}
+{{$vid_fx_1 := (call .Video "TH01-TOTLE-transition-full-FPS" "Video of TH01's transition to the TOTLE screen, recorded starting from a black background and without palette interpolation, at the original 28.2 FPS frame rate") -}}
+{{$vid_metrics := (call .Video "TH01-TOTLE-metrics" "Video of the per-metric digit animation in TH01's TOTLE screen, slowed down to one digit per frame and demonstrating the counting quirk on the second digit loop") -}}
+
+<p>
+	Wow, it's been 3 days and I'm already back with an unexpectedly long post
+	about TH01's bonus point screens? 3 days used to take much longer in my
+	previous projects…
+</p><p>
+	Before I talk about graphics for the rest of this post, let's start with the
+	exact calculations for both bonuses. Touhou Wiki already got these right,
+	but it still makes sense to provide them here, in a format that allows you
+	to cross-reference them with the source code more easily. For the
+	card-flipping stage bonus:
+</p><table class="numbers"><tr>
+	<th>Time</th>
+	<td><code>min((</code>Stage timer<code> * 3), 6553)</code></td>
+</tr><tr>
+	<th>Continuous</th>
+	<td><code>min((</code>Highest card combo<code> * 100), 6553)</code></td>
+</tr><tr>
+	<th>Bomb&Player</th>
+	<td><code>min(((</code>Lives<code> * 200) + (</code>Bombs<code> * 100)), 6553)</code></td>
+</tr><tr>
+	<th>STAGE</th>
+	<td><code>min((</code>(Stage number<code> - 1) * 200), 6553)</code></td>
+</tr><tfoot><tr>
+	<th>BONUS Point</th>
+	<td>Sum of all above values * 10</td>
+</tr></tfoot></table><p>
+	The boss stage bonus is calculated from the exact same metrics, despite half
+	of them being labeled differently. The only actual differences are in the
+	higher multipliers and in the cap for the stage number bonus. Why remove it
+	if raising it high enough also effectively disables it?
+	{{HTML_Emoji "tannedcirno"}}
+</p><table class="numbers"><tr>
+	<th style="color:red;">Time</th>
+	<td><code>min((</code>Stage timer<code> * 5), 6553)</code></td>
+</tr><tr>
+	<th style="color:red;">Continuous</th>
+	<td><code>min((</code>Highest card combo<code> * 200), 6553)</code></td>
+</tr><tr>
+	<th style="color:red;">MIKOsan</th>
+	<td><code>min(((</code>Lives<code> * 500) + (</code>Bombs<code> * 200)), 6553)</code></td>
+</tr><tr>
+	<th style="color:red;">Clear</th>
+	<td><code>min((</code>Stage number<code> * 1000), 65530)</code></td>
+</tr><tfoot><tr>
+	<th style="color:red;">TOTLE</th>
+	<td>Sum of all above values * 10</td>
+</tr></tfoot></table><hr /><p>
+	The transition between the gameplay and TOTLE screens is one of the more
+	impressive effects showcased in this game, especially due to how wavy it
+	often tends to look. Aside from the palette interpolation (which is, by the
+	way, the first time ZUN wrote a correct interpolation algorithm between two
+	4-bit palettes), the core of the effect is quite simple. With the TOTLE
+	image blitted to VRAM page 1:
+</p><ul>
+	<li>Shift the contents of a line on VRAM page 0 by 32 pixels, alternating
+	the shift direction between <i>right edge</i> → <i>left edge</i> (even Y
+	values) and the other way round (odd Y values)</li>
+	<li>Keep a cursor for the destination pixels on VRAM page 1 for every line,
+	starting at the respective opposite edge</li>
+	<li>Blit the 32 pixels at the VRAM page 1 cursor to the newly freed 32
+	pixels on VRAM page 0, and advance the cursor towards the other edge</li>
+	<li>Successive line shifts will then include these newly blitted 32 pixels
+	as well</li>
+	<li>Repeat <code>(640 / 32) = 20</code> times, after which all new pixels
+	will be in their intended place</li>
+</ul><p>
+	So it's really more like two interlaced shift effects with opposite
+	directions, starting on different scanlines. No trigonometry involved at
+	all.
+</p><p>
+	Horizontally scrolling pixels on a single VRAM page remains one of the few
+	{{Blog_PostLink "2022-06-17" "appropriate uses of the EGC in a fullscreen 640×400 PC-98 game"}},
+	regardless of the copied block size. The few inter-page copies in this
+	effect are also reasonable: With 8 new lines starting on each effect frame,
+	up to <code>(8 × <span
+		class="hovertext"
+		title="amount of frames required to fully transfer a single line, see above"
+	>20</span>) =</code> 160 lines are transferred at any given time, resulting
+	in a maximum of <code>(160 × <span
+		class="hovertext"
+		title="alternating between page 0 and 1"
+	>2</span> × <span
+		class="hovertext"
+		title="number of EGC operations required to cover 32 pixels"
+	>2</span>) =</code> 640 VRAM page switches per frame for the newly
+	transferred pixels. Not that frame rate matters in this situation to begin
+	with though, as the game is doing nothing else while playing this effect.<br
+	/>
+	What <i>does</i> sort of matter: Why 32 pixels every 2 frames, instead of 16
+	pixels on every frame? There's no performance difference between doing one
+	half of the work in one frame, or two halves of the work in two frames. It's
+	not like the overhead of another loop has a serious impact here,
+	<i>especially</i> with the PC-98 VRAM being said to have rather high
+	latencies. 32 pixels over 2 frames is also <i>harder</i> to code, so ZUN
+	must have done it on purpose. Guess he really wanted to go for that 📽
+	<i>cinematic 30 FPS look </i> 📽 here… {{HTML_Emoji "zunpet"}}
+</p><figure class="fullres">
+	<div class="multilayer">
+		{{$vid_fx_0.TagWithIDActive "fx-0"}}
+		{{$vid_fx_1.TagWithID "fx-1"}}
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-fx-controls"></div>
+			<div id="{{.Date}}-fx"></div>
+		</p>
+		Removing the palette interpolation and transitioning from a black screen
+		to <code>CLEAR3.GRP</code> makes it a lot clearer how the effect works.
+	</figcaption>
+</figure><hr /><p>
+	Once all the metrics have been calculated, ZUN animates each value with a
+	rather fancy left-to-right typing effect. As 16×16 images that use a single
+	<span style="color:red">bright-red color</span>, these numbers would be
+	perfect candidates for gaiji… except that ZUN wanted to render them at the
+	more natural Y positions of the labels inside <code>CLEAR3.GRP</code> that
+	are far from aligned to the 8×16 text RAM grid. Not having been in the mood
+	for hardcoding another set of monochrome sprites as C arrays that day, ZUN
+	made the still reasonable choice of storing the image data for these numbers
+	in the single-color .GRC form– yeah, no, of <i>course</i> he once again
+	chose the .PTN hammer, and its
+	{{Blog_PostLink "2020-12-18" "16×16 \"quarter\" wrapper functions around nominal 32×32 sprites"}}.
+</p><figure>
+	<figure class="side_by_side pixelated checkerboard" style="width: 100%">
+		<img
+			src="data:image/gif;base64,R0lGODlhIAAgAPABAPwAAAAAACH5BAUKAAEALAAAAAAgACAAQAJ7jAOpx43gXnIK0hWz3rtyU2FeM5LYNR2lmbJtyMAsaEW1PEu1jp6xT2v9hCogr8cJ7VyrYNEIlPlwnykRlVkot7nnS2QcZq3X4NKMTLvUw/OxbQu/5/Bxqln/6Pc6uRkHuELFExhVJjfYcYWnV1LGFAexpSSGNJnYV1IAADs="
+			alt=".PTN sprite for the TOTLE metric digits of 0, 1, 2, and 3"
+			style="height: 128px;" /><img
+			src="data:image/gif;base64,R0lGODlhIAAgAIABAPwAAAAAACH5BAEKAAEALAAAAAAgACAAAAJ8jH+gmOrvWFsSWiANzDfmYHHYJ4IecpKNlrJd6Y4oFcvmTK+Vl5u96rsxHsAhcfdr1TohX/I3sTmlR9GTqlxem8Wu9wvmRplGW4rZOlfR2DZNyirDz0g5eIZ8AZWbKKnqZ2dlNZcFGIgD50SYxzhYRqjogvPR92dZCRVQAAA7"
+			alt=".PTN sprite for the TOTLE metric digits of 4, 5, 6, and 7"
+			style="height: 128px;" />
+			<img
+			src="data:image/gif;base64,R0lGODlhIAAgAIABAPwAAAAAACH5BAEKAAEALAAAAAAgACAAAAJdjAOpcH2rHIovydXotJdVnnFY94GfATlmqlIQo5Ud+JpyGNdeS7MuO4tgbBuiBAUMnoJGpGgka/qgTk+suNvgbLrslnoMi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6xsFADs="
+			alt=".PTN sprite for the TOTLE metric digits of 8 and 9, filled with two blank quarters"
+			style="height: 128px;" />
+	</figure>
+	<figcaption>The three 32×32 TOTLE metric digit sprites inside
+	<code>NUMB.PTN</code>.</figcaption>
+</figure><p>
+	Why do I bring up such a detail? What's actually going on there is that ZUN
+	loops through and blits each digit from 0 to 9, and then continues the loop
+	with "digit" numbers from 10 to 19, stopping before the number whose ones
+	digit equals the one that should stay on screen. No problem with that in
+	theory, and the .PTN <i>sprite</i> selection is correct… but the .PTN
+	<i>quarter</i> selection isn't, as ZUN wrote <code>(digit % 4)</code>
+	instead of the correct <code>((digit % 10) % 4)</code>.
+	{{HTML_Emoji "onricdennat"}} Since .PTN quarters are indexed in a row-major
+	way, the 10-19 part of the loop thus ends up blitting
+	<strong style="color:red">2</strong> →
+	<strong style="color:red">3</strong> →
+	<strong style="color:red">0</strong> →
+	<strong style="color:red">1</strong> →
+	<strong style="color:red">6</strong> →
+	<strong style="color:red">7</strong> →
+	<strong style="color:red">4</strong> →
+	<strong style="color:red">5</strong> →
+	<i>(nothing)</i>:
+</p><figure class="fullres">
+	{{$vid_metrics.TagWithID "metrics"}}
+	<figcaption class="fullres">
+		<p id="{{.Date}}-metrics-controls"></p>
+		This footage was slowed down to show one sprite blitting operation per
+		frame. The actual game waits a hardcoded 4 milliseconds between each
+		sprite, so even theoretically, you would only see roughly every
+		4<sup>th</sup> digit. And yes, <a href='#{{.Date}}-metrics' onclick=
+		'_2022_08_11_metrics.currentTime = 0.87;
+		_2022_08_11_metrics.stop();'>here's a frame with the empty quarter</a>,
+		only blitted if one of the digits is a 9.
+	</figcaption>
+</figure><p>
+	Seriously though? If the deadline is looming and you've got to rush
+	<i>some</i> part of your game, a standalone screen that doesn't affect
+	anything is <i>the</i> best place to pick. At 4 milliseconds per digit, the
+	animation goes by so fast that this quirk might even <i>add</i> to its
+	perceived fanciness. It's exactly the reason why I've always been rather
+	careful with labeling such quirks as "bugs". And in the end, the code does
+	perform one more blitting call after the loop to make sure that the correct
+	digit remains on screen.
+</p><hr /></p>
+	The remaining ¾ of the second push went towards transferring the final data
+	definitions from ASM to C land. Most of the details there paint a rather
+	depressing picture about ZUN's original code layout and the bloat that came
+	with it, but it did end on a real highlight. There was some unused data
+	between ZUN's non-master.lib VSync and text RAM code that I just moved away
+	in September 2015 without taking a closer look at it. Those bytes kind of
+	look like another hardcoded 1bpp image though… wait, <i>what</i>?!
+</p><figure class="pixelated checkerboard">
+	<img src="data:image/gif;base64,R0lGODlhIAAQAPABAP///wAAACH5BAUKAAEALAAAAAAgABAAAAI7BIKpy4123IoyQVpNtXcH6F1aBpKiOTpi16zSyk5wC5fKTLtqnPOMlsp9bD/OK3LaBFGeYZNIajqlkgIAOw=="
+	alt="An unused mouse cursor sprite found in all of TH01's binaries"
+	style="height: 128px"; />
+</figure><p>
+	Lovely! With no mouse-related code left in the game otherwise, this cursor
+	sprite provides some great fuel for wild fan theories about TH01's
+	development history:
+</p><ol>
+	<li>Could ZUN have {{Blog_PostLink "2019-11-06" "stolen"}} the basic PC-98
+	VSync or text RAM function code from a source that also implemented mouse
+	support?</li>
+	<li><a href="https://twitter.com/gensakudan/status/1557594118217515008">Did
+	he have a mouse-controlled level editor during development?</a> It's highly
+	likely that he had <i>something</i>, given all the
+	{{Blog_PostLink "2020-11-30" "bit twiddling seen in the <code>STAGE?.DAT</code> format"}}.</li>
+	<li>Or was this game actually meant to have mouse-controllable portions at
+	some point during development? Even if it would have just been the
+	menus.</li>
+</ol><hr /><p>
+	… Actually, you know what, with all shared data moved to C land, I might as
+	well finish <code>FUUIN.EXE</code> right now. The last secret hidden in its
+	<code>main()</code> function: Just like <code>GAME.BAT</code> supports
+	launching the game in a debug mode from the DOS command line,
+	<code>FUUIN.EXE</code> can directly launch one of the game's endings. As
+	long as the MDRV2 driver is installed, you can enter
+	<code>fuuin&nbsp;t1</code> for the 魔界/Makai Good Ending, or
+	<code>fuuin&nbsp;t</code> for 地獄/Jigoku Good Ending.<br />
+	Unfortunately, the command-line parameter can only control the route.
+	Choosing between a Good or Bad Ending is still done exclusively through
+	TH01's resident structure, and the <code>continues_per_scene</code> array in
+	particular. But if you pre-allocate that structure somehow and set one of
+	the members to a nonzero value, it would work. <a
+	href="https://www.youtube.com/watch?v=3hMHZJFEHIY">Trainers, anyone?</a>
+</p><p>
+	Alright, gotta get back to the code if I want to have any chance of
+	finishing this game before the 15<sup>th</sup>… Next up: The final 17
+	functions in <code>REIIDEN.EXE</code> that tie everything together and add
+	some more debug features on top.
+</p><script>
+	const _2022_08_11_fx = switchMultipleVideos("{{.Date}}-fx");
+	_2022_08_11_fx.add("Original, 32 pixels every 2 frames", "0", true);
+	_2022_08_11_fx.add("Full speed, 16 pixels every frame", "1");
+	_2022_08_11_fx.addControls("{{.Date}}-fx-controls", 56.423);
+
+	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
+	videoAddControls(
+		"{{.Date}}-metrics-controls", 56.423, () => _2022_08_11_metrics
+	);
+</script>

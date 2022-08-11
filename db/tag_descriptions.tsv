@@ -16,6 +16,7 @@ card-flipping	TH01's regular, non-boss stages.
 contribution-ideas	Potential improvements that volunteers could meaningfully contribute to this project. Mostly minor issues, or slightly out of scope of the main project.
 cutscene	Endings or staff roll animations. Also applies to the cutscenes before stages 8 and 9 in TH03.
 danmaku-pattern	A complete danmaku animation over a specified period of time.
+debug	Debug features that ZUN left in the shipped game.
 dosbox-x	A DOSBox fork with support for PC-98 emulation.
 enemy	Common stage enemies with simple scripts, in contrast to midbosses or bosses.
 file-format	Structure of an on-disk file format.

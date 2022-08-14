@@ -1,0 +1,144 @@
+{{$vid_orig := (call .Video "TH01-Gameover-original" "Video of TH01's original Game Over animation, highlighting very quirky unblitting choices") -}}
+{{$vid_wimpy := (call .Video "TH01-Gameover-wimpy" "Video of TH01's Game Over animation with \"proper\" per-effect unblitting code, yielding a rather wimpy result") -}}
+{{$vid_no := (call .Video "TH01-Gameover-no-unblitting" "Video of TH01's Game Over animation with no sprite unblitting whatsoever") -}}
+
+<p>
+	Last blog post before the 100% completion of TH01! The final parts of
+	<code>REIIDEN.EXE</code> would feel rather out of place in a celebratory
+	blog post, after all. They provided quite a neat summary of the typical
+	technical details that are wrong with this game, and that I now get to
+	mention for one final time:
+</p><ul>
+	<li>The Orb's animation cycle is maybe two frames shorter than it should
+	have been, showing its last sprite for just 1 frame rather than 3: <img
+	src="data:image/gif;base64,R0lGODlhIAAgAPEDAKCgoPDw8AAAADLNMiH/C05FVFNDQVBFMi4wAwEAAAAh+QQFHgADACwAAAAAIAAgAEAChZyPqcsG/4IMQswb2hCg+u9hGKCBIfVBpMaoE6s8XGeJttSYuqdCcJJ6/IZEluuG+/UAlwqyIavQnEjMYreLTHwMrK439M6ExbL5jE4fIDfzsZqBLSefNnQOv7Rk0Vo+CTQ1dQJ3NYh1QwYkBuLCpcDYCJaj08Sj8mNiObZSlKWoFip6UAAAIfkEBR4AAwAsAwAEABkAGQAAAlucf6Eb6D+YVNDNSyvecHvrfUnIGSQjpIICmKcKB+0ZwDYASOtk9/mi0vVqNQFgV0QqesgYUDhcBjfMldXJq/YGKagWZviKU4exFmGuOtI2CJtcYVfQ37l7WykAACH5BAUeAAMALAMABAAZABkAAAJrnH+hwIAPhwqtuogmtRbL2WhcJFYLI6Tpo22MqMZZyaGxkLT1fRvt2eD1fkCbUEVcHIVJxZLXdD6RUemzCrpGLcvPbyf0gUDgnnhzSlV4M4ALEAuaE26uYC2D1Dj5yF6+4mGwpyKoZ4SDUQAAIfkEBQoAAwAsAwAEABkAGQAAAnGcf6Ar6D+WZNDNC4SuEesPQtgFbsjolSealaHBujI8ysF9b6iL94G2CACEipLPJwjeGCBkL6nAZVoaZDVHFAqTzedVCqJ+lxnp8CcTHEeDHM/HbrvHZszhuI4b8D2WI88CAEEWqMBRuMCR4KdoccFRAAAh/hVNYWRlIHdpdGggU2NyZWVuVG9HaWYAOw=="
+	alt="TH01's Orb animation cycle as an animated GIF, with frame durations
+	proportional to the ones found in the game" /></li>
+	<li>The text in the Pause and Continue menus is not <i>quite</i> correctly
+	centered.</li>
+	<li>The memory info screen hides quite a bit of information about the .PTN
+	buffers, and obscures even the info that it <i>does</i> show behind
+	misleading labels. The most vital information would have been that ZUN could
+	have easily saved 20% of the memory by using a structure without the
+	unneeded alpha plane… Oh, and the <span lang="ja">REWIRTE</span> option
+	mapped to the ⬇️ down arrow key simply redraws the info screen. Might be
+	useful after a <span lang="ja">NODE CHEAK</span>, which replaces the output
+	with its own, but stays within the same input loop.</li>
+</ul><p>
+	But hey, there's an error message if you start <code>REIIDEN.EXE</code>
+	without a resident MDRV2 or a correctly prepared resident structure! And
+	even a good, user-friendly one, asking the user to launch the batch file
+	instead. For some reason, this convenience went out of fashion in the later
+	games.
+</p><hr /><p>
+	The Game Over animation (how fitting) gives us TH01's final piece of weird
+	sprite blitting code, which seriously manages to include 2 bugs and 3 quirks
+	in under 50 lines of code. In debug mode, you can trigger this effect by
+	pressing the ⬇️ down arrow key, which certainly explains why I encountered
+	seemingly random Game Over events during all the tests I did with this
+	game…<br />
+	The animation appears to have changed quite a bit during development, to the
+	point that probably even ZUN himself didn't know what he wanted it to look
+	like in the end:
+</p><figure class="th01_playfield">
+	<div class="multilayer">
+		{{$vid_orig.TagWithIDActive "go-o"}}
+		{{$vid_wimpy.TagWithID "go-w"}}
+		{{$vid_no.TagWithID "go-n"}}
+	</div>
+	<figcaption>
+		<p>
+			<div id="{{.Date}}-go-controls"></div>
+			<div id="{{.Date}}-go"></div>
+		</p>
+		<span id="{{.Date}}-go-caption"></span>
+	</figcaption>
+</figure><hr /><p>
+	Finally, we get to the big <code>main()</code> function, serving as the duct
+	tape that holds this game together. It may read rather disorganized with all
+	the (actually necessary) assignments and function calls, but the only
+	<i>actual</i> minor issue I've seen there is that you're robbed of any
+	pellet destroy bonus collected on the final frame of the final boss. There
+	is a certain charm in directly nesting the infinite main gameplay loop
+	within the infinite per-life loop within the infinite stage loop. But come
+	on, why is there no fourth scene loop? {{HTML_Emoji "zunpet"}} Instead, the
+	game just starts a new <code>REIIDEN.EXE</code> process before and after a
+	boss fight. With all the wildly mutated global state, that was probably a
+	much saner choice.
+</p><p>
+	The final secrets can be found in the debug mode stage selection. ZUN
+	implemented the prompts using the C standard library's <code>scanf()</code>
+	function, which is the natural choice for quick-and-dirty testing features
+	like this one. However, the C standard library is also complete and utter
+	trash, and so it's not surprising that both of the <code>scanf()</code>
+	calls do… well, probably not what ZUN intended. The guaranteed out-of-bounds
+	memory access in the <code>select_flag</code> route prompt thankfully has no
+	real effect on the game, but it gets really interesting with the <code
+	lang="ja">面数 </code> stage prompt.<br />
+	Back in 2020, I already wrote about
+	{{Blog_PostLink "2020-11-30" "stages 21-24, and how they're loaded from actual data that ZUN shipped with the game"}}.
+	As it now turns out, the code that maps stage IDs to <code>STAGE?.DAT</code>
+	scene numbers contains an explicit branch that maps any (1-based) stage
+	number ≥21 to scene 7. Does this mean that an Extra Stage was indeed planned
+	at some point? That branch seems way too specific to just be meant as a
+	fallback. <a href="https://www.youtube.com/watch?v=RcjhM4tfPq4&t=169s">Maybe
+	Asprey was on to something after all…</a>
+</p><p>
+	However, since ZUN passed the stage ID as a signed integer to
+	<code>scanf()</code>, you can also enter negative numbers. The only place
+	that kind of accidentally checks for them is the aforementioned stage
+	ID&nbsp;→&nbsp;scene mapping, which ensures that (1-based) stages &lt; 5 use
+	the shrine's background image and BGM. With no checks anywhere else, we get
+	a new set of "glitch stages":
+</p><figure class="side_by_side medium">{{range loop 1 6 -}}
+	{{- $pic := printf "TH01-Stage-minus-%d.png" . -}}
+	{{- $picFN := (call $.PostFileURL $pic) -}}
+	<figure>
+		<a href="{{$picFN}}"><img
+			src="{{$picFN}}"
+			alt="TH01's stage -{{.}}"
+	/></a><figcaption>Stage -{{.}}</figcaption>
+	</figure>
+{{- end}}</figure><p>
+	The scene loading function takes the entered 0-based stage ID value modulo
+	5, so these 4 are the only ones that "exist", and lower stage numbers will
+	simply loop around to them. When loading these stages, the function accesses
+	the data in <code>REIIDEN.EXE</code> that lies before the statically
+	allocated 5-element stages-of-scene array, which happens to encompass
+	Borland C++'s locale and exception handling data, as well as a small bit of
+	ZUN's global variables. In particular, the obstacle/card HP on the tile I
+	highlighted in <span style="color: green;">green</span> corresponds to the
+	lowest byte of the 32-bit RNG seed. If it weren't for that and the fact that
+	the obstacles/card HP on the few tiles before are similarly controlled by
+	the x86 segment values of certain initialization function addresses, these
+	glitch stages would be completely deterministic across PC-98 systems, and
+	<i>technically</i> canon… {{HTML_Emoji "tannedcirno"}}<br />
+	Stage -4 is the only playable one here as it's the only stage to end up
+	below the
+	{{Blog_PostLink "2020-11-30" "heap corruption limit of 102 stage objects"}}.
+	Completing it loads Stage -3, which crashes with a <code>Divide Error</code>
+	just like it does if it's directly selected. Unsurprisingly, this happens
+	because all 50 card bytes at that memory location are 0, so one division (or
+	in this case, modulo operation) by the number of cards is enough to crash
+	the game.<br />
+	Stage -5 is modulo'd to 0 and thus loads the first regular stage. The only
+	apparent broken element there is the timer, which is handled by a completely
+	different function that still operates with a (0-based) stage ID value of
+	-5. Completing the stage loads Stage -4, which also crashes, but only
+	because its 61 cards naturally cause the
+	{{Blog_PostLink "2020-11-30" "stack overflow in the flip-in animation for any stage with more than 50 cards"}}.
+</p><p>
+	And that's <code>REIIDEN.EXE</code>, the biggest and most bloated PC-98
+	Touhou executable, fully decompiled! Next up: Finishing this game with the
+	main menu, and hoping I'll actually pull it off within 24 hours. (If I do,
+	we might all have to thank <a
+	href="https://github.com/32th-System/ReC98/commit/db21033c827b0c932460e4fd0ccf0b224cbca206">32th
+	System</a>, who independently decompiled half of the remaining 14
+	functions…)
+</p><script>
+	const _2022_08_14_go = switchMultipleVideos("{{.Date}}-go");
+	_2022_08_14_go.add("Original version", "o", true, `The original version unblits a 32×32 rectangle around Reimu that only grows on the X axis… for the first 5 frames. The unblitting call is only run if the corresponding sprite wasn't clipped at the edges of the playfield in the frame before, and ZUN uses the <i>animation's frame number</i> rather than the sprite loop variable to index the per-sprite clip flag array. The resulting out-of-bounds access then reads the sprite <i>coordinates</i> instead, which are never 0, thus interpreting all 5 sprites as clipped.`);
+	_2022_08_14_go.add('"Proper" effect sprite unblitting', "w", false, `This variant would interpret the declared 5 effect coordinates as distinct sprites and unblit them correctly every frame. The end result is rather wimpy though… hardly appropriate for a Game Over, especially with the original animation in mind.`);
+	_2022_08_14_go.add("No unblitting", "n", false, `This variant would not unblit anything, and is probably closest to what the final animation should have been.`);
+	_2022_08_14_go.addControls("{{.Date}}-go-controls", 56.423);
+</script>

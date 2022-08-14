@@ -209,3 +209,5 @@ P0210	[146, 184]	TH01 decompilation (YuugenMagan, part 4/5: Eye opening/closing 
 P0211	[184, 186]	TH01 decompilation (Data finalization, part 1/2 + common part of endings)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/149fbca...d398a94	1
 P0212	[192, 186, 188]	TH01 decompilation (Stage bonus and TOTLE screens, part 1/2)	2022-08-11T21:27:53Z	nmlgc/ReC98/compare/d398a94...363fd54	1
 P0213	[188, 187]	TH01 decompilation (Stage bonus and TOTLE screens, part 2/2 + Data finalization, part 2/2 + FUUIN.EXE 100%)	2022-08-11T21:27:53Z	nmlgc/ReC98/compare/363fd54...158a91e	1
+P0214	[187]	TH01 decompilation (Orb and Game Over animations + Pause, continue, and debug menus)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/158a91e...414770c	1
+P0215	[187, 196]	TH01 decompilation (REIIDEN.EXE main() function / 100%)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/414770c...3123c9d	1

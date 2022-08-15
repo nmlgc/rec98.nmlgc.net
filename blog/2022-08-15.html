@@ -1,0 +1,186 @@
+{{$pic := (call .PostFileURL "TH01-Title.png") -}}
+
+<p>
+	On August 15, 1997, at Comiket 52, an unknown doujin developer going by the
+	name of ZUN released his first game, <cite><span lang="ja">東方靈異伝　～
+	</span> The Highly Responsive to Prayers</cite>, marking the start of the
+	Touhou Project game series that keeps running to this day. Today, exactly 25
+	years later, the C++ source code to version 1.10 of that game has been
+	completely and perfectly reconstructed, reviewed, and documented.
+</p><figure class="fullres pixelated">
+	<img src="{{$pic}}" alt="The TH01 title image."/>
+</figure><p>
+	And with that, a warm welcome to all game journalists who have
+	(re-)discovered this project through these news! Here's a summary for
+	everyone who doesn't want to go through 3 years worth of blog posts:
+</p><h5>What does this mean?</h5><ul>
+	<li>All code that ZUN wrote as part of a TH01 installation has now been
+	decompiled to C++ code. The only parts left in assembly are two third-party
+	libraries (master.lib and PiLoad), which were originally written in
+	assembly, and are built from their respective official source code.</li>
+	<li>You can clone the <a href="https://github.com/nmlgc/ReC98">ReC98
+	repository</a>, set up the build environment, and get a binary with an
+	identical program image. The hashes of the resulting executables won't match
+	those of ZUN's original release, but all differences there stem from details
+	in the .EXE header that don't influence program execution, such as the
+	on-disk order of the conceptually unordered set of x86 memory segment
+	relocations. If you're interested in that level of correctness, you can
+	order <i>Easier verification against original binaries</i> from the store.
+	For now though, use <a href="https://github.com/nmlgc/mzdiff">mzdiff</a> for
+	verifying the builds against ZUN's binaries.</li>
+	<li>Ever since this crowdfunding has started 3 years ago, the goal of this
+	project has shifted more and more towards a full-on code review rather than
+	being just a mechanical decompilation:<ul>
+		<li>Hardcoded constants were derived from as few truly hardcoded values
+		as possible, which uncovered their intended meaning and highlighted any
+		inconsistencies</li>
+		<li>Code was deduplicated to a perhaps obsessive level (I'm still trying
+		to find a balance)</li>
+		<li>Tons of comments everywhere to put everything into context</li>
+		<li>And, of course, <a href="/blog/tag/th01">2½ years worth of blog
+		posts</a> summarizing any highlights, glitches, and secrets. (There
+		might still be some left to be discovered!)</li>
+	</ul></li>
+	<li>As a result, modding the games and porting them away from the PC-98
+	platform is now a lot easier.</li>
+</ul><h5>What does this not mean?</h5><ul>
+	<li>This is not a piracy release. ReC98 only provides the code that the
+	game's .EXE and .COM files are built out of. Without the rest of the
+	original data files, supplied from a pre-existing game copy, the code won't
+	do very much.</li>
+	<li>Even apart from ZUN's own code quality, the ReC98 repository is not as
+	polished and consistent as it could be, having seen multiple code structure
+	evolutions over the 8 years of its existence.</li>
+	<li>TH01 hasn't magically reached Doom levels of easy portability now. As a
+	decompilation of the exact code that ZUN wrote for the PC-98 platform, it is
+	<i>very</i> PC-98-native, and wildly mixes game logic with hardware
+	accesses. As ZUN's first foray into game development, he understandably
+	didn't see the need for writing an engine or hardware abstraction layer
+	yet.</li>
+</ul><p>
+	So while this milestone opened the floodgates to PC-98-native mods, I
+	wouldn't advise trying to attempt a port away from PC-98 right now. But then
+	again, I have a financial interest in being a part of the porting process,
+	and who knows, maybe you <i>can</i> just merge in a PC-98 emulator core and
+	get started with something halfway decent in a short amount of time. After
+	all, TH01 is by far the easiest PC-98 Touhou game to port to other systems,
+	as it makes the least use of hardware features.
+</p><p>
+	However, this game in particular raises the question of what <i>exactly</i>
+	one would even <i>want</i> to port. TH01 is a broken flicker-fest that
+	overwhelmingly suffers the drawbacks of PC-98 hardware rather than using it
+	to its advantage. Out of the 78 bugs that I ended up labeling as such, the
+	majority are <a href="/blog/tag/th01/blitting">sprite blitting issues</a>,
+	while you can  <a href="/blog/tag/th01/good-code">count the instances of
+	good hardware use on one hand</a>.<br />
+	And even at the level of game logic, this game features a <i>lot</i> of
+	weird, inconsistent behavior. Less rigorous projects such as <a
+	href="https://github.com/Wintiger0222/uth05win">uth05win</a> would probably
+	promptly identify these issues as bugs and fix them. On the one hand, this
+	shows that there is a part of the community that wants sane versions of
+	these games which behave as expected. In other parts of the community
+	though, such projects quickly gain the reputation of being too inaccurate to
+	bother about them.
+</p><p>
+	Some terminology might help here. If you look over the ReC98 codebase,
+	you'll find that I classified any weird code into three categories:
+</p><ul>
+	<li id="zun-bug"><a href="#zun-bug">🔗 <strong>ZUN bugs</strong></a>: Broken
+	code that results from logic errors or incorrect programming
+	language/API/hardware use, with enough evidence in the code to indicate that
+	ZUN did not intend the bug. Fixing these issues must not affect hypothetical
+	replay compatibility, and any resulting visual changes must match ZUN's
+	provable intentions.</li>
+	<li id="zun-quirk"><a href="#zun-quirk">🔗 <strong>ZUN quirks</strong></a>:
+	Weird code that looks incorrect in context. Fixing these issues would change
+	gameplay enough to desync a hypothetical replay recorded on the original
+	version, or affect the visuals so much that the result is no longer faithful
+	to ZUN's original release. It might very well be called a fangame at that
+	point.</li>
+	<li id="zun-bloat"><a href="#zun-bloat">🔗 <strong>ZUN bloat</strong></a>:
+	Code that wastes memory, CPU cycles, or even just the mental capacity of
+	anyone trying to read and understand the code. If you want to write a
+	particularly resource-intensive mod, these are the places you could claim
+	some of those resources from.</li>
+</ul><p>
+	Some examples:
+</p><ul>
+	<li>All crashes are bugs</li>
+	<li>All blitting issues related to inappropriate VRAM byte alignment are
+	bugs</li>
+	<li>All the {{Blog_PostLink "2022-08-08" "incorrect coordinate calculations in the YuugenMagan fight"}} are quirks</li>
+	<li>The overly high damage of TH10's MarisaB 3.00-3.95 power shot is a
+	quirk, <a href="https://nylilsa.github.io/#/bugs/th10/0">despite having been
+	proven to be a typo</a>.</li>
+	<li>The idea of splitting TH01 across three executables is its biggest
+	source of bloat. It wastes disk space, the game doesn't even make use of the
+	memory gained from unloading unneeded code and data, it complicates the
+	build process and code structure with inconsistencies between the individual
+	binaries, and the required inter-process communication via shared memory
+	adds another piece of global state mutation headache.</li>
+</ul><p>
+	Since I'm not in the business of writing fanfiction, I won't offer any
+	option that fixes <i>quirks</i>. That's where all of you can come in, and
+	use ReC98 as a base for remasters and remakes. As for bloat and bugs though,
+	there are many ways we could go from here:
+</p><ul>
+	<li>If you want to ultimately try porting the game yourself, but still
+	support ReC98 somehow, I can recommend the <i>ZUN code cleanup</i> goal.
+	This is the most conservative option that leaves all bugs and quirks in
+	place and only removes <i>bloat</i>, rearchitecting the codebase so that
+	it's easier to work with.</li>
+	<li>For an improved gameplay experience on PC-98, choose the <i>TH01
+	Anniversary Edition</i> goal. In addition to the above code cleanup, this
+	goal fixes every <i>bug</i> with the game, most notably all the sprite
+	flickering by implementing a completely new renderer, while maintaining
+	hypothetical replay compatibility to ZUN's original release.</li>
+	<li>If you're mainly interested in seeing any variety of TH01 ported away
+	from PC-98 to any system, choose the <i>Portability to non-PC-98 systems</i>
+	goal. In this one, I'm going to develop the abstraction layers that would
+	ultimately bring this game to the aforementioned Doom level of portability,
+	while still keeping it running with better than original performance on
+	PC-98.</li>
+	<li><i>Replay support</i> is also something you could order…</li>
+	<li>… as is <i>Multilingual translation support (on PC-98)</i>, for those
+	sweet non-ASCII characters if that's your thing.</li>
+</ul><p>
+	Then again, with all these choices in mind, maybe we should just let TH01 be
+	what it is: ZUN's first game, evidence for the truth that no programmer
+	writes good code the first time around, and more of a historical curiosity
+	than anything you'd want to maintain and modernize. The idea of moving on to
+	the next game and decompiling all 5 PC-98 Touhou games in order has
+	certainly <a
+	href="https://twitter.com/TheArandui/status/1549480991806324736">shown to be
+	popular among the backers who funded this 100% goal</a>.
+</p><hr /><p>
+	Since the beginning of the year, I've been dramatically raising the level of
+	quality and care I've been putting into this project, leading to 9 of the 10
+	longest blog posts having been written in the past 8 months. The community
+	reception has been even more supportive as well, with all of you still
+	regularly selling out the store in return. To match the level of quality
+	with the community demand, I'm raising push prices from
+	{{HTML_Currency 6000}} to {{HTML_Currency 7500}} per push, as of this blog
+	post. {{Blog_PostLink "2021-12-01" "As usual"}}, I'm going to deliver any
+	existing orders in the backlog at the value they were originally purchased
+	at. Due to the way the cap has to be calculated, these contributions now
+	appear to have increased in value by 25%.
+</p><p>
+	However, I do realize that this might make regular pushes prohibitively
+	expensive for some. This could especially prevent all these exciting modding
+	goals from ever getting off the ground. Thinking about it though, the push
+	system is only really necessary for the core reverse-engineering business,
+	where longer, concentrated stretches of work allow me to study a new piece
+	of code in a larger context and improve the quality of the final result. In
+	contrast, modding-related goals could theoretically be segmented into
+	arbitrarily small portions of work, as I have a clear idea of where I want
+	to go and how to get there.<br />
+	Thus, I'm introducing <i>microtransactions</i>, now available for all
+	modding-related goals. These allow you to order fractional pieces of work
+	for as low as 1 €, which I will immediately deliver without requiring others
+	to fund a full push first.
+</p><p>
+	Next up: Taking a break and recovering from crunch time by improving video
+	playback on this blog and <a
+	href="https://github.com/nmlgc/ssg/issues">working on Shuusou Gyoku</a>,
+	before returning to Touhou in September.
+</p>

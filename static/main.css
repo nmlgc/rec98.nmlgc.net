@@ -774,7 +774,7 @@ td, th {
 	color: orangered;
 }
 
-#order #info * {
+#order .left * {
 	text-align: left;
 }
 
@@ -786,6 +786,14 @@ td, th {
 #order :invalid {
 	border-color: red;
 	outline-color: red;
+}
+
+#order input[type="checkbox"]+label ul {
+	font-size: small;
+}
+
+#order input[disabled]+label {
+	color: var(--c-border);
 }
 
 #error {

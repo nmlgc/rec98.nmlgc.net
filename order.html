@@ -33,29 +33,29 @@
 				<option data-info="Won't go to Seihou by default, unless you explicitly allow me to.">Anything (including tooling)</option>
 				<option>Reverse-engineering</option>
 				<option>Position independence</option>
-				<option>Stable English translation patches (on PC-98)</option>
+				<option data-micro>Stable English translation patches (on PC-98)</option>
 				<option data-info='Will be the real deal:<ul>
 					<li>✘ No font ROM / emulator font bitmap hacks</li>
 					<li>✘ No other shortcuts for languages with just a few non-ASCII characters</li>
 					<li>✔ Proper support for any possible (monospaced) Unicode character</li>
-				</ul>Requires 100% position independence of the game(s) in question, as well as all text-related code to be reverse-engineered. If the backlog contains no other pushes which could be used to reach these prerequisites, I will use this order to cover them.' data-goal-mandatory>Multilingual translation support (on PC-98)</option>
+				</ul>Requires 100% position independence of the game(s) in question, as well as all text-related code to be reverse-engineered. If the backlog contains no other pushes which could be used to reach these prerequisites, I will use this order to cover them.' data-goal-mandatory  data-micro>Multilingual translation support (on PC-98)</option>
 				<option data-info="<ul>
 					<li>Please specify which game(s) would be most important to you.</li>
 					<li>Requires all movement-related code of the games in question to be reverse-engineered. If the backlog contains no other pushes which could cover that code, I will use this order to cover them.</li>
 					<li>As replays are critical infrastructure, this will <i>not</i> require 100% position independence, and be implemented in an <span class='hovertext' title='That is, as a TSR with a minimal amount of hooks in original game code.'>easily diffable way</span> even for games where 100% PI has been reached.</li>
-				</ul>" data-goal-mandatory>Replay support (on PC-98)</option>
+				</ul>" data-goal-mandatory data-micro>Replay support (on PC-98)</option>
 				<option data-info="Please specify which game(s) would be most important to you. Will consist of the following steps, in order:<ol>
 					<li>Decompilations of ZUN's hand-written ASM</li>
 					<li>Building a PC-98 abstraction interface in C++ and routing all the game's hardware access through it. Ports to generic 640×400×16-color framebuffers, other retro systems with hardware sprites, or headless servers with no graphical output, would then only reimplement that interface, and don't need to touch any game code.</li>
 					<li>Getting rid of master.lib, PiLoad, and SPRITE16</li>
-				</ol>All new code will make appropriate use of the C++ language features available in Turbo C++. Requires 100% position independence of the game(s) in question, as they will continue to run on PC-98 hardware during the entire process, perhaps even at higher performance. Does <i>not</i> imply a port to any specific system; these can be ordered separately once they become realistic." data-goal-mandatory>Portability to non-PC-98 systems</option>
-				<option data-info="If you <i>really</i> insist on building this code with ancient C-only compilers, rather than hacking support for your target platform into modern C++ toolchains… Will only focus on the pieces of code that wouldn't also be touched by the portability goal initially. Note that C89 conformance will in fact be a <i>mod</i>, as it's impossible to generate ZUN's original machine code without C++ and only C89 features. However, that means that the resulting code can (and will) be refactored into more clean and idiomatic C. Requires 100% position independence of the game(s) in question.">C89 conformance</option>
-				<option data-info="Requires the 16-bit build system to be completed, delivery will be delayed until that point.">Easier verification against original binaries</option>
+				</ol>All new code will make appropriate use of the C++ language features available in Turbo C++. Requires 100% position independence of the game(s) in question, as they will continue to run on PC-98 hardware during the entire process, perhaps even at higher performance. Does <i>not</i> imply a port to any specific system; these can be ordered separately once they become realistic." data-goal-mandatory data-micro>Portability to non-PC-98 systems</option>
+				<option data-info="If you <i>really</i> insist on building this code with ancient C-only compilers, rather than hacking support for your target platform into modern C++ toolchains… Will only focus on the pieces of code that wouldn't also be touched by the portability goal initially. Note that C89 conformance will in fact be a <i>mod</i>, as it's impossible to generate ZUN's original machine code without C++ and only C89 features. However, that means that the resulting code can (and will) be refactored into more clean and idiomatic C. Requires 100% position independence of the game(s) in question." data-micro>C89 conformance</option>
+				<option data-info="Requires the 16-bit build system to be completed, delivery will be delayed until that point." data-micro>Easier verification against original binaries</option>
 				<option>Reconstructing the original installers</option>
-				<option data-info="Please specify which game(s) would be most important to you. Will be more efficient after that game reached 100% position independence, but definitely possible before. No guarantees that it will actually <i>perform</i> well on such old systems, though!" data-goal-mandatory>Compatibility with pre-386 PC-98 models</option>
-				<option>Improving the website</option>
+				<option data-info="Please specify which game(s) would be most important to you. Will be more efficient after that game reached 100% position independence, but definitely possible before. No guarantees that it will actually <i>perform</i> well on such old systems, though!" data-goal-mandatory data-micro>Compatibility with pre-386 PC-98 models</option>
+				<option data-micro>Improving the website</option>
 				<option>Build server experiments</option>
-				<option data-info="The first goal will be to get pbg's incomplete <a href='https://github.com/pbghogehoge/ssg'>Shuusou Gyoku</a> and <a href='https://github.com/pbghogehoge/kog'>Kioh Gyoku</a> source code releases into a working and compilable state, by adding clean-room reimplementations of missing functionality as necessary. Please tell me which one of the two I should do first. Once that's done, we can talk about what else I should do with these codebases." data-goal-mandatory>Seihou</option>
+				<option data-info="The first goal will be to get pbg's incomplete <a href='https://github.com/pbghogehoge/ssg'>Shuusou Gyoku</a> and <a href='https://github.com/pbghogehoge/kog'>Kioh Gyoku</a> source code releases into a working and compilable state, by adding clean-room reimplementations of missing functionality as necessary. Please tell me which one of the two I should do first. Once that's done, we can talk about what else I should do with these codebases." data-goal-mandatory data-micro>Seihou</option>
 				<option>Something else?</option>
 			</select>
 			<label for="goal">
@@ -79,7 +79,7 @@
 					{{- end -}}
 				</select>
 			{{- end -}}
-			<aside id="info" class="info" style="display: none;">
+			<aside id="info" class="left" style="display: none;">
 				<span class="icon-cell">ℹ️</span>
 				<p id="info_text"></p>
 				<span class="icon-cell">ℹ️</span>
@@ -95,6 +95,13 @@
 				{{Blog_PostLink "2022-07-17" "See the 2022-07-17 blog post for details and an example."}}</p>
 				<span class="icon-cell">{{HTML_Emoji "th01"}}</span>
 			</aside>
+			<div id="micro_container"class="left" hidden>
+				<input type="checkbox" id="micro" name="micro">
+				<label for="micro">Turn into a microtransaction<span id="micro_available"></span><ul>
+					<li>This order will be directly delivered as a smaller piece of work, proportional to a regular push. No need to rely on other backers to fund a complete push first.</li>
+					<li>No blog post will be written for it, and the only summary will be inside the Git commit messages. The results will be briefly mentioned and explained as part of other blog posts for regular pushes towards the same goal, though.</li>
+				</ul></label>
+			</div>
 			<div>
 				This is a…
 			</div>
@@ -142,11 +149,21 @@
 	</aside>
 
 	<script>
+		/** @type {HTMLSelectElement} */
 		const metric = document.getElementById("metric");
+
 		const goal = document.getElementById("goal");
 		const info = document.getElementById("info");
 		const info_text = document.getElementById("info_text");
 
+		const micro_container = document.getElementById("micro_container");
+
+		/** @type {HTMLInputElement} */
+		const micro = document.getElementById("micro");
+
+		const micro_available = document.getElementById("micro_available");
+
+		let micro_previously_checked = false;
 		function handleSelect(option) {
 			const goal_mandatory = option.getAttribute("data-goal-mandatory");
 			const message = option.getAttribute("data-info");
@@ -159,10 +176,26 @@
 				info.style.display = "none";
 			}
 
+			if(option.hasAttribute("data-micro")) {
+				if(micro.disabled) {
+					micro.checked = micro_previously_checked;
+				}
+				micro.disabled = false;
+				micro_available.textContent = "";
+			} else {
+				micro_previously_checked = micro.checked;
+				micro.disabled = true;
+				micro.checked = false;
+				micro_available.textContent = " (not possible with this goal, full push required for delivery)";
+			}
+
 			goal.required = (goal_mandatory !== null);
 			goal.reportValidity();
+			micro_container.hidden = false;
 		}
 
-		handleSelect(metric.options[0]);
+		window.onload = () => {
+			handleSelect(metric.options[metric.selectedIndex]);
+		}
 	</script>
 {{end}}

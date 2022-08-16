@@ -285,6 +285,9 @@ var pages = template.New("").Funcs(map[string]interface{}{
 		return ret
 	},
 
+	// String munging, safe
+	"hasprefix": strings.HasPrefix,
+
 	// Markup, safe
 	"HTML_Date":         HTMLDate,
 	"HTML_Time":         HTMLTime,
@@ -426,7 +429,7 @@ func main() {
 
 	// Blog
 	// ----
-	NewBlog(pages, pushes, blogTags, func(blog Blog) map[string]interface{} {
+	blog := NewBlog(pages, pushes, blogTags, func(blog Blog) map[string]interface{} {
 		return map[string]interface{}{
 			"Blog_Posts":            blog.Posts,
 			"Blog_PostLink":         blog.PostLink,
@@ -442,6 +445,11 @@ func main() {
 			},
 		}
 	}).AutogenerateTags(&repo)
+	feedHandler := FeedHandler{
+		Blog:     &blog,
+		SiteURL:  "https://rec98.nmlgc.net",
+		BlogPath: "/blog",
+	}
 	// ----
 
 	pages = template.Must(pages.ParseGlob("*.html"))
@@ -469,6 +477,9 @@ func main() {
 	r.Handle("/faq", pagesHandler("faq.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(blogURLPrefix, pagesHandler("blog.html"))
+	r.Handle(blogURLPrefix+"/feed.xml", http.HandlerFunc(feedHandler.HandleRSS))
+	r.Handle(blogURLPrefix+"/feed.atom", http.HandlerFunc(feedHandler.HandleAtom))
+	r.Handle(blogURLPrefix+"/feed.json", http.HandlerFunc(feedHandler.HandleJSON))
 	r.Handle(blogURLPrefix+"/tag", pagesHandler("blog_taglist.html"))
 	r.Handle(blogURLPrefix+"/{date}", pagesHandler("blog_single.html"))
 	r.Handle(

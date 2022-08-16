@@ -69,6 +69,16 @@ type BlogEntry struct {
 	templateName string
 }
 
+// GetTime returns the timestamp corresponding to the moment the blog entry has
+// been published. It matches the datetime string on the blog.
+func (e *BlogEntry) GetTime() time.Time {
+	if e.Pushes != nil {
+		return e.Pushes[0].Delivered
+	} else {
+		return DateInDevLocation(e.Date).Time
+	}
+}
+
 // Blog bundles all blog entries, sorted from newest to oldest.
 type Blog []BlogEntry
 
@@ -188,14 +198,10 @@ func (e BlogEntry) Render(filters []string) Post {
 
 	post := Post{
 		Date:    e.Date,
+		Time:    e.GetTime(),
 		Tags:    e.Tags,
 		Filters: filters,
 		Body:    template.HTML(b.String()),
-	}
-	if e.Pushes != nil {
-		post.Time = e.Pushes[0].Delivered
-	} else {
-		post.Time = DateInDevLocation(e.Date).Time
 	}
 
 	for i := len(e.Pushes) - 1; i >= 0; i-- {

@@ -8,6 +8,7 @@ require (
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/gocarina/gocsv v0.0.0-20220531201732-5f969b02b902
+	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/mux v1.8.0
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect

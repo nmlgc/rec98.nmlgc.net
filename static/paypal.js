@@ -85,6 +85,7 @@ async function sendIncoming(orderID, amount, discountID) {
 			CustURL: document.getElementById("cust-url").value,
 			Metric: document.getElementById("metric").value,
 			Goal: document.getElementById("goal").value,
+			Micro: document.getElementById("micro").checked,
 			Cycle: cycle(),
 			Discount: discountID,
 			Cents: amount * 100,

@@ -4,7 +4,12 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{{if eq .TemplateName "legal" -}}
-		<meta name="robots" content="noindex, noarchive" />
+	<meta name="robots" content="noindex, noarchive" />
+	{{- end}}
+	{{if hasprefix .TemplateName "blog" -}}
+	<link rel="alternate" href="/blog/feed.xml" type="application/rss+xml" />
+	<link rel="alternate" href="/blog/feed.atom" type="application/atom+xml" />
+	<link rel="alternate" href="/blog/feed.json" type="application/json" />
 	{{- end}}
 	<link rel="stylesheet" href="{{call $.StaticFileURL "main.css"}}" />
 	<script src="{{call $.StaticFileURL "main.js"}}"></script>

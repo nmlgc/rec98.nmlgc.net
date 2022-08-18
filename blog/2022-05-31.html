@@ -343,7 +343,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	Since we're in critical infrastructure territory once again, I went for the
 	most conservative fix with the least impact on the binary: Simply changing
 	any VRAM offsets <code>&gt;= 0xFFFD</code> to <code>0x0000</code> to avoid
-	the GPF, and leave all other bugs in place. Sure, it's rather lazy and
+	the GPF, and leaving all other bugs in place. Sure, it's rather lazy and
 	"incorrect"; the function still unblits a 32-pixel block there, but adding a
 	special case for blitting 24 pixels would add way too much code. And
 	seriously, it's not like anything happens in the 8 pixels between

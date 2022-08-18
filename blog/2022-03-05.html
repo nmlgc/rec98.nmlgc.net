@@ -82,7 +82,7 @@ const uint8_t SNAP = 0x02;
 
 // Else, turn either clockwise or counterclockwise by 1/256th of a circle,
 // depending on what would reach the player the fastest.
-if((angle_delta > SNAP) && (angle_delta < static_cast<uint8_t>(-SNAP))) {
+if((angle_delta > SNAP) && (angle_delta < static_cast&lt;uint8_t&gt;(-SNAP))) {
 	angle_delta = (angle_delta >= 0x80) ? -0x01 : +0x01;
 }
 head_p->angle -= angle_delta;
@@ -90,7 +90,7 @@ head_p->angle -= angle_delta;
 	5 lines of code, and not all too difficult to follow once you are familiar
 	with 8-bit angles… unlike what ZUN <i>actually</i> wrote. Which is 26 lines,
 	and includes an unused "friction" variable that is never set to any value
-	that makes a difference in the formula. {{HTML_Emoji "zunpet"}}. uth05win
+	that makes a difference in the formula. {{HTML_Emoji "zunpet"}} uth05win
 	correctly saw through that all and simplified this code to something
 	equivalent to my explanation. Redoing that work certainly wasted a bit of my
 	time, and means that I now definitely need to spend another push on RE'ing
@@ -116,7 +116,7 @@ head_p->angle -= angle_delta;
 	simply "un-shakes" the screen by just marking every stage tile to be
 	redrawn. In the context of all the other tile invalidation that can take
 	place during a frame, that's definitely more performant than
-	{{Blog_PostLink "2019-11-18" "doing another EGC-accelerated <code>memmove()	</code>"}}.
+	{{Blog_PostLink "2019-11-18" "doing another EGC-accelerated <code>memmove()</code>"}}.
 	Due to these two games being double-buffered via page flipping, this
 	invalidation only really <i>needs</i> to happen for the frame after the next
 	one though. The immediately next frame will show the regular, un-shaken

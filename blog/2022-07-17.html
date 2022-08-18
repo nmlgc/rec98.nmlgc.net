@@ -122,7 +122,7 @@
 	</figcaption>
 </figure><p>
 	However, I'd say that the saddest part about this pattern is how choppy it
-	is, with the  circle/pillar entities updating and rendering at a meager 7
+	is, with the circle/pillar entities updating and rendering at a meager 7
 	FPS. Why go that low on purpose when you can just make the game render ✨
 	<i>smoothly</i> ✨ instead?
 </p><figure class="th01_playfield">
@@ -192,12 +192,13 @@
 	latter palette to the graphics chip every 40 frames is what <i>corrects</i>
 	the discoloration, which would otherwise be permanent.
 </p><p>
-	The green color comes from <code>BOSS7_D1.GRP</code>, the scroll background,
-	and that's what turns this into a clear bug: The <i>stage</i> palette is
-	only set a single time in the entire fight, at the beginning of the entrance
-	animation, to the palette of this image. Apart from consistency reasons, it
-	doesn't even make sense to set the stage palette there, as you can't enter
-	the Pause menu or bomb during a blocking animation function.<br />
+	The green color comes from <code>BOSS7_D1.GRP</code>, the scrolling
+	background of the entrance animation. That's what turns this into a clear
+	bug: The <i>stage</i> palette is only set a single time in the entire fight,
+	at the beginning of the entrance animation, to the palette of this image.
+	Apart from consistency reasons, it doesn't even make sense to set the stage
+	palette there, as you can't enter the Pause menu or bomb during a blocking
+	animation function.<br />
 	And just 3 lines of code later, ZUN loads <code>BOSS8_A1.GRP</code>, the
 	main background image of the fight. Moving the stage palette assignment
 	there would have easily prevented the discoloration.

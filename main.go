@@ -211,7 +211,7 @@ func HTMLScreenY(v int) template.HTML {
 }
 
 // HTML200Y formats v as a Y coordinate in the PC-98 VRAM space, in
-//  line-doubled 640×200 mode.
+// line-doubled 640×200 mode.
 func HTML200Y(v int) template.HTML {
 	return HTMLPC98Y("vram200", "Y coordinate in 640×200 VRAM space", v)
 }

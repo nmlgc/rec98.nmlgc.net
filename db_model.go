@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -117,14 +119,16 @@ func (e eInvalidID) Error() string {
 	return fmt.Sprintf("invalid ID: \"%s\"", e.input)
 }
 
-func parseID(input string, format string) (ret int, err error) {
-	n, err := fmt.Sscanf(input, format, &ret)
-	if err != nil {
-		return 0, err
-	} else if n != 1 {
+func parseID(input string, format *regexp.Regexp) (id int, err error) {
+	idStr := format.FindStringSubmatch(input)
+	if len(idStr) < 2 {
 		return 0, eInvalidID{input}
 	}
-	return ret, nil
+	ret, err := strconv.ParseUint(idStr[1], 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	return int(ret), nil
 }
 
 // LocalDateStamp represents a date-only timestamp in the devLocation.
@@ -156,10 +160,10 @@ type CustomerID int
 // PushID represents a consecutively numbered, 1-based push ID.
 type PushID int
 
-const pushIDFormat = "P%04d"
+var pushIDFormat = regexp.MustCompile("P([0-9]{4})")
 
 func (i PushID) String() string {
-	return fmt.Sprintf(pushIDFormat, i)
+	return fmt.Sprintf("P%04d", i)
 }
 
 // UnmarshalCSV decodes a PushID from its string representation.
@@ -172,10 +176,10 @@ func (i *PushID) UnmarshalCSV(s string) error {
 // TransactionID represents a consecutively numbered transaction ID.
 type TransactionID int
 
-const transactionIDFormat = "T%04d"
+var transactionIDFormat = regexp.MustCompile("T([0-9]{4})")
 
 func (i TransactionID) String() string {
-	return fmt.Sprintf(transactionIDFormat, i)
+	return fmt.Sprintf("T%04d", i)
 }
 
 // UnmarshalCSV decodes a TransactionID from its string representation.

@@ -333,7 +333,7 @@ func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
 }
 
-func (t tTransactions) ByID(id TransactionID) *Transaction {
+func (t tTransactions) ByID(id int) *Transaction {
 	return t[id-1]
 }
 
@@ -419,7 +419,7 @@ var paypal_auth = PayPalAuth{}
 // --------------------
 type pushTSV struct {
 	ID                PushID
-	Transactions      []TransactionID
+	Transactions      []int
 	Goal              string
 	Delivered         time.Time
 	Diff              string

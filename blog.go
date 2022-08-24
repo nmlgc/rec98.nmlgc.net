@@ -151,7 +151,7 @@ type PostDot struct {
 type Post struct {
 	Date     string
 	Time     time.Time // Full post time
-	PushIDs  []PushID
+	PushIDs  []ScopedID
 	FundedBy []CustomerID
 	Diffs    []DiffInfo
 	Tags     []string

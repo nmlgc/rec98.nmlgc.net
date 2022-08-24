@@ -22,7 +22,7 @@ func (t tCustomers) HTMLByID(id CustomerID) template.HTML {
 // OutstandingPushFraction bundles a transaction ID with its outstanding
 // amount of pushes.
 type OutstandingPushFraction struct {
-	ID       TransactionID
+	ID       ScopedID
 	Fraction float64
 }
 
@@ -72,7 +72,7 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 			fpc := tfg.forCustomer(t.Customer)
 			pushprice := pushprices.At(t.Time)
 			opf := OutstandingPushFraction{
-				ID:       t.ID,
+				ID:       *t.ID,
 				Fraction: float64(t.Outstanding) / float64(pushprice),
 			}
 			fpc.Breakdown = append(fpc.Breakdown, opf)

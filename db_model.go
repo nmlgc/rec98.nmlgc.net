@@ -154,38 +154,33 @@ func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 /// Schemas
 /// -------
 
+type IDScope byte
+
+const (
+	SPush        IDScope = 'P'
+	STransaction IDScope = 'T'
+)
+
 // CustomerID represents a consecutively numbered, 1-based customer ID.
 type CustomerID int
 
-// PushID represents a consecutively numbered, 1-based push ID.
-type PushID int
-
-var pushIDFormat = regexp.MustCompile("(P)([0-9]{4})")
-
-func (i PushID) String() string {
-	return fmt.Sprintf("P%04d", i)
+// ScopedID represents a consecutively numbered, 1-based ID in any of the ID
+// scopes.
+type ScopedID struct {
+	Scope IDScope
+	ID    int
 }
 
-// UnmarshalCSV decodes a PushID from its string representation.
-func (i *PushID) UnmarshalCSV(s string) error {
-	_, ret, err := parseID(s, pushIDFormat)
-	*i = PushID(ret)
-	return err
+var scopedIDFormat = regexp.MustCompile("(P|T)([0-9]{4})")
+
+func (i ScopedID) String() string {
+	return fmt.Sprintf("%c%04d", i.Scope, i.ID)
 }
 
-// TransactionID represents a consecutively numbered transaction ID.
-type TransactionID int
-
-var transactionIDFormat = regexp.MustCompile("(T)([0-9]{4})")
-
-func (i TransactionID) String() string {
-	return fmt.Sprintf("T%04d", i)
-}
-
-// UnmarshalCSV decodes a TransactionID from its string representation.
-func (i *TransactionID) UnmarshalCSV(s string) error {
-	_, ret, err := parseID(s, transactionIDFormat)
-	*i = TransactionID(ret)
+// UnmarshalCSV decodes a ScopedID from its string representation.
+func (i *ScopedID) UnmarshalCSV(s string) error {
+	prefix, id, err := parseID(s, scopedIDFormat)
+	*i = ScopedID{ID: id, Scope: IDScope(prefix)}
 	return err
 }
 
@@ -198,7 +193,7 @@ type Customer struct {
 // Transaction represents a single money transfer that may or may not be large
 // enough to result in one or more pushes.
 type Transaction struct {
-	ID       TransactionID
+	ID       *ScopedID
 	Time     time.Time
 	Customer CustomerID
 	Cents    int
@@ -237,7 +232,7 @@ func (t *Transaction) consume(p *pushTSV, fractionNeeded float64) float64 {
 
 // Push represents a single unit of work.
 type Push struct {
-	ID                PushID
+	ID                ScopedID
 	Transactions      []*Transaction
 	Goal              string
 	Delivered         time.Time
@@ -418,7 +413,7 @@ var paypal_auth = PayPalAuth{}
 // TSV input structures
 // --------------------
 type pushTSV struct {
-	ID                PushID
+	ID                *ScopedID
 	Transactions      []int
 	Goal              string
 	Delivered         time.Time
@@ -428,7 +423,7 @@ type pushTSV struct {
 
 func (p *pushTSV) toActualPush(repo *Repository) *Push {
 	return &Push{
-		ID:                p.ID,
+		ID:                *p.ID,
 		Goal:              p.Goal,
 		Delivered:         p.Delivered,
 		Diff:              NewDiffInfo(p.Diff, repo),

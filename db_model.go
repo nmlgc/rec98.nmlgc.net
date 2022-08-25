@@ -455,9 +455,6 @@ var tsvPushes []*pushTSV
 // and validating their assignment to the respective pushes. Commit references
 // are directly resolved using the given repo.
 func NewPushes(transactions tTransactions, tsv []*pushTSV, repo *Repository) (ret tPushes) {
-	for i := range transactions {
-		transactions[i].Outstanding = transactions[i].Cents
-	}
 	for _, p := range tsvPushes {
 		ret = append(ret, p.toActualPush(repo))
 	}
@@ -521,6 +518,10 @@ func init() {
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
 	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
+
+	for i := range transactions {
+		transactions[i].Outstanding = transactions[i].Cents
+	}
 
 	tagDescriptions.Map = make(map[string]string)
 	for _, td := range tagDescriptions.Ordered {

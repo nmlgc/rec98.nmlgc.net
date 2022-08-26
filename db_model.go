@@ -161,6 +161,18 @@ const (
 	STransaction IDScope = 'T'
 )
 
+// ToTransaction returns the corresponding transaction scope for the delivery
+// scope s.
+func (s IDScope) ToTransaction() IDScope {
+	switch s {
+	case SPush:
+		return STransaction
+	default:
+		log.Fatalf("trying to use %c as a delivery scope?\n", s)
+		return 0
+	}
+}
+
 // CustomerID represents a consecutively numbered, 1-based customer ID.
 type CustomerID int
 
@@ -309,7 +321,10 @@ func (p PayPalAuth) Initialized() bool {
 }
 
 type tCustomers []*Customer
-type tTransactions []*Transaction
+type tTransactions struct {
+	All    []*Transaction
+	Scoped map[IDScope][]*Transaction
+}
 type tPushes []*Push
 type tPushPrices []*PushPrice
 type tFreeTime []*FreeTime
@@ -326,10 +341,6 @@ type tIncoming struct {
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
-}
-
-func (t tTransactions) ByID(id int) *Transaction {
-	return t[id-1]
 }
 
 func (p tPushPrices) At(t time.Time) (price int) {
@@ -435,7 +446,7 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 			}
 			fractionNeeded := float64(1)
 			for _, tid := range p.Transactions {
-				t := transactions.ByID(tid)
+				t := transactions.Scoped[p.ID.Scope.ToTransaction()][tid-1]
 				ret = append(ret, t)
 			}
 			for _, t := range ret {
@@ -510,7 +521,7 @@ func init() {
 	FatalIf(err)
 
 	loadTSV(&customers, "customers", gocsv.UnmarshalCSV)
-	loadTSV(&transactions, "transactions", gocsv.UnmarshalCSV)
+	loadTSV(&transactions.All, "transactions", gocsv.UnmarshalCSV)
 	loadTSV(&tsvPushes, "pushes", gocsv.UnmarshalCSV)
 	loadTSV(&pushprices, "pushprices", gocsv.UnmarshalCSV)
 	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
@@ -519,8 +530,12 @@ func init() {
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
 	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
 
-	for i := range transactions {
-		transactions[i].Outstanding = transactions[i].Cents
+	transactions.Scoped = make(map[IDScope][]*Transaction)
+	for _, transaction := range transactions.All {
+		transaction.Outstanding = transaction.Cents
+		transactions.Scoped[transaction.ID.Scope] = append(
+			transactions.Scoped[transaction.ID.Scope], transaction,
+		)
 	}
 
 	tagDescriptions.Map = make(map[string]string)

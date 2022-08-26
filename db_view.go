@@ -64,8 +64,8 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 		return &ret[len(ret)-1]
 	}
 
-	for i := len(transactions) - 1; i >= 0; i-- {
-		t := transactions[i]
+	for i := len(transactions.All) - 1; i >= 0; i-- {
+		t := transactions.All[i]
 		if t.Outstanding > 0 {
 			tfg := transactionsForGoal(t.Goal)
 			tfg.Delayed = tfg.Delayed || t.Delayed

@@ -157,6 +157,7 @@ func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 type IDScope byte
 
 const (
+	SMicro       IDScope = 'M'
 	SPush        IDScope = 'P'
 	STransaction IDScope = 'T'
 )
@@ -167,6 +168,8 @@ func (s IDScope) ToTransaction() IDScope {
 	switch s {
 	case SPush:
 		return STransaction
+	case SMicro:
+		return SMicro
 	default:
 		log.Fatalf("trying to use %c as a delivery scope?\n", s)
 		return 0
@@ -183,7 +186,7 @@ type ScopedID struct {
 	ID    int
 }
 
-var scopedIDFormat = regexp.MustCompile("(P|T)([0-9]{4})")
+var scopedIDFormat = regexp.MustCompile("(M|P|T)([0-9]{4})")
 
 func (i ScopedID) String() string {
 	return fmt.Sprintf("%c%04d", i.Scope, i.ID)
@@ -219,6 +222,11 @@ type Transaction struct {
 // Consumes outstanding cents up to the remaining fraction from p, and returns
 // the new remaining push fraction.
 func (t *Transaction) consume(p *pushTSV, fractionNeeded float64) float64 {
+	if t.ID.Scope == SMicro {
+		t.Outstanding = 0
+		return 0
+	}
+
 	if fractionNeeded <= 0 {
 		log.Fatalf(
 			"%s consumed more transactions than it should have (%s)",

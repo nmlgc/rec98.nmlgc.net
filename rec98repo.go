@@ -533,7 +533,7 @@ func (b Blog) AutogenerateTags(repo *Repository) Blog {
 	for i := range b {
 		entry := &b[i]
 		var gameSeen [5]bool
-		var projectTag string
+		var project *ProjectInfo
 		for _, p := range entry.Pushes {
 			if (p.Diff.Top != nil) && (p.Diff.Bottom != nil) {
 				iter, err := repo.GetLogAt(p.Diff.Top)
@@ -558,7 +558,7 @@ func (b Blog) AutogenerateTags(repo *Repository) Blog {
 				})
 				FatalIf(err)
 			}
-			projectTag = p.Diff.Project.BlogTag
+			project = p.Diff.Project
 		}
 		for i := len(gameSeen) - 1; i >= 0; i-- {
 			if gameSeen[i] {
@@ -568,8 +568,8 @@ func (b Blog) AutogenerateTags(repo *Repository) Blog {
 				)
 			}
 		}
-		if projectTag != "" {
-			entry.Tags = append([]string{projectTag}, entry.Tags...)
+		if project != nil {
+			entry.Tags = append(project.BlogTags, entry.Tags...)
 		}
 	}
 	return b

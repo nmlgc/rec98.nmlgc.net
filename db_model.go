@@ -42,6 +42,7 @@ type ProjectInfo struct {
 var projectMap = map[string]*ProjectInfo{
 	"ReC98":           {"", []string{"rec98"}},
 	"rec98.nmlgc.net": {"Website", []string{"website"}},
+	"ssg":             {"Seihou", []string{"seihou", "sh01"}},
 }
 
 // DiffInfo contains all pieces of information parsed from a GitHub diff URL.

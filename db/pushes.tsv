@@ -212,3 +212,4 @@ P0213	[188, 187]	TH01 decompilation (Stage bonus and TOTLE screens, part 2/2 + D
 P0214	[187]	TH01 decompilation (Orb and Game Over animations + Pause, continue, and debug menus)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/158a91e...414770c	1
 P0215	[187, 196]	TH01 decompilation (REIIDEN.EXE main() function / 100%)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/414770c...3123c9d	1
 P0216	[195]	TH01 decompilation (100%)	2022-08-15T23:57:46Z	nmlgc/ReC98/compare/3123c9d...a0ff3f1	1
+P0217	[165]	Seihou / Shuusou Gyoku (Clean-room packfile implementation / Building a drop-in replacement binary)	2022-09-04T15:13:44Z	nmlgc/ssg/compare/pbg...P0217	0

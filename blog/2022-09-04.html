@@ -1,0 +1,234 @@
+<p>
+	First of all: This blog is now available as a web feed, in three different
+	formats!
+</p><ul>
+	<li><a href="/blog/feed.xml"><code>/blog/feed.xml</code></a></li>
+	<li><a href="/blog/feed.atom"><code>/blog/feed.atom</code></a></li>
+	<li><a href="/blog/feed.json"><code>/blog/feed.json</code></a></li>
+</ul><p>
+	Thanks to <a href="https://github.com/handlerug">handlerug</a> for
+	implementing and PR'ing the feature in a very clean way. That makes at least
+	two people I know who wanted to see feed support, so there are probably
+	a few more out there.
+</p><hr /><p>
+	So, Shuusou Gyoku. pbg released the original source code for the first two
+	Seihou games back in February 2019, but notably removed the crucial
+	decompression code for the original packfiles due to… various unspecified
+	reasons, considerations, and implications. {{HTML_Emoji "thonk"}} This vague
+	language and subsequent <a
+	href="https://github.com/pbghogehoge/ssg/pull/1">rejection of a pull request
+	to add these features back in</a> were probably the main reasons why no one
+	has publicly done anything with this codebase since.
+</p><p>
+	The only other fork I know about is <a
+	href="https://github.com/Priw8">Priw8</a>'s private fork from 2020, but only
+	because <a
+	href="https://twitter.com/WishMakers_TH/status/1520633977756786688">WishMakers
+	informed me about it</a> shortly after this push was funded. Both of them
+	might also contribute some features to my fork in the future if their time
+	allows it.<br />
+	In this fork, Priw8 replaced packfile decompression with raw reads from
+	directories with the pre-extracted contents of all the .DAT files. This
+	works for playing the game, but there are actually two more things that
+	require the original packfile code:
+</p><ul>
+	<li>High scores are stored as a bitstream with every variable separated by
+	an alternating 0 or 1 bit, using the same bit-level access functions as the
+	packfile reader. That's a quite… unique form of obfuscation: It requires way
+	too much code to read and write the format, and doesn't even obfuscate the
+	data <i>that</i> well because you can still see clear patterns when opening
+	these scorefiles in a hex editor.</li>
+	<li>Replays are 2-"file" archives compressed using the same algorithm as the
+	packfile. The first "file" contains metadata like the shot type, stage, and
+	RNG seed, and the second one contains the input state for every frame.</li>
+</ul><p>
+	We can surely implement our own simple and uncompressed formats for these
+	things, but it's not the idea to build all future Shuusou Gyoku features on
+	top of a replay-incompatible fork. So, what do we do? On the one hand, pbg
+	expressed the clear wish to not include data reverse-engineered from the
+	original binary. On the other hand, he released the code under the MIT
+	license, which allows us to modify the code and distribute the results in
+	any way we wish.<br />
+	So, let's meet in the middle, and go for a clean-room implementation of the
+	missing features as indicated by their usage, without looking at either the
+	original binary or wangqr's reverse-engineered code.
+</p><hr /><p>
+	With incremental rebuilds being broken in the latest Visual Studio project
+	files as well, it made sense to start from scratch on pbg's last commit. Of
+	course, I can't pass up a chance to use
+	{{Blog_PostLink "2020-09-03" "Tup, my favorite build system"}} for every
+	project I'm the main developer of. It might not fit Shuusou Gyoku as well as
+	it fits ReC98, but let's see whether it would be reasonable at all…
+</p><p>
+	… and it's actually not too bad! Modern Visual Studio makes this a bit
+	harder than it should be with all the intermediate build artifacts you have
+	to keep track of. In the end though, it's still only <a
+	href="https://github.com/nmlgc/ssg/blob/5c163b6adf746289bf80e449752da888cea09a97/Tuprules.lua">70
+	lines of Lua to have a nice abstraction for both Debug and Release
+	builds</a>. With this layer underneath, the <a
+	href="https://github.com/nmlgc/ssg/blob/5c163b6adf746289bf80e449752da888cea09a97/Tupfile.lua">actual
+	Shuusou Gyoku-specific part</a> can be expressed as succinctly as in any
+	other modern build system, while still making every compiler flag explicit.
+	It might be slightly slower than a traditional <code>.vcxproj</code> build
+	due to <a
+	href="https://randomascii.wordpress.com/2014/03/22/make-vc-compiles-fast-through-parallel-compilation/">launching
+	one <code>cl.exe</code> process per translation unit</a>, but the result is
+	way more reliable and trustworthy compared to anything that involves Visual
+	Studio project files. This simplicity paves the way for expanding the build
+	process to multiple steps, and doing all the static checking on translation
+	strings that I never got to do for thcrap-based patches. Heck, I might even
+	compile all future translations directly into the binary…
+</p><p>
+	Every C++ build system will invariably be hated by <i>someone</i>, so I'd
+	say that your goal should always be to simplify the actually important parts
+	of your build enough to allow everyone else to easily adapt it to their
+	favorite system. This Tupfile definitely does a better job there than your
+	average <code>.vcxproj</code> file – but if you still want such a thing (or,
+	gasp, 🤮&nbsp;CMake project files&nbsp;🤮) for better Visual Studio IDE
+	integration, you should have no problem generating them for yourself.<br />
+	There might still be a point in doing that because that's the one part that
+	unfortunately sucks about this approach. Visual Studio is horribly broken
+	for any nonstandard C++ project even in 2022:
+</p><ul>
+	<li>Makefile projects can be nicely integrated with Debug and Release
+	configurations, but setting a later C++ language standard requires <a
+	href="https://github.com/Microsoft/VSLinux/issues/292#issuecomment-696271764">dumb
+	<code>.vcxproj</code> hacks</a> that don't even work properly anymore.</li>
+	<li>Folder projects are ridiculously ugly: The Build toolbar is permanently
+	grayed out <i>even if you configured a build task</i>. For some reason,
+	configuring these tasks merely adds one additional element to a 9-element
+	context menu in the Solution Explorer. Also, why does the big IDE use a
+	different JSON schema than the perfectly functional and adequate one from
+	Visual Studio Code?</li>
+</ul>
+	In both cases, IntelliSense doesn't work properly <i>at all</i> even if it
+	appears to be configured correctly, and Tup's dependency tracking appeared
+	to be weirdly cut off for the very final .PDB file. Interestingly though,
+	using the big Visual Studio IDE for just <i>debugging</i> a binary via
+	<code>devenv bin/GIAN07.exe</code> suddenly eliminates all the IntelliSense
+	issues. Looks like there's a lot of essential information stored in the .PDB
+	files that Visual Studio just refuses to read in any other context.
+	{{HTML_Emoji "thonk"}}
+</p><p>
+	But now compare that to Visual Studio Code: Open it from the <i>x64_x86
+	Cross Tools Command Prompt</i> via <code>code .</code>,  launch a build or
+	debug task, or browse the code with perfect IntelliSense. Three small
+	configuration files and everything just works – heck, you even get the Tup
+	progress bar in the terminal. It might be Electron bloatware and horribly
+	slow at times, but Visual Studio Code has long outperformed regular Visual
+	Studio in terms of non-debug functionality.
+</p><hr /><p>
+	On to the compression algorithm then… and it's just textbook <a
+	href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Storer%E2%80%93Szymanski">LZSS</a>,
+	with 13 bits for the offset of a back-reference and 4 bits for its length?
+	Hardly a trade secret there. The hard parts there all come from unexpected
+	inefficiencies in the bitstream format:
+</p><ol>
+	<li>Encoding back-references as offsets into an 8 KiB ring buffer dictionary
+	means that the most straightforward implementation actually needs an 8 KiB
+	array for the LZSS sliding window. This could have easily been done with
+	zero additional memory if the offset was encoded as the difference to the
+	current byte instead.</li>
+	<li>The packfile format stores the uncompressed size of every file in its
+	header, which is a good thing because you want to know in advance how much
+	heap memory to allocate for a specific file. Nevertheless, the original game
+	only stops reading bits from the packfile once it encountered a
+	back-reference with an offset of 0. This means that the compressor not only
+	has to write this technically unneeded back-reference to the end of the
+	compressed bitstream, but also ignore any potential other longest
+	back-reference with an offset of 0 <i>within</i> the file. The latter can
+	easily happen with a ring buffer dictionary.</li>
+</ol><p>
+	The original game used a single <code>BIT_DEVICE</code> class with mode
+	flags for every combination of reading and writing memory buffers and
+	on-disk files. Since that would have necessitated a lot of error checking
+	for all (pseudo-)methods of this class, I wrote one dedicated small class
+	for each one of these permutations instead. To further emphasize the
+	clean-room property of this code, these use modern C++ memory ownership
+	features: <code>std::unique_ptr</code> for the fixed-size read-only buffers
+	we get from packfiles, <code>std::vector</code> for the newly compressed
+	buffers where we don't know the size in advance, and <code>std::span</code>
+	for a borrowed reference to an immutable region of memory that we want to
+	treat as a bitstream. Definitely better than using the native Win32
+	<code>LocalAlloc()</code> and <code>LocalFree()</code> allocator, especially
+	if we want to port the game away from Windows one day.
+</p><p>
+	One feature I didn't use though: C++ fstreams, because those are trash.
+	{{HTML_Emoji "tannedcirno"}} These days, they would seem to be the natural
+	choice with the new <code>std::filesystem::path</code> type from C++17:
+	Correctly constructed, you can pass that type to an fstream constructor and
+	gain both locale independence on Windows <i>and</i> portability to
+	everything else, without writing any Windows-specific UTF-16 code. But even
+	in a Release build, fstreams add ~100 KB of locale-related bloat to the .EXE
+	which adds no value for just reading binary files. That's just too
+	embarrassing if you look at how much space the rest of the game takes up.
+	Writing your own platform layer that calls the Win32
+	<code>CreateFileW()</code>, <code>ReadFile()</code>, and
+	<code>WriteFile()</code> API functions is apparently still the way to go
+	even in 2022. And with <code>std::filesystem::path</code> still being a
+	welcome addition to C++, it's not too much code to write either.
+</p><p>
+	This gets us file format compatibility with the original release… and a
+	crash as soon as the ending starts, but only in Release mode? As it turns
+	out, this crash is caused by <a
+	href="https://github.com/nmlgc/ssg/commit/5c163b6adf746289bf80e449752da888cea09a97">an
+	out-of-bounds</a> <a
+	href="https://github.com/nmlgc/ssg/blob/5c163b6adf746289bf80e449752da888cea09a97/GIAN07/ENDING.CPP#L127-L128">array
+	access bug</a> that was present even in the original game, and only turned
+	into a crash now because the optimizer in modern Visual Studio versions
+	reorders static data. As a result, the 6-element <code>pFontInfo</code>
+	array got placed in front of an ECL-related counter variable that then got
+	corrupted by the write to the 7<sup>th</sup> element, which  subsequently
+	crashed the game with a read access to previously deallocated danmaku script
+	data. That just goes to show that these <i>technical</i> bugs are important
+	and worth fixing even if they don't cause issues in the original game. Who
+	knows how many of these will turn into crashes once we get to porting PC-98
+	Touhou?
+</p><hr /><p>
+	So here we go, a new build of Shuusou Gyoku, compiled with Visual Studio
+	2022, and compatible with all original data formats:
+</p><p>
+	<a class="release"
+	href="https://github.com/nmlgc/ssg/releases/tag/P0217"
+	><strong>{{HTML_Emoji "sh01"}} Shuusou Gyoku P0217</strong></a>
+</p><p>
+	Inside the regular Shuusou Gyoku installation directory, this binary works
+	as a full-fledged drop-in replacement for the original
+	<code>秋霜玉.exe</code>. It still has all of the original binary's problems
+	though:
+</p><ul>
+	<li>Separate Japanese locale emulation is still needed to correctly refer to
+	the original names of the configuration (<code>秋霜CFG.DAT</code>), score
+	(<code>秋霜SC.DAT</code>), and replay (<code>秋霜りぷ*.DAT</code>) files.
+	It's also required for the ending text to not render as mojibake.</li>
+	<li>Running the game at full speed and without graphical glitches on modern
+	Windows still requires a separate DirectDraw patch such as <a
+	href="https://github.com/narzoul/DDrawCompat/releases">DDrawCompat</a>. To
+	eliminate any remaining flickering, configure the game to use 16-bit
+	graphics in the <i>Config → Graphic</i> menu.</li>
+</ul><p>
+	As well as some of its own:
+</p><ul>
+	<li>The original screenshot feature is still missing, as it also wasn't part
+	of pbg's released source code.</li>
+	<li>If you're wondering why your antivirus is freaking out: I explained the
+	reasons in <a href="https://github.com/nmlgc/ssg/issues/22">this GitHub
+	issue</a>, with <a href="https://github.com/nmlgc/ssg/issues/21">some more
+	background here</a>.</li>
+</ul><p>
+	So all in all, it's a strict downgrade at this point in time.
+	{{HTML_Emoji "onricdennat"}} And more of a symbol that we can now start
+	doing actual work on this game. Seihou has been a fun change of pace, and I
+	hope that I get to do more work on the series. There is quite a lot to be
+	done with Shuusou Gyoku alone, and the <a
+	href="https://github.com/nmlgc/ssg/issues">21 GitHub issues</a> I've opened
+	are probably only scratching the surface.<br />
+	However, all the required research for this one consumed more like 1⅔
+	pushes. Despite just one push being funded, it wouldn't have made sense to
+	release the commits or this binary in any earlier state. To repay this debt,
+	I'm going to put the next {{HTML_Currency 5000}} for Seihou towards the
+	small code maintenance and performance tasks that I usually do for free,
+	before doing any more feature and bugfix work. Next up: Improving video
+	playback on the blog, and maybe delivering some microtransaction work on the
+	side?
+</p>

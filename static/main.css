@@ -363,7 +363,7 @@ footer * {
 
 /* Link icons
    ---------- */
-a:not(.customer)[href^="https://github.com/"]:before {
+a:not(.customer):not(.release)[href^="https://github.com/"]:before {
 	background-image: url('/static/github.svg?29bc319c');
 	display: inline-block;
 	width: 1em;

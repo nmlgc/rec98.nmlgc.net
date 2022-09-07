@@ -293,6 +293,7 @@ func main() {
 	// Concurrent initialization
 	// -------------------------
 	paypalClient := Concurrent(NewPaypalClient)
+	videoRoot := Concurrent(NewVideoRoot)
 	// -------------------------
 
 	repo := NewRepository(os.Args[1])
@@ -349,7 +350,7 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes, blogTags, func(blog *Blog) map[string]interface{} {
+	blog := NewBlog(pages, pushes, blogTags, <-videoRoot, func(blog *Blog) map[string]interface{} {
 		return map[string]interface{}{
 			"Blog_Posts":            blog.Posts,
 			"Blog_PostLink":         blog.PostLink,

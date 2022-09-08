@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 var blogURLPrefix = "/blog"
@@ -114,6 +117,15 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 	return ret
 }
 
+// OldVideoRedirectHandler redirects old VP9 and VP8 video URLs to the new
+// codec-specific subdirectories.
+func (b *Blog) OldVideoRedirectHandler(codec string) http.Handler {
+	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+		newURL := b.VideoURL(mux.Vars(req)["stem"], codec)
+		http.Redirect(wr, req, newURL, http.StatusMovedPermanently)
+	})
+}
+
 // FindEntryByString looks for and returns a potential blog entry posted
 // during the given ISO 8601-formatted date, or nil if there is none.
 func (b *Blog) FindEntryByString(date string) (*BlogEntry, error) {
@@ -173,8 +185,9 @@ func (e eNoPost) Error() string {
 	return fmt.Sprintf("no blog entry posted on %s", e.date)
 }
 
-func (b *Blog) VideoURL(stem string) string {
-	return blogHP.VersionURLFor(b.Video.FN(stem))
+// VideoURL returns the URL of a video in a specific codec.
+func (b *Blog) VideoURL(stem string, codec string) string {
+	return blogHP.VersionURLFor(b.Video.URL(stem, codec))
 }
 
 // Render builds a new Post instance from e.
@@ -187,8 +200,8 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 	video := func(fn string, alt string) *BlogVideo {
 		stem := (datePrefix + fn)
 		return &BlogVideo{
-			VP9:  template.HTML(b.VideoURL(stem)),
-			VP8:  template.HTML(b.VideoURL(stem + "-vp8")),
+			VP9:  template.HTML(b.VideoURL(stem, "vp9")),
+			VP8:  template.HTML(b.VideoURL(stem, "vp8")),
 			Date: e.Date,
 			Alt:  alt,
 		}

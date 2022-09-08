@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -293,7 +294,12 @@ func main() {
 	// Concurrent initialization
 	// -------------------------
 	paypalClient := Concurrent(NewPaypalClient)
-	videoRoot := Concurrent(NewVideoRoot)
+	videoRoot := Concurrent(func() *VideoRoot {
+		return NewVideoRoot(SymmetricPath{
+			LocalPath: filepath.Join(blogHP.LocalPath, "video"),
+			URLPrefix: "video/", // blogHP contains the remaining prefix
+		})
+	})
 	// -------------------------
 
 	repo := NewRepository(os.Args[1])
@@ -391,6 +397,12 @@ func main() {
 	r := mux.NewRouter()
 
 	r.Use(measureRequestTime)
+	r.Handle(
+		blogHP.URLPrefix+"{stem}-vp8.webm", blog.OldVideoRedirectHandler("vp8"),
+	)
+	r.Handle(
+		blogHP.URLPrefix+"{stem}.webm", blog.OldVideoRedirectHandler("vp9"),
+	)
 	staticHP.RegisterFileServer(r)
 	blogHP.RegisterFileServer(r)
 	r.Handle("/favicon.ico", staticHP.Server())

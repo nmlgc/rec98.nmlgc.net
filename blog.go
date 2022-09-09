@@ -173,6 +173,10 @@ func (e eNoPost) Error() string {
 	return fmt.Sprintf("no blog entry posted on %s", e.date)
 }
 
+func (b *Blog) VideoURL(stem string) string {
+	return blogHP.VersionURLFor(b.Video.FN(stem))
+}
+
 // Render builds a new Post instance from e.
 func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 	var builder strings.Builder
@@ -181,9 +185,10 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 		return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
 	}
 	video := func(fn string, alt string) *BlogVideo {
+		stem := (datePrefix + fn)
 		return &BlogVideo{
-			VP9:  postFileURL(b.Video.URL(fn)),
-			VP8:  postFileURL(b.Video.URL(fn + "-vp8")),
+			VP9:  template.HTML(b.VideoURL(stem)),
+			VP8:  template.HTML(b.VideoURL(stem + "-vp8")),
 			Date: e.Date,
 			Alt:  alt,
 		}

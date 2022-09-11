@@ -187,7 +187,7 @@ Time	Customer	Cents	Goal	ID	Delayed
 2022-07-19T02:14:07Z	16	6000	TH01 > (Seihou || other secondary priorities from the final TH01 stretch)	T0186	0
 2022-07-19T13:31:44Z	13	12000	TH01 > TH02	T0187	0
 2022-07-19T18:05:59Z	19	6000	TH01 > (TH02 || any further TH01-related mod goal)	T0188	0
-2022-07-21T11:12:02Z	13	6000	TH02	T0189	0
+2022-07-21T11:12:02Z	13	6000	TH02 RE	T0189	0
 2022-08-02T10:23:00Z	15	1000	Reverse-engineering	T0190	0
 2022-08-05T10:57:56Z	0	5000	Improving the website (Blog video performance and usability)	T0191	0
 2022-08-08T20:15:39Z	20	1000	TH01	T0192	0
@@ -201,3 +201,4 @@ Time	Customer	Cents	Goal	ID	Delayed
 2022-09-04T16:33:08Z	18	2500	Seihou (overtime compensation)	M0001	0
 2022-09-05T07:09:53Z	22	3000	TH05 RE	T0200	0
 2022-09-06T10:56:36Z	0	7500	Anything (including tooling)	T0201	0
+2022-09-11T06:50:06Z	10	3500	TH02 RE	T0202	0

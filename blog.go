@@ -64,7 +64,7 @@ func (b *BlogVideo) TagWithIDActive(id string) (ret template.HTML) {
 
 func (b *Blog) NewBlogVideo(stem, date, alt string, loop bool) *BlogVideo {
 	ret := &BlogVideo{Date: date, Alt: alt, Loop: loop}
-	for _, codec := range VIDEO_ENCODERS {
+	for _, codec := range VIDEO_ENCODED {
 		codecURL := template.HTML(b.VideoURL(stem, codec))
 		ret.Sources = append(ret.Sources, codecURL)
 	}

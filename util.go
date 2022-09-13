@@ -5,6 +5,17 @@ import (
 	"os"
 )
 
+// Concurrent runs the given function concurrently, returning its result on a
+// channel.
+func Concurrent[T any](f func() T) <-chan T {
+	ret := make(chan T)
+	go func() {
+		ret <- f()
+		close(ret)
+	}()
+	return ret
+}
+
 // RemoveDuplicates removes duplicates from the given slice in-place.
 func RemoveDuplicates[T comparable](slice *[]T) {
 	firstIndexOf := make(map[T]int, len(*slice))

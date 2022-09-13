@@ -9,19 +9,17 @@ import (
 	"github.com/plutov/paypal/v4"
 )
 
-var client *paypal.Client
-
-func init() {
+func NewPaypalClient() *paypal.Client {
 	auth := paypal_auth
 	if !auth.Initialized() {
-		return
+		return nil
 	}
-	var err error
-	client, err = paypal.NewClient(auth.ClientID, auth.Secret, auth.APIBase)
+	client, err := paypal.NewClient(auth.ClientID, auth.Secret, auth.APIBase)
 	FatalIf(err)
 
 	_, err = client.GetAccessToken(context.Background())
 	FatalIf(err)
+	return client
 }
 
 type eInvalidAmount struct {
@@ -65,8 +63,8 @@ func processSubscription(in *Incoming, order *paypal.Order) error {
 	return nil
 }
 
-var transactionIncomingHandler = http.HandlerFunc(
-	func(wr http.ResponseWriter, req *http.Request) {
+func transactionIncomingHandler(client *paypal.Client) http.Handler {
+	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
 		if req.Method != "POST" {
 			http.Redirect(wr, req, "/order", http.StatusSeeOther)
 			return
@@ -95,5 +93,5 @@ var transactionIncomingHandler = http.HandlerFunc(
 		if err = incoming.Insert(&in); err != nil {
 			respondWithError(wr, err)
 		}
-	},
-)
+	})
+}

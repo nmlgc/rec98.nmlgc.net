@@ -375,6 +375,11 @@ func main() {
 		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
 	}
 
+	// Concurrent initialization
+	// -------------------------
+	paypalClient := Concurrent(NewPaypalClient)
+	// -------------------------
+
 	repo := NewRepository(os.Args[1])
 	master, err := repo.GetCommit("master")
 	if err != nil {
@@ -488,7 +493,8 @@ func main() {
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
 	if paypal_auth.Initialized() {
-		r.Handle("/api/transaction-incoming", transactionIncomingHandler)
+		incomingHandler := transactionIncomingHandler(<-paypalClient)
+		r.Handle("/api/transaction-incoming", incomingHandler)
 		r.Handle("/order", pagesHandler("order.html"))
 		r.Handle("/thankyou", pagesHandler("thankyou.html"))
 	}

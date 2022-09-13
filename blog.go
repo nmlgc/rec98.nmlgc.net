@@ -168,8 +168,8 @@ func (e eNoPost) Error() string {
 }
 
 // Render builds a new Post instance from e.
-func (e BlogEntry) Render(filters []string) Post {
-	var b strings.Builder
+func (b Blog) Render(e *BlogEntry, filters []string) Post {
+	var builder strings.Builder
 	datePrefix := e.Date + "-"
 	postFileURL := func(fn string) template.HTML {
 		return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
@@ -194,14 +194,14 @@ func (e BlogEntry) Render(filters []string) Post {
 			return ret
 		},
 	}
-	pagesExecute(&b, e.templateName, &ctx)
+	pagesExecute(&builder, e.templateName, &ctx)
 
 	post := Post{
 		Date:    e.Date,
 		Time:    e.GetTime(),
 		Tags:    e.Tags,
 		Filters: filters,
-		Body:    template.HTML(b.String()),
+		Body:    template.HTML(builder.String()),
 	}
 
 	for i := len(e.Pushes) - 1; i >= 0; i-- {
@@ -221,7 +221,7 @@ func (b Blog) GetPost(date string) (*Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	post := entry.Render([]string{})
+	post := b.Render(entry, []string{})
 	return &post, nil
 }
 
@@ -240,7 +240,7 @@ func (b Blog) Posts(filters []string) chan Post {
 				}
 			}
 			if filtersSeen == len(filters) {
-				ret <- entry.Render(filters)
+				ret <- b.Render(&entry, filters)
 			}
 		}
 		close(ret)

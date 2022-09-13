@@ -504,13 +504,12 @@ func (m REMetricEstimate) ForComponents(game int) chan REEstimate {
 
 // AutogenerateTags adds auto-generated tags from the associated commits of a
 // blog post to all entries in the given blog. Returns b itself.
-func (b Blog) AutogenerateTags(repo *Repository) Blog {
+func (b *Blog) AutogenerateTags(repo *Repository) *Blog {
 	log.Println("Auto-generating blog post tags from associated commits…")
 
 	var rxGames = regexp.MustCompile(` \[(th0[1-5]/?)+\]`)
 
-	for i := range b {
-		entry := &b[i]
+	for _, entry := range b.Entries {
 		var gameSeen [5]bool
 		var project *ProjectInfo
 		for _, p := range entry.Pushes {

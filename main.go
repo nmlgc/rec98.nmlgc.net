@@ -349,7 +349,7 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes, blogTags, func(blog Blog) map[string]interface{} {
+	blog := NewBlog(pages, pushes, blogTags, func(blog *Blog) map[string]interface{} {
 		return map[string]interface{}{
 			"Blog_Posts":            blog.Posts,
 			"Blog_PostLink":         blog.PostLink,
@@ -366,7 +366,7 @@ func main() {
 		}
 	}).AutogenerateTags(&repo)
 	feedHandler := FeedHandler{
-		Blog:     &blog,
+		Blog:     blog,
 		SiteURL:  "https://rec98.nmlgc.net",
 		BlogPath: "/blog",
 	}

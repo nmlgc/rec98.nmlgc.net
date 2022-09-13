@@ -25,10 +25,10 @@ type FeedHandler struct {
 
 // getModTime returns the last modification time of the blog.
 func (h *FeedHandler) getModTime() time.Time {
-	if len(*h.Blog) == 0 {
+	if len(h.Blog.Entries) == 0 {
 		return time.Time{}
 	}
-	return (*h.Blog)[0].GetTime()
+	return h.Blog.Entries[0].GetTime()
 }
 
 // getFeed generates a feed from the rendered blog entries.
@@ -69,7 +69,7 @@ func (h *FeedHandler) processRequest(wr http.ResponseWriter, req *http.Request) 
 
 	// If there are no blog posts, we don't have anything to compare the
 	// timestamps to. Generate the feeds unconditionally.
-	if len(*h.Blog) == 0 {
+	if len(h.Blog.Entries) == 0 {
 		return true
 	}
 

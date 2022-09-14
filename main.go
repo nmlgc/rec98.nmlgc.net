@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 	"html/template"
 	"io"
@@ -10,14 +9,11 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gorilla/mux"
-	"github.com/rjeczalik/notify"
 )
 
 // FatalIf removes the boilerplate for cases where errors are fatal.
@@ -27,88 +23,7 @@ func FatalIf(err error) {
 	}
 }
 
-// hostedPath stores the corresponding URL prefix for a local filesystem path.
-type hostedPath struct {
-	srv        http.Handler
-	fileToHash sync.Map
-
-	LocalPath string // must end with a slash
-	URLPrefix string // must start *and* end with a slash
-}
-
-// newHostedPath sets up a new hostedPath instance.
-func newHostedPath(LocalPath string, URLPrefix string) *hostedPath {
-	absoluteLocalPath, err := filepath.Abs(LocalPath)
-	FatalIf(err)
-	dir := http.FileServer(http.Dir(absoluteLocalPath))
-	ret := &hostedPath{
-		srv: http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-			if len(req.URL.RawQuery) > 0 {
-				wr.Header().Set("Cache-Control", "max-age: 31536000, immutable")
-			}
-			dir.ServeHTTP(wr, req)
-		}),
-		LocalPath: (absoluteLocalPath + "/"),
-		URLPrefix: URLPrefix,
-	}
-	go ret.watch()
-	return ret
-}
-
-// watch watches the LocalPath for file changes in order to purge hashes as
-// necessary.
-func (hp *hostedPath) watch() {
-	// Make the channel buffered to ensure no event is dropped. Notify will
-	// drop an event if the receiver is not able to keep up the sending pace.
-	c := make(chan notify.EventInfo, 1)
-
-	err := notify.Watch(hp.LocalPath+"...", c, notify.Write)
-	FatalIf(err)
-
-	for e := range c {
-		fn, err := filepath.Rel(hp.LocalPath, e.Path())
-		FatalIf(err)
-
-		// At least on Windows, I always get multiple events each time I save a
-		// file. At the first event, the file is still locked for concurrent
-		// reads, so we can't immediately rehash it. So, let's just delete the
-		// old hash, and let the new one be generated on demand…
-		if _, deleted := hp.fileToHash.LoadAndDelete(fn); deleted {
-			log.Printf("%s: \"%s\" changed", hp.LocalPath, fn)
-		}
-	}
-}
-
-// Server returns hp's file serving handler, e.g. to be re-used elsewhere.
-func (hp *hostedPath) Server() http.Handler {
-	return hp.srv
-}
-
-// RegisterFileServer registers a HTTP route on the given router at hp's
-// URLPrefix, serving any local files in hp's LocalPath.
-func (hp *hostedPath) RegisterFileServer(r *mux.Router) {
-	stripped := http.StripPrefix(hp.URLPrefix, hp.srv)
-	r.PathPrefix(hp.URLPrefix).Handler(stripped)
-}
-
-// VersionQueryFor returns the current hash of fn as a query string suffix.
-func (hp *hostedPath) VersionQueryFor(fn string) string {
-	hash, ok := hp.fileToHash.Load(fn)
-	if !ok {
-		fullHash := CryptHashOfFile(hp.LocalPath + fn)
-		hash = hex.EncodeToString(fullHash[:4])
-		hp.fileToHash.Store(fn, hash)
-	}
-	return "?" + hash.(string)
-}
-
-// VersionURLFor returns the full URL of fn, with a version-based query string
-// suffix.
-func (hp *hostedPath) VersionURLFor(fn string) string {
-	return (hp.URLPrefix + fn + hp.VersionQueryFor(fn))
-}
-
-var staticHP = newHostedPath("static/", "/static/")
+var staticHP = NewHostedPath("static/", "/static/")
 
 /// HTML templates.
 // Need to be functions that return template.HTML rather than separate types
@@ -187,7 +102,7 @@ func HTMLPushPrice() template.HTML {
 }
 
 // HTMLDownload returns a file download link for basename, hosted at hp.
-func HTMLDownload(hp *hostedPath, basename string) template.HTML {
+func HTMLDownload(hp *HostedPath, basename string) template.HTML {
 	localFN := hp.LocalPath + basename
 	fi, err := os.Stat(localFN)
 	FatalIf(err)

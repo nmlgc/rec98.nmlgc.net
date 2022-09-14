@@ -12,7 +12,7 @@ import (
 )
 
 var blogURLPrefix = "/blog"
-var blogHP = newHostedPath("blog/", blogURLPrefix+"/static/")
+var blogHP = NewHostedPath("blog/", blogURLPrefix+"/static/")
 
 // BlogVideo collects static file URLs to all encodings of a video.
 type BlogVideo struct {
@@ -138,7 +138,7 @@ func (b Blog) FindEntryForPush(p Push) *BlogEntry {
 // PostDot contains everything handed to a blog template as the value of dot.
 type PostDot struct {
 	Date       string      // ISO 8601-formatted date
-	HostedPath *hostedPath // Value of [blogHP]
+	HostedPath *HostedPath // Value of [blogHP]
 	DatePrefix string      // Date prefix for potential post-specific files
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML

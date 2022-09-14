@@ -11,13 +11,19 @@ import (
 	"github.com/rjeczalik/notify"
 )
 
-// HostedPath stores the corresponding URL prefix for a local filesystem path.
-type HostedPath struct {
-	srv        http.Handler
-	fileToHash sync.Map
-
+// SymmetricPath describes a local filesystem path that can be accessed via
+// HTTP through a URL prefix.
+type SymmetricPath struct {
 	LocalPath string // must end with a slash
 	URLPrefix string // must start *and* end with a slash
+}
+
+// HostedPath adds an HTTP file server with version-based URL suffixes to
+// SymmetricPath.
+type HostedPath struct {
+	SymmetricPath
+	srv        http.Handler
+	fileToHash sync.Map
 }
 
 // NewHostedPath sets up a new HostedPath instance.
@@ -26,14 +32,16 @@ func NewHostedPath(LocalPath string, URLPrefix string) *HostedPath {
 	FatalIf(err)
 	dir := http.FileServer(http.Dir(absoluteLocalPath))
 	ret := &HostedPath{
+		SymmetricPath: SymmetricPath{
+			LocalPath: (absoluteLocalPath + "/"),
+			URLPrefix: URLPrefix,
+		},
 		srv: http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
 			if len(req.URL.RawQuery) > 0 {
 				wr.Header().Set("Cache-Control", "max-age: 31536000, immutable")
 			}
 			dir.ServeHTTP(wr, req)
 		}),
-		LocalPath: (absoluteLocalPath + "/"),
-		URLPrefix: URLPrefix,
 	}
 	go ret.watch()
 	return ret

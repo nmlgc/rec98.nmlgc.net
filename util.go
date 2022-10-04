@@ -2,7 +2,7 @@ package main
 
 import (
 	"crypto/sha512"
-	"io/ioutil"
+	"os"
 )
 
 // RemoveDuplicates removes duplicates from the given slice in-place.
@@ -26,7 +26,7 @@ type CryptHash [sha512.Size]byte
 // CryptHashOfFile hashes the file with the given name using a current
 // cryptographically secure algorithm.
 func CryptHashOfFile(fn string) CryptHash {
-	f, err := ioutil.ReadFile(fn)
+	f, err := os.ReadFile(fn)
 	FatalIf(err)
 	return sha512.Sum512(f)
 }

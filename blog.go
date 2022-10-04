@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"os"
 	"path"
 	"path/filepath"
 	"sort"
@@ -103,7 +103,7 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, funcs func(b 
 	}
 	t.Funcs(funcs(ret))
 	for _, tmpl := range templates {
-		buf, err := ioutil.ReadFile(tmpl)
+		buf, err := os.ReadFile(tmpl)
 		FatalIf(err)
 		template.Must(t.New(tmpl).Parse(string(buf)))
 	}

@@ -230,7 +230,7 @@ func (t *Transaction) consume(p *pushTSV, fractionNeeded float64) float64 {
 
 	if fractionNeeded <= 0 {
 		log.Fatalf(
-			"%s consumed more transactions than it should have (%s)",
+			"%s consumed more transactions than it should have (%v)",
 			p.ID, p.Transactions,
 		)
 	} else if t.Outstanding <= 0 {

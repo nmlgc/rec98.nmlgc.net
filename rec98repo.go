@@ -9,6 +9,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -284,7 +285,7 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 // REProgressAtTree parses the ASM dump files for every game at the given Git
 // tree, and returns the progress for each.
 var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
-	const CACHE_FN = "progress_cache.gob"
+	const CACHE_FN = "cache/progress.gob"
 
 	parserHashCur := CryptHashOfFile("asm.go")
 	repoHashCur := CryptHashOfFile("rec98repo.go")
@@ -317,6 +318,8 @@ var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
 	}
 
 	save := func(fn string, cache map[plumbing.Hash]*REProgress) {
+		dir, _ := filepath.Split(fn)
+		FatalIf(os.MkdirAll(dir, 0600))
 		f, err := os.Create(fn)
 		FatalIf(err)
 		enc := gob.NewEncoder(f)

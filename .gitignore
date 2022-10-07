@@ -1,4 +1,4 @@
 legal.html
+cache/
 db/incoming.tsv
 db/paypal_auth.tsv
-progress_cache.gob

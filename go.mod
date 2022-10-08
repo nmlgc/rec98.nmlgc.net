@@ -14,6 +14,8 @@ require (
 	github.com/stretchr/testify v1.8.0
 )
 
+require gopkg.in/vansante/go-ffprobe.v2 v2.1.1
+
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20220822140716-1678d6eb0cbe // indirect

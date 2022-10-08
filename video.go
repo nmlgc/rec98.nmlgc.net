@@ -2,11 +2,18 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"context"
 	"fmt"
+	"io/fs"
 	"log"
 	"os/exec"
 	"path"
+	"path/filepath"
+	"strconv"
 	"strings"
+
+	"gopkg.in/vansante/go-ffprobe.v2"
 )
 
 // Codecs
@@ -69,6 +76,40 @@ const (
 	Decoder ffmpegCodecType = "-decoders"
 )
 
+// NewSourceMetadata runs ffprobe on the given file to generate a VideoMetadata
+// struct. Only really supports AVI files, since WebM doesn't have a dedicated
+// frame count field in its header.
+func (f *FFMPEG) NewSourceMetadata(fn string) VideoMetadata {
+	probe, err := ffprobe.ProbeURL(context.Background(), fn)
+	FatalIf(err)
+
+	videoStream := probe.FirstVideoStream()
+	if videoStream == nil {
+		log.Fatalf("%s: no video stream found", fn)
+	}
+
+	mustParseUint := func(s string) uint {
+		ret, err := strconv.ParseUint(s, 10, 32)
+		FatalIf(err)
+		return uint(ret)
+	}
+
+	dividend, divisor, found := strings.Cut(videoStream.RFrameRate, "/")
+	if !found {
+		log.Fatalf(
+			"%s: invalid frame rate format: %s", fn, videoStream.RFrameRate,
+		)
+	}
+	fps := (float64(mustParseUint(dividend)) / float64(mustParseUint(divisor)))
+
+	return VideoMetadata{
+		FPS:        fps,
+		FrameCount: mustParseUint(videoStream.NbFrames),
+		Width:      uint(videoStream.Width),
+		Height:     uint(videoStream.Height),
+	}
+}
+
 // Supports returns the missing encoders and decoders among the given codecs
 // that are not supported by this ffmpeg.
 func (f FFMPEG) Supports(codecType ffmpegCodecType, codecs []*FFMPEGCodec) (missing []*FFMPEGCodec) {
@@ -104,9 +145,21 @@ func (f FFMPEG) Supports(codecType ffmpegCodecType, codecs []*FFMPEGCodec) (miss
 
 // ------
 
+// VideoMetadata bundles all relevant metadata of a video.
+type VideoMetadata struct {
+	FPS        float64
+	FrameCount uint
+	Width      uint
+	Height     uint
+}
+
+// Videos maps a video stem to its metadata.
+type Videos map[string]VideoMetadata
+
 type VideoRoot struct {
 	Root   SymmetricPath
 	ffmpeg FFMPEG
+	Videos
 }
 
 func NewVideoRoot(root SymmetricPath) *VideoRoot {
@@ -131,7 +184,30 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 		}
 		log.Fatal(err)
 	}
-	return &VideoRoot{Root: root, ffmpeg: ffmpeg}
+
+	log.Println("Loading video metadata…")
+	videos := make(Videos)
+	sourcePath := filepath.Join(root.LocalPath, VIDEO_SOURCE.Dir)
+	FatalIf(filepath.WalkDir(
+		sourcePath, func(fn string, info fs.DirEntry, err error) error {
+			FatalIf(err)
+			if info.IsDir() {
+				return nil
+			}
+			basename := info.Name()
+			ext := filepath.Ext(basename)
+			if !strings.EqualFold(ext, VIDEO_SOURCE.Ext) {
+				return nil
+			}
+			stem := strings.TrimSuffix(basename, ext)
+
+			videos[stem] = ffmpeg.NewSourceMetadata(fn)
+			return nil
+		},
+	))
+	log.Println("Video metadata loaded.")
+
+	return &VideoRoot{Root: root, ffmpeg: ffmpeg, Videos: videos}
 }
 
 func (r *VideoRoot) URL(stem string, vd *VideoDir) string {

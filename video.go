@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"gopkg.in/vansante/go-ffprobe.v2"
 )
@@ -145,6 +146,8 @@ func (f FFMPEG) Supports(codecType ffmpegCodecType, codecs []*FFMPEGCodec) (miss
 
 // ------
 
+const VIDEO_CACHE_BASENAME = "videos.gob"
+
 // VideoMetadata bundles all relevant metadata of a video.
 type VideoMetadata struct {
 	FPS        float64
@@ -153,13 +156,39 @@ type VideoMetadata struct {
 	Height     uint
 }
 
-// Videos maps a video stem to its metadata.
-type Videos map[string]VideoMetadata
+// VideoCacheEntry bundles a video's metadata with mtimes and hashes for cache
+// invalidation and re-encoding.
+type VideoCacheEntry struct {
+	SourceMTime time.Time
+	SourceHash  CryptHash
+	Metadata    VideoMetadata
+}
+
+// VideoCache maps a video stem to its cached information.
+type VideoCache struct {
+	// Needs to be a pointer for addressability.
+	Video map[string]*VideoCacheEntry
+}
+
+func loadVideoCache() VideoCache {
+	ret, err := CacheLoad[VideoCache](VIDEO_CACHE_BASENAME)
+	if err != nil {
+		log.Printf("Video cache invalid (%s), will be regenerated", err)
+		return VideoCache{
+			Video: make(map[string]*VideoCacheEntry),
+		}
+	}
+	return ret
+}
+
+func (v *VideoCache) save() {
+	CacheSave(VIDEO_CACHE_BASENAME, v)
+}
 
 type VideoRoot struct {
 	Root   SymmetricPath
 	ffmpeg FFMPEG
-	Videos
+	Cache  VideoCache
 }
 
 func NewVideoRoot(root SymmetricPath) *VideoRoot {
@@ -185,8 +214,10 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 		log.Fatal(err)
 	}
 
-	log.Println("Loading video metadata…")
-	videos := make(Videos)
+	// Loading metadata
+	// ----------------
+
+	cache := loadVideoCache()
 	sourcePath := filepath.Join(root.LocalPath, VIDEO_SOURCE.Dir)
 	FatalIf(filepath.WalkDir(
 		sourcePath, func(fn string, info fs.DirEntry, err error) error {
@@ -201,13 +232,32 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 			}
 			stem := strings.TrimSuffix(basename, ext)
 
-			videos[stem] = ffmpeg.NewSourceMetadata(fn)
+			entry, inCache := cache.Video[stem]
+
+			// Invalidate if both the source file's mtime…
+			fi, err := info.Info()
+			FatalIf(err)
+			currentMTime := fi.ModTime()
+			if !inCache || !entry.SourceMTime.Equal(currentMTime) {
+				// …and its hash have changed.
+				currentHash := CryptHashOfFile(fn)
+				if !inCache || (currentHash != entry.SourceHash) {
+					cache.Video[stem] = &VideoCacheEntry{
+						SourceHash: currentHash,
+						Metadata:   ffmpeg.NewSourceMetadata(fn),
+					}
+				}
+				// Write a potentially changed mtime separately
+				cache.Video[stem].SourceMTime = currentMTime
+				cache.save()
+			}
 			return nil
 		},
 	))
 	log.Println("Video metadata loaded.")
+	// ----------------
 
-	return &VideoRoot{Root: root, ffmpeg: ffmpeg, Videos: videos}
+	return &VideoRoot{Root: root, ffmpeg: ffmpeg, Cache: cache}
 }
 
 func (r *VideoRoot) URL(stem string, vd *VideoDir) string {

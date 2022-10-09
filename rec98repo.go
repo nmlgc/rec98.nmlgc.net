@@ -1,15 +1,12 @@
 package main
 
 import (
-	"encoding/gob"
 	"errors"
 	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"math"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -285,61 +282,40 @@ func reProgressAtTree(tree *object.Tree) (progress REProgress) {
 // REProgressAtTree parses the ASM dump files for every game at the given Git
 // tree, and returns the progress for each.
 var REProgressAtTree = func() func(tree *object.Tree) (progress REProgress) {
-	const CACHE_FN = "cache/progress.gob"
+	const CACHE_BASENAME = "progress.gob"
 
-	parserHashCur := CryptHashOfFile("asm.go")
-	repoHashCur := CryptHashOfFile("rec98repo.go")
-
-	load := func(fn string) (ret map[plumbing.Hash]*REProgress, err error) {
-		var parserHashPrev CryptHash
-		var repoHashPrev CryptHash
-
-		f, err := os.Open(fn)
-		if err != nil {
-			return make(map[plumbing.Hash]*REProgress), err
-		}
-		dec := gob.NewDecoder(f)
-		if err := dec.Decode(&parserHashPrev); err != nil {
-			return make(map[plumbing.Hash]*REProgress), err
-		}
-		if err := dec.Decode(&repoHashPrev); err != nil {
-			return make(map[plumbing.Hash]*REProgress), err
-		}
-		if parserHashCur != parserHashPrev || repoHashCur != repoHashPrev {
-			return make(map[plumbing.Hash]*REProgress), errors.New(
-				"ASM parser has changed",
-			)
-		}
-		if err := dec.Decode(&ret); err != nil {
-			return make(map[plumbing.Hash]*REProgress), err
-		}
-		FatalIf(f.Close())
-		return ret, nil
+	type ProgressCache struct {
+		ParserHash CryptHash
+		RepoHash   CryptHash
+		Data       map[plumbing.Hash]*REProgress
 	}
 
-	save := func(fn string, cache map[plumbing.Hash]*REProgress) {
-		dir, _ := filepath.Split(fn)
-		FatalIf(os.MkdirAll(dir, 0600))
-		f, err := os.Create(fn)
-		FatalIf(err)
-		enc := gob.NewEncoder(f)
-		FatalIf(enc.Encode(parserHashCur))
-		FatalIf(enc.Encode(repoHashCur))
-		FatalIf(enc.Encode(cache))
-		FatalIf(f.Close())
+	cacheNew := ProgressCache{
+		ParserHash: CryptHashOfFile("asm.go"),
+		RepoHash:   CryptHashOfFile("rec98repo.go"),
+		Data:       make(map[plumbing.Hash]*REProgress),
 	}
 
-	cache, err := load(CACHE_FN)
+	cache, err := CacheLoad[ProgressCache](CACHE_BASENAME)
+	if err == nil {
+		tagMismatch := false
+		tagMismatch = (tagMismatch || (cacheNew.ParserHash != cache.ParserHash))
+		tagMismatch = (tagMismatch || (cacheNew.RepoHash != cache.RepoHash))
+		if tagMismatch {
+			err = errors.New("ASM parser has changed")
+		}
+	}
 	if err != nil {
 		log.Printf("Progress cache invalid (%s), will be regenerated", err)
+		cache = cacheNew
 	}
 	return func(tree *object.Tree) REProgress {
-		if progress, ok := cache[tree.Hash]; ok {
+		if progress, ok := cache.Data[tree.Hash]; ok {
 			return *progress
 		}
 		progress := reProgressAtTree(tree)
-		cache[tree.Hash] = &progress
-		save(CACHE_FN, cache)
+		cache.Data[tree.Hash] = &progress
+		CacheSave(CACHE_BASENAME, cache)
 		return progress
 	}
 }()

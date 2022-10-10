@@ -199,7 +199,20 @@ func (f FFMPEG) Supports(codecType ffmpegCodecType, codecs []*FFMPEGCodec) (miss
 
 const VIDEO_CACHE_BASENAME = "videos.gob"
 
-type reencodeReason struct {
+type cacheMiss struct {
+	refName   string
+	cmpName   string
+	refMetric any
+	cmpMetric any
+}
+
+func (r *cacheMiss) Log(verdict string) {
+	if verdict != "" {
+		verdict = (", " + verdict)
+	}
+	lenName := Max(len(r.refName), len(r.cmpName))
+	log.Printf("%s: %v\n", RightPad(r.refName, lenName), r.refMetric)
+	log.Printf("%s: %v%s\n", RightPad(r.cmpName, lenName), r.cmpMetric, verdict)
 }
 
 // VideoMetadata bundles all relevant metadata of a video.
@@ -342,11 +355,16 @@ func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 		encodedDebugFN := vd.RelativeFN(stem)
 		encodedFN := filepath.Join(r.Root.LocalPath, encodedDebugFN)
 
-		needsReencode := func() *reencodeReason {
+		needsReencode := func() *cacheMiss {
 			// 1) Encoded file does not exist
 			encodedFI, err := os.Stat(encodedFN)
 			if errors.Is(err, fs.ErrNotExist) {
-				return &reencodeReason{}
+				return &cacheMiss{
+					refName:   sourceDebugFN,
+					cmpName:   encodedDebugFN,
+					refMetric: entry.SourceMTime.String(),
+					cmpMetric: "n/a",
+				}
 			} else if err != nil {
 				FatalIf(err)
 			}
@@ -357,19 +375,34 @@ func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 			// here, not the one from the filesystem. This way, we also detect
 			// interrupted encodes here, and restart them accordingly.
 			if cachedMTime.Before(entry.SourceMTime) {
-				return &reencodeReason{}
+				cmpMetric := cachedMTime.String()
+				if cachedMTime.IsZero() {
+					cmpMetric = "outdated"
+				}
+				return &cacheMiss{
+					refName:   sourceDebugFN,
+					cmpName:   encodedDebugFN,
+					refMetric: entry.SourceMTime.String(),
+					cmpMetric: cmpMetric,
+				}
 			}
 
 			// 3) Filesystem mtime does not match recorded mtime
 			if cachedMTime != encodedFI.ModTime() {
-				return &reencodeReason{}
+				return &cacheMiss{
+					refName:   (encodedDebugFN + " (in cache)"),
+					cmpName:   (encodedDebugFN + " (on disk)"),
+					refMetric: cachedMTime.String(),
+					cmpMetric: encodedFI.ModTime().String(),
+				}
 			}
 
 			// File up to date!
 			return nil
 		}
 
-		if reason := needsReencode(); reason != nil {
+		if miss := needsReencode(); miss != nil {
+			miss.Log("re-encoding")
 			r.ffmpeg.Encode(encodedFN, sourceFN, &vd.FFMPEGCodec)
 			encodedFI, err := os.Stat(encodedFN)
 			FatalIf(err)

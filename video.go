@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io/fs"
 	"log"
+	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
@@ -26,6 +28,18 @@ type VideoDir struct {
 	FFMPEGCodec
 }
 
+// Basename returns the name of stem encoded in this directory's codec,
+// relative to d.
+func (d *VideoDir) Basename(stem string) string {
+	return (stem + d.Ext)
+}
+
+// RelativeFN returns the name of stem encoded in this directory's codec,
+// relative to the local root path.
+func (d *VideoDir) RelativeFN(stem string) string {
+	return filepath.Join(d.Dir, d.Basename(stem))
+}
+
 // Lossless source files
 var VIDEO_SOURCE = VideoDir{"zmbv", FFMPEGCodec{
 	Ext:    ".avi",
@@ -36,12 +50,19 @@ var VIDEO_SOURCE = VideoDir{"zmbv", FFMPEGCodec{
 var VP9 = VideoDir{"vp9", FFMPEGCodec{
 	Ext:    ".webm",
 	VCodec: "libvpx-vp9",
+	VFlags: []string{"-lossless", "1"},
 }}
 
 // Lossy fallback for outdated garbage
 var VP8 = VideoDir{"vp8", FFMPEGCodec{
 	Ext:    ".webm",
 	VCodec: "libvpx",
+	VFlags: []string{
+		"-qmin", "0",
+		"-qmax", "4",
+		"-crf", "4",
+		"-b:v", "1G",
+	},
 }}
 
 // VIDEO_ENCODED defines all target codec directories, ordered from the most to
@@ -55,8 +76,9 @@ var VIDEO_ENCODED = []*VideoDir{&VP9, &VP8}
 
 // FFMPEGCodec defines ffmpeg parameters for a codec.
 type FFMPEGCodec struct {
-	Ext    string // File extension
-	VCodec string // -vcodec
+	Ext    string   // File extension
+	VCodec string   // -vcodec
+	VFlags []string // Encoding settings
 }
 
 // FFMPEG wraps operations that shell out to an external ffmpeg binary.
@@ -76,6 +98,35 @@ const (
 	Encoder ffmpegCodecType = "-encoders"
 	Decoder ffmpegCodecType = "-decoders"
 )
+
+// Encode encodes sourceFN to encodedFN with the given codec, creating any
+// necessary directories beforehand.
+func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
+	encodedDir, _ := filepath.Split(encodedFN)
+	FatalIf(os.MkdirAll(encodedDir, 0600))
+	passCount := 1
+	for pass := 1; pass <= passCount; pass++ {
+		args := []string{
+			f.ffmpeg,
+			"-hide_banner",
+			"-y", // force overwrite
+			"-i", sourceFN,
+			"-vcodec", codec.VCodec,
+		}
+		args = append(args, codec.VFlags...)
+		args = append(args, encodedFN)
+		cmd := exec.Cmd{
+			Path:   f.ffmpeg,
+			Args:   args,
+			Stdout: os.Stdout,
+
+			// ffmpeg outputs mostly to stderr, as do we. Redirect it to stdout
+			// for easy filtering.
+			Stderr: os.Stdout,
+		}
+		FatalIf(cmd.Run())
+	}
+}
 
 // NewSourceMetadata runs ffprobe on the given file to generate a VideoMetadata
 // struct. Only really supports AVI files, since WebM doesn't have a dedicated
@@ -148,6 +199,9 @@ func (f FFMPEG) Supports(codecType ffmpegCodecType, codecs []*FFMPEGCodec) (miss
 
 const VIDEO_CACHE_BASENAME = "videos.gob"
 
+type reencodeReason struct {
+}
+
 // VideoMetadata bundles all relevant metadata of a video.
 type VideoMetadata struct {
 	FPS        float64
@@ -159,9 +213,10 @@ type VideoMetadata struct {
 // VideoCacheEntry bundles a video's metadata with mtimes and hashes for cache
 // invalidation and re-encoding.
 type VideoCacheEntry struct {
-	SourceMTime time.Time
-	SourceHash  CryptHash
-	Metadata    VideoMetadata
+	SourceMTime  time.Time
+	SourceHash   CryptHash
+	Metadata     VideoMetadata
+	EncodedMTime map[string]time.Time // subdirectory → mtime
 }
 
 // VideoCache maps a video stem to its cached information.
@@ -243,8 +298,9 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 				currentHash := CryptHashOfFile(fn)
 				if !inCache || (currentHash != entry.SourceHash) {
 					cache.Video[stem] = &VideoCacheEntry{
-						SourceHash: currentHash,
-						Metadata:   ffmpeg.NewSourceMetadata(fn),
+						SourceHash:   currentHash,
+						Metadata:     ffmpeg.NewSourceMetadata(fn),
+						EncodedMTime: make(map[string]time.Time),
 					}
 				}
 				// Write a potentially changed mtime separately
@@ -257,9 +313,70 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 	log.Println("Video metadata loaded.")
 	// ----------------
 
-	return &VideoRoot{Root: root, ffmpeg: ffmpeg, Cache: cache}
+	ret := &VideoRoot{Root: root, ffmpeg: ffmpeg, Cache: cache}
+	go func() {
+		encodedCount := 0
+		for stem := range ret.Cache.Video {
+			encodedCount += ret.UpdateVideo(stem)
+		}
+		if encodedCount != 0 {
+			log.Println("Initial video conversion complete.")
+		}
+	}()
+	return ret
 }
 
 func (r *VideoRoot) URL(stem string, vd *VideoDir) string {
 	return path.Join(r.Root.URLPrefix, vd.Dir, (stem + vd.Ext))
+}
+
+// UpdateVideo re-encodes a video in any codecs whose files are outdated.
+// Returns the amount of videos newly encoded.
+func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
+	entry := r.Cache.Video[stem]
+	sourceBasename := VIDEO_SOURCE.Basename(stem)
+	sourceFN := filepath.Join(r.Root.LocalPath, VIDEO_SOURCE.RelativeFN(stem))
+	for _, vd := range VIDEO_ENCODED {
+		sourceDebugFN := strings.Repeat(" ", (len(vd.Dir) + 1))
+		sourceDebugFN += sourceBasename
+		encodedDebugFN := vd.RelativeFN(stem)
+		encodedFN := filepath.Join(r.Root.LocalPath, encodedDebugFN)
+
+		needsReencode := func() *reencodeReason {
+			// 1) Encoded file does not exist
+			encodedFI, err := os.Stat(encodedFN)
+			if errors.Is(err, fs.ErrNotExist) {
+				return &reencodeReason{}
+			} else if err != nil {
+				FatalIf(err)
+			}
+
+			cachedMTime := entry.EncodedMTime[vd.Dir]
+
+			// 2) Encoded file is older. Note that we use the *cached* mtime
+			// here, not the one from the filesystem. This way, we also detect
+			// interrupted encodes here, and restart them accordingly.
+			if cachedMTime.Before(entry.SourceMTime) {
+				return &reencodeReason{}
+			}
+
+			// 3) Filesystem mtime does not match recorded mtime
+			if cachedMTime != encodedFI.ModTime() {
+				return &reencodeReason{}
+			}
+
+			// File up to date!
+			return nil
+		}
+
+		if reason := needsReencode(); reason != nil {
+			r.ffmpeg.Encode(encodedFN, sourceFN, &vd.FFMPEGCodec)
+			encodedFI, err := os.Stat(encodedFN)
+			FatalIf(err)
+			r.Cache.Video[stem].EncodedMTime[vd.Dir] = encodedFI.ModTime()
+			r.Cache.save()
+			encodedCount++
+		}
+	}
+	return
 }

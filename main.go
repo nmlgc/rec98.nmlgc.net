@@ -398,11 +398,9 @@ func main() {
 
 	r.Use(measureRequestTime)
 	r.Handle(
-		blogHP.URLPrefix+"{stem}-vp8.webm", blog.OldVideoRedirectHandler("vp8"),
+		blogHP.URLPrefix+"{stem}-vp8.webm", blog.OldVideoRedirectHandler(&VP8),
 	)
-	r.Handle(
-		blogHP.URLPrefix+"{stem}.webm", blog.OldVideoRedirectHandler("vp9"),
-	)
+	r.Handle(blogHP.URLPrefix+"{stem}.webm", blog.OldVideoRedirectHandler(&VP9))
 	staticHP.RegisterFileServer(r)
 	blogHP.RegisterFileServer(r)
 	r.Handle("/favicon.ico", staticHP.Server())

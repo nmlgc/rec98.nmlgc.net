@@ -19,12 +19,10 @@ var blogHP = NewHostedPath("blog/", blogURLPrefix+"/static/")
 
 // BlogVideo collects static file URLs to all encodings of a video.
 type BlogVideo struct {
-	VP9 template.HTML // Lossless
-	VP8 template.HTML // Fallback for outdated garbage
-
-	Date   string
-	Alt    string
-	NoLoop bool
+	Sources []template.HTML
+	Date    string
+	Alt     string
+	Loop    bool
 }
 
 // tag generates a complete HTML <video> tag for a video.
@@ -33,20 +31,21 @@ func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
 	if id != "" {
 		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, id))
 	}
-	if !b.NoLoop {
+	if b.Loop {
 		ret += ` loop`
 	}
 	if active {
 		ret += ` class="active"`
 	}
 	ret += `>`
-	ret += template.HTML(`<source src="` + b.VP9 + `" type="video/webm">`)
-	ret += template.HTML(`<source src="` + b.VP8 + `" type="video/webm">`)
+	for _, source := range b.Sources {
+		ret += `<source src="` + source + `" type="video/webm">`
+	}
 
 	if b.Alt != "" {
 		ret += template.HTML(b.Alt + ". ")
 	}
-	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.VP9))
+	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
 	ret += `</video>`
 	return ret
 }
@@ -61,6 +60,15 @@ func (b *BlogVideo) TagWithID(id string) (ret template.HTML) {
 
 func (b *BlogVideo) TagWithIDActive(id string) (ret template.HTML) {
 	return b.tag(id, true)
+}
+
+func (b *Blog) NewBlogVideo(stem, date, alt string, loop bool) *BlogVideo {
+	ret := &BlogVideo{Date: date, Alt: alt, Loop: loop}
+	for _, codec := range VIDEO_ENCODERS {
+		codecURL := template.HTML(b.VideoURL(stem, codec))
+		ret.Sources = append(ret.Sources, codecURL)
+	}
+	return ret
 }
 
 // BlogEntry describes an existing blog entry, together with information about
@@ -119,9 +127,9 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 
 // OldVideoRedirectHandler redirects old VP9 and VP8 video URLs to the new
 // codec-specific subdirectories.
-func (b *Blog) OldVideoRedirectHandler(codec string) http.Handler {
+func (b *Blog) OldVideoRedirectHandler(vd *VideoDir) http.Handler {
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
-		newURL := b.VideoURL(mux.Vars(req)["stem"], codec)
+		newURL := b.VideoURL(mux.Vars(req)["stem"], vd)
 		http.Redirect(wr, req, newURL, http.StatusMovedPermanently)
 	})
 }
@@ -186,36 +194,26 @@ func (e eNoPost) Error() string {
 }
 
 // VideoURL returns the URL of a video in a specific codec.
-func (b *Blog) VideoURL(stem string, codec string) string {
-	return blogHP.VersionURLFor(b.Video.URL(stem, codec))
+func (b *Blog) VideoURL(stem string, vd *VideoDir) string {
+	return blogHP.VersionURLFor(b.Video.URL(stem, vd))
 }
 
 // Render builds a new Post instance from e.
 func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 	var builder strings.Builder
 	datePrefix := e.Date + "-"
-	postFileURL := func(fn string) template.HTML {
-		return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
-	}
-	video := func(fn string, alt string) *BlogVideo {
-		stem := (datePrefix + fn)
-		return &BlogVideo{
-			VP9:  template.HTML(b.VideoURL(stem, "vp9")),
-			VP8:  template.HTML(b.VideoURL(stem, "vp8")),
-			Date: e.Date,
-			Alt:  alt,
-		}
-	}
 	ctx := PostDot{
-		Date:        e.Date,
-		HostedPath:  blogHP,
-		DatePrefix:  datePrefix,
-		PostFileURL: postFileURL,
-		Video:       video,
+		Date:       e.Date,
+		HostedPath: blogHP,
+		DatePrefix: datePrefix,
+		PostFileURL: func(fn string) template.HTML {
+			return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
+		},
+		Video: func(fn string, alt string) *BlogVideo {
+			return b.NewBlogVideo((datePrefix + fn), e.Date, alt, true)
+		},
 		VideoNoLoop: func(fn string, alt string) *BlogVideo {
-			ret := video(fn, alt)
-			ret.NoLoop = true
-			return ret
+			return b.NewBlogVideo((datePrefix + fn), e.Date, alt, false)
 		},
 	}
 	pagesExecute(&builder, e.templateName, &ctx)

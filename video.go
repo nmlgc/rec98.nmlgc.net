@@ -49,9 +49,10 @@ var VIDEO_SOURCE = VideoDir{"zmbv", FFMPEGCodec{
 
 // Best web-supported lossless codec in 2019
 var VP9 = VideoDir{"vp9", FFMPEGCodec{
-	Ext:    ".webm",
-	VCodec: "libvpx-vp9",
-	VFlags: []string{"-lossless", "1"},
+	Ext:     ".webm",
+	VCodec:  "libvpx-vp9",
+	VFlags:  []string{"-lossless", "1"},
+	TwoPass: true,
 }}
 
 // Lossy fallback for outdated garbage
@@ -77,9 +78,10 @@ var VIDEO_ENCODED = []*VideoDir{&VP9, &VP8}
 
 // FFMPEGCodec defines ffmpeg parameters for a codec.
 type FFMPEGCodec struct {
-	Ext    string   // File extension
-	VCodec string   // -vcodec
-	VFlags []string // Encoding settings
+	Ext     string   // File extension
+	VCodec  string   // -vcodec
+	VFlags  []string // Encoding settings
+	TwoPass bool
 }
 
 // EqualTo returns whether these codec parameters are the same as the given
@@ -123,6 +125,9 @@ func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
 	encodedDir, _ := filepath.Split(encodedFN)
 	FatalIf(os.MkdirAll(encodedDir, 0600))
 	passCount := 1
+	if codec.TwoPass {
+		passCount = 2
+	}
 	for pass := 1; pass <= passCount; pass++ {
 		args := []string{
 			f.ffmpeg,
@@ -132,7 +137,14 @@ func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
 			"-vcodec", codec.VCodec,
 		}
 		args = append(args, codec.VFlags...)
-		args = append(args, encodedFN)
+		if codec.TwoPass {
+			args = append(args, "-pass", strconv.FormatInt(int64(pass), 32))
+		}
+		if pass == passCount {
+			args = append(args, encodedFN)
+		} else {
+			args = append(args, "-f", "null", "-")
+		}
 		cmd := exec.Cmd{
 			Path:   f.ffmpeg,
 			Args:   args,
@@ -143,6 +155,9 @@ func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
 			Stderr: os.Stdout,
 		}
 		FatalIf(cmd.Run())
+		if (pass == passCount) && codec.TwoPass {
+			os.Remove("ffmpeg2pass-0.log")
+		}
 	}
 }
 

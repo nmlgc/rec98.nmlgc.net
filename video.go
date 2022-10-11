@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/exp/slices"
 	"gopkg.in/vansante/go-ffprobe.v2"
 )
 
@@ -79,6 +80,23 @@ type FFMPEGCodec struct {
 	Ext    string   // File extension
 	VCodec string   // -vcodec
 	VFlags []string // Encoding settings
+}
+
+// EqualTo returns whether these codec parameters are the same as the given
+// ones.
+func (c *FFMPEGCodec) EqualTo(other *FFMPEGCodec) bool {
+	if (c == nil) || (other == nil) {
+		return false
+	}
+	if len(c.VFlags) != len(other.VFlags) {
+		return false
+	}
+	for i := range c.VFlags {
+		if c.VFlags[i] != other.VFlags[i] {
+			return false
+		}
+	}
+	return (c.VCodec == other.VCodec)
 }
 
 // FFMPEG wraps operations that shell out to an external ffmpeg binary.
@@ -232,20 +250,68 @@ type VideoCacheEntry struct {
 	EncodedMTime map[string]time.Time // subdirectory → mtime
 }
 
-// VideoCache maps a video stem to its cached information.
+// VideoCache bundles the stem→info map with codec settings for cache
+// invalidation.
 type VideoCache struct {
-	// Needs to be a pointer for addressability.
+	Tag []*VideoDir
+
+	// Maps a video stem to its cached information. Needs to be a pointer for
+	// addressability.
 	Video map[string]*VideoCacheEntry
 }
 
-func loadVideoCache() VideoCache {
+func loadVideoCache(localRoot string) VideoCache {
 	ret, err := CacheLoad[VideoCache](VIDEO_CACHE_BASENAME)
 	if err != nil {
 		log.Printf("Video cache invalid (%s), will be regenerated", err)
 		return VideoCache{
+			Tag:   VIDEO_ENCODED,
 			Video: make(map[string]*VideoCacheEntry),
 		}
 	}
+
+	var misses []cacheMiss
+	for _, prev := range ret.Tag {
+		prevCodec := &prev.FFMPEGCodec
+		curCodecIndex := slices.IndexFunc(
+			VIDEO_ENCODED, func(e *VideoDir) bool { return e.Dir == prev.Dir },
+		)
+		var curCodec *FFMPEGCodec
+		if curCodecIndex != -1 {
+			curCodec = &VIDEO_ENCODED[curCodecIndex].FFMPEGCodec
+		}
+		if curCodec.EqualTo(prevCodec) {
+			continue
+		}
+
+		// Check if we still have stale files for the old codec configuration
+		for stem := range ret.Video {
+			encodedFN := filepath.Join(localRoot, prev.RelativeFN(stem))
+			_, err := os.Stat(encodedFN)
+			if err == nil {
+				miss := cacheMiss{
+					refName:   fmt.Sprintf("%s (cached)", prev.Dir),
+					cmpName:   fmt.Sprintf("%s (in code)", prev.Dir),
+					refMetric: *prevCodec,
+					cmpMetric: "n/a",
+				}
+				if curCodec != nil {
+					miss.cmpMetric = *curCodec
+				}
+				misses = append(misses, miss)
+				break
+			}
+		}
+	}
+	if len(misses) > 0 {
+		log.Println("Some video pipeline codec configurations changed:")
+		for _, miss := range misses {
+			miss.Log("")
+		}
+		log.Println("The respective directories still contain old video files that need to be deleted to achieve consistency with this version of the pipeline.")
+		log.Fatalln("(We might also just be on an earlier commit. Exiting in any case.)")
+	}
+	ret.Tag = VIDEO_ENCODED
 	return ret
 }
 
@@ -285,7 +351,7 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 	// Loading metadata
 	// ----------------
 
-	cache := loadVideoCache()
+	cache := loadVideoCache(root.LocalPath)
 	sourcePath := filepath.Join(root.LocalPath, VIDEO_SOURCE.Dir)
 	FatalIf(filepath.WalkDir(
 		sourcePath, func(fn string, info fs.DirEntry, err error) error {

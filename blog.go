@@ -30,6 +30,7 @@ type BlogVideo struct {
 
 // tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
+	ret += `<rec98-video>`
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)
 	if id != "" {
 		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, id))
@@ -50,6 +51,7 @@ func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
 	ret += `</video>`
+	ret += `</rec98-video>`
 	return ret
 }
 

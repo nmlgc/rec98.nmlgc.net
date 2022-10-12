@@ -47,6 +47,16 @@ var VIDEO_SOURCE = VideoDir{"zmbv", FFMPEGCodec{
 	VCodec: "zmbv",
 }}
 
+// Preview images
+var POSTER = VideoDir{"poster", FFMPEGCodec{
+	Ext:    ".webp",
+	VCodec: "libwebp",
+	VFlags: []string{
+		"-frames:v", "1",
+		"-lossless", "1",
+	},
+}}
+
 // Best web-supported lossless codec in 2019
 var VP9 = VideoDir{"vp9", FFMPEGCodec{
 	Ext:     ".webm",
@@ -67,9 +77,12 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 	},
 }}
 
-// VIDEO_ENCODED defines all target codec directories, ordered from the most to
-// the least preferred one.
-var VIDEO_ENCODED = []*VideoDir{&VP9, &VP8}
+// VIDEO_ENCODED defines all target codec directories.
+var VIDEO_ENCODED = []*VideoDir{&POSTER, &VP9, &VP8}
+
+// VIDEO_HOSTED defines all hosted video <source> codecs, ordered from the most
+// to the least preferred one.
+var VIDEO_HOSTED = VIDEO_ENCODED[1:]
 
 // ------
 

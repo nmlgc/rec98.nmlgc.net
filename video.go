@@ -57,7 +57,16 @@ var POSTER = VideoDir{"poster", FFMPEGCodec{
 	},
 }}
 
-// Best web-supported lossless codec in 2019
+// Best web-supported codec in 2022
+var AV1 = VideoDir{"av1", FFMPEGCodec{
+	Ext:    ".webm",
+	VCodec: "libaom-av1",
+	VFlags: []string{
+		"-crf", "1",
+	},
+}}
+
+// Was good for visually lossless video in 2019
 var VP9 = VideoDir{"vp9", FFMPEGCodec{
 	Ext:     ".webm",
 	VCodec:  "libvpx-vp9",
@@ -78,7 +87,7 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 }}
 
 // VIDEO_ENCODED defines all target codec directories.
-var VIDEO_ENCODED = []*VideoDir{&POSTER, &VP9, &VP8}
+var VIDEO_ENCODED = []*VideoDir{&POSTER, &AV1, &VP9, &VP8}
 
 // VIDEO_HOSTED defines all hosted video <source> codecs, ordered from the most
 // to the least preferred one.

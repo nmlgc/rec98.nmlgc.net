@@ -409,6 +409,9 @@ if(rank == RANK_HARD) {
 	5000}} contribution for this work, so it would take another {{HTML_Currency
 	1000}} to be turned into a full push.</li>
 </ul><script>
+	const _2022_08_08_blit_fps = {{$vid_blit.Metadata.FPS}};
+	const _2022_08_08_y_fps = {{$vid_邪.Metadata.FPS}};
+
 	const _2022_08_08_p0 = switchMultipleVideos("{{.Date}}-p0");
 	_2022_08_08_p0.add("Hard, original", "h");
 	_2022_08_08_p0.add("Lunatic, original", "l");
@@ -421,7 +424,9 @@ if(rank == RANK_HARD) {
 	_2022_08_08_p5.add("Lunatic", "l", true);
 
 	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
-	videoAddControls("{{.Date}}-blit-controls", 56.423, () => _2022_08_08_blit);
+	videoAddControls(
+		"{{.Date}}-blit-controls", _2022_08_08_blit_fps, () => _2022_08_08_blit
+	);
 
 	const _2022_08_08_y = document.getElementById("{{.Date}}-y");
 
@@ -429,7 +434,7 @@ if(rank == RANK_HARD) {
 	_2022_08_08_y.controls = false;
 
 	videoAddControls(
-		"{{.Date}}-y-controls", 56.423, () => _2022_08_08_y, () => {
+		"{{.Date}}-y-controls", _2022_08_08_y_fps, () => _2022_08_08_y, () => {
 			const button = document.createElement('button');
 			const play = () => {
 				_2022_08_08_y.play();

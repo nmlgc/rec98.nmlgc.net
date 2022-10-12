@@ -253,31 +253,47 @@
 	<code>REIIDEN.EXE</code> and the single biggest function in all of PC-98
 	Touhou, let's go!
 </p><script>
+	const _2022_07_17_p0_fps = {{$vid_p0_0.Metadata.FPS}};
+	const _2022_07_17_p7_fps = {{$vid_p7.Metadata.FPS}};
+	const _2022_07_17_p4_h_fps = {{$vid_p4_h.Metadata.FPS}};
+	const _2022_07_17_p4_s_fps = {{$vid_p4_s.Metadata.FPS}};
+	const _2022_07_17_hop_fps = {{$vid_hop_0.Metadata.FPS}};
+
 	const _2022_07_17_p0_buttons = document.getElementById("{{.Date}}-p0");
 	const _2022_07_17_p0 = switchMultipleVideos("{{.Date}}-p0");
 	_2022_07_17_p0.add("(Original version)", "0", true);
 	_2022_07_17_p0.add("(Fixed version)", "1");
-	_2022_07_17_p0.addControls("{{.Date}}-p0-controls", 56.423, () => {
-		const frame = document.createElement('button');
-		frame.textContent = `First pellets spawned`;
-		frame.onclick = () => {
-			_2022_07_17_p0_buttons.querySelector("button:not(.active)").click();
-			_2022_07_17_p0.seek(1.932);
-		};
-		return frame;
-	});
+	_2022_07_17_p0.addControls(
+		"{{.Date}}-p0-controls", _2022_07_17_p0_fps, () => {
+			const frame = document.createElement('button');
+			frame.textContent = `First pellets spawned`;
+			frame.onclick = () => {
+				_2022_07_17_p0_buttons.querySelector(
+					"button:not(.active)"
+				).click();
+				_2022_07_17_p0.seek(1.932);
+			};
+			return frame;
+		}
+	);
 
 	const _2022_07_17_p7 = document.getElementById("{{.Date}}-p7");
-	videoAddControls("{{.Date}}-p7-controls", 56.423, () => _2022_07_17_p7);
+	videoAddControls(
+		"{{.Date}}-p7-controls", _2022_07_17_p7_fps, () => _2022_07_17_p7
+	);
 
 	const _2022_07_17_p4_h = document.getElementById("{{.Date}}-p4-h");
-	videoAddControls("{{.Date}}-p4-h-controls", 56.423, () => _2022_07_17_p4_h);
+	videoAddControls(
+		"{{.Date}}-p4-h-controls", _2022_07_17_p4_h_fps, () => _2022_07_17_p4_h
+	);
 
 	const _2022_07_17_p4_s = document.getElementById("{{.Date}}-p4-s");
-	videoAddControls("{{.Date}}-p4-s-controls", 56.423, () => _2022_07_17_p4_s);
+	videoAddControls(
+		"{{.Date}}-p4-s-controls", _2022_07_17_p4_s_fps, () => _2022_07_17_p4_s
+	);
 
 	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
 	_2022_07_17_hop.add("(Actual palette changes)", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
 	_2022_07_17_hop.add("(Expected palette changes)", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
-	_2022_07_17_hop.addControls("{{.Date}}-hop-controls", 56.423);
+	_2022_07_17_hop.addControls("{{.Date}}-hop-controls", _2022_07_17_hop_fps);
 </script>

@@ -173,8 +173,15 @@
 	That leaves 76 functions until we're done with TH01! Next up: Card-flipping
 	stage obstacles.
 </p><script>
+	const _2022_06_25_v1_fps = {{$vid1.Metadata.FPS}};
+	const _2022_06_25_v2_fps = {{$vid2.Metadata.FPS}};
+
 	const _2022_06_25_v1 = document.getElementById("{{.Date}}-v1");
 	const _2022_06_25_v2 = document.getElementById("{{.Date}}-v2");
-	videoAddControls("{{.Date}}-v1-controls", 56.423, () => _2022_06_25_v1);
-	videoAddControls("{{.Date}}-v2-controls", 56.423, () => _2022_06_25_v2);
+	videoAddControls(
+		"{{.Date}}-v1-controls", _2022_06_25_v1_fps, () => _2022_06_25_v1
+	);
+	videoAddControls(
+		"{{.Date}}-v2-controls", _2022_06_25_v2_fps, () => _2022_06_25_v2
+	);
 </script>

@@ -136,9 +136,11 @@
 	System</a>, who independently decompiled half of the remaining 14
 	functions…)
 </p><script>
+	const _2022_08_14_go_fps = {{$vid_orig.Metadata.FPS}};
+
 	const _2022_08_14_go = switchMultipleVideos("{{.Date}}-go");
 	_2022_08_14_go.add("Original version", "o", true, `The original version unblits a 32×32 rectangle around Reimu that only grows on the X axis… for the first 5 frames. The unblitting call is only run if the corresponding sprite wasn't clipped at the edges of the playfield in the frame before, and ZUN uses the <i>animation's frame number</i> rather than the sprite loop variable to index the per-sprite clip flag array. The resulting out-of-bounds access then reads the sprite <i>coordinates</i> instead, which are never 0, thus interpreting all 5 sprites as clipped.`);
 	_2022_08_14_go.add('"Proper" effect sprite unblitting', "w", false, `This variant would interpret the declared 5 effect coordinates as distinct sprites and unblit them correctly every frame. The end result is rather wimpy though… hardly appropriate for a Game Over, especially with the original animation in mind.`);
 	_2022_08_14_go.add("No unblitting", "n", false, `This variant would not unblit anything, and is probably closest to what the final animation should have been.`);
-	_2022_08_14_go.addControls("{{.Date}}-go-controls", 56.423);
+	_2022_08_14_go.addControls("{{.Date}}-go-controls", _2022_08_14_go_fps);
 </script>

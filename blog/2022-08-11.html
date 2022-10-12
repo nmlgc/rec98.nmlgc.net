@@ -227,13 +227,18 @@
 	functions in <code>REIIDEN.EXE</code> that tie everything together and add
 	some more debug features on top.
 </p><script>
+	const _2022_08_11_fx_fps = {{$vid_fx_0.Metadata.FPS}};
+	const _2022_08_11_metrics_fps = {{$vid_metrics.Metadata.FPS}};
+
 	const _2022_08_11_fx = switchMultipleVideos("{{.Date}}-fx");
 	_2022_08_11_fx.add("Original, 32 pixels every 2 frames", "0", true);
 	_2022_08_11_fx.add("Full speed, 16 pixels every frame", "1");
-	_2022_08_11_fx.addControls("{{.Date}}-fx-controls", 56.423);
+	_2022_08_11_fx.addControls("{{.Date}}-fx-controls", _2022_08_11_fx_fps);
 
 	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
 	videoAddControls(
-		"{{.Date}}-metrics-controls", 56.423, () => _2022_08_11_metrics
+		"{{.Date}}-metrics-controls",
+		_2022_08_11_metrics_fps,
+		() => _2022_08_11_metrics
 	);
 </script>

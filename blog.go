@@ -17,13 +17,15 @@ import (
 var blogURLPrefix = "/blog"
 var blogHP = NewHostedPath("blog/", blogURLPrefix+"/static/")
 
-// BlogVideo collects static file URLs to all encodings of a video.
+// BlogVideo bundles static file URLs to all encodings of a video with all
+// necessary metadata.
 type BlogVideo struct {
-	Poster  template.HTML
-	Sources []template.HTML
-	Date    string
-	Alt     string
-	Loop    bool
+	Metadata *VideoMetadata
+	Poster   template.HTML
+	Sources  []template.HTML
+	Date     string
+	Alt      string
+	Loop     bool
 }
 
 // tag generates a complete HTML <video> tag for a video.
@@ -65,10 +67,11 @@ func (b *BlogVideo) TagWithIDActive(id string) (ret template.HTML) {
 
 func (b *Blog) NewBlogVideo(stem, date, alt string, loop bool) *BlogVideo {
 	ret := &BlogVideo{
-		Poster: template.HTML(b.VideoURL(stem, &POSTER)),
-		Date:   date,
-		Alt:    alt,
-		Loop:   loop,
+		Metadata: &b.Video.Cache.Video[stem].Metadata,
+		Poster:   template.HTML(b.VideoURL(stem, &POSTER)),
+		Date:     date,
+		Alt:      alt,
+		Loop:     loop,
 	}
 	for _, codec := range VIDEO_HOSTED {
 		codecURL := template.HTML(b.VideoURL(stem, codec))

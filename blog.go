@@ -41,6 +41,7 @@ func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
 	if active {
 		ret += ` class="active"`
 	}
+	ret += template.HTML(fmt.Sprintf(` data-fps="%v"`, b.Metadata.FPS))
 	ret += `>`
 	for _, source := range b.Sources {
 		ret += `<source src="` + source + `" type="video/webm">`

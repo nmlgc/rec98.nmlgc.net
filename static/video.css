@@ -8,7 +8,7 @@ rec98-video .controls {
 	color: var(--c-lightgray);
 	display: grid;
 	font-size: small;
-	grid-template-columns: 2.5em 1fr;
+	grid-template-columns: 2.5em 1.5em max-content 1fr;
 	justify-items: left !important;
 	width: 100%;
 }
@@ -18,4 +18,9 @@ rec98-video .controls>button {
 	padding: 0;
 	user-select: none;
 	-webkit-user-select: none;
+}
+
+rec98-video .controls>.time {
+	/* Prevent alignment shaking from digits with different widths. */
+	font-family: monospace;
 }

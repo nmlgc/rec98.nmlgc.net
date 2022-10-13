@@ -1,0 +1,21 @@
+rec98-video {
+	box-shadow: var(--blog-shadow);
+	background-color: var(--c-dark);
+	display: grid;
+}
+
+rec98-video .controls {
+	color: var(--c-lightgray);
+	display: grid;
+	font-size: small;
+	grid-template-columns: 2.5em 1fr;
+	justify-items: left !important;
+	width: 100%;
+}
+
+rec98-video .controls>button {
+	color: white;
+	padding: 0;
+	user-select: none;
+	-webkit-user-select: none;
+}

@@ -51,6 +51,7 @@ func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
 	ret += `</video>`
+	ret += `<rec98-parent-init></rec98-parent-init>`
 	ret += `</rec98-video>`
 	return ret
 }

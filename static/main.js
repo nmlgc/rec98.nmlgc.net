@@ -227,3 +227,39 @@ function switchMultipleVideos(id, onSwitch = switchVideo) {
 	}, ret);
 }
 // ---------------------
+
+// Web Component initialization workaround
+// ---------------------------------------
+
+// Placed as the last child of a web component, this dummy element ensures that
+// we only initialize the parent element once all its child nodes are connected
+// to the DOM.
+class ReC98ParentInit extends HTMLElement {
+	connectedCallback() {
+		if(!this.parentElement || (this.parentElement.lastChild !== this) || !(
+			(this.parentElement.tagName === 'REC98-VIDEO')
+		)) {
+			throw "Must be placed at the last child of a supported element.";
+		}
+		/** @type {ReC98Video} */
+		(this.parentElement).init();
+	}
+};
+
+window.customElements.define("rec98-parent-init", ReC98ParentInit);
+// ---------------------------------------
+
+/**
+ * Translates equivalent KeyboardEvents into a virtual key.
+ *
+ * @typedef {' ' | null} VirtualKey
+ * @param {KeyboardEvent} event
+ * @returns {VirtualKey}
+ */
+function virtualKey(event) {
+	switch(event.code) {
+	case "Space":
+		return ' ';
+	}
+	return null;
+}

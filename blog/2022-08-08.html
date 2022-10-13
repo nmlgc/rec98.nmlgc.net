@@ -434,21 +434,7 @@ if(rank == RANK_HARD) {
 	_2022_08_08_y.controls = false;
 
 	videoAddControls(
-		"{{.Date}}-y-controls", _2022_08_08_y_fps, () => _2022_08_08_y, () => {
-			const button = document.createElement('button');
-			const play = () => {
-				_2022_08_08_y.play();
-				button.textContent = "Pause";
-				button.onclick = pause;
-			}
-			const pause = () => {
-				_2022_08_08_y.pause();
-				button.textContent = "Play";
-				button.onclick = play;
-			}
-			pause();
-			return button;
-		}
+		"{{.Date}}-y-controls", _2022_08_08_y_fps, () => _2022_08_08_y
 	);
 
 </script>

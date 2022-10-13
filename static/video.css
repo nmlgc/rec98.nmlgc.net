@@ -18,9 +18,22 @@ rec98-video .controls>button {
 	padding: 0;
 	user-select: none;
 	-webkit-user-select: none;
+	width: 100%;
 }
 
 rec98-video .controls>.time {
 	/* Prevent alignment shaking from digits with different widths. */
 	font-family: monospace;
+}
+
+rec98-video .large {
+	grid-row: 1 / 3;
+}
+
+rec98-video .seconds {
+	grid-row: 1;
+}
+
+rec98-video .frame {
+	grid-row: 2;
 }

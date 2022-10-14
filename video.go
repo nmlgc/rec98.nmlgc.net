@@ -63,14 +63,19 @@ var AV1 = VideoDir{"av1", FFMPEGCodec{
 	VCodec: "libaom-av1",
 	VFlags: []string{
 		"-crf", "1",
+		"-g", "10",
 	},
 }}
 
-// Was good for visually lossless video in 2019
+// Was good for visually lossless video in 2019, turns to complete trash if
+// keyframes are needed
 var VP9 = VideoDir{"vp9", FFMPEGCodec{
-	Ext:     ".webm",
-	VCodec:  "libvpx-vp9",
-	VFlags:  []string{"-lossless", "1"},
+	Ext:    ".webm",
+	VCodec: "libvpx-vp9",
+	VFlags: []string{
+		"-lossless", "1",
+		"-g", "20",
+	},
 	TwoPass: true,
 }}
 
@@ -83,6 +88,7 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 		"-qmax", "4",
 		"-crf", "4",
 		"-b:v", "1G",
+		"-g", "30",
 	},
 }}
 

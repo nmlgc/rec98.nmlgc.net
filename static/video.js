@@ -205,6 +205,16 @@ class ReC98Video extends HTMLElement {
 			}
 		});
 
+		// Preloading the video is required for seeking to work before the
+		// video has been play()ed the first time.
+		this.onpointerenter = (() => {
+			for(const video of this.videos) {
+				video.load();
+				video.preload = "auto";
+			}
+			this.onpointerenter = null;
+		});
+
 		this.ePlay.onclick = ((event) => this.toggle(event));
 		// --------------
 

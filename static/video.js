@@ -59,6 +59,7 @@ class ReC98Video extends HTMLElement {
 	/** @type {HTMLVideoElement} */
 	videoShown;
 
+	frameCount = 0;
 	fps = 1;
 
 	/** @type {number | null} */
@@ -106,6 +107,48 @@ class ReC98Video extends HTMLElement {
 			clearInterval(this.timeIntervalID);
 			this.timeIntervalID = null;
 		}
+	}
+
+	/**
+	 * Returns the new currentTime after a seek by the given number of delta
+	 * frames.
+	 *
+	 * @param {number} frameDelta
+	 * @returns {number}
+	 */
+	frameSeekTime(frameDelta) {
+		if(!this.videoShown) {
+			return 0;
+		}
+		const frameNew = (this.frame() + frameDelta);
+		return (secondsFrom(frameNew, this.fps) + (
+			(frameNew <                0) ? +this.videoShown.duration :
+			(frameNew >= this.frameCount) ? -this.videoShown.duration : 0
+		));
+	}
+
+	/**
+	 * Seeks the video to the given position, waiting for a previous seek to
+	 * complete if necessary.
+	 *
+	 * @param {number} seconds
+	 */
+	seekTo(seconds) {
+		if(this.videoShown.seeking) {
+			this.videoShown.onseeked = (() => {
+				this.renderTimeFromVideo();
+				this.videoShown.currentTime = seconds;
+				this.videoShown.onseeked = (() => this.renderTimeFromVideo());
+			});
+		} else {
+			this.videoShown.currentTime = seconds;
+		}
+	}
+
+	/** @param {number} frameDelta */
+	seekBy(frameDelta) {
+		this.videoShown.pause();
+		this.seekTo(this.frameSeekTime(frameDelta));
 	}
 
 	/** @param {Event} event */
@@ -181,7 +224,8 @@ class ReC98Video extends HTMLElement {
 		const seekedFunc = (() => this.renderTimeFromVideo());
 
 		this.fps = attributeAsNumber(videoNew, "data-fps");
-		this.videoShown = videoNew;
+		this.frameCount = attributeAsNumber(videoNew, "data-frame-count");
+		this.videoShown = this.videos[index];
 
 		videoNew.onclick = ((event) => this.toggle(event));
 		videoNew.onseeked = seekedFunc;

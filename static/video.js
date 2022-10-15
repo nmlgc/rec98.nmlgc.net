@@ -31,6 +31,18 @@ function frameFrom(seconds, fps) {
 	return Math.floor(seconds * fps);
 }
 
+/**
+ * Raw frame→currentTime conversion. Avoids rounding errors by returning the
+ * middle of a frame.
+ *
+ * @param {number} frame
+ * @param {number} fps
+ * @returns {number}
+ */
+function secondsFrom(frame, fps) {
+	return ((frame + 0.5) / fps);
+}
+
 class ReC98Video extends HTMLElement {
 	// Members
 	// -------
@@ -173,10 +185,28 @@ class ReC98Video extends HTMLElement {
 
 		videoNew.onclick = ((event) => this.toggle(event));
 		videoNew.onseeked = seekedFunc;
-
-		// For compatibility with code that accesses the <video> directly
 		videoNew.onplay = (() => this.play());
-		videoNew.onpause = (() => this.pause());
+		videoNew.onpause = (() => {
+			this.pause();
+
+			// Since `currentTime` is continuous, every (1 / [fps]) time span
+			// within the video can always correspond to at least two discrete
+			// frames. The actual frame for a specific `currentTime` value is
+			// therefore defined by the browser's rounding algorithm, and will
+			// certainly not match the one used in frame(), which defines the
+			// number shown in [eTimeFrame]. As a result, the frame number is
+			// very likely to be incorrect half of the time.
+			// It doesn't matter during playback, where the frame number is
+			// constantly updating anyway, but manifests itself in inconsistent
+			// frame numbers when seeking a paused video.
+			// As a workaround, we perform a round-trip conversion from
+			// `currentTime` to frames and back, which gets us back onto our
+			// discrete seek grid in any case. This might lead to a noticeable
+			// jump back by one frame, but is unfortunately the best compromise
+			// in view of what we're given here.
+			const frame = frameFrom(videoNew.currentTime, this.fps);
+			videoNew.currentTime = secondsFrom(frame, this.fps);
+		});
 	}
 
 	/**

@@ -8,7 +8,7 @@ rec98-video .controls {
 	color: var(--c-lightgray);
 	display: grid;
 	font-size: small;
-	grid-template-columns: 2.5em 1.5em 1ch 4ch 1ch 1fr;
+	grid-template-columns: 2.5em 1.5em 2ch 6ch 2ch 1fr;
 	justify-items: left !important;
 	width: 100%;
 }
@@ -32,10 +32,6 @@ rec98-video .large {
 
 rec98-video .seconds {
 	grid-row: 1;
-}
-
-rec98-video .seconds.time {
-	grid-column: 3 / 6;
 }
 
 rec98-video .frame {

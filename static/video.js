@@ -49,7 +49,9 @@ class ReC98Video extends HTMLElement {
 	eControls = document.createElement("div");
 	ePlay = document.createElement("button");
 	eTimeSecondsIcon = document.createElement("span");
+	eRewind = document.createElement("button");
 	eTimeSeconds = document.createElement("span");
+	eFastForward = document.createElement("button");
 	eTimeFrameIcon = document.createElement("span");
 	eFramePrevious = document.createElement("button");
 	eTimeFrame = document.createElement("span");
@@ -153,6 +155,11 @@ class ReC98Video extends HTMLElement {
 		this.seekTo(this.frameSeekTime(frameDelta));
 	}
 
+	/** @param {(-1 | 1)} direction */
+	seekFast(direction) {
+		this.seekBy(direction * (this.frameCount / 10));
+	}
+
 	/** @param {Event} event */
 	toggle(event) {
 		if(!this.videoShown) {
@@ -208,6 +215,13 @@ class ReC98Video extends HTMLElement {
 		// we always focus the main ReC98Video element instead.
 		const preventFocus = (() => this.focus());
 
+		this.eRewind.textContent = "⏪";
+		this.eRewind.title = "Rewind (Ctrl-←️ / Ctrl-A / Ctrl-H)";
+		this.eRewind.onfocus = preventFocus;
+		this.eFastForward.textContent = "⏩";
+		this.eFastForward.title = "Fast forward (Ctrl-→️ / Ctrl-D / Ctrl-L)";
+		this.eFastForward.onfocus = preventFocus;
+
 		this.eFramePrevious.textContent = "⏴";
 		this.eFramePrevious.title = "Previous frame (←️ / A / H)";
 		this.eFramePrevious.onfocus = preventFocus;
@@ -215,6 +229,8 @@ class ReC98Video extends HTMLElement {
 		this.eFrameNext.title = "Next frame (→️ / D / L)";
 		this.eFrameNext.onfocus = preventFocus;
 
+		this.eRewind.className = "seconds";
+		this.eFastForward.className = "seconds";
 		this.eFramePrevious.className = "frame";
 		this.eFrameNext.className = "frame";
 		// ---------------
@@ -282,7 +298,9 @@ class ReC98Video extends HTMLElement {
 
 		this.eControls.appendChild(this.ePlay);
 		this.eControls.appendChild(this.eTimeSecondsIcon);
+		this.eControls.appendChild(this.eRewind);
 		this.eControls.appendChild(this.eTimeSeconds);
+		this.eControls.appendChild(this.eFastForward);
 		this.eControls.appendChild(this.eTimeFrameIcon);
 		this.eControls.appendChild(this.eFramePrevious);
 		this.eControls.appendChild(this.eTimeFrame);
@@ -299,9 +317,15 @@ class ReC98Video extends HTMLElement {
 			case ' ':
 				return this.ePlay.onclick?.(event);
 			case '←':
-				return this.eFramePrevious.onclick?.(event);
+				return ((event.ctrlKey)
+					? this.eRewind.onclick?.(event)
+					: this.eFramePrevious.onclick?.(event)
+				);
 			case '→':
-				return this.eFrameNext.onclick?.(event);
+				return ((event.ctrlKey)
+					? this.eFastForward.onclick?.(event)
+					: this.eFrameNext.onclick?.(event)
+				);
 			}
 		});
 
@@ -316,6 +340,8 @@ class ReC98Video extends HTMLElement {
 		});
 
 		this.ePlay.onclick = ((event) => this.toggle(event));
+		this.eRewind.onclick = (() => this.seekFast(-1));
+		this.eFastForward.onclick = (() => this.seekFast(+1));
 		this.eFramePrevious.onclick = (() => this.seekBy(-1));
 		this.eFrameNext.onclick = (() => this.seekBy(+1));
 		// --------------

@@ -104,10 +104,7 @@
 		{{$vid_fx_1.TagWithID "fx-1"}}
 	</div>
 	<figcaption>
-		<p>
-			<div id="{{.Date}}-fx-controls"></div>
-			<div id="{{.Date}}-fx"></div>
-		</p>
+		<p id="{{.Date}}-fx"></p>
 		Removing the palette interpolation and transitioning from a black screen
 		to <code>CLEAR3.GRP</code> makes it a lot clearer how the effect works.
 	</figcaption>
@@ -161,7 +158,6 @@
 </p><figure class="fullres">
 	{{$vid_metrics.TagWithID "metrics"}}
 	<figcaption class="fullres">
-		<p id="{{.Date}}-metrics-controls"></p>
 		This footage was slowed down to show one sprite blitting operation per
 		frame. The actual game waits a hardcoded 4 milliseconds between each
 		sprite, so even theoretically, you would only see roughly every
@@ -227,18 +223,9 @@
 	functions in <code>REIIDEN.EXE</code> that tie everything together and add
 	some more debug features on top.
 </p><script>
-	const _2022_08_11_fx_fps = {{$vid_fx_0.Metadata.FPS}};
-	const _2022_08_11_metrics_fps = {{$vid_metrics.Metadata.FPS}};
-
 	const _2022_08_11_fx = switchMultipleVideos("{{.Date}}-fx");
 	_2022_08_11_fx.add("Original, 32 pixels every 2 frames", "0", true);
 	_2022_08_11_fx.add("Full speed, 16 pixels every frame", "1");
-	_2022_08_11_fx.addControls("{{.Date}}-fx-controls", _2022_08_11_fx_fps);
 
 	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
-	videoAddControls(
-		"{{.Date}}-metrics-controls",
-		_2022_08_11_metrics_fps,
-		() => _2022_08_11_metrics
-	);
 </script>

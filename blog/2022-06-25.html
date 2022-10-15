@@ -50,7 +50,6 @@
 </p><figure class="th01_playfield">
 	{{$vid1.TagWithID "v1"}}
 	<figcaption>
-		<p id="{{.Date}}-v1-controls"></p>
 		Due to VRAM byte alignment, all player shots fired between
 		<code>gx&nbsp;= 376</code> and <code>gx&nbsp;= 383</code> inclusive
 		appear at the same visual X position, but are internally already partly
@@ -91,8 +90,7 @@
 </p><figure class="th01_playfield">
 	{{$vid2.TagWithID "v2"}}
 	<figcaption>
-		<p id="{{.Date}}-v2-controls"></p>
-		<p>By having the sphere move from the right edge of the playfield to the
+		By having the sphere move from the right edge of the playfield to the
 		left, this video demonstrates both the <a href="#{{.Date}}-v2"
 		onclick="
 			_2022_06_25_v2.pause();
@@ -107,7 +105,7 @@
 			_2022_06_25_v2.pause();
 			_2022_06_25_v2.currentTime = 1.861;
 		">Reimu can partly disappear</a> from all the sloppy SinGyoku-related
-		unblitting going on after her sprite was blitted?</p>
+		unblitting going on after her sprite was blitted?
 	</figcaption>
 </figure><p>
 	Due to the low contrast of the sphere against the background, you typically
@@ -173,15 +171,6 @@
 	That leaves 76 functions until we're done with TH01! Next up: Card-flipping
 	stage obstacles.
 </p><script>
-	const _2022_06_25_v1_fps = {{$vid1.Metadata.FPS}};
-	const _2022_06_25_v2_fps = {{$vid2.Metadata.FPS}};
-
 	const _2022_06_25_v1 = document.getElementById("{{.Date}}-v1");
 	const _2022_06_25_v2 = document.getElementById("{{.Date}}-v2");
-	videoAddControls(
-		"{{.Date}}-v1-controls", _2022_06_25_v1_fps, () => _2022_06_25_v1
-	);
-	videoAddControls(
-		"{{.Date}}-v2-controls", _2022_06_25_v2_fps, () => _2022_06_25_v2
-	);
 </script>

@@ -383,27 +383,25 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	_2022_04_18_m.add("frame 152 (Divide error)", "152", true);
 	_2022_04_18_m.add("frame 156", "156");
 	_2022_04_18_m.add("frame 160", "160");
-	_2022_04_18_m.addControls("{{.Date}}-m-controls", _2022_04_18_m_fps, () => {
-			const frame = document.createElement('button');
-			frame.textContent = `Bit destruction frame`;
-			frame.onclick = () => _2022_04_18_m.seekAndStop(
-				(Number(_2022_04_18_m.getActive()[2]) - 30) / _2022_04_18_m_fps
-			);
-			return frame;
-		});
+	_2022_04_18_m.addMiddleButton("{{.Date}}-m-controls", () => {
+		const frame = document.createElement('button');
+		frame.textContent = `Bit destruction frame`;
+		frame.onclick = () => _2022_04_18_m.seekAndStop(
+			(Number(_2022_04_18_m.getActive()[2]) - 30) / _2022_04_18_m_fps
+		);
+		return frame;
+	});
 
 	const _2022_04_18_m_wa = switchMultipleVideos("{{.Date}}-m-wa");
 	_2022_04_18_m_wa.add("1) Not moving at all", "0", true);
 	_2022_04_18_m_wa.add("2) Move and brake", "1");
 	_2022_04_18_m_wa.add("3) Warp", "2");
-	_2022_04_18_m_wa.addControls(
-		"{{.Date}}-m-wa-controls", _2022_04_18_m_fps, () => {
-			const frame = document.createElement('button');
-			frame.textContent = `Bit destruction frame`;
-			frame.onclick = () => _2022_04_18_m_wa.seekAndStop(
-				22 / _2022_04_18_m_fps
-			);
-			return frame;
-		}
-	);
+	_2022_04_18_m_wa.addMiddleButton("{{.Date}}-m-wa-controls", () => {
+		const frame = document.createElement('button');
+		frame.textContent = `Bit destruction frame`;
+		frame.onclick = () => _2022_04_18_m_wa.seekAndStop(
+			22 / _2022_04_18_m_fps
+		);
+		return frame;
+	});
 </script>

@@ -51,7 +51,9 @@ class ReC98Video extends HTMLElement {
 	eTimeSecondsIcon = document.createElement("span");
 	eTimeSeconds = document.createElement("span");
 	eTimeFrameIcon = document.createElement("span");
+	eFramePrevious = document.createElement("button");
 	eTimeFrame = document.createElement("span");
+	eFrameNext = document.createElement("button");
 
 	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
 	videos;
@@ -199,6 +201,24 @@ class ReC98Video extends HTMLElement {
 		this.ePlay.className = "large";
 		// -----------------
 
+		// Seeking buttons
+		// ---------------
+
+		// Focused buttons prevent the arrow keys from working as intended, so
+		// we always focus the main ReC98Video element instead.
+		const preventFocus = (() => this.focus());
+
+		this.eFramePrevious.textContent = "⏴";
+		this.eFramePrevious.title = "Previous frame (←️ / A / H)";
+		this.eFramePrevious.onfocus = preventFocus;
+		this.eFrameNext.textContent = "⏵";
+		this.eFrameNext.title = "Next frame (→️ / D / L)";
+		this.eFrameNext.onfocus = preventFocus;
+
+		this.eFramePrevious.className = "frame";
+		this.eFrameNext.className = "frame";
+		// ---------------
+
 		// Time
 		// ----
 		this.eTimeSecondsIcon.textContent = "⌚";
@@ -264,7 +284,9 @@ class ReC98Video extends HTMLElement {
 		this.eControls.appendChild(this.eTimeSecondsIcon);
 		this.eControls.appendChild(this.eTimeSeconds);
 		this.eControls.appendChild(this.eTimeFrameIcon);
+		this.eControls.appendChild(this.eFramePrevious);
 		this.eControls.appendChild(this.eTimeFrame);
+		this.eControls.appendChild(this.eFrameNext);
 		this.appendChild(this.eControls);
 
 		// Event handlers
@@ -276,6 +298,10 @@ class ReC98Video extends HTMLElement {
 			switch(virtualKey(event)) {
 			case ' ':
 				return this.ePlay.onclick?.(event);
+			case '←':
+				return this.eFramePrevious.onclick?.(event);
+			case '→':
+				return this.eFrameNext.onclick?.(event);
 			}
 		});
 
@@ -290,6 +316,8 @@ class ReC98Video extends HTMLElement {
 		});
 
 		this.ePlay.onclick = ((event) => this.toggle(event));
+		this.eFramePrevious.onclick = (() => this.seekBy(-1));
+		this.eFrameNext.onclick = (() => this.seekBy(+1));
 		// --------------
 
 		this.videos = this.getElementsByTagName("video");

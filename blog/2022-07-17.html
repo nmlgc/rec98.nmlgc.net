@@ -87,9 +87,8 @@
 	remembering the square corner coordinates across frames was definitely a
 	decent investment.
 </p><figure class="th01_playfield">
-	{{$vid_p7.TagWithID "p7"}}
+	{{$vid_p7.Tag}}
 	<figcaption>
-		<p id="{{.Date}}-p7-controls"></p>
 		Mima's laser pattern on Lunatic difficulty, now with correct laser spawn
 		positions. If this pattern reminds you of the game crashing immediately
 		when defeating Mima,
@@ -108,7 +107,6 @@
 </p><figure class="th01_playfield">
 	{{$vid_p4_h.TagWithID "p4-h"}}
 	<figcaption>
-		<p id="{{.Date}}-p4-h-controls"></p>
 		Mima's flame pillar pattern. This video was recorded on a particularly
 		unlucky seed that resulted in great disparities between a pillar's
 		internal X coordinate and its byte-aligned on-screen appearance, leading
@@ -126,11 +124,8 @@
 	FPS. Why go that low on purpose when you can just make the game render ✨
 	<i>smoothly</i> ✨ instead?
 </p><figure class="th01_playfield">
-	{{$vid_p4_s.TagWithID "p4-s"}}
-	<figcaption>
-		<p id="{{.Date}}-p4-s-controls"></p>
-		So smooth it's almost uncanny.
-	</figcaption>
+	{{$vid_p4_s.Tag}}
+	<figcaption>So smooth it's almost uncanny.</figcaption>
 </figure><p>
 	The reason quickly becomes obvious: With TH01's lack of optimization, going
 	for the full 56.4 FPS would have significantly slowed down the game on its
@@ -160,10 +155,7 @@
 		{{$vid_hop_1.TagWithID "hop-1"}}
 	</div>
 	<figcaption>
-		<p>
-			<div id="{{.Date}}-hop-controls"></div>
-			<div id="{{.Date}}-hop"></div>
-		</p>
+		<p id="{{.Date}}-hop"></p>
 		<span id="{{.Date}}-hop-caption"></span>
 	</figcaption>
 </figure><p>
@@ -253,47 +245,23 @@
 	<code>REIIDEN.EXE</code> and the single biggest function in all of PC-98
 	Touhou, let's go!
 </p><script>
-	const _2022_07_17_p0_fps = {{$vid_p0_0.Metadata.FPS}};
-	const _2022_07_17_p7_fps = {{$vid_p7.Metadata.FPS}};
-	const _2022_07_17_p4_h_fps = {{$vid_p4_h.Metadata.FPS}};
-	const _2022_07_17_p4_s_fps = {{$vid_p4_s.Metadata.FPS}};
-	const _2022_07_17_hop_fps = {{$vid_hop_0.Metadata.FPS}};
-
 	const _2022_07_17_p0_buttons = document.getElementById("{{.Date}}-p0");
 	const _2022_07_17_p0 = switchMultipleVideos("{{.Date}}-p0");
 	_2022_07_17_p0.add("(Original version)", "0", true);
 	_2022_07_17_p0.add("(Fixed version)", "1");
-	_2022_07_17_p0.addControls(
-		"{{.Date}}-p0-controls", _2022_07_17_p0_fps, () => {
-			const frame = document.createElement('button');
-			frame.textContent = `First pellets spawned`;
-			frame.onclick = () => {
-				_2022_07_17_p0_buttons.querySelector(
-					"button:not(.active)"
-				).click();
-				_2022_07_17_p0.seek(1.932);
-			};
-			return frame;
-		}
-	);
-
-	const _2022_07_17_p7 = document.getElementById("{{.Date}}-p7");
-	videoAddControls(
-		"{{.Date}}-p7-controls", _2022_07_17_p7_fps, () => _2022_07_17_p7
-	);
+	_2022_07_17_p0.addMiddleButton("{{.Date}}-p0-controls", () => {
+		const frame = document.createElement('button');
+		frame.textContent = `First pellets spawned`;
+		frame.onclick = () => {
+			_2022_07_17_p0_buttons.querySelector("button:not(.active)").click();
+			_2022_07_17_p0.seek(1.932);
+		};
+		return frame;
+	});
 
 	const _2022_07_17_p4_h = document.getElementById("{{.Date}}-p4-h");
-	videoAddControls(
-		"{{.Date}}-p4-h-controls", _2022_07_17_p4_h_fps, () => _2022_07_17_p4_h
-	);
-
-	const _2022_07_17_p4_s = document.getElementById("{{.Date}}-p4-s");
-	videoAddControls(
-		"{{.Date}}-p4-s-controls", _2022_07_17_p4_s_fps, () => _2022_07_17_p4_s
-	);
 
 	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
 	_2022_07_17_hop.add("(Actual palette changes)", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
 	_2022_07_17_hop.add("(Expected palette changes)", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
-	_2022_07_17_hop.addControls("{{.Date}}-hop-controls", _2022_07_17_hop_fps);
 </script>

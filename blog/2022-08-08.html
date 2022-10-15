@@ -231,7 +231,6 @@ if(rank == RANK_HARD) {
 	phase 13:
 </p><figure class="th01_playfield and_hp">
 	{{$vid_blit.TagWithID "blit"}}
-	<figcaption id="{{.Date}}-blit-controls"></figcaption>
 </figure><ol>
 	<li><a href='#{{.Date}}-blit' onclick=
 		'videoSeekAndStop(_2022_08_08_blit, 0.089);'
@@ -343,7 +342,6 @@ if(rank == RANK_HARD) {
 </p><figure class="th01_playfield">
 	{{$vid_邪.TagWithID "y"}}
 	<figcaption>
-		<p id="{{.Date}}-y-controls"></p>
 		Since each iteration of phase 12 adds 63 to the red component, integer
 		overflow will cause the color to infinitely alternate between dark-blue
 		and red colors on every 2.03 iterations of the pentagram phase loop. The
@@ -409,9 +407,6 @@ if(rank == RANK_HARD) {
 	5000}} contribution for this work, so it would take another {{HTML_Currency
 	1000}} to be turned into a full push.</li>
 </ul><script>
-	const _2022_08_08_blit_fps = {{$vid_blit.Metadata.FPS}};
-	const _2022_08_08_y_fps = {{$vid_邪.Metadata.FPS}};
-
 	const _2022_08_08_p0 = switchMultipleVideos("{{.Date}}-p0");
 	_2022_08_08_p0.add("Hard, original", "h");
 	_2022_08_08_p0.add("Lunatic, original", "l");
@@ -424,17 +419,5 @@ if(rank == RANK_HARD) {
 	_2022_08_08_p5.add("Lunatic", "l", true);
 
 	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
-	videoAddControls(
-		"{{.Date}}-blit-controls", _2022_08_08_blit_fps, () => _2022_08_08_blit
-	);
-
 	const _2022_08_08_y = document.getElementById("{{.Date}}-y");
-
-	// They cover the debug text… About time we implemented custom ones.
-	_2022_08_08_y.controls = false;
-
-	videoAddControls(
-		"{{.Date}}-y-controls", _2022_08_08_y_fps, () => _2022_08_08_y
-	);
-
 </script>

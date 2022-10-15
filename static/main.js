@@ -174,39 +174,12 @@ function videoSeekAndStop(vid, time) {
 }
 
 /**
- *
- * @param {HTMLVideoElement} vid
- * @param {number} fps
- * @param {-1 | +1} direction
- */
-function videoFrameStep(vid, fps, direction) {
-	videoSeekAndStop(vid, (vid.currentTime + (direction / fps)));
-}
-
-/**
-  * @param {HTMLElement} containerID
-  * @param {number} fps
-  * @param {function} vidFunc Function that returns the <video> to operate on
-  * @param {function | null} middleButton
+  * @param {string} containerID
+  * @param {function} middleButton
   */
-function videoAddControls(containerID, fps, vidFunc, middleButton = null) {
-	const prev = document.createElement('button');
-	const next = document.createElement('button');
-
-	prev.textContent = `< Previous frame`;
-	next.textContent = `Next frame >`;
-
-	prev.onclick = () => videoFrameStep(vidFunc(), fps, -1);
-	next.onclick = () => videoFrameStep(vidFunc(), fps, +1);
-
+function videoAddMiddleButton(containerID, middleButton) {
 	const container = document.getElementById(containerID);
-	container.appendChild(prev);
-	if(middleButton) {
-		container.appendChild(document.createTextNode("•"));
-		container.appendChild(middleButton());
-	}
-	container.appendChild(document.createTextNode("•"));
-	container.appendChild(next);
+	container.appendChild(middleButton());
 }
 
 /**
@@ -220,9 +193,8 @@ function switchMultipleVideos(id, onSwitch = switchVideo) {
 
 	return Object.assign({
 		seek: (time) => vidFunc().currentTime = time,
-		seekAndStop: (time) => videoSeekAndStop(vidFunc(), time),
-		addControls: (containerID, fps, middleButton = null) => {
-			videoAddControls(containerID, fps, vidFunc, middleButton);
+		addMiddleButton: (containerID, middleButton) => {
+			videoAddMiddleButton(containerID, middleButton);
 		}
 	}, ret);
 }
@@ -252,7 +224,7 @@ window.customElements.define("rec98-parent-init", ReC98ParentInit);
 /**
  * Translates equivalent KeyboardEvents into a virtual key.
  *
- * @typedef {' ' | null} VirtualKey
+ * @typedef {' ' | '←' | '→' | null} VirtualKey
  * @param {KeyboardEvent} event
  * @returns {VirtualKey}
  */
@@ -260,6 +232,14 @@ function virtualKey(event) {
 	switch(event.code) {
 	case "Space":
 		return ' ';
+	case "ArrowLeft":
+	case "KeyA":
+	case "KeyH":
+		return '←';
+	case "ArrowRight":
+	case "KeyD":
+	case "KeyL":
+		return '→';
 	}
 	return null;
 }

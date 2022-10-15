@@ -274,10 +274,7 @@
 		{{$vid_be2_1.TagWithID "be2-1"}}
 	</div>
 	<figcaption>
-		<p>
-			<div id="{{.Date}}-be2-controls"></div>
-			<div id="{{.Date}}-be2"></div>
-		</p>
+		<p id="{{.Date}}-be2"></p>
 		<span id="{{.Date}}-be2-caption"></span>
 		(Note how the background of the <i lang="ja" style="color: red"
 		>ド﻿カ﻿ー﻿ン</i> image is shifted 1 pixel to the left compared to pic
@@ -339,8 +336,6 @@
 	only is the quickest boss to defeat in-game, but also comes with the least
 	amount of code. See you very soon!
 </p><script>
-	const _2022_06_17_be2_fps = {{$vid_be2_0.Metadata.FPS}};
-
 	const _2022_06_17_p4 = switchMultipleVideos("{{.Date}}-p4");
 	_2022_06_17_p4.add("Easy", "e");
 	_2022_06_17_p4.add("Normal", "n");
@@ -354,5 +349,4 @@
 	const _2022_06_17_be2_1 = _2022_06_17_be2.add(
 		"(Optimized version)", "1", false, `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`
 	);
-	_2022_06_17_be2.addControls("{{.Date}}-be2-controls", _2022_06_17_be2_fps);
 </script>

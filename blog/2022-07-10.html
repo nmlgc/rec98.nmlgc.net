@@ -68,8 +68,8 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	letting them do their work would have entirely prevented these loops:
 </p><figure class="th01_playfield">
 	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		{{$vid_b2_0.TagWithIDActive "b2-0"}}
-		{{$vid_b2_1.TagWithID "b2-1"}}
+		{{(($vid_b2_0.SetID "b2-0").SetActive).Tag}}
+		{{($vid_b2_1.SetID "b2-1").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-b2"></p>
@@ -108,8 +108,8 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	the newly applied force is not guaranteed to be enough:
 </p><figure class="th01_playfield">
 	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		{{$vid_b3_0.TagWithIDActive "b3-0"}}
-		{{$vid_b3_1.TagWithID "b3-1"}}
+		{{(($vid_b3_0.SetID "b3-0").SetActive).Tag}}
+		{{($vid_b3_1.SetID "b3-1").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-b3"></p>
@@ -234,7 +234,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><hr /><p>
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
-</p><figure class="th01_playfield">{{$vid_vbar.TagWithID "vbar"}}</figure><p>
+</p><figure class="th01_playfield">{{($vid_vbar.SetID "vbar").Tag}}</figure><p>
 	At first, that workaround doesn't seem to make a difference here. As we
 	expect, the frame numbers now tell us that only one of the two bumper bars
 	in a row activates, but we couldn't have told otherwise as the number of
@@ -309,7 +309,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
 </p><figure class="th01_playfield">
-	{{$vid_p.TagWithID "p"}}
+	{{($vid_p.SetID "p").Tag}}
 	<figcaption id="{{.Date}}-p-controls"></figcaption>
 </figure><p>
 	And that's it! At least the turrets don't have anything notable to say about

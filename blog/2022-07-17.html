@@ -69,8 +69,8 @@
 	the square from 8 frames ago. {{HTML_Emoji "tannedcirno"}}
 </p><figure class="th01_playfield">
 	<div class="multilayer">
-		{{$vid_p0_0.TagWithIDActive "p0-0"}}
-		{{$vid_p0_1.TagWithID "p0-1"}}
+		{{(($vid_p0_0.SetID "p0-0").SetActive).Tag}}
+		{{($vid_p0_1.SetID "p0-1").Tag}}
 	</div>
 	<figcaption>
 		<p>
@@ -87,7 +87,7 @@
 	remembering the square corner coordinates across frames was definitely a
 	decent investment.
 </p><figure class="th01_playfield">
-	{{$vid_p7.Tag}}
+	{{($vid_p7.Tag}}
 	<figcaption>
 		Mima's laser pattern on Lunatic difficulty, now with correct laser spawn
 		positions. If this pattern reminds you of the game crashing immediately
@@ -105,7 +105,7 @@
 	{{Blog_PostLink "2022-06-17" "Kikuri, where we've seen the exact same issue with the teardrop ripple sprites"}}.
 	The conclusions are identical as well.
 </p><figure class="th01_playfield">
-	{{$vid_p4_h.TagWithID "p4-h"}}
+	{{($vid_p4_h.SetID "p4-h").Tag}}
 	<figcaption>
 		Mima's flame pillar pattern. This video was recorded on a particularly
 		unlucky seed that resulted in great disparities between a pillar's
@@ -151,8 +151,8 @@
 	not what we see in the actual game:
 </p><figure class="th01_playfield">
 	<div class="multilayer">
-		{{$vid_hop_0.TagWithIDActive "hop-0"}}
-		{{$vid_hop_1.TagWithID "hop-1"}}
+		{{(($vid_hop_0.SetID "hop-0").SetActive).Tag}}
+		{{($vid_hop_1.SetID "hop-1").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-hop"></p>

@@ -1,4 +1,4 @@
-{{$vid_heap := (call .VideoNoLoop "TH01-Elis-heap-corruption" "Video demonstrating TH01 Elis' HP going below zero, and how rendering negative HP will cause heap corruption") -}}
+{{$vid_heap := (call .Video "TH01-Elis-heap-corruption" "Video demonstrating TH01 Elis' HP going below zero, and how rendering negative HP will cause heap corruption") -}}
 {{$vid_3_0 := (call .Video "TH01-Elis-pattern-3-original" "Video of TH01 Elis' \"pellets along circle\" pattern in its original version") -}}
 {{$vid_3_1 := (call .Video "TH01-Elis-pattern-3-fixed" "Video of TH01 Elis' \"pellets along circle\" pattern, with the pellet camp bumped to 160, fixed blitting for the 4th quadrant of the big circle, and a correctly centered pellet spawn point") -}}
 {{$vid_7_e := (call .Video "TH01-Elis-pattern-7-Easy" "Video of the \"slow spread\" pattern of TH01 Elis' bat form on Easy Mode") -}}
@@ -92,7 +92,7 @@
 	trivial to cause: Simply hold  ↵&nbsp;Return from the beginning of the
 	fight, and the completion condition will never be <code>true</code>, as the
 	HP and frame numbers run past the off-by-one meeting point.
-</p><figure>{{$vid_heap.Tag}}</figure><p>
+</p><figure>{{($vid_heap.SetNoLoop).Tag}}</figure><p>
 	Regular gameplay, however, entirely prevents this due to the fixed start
 	positions of Reimu and the Orb, the Orb's fixed initial trajectory, and the
 	50 frames of delay until a bomb deals damage to a boss. These aspects make
@@ -130,8 +130,8 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	danmaku pattern, right in phase 1:
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid_3_0.TagWithIDActive "p3-0"}}
-		{{$vid_3_1.TagWithID "p3-1"}}
+		{{(($vid_3_0.SetID "p3-0").SetActive).Tag}}
+		{{($vid_3_1.SetID "p3-1").Tag}}
 	</div>
 	<figcaption id="{{.Date}}-p3">
 		<script>switchVideoButton("{{.Date}}-p3");</script> The "pellets along
@@ -193,10 +193,10 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	angle, leaving plenty of room for the player to move out of the way:
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid_7_l.TagWithIDActive "p7-l"}}
-		{{$vid_7_h.TagWithID "p7-h"}}
-		{{$vid_7_n.TagWithID "p7-n"}}
-		{{$vid_7_e.TagWithID "p7-e"}}
+		{{(($vid_7_l.SetID "p7-l").SetActive).Tag}}
+		{{($vid_7_h.SetID "p7-h").Tag}}
+		{{($vid_7_n.SetID "p7-n").Tag}}
+		{{($vid_7_e.SetID "p7-e").Tag}}
 	</div>
 	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on <span
 	id="{{.Date}}-p7"></span>. Which version do you think is the easiest
@@ -205,7 +205,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
 </p><figure class="fullres">
-	{{$vid_12.TagWithID "p12"}}
+	{{($vid_12.SetID "p12").Tag}}
 </figure><p>
 	After the circle spawned completely, you lose a life by moving outside it,
 	but doing that immediately advances the pattern <a href="#{{.Date}}-p12"

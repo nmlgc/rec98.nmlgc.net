@@ -1,5 +1,5 @@
 {{$k_16 := (call .Video "TH04-Kurumi-crash-pattern-playperf-16" "") -}}
-{{$k_4 := (call .VideoNoLoop "TH04-Kurumi-crash-pattern-playperf-4" "") -}}
+{{$k_4 := (call .Video "TH04-Kurumi-crash-pattern-playperf-4" "") -}}
 
 {{$k_wa_0 := (call .Video "TH04-Kurumi-crash-workaround-0-bullets" "") -}}
 {{$k_wa_1 := (call .Video "TH04-Kurumi-crash-workaround-1-bullet" "") -}}
@@ -12,7 +12,7 @@
 {{$m_112 := (call .Video "TH04-Marisa4-crash-pattern-bits-112" "") -}}
 {{$m_144 := (call .Video "TH04-Marisa4-crash-pattern-bits-144" "") -}}
 {{$m_148 := (call .Video "TH04-Marisa4-crash-pattern-bits-148" "") -}}
-{{$m_152 := (call .VideoNoLoop "TH04-Marisa4-crash-pattern-bits-152" "") -}}
+{{$m_152 := (call .Video "TH04-Marisa4-crash-pattern-bits-152" "") -}}
 {{$m_156 := (call .Video "TH04-Marisa4-crash-pattern-bits-156" "") -}}
 {{$m_160 := (call .Video "TH04-Marisa4-crash-pattern-bits-160" "") -}}
 
@@ -114,8 +114,8 @@
 	<li>Boom, division by zero.</li>
 </ul><figure class="fullres">
 	<div class="multilayer">
-		{{$k_4.TagWithIDActive "k-4"}}
-		{{$k_16.TagWithID "k-16"}}
+		{{((($k_4.SetID "k-4").SetActive).SetNoLoop).Tag}}
+		{{($k_16.SetID "k-16").Tag}}
 	</div>
 	<figcaption>
 		<span id="{{.Date}}-k"></span><br />
@@ -149,10 +149,10 @@
 	be accepted in Serious, High-Level Play™.</li>
 </ol><figure class="singleplayer_playfield">
 	<div class="multilayer">
-		{{$k_wa_0.TagWithIDActive "k-wa-0"}}
-		{{$k_wa_1.TagWithID "k-wa-1"}}
-		{{$k_wa_2.TagWithID "k-wa-2"}}
-		{{$k_wa_3.TagWithID "k-wa-3"}}
+		{{(($k_wa_0.SetID "k-wa-0").SetActive).Tag}}
+		{{($k_wa_1.SetID "k-wa-1").Tag}}
+		{{($k_wa_2.SetID "k-wa-2").Tag}}
+		{{($k_wa_3.SetID "k-wa-3").Tag}}
 	</div>
 	<figcaption id="{{.Date}}-k-wa"></figcaption>
 </figure><p>
@@ -235,13 +235,13 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	{{HTML_Emoji "zunpet"}}</li>
 </ul><figure class="fullres">
 	<div class="multilayer">
-		{{$m_152.TagWithIDActive "m-152"}}
-		{{$m_68.TagWithID "m-68"}}
-		{{$m_112.TagWithID "m-112"}}
-		{{$m_144.TagWithID "m-144"}}
-		{{$m_148.TagWithID "m-148"}}
-		{{$m_156.TagWithID "m-156"}}
-		{{$m_160.TagWithID "m-160"}}
+		{{((($m_152.SetID "m-152").SetActive).SetNoLoop).Tag}}
+		{{($m_68.SetID "m-68").Tag}}
+		{{($m_112.SetID "m-112").Tag}}
+		{{($m_144.SetID "m-144").Tag}}
+		{{($m_148.SetID "m-148").Tag}}
+		{{($m_156.SetID "m-156").Tag}}
+		{{($m_160.SetID "m-160").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-m-controls"></p>
@@ -277,9 +277,9 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	people <i>already</i> hate losing runs to this bug!</li>
 </ol><figure class="singleplayer_playfield">
 	<div class="multilayer">
-		{{$m_wa_1.TagWithIDActive "m-wa-0"}}
-		{{$m_wa_1.TagWithID "m-wa-1"}}
-		{{$m_wa_2.TagWithID "m-wa-2"}}
+		{{(($m_wa_1.SetID "m-wa-0").SetActive).Tag}}
+		{{($m_wa_1.SetID "m-wa-1").Tag}}
+		{{($m_wa_2.SetID "m-wa-2").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-m-wa-controls"></p>

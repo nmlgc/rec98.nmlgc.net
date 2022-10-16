@@ -100,8 +100,8 @@
 	<i>cinematic 30 FPS look </i> 📽 here… {{HTML_Emoji "zunpet"}}
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid_fx_0.TagWithIDActive "fx-0"}}
-		{{$vid_fx_1.TagWithID "fx-1"}}
+		{{(($vid_fx_0.SetID "fx-0").SetActive).Tag}}
+		{{($vid_fx_1.SetID "fx-1").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-fx"></p>
@@ -156,7 +156,7 @@
 	<strong style="color:red">5</strong> →
 	<i>(nothing)</i>:
 </p><figure class="fullres">
-	{{$vid_metrics.TagWithID "metrics"}}
+	{{($vid_metrics.SetID "metrics").Tag}}
 	<figcaption class="fullres">
 		This footage was slowed down to show one sprite blitting operation per
 		frame. The actual game waits a hardcoded 4 milliseconds between each

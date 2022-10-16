@@ -24,21 +24,38 @@ type BlogVideo struct {
 	Poster   template.HTML
 	Sources  []template.HTML
 	Date     string
+	ID       string
 	Alt      string
-	Loop     bool
+	Active   bool
+	NoLoop   bool
 }
 
-// tag generates a complete HTML <video> tag for a video.
-func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
+func (b *BlogVideo) SetID(id string) *BlogVideo {
+	b.ID = id
+	return b
+}
+
+func (b *BlogVideo) SetActive() *BlogVideo {
+	b.Active = true
+	return b
+}
+
+func (b *BlogVideo) SetNoLoop() *BlogVideo {
+	b.NoLoop = true
+	return b
+}
+
+// Tag generates a complete HTML <video> tag for a video.
+func (b *BlogVideo) Tag() (ret template.HTML) {
 	ret += `<rec98-video>`
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)
-	if id != "" {
-		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, id))
+	if b.ID != "" {
+		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, b.ID))
 	}
-	if b.Loop {
+	if !b.NoLoop {
 		ret += ` loop`
 	}
-	if active {
+	if b.Active {
 		ret += ` class="active"`
 	}
 	ret += template.HTML(fmt.Sprintf(
@@ -61,25 +78,12 @@ func (b *BlogVideo) tag(id string, active bool) (ret template.HTML) {
 	return ret
 }
 
-func (b *BlogVideo) Tag() (ret template.HTML) {
-	return b.tag("", false)
-}
-
-func (b *BlogVideo) TagWithID(id string) (ret template.HTML) {
-	return b.tag(id, false)
-}
-
-func (b *BlogVideo) TagWithIDActive(id string) (ret template.HTML) {
-	return b.tag(id, true)
-}
-
-func (b *Blog) NewBlogVideo(stem, date, alt string, loop bool) *BlogVideo {
+func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	ret := &BlogVideo{
 		Metadata: &b.Video.Cache.Video[stem].Metadata,
 		Poster:   template.HTML(b.VideoURL(stem, &POSTER)),
 		Date:     date,
 		Alt:      alt,
-		Loop:     loop,
 	}
 	for _, codec := range VIDEO_HOSTED {
 		codecURL := template.HTML(b.VideoURL(stem, codec))
@@ -186,7 +190,6 @@ type PostDot struct {
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
 	Video       func(fn string, alt string) *BlogVideo
-	VideoNoLoop func(fn string, alt string) *BlogVideo
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -227,10 +230,7 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 			return template.HTML(blogHP.VersionURLFor(datePrefix + fn))
 		},
 		Video: func(fn string, alt string) *BlogVideo {
-			return b.NewBlogVideo((datePrefix + fn), e.Date, alt, true)
-		},
-		VideoNoLoop: func(fn string, alt string) *BlogVideo {
-			return b.NewBlogVideo((datePrefix + fn), e.Date, alt, false)
+			return b.NewBlogVideo((datePrefix + fn), e.Date, alt)
 		},
 	}
 	pagesExecute(&builder, e.templateName, &ctx)

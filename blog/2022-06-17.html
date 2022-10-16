@@ -172,10 +172,10 @@
 	pellets adding a constant aimed component to every difficulty level.
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid_p4_l.TagWithIDActive "p4-l"}}
-		{{$vid_p4_h.TagWithID "p4-h"}}
-		{{$vid_p4_n.TagWithID "p4-n"}}
-		{{$vid_p4_e.TagWithID "p4-e"}}
+		{{(($vid_p4_l.SetID "p4-l").SetActive).Tag}}
+		{{($vid_p4_h.SetID "p4-h").Tag}}
+		{{($vid_p4_n.SetID "p4-n").Tag}}
+		{{($vid_p4_e.SetID "p4-e").Tag}}
 	</div>
 	<figcaption>Kikuri's phase 4 patterns, on <span
 	id="{{.Date}}-p4"></span>.</figcaption>
@@ -270,8 +270,8 @@
 	<code>i</code> overlaid using the text chip. Caution, flashing lights:
 </p><figure class="th01_ending">
 	<div class="multilayer">
-		{{$vid_be2_0.TagWithIDActive "be2-0"}}
-		{{$vid_be2_1.TagWithID "be2-1"}}
+		{{(($vid_be2_0.SetID "be2-0").SetActive).Tag}}
+		{{($vid_be2_1.SetID "be2-1").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-be2"></p>

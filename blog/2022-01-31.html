@@ -119,8 +119,8 @@
 	The intended animation is easily restored though:
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid1.TagWithIDActive "pattern3-0"}}
-		{{$vid2.TagWithID "pattern3-1"}}
+		{{(($vid1.SetID "pattern3-0").SetActive).Tag}}
+		{{($vid2.SetID "pattern3-1").Tag}}
 	</div>
 	<figcaption id="{{.Date}}-pattern3">
 		<script>switchVideoButton("{{.Date}}-pattern3");</script>
@@ -242,8 +242,8 @@
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
 </p><figure class="fullres">
 	<div class="multilayer">
-		{{$vid3.TagWithIDActive "leafsplash-0"}}
-		{{$vid4.TagWithID "leafsplash-1"}}
+		{{(($vid3.SetID "leafsplash-0").SetActive).Tag}}
+		{{($vid4.SetID "leafsplash-1").Tag}}
 	</div>
 	<figcaption id="{{.Date}}-leafsplash">
 		<script>switchVideoButton("{{.Date}}-leafsplash");</script>

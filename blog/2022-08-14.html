@@ -42,9 +42,9 @@
 	like in the end:
 </p><figure class="th01_playfield">
 	<div class="multilayer">
-		{{$vid_orig.TagWithIDActive "go-o"}}
-		{{$vid_wimpy.TagWithID "go-w"}}
-		{{$vid_no.TagWithID "go-n"}}
+		{{(($vid_orig.SetID "go-o").SetActive).Tag}}
+		{{($vid_wimpy.SetID "go-w").Tag}}
+		{{($vid_no.SetID "go-n").Tag}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-go"></p>

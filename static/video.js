@@ -43,6 +43,16 @@ function secondsFrom(frame, fps) {
 	return ((frame + 0.5) / fps);
 }
 
+/**
+ * Generates the CSS `width` for the timeline bar at a given frame.
+ *
+ * @param {number} frame
+ * @param {number} frameCount
+ */
+function timelineWidthAt(frame, frameCount) {
+	return `${(frame / (frameCount - 1)) * 100}%`;
+}
+
 class ReC98Video extends HTMLElement {
 	// Members
 	// -------
@@ -56,6 +66,9 @@ class ReC98Video extends HTMLElement {
 	eFramePrevious = document.createElement("button");
 	eTimeFrame = document.createElement("span");
 	eFrameNext = document.createElement("button");
+	eTimeline = document.createElement("div");
+	eTimelineBorder = document.createElement("div");
+	eTimelinePos = document.createElement("div");
 
 	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
 	videos;
@@ -65,6 +78,7 @@ class ReC98Video extends HTMLElement {
 
 	frameCount = 0;
 	fps = 1;
+	scrubPossible = false;
 
 	/** @type {number | null} */
 	timeIntervalID = null;
@@ -160,6 +174,21 @@ class ReC98Video extends HTMLElement {
 		this.seekBy(direction * (this.frameCount / 10));
 	}
 
+	/** @param {PointerEvent} event */
+	scrub(event) {
+		this.focus();
+
+		// Why is the border width included in [offsetX]?!?
+		const fraction = ((event.offsetX + 1) / this.eTimeline.offsetWidth);
+
+		let frame = frameFrom((fraction * this.videoShown.duration), this.fps);
+		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
+		const seconds = secondsFrom(frame, this.fps);
+		this.renderTime(seconds); // Immediate feedback
+		this.pause();
+		this.seekTo(seconds);
+	}
+
 	/** @param {Event} event */
 	toggle(event) {
 		if(!this.videoShown) {
@@ -192,6 +221,7 @@ class ReC98Video extends HTMLElement {
 			Math.trunc((seconds % 1) * 100).toString().padStart(2, "0")
 		);
 		this.eTimeFrame.textContent = frame.toString();
+		this.eTimelinePos.style.width = timelineWidthAt(frame, this.frameCount);
 	}
 
 	renderTimeFromVideo() {
@@ -250,6 +280,13 @@ class ReC98Video extends HTMLElement {
 		this.eTimeFrame.className = "frame time";
 		this.renderTime(0);
 		// ----
+
+		// Timeline
+		// --------
+		this.eTimeline.className = "timeline";
+		this.eTimelineBorder.className = "border";
+		this.eTimelinePos.className = "pos";
+		// --------
 	}
 
 	/**
@@ -263,6 +300,10 @@ class ReC98Video extends HTMLElement {
 		this.frameCount = attributeAsNumber(videoNew, "data-frame-count");
 		this.videoShown = this.videos[index];
 
+		videoNew.oncanplay = (() => {
+			this.scrubPossible = true;
+			videoNew.oncanplay = null;
+		})
 		videoNew.onclick = ((event) => this.toggle(event));
 		videoNew.onseeked = seekedFunc;
 		videoNew.onplay = (() => this.play());
@@ -296,6 +337,8 @@ class ReC98Video extends HTMLElement {
 	init() {
 		this.tabIndex = -1;
 
+		this.eTimelineBorder.appendChild(this.eTimelinePos);
+		this.eTimeline.appendChild(this.eTimelineBorder);
 		this.eControls.appendChild(this.ePlay);
 		this.eControls.appendChild(this.eTimeSecondsIcon);
 		this.eControls.appendChild(this.eRewind);
@@ -305,10 +348,14 @@ class ReC98Video extends HTMLElement {
 		this.eControls.appendChild(this.eFramePrevious);
 		this.eControls.appendChild(this.eTimeFrame);
 		this.eControls.appendChild(this.eFrameNext);
+		this.eControls.appendChild(this.eTimeline);
 		this.appendChild(this.eControls);
 
 		// Event handlers
 		// --------------
+		let scrubActive = false;
+		let scrubWasPaused = false;
+
 		this.onkeydown = ((event) => {
 			if(document.activeElement !== this) {
 				return;
@@ -344,6 +391,25 @@ class ReC98Video extends HTMLElement {
 		this.eFastForward.onclick = (() => this.seekFast(+1));
 		this.eFramePrevious.onclick = (() => this.seekBy(-1));
 		this.eFrameNext.onclick = (() => this.seekBy(+1));
+		this.eTimelineBorder.onpointermove = ((event) => (
+			scrubActive && this.scrubPossible && this.scrub(event)
+		));
+		this.eTimelineBorder.onpointerdown = ((event) => {
+			if(event.button !== 0) {
+				return;
+			}
+			scrubActive = true;
+			scrubWasPaused = (this.videoShown?.paused ?? true);
+			this.eTimelineBorder.setPointerCapture(event.pointerId);
+			this.eTimelineBorder.onpointermove?.(event);
+		});
+		this.eTimelineBorder.onpointerup = ((event) => {
+			if(event.button !== 0) {
+				return;
+			}
+			scrubActive = false;
+			!scrubWasPaused && this.play();
+		});
 		// --------------
 
 		this.videos = this.getElementsByTagName("video");

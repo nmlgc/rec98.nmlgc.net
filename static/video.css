@@ -1,3 +1,10 @@
+:root {
+	--timeline-gradient: linear-gradient(180deg,
+		white 0%,
+		var(--c-lightgray) 50%
+	);
+}
+
 rec98-video {
 	box-shadow: var(--blog-shadow);
 	background-color: var(--c-dark);
@@ -26,7 +33,8 @@ rec98-video .controls>.time {
 	font-family: monospace;
 }
 
-rec98-video .large {
+rec98-video .large,
+rec98-video .timeline {
 	grid-row: 1 / 3;
 }
 
@@ -36,4 +44,33 @@ rec98-video .seconds {
 
 rec98-video .frame {
 	grid-row: 2;
+}
+
+rec98-video .timeline {
+	align-self: center;
+	grid-column: 6;
+	height: 50%;
+	position: relative;
+	touch-action: none;
+	width: calc(100% - 1em);
+}
+
+rec98-video .timeline .border {
+	border-left: var(--header-border);
+	border-radius: 5em;
+	border-right: var(--header-border);
+	cursor: pointer;
+	height: 100%;
+	overflow: hidden;
+	width: 100%;
+}
+
+rec98-video .timeline .border .pos {
+	border-bottom: var(--header-border);
+	border-radius: 0;
+	border-top: var(--header-border);
+	border: 0;
+	background: var(--timeline-gradient);
+	height: 100%;
+	width: 0;
 }

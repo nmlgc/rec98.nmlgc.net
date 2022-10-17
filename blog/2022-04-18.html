@@ -113,10 +113,7 @@
 	bullets…</li>
 	<li>Boom, division by zero.</li>
 </ul><figure class="fullres">
-	<div class="multilayer">
-		{{((($k_4.SetID "k-4").SetActive).SetNoLoop).Tag}}
-		{{($k_16.SetID "k-16").Tag}}
-	</div>
+	{{call .VideoPlayer (($k_4.SetID "k-4").SetActive).SetNoLoop ($k_16.SetID "k-16")}}
 	<figcaption>
 		<span id="{{.Date}}-k"></span><br />
 		<p>The pattern that causes the crash in Kurumi's fight. Also
@@ -148,12 +145,7 @@
 	closest to the behavior of the original games, and perhaps the only one to
 	be accepted in Serious, High-Level Play™.</li>
 </ol><figure class="singleplayer_playfield">
-	<div class="multilayer">
-		{{(($k_wa_0.SetID "k-wa-0").SetActive).Tag}}
-		{{($k_wa_1.SetID "k-wa-1").Tag}}
-		{{($k_wa_2.SetID "k-wa-2").Tag}}
-		{{($k_wa_3.SetID "k-wa-3").Tag}}
-	</div>
+	{{call .VideoPlayer ($k_wa_0.SetID "k-wa-0").SetActive ($k_wa_1.SetID "k-wa-1") ($k_wa_2.SetID "k-wa-2") ($k_wa_3.SetID "k-wa-3")}}
 	<figcaption id="{{.Date}}-k-wa"></figcaption>
 </figure><p>
 	As I was writing this post, it felt increasingly wrong for me to make this
@@ -234,15 +226,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<i>away</i> from the intended point, as the divisor becomes negative.
 	{{HTML_Emoji "zunpet"}}</li>
 </ul><figure class="fullres">
-	<div class="multilayer">
-		{{((($m_152.SetID "m-152").SetActive).SetNoLoop).Tag}}
-		{{($m_68.SetID "m-68").Tag}}
-		{{($m_112.SetID "m-112").Tag}}
-		{{($m_144.SetID "m-144").Tag}}
-		{{($m_148.SetID "m-148").Tag}}
-		{{($m_156.SetID "m-156").Tag}}
-		{{($m_160.SetID "m-160").Tag}}
-	</div>
+	{{call .VideoPlayer ($m_68.SetID "m-68") ($m_112.SetID "m-112") ($m_144.SetID "m-144") ($m_148.SetID "m-148") (($m_152.SetID "m-152").SetActive).SetNoLoop ($m_156.SetID "m-156") ($m_160.SetID "m-160")}}
 	<figcaption>
 		<p id="{{.Date}}-m-controls"></p>
 		One of the two patterns in TH04's Stage 4 Marisa boss fight that feature
@@ -276,11 +260,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<li>Triggering an immediate Game O– hell no, this is the Stage 4 boss,
 	people <i>already</i> hate losing runs to this bug!</li>
 </ol><figure class="singleplayer_playfield">
-	<div class="multilayer">
-		{{(($m_wa_1.SetID "m-wa-0").SetActive).Tag}}
-		{{($m_wa_1.SetID "m-wa-1").Tag}}
-		{{($m_wa_2.SetID "m-wa-2").Tag}}
-	</div>
+	{{call .VideoPlayer ($m_wa_0.SetID "m-wa-0").SetActive ($m_wa_1.SetID "m-wa-1") ($m_wa_2.SetID "m-wa-2")}}
 	<figcaption>
 		<p id="{{.Date}}-m-wa-controls"></p>
 		<span id="{{.Date}}-m-wa"></span>
@@ -347,7 +327,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	mask from stage tiles to the backdrop image, by making clever use of the
 	tile invalidation system:
 </p><figure class="singleplayer_playfield">
-	{{$sara.Tag}}
+	{{call .VideoPlayer $sara}}
 </figure><p>
 	TH04 uses the same effect a bit more frequently, for its first three bosses.
 </p><p>

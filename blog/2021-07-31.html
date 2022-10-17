@@ -23,13 +23,13 @@
 	which deserve different names:
 </p><figure class="side_by_side">
 	<figure class="fullres">
-		{{$vid1.Tag}}
+		{{call .VideoPlayer $vid1}}
 		<figcaption>Mechanic #1: <i>Clearing</i> bullets for a custom amount of
 		time, awarding 1000 points for all bullets alive on the first frame,
 		and 100 points for all bullets spawned during the clear time.
 		</figcaption>
 	</figure><figure class="fullres">
-		{{$vid2.Tag}}
+		{{call .VideoPlayer $vid2}}
 		<figcaption>Mechanic #2: <i>Zapping</i> bullets for a fixed 16 frames,
 		awarding a semi-exponential and loudly announced <i>Bonus!!</i> for all
 		bullets alive on the first frame, and preventing new bullets from being

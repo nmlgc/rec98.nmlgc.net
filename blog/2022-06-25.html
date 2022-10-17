@@ -48,7 +48,7 @@
 	<i>and</i> stretch the entire width of SinGyoku's sprite? You get a hitbox
 	that ends in mid-air, far away from the right edge of the sprite:
 </p><figure class="th01_playfield">
-	{{($vid1.SetID "v1").Tag}}
+	{{call .VideoPlayer ($vid1.SetID "v1")}}
 	<figcaption>
 		Due to VRAM byte alignment, all player shots fired between
 		<code>gx&nbsp;= 376</code> and <code>gx&nbsp;= 383</code> inclusive
@@ -88,7 +88,7 @@
 	sphere's movement in the next one.</li>
 </ul>
 </p><figure class="th01_playfield">
-	{{($vid2.SetID "v2").Tag}}
+	{{call .VideoPlayer ($vid2.SetID "v2")}}
 	<figcaption>
 		By having the sphere move from the right edge of the playfield to the
 		left, this video demonstrates both the <a href="#{{.Date}}-v2"

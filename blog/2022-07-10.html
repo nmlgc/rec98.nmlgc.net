@@ -67,10 +67,7 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	bounce between two bumpers. As rudimentary as the Orb's physics may be, just
 	letting them do their work would have entirely prevented these loops:
 </p><figure class="th01_playfield">
-	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		{{(($vid_b2_0.SetID "b2-0").SetActive).Tag}}
-		{{($vid_b2_1.SetID "b2-1").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_b2_0.SetID "b2-0").SetActive ($vid_b2_1.SetID "b2-1")}}
 	<figcaption>
 		<p id="{{.Date}}-b2"></p>
 		<span id="{{.Date}}-b2-caption"></span> The blue areas indicate the
@@ -107,9 +104,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	is the only part of the code that actually prevents a collision there, as
 	the newly applied force is not guaranteed to be enough:
 </p><figure class="th01_playfield">
-	<div class="multilayer" style="aspect-ratio: 2 / 1;">
-		{{(($vid_b3_0.SetID "b3-0").SetActive).Tag}}
-		{{($vid_b3_1.SetID "b3-1").Tag}}
+	{{call .VideoPlayer ($vid_b3_0.SetID "b3-0").SetActive ($vid_b3_1.SetID "b3-1")}}
 	</div>
 	<figcaption>
 		<p id="{{.Date}}-b3"></p>
@@ -127,7 +122,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	player can fire a new shot every 4 frames when standing still. That makes it
 	immediately obvious why this works:
 </p><figure class="th01_playfield">
-	{{$vid_hbar.Tag}}
+	{{call .VideoPlayer $vid_hbar}}
 	<figcaption>
 		The <span style="color:green">green numbers</span> show the amount of
 		frames since the last detected collision with the respective bumper bar,
@@ -164,7 +159,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	Orb can climb, as the initial collision with two hitboxes cancels out the
 	intended sign change that reflects the Orb away from the bars:
 </p><figure class="th01_playfield">
-	{{$vid_rope.Tag}}
+	{{call .VideoPlayer $vid_rope}}
 	<figcaption>
 		This footage was recorded without the workaround I am about to describe.
 		It does not reflect the behavior of the original game. <strong>You
@@ -184,7 +179,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	absolute screen coordinates. Stage 17 on the
 	<span class="ja">魔﻿界</span>/Makai route contains exactly such a layout:
 </p><figure class="th01_playfield">
-	{{$vid_fall.Tag}}
+	{{call .VideoPlayer $vid_fall}}
 	<figcaption>
 		The collision handlers of adjacent vertical bars always activate in the
 		same frame, independently invert the Orb's X velocity, and therefore
@@ -214,8 +209,8 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	still get the Orb to climb a vertical column, or glide along a horizontal
 	row:
 </p><figure class="side_by_side">
-	<figure>{{$vid_realrope.Tag}}</figure>
-	<figure>{{$vid_glide.Tag}}</figure>
+	<figure>{{call .VideoPlayer $vid_realrope}}</figure>
+	<figure>{{call .VideoPlayer $vid_glide}}</figure>
 </figure><p>
 	<a href="{{$pic}}">Here's the hitbox overlay for
 	<span lang="ja">地﻿獄</span>/Jigoku Stage 19</a>, and here's an updated
@@ -234,7 +229,9 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><hr /><p>
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
-</p><figure class="th01_playfield">{{($vid_vbar.SetID "vbar").Tag}}</figure><p>
+</p><figure class="th01_playfield">
+	{{call .VideoPlayer ($vid_vbar.SetID "vbar")}}
+</figure><p>
 	At first, that workaround doesn't seem to make a difference here. As we
 	expect, the frame numbers now tell us that only one of the two bumper bars
 	in a row activates, but we couldn't have told otherwise as the number of
@@ -309,7 +306,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
 </p><figure class="th01_playfield">
-	{{($vid_p.SetID "p").Tag}}
+	{{call .VideoPlayer ($vid_p.SetID "p")}}
 	<figcaption id="{{.Date}}-p-controls"></figcaption>
 </figure><p>
 	And that's it! At least the turrets don't have anything notable to say about

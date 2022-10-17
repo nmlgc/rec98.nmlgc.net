@@ -11,10 +11,20 @@ rec98-video {
 	display: grid;
 }
 
+rec98-video video {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+rec98-video video.active {
+	z-index: 1;
+}
+
 rec98-video .controls {
 	color: var(--c-lightgray);
 	display: grid;
 	font-size: small;
+	grid-row: 2;
 	grid-template-columns: 2.5em 1.5em 2ch 6ch 2ch 1fr;
 	justify-items: left !important;
 	width: 100%;

@@ -92,7 +92,7 @@
 	trivial to cause: Simply hold  ↵&nbsp;Return from the beginning of the
 	fight, and the completion condition will never be <code>true</code>, as the
 	HP and frame numbers run past the off-by-one meeting point.
-</p><figure>{{($vid_heap.SetNoLoop).Tag}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_heap.SetNoLoop}}</figure><p>
 	Regular gameplay, however, entirely prevents this due to the fixed start
 	positions of Reimu and the Orb, the Orb's fixed initial trajectory, and the
 	50 frames of delay until a bomb deals damage to a boss. These aspects make
@@ -129,10 +129,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	As for the fight itself, it doesn't take long until we reach its most janky
 	danmaku pattern, right in phase 1:
 </p><figure class="fullres">
-	<div class="multilayer">
-		{{(($vid_3_0.SetID "p3-0").SetActive).Tag}}
-		{{($vid_3_1.SetID "p3-1").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_3_0.SetID "p3-0").SetActive ($vid_3_1.SetID "p3-1")}}
 	<figcaption id="{{.Date}}-p3">
 		<script>switchVideoButton("{{.Date}}-p3");</script> The "pellets along
 		circle" pattern on Lunatic, in its original version and with fanfiction
@@ -175,7 +172,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	which displays some rather unique hitboxes. The one against the Orb is fine,
 	but the one against player shots…
 </p><figure class="fullres">
-	{{$vid_hitbox.Tag}}
+	{{call .VideoPlayer $vid_hitbox}}
 </figure><p>
 	… uses the bat's X coordinate for both X and Y dimensions.
 	{{HTML_Emoji "zunpet"}} In regular gameplay, it's not <i>too</i> bad as most
@@ -192,12 +189,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	are not only always fired downwards, but also at the hardcoded narrow delta
 	angle, leaving plenty of room for the player to move out of the way:
 </p><figure class="fullres">
-	<div class="multilayer">
-		{{(($vid_7_l.SetID "p7-l").SetActive).Tag}}
-		{{($vid_7_h.SetID "p7-h").Tag}}
-		{{($vid_7_n.SetID "p7-n").Tag}}
-		{{($vid_7_e.SetID "p7-e").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_7_l.SetID "p7-l").SetActive ($vid_7_h.SetID "p7-h") ($vid_7_n.SetID "p7-n") ($vid_7_e.SetID "p7-e")}}
 	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on <span
 	id="{{.Date}}-p7"></span>. Which version do you think is the easiest
 	one?</figcaption>
@@ -205,7 +197,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
 </p><figure class="fullres">
-	{{($vid_12.SetID "p12").Tag}}
+	{{call .VideoPlayer ($vid_12.SetID "p12")}}
 </figure><p>
 	After the circle spawned completely, you lose a life by moving outside it,
 	but doing that immediately advances the pattern <a href="#{{.Date}}-p12"

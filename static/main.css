@@ -129,7 +129,6 @@ figure.medium {
 	gap: 2.5%;
 }
 
-.th01_ending,
 .fullres,
 .th01_playfield,
 .singleplayer_playfield {
@@ -137,37 +136,23 @@ figure.medium {
 }
 
 figure.fullres,
-figure.fullres img,
-figure.fullres video {
+figure.fullres img {
 	width: 640px;
 }
-figure.th01_ending,
-figure.th01_ending img,
-figure.th01_ending video {
-	width: 320px;
-}
 figure.th01_playfield,
-figure.th01_playfield img,
-figure.th01_playfield video {
+figure.th01_playfield img {
 	width: 640px;
 }
 figure.singleplayer_playfield,
-figure.singleplayer_playfield img,
-figure.singleplayer_playfield video {
+figure.singleplayer_playfield img {
 	width: 384px;
 }
 
 figure.fullres .multilayer {
 	aspect-ratio: 16 / 10;
 }
-figure.th01_ending .multilayer {
-	aspect-ratio: 20 / 13;
-}
 figure.th01_playfield .multilayer {
 	aspect-ratio: 40 / 21;
-}
-figure.th01_playfield.and_hp .multilayer {
-	aspect-ratio: 40 / 22;
 }
 figure.singleplayer_playfield .multilayer {
 	aspect-ratio: 24 / 23;
@@ -209,7 +194,6 @@ figure.singleplayer_playfield img {
 	position: relative;
 }
 
-.multilayer video,
 .multilayer img {
 	position: absolute;
 	left: 0;

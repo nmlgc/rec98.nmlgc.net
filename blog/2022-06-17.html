@@ -138,7 +138,7 @@
 	right, compared to where you would expect it from a ripple sprite's
 	on-screen position:
 </p><figure class="th01_playfield">
-	{{$vid_ripple.Tag}}
+	{{call .VideoPlayer $vid_ripple}}
 	<figcaption>Due to the deterministic nature of this part of the fight, it's
 	always 5 pixels for this first set of ripples. These visualizations are
 	obviously not pixel-perfect due to the different potential shapes of
@@ -171,12 +171,7 @@
 	distributed across the four levels, with the simultaneous spinning circle
 	pellets adding a constant aimed component to every difficulty level.
 </p><figure class="fullres">
-	<div class="multilayer">
-		{{(($vid_p4_l.SetID "p4-l").SetActive).Tag}}
-		{{($vid_p4_h.SetID "p4-h").Tag}}
-		{{($vid_p4_n.SetID "p4-n").Tag}}
-		{{($vid_p4_e.SetID "p4-e").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_p4_e.SetID "p4-e") ($vid_p4_n.SetID "p4-n") ($vid_p4_h.SetID "p4-h") ($vid_p4_l.SetID "p4-l").SetActive}}
 	<figcaption>Kikuri's phase 4 patterns, on <span
 	id="{{.Date}}-p4"></span>.</figcaption>
 </figure>
@@ -268,11 +263,8 @@
 	loop with <code>boom_duration = 16</code>, recorded in DOSBox-X with
 	<code>cputype=auto</code> and <code>cycles=max</code>, and with
 	<code>i</code> overlaid using the text chip. Caution, flashing lights:
-</p><figure class="th01_ending">
-	<div class="multilayer">
-		{{(($vid_be2_0.SetID "be2-0").SetActive).Tag}}
-		{{($vid_be2_1.SetID "be2-1").Tag}}
-	</div>
+</p><figure style="width: 320px;">
+	{{call .VideoPlayer ($vid_be2_0.SetID "be2-0").SetActive ($vid_be2_1.SetID "be2-1")}}
 	<figcaption>
 		<p id="{{.Date}}-be2"></p>
 		<span id="{{.Date}}-be2-caption"></span>

@@ -41,11 +41,7 @@
 	point that probably even ZUN himself didn't know what he wanted it to look
 	like in the end:
 </p><figure class="th01_playfield">
-	<div class="multilayer">
-		{{(($vid_orig.SetID "go-o").SetActive).Tag}}
-		{{($vid_wimpy.SetID "go-w").Tag}}
-		{{($vid_no.SetID "go-n").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_orig.SetID "go-o").SetActive ($vid_wimpy.SetID "go-w") ($vid_no.SetID "go-n")}}
 	<figcaption>
 		<p id="{{.Date}}-go"></p>
 		<span id="{{.Date}}-go-caption"></span>

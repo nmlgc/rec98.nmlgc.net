@@ -47,7 +47,6 @@ func (b *BlogVideo) SetNoLoop() *BlogVideo {
 
 // Tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) Tag() (ret template.HTML) {
-	ret += `<rec98-video>`
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)
 	if b.ID != "" {
 		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, b.ID))
@@ -73,8 +72,6 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
 	ret += `</video>`
-	ret += `<rec98-parent-init></rec98-parent-init>`
-	ret += `</rec98-video>`
 	return ret
 }
 
@@ -190,6 +187,7 @@ type PostDot struct {
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
 	Video       func(fn string, alt string) *BlogVideo
+	VideoPlayer func(videos ...*BlogVideo) template.HTML
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -231,6 +229,15 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 		},
 		Video: func(fn string, alt string) *BlogVideo {
 			return b.NewBlogVideo((datePrefix + fn), e.Date, alt)
+		},
+		VideoPlayer: func(videos ...*BlogVideo) (ret template.HTML) {
+			ret = "<rec98-video>"
+			for _, video := range videos {
+				ret += video.Tag()
+			}
+			ret += `<rec98-parent-init></rec98-parent-init>`
+			ret += `</rec98-video>`
+			return ret
 		},
 	}
 	pagesExecute(&builder, e.templateName, &ctx)

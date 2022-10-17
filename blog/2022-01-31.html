@@ -118,10 +118,7 @@
 	thus never rendered again.<br />
 	The intended animation is easily restored though:
 </p><figure class="fullres">
-	<div class="multilayer">
-		{{(($vid1.SetID "pattern3-0").SetActive).Tag}}
-		{{($vid2.SetID "pattern3-1").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid1.SetID "pattern3-0").SetActive ($vid2.SetID "pattern3-1")}}
 	<figcaption id="{{.Date}}-pattern3">
 		<script>switchVideoButton("{{.Date}}-pattern3");</script>
 		Sariel's third pattern, and the first to spawn birds, in its original
@@ -241,10 +238,7 @@
 	hiding an entire animation" category, causing all of
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
 </p><figure class="fullres">
-	<div class="multilayer">
-		{{(($vid3.SetID "leafsplash-0").SetActive).Tag}}
-		{{($vid4.SetID "leafsplash-1").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid3.SetID "leafsplash-0").SetActive ($vid4.SetID "leafsplash-1")}}
 	<figcaption id="{{.Date}}-leafsplash">
 		<script>switchVideoButton("{{.Date}}-leafsplash");</script>
 		The "swaying leaves" pattern. ZUN intended a splash animation to be

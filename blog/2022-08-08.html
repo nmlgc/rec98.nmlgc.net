@@ -118,11 +118,7 @@ if(rank == RANK_HARD) {
 	}
 }</pre>
 </p><figure class="th01_playfield and_hp">
-	<div class="multilayer">
-		{{(($vid_p0_u.SetID "p0-u").SetActive).Tag}}
-		{{($vid_p0_l.SetID "p0-l").Tag}}
-		{{($vid_p0_h.SetID "p0-h").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_p0_h.SetID "p0-h") ($vid_p0_l.SetID "p0-l") ($vid_p0_u.SetID "p0-u").SetActive}}
 	<figcaption>
 		<p id="{{.Date}}-p0"></p>
 		Featuring the weirdly extended hitbox for the eastern laser, as well as
@@ -208,12 +204,7 @@ if(rank == RANK_HARD) {
 	full 360° though, we can see how ZUN might have originally planned the
 	pattern to end:
 </p><figure class="th01_playfield and_hp">
-	<div class="multilayer">
-		{{(($vid_p5_l.SetID "p5-l").SetActive).Tag}}
-		{{($vid_p5_h.SetID "p5-h").Tag}}
-		{{($vid_p5_n.SetID "p5-n").Tag}}
-		{{($vid_p5_e.SetID "p5-e").Tag}}
-	</div>
+	{{call .VideoPlayer ($vid_p5_e.SetID "p5-e") ($vid_p5_n.SetID "p5-n") ($vid_p5_h.SetID "p5-h") ($vid_p5_l.SetID "p5-l").SetActive}}
 	<figcaption>YuugenMagan's phase 5 patterns, on <span
 	id="{{.Date}}-p5"></span>, with the <a
 		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seek(4.094);'
@@ -230,7 +221,7 @@ if(rank == RANK_HARD) {
 	fight, from the end of phase 9 up until the pentagram starts spinning in
 	phase 13:
 </p><figure class="th01_playfield and_hp">
-	{{$vid_blit.TagWithID "blit"}}
+	{{call .VideoPlayer ($vid_blit.SetID "blit")}}
 </figure><ol>
 	<li><a href='#{{.Date}}-blit' onclick=
 		'videoSeekAndStop(_2022_08_08_blit, 0.089);'
@@ -281,7 +272,7 @@ if(rank == RANK_HARD) {
 </p><p>
 	And just in case you were wondering about the hitboxes of these pentagrams
 	as they slam themselves into Reimu:
-</p><figure>{{$vid_p.Tag}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_p}}</figure><p>
 	62 pixels on the X axis, centered around each corner point of the star, 16
 	pixels below, and extending infinitely far up. The latter part becomes
 	especially devious because the game <i>always</i> collision-detects
@@ -340,7 +331,7 @@ if(rank == RANK_HARD) {
 </ul><p>
 	Adding some debug output sheds light on what's going on there:
 </p><figure class="th01_playfield">
-	{{($vid_邪.SetID "y").Tag}}
+	{{call .VideoPlayer ($vid_邪.SetID "y")}}
 	<figcaption>
 		Since each iteration of phase 12 adds 63 to the red component, integer
 		overflow will cause the color to infinitely alternate between dark-blue

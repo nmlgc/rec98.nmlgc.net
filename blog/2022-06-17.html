@@ -8,6 +8,13 @@
 {{$vid_be2_0 := (call .Video "TH01-Jigoku-Bad-Ending-shake-boom-original" "Video of the original, slow shake/boom effect during the TH01 Jigoku Bad Ending") -}}
 {{$vid_be2_1 := (call .Video "TH01-Jigoku-Bad-Ending-shake-boom-optimized" "Video of an optimized shake/boom effect during the TH01 Jigoku Bad Ending") -}}
 
+{{$vid_p4_e.SetTitle "Easy" -}}
+{{$vid_p4_n.SetTitle "Normal" -}}
+{{$vid_p4_h.SetTitle "Hard" -}}
+{{$vid_p4_l.SetTitle "Lunatic" -}}
+{{$vid_be2_0.SetTitle "Original version" -}}
+{{$vid_be2_1.SetTitle "Optimized version" -}}
+
 <p>
 	What's this? A simple, straightforward, easy-to-decompile TH01 boss with
 	just a few minor quirks and only two rendering-related ZUN bugs? Yup, 2½
@@ -329,16 +336,16 @@
 	amount of code. See you very soon!
 </p><script>
 	const _2022_06_17_p4 = switchMultipleVideos("{{.Date}}-p4");
-	_2022_06_17_p4.add("Easy", "e");
-	_2022_06_17_p4.add("Normal", "n");
-	_2022_06_17_p4.add("Hard", "h");
-	_2022_06_17_p4.add("Lunatic", "l", true);
+	_2022_06_17_p4.add("{{$vid_p4_e.Title}}", "e");
+	_2022_06_17_p4.add("{{$vid_p4_n.Title}}", "n");
+	_2022_06_17_p4.add("{{$vid_p4_h.Title}}", "h");
+	_2022_06_17_p4.add("{{$vid_p4_l.Title}}", "l", true);
 
 	const _2022_06_17_be2 = switchMultipleVideos("{{.Date}}-be2");
 	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
-		"(Original version)", "0", true, `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`
+		"{{$vid_be2_0.Title}}", "0", true, `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`
 	);
 	const _2022_06_17_be2_1 = _2022_06_17_be2.add(
-		"(Optimized version)", "1", false, `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`
+		"{{$vid_be2_1.Title}}", "1", false, `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`
 	);
 </script>

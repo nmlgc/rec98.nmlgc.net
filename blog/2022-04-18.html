@@ -24,6 +24,23 @@
 
 {{$sara := (call .Video "TH05-Sara-entrance" "Video of Sara's entrance animation, showing off .BB files being used as tile invalidation masks") -}}
 
+{{$k_4.SetTitle "<code>playperf = 4</code> (minimum rank on Easy mode)" -}}
+{{$k_16.SetTitle "<code>playperf = 16</code> (starting rank, and maximum on Easy mode)" -}}
+{{$k_wa_0.SetTitle "0 bullets" -}}
+{{$k_wa_1.SetTitle "1 bullet" -}}
+{{$k_wa_2.SetTitle "200 bullets" -}}
+{{$k_wa_3.SetTitle "Game Over" -}}
+{{$m_68.SetTitle "Frame 68" -}}
+{{$m_112.SetTitle "Frame 112" -}}
+{{$m_144.SetTitle "Frame 144" -}}
+{{$m_148.SetTitle "Frame 148" -}}
+{{$m_152.SetTitle "Frame 152 (Divide Error)" -}}
+{{$m_156.SetTitle "Frame 156" -}}
+{{$m_160.SetTitle "Frame 160" -}}
+{{$m_wa_0.SetTitle "Not moving at all" -}}
+{{$m_wa_1.SetTitle "Move and brake" -}}
+{{$m_wa_2.SetTitle "Warp" -}}
+
 <p>
 	(Before we start: Make sure you've read the <a
 	href="/faq#tsa-takedown">current version of the FAQ section on a potential
@@ -341,28 +358,23 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	const _2022_04_18_m_fps = {{$m_68.Metadata.FPS}};
 
 	const _2022_04_18_k = switchMultipleVideos("{{.Date}}-k");
-	_2022_04_18_k.add(
-		"<code>playperf = 4</code> (minimum rank on Easy mode)", "4", true
-	);
-	_2022_04_18_k.add(
-		"<code>playperf = 16</code> (starting rank, and maximum on Easy mode)",
-		"16"
-	);
+	_2022_04_18_k.add("{{$k_4.Title}}", "4", true);
+	_2022_04_18_k.add("{{$k_16.Title}}", "16");
 
 	const _2022_04_18_k_wa = switchMultipleVideos("{{.Date}}-k-wa");
-	_2022_04_18_k_wa.add("1) 0 bullets", "0", true);
-	_2022_04_18_k_wa.add("2) 1 bullet", "1");
-	_2022_04_18_k_wa.add("3) 200 bullets", "2");
-	_2022_04_18_k_wa.add("4) Game Over", "3");
+	_2022_04_18_k_wa.add("{{$k_wa_0.Title}}", "0", true);
+	_2022_04_18_k_wa.add("{{$k_wa_1.Title}}", "1");
+	_2022_04_18_k_wa.add("{{$k_wa_2.Title}}", "2");
+	_2022_04_18_k_wa.add("{{$k_wa_3.Title}}", "3");
 
 	const _2022_04_18_m = switchMultipleVideos("{{.Date}}-m");
-	_2022_04_18_m.add("frame 68", "68");
-	_2022_04_18_m.add("frame 112", "112");
-	_2022_04_18_m.add("frame 144", "144");
-	_2022_04_18_m.add("frame 148", "148");
-	_2022_04_18_m.add("frame 152 (Divide error)", "152", true);
-	_2022_04_18_m.add("frame 156", "156");
-	_2022_04_18_m.add("frame 160", "160");
+	_2022_04_18_m.add("{{$m_68.Title}}", "68");
+	_2022_04_18_m.add("{{$m_112.Title}}", "112");
+	_2022_04_18_m.add("{{$m_144.Title}}", "144");
+	_2022_04_18_m.add("{{$m_148.Title}}", "148");
+	_2022_04_18_m.add("{{$m_152.Title}}", "152", true);
+	_2022_04_18_m.add("{{$m_156.Title}}", "156");
+	_2022_04_18_m.add("{{$m_160.Title}}", "160");
 	_2022_04_18_m.addMiddleButton("{{.Date}}-m-controls", () => {
 		const frame = document.createElement('button');
 		frame.textContent = `Bit destruction frame`;
@@ -373,9 +385,9 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	});
 
 	const _2022_04_18_m_wa = switchMultipleVideos("{{.Date}}-m-wa");
-	_2022_04_18_m_wa.add("1) Not moving at all", "0", true);
-	_2022_04_18_m_wa.add("2) Move and brake", "1");
-	_2022_04_18_m_wa.add("3) Warp", "2");
+	_2022_04_18_m_wa.add("{{$m_wa_0.Title}}", "0", true);
+	_2022_04_18_m_wa.add("{{$m_wa_1.Title}}", "1");
+	_2022_04_18_m_wa.add("{{$m_wa_2.Title}}", "2");
 	_2022_04_18_m_wa.addMiddleButton("{{.Date}}-m-wa-controls", () => {
 		const frame = document.createElement('button');
 		frame.textContent = `Bit destruction frame`;

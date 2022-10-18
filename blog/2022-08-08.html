@@ -14,6 +14,14 @@
 {{$vid_p := (call .Video "TH01-YuugenMagan-pentagram-hitboxes" "Video of the pentagram hitboxes in the TH01 YuugenMagan fight") -}}
 {{$vid_邪 := (call .Video "TH01-YuugenMagan-邪-color" "Video of the 邪 color shifts in the TH01 YuugenMagan fight, together with debug output to demonstrate how the final colors are a result of stage palette overflows") -}}
 
+{{$vid_p0_h.SetTitle "Hard, original" -}}
+{{$vid_p0_l.SetTitle "Lunatic, original" -}}
+{{$vid_p0_u.SetTitle "Lunatic, fixed subpattern condition" -}}
+{{$vid_p5_e.SetTitle "Easy" -}}
+{{$vid_p5_n.SetTitle "Normal" -}}
+{{$vid_p5_h.SetTitle "Hard" -}}
+{{$vid_p5_l.SetTitle "Lunatic" -}}
+
 <p>
 	Whew, TH01's boss code just had to end with another beast of a boss, taking
 	way longer than it should have and leaving uncomfortably little time for the
@@ -399,15 +407,15 @@ if(rank == RANK_HARD) {
 	1000}} to be turned into a full push.</li>
 </ul><script>
 	const _2022_08_08_p0 = switchMultipleVideos("{{.Date}}-p0");
-	_2022_08_08_p0.add("Hard, original", "h");
-	_2022_08_08_p0.add("Lunatic, original", "l");
-	_2022_08_08_p0.add("Lunatic, with fixed subpattern condition", "u", true);
+	_2022_08_08_p0.add("{{$vid_p0_h.Title}}", "h");
+	_2022_08_08_p0.add("{{$vid_p0_l.Title}}", "l");
+	_2022_08_08_p0.add("{{$vid_p0_u.Title}}", "u", true);
 
 	const _2022_08_08_p5 = switchMultipleVideos("{{.Date}}-p5");
-	_2022_08_08_p5.add("Easy", "e");
-	_2022_08_08_p5.add("Normal", "n");
-	_2022_08_08_p5.add("Hard", "h");
-	_2022_08_08_p5.add("Lunatic", "l", true);
+	_2022_08_08_p5.add("{{$vid_p5_e.Title}}", "e");
+	_2022_08_08_p5.add("{{$vid_p5_n.Title}}", "n");
+	_2022_08_08_p5.add("{{$vid_p5_h.Title}}", "h");
+	_2022_08_08_p5.add("{{$vid_p5_l.Title}}", "l", true);
 
 	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
 	const _2022_08_08_y = document.getElementById("{{.Date}}-y");

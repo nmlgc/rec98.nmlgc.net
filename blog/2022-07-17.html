@@ -7,6 +7,11 @@
 {{$vid_hop_1 := (call .Video "TH01-Mima-hop-expected" "Video of TH01-Mima's hop pattern, with external palette resets removed to reveal the pattern's own palette changes") -}}
 {{$vid_green := (call .Video "TH01-Konngara-green" "Video demonstrating the simplest way of reproducing the green discoloration bug during the TH01 Konngara fight") -}}
 
+{{$vid_p0_0.SetTitle "Original version" -}}
+{{$vid_p0_1.SetTitle "Fixed version" -}}
+{{$vid_hop_0.SetTitle "Actual palette changes" -}}
+{{$vid_hop_1.SetTitle "Expected palette changes" -}}
+
 <p>
 	Oh look, it's another rather short and straightforward boss with a rather
 	small number of bugs and quirks. Yup, contrary to the character's
@@ -241,8 +246,8 @@
 </p><script>
 	const _2022_07_17_p0_buttons = document.getElementById("{{.Date}}-p0");
 	const _2022_07_17_p0 = switchMultipleVideos("{{.Date}}-p0");
-	_2022_07_17_p0.add("(Original version)", "0", true);
-	_2022_07_17_p0.add("(Fixed version)", "1");
+	_2022_07_17_p0.add("{{$vid_p0_0.Title}}", "0", true);
+	_2022_07_17_p0.add("{{$vid_p0_1.Title}}", "1");
 	_2022_07_17_p0.addMiddleButton("{{.Date}}-p0-controls", () => {
 		const frame = document.createElement('button');
 		frame.textContent = `First pellets spawned`;
@@ -256,6 +261,6 @@
 	const _2022_07_17_p4_h = document.getElementById("{{.Date}}-p4-h");
 
 	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
-	_2022_07_17_hop.add("(Actual palette changes)", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
-	_2022_07_17_hop.add("(Expected palette changes)", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
+	_2022_07_17_hop.add("{{$vid_hop_0.Title}}", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
+	_2022_07_17_hop.add("{{$vid_hop_1.Title}}", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
 </script>

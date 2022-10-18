@@ -2,6 +2,9 @@
 {{$vid_fx_1 := (call .Video "TH01-TOTLE-transition-full-FPS" "Video of TH01's transition to the TOTLE screen, recorded starting from a black background and without palette interpolation, at the original 28.2 FPS frame rate") -}}
 {{$vid_metrics := (call .Video "TH01-TOTLE-metrics" "Video of the per-metric digit animation in TH01's TOTLE screen, slowed down to one digit per frame and demonstrating the counting quirk on the second digit loop") -}}
 
+{{$vid_fx_0.SetTitle "Original, 32 pixels every 2 frames" -}}
+{{$vid_fx_1.SetTitle "Full speed, 16 pixels every frame" -}}
+
 <p>
 	Wow, it's been 3 days and I'm already back with an unexpectedly long post
 	about TH01's bonus point screens? 3 days used to take much longer in my
@@ -221,8 +224,8 @@
 	some more debug features on top.
 </p><script>
 	const _2022_08_11_fx = switchMultipleVideos("{{.Date}}-fx");
-	_2022_08_11_fx.add("Original, 32 pixels every 2 frames", "0", true);
-	_2022_08_11_fx.add("Full speed, 16 pixels every frame", "1");
+	_2022_08_11_fx.add("{{$vid_fx_0.Title}}", "0", true);
+	_2022_08_11_fx.add("{{$vid_fx_1.Title}}", "1");
 
 	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
 </script>

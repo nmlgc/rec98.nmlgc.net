@@ -10,6 +10,13 @@
 {{$pic_1 := (call .PostFileURL "TH01-Elis-GPF-debug.png") -}}
 {{$pic_2 := (call .PostFileURL "TH01-Mima-GPF-debug.png") -}}
 
+{{$vid_3_0.SetTitle "Original version" -}}
+{{$vid_3_1.SetTitle "Fixed version" -}}
+{{$vid_7_e.SetTitle "Easy" -}}
+{{$vid_7_n.SetTitle "Normal" -}}
+{{$vid_7_h.SetTitle "Hard" -}}
+{{$vid_7_l.SetTitle "Lunatic" -}}
+
 {{$mod := printf "%v%v" .DatePrefix "community-choice-fixes.zip" -}}
 
 <p>
@@ -382,10 +389,10 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 </p>
 <script>
 	const _2022_05_31_p7 = switchMultipleVideos("{{.Date}}-p7");
-	_2022_05_31_p7.add("Easy", "e");
-	_2022_05_31_p7.add("Normal", "n");
-	_2022_05_31_p7.add("Hard", "h");
-	_2022_05_31_p7.add("Lunatic", "l", true);
+	_2022_05_31_p7.add("{{$vid_7_e.Title}}", "e");
+	_2022_05_31_p7.add("{{$vid_7_n.Title}}", "n");
+	_2022_05_31_p7.add("{{$vid_7_h.Title}}", "h");
+	_2022_05_31_p7.add("{{$vid_7_l.Title}}", "l", true);
 
 	const _2022_05_31_p12 = document.getElementById("{{.Date}}-p12");
 </script>

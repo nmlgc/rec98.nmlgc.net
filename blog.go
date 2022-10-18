@@ -25,6 +25,7 @@ type BlogVideo struct {
 	Sources  []template.HTML
 	Date     string
 	ID       string
+	Title    template.HTML
 	Alt      string
 	Active   bool
 	NoLoop   bool
@@ -33,6 +34,11 @@ type BlogVideo struct {
 func (b *BlogVideo) SetID(id string) *BlogVideo {
 	b.ID = id
 	return b
+}
+
+func (b *BlogVideo) SetTitle(title template.HTML) string {
+	b.Title = title
+	return ""
 }
 
 func (b *BlogVideo) SetActive() *BlogVideo {

@@ -10,6 +10,14 @@
 
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
+	--header-gradient: linear-gradient(180deg,
+		white 0%,
+		var(--c-lightgray) 100%
+	);
+	--header-gradient-hover: linear-gradient(180deg,
+		white 0%,
+		rgb(256, 220, 220) 100%
+	);
 	--logo-width: 3.5em;
 	--logo-padding: 0.5em;
 	--estimate-tl: -1px;
@@ -289,7 +297,7 @@ body {
 header {
 	display: table;
 	height: var(--header-height);
-	background: linear-gradient(180deg, white 0%, var(--c-lightgray) 100%);
+	background: var(--header-gradient);
 	border: var(--header-border);
 }
 
@@ -329,7 +337,7 @@ header nav a {
 }
 
 header nav a:hover {
-	background: linear-gradient(180deg, white 0%, rgb(256, 220, 220) 100%);
+	background: var(--header-gradient-hover);
 }
 
 main {
@@ -351,7 +359,7 @@ footer {
 	width: 100%;
 	height: var(--footer-height);
 
-	background: linear-gradient(180deg, white 0%, var(--c-lightgray) 100%);
+	background: var(--header-gradient);
 	text-align: right;
 }
 

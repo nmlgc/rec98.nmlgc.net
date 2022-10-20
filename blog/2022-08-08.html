@@ -126,9 +126,8 @@ if(rank == RANK_HARD) {
 	}
 }</pre>
 </p><figure class="th01_playfield and_hp">
-	{{call .VideoPlayer ($vid_p0_h.SetID "p0-h") ($vid_p0_l.SetID "p0-l") ($vid_p0_u.SetID "p0-u").SetActive}}
+	{{call .VideoPlayer $vid_p0_h $vid_p0_l $vid_p0_u.SetActive}}
 	<figcaption>
-		<p id="{{.Date}}-p0"></p>
 		Featuring the weirdly extended hitbox for the eastern laser, as well as
 		an initial Reimu position that points out the disparity between
 		byte-aligned rendering and the internal coordinates one final time.
@@ -212,9 +211,8 @@ if(rank == RANK_HARD) {
 	full 360° though, we can see how ZUN might have originally planned the
 	pattern to end:
 </p><figure class="th01_playfield and_hp">
-	{{call .VideoPlayer ($vid_p5_e.SetID "p5-e") ($vid_p5_n.SetID "p5-n") ($vid_p5_h.SetID "p5-h") ($vid_p5_l.SetID "p5-l").SetActive}}
-	<figcaption>YuugenMagan's phase 5 patterns, on <span
-	id="{{.Date}}-p5"></span>, with the <a
+	{{call .VideoPlayer $vid_p5_e $vid_p5_n $vid_p5_h ($vid_p5_l.SetID "p5-l").SetActive}}
+	<figcaption>YuugenMagan's phase 5 patterns on every difficulty, with the <a
 		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seek(4.094);'
 	>second subpattern</a> extended to reveal the different pellet behavior
 	that remained in the final game code. In the original game, the eyes would
@@ -406,17 +404,6 @@ if(rank == RANK_HARD) {
 	5000}} contribution for this work, so it would take another {{HTML_Currency
 	1000}} to be turned into a full push.</li>
 </ul><script>
-	const _2022_08_08_p0 = switchMultipleVideos("{{.Date}}-p0");
-	_2022_08_08_p0.add("{{$vid_p0_h.Title}}", "h");
-	_2022_08_08_p0.add("{{$vid_p0_l.Title}}", "l");
-	_2022_08_08_p0.add("{{$vid_p0_u.Title}}", "u", true);
-
-	const _2022_08_08_p5 = switchMultipleVideos("{{.Date}}-p5");
-	_2022_08_08_p5.add("{{$vid_p5_e.Title}}", "e");
-	_2022_08_08_p5.add("{{$vid_p5_n.Title}}", "n");
-	_2022_08_08_p5.add("{{$vid_p5_h.Title}}", "h");
-	_2022_08_08_p5.add("{{$vid_p5_l.Title}}", "l", true);
-
 	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
 	const _2022_08_08_y = document.getElementById("{{.Date}}-y");
 </script>

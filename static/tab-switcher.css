@@ -1,0 +1,23 @@
+rec98-tab-switcher {
+	display: grid;
+	font-size: 75%;
+	grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+	width: 100%;
+}
+
+rec98-tab-switcher button {
+	background: var(--header-gradient) !important;
+	min-height: var(--header-height);
+	width: 100%;
+}
+
+rec98-tab-switcher button.active {
+	background: var(--c-dark) !important;
+	color: white !important;
+	font-weight: normal !important; /* avoid reflows */
+}
+
+rec98-tab-switcher button:hover:not(.active) {
+	color: var(--c-link-hover);
+	background: var(--header-gradient-hover);
+}

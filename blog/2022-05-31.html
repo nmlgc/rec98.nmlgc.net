@@ -136,11 +136,11 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	As for the fight itself, it doesn't take long until we reach its most janky
 	danmaku pattern, right in phase 1:
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid_3_0.SetID "p3-0").SetActive ($vid_3_1.SetID "p3-1")}}
-	<figcaption id="{{.Date}}-p3">
-		<script>switchVideoButton("{{.Date}}-p3");</script> The "pellets along
-		circle" pattern on Lunatic, in its original version and with fanfiction
-		fixes for everything that can potentially be interpreted as a bug.
+	{{call .VideoPlayer $vid_3_0.SetActive $vid_3_1}}
+	<figcaption>
+		The "pellets along circle" pattern on Lunatic, in its original version
+		and with fanfiction fixes for everything that can potentially be
+		interpreted as a bug.
 	</figcaption>
 </figure><ul>
 	<li>For whatever reason, the lower-right quarter of the circle isn't
@@ -196,10 +196,9 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	are not only always fired downwards, but also at the hardcoded narrow delta
 	angle, leaving plenty of room for the player to move out of the way:
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid_7_l.SetID "p7-l").SetActive ($vid_7_h.SetID "p7-h") ($vid_7_n.SetID "p7-n") ($vid_7_e.SetID "p7-e")}}
-	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on <span
-	id="{{.Date}}-p7"></span>. Which version do you think is the easiest
-	one?</figcaption>
+	{{call .VideoPlayer $vid_7_e $vid_7_n $vid_7_h $vid_7_l.SetActive}}
+	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on every
+	difficulty. Which version do you think is the easiest one?</figcaption>
 </figure><p>
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
@@ -388,11 +387,5 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	still manage to completely decompile this game by that point…
 </p>
 <script>
-	const _2022_05_31_p7 = switchMultipleVideos("{{.Date}}-p7");
-	_2022_05_31_p7.add("{{$vid_7_e.Title}}", "e");
-	_2022_05_31_p7.add("{{$vid_7_n.Title}}", "n");
-	_2022_05_31_p7.add("{{$vid_7_h.Title}}", "h");
-	_2022_05_31_p7.add("{{$vid_7_l.Title}}", "l", true);
-
 	const _2022_05_31_p12 = document.getElementById("{{.Date}}-p12");
 </script>

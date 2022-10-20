@@ -57,6 +57,9 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 	if b.ID != "" {
 		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, b.ID))
 	}
+	if b.Title != "" {
+		ret += template.HTML(fmt.Sprintf(` data-title="%s"`, b.Title))
+	}
 	if !b.NoLoop {
 		ret += ` loop`
 	}

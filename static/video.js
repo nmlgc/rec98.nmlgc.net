@@ -56,6 +56,10 @@ function timelineWidthAt(frame, frameCount) {
 class ReC98Video extends HTMLElement {
 	// Members
 	// -------
+
+	/** @type {ReC98TabSwitcher | null} */
+	eTabSwitcher = null;
+
 	eControls = document.createElement("div");
 	ePlay = document.createElement("button");
 	eTimeSecondsIcon = document.createElement("span");
@@ -79,6 +83,7 @@ class ReC98Video extends HTMLElement {
 	frameCount = 0;
 	fps = 1;
 	scrubPossible = false;
+	switchingVideos = false;
 
 	/** @type {number | null} */
 	timeIntervalID = null;
@@ -291,9 +296,15 @@ class ReC98Video extends HTMLElement {
 
 	/**
 	 * @param {number} index
+	 * @returns {boolean} `true` if the playing video was changed
 	 */
 	showVideo(index) {
+		const videoPrev = this.videoShown;
 		const videoNew = this.videos[index];
+		if((videoPrev === videoNew) || this.switchingVideos) {
+			return false;
+		}
+
 		const seekedFunc = (() => this.renderTimeFromVideo());
 
 		this.fps = attributeAsNumber(videoNew, "data-fps");
@@ -305,7 +316,6 @@ class ReC98Video extends HTMLElement {
 			videoNew.oncanplay = null;
 		})
 		videoNew.onclick = ((event) => this.toggle(event));
-		videoNew.onseeked = seekedFunc;
 		videoNew.onplay = (() => this.play());
 		videoNew.onpause = (() => {
 			this.pause();
@@ -331,6 +341,41 @@ class ReC98Video extends HTMLElement {
 			);
 			videoNew.currentTime = secondsFrom(frame, this.fps);
 		});
+
+		if(videoPrev && this.eTabSwitcher) {
+			// If a user switches videos fast enough, they could easily hit an
+			// ongoing seek where an otherwise playing video might still be
+			// paused. This would cause the new video to stay paused when it
+			// shouldn't be. Blocking a switch in this case works well enough,
+			// and probably won't be noticeable at the switching speeds where
+			// this becomes an issue.
+			this.switchingVideos = true;
+
+			videoNew.onseeked = (() => {
+				videoNew.classList.add("active");
+				seekedFunc();
+				videoPrev.classList.remove("active");
+				if(!videoPrev.paused) {
+					videoNew.play();
+					videoPrev.pause();
+				}
+				this.switchingVideos = false;
+				videoNew.onseeked = seekedFunc;
+			});
+		} else {
+			videoNew.onseeked = seekedFunc;
+		}
+
+		if(videoPrev) {
+			// Stop any further events from mutating [this.videoShown] based on
+			// changes to the previous video.
+			videoPrev.onplay = null;
+			videoPrev.onpause = null;
+			videoPrev.onseeked = null;
+
+			this.seekTo(videoPrev.currentTime);
+		}
+		return true;
 	}
 
 	/**
@@ -361,6 +406,9 @@ class ReC98Video extends HTMLElement {
 
 		this.onkeydown = ((event) => {
 			if(document.activeElement !== this) {
+				return;
+			}
+			if(this.eTabSwitcher?.keydownHandler(event)) {
 				return;
 			}
 			switch(virtualKey(event)) {
@@ -418,6 +466,15 @@ class ReC98Video extends HTMLElement {
 		this.videos = this.getElementsByTagName("video");
 		let lastChild = null;
 		let requested = null;
+
+		if(this.videos.length >= 2) {
+			this.eTabSwitcher = new ReC98TabSwitcher((i) => {
+				this.focus();
+				return this.showVideo(i);
+			});
+			this.prepend(this.eTabSwitcher);
+		}
+
 		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
 			video.onclick = ((event) => this.toggle(event));
@@ -430,6 +487,9 @@ class ReC98Video extends HTMLElement {
 			if(video.classList.contains("active")) {
 				requested = i;
 			}
+			this.eTabSwitcher?.add(
+				attributeAsString(video, "data-title"), (i === requested)
+			);
 			lastChild = i;
 		}
 		if(lastChild === null) {

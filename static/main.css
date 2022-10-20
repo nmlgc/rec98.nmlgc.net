@@ -91,10 +91,6 @@ aside .icon-cell {
 	font-size: 150%;
 }
 
-.active {
-	font-weight: bold!important;
-}
-
 figure figure {
 	margin: 0; /* controlled by side_by_side Flexbox gap instead */
 }
@@ -105,6 +101,7 @@ figure {
 	margin-right: auto;
 	display: grid;
 	max-width: 100%;
+	grid-template-rows: min-content;
 }
 
 /* Applying this to .multilayer would reduce them to a width of 0 pixels, for
@@ -876,6 +873,10 @@ article h5 {
 	font-size: 80%;
 	background-color: #f8f8ff;
 	border: 1px solid var(--c-link);
+}
+
+.tag.active {
+	font-weight: bold;
 }
 
 .tag * {

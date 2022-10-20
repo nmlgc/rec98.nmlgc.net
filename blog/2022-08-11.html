@@ -102,7 +102,7 @@
 	must have done it on purpose. Guess he really wanted to go for that 📽
 	<i>cinematic 30 FPS look </i> 📽 here… {{HTML_Emoji "zunpet"}}
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid_fx_0.SetID "fx-0").SetActive ($vid_fx_1.SetID "fx-1")}}
+	{{call .VideoPlayer $vid_fx_0.SetActive $vid_fx_1}}
 	<figcaption>
 		<p id="{{.Date}}-fx"></p>
 		Removing the palette interpolation and transitioning from a black screen
@@ -223,9 +223,5 @@
 	functions in <code>REIIDEN.EXE</code> that tie everything together and add
 	some more debug features on top.
 </p><script>
-	const _2022_08_11_fx = switchMultipleVideos("{{.Date}}-fx");
-	_2022_08_11_fx.add("{{$vid_fx_0.Title}}", "0", true);
-	_2022_08_11_fx.add("{{$vid_fx_1.Title}}", "1");
-
 	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
 </script>

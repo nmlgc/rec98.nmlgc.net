@@ -178,9 +178,8 @@
 	distributed across the four levels, with the simultaneous spinning circle
 	pellets adding a constant aimed component to every difficulty level.
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid_p4_e.SetID "p4-e") ($vid_p4_n.SetID "p4-n") ($vid_p4_h.SetID "p4-h") ($vid_p4_l.SetID "p4-l").SetActive}}
-	<figcaption>Kikuri's phase 4 patterns, on <span
-	id="{{.Date}}-p4"></span>.</figcaption>
+	{{call .VideoPlayer $vid_p4_e $vid_p4_n $vid_p4_h $vid_p4_l.SetActive}}
+	<figcaption>Kikuri's phase 4 patterns, on every difficulty.</figcaption>
 </figure>
 </p><hr /><p>
 	That brings us to 5 fully decompiled PC-98 Touhou bosses, with 26 remaining…
@@ -335,12 +334,6 @@
 	only is the quickest boss to defeat in-game, but also comes with the least
 	amount of code. See you very soon!
 </p><script>
-	const _2022_06_17_p4 = switchMultipleVideos("{{.Date}}-p4");
-	_2022_06_17_p4.add("{{$vid_p4_e.Title}}", "e");
-	_2022_06_17_p4.add("{{$vid_p4_n.Title}}", "n");
-	_2022_06_17_p4.add("{{$vid_p4_h.Title}}", "h");
-	_2022_06_17_p4.add("{{$vid_p4_l.Title}}", "l", true);
-
 	const _2022_06_17_be2 = switchMultipleVideos("{{.Date}}-be2");
 	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
 		"{{$vid_be2_0.Title}}", "0", true, `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`

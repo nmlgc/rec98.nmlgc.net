@@ -123,9 +123,8 @@
 	thus never rendered again.<br />
 	The intended animation is easily restored though:
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid1.SetID "pattern3-0").SetActive ($vid2.SetID "pattern3-1")}}
-	<figcaption id="{{.Date}}-pattern3">
-		<script>switchVideoButton("{{.Date}}-pattern3");</script>
+	{{call .VideoPlayer $vid1.SetActive $vid2}}
+	<figcaption>
 		Sariel's third pattern, and the first to spawn birds, in its original
 		and fixed versions. Note that I somewhat fixed the bird hatch animation
 		as well: ZUN's code never unblits any frame of animation there, and
@@ -243,9 +242,8 @@
 	hiding an entire animation" category, causing all of
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid3.SetID "leafsplash-0").SetActive ($vid4.SetID "leafsplash-1")}}
-	<figcaption id="{{.Date}}-leafsplash">
-		<script>switchVideoButton("{{.Date}}-leafsplash");</script>
+	{{call .VideoPlayer $vid3.SetActive $vid4}}
+	<figcaption>
 		The "swaying leaves" pattern. ZUN intended a splash animation to be
 		shown once each leaf "spark" reaches the top of the playfield, which is
 		never displayed in the original game.

@@ -130,13 +130,12 @@
 	bullets…</li>
 	<li>Boom, division by zero.</li>
 </ul><figure class="fullres">
-	{{call .VideoPlayer (($k_4.SetID "k-4").SetActive).SetNoLoop ($k_16.SetID "k-16")}}
+	{{call .VideoPlayer ($k_4.SetActive).SetNoLoop $k_16}}
 	<figcaption>
-		<span id="{{.Date}}-k"></span><br />
-		<p>The pattern that causes the crash in Kurumi's fight. Also
+		The pattern that causes the crash in Kurumi's fight. Also
 		demonstrates how the number of bullets in a ring is always halved on
 		Easy Mode after the rank-based tuning, leading to just a 3-ring on
-		<code>playperf = 16</code>.</p>
+		<code>playperf = 16</code>.
 	</figcaption>
 </figure><p>
 	So, what should the workaround look like? Obviously, we want to modify
@@ -162,8 +161,7 @@
 	closest to the behavior of the original games, and perhaps the only one to
 	be accepted in Serious, High-Level Play™.</li>
 </ol><figure class="singleplayer_playfield">
-	{{call .VideoPlayer ($k_wa_0.SetID "k-wa-0").SetActive ($k_wa_1.SetID "k-wa-1") ($k_wa_2.SetID "k-wa-2") ($k_wa_3.SetID "k-wa-3")}}
-	<figcaption id="{{.Date}}-k-wa"></figcaption>
+	{{call .VideoPlayer $k_wa_0.SetActive $k_wa_1 $k_wa_2 $k_wa_3}}
 </figure><p>
 	As I was writing this post, it felt increasingly wrong for me to make this
 	decision. So I once again went to Twitter, where <a
@@ -248,7 +246,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 		<p id="{{.Date}}-m-controls"></p>
 		One of the two patterns in TH04's Stage 4 Marisa boss fight that feature
 		frame number-dependent point-reflected movement. The bits were hacked to
-		self-destruct on <span id="{{.Date}}-m"></span>.
+		self-destruct on the respective frame.
 	</figcaption>
 </figure><p>
 	tl;dr: "Game crashes if last bit destroyed within 4-frame window near end of
@@ -277,11 +275,8 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<li>Triggering an immediate Game O– hell no, this is the Stage 4 boss,
 	people <i>already</i> hate losing runs to this bug!</li>
 </ol><figure class="singleplayer_playfield">
-	{{call .VideoPlayer ($m_wa_0.SetID "m-wa-0").SetActive ($m_wa_1.SetID "m-wa-1") ($m_wa_2.SetID "m-wa-2")}}
-	<figcaption>
-		<p id="{{.Date}}-m-wa-controls"></p>
-		<span id="{{.Date}}-m-wa"></span>
-	</figcaption>
+	{{call .VideoPlayer $m_wa_0.SetActive $m_wa_1 $m_wa_2}}
+	<figcaption id="{{.Date}}-m-wa-controls"></figcaption>
 </figure><p>
 	Asking Twitter worked great for the Kurumi workaround, so let's do it again!
 	Gotta attach a screenshot of an earlier draft of this blog post though,
@@ -357,24 +352,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 <script>
 	const _2022_04_18_m_fps = {{$m_68.Metadata.FPS}};
 
-	const _2022_04_18_k = switchMultipleVideos("{{.Date}}-k");
-	_2022_04_18_k.add("{{$k_4.Title}}", "4", true);
-	_2022_04_18_k.add("{{$k_16.Title}}", "16");
-
-	const _2022_04_18_k_wa = switchMultipleVideos("{{.Date}}-k-wa");
-	_2022_04_18_k_wa.add("{{$k_wa_0.Title}}", "0", true);
-	_2022_04_18_k_wa.add("{{$k_wa_1.Title}}", "1");
-	_2022_04_18_k_wa.add("{{$k_wa_2.Title}}", "2");
-	_2022_04_18_k_wa.add("{{$k_wa_3.Title}}", "3");
-
 	const _2022_04_18_m = switchMultipleVideos("{{.Date}}-m");
-	_2022_04_18_m.add("{{$m_68.Title}}", "68");
-	_2022_04_18_m.add("{{$m_112.Title}}", "112");
-	_2022_04_18_m.add("{{$m_144.Title}}", "144");
-	_2022_04_18_m.add("{{$m_148.Title}}", "148");
-	_2022_04_18_m.add("{{$m_152.Title}}", "152", true);
-	_2022_04_18_m.add("{{$m_156.Title}}", "156");
-	_2022_04_18_m.add("{{$m_160.Title}}", "160");
 	_2022_04_18_m.addMiddleButton("{{.Date}}-m-controls", () => {
 		const frame = document.createElement('button');
 		frame.textContent = `Bit destruction frame`;
@@ -385,9 +363,6 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	});
 
 	const _2022_04_18_m_wa = switchMultipleVideos("{{.Date}}-m-wa");
-	_2022_04_18_m_wa.add("{{$m_wa_0.Title}}", "0", true);
-	_2022_04_18_m_wa.add("{{$m_wa_1.Title}}", "1");
-	_2022_04_18_m_wa.add("{{$m_wa_2.Title}}", "2");
 	_2022_04_18_m_wa.addMiddleButton("{{.Date}}-m-wa-controls", () => {
 		const frame = document.createElement('button');
 		frame.textContent = `Bit destruction frame`;

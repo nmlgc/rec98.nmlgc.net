@@ -77,33 +77,6 @@ function externalEnable(hostname) {
 // Multi-layer galleries
 // ---------------------
 /**
- * @param {HTMLButtonElement} button
- * @param {HTMLVideoElement[]} vids
- * @param {0 | 1} subvid_on_click
- */
-function switchVideoButtonSet(button, vids, subvid_on_click) {
-	button.textContent = `(Switch to ${
-		subvid_on_click === 1 ? "fixed version" : "original"
-	})`;
-	button.onclick = () => {
-		switchVideo(vids[1 - subvid_on_click], vids[subvid_on_click]);
-		switchVideoButtonSet(button, vids, (1 - subvid_on_click));
-	};
-}
-
-/**
- * @param {string} id DOM element that receives the button
- */
-function switchVideoButton(id) {
-	const vids = [
-		document.getElementById(`${id}-0`), document.getElementById(`${id}-1`),
-	];
-	const button = document.createElement('button');
-	switchVideoButtonSet(button, vids, 1);
-	document.getElementById(id).prepend(button);
-}
-
-/**
  * @param {HTMLVideoElement} vidOld
  * @param {HTMLVideoElement} vidNew
  */
@@ -224,7 +197,7 @@ window.customElements.define("rec98-parent-init", ReC98ParentInit);
 /**
  * Translates equivalent KeyboardEvents into a virtual key.
  *
- * @typedef {' ' | '←' | '→' | null} VirtualKey
+ * @typedef {' ' | '←' | '→' | '↑' | '↓' | null} VirtualKey
  * @param {KeyboardEvent} event
  * @returns {VirtualKey}
  */
@@ -240,6 +213,14 @@ function virtualKey(event) {
 	case "KeyD":
 	case "KeyL":
 		return '→';
+	case "ArrowUp":
+	case "KeyW":
+	case "KeyK":
+		return '↑';
+	case "ArrowDown":
+	case "KeyS":
+	case "KeyJ":
+		return '↓';
 	}
 	return null;
 }

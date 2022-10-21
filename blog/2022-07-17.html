@@ -12,6 +12,13 @@
 {{$vid_hop_0.SetTitle "Actual palette changes" -}}
 {{$vid_hop_1.SetTitle "Expected palette changes" -}}
 
+{{$vid_p0_0.AddMarker 109 "First pellets spawned" -}}
+{{$vid_p0_1.AddMarker 109 "First pellets spawned" -}}
+{{$vid_p4_h.AddMarker 296 "🌠 Meteor" -}}
+{{$vid_p4_h.AddMarker 297 "🚫 Cast" -}}
+{{$vid_hop_0.AddMarker 144 "Last hop" -}}
+{{$vid_hop_1.AddMarker 144 "Last hop" -}}
+
 <p>
 	Oh look, it's another rather short and straightforward boss with a rather
 	small number of bugs and quirks. Yup, contrary to the character's
@@ -73,14 +80,8 @@
 	<i>are</i> spawned exactly in the corners of the square, it's just that it's
 	the square from 8 frames ago. {{HTML_Emoji "tannedcirno"}}
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_p0_0.SetID "p0-0").SetActive ($vid_p0_1.SetID "p0-1")}}
-	<figcaption>
-		<p>
-			<div id="{{.Date}}-p0-controls"></div>
-			<div id="{{.Date}}-p0"></div>
-		</p>
-		Mima's first pattern on Normal difficulty.
-	</figcaption>
+	{{call .VideoPlayer $vid_p0_0.SetActive $vid_p0_1}}
+	<figcaption>Mima's first pattern on Normal difficulty.</figcaption>
 </figure><p>
 	Once ZUN reached the final laser pattern though, he must have noticed that
 	there's something wrong there… or maybe he just <i>wanted</i> to fire those
@@ -107,18 +108,15 @@
 	{{Blog_PostLink "2022-06-17" "Kikuri, where we've seen the exact same issue with the teardrop ripple sprites"}}.
 	The conclusions are identical as well.
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_p4_h.SetID "p4-h")}}
+	{{call .VideoPlayer $vid_p4_h}}
 	<figcaption>
 		Mima's flame pillar pattern. This video was recorded on a particularly
 		unlucky seed that resulted in great disparities between a pillar's
 		internal X coordinate and its byte-aligned on-screen appearance, leading
 		to lots of right-shifted hitboxes.<br />
-		Also note how the change from the <a href="#{{.Date}}-p4-h"
-		onclick='_2022_07_17_p4_h.pause(); _2022_07_17_p4_h.currentTime =
-		5.246'>meteor animation</a> to the <a href="#{{.Date}}-p4-h"
-		onclick='_2022_07_17_p4_h.pause(); _2022_07_17_p4_h.currentTime =
-		5.264'>three-arm 🚫 casting sprite</a> doesn't unblit the meteor, and
-		leaves that job to any sprite that happens to fly over those pixels.
+		Also note how the change from the meteor animation to the three-arm 🚫
+		casting sprite</a> doesn't unblit the meteor, and leaves that job to
+		any sprite that happens to fly over those pixels.
 	</figcaption>
 </figure><p>
 	However, I'd say that the saddest part about this pattern is how choppy it
@@ -144,13 +142,11 @@
 	The final piece of weirdness in this fight can be found in phase 1's hop
 	pattern, and specifically its palette manipulation. Just from looking at the
 	pattern code itself, each of the 4 hops is supposed to darken the hardware
-	palette by subtracting <code>#444</code> from every color. <a
-	id="{{.Date}}-hop-last" href='#{{.Date}}-hop-last'
-	onclick='_2022_07_17_hop.seek(2.552);'>At the last hop</a>, every color
-	should have therefore been reduced to a pitch-black <code>#000</code>,
-	leaving the player completely blind to the movement of the chasing pellets
-	for 30 frames and making the pattern quite ghostly indeed. However, that's
-	not what we see in the actual game:
+	palette by subtracting <code>#444</code> from every color. At the last hop,
+	every color should have therefore been reduced to a pitch-black
+	<code>#000</code>, leaving the player completely blind to the movement of
+	the chasing pellets for 30 frames and making the pattern quite ghostly
+	indeed. However, that's not what we see in the actual game:
 </p><figure class="th01_playfield">
 	{{call .VideoPlayer ($vid_hop_0.SetID "hop-0").SetActive ($vid_hop_1.SetID "hop-1")}}
 	<figcaption>
@@ -244,20 +240,6 @@
 	<code>REIIDEN.EXE</code> and the single biggest function in all of PC-98
 	Touhou, let's go!
 </p><script>
-	const _2022_07_17_p0_buttons = document.getElementById("{{.Date}}-p0");
-	const _2022_07_17_p0 = switchMultipleVideos("{{.Date}}-p0");
-	_2022_07_17_p0.addMiddleButton("{{.Date}}-p0-controls", () => {
-		const frame = document.createElement('button');
-		frame.textContent = `First pellets spawned`;
-		frame.onclick = () => {
-			_2022_07_17_p0_buttons.querySelector("button:not(.active)").click();
-			_2022_07_17_p0.seek(1.932);
-		};
-		return frame;
-	});
-
-	const _2022_07_17_p4_h = document.getElementById("{{.Date}}-p4-h");
-
 	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
 	_2022_07_17_hop.add("{{$vid_hop_0.Title}}", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
 	_2022_07_17_hop.add("{{$vid_hop_1.Title}}", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");

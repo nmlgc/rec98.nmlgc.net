@@ -17,6 +17,11 @@
 {{$vid_b3_0.SetTitle "Original version"}}
 {{$vid_b3_1.SetTitle "Y position assignments removed"}}
 
+{{$vid_b2_1.AddMarker 256 "Finite bounce between two orbs" -}}
+{{$vid_b3_1.AddMarker 60 "Final force" -}}
+{{$vid_p.AddMarker 56 "Reimu getting hit" -}}
+{{$vid_vbar.AddMarker 855 "Two collisions within the same frame" -}}
+
 <p>
 	Let's start right with the milestones:
 </p><ul>
@@ -234,9 +239,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><hr /><p>
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
-</p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_vbar.SetID "vbar")}}
-</figure><p>
+</p><figure class="th01_playfield">{{call .VideoPlayer $vid_vbar}}</figure><p>
 	At first, that workaround doesn't seem to make a difference here. As we
 	expect, the frame numbers now tell us that only one of the two bumper bars
 	in a row activates, but we couldn't have told otherwise as the number of
@@ -246,19 +249,19 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	collision testing. As soon as <i>any</i> bumper bar completed its 7
 	collision delay frames, it resets the aforementioned flag, which already
 	reactivates collision handling for any remaining vertical bumper bars during
-	the same frame. Look out for <a href='#{{.Date}}-vbar'
-	onclick='_2022_07_10_vbar.currentTime = 2.836;'>frames with both a <span
-	style="color: green;">7</span> and a <span style="color:
-	green;">1</span></a>: The <span style="color: green;">7</span> will always
-	appear <i>before</i> the <span style="color: green;">1</span> in the
-	row-major order. Whenever this happens, the current oscillation period is
-	cut down from 7 to 6 frames – and because collision testing runs from top to
-	bottom, this will always happen during the falling part. Depending on the Y
-	velocity, the rising part may also be cut down to 6 frames from time to
-	time, but that one at least has a <i>chance</i> to last for the full 7
-	frames. This difference adds those crucial extra frames of upward movement,
-	which add up to send the Orb to the top. Without the flag, you'd always see
-	the Orb oscillating between a fixed range of the bar column.<br />
+	the same frame. Look out for frames with both a <span
+	style="color: green;">7</span> and a <span
+	style="color:green;">1</span>, like the one marked in the video above:
+	The <span style="color: green;">7</span> will always appear <i>before</i>
+	the <span style="color: green;">1</span> in the row-major order. Whenever
+	this happens, the current oscillation period is cut down from 7 to 6
+	frames – and because collision testing runs from top to bottom, this will
+	always happen during the falling part. Depending on the Y velocity, the
+	rising part may also be cut down to 6 frames from time to time, but that one
+	at least has a <i>chance</i> to last for the full 7 frames. This difference
+	adds those crucial extra frames of upward movement, which add up to send the
+	Orb to the top. Without the flag, you'd always see the Orb oscillating
+	between a fixed range of the bar column.<br />
 	Finally, it's the "top of playfield" force that gradually slows down the Orb
 	and makes sure it ultimately only moves at sub-pixel velocities, which have
 	no visible effect. Because
@@ -310,10 +313,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	This makes very little sense no matter how you look at it. The Orb doesn't
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
-</p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_p.SetID "p")}}
-	<figcaption id="{{.Date}}-p-controls"></figcaption>
-</figure><p>
+</p><figure class="th01_playfield">{{call .VideoPlayer $vid_p}}</figure><p>
 	And that's it! At least the turrets don't have anything notable to say about
 	them {{Blog_PostLink "2020-11-30" "that I haven't said before"}}.
 </p><hr /><p>
@@ -341,7 +341,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	const _2022_07_10_b2_0 = _2022_07_10_b2.add(
 		"{{$vid_b2_0.Title}}", "0", true, "One of at least three infinite bumper loop constellations within just this 10×5-tile section of TH01's Stage 18 on the <span lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal pixels between both hitboxes, the Orb would have to travel an absolute Y distance of at least 16 vertical pixels within <code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the other bumper's hitbox. If the initial bounce reduces the Orb's Y velocity far enough for it to not manage that distance the first time, it will never reach the necessary speed again. In this loop, the bounce-off force even stabilizes, though this doesn't have to happen.");
 	const _2022_07_10_b2_1 = _2022_07_10_b2.add(
-		"{{$vid_b2_1.Title}}", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still <a href='#{{.Date}}-b2-1' onclick='_2022_07_10_b2_1.currentTime = 4.413;'>bounces back and forth between two bumpers for a while</a>, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end."
+		"{{$vid_b2_1.Title}}", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still bounces back and forth between two bumpers for a while, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end."
 	);
 
 	const _2022_07_10_b3 = switchMultipleVideos("{{.Date}}-b3");
@@ -349,16 +349,6 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 		"{{$vid_b3_0.Title}}", "0", true, "An infinite loop across three bumpers, made possible by the edge of the playfield and bumper bars on opposite sides, an unchanged horizontal direction, and the Y assignments neatly placing the Orb on either the top or bottom side of a bumper. The alternating sign of the force further ensures that the Orb will travel upwards half the time, canceling out gravity during the short time between two hitboxes."
 	);
 	const _2022_07_10_b3_1 = _2022_07_10_b3.add(
-		"{{$vid_b3_1.Title}}", "1", false, "With the unchanged horizontal direction and the Y assignments removed, nothing keeps an Orb at ±8 pixels per frame from flying into/over a bumper. The collision force pushes the Orb slightly, but not enough to truly matter. The <a href='#{{.Date}}-b3-1' onclick='_2022_07_10_b3_1.pause(); _2022_07_10_b3_1.currentTime = 1.081;'>final force sends the Orb on a significant downward trajectory</a> beyond the next bumper's hitbox, breaking the original loop."
+		"{{$vid_b3_1.Title}}", "1", false, "With the unchanged horizontal direction and the Y assignments removed, nothing keeps an Orb at ±8 pixels per frame from flying into/over a bumper. The collision force pushes the Orb slightly, but not enough to truly matter. The final force sends the Orb on a significant downward trajectory beyond the next bumper's hitbox, breaking the original loop."
 	);
-
-	const _2022_07_10_vbar = document.getElementById("{{.Date}}-vbar");
-	const _2022_07_10_p = document.getElementById("{{.Date}}-p");
-
-	videoAddMiddleButton("{{.Date}}-p-controls", () => {
-		const frame = document.createElement('button');
-		frame.textContent = `Reimu getting hit`;
-		frame.onclick = () => _2022_07_10_p.currentTime = 2.8;
-		return frame;
-	});
 </script>

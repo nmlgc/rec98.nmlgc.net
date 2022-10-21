@@ -137,35 +137,13 @@ function switchMultiple(id, onSwitch = (elmOld, elmNew) => {}) {
 }
 
 /**
- *
- * @param {HTMLVideoElement} vid
- * @param {number} time
- */
-function videoSeekAndStop(vid, time) {
-	vid.pause();
-	vid.currentTime = time;
-}
-
-/**
-  * @param {string} containerID
-  * @param {function} middleButton
-  */
-function videoAddMiddleButton(containerID, middleButton) {
-	const container = document.getElementById(containerID);
-	container.appendChild(middleButton());
-}
-
-/**
  * @param {string} id DOM element that receives the switch bar
  * @param {function} onSwitch Function called when clicking a switch button
  */
 function switchMultipleVideos(id, onSwitch = switchVideo) {
 	const ret = switchMultiple(id, onSwitch);
 
-	const vidFunc = () => ret.getActive()[1];
-
 	return Object.assign({
-		seek: (time) => vidFunc().currentTime = time,
 		addMiddleButton: (containerID, middleButton) => {
 			videoAddMiddleButton(containerID, middleButton);
 		}

@@ -22,6 +22,29 @@
 {{$vid_p5_h.SetTitle "Hard" -}}
 {{$vid_p5_l.SetTitle "Lunatic" -}}
 
+{{$vid_p5_e.AddMarker 231 "Second subpattern" -}}
+{{$vid_p5_n.AddMarker 231 "Second subpattern" -}}
+{{$vid_p5_h.AddMarker 231 "Second subpattern" -}}
+{{$vid_p5_l.AddMarker 231 "Second subpattern" -}}
+{{$vid_p5_e.AddMarker 347 "Original end" -}}
+{{$vid_p5_n.AddMarker 347 "Original end" -}}
+{{$vid_p5_h.AddMarker 347 "Original end" -}}
+{{$vid_p5_l.AddMarker 347 "Original end" -}}
+
+{{$vid_blit.AddMarker   5 "1" -}}
+{{$vid_blit.AddMarker   9 "2" -}}
+{{$vid_blit.AddMarker  38 "3" -}}
+{{$vid_blit.AddMarker 248 "4" -}}
+{{$vid_blit.AddMarker 332 "5" -}}
+{{$vid_blit.AddMarker 400 "6" -}}
+
+{{$vid_邪.AddMarker   1 "2" -}}
+{{$vid_邪.AddMarker  71 "4" -}}
+{{$vid_邪.AddMarker 141 "6" -}}
+{{$vid_邪.AddMarker 211 "8" -}}
+{{$vid_邪.AddMarker 281 "10" -}}
+{{$vid_邪.AddMarker 421 "12, #2" -}}
+
 <p>
 	Whew, TH01's boss code just had to end with another beast of a boss, taking
 	way longer than it should have and leaving uncomfortably little time for the
@@ -211,14 +234,11 @@ if(rank == RANK_HARD) {
 	full 360° though, we can see how ZUN might have originally planned the
 	pattern to end:
 </p><figure class="th01_playfield and_hp">
-	{{call .VideoPlayer $vid_p5_e $vid_p5_n $vid_p5_h ($vid_p5_l.SetID "p5-l").SetActive}}
-	<figcaption>YuugenMagan's phase 5 patterns on every difficulty, with the <a
-		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seek(4.094);'
-	>second subpattern</a> extended to reveal the different pellet behavior
-	that remained in the final game code. In the original game, the eyes would
-	stop spawning bullets on <a
-		href='#{{.Date}}-p5-l' onclick='_2022_08_08_p5.seekAndStop(6.150);'
-	>this frame</a>.</figcaption>
+	{{call .VideoPlayer $vid_p5_e $vid_p5_n $vid_p5_h $vid_p5_l.SetActive}}
+	<figcaption>YuugenMagan's phase 5 patterns on every difficulty, with the
+	second subpattern extended to reveal the different pellet behavior that
+	remained in the final game code. In the original game, the eyes would stop
+	spawning bullets on the marked frame.</figcaption>
 </figure><hr /><p>
 	If we also disregard everything else about YuugenMagan that fits the
 	upcoming definition of <i>quirk</i>, we're left with 6 "fixable" bugs, all
@@ -227,49 +247,37 @@ if(rank == RANK_HARD) {
 	fight, from the end of phase 9 up until the pentagram starts spinning in
 	phase 13:
 </p><figure class="th01_playfield and_hp">
-	{{call .VideoPlayer ($vid_blit.SetID "blit")}}
+	{{call .VideoPlayer $vid_blit}}
 </figure><ol>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'videoSeekAndStop(_2022_08_08_blit, 0.089);'
-	>General flickering whenever any sprite overlaps an eye</a>. This is caused
+	<li>General flickering whenever any sprite overlaps an eye. This is caused
 	by only reblitting each eye every 3 frames, and is an issue all throughout
 	the fight. You might have already spotted it in the videos above.</li>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'videoSeekAndStop(_2022_08_08_blit, 0.160);'
-	>Each of the two lasers is unblitted and blitted individually</a> instead of
+	<li>Each of the two lasers is unblitted and blitted individually instead of
 	each operation being done for both lasers together. Remember how
 	{{Blog_PostLink "2022-05-31" "ZUN unblits 32 horizontal pixels for every row of a line regardless of its width"}}?
 	That's why the top part of the left, right-moving laser is never visible,
 	because it's blitted before the other laser is unblitted.</li>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'_2022_08_08_blit.currentTime = 0.673; _2022_08_08_blit.play();'
-	>ZUN forgot to unblit the lasers when phase 9 ends.</a> This footage was
+	<li>ZUN forgot to unblit the lasers when phase 9 ends. This footage was
 	recorded by pressing ↵&nbsp;Return in debug mode, and it's probably
 	impossible to achieve this during actual gameplay without TAS techniques.
 	You would have to deal the required 6 points of damage within 491 frames,
 	with the eye being invincible during 240 of them. Simply shooting up an Orb
 	with a horizontal velocity of 0 would also only work a single time, as boss
 	entities always repel the Orb with a horizontal velocity of ±4.</li>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'_2022_08_08_blit.currentTime = 4.396;'
-	>The shrinking pentagram is unblitted after the eyes were blitted</a>,
+	<li>The shrinking pentagram is unblitted after the eyes were blitted,
 	adding another guaranteed frame of flicker on top of the ones in 1). Like in
 	2), the blockiness of the holes is another result of unblitting 32 pixels
 	per row at a time.</li>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'videoSeekAndStop(_2022_08_08_blit, 5.884);'
-	>Another missing unblitting call in a phase transition</a>, as the pentagram
+	<li>Another missing unblitting call in a phase transition, as the pentagram
 	switches from its not quite correctly interpolated shrunk form to a regular
 	star polygon with a radius of 64 pixels. Indirectly caused by the massively
 	bloated coordinate calculation for the shrink animation being done
 	separately for the unblitting and blitting calls. Instead of, y'know, just
 	doing it once and storing the result in variables that can later be
 	reused.</li>
-	<li><a href='#{{.Date}}-blit' onclick=
-		'_2022_08_08_blit.currentTime = 7.089; _2022_08_08_blit.play();
-	'>The pentagram is not reblitted at all during the first 100 frames of phase
-	13</a>. During that rather long time, it's easily possible to remove it from
-	VRAM completely by covering its area with player shots. Or <span
+	<li>The pentagram is not reblitted at all during the first 100 frames of
+	phase 13</a>. During that rather long time, it's easily possible to remove
+	it from VRAM completely by covering its area with player shots. Or <span
 	style="color: red">HARRY UP</span> pellets.</li>
 </ol><p>
 	Definitely an appropriate end for this game's entity blitting code.
@@ -298,7 +306,7 @@ if(rank == RANK_HARD) {
 	or none of the color's three 4-bit components at the beginning of each
 	even-numbered phase. The resulting color sequence, however, doesn't
 	<i>quite</i> seem to follow these simple rules:
-</p><ul id="{{.Date}}-y-phases">
+</p><ul>
 	{{- define "邪" -}}
 		<code>{{.}}</code>
 		<strong lang="ja" style="
@@ -309,35 +317,21 @@ if(rank == RANK_HARD) {
 			line-height: 2em;
 		">邪</strong>
 	{{- end -}}
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 0.000;"
-	>Phase 0</a>: {{template "邪" "#DD5"}}</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 0.000;"
-	>Phase 2</a>: {{template "邪" "#0DF"}}</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 1.259;"
-	>Phase 4</a>: {{template "邪" "#F0F"}}</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 2.499;"
-	>Phase 6</a>: {{template "邪" "#00F"}}, but at the <i>end</i> of the
-	phase?!</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 3.740;"
-	>Phase 8</a>: {{template "邪" "#0FF"}}, at the <i>start</i> of the phase,
-	{{template "邪" "#0F5"}}, at the <i>end</i>!?</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 4.981;"
-	>Phase 10</a>: {{template "邪" "#FF5"}}, at the start of the phase,
-	{{template "邪" "#F05"}}, at the end</li>
-	<li><a href="#{{.Date}}-y-phases" onclick=
-		"_2022_08_08_y.currentTime = 7.462;"
-	>Second repetition of phase 12</a>: {{template "邪" "#005"}}
+	<li><strong>Phase 0</strong>: {{template "邪" "#DD5"}}</li>
+	<li><strong>Phase 2</strong>: {{template "邪" "#0DF"}}</li>
+	<li><strong>Phase 4</strong>: {{template "邪" "#F0F"}}</li>
+	<li><strong>Phase 6</strong>: {{template "邪" "#00F"}}, but at the
+	<i>end</i> of the phase?!</li>
+	<li><strong>Phase 8</strong>: {{template "邪" "#0FF"}}, at the <i>start</i>
+	of the phase, {{template "邪" "#0F5"}}, at the <i>end</i>!?</li>
+	<li><strong>Phase 10</strong>: {{template "邪" "#FF5"}}, at the start of
+	the phase, {{template "邪" "#F05"}}, at the end</li>
+	<li><strong>Second repetition of phase 12</strong>: {{template "邪" "#005"}}
 	shortly after the start of the phase?! {{HTML_Emoji "godzun"}}</li>
 </ul><p>
 	Adding some debug output sheds light on what's going on there:
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_邪.SetID "y")}}
+	{{call .VideoPlayer $vid_邪}}
 	<figcaption>
 		Since each iteration of phase 12 adds 63 to the red component, integer
 		overflow will cause the color to infinitely alternate between dark-blue
@@ -403,7 +397,4 @@ if(rank == RANK_HARD) {
 	at the bottom… I already reserved this month's anonymous {{HTML_Currency
 	5000}} contribution for this work, so it would take another {{HTML_Currency
 	1000}} to be turned into a full push.</li>
-</ul><script>
-	const _2022_08_08_blit = document.getElementById("{{.Date}}-blit");
-	const _2022_08_08_y = document.getElementById("{{.Date}}-y");
-</script>
+</ul>

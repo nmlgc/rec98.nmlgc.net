@@ -17,6 +17,13 @@ import (
 var blogURLPrefix = "/blog"
 var blogHP = NewHostedPath("blog/", blogURLPrefix+"/static/")
 
+// BlogVideoMarker specifies an interesting frame in the video that should be
+// highlighted on its timeline.
+type BlogVideoMarker struct {
+	Frame uint
+	Title string
+}
+
 // BlogVideo bundles static file URLs to all encodings of a video with all
 // necessary metadata.
 type BlogVideo struct {
@@ -29,6 +36,7 @@ type BlogVideo struct {
 	Alt      string
 	Active   bool
 	NoLoop   bool
+	Markers  []BlogVideoMarker
 }
 
 func (b *BlogVideo) SetID(id string) *BlogVideo {
@@ -49,6 +57,11 @@ func (b *BlogVideo) SetActive() *BlogVideo {
 func (b *BlogVideo) SetNoLoop() *BlogVideo {
 	b.NoLoop = true
 	return b
+}
+
+func (b *BlogVideo) AddMarker(frame uint, title string) string {
+	b.Markers = append(b.Markers, BlogVideoMarker{Frame: frame, Title: title})
+	return ""
 }
 
 // Tag generates a complete HTML <video> tag for a video.

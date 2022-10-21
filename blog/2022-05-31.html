@@ -17,6 +17,9 @@
 {{$vid_7_h.SetTitle "Hard" -}}
 {{$vid_7_l.SetTitle "Lunatic" -}}
 
+{{$vid_12.AddMarker 117 "Circle activates" -}}
+{{$vid_12.AddMarker 317 "Circle disappears" -}}
+
 {{$mod := printf "%v%v" .DatePrefix "community-choice-fixes.zip" -}}
 
 <p>
@@ -202,14 +205,11 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 </figure><p>
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
-</p><figure class="fullres">
-	{{call .VideoPlayer ($vid_12.SetID "p12")}}
-</figure><p>
+</p><figure class="fullres">{{call .VideoPlayer $vid_12}}</figure><p>
 	After the circle spawned completely, you lose a life by moving outside it,
-	but doing that immediately advances the pattern <a href="#{{.Date}}-p12"
-	onclick="_2022_05_31_p12.pause(); _2022_05_31_p12.currentTime = 5.619;">past
-	the circle part</a>. This part takes 200 frames, but the defeat animation
-	only takes 82 frames, so you can save up to 118 frames there.
+	but doing that immediately advances the pattern past the circle part. This
+	part takes 200 frames, but the defeat animation only takes 82 frames, so
+	you can save up to 118 frames there.
 </p><p>
 	Final funny tidbit: As with all dynamic entities, this circle is only
 	blitted to VRAM page 0 to allow easy unblitting. However, it's also kind of
@@ -386,6 +386,3 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	anniversary of its first public release coming up on August 15, and I might
 	still manage to completely decompile this game by that point…
 </p>
-<script>
-	const _2022_05_31_p12 = document.getElementById("{{.Date}}-p12");
-</script>

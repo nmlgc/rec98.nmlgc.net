@@ -5,6 +5,8 @@
 {{$vid_fx_0.SetTitle "Original, 32 pixels every 2 frames" -}}
 {{$vid_fx_1.SetTitle "Full speed, 16 pixels every frame" -}}
 
+{{$vid_metrics.AddMarker 49 "Empty quarter" -}}
+
 <p>
 	Wow, it's been 3 days and I'm already back with an unexpectedly long post
 	about TH01's bonus point screens? 3 days used to take much longer in my
@@ -156,15 +158,13 @@
 	<strong style="color:red">5</strong> →
 	<i>(nothing)</i>:
 </p><figure class="fullres">
-	{{call .VideoPlayer ($vid_metrics.SetID "metrics")}}
+	{{call .VideoPlayer $vid_metrics}}
 	<figcaption class="fullres">
 		This footage was slowed down to show one sprite blitting operation per
 		frame. The actual game waits a hardcoded 4 milliseconds between each
 		sprite, so even theoretically, you would only see roughly every
-		4<sup>th</sup> digit. And yes, <a href='#{{.Date}}-metrics' onclick=
-		'_2022_08_11_metrics.currentTime = 0.87;
-		_2022_08_11_metrics.stop();'>here's a frame with the empty quarter</a>,
-		only blitted if one of the digits is a 9.
+		4<sup>th</sup> digit. And yes, we can also observe the empty quarter
+		here, only blitted if one of the digits is a 9.
 	</figcaption>
 </figure><p>
 	Seriously though? If the deadline is looming and you've got to rush
@@ -222,6 +222,4 @@
 	finishing this game before the 15<sup>th</sup>… Next up: The final 17
 	functions in <code>REIIDEN.EXE</code> that tie everything together and add
 	some more debug features on top.
-</p><script>
-	const _2022_08_11_metrics = document.getElementById("{{.Date}}-metrics");
-</script>
+</p>

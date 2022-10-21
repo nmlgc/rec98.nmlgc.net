@@ -41,6 +41,17 @@
 {{$m_wa_1.SetTitle "Move and brake" -}}
 {{$m_wa_2.SetTitle "Warp" -}}
 
+{{$m_68.AddMarker    37 "Bit destruction frame" -}}
+{{$m_112.AddMarker   81 "Bit destruction frame" -}}
+{{$m_144.AddMarker  113 "Bit destruction frame" -}}
+{{$m_148.AddMarker  117 "Bit destruction frame" -}}
+{{$m_152.AddMarker  121 "Bit destruction frame" -}}
+{{$m_156.AddMarker  125 "Bit destruction frame" -}}
+{{$m_160.AddMarker  129 "Bit destruction frame" -}}
+{{$m_wa_0.AddMarker  21 "Bit destruction frame" -}}
+{{$m_wa_1.AddMarker  21 "Bit destruction frame" -}}
+{{$m_wa_2.AddMarker  21 "Bit destruction frame" -}}
+
 <p>
 	(Before we start: Make sure you've read the <a
 	href="/faq#tsa-takedown">current version of the FAQ section on a potential
@@ -241,9 +252,8 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<i>away</i> from the intended point, as the divisor becomes negative.
 	{{HTML_Emoji "zunpet"}}</li>
 </ul><figure class="fullres">
-	{{call .VideoPlayer ($m_68.SetID "m-68") ($m_112.SetID "m-112") ($m_144.SetID "m-144") ($m_148.SetID "m-148") (($m_152.SetID "m-152").SetActive).SetNoLoop ($m_156.SetID "m-156") ($m_160.SetID "m-160")}}
+	{{call .VideoPlayer $m_68 $m_112 $m_144 $m_148 ($m_152.SetActive).SetNoLoop $m_156 $m_160}}
 	<figcaption>
-		<p id="{{.Date}}-m-controls"></p>
 		One of the two patterns in TH04's Stage 4 Marisa boss fight that feature
 		frame number-dependent point-reflected movement. The bits were hacked to
 		self-destruct on the respective frame.
@@ -276,7 +286,6 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	people <i>already</i> hate losing runs to this bug!</li>
 </ol><figure class="singleplayer_playfield">
 	{{call .VideoPlayer $m_wa_0.SetActive $m_wa_1 $m_wa_2}}
-	<figcaption id="{{.Date}}-m-wa-controls"></figcaption>
 </figure><p>
 	Asking Twitter worked great for the Kurumi workaround, so let's do it again!
 	Gotta attach a screenshot of an earlier draft of this blog post though,
@@ -348,27 +357,3 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<i>that one</i> is included in there. Looks like I've <i>slightly</i>
 	overestimated the amount of work required for TH04's and TH05's bosses…
 </p>
-
-<script>
-	const _2022_04_18_m_fps = {{$m_68.Metadata.FPS}};
-
-	const _2022_04_18_m = switchMultipleVideos("{{.Date}}-m");
-	_2022_04_18_m.addMiddleButton("{{.Date}}-m-controls", () => {
-		const frame = document.createElement('button');
-		frame.textContent = `Bit destruction frame`;
-		frame.onclick = () => _2022_04_18_m.seekAndStop(
-			(Number(_2022_04_18_m.getActive()[2]) - 30) / _2022_04_18_m_fps
-		);
-		return frame;
-	});
-
-	const _2022_04_18_m_wa = switchMultipleVideos("{{.Date}}-m-wa");
-	_2022_04_18_m_wa.addMiddleButton("{{.Date}}-m-wa-controls", () => {
-		const frame = document.createElement('button');
-		frame.textContent = `Bit destruction frame`;
-		frame.onclick = () => _2022_04_18_m_wa.seekAndStop(
-			22 / _2022_04_18_m_fps
-		);
-		return frame;
-	});
-</script>

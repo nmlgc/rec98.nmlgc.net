@@ -319,13 +319,16 @@ class ReC98Video extends HTMLElement {
 			// very likely to be incorrect half of the time.
 			// It doesn't matter during playback, where the frame number is
 			// constantly updating anyway, but manifests itself in inconsistent
-			// frame numbers when seeking a paused video.
+			// frame numbers when seeking a paused video, or whenever a
+			// non-looping video finished playing.
 			// As a workaround, we perform a round-trip conversion from
 			// `currentTime` to frames and back, which gets us back onto our
 			// discrete seek grid in any case. This might lead to a noticeable
 			// jump back by one frame, but is unfortunately the best compromise
 			// in view of what we're given here.
-			const frame = frameFrom(videoNew.currentTime, this.fps);
+			const frame = Math.min(
+				frameFrom(videoNew.currentTime, this.fps), (this.frameCount - 1)
+			);
 			videoNew.currentTime = secondsFrom(frame, this.fps);
 		});
 	}

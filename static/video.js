@@ -53,6 +53,48 @@ function timelineWidthAt(frame, frameCount) {
 	return `${(frame / (frameCount - 1)) * 100}%`;
 }
 
+class ReC98VideoMarker extends HTMLElement {
+	button = document.createElement("button");
+	videoIndex = -1;
+	frameCount = 0;
+
+	/**
+	 * @param {ReC98Video} player
+	 * @param {number} videoIndex
+	 * @param {number} timelineWidth
+	 * @param {number} fps
+	 * @param {number} frameCount
+	 */
+	init(player, videoIndex, timelineWidth, fps, frameCount) {
+		const frame = attributeAsNumber(this, "data-frame");
+		const title = attributeAsString(this, "data-title");
+		this.frameCount = frameCount;
+		this.videoIndex = videoIndex;
+
+		const onclick = (() => {
+			player.seekTo(secondsFrom(frame, fps));
+			player.focus();
+		})
+
+		this.style.left = timelineWidthAt(frame, frameCount);
+		this.setWidth(timelineWidth);
+		this.button.style.right = "0";
+		this.button.innerHTML = title;
+		this.onclick = onclick;
+		this.button.onclick = onclick;
+
+		this.appendChild(this.button);
+	}
+
+	/** @param {number} timelineWidth */
+	setWidth(timelineWidth) {
+		const width = (timelineWidth / this.frameCount);
+
+		this.style.width = `${width}px`;
+		this.button.style.borderWidth = `${Math.min(width, 3)}px`;
+	}
+};
+
 class ReC98Video extends HTMLElement {
 	// Members
 	// -------
@@ -233,6 +275,12 @@ class ReC98Video extends HTMLElement {
 		this.renderTime(this.videoShown.currentTime);
 	}
 
+	markers() {
+		return /** @type {HTMLCollectionOf<ReC98VideoMarker>} */ (
+			this.eTimeline.getElementsByTagName("rec98-video-marker")
+		);
+	}
+
 	// Constant property initialization
 	constructor() {
 		super();
@@ -375,6 +423,10 @@ class ReC98Video extends HTMLElement {
 
 			this.seekTo(videoPrev.currentTime);
 		}
+
+		for(const marker of this.markers()) {
+			marker.hidden = (marker.videoIndex !== index);
+		}
 		return true;
 	}
 
@@ -475,6 +527,8 @@ class ReC98Video extends HTMLElement {
 			this.prepend(this.eTabSwitcher);
 		}
 
+		const timelineWidth = this.eTimeline.getBoundingClientRect().width;
+
 		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
 			video.onclick = ((event) => this.toggle(event));
@@ -483,6 +537,19 @@ class ReC98Video extends HTMLElement {
 			// runs with disabled JavaScript, so we're separately disabling
 			// them here as we're about to replace them with our own.
 			video.controls = false;
+
+			// Setup markers. Note that we mutate [markers] by reparenting its
+			// elements; a `for…of` loop would therefore skip every second
+			// marker.
+			const fps = attributeAsNumber(video, "data-fps");
+			const frameCount = attributeAsNumber(video, "data-frame-count");
+			const markers = video.getElementsByTagName("rec98-video-marker");
+			while(markers[0]) {
+				/** @type {ReC98VideoMarker} */
+				(markers[0]).init(this, i, timelineWidth, fps, frameCount);
+				this.eTimeline.appendChild(markers[0]);
+				this.classList.add("with-markers");
+			}
 
 			if(video.classList.contains("active")) {
 				requested = i;
@@ -502,3 +569,4 @@ class ReC98Video extends HTMLElement {
 };
 
 window.customElements.define("rec98-video", ReC98Video);
+window.customElements.define("rec98-video-marker", ReC98VideoMarker);

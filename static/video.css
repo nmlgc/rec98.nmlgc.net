@@ -3,12 +3,19 @@
 		white 0%,
 		var(--c-lightgray) 50%
 	);
+
+	/* Better contrast against black, compared to --c-link. */
+	--c-timeline-link: #0080ff;
 }
 
 rec98-video {
 	box-shadow: var(--blog-shadow);
 	background-color: var(--c-dark);
 	display: grid;
+}
+
+rec98-video.with-markers {
+	margin-bottom: 1.75em;
 }
 
 rec98-video video {
@@ -83,4 +90,32 @@ rec98-video .timeline .border .pos {
 	background: var(--timeline-gradient);
 	height: 100%;
 	width: 0;
+}
+
+rec98-video .timeline rec98-video-marker {
+	background-color: var(--c-timeline-link);
+	cursor: pointer;
+	height: 200%;
+	position: absolute;
+	top: -50%;
+}
+
+rec98-video .timeline rec98-video-marker button {
+	background: var(--timeline-gradient);
+	border: 1px solid var(--c-timeline-link);
+	font-size: 85%;
+	padding: 0.15em 0.5em;
+	position: absolute;
+	top: 100%;
+	width: max-content;
+}
+
+rec98-video .timeline rec98-video-marker:hover {
+	background-color: var(--c-link-hover);
+}
+
+rec98-video .timeline rec98-video-marker:hover button,
+rec98-video .timeline rec98-video-marker button:hover {
+	border-color: var(--c-link-hover);
+	color: var(--c-link-hover);
 }

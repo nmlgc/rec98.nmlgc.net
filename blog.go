@@ -93,6 +93,13 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		ret += template.HTML(b.Alt + ". ")
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
+	for _, marker := range b.Markers {
+		ret += "<rec98-video-marker"
+		ret += template.HTML(fmt.Sprintf(
+			` data-frame="%d" data-title="%s"`, marker.Frame, marker.Title,
+		))
+		ret += "></rec98-video-marker>"
+	}
 	ret += `</video>`
 	return ret
 }

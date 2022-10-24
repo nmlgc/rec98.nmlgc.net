@@ -32,7 +32,7 @@ rec98-video .controls {
 	display: grid;
 	font-size: small;
 	grid-row: 3;
-	grid-template-columns: 2.5em 1.5em 2ch 6ch 2ch 1fr;
+	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr;
 	justify-items: left !important;
 	width: 100%;
 }
@@ -63,9 +63,23 @@ rec98-video .frame {
 	grid-row: 2;
 }
 
+rec98-video .frame.previous {
+	grid-column: 3 / 5;
+	text-align: right;
+}
+
+rec98-video .frame.time {
+	grid-column: 5;
+}
+
+rec98-video .frame.next {
+	grid-column: 6 / 8;
+	text-align: left;
+}
+
 rec98-video .timeline {
 	align-self: center;
-	grid-column: 6;
+	grid-column: 8;
 	height: 50%;
 	position: relative;
 	touch-action: none;

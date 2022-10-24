@@ -105,9 +105,11 @@ class ReC98Video extends HTMLElement {
 	eControls = document.createElement("div");
 	ePlay = document.createElement("button");
 	eTimeSecondsIcon = document.createElement("span");
+	eHome = document.createElement("button");
 	eRewind = document.createElement("button");
 	eTimeSeconds = document.createElement("span");
 	eFastForward = document.createElement("button");
+	eEnd = document.createElement("button");
 	eTimeFrameIcon = document.createElement("span");
 	eFramePrevious = document.createElement("button");
 	eTimeFrame = document.createElement("span");
@@ -298,6 +300,13 @@ class ReC98Video extends HTMLElement {
 		// we always focus the main ReC98Video element instead.
 		const preventFocus = (() => this.focus());
 
+		this.eHome.textContent = "⏮"
+		this.eHome.title = "First frame (Home)"
+		this.eHome.onfocus = preventFocus;
+		this.eEnd.textContent = "⏭"
+		this.eEnd.title = "Last frame (End)"
+		this.eEnd.onfocus = preventFocus;
+
 		this.eRewind.textContent = "⏪";
 		this.eRewind.title = "Rewind (Ctrl-←️ / Ctrl-A / Ctrl-H)";
 		this.eRewind.onfocus = preventFocus;
@@ -312,10 +321,12 @@ class ReC98Video extends HTMLElement {
 		this.eFrameNext.title = "Next frame (→️ / D / L)";
 		this.eFrameNext.onfocus = preventFocus;
 
+		this.eHome.className = "seconds";
 		this.eRewind.className = "seconds";
 		this.eFastForward.className = "seconds";
-		this.eFramePrevious.className = "frame";
-		this.eFrameNext.className = "frame";
+		this.eEnd.className = "seconds";
+		this.eFramePrevious.className = "frame previous";
+		this.eFrameNext.className = "frame next";
 		// ---------------
 
 		// Time
@@ -441,9 +452,11 @@ class ReC98Video extends HTMLElement {
 		this.eTimeline.appendChild(this.eTimelineBorder);
 		this.eControls.appendChild(this.ePlay);
 		this.eControls.appendChild(this.eTimeSecondsIcon);
+		this.eControls.appendChild(this.eHome);
 		this.eControls.appendChild(this.eRewind);
 		this.eControls.appendChild(this.eTimeSeconds);
 		this.eControls.appendChild(this.eFastForward);
+		this.eControls.appendChild(this.eEnd);
 		this.eControls.appendChild(this.eTimeFrameIcon);
 		this.eControls.appendChild(this.eFramePrevious);
 		this.eControls.appendChild(this.eTimeFrame);
@@ -466,6 +479,12 @@ class ReC98Video extends HTMLElement {
 			switch(virtualKey(event)) {
 			case ' ':
 				return this.ePlay.onclick?.(event);
+			case '⏮':
+				event.preventDefault();
+				return this.eHome.onclick?.(event);
+			case '⏭':
+				event.preventDefault();
+				return this.eEnd.onclick?.(event);
 			case '←':
 				return ((event.ctrlKey)
 					? this.eRewind.onclick?.(event)
@@ -490,8 +509,12 @@ class ReC98Video extends HTMLElement {
 		});
 
 		this.ePlay.onclick = ((event) => this.toggle(event));
+		this.eHome.onclick = (() => this.seekTo(0));
 		this.eRewind.onclick = (() => this.seekFast(-1));
 		this.eFastForward.onclick = (() => this.seekFast(+1));
+		this.eEnd.onclick = (() =>
+			this.seekTo(secondsFrom((this.frameCount - 1), this.fps))
+		);
 		this.eFramePrevious.onclick = (() => this.seekBy(-1));
 		this.eFrameNext.onclick = (() => this.seekBy(+1));
 		this.eTimelineBorder.onpointermove = ((event) => (

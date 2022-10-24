@@ -175,7 +175,7 @@ window.customElements.define("rec98-parent-init", ReC98ParentInit);
 /**
  * Translates equivalent KeyboardEvents into a virtual key.
  *
- * @typedef {' ' | '←' | '→' | '↑' | '↓' | null} VirtualKey
+ * @typedef {' ' | '←' | '→' | '↑' | '↓' | '⏮' | '⏭' | null} VirtualKey
  * @param {KeyboardEvent} event
  * @returns {VirtualKey}
  */
@@ -199,6 +199,10 @@ function virtualKey(event) {
 	case "KeyS":
 	case "KeyJ":
 		return '↓';
+	case "Home":
+		return '⏮';
+	case "End":
+		return '⏭';
 	}
 	return null;
 }

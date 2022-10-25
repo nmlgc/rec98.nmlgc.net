@@ -77,13 +77,13 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	bounce between two bumpers. As rudimentary as the Orb's physics may be, just
 	letting them do their work would have entirely prevented these loops:
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_b2_0.SetID "b2-0").SetActive ($vid_b2_1.SetID "b2-1")}}
 	<figcaption>
 		<p id="{{.Date}}-b2"></p>
 		<span id="{{.Date}}-b2-caption"></span> The blue areas indicate the
 		<span class="hovertext" title="Within the usual caveat of the Orb's internal X position not corresponding to its on-screen one, as it's blitted on the byte-aligned 8×1-pixel VRAM grid.">pixel-perfect*</span>
 		hitboxes of each bumper.
 	</figcaption>
+	{{call .VideoPlayer ($vid_b2_0.SetID "b2-0").SetActive ($vid_b2_1.SetID "b2-1")}}
 </figure><p>
 	Now, you might be thinking that these Y assignments were just an attempt to
 	prevent the Orb from colliding with the same bumper again on the next frame.
@@ -114,12 +114,12 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	is the only part of the code that actually prevents a collision there, as
 	the newly applied force is not guaranteed to be enough:
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_b3_0.SetID "b3-0").SetActive ($vid_b3_1.SetID "b3-1")}}
-	</div>
 	<figcaption>
 		<p id="{{.Date}}-b3"></p>
 		<span id="{{.Date}}-b3-caption"></span>
 	</figcaption>
+	{{call .VideoPlayer ($vid_b3_0.SetID "b3-0").SetActive ($vid_b3_1.SetID "b3-1")}}
+	</div>
 </figure><p>
 	Forgetting to handle ⅖ of your discrete X velocity cases is simply not
 	something you do by accident. So we might as well say that ZUN deliberately

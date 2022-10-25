@@ -20,23 +20,6 @@
 	be stored on both VRAM pages, allowing the game to still be double-buffered.
 	If you force the graphics chip to run at 640×400, you can see them:
 </p><figure class="pixelated fullres">
-	<div class="multilayer">
-		<img
-			id="{{.Date}}-200"
-			src="{{$pic1}}"
-			alt="TH03's VRAM at regular line-doubled 640×200 resolution"
-		/><img
-			id="{{.Date}}-400"
-			class="active"
-			src="{{$pic2}}"
-			alt="TH03's VRAM at full 640×400 resolution, including the SPRITE16 sprite area"
-		/><img
-			id="{{.Date}}-tram"
-			class="active"
-			src="{{$pic3}}"
-			alt="TH03's text layer during an in-game round."
-		/>
-	</div>
 	<figcaption>
 		{{$desc_200 := "The upper half of VRAM during TH03's in-game portion, at the original line-doubled 640×200 resolution."}}
 		{{$desc_400 := "The full VRAM contents during TH03's in-game portion, as seen when forcing the system into a 640×400 resolution."}}
@@ -66,6 +49,23 @@
 			document.getElementById('{{.Date}}-tram-hide').hidden = false;
 		" hidden>(Show text layer)</button>
 	</figcaption>
+	<div class="multilayer">
+		<img
+			id="{{.Date}}-200"
+			src="{{$pic1}}"
+			alt="TH03's VRAM at regular line-doubled 640×200 resolution"
+		/><img
+			id="{{.Date}}-400"
+			class="active"
+			src="{{$pic2}}"
+			alt="TH03's VRAM at full 640×400 resolution, including the SPRITE16 sprite area"
+		/><img
+			id="{{.Date}}-tram"
+			class="active"
+			src="{{$pic3}}"
+			alt="TH03's text layer during an in-game round."
+		/>
+	</div>
 </figure><p>
 	Note that the text chip still displays its overlaid contents at 640×400,
 	which means that TH03's in-game portion <i>technically</i> runs at two

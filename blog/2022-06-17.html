@@ -77,22 +77,6 @@
 	instead of a &gt; sign, resulting in an in-game hitbox that's not
 	<i>quite</i> where it was intended to be…
 </p><figure class="pixelated th01_playfield">
-	<div class="multilayer">
-		<!-- Force onto z-index: 1 to cover the inactive transparent image -->
-		<img src="{{$pic1}}" class="active" alt="TODO" />
-		<img
-			id="{{.Date}}-intended"
-			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVpRwDwAADVixDUAAAAAXRSTlMAQObYZgAAAJpJREFUeJzt2LENAjEURMFFBISUQKlQGqVQAgUgTHSSTeqP8EkzBbxoo00AAAAAAGDPTm3TWrvP1pJc+uBztpbk2gdfs7Ukfa+9Z2vJYQi22VxyHIO31YJfq6nYTXUw5zH4EBQUFBQUFBQUFBQUFBQUFFwyuPrNsoerqvqdq/4Pf/FwVn+w1S8xAAAAAAAAAAAAAAAAAADA33wA8BYPrD97Uz8AAAAASUVORK5CYII="
-			style="opacity: 0.5"
-			alt="TH01 Kikuri's intended hitbox"
-		/><img
-			id="{{.Date}}-actual"
-			class="active"
-			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVARhnwAADlWXWPAAAAAXRSTlMAQObYZgAAAIdJREFUeNrt0rENg1AQBcFnOSCkBJdqSqMUSqAAyyblSBxc8pFmCthokz/mX7GlS1BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDwbsFMNbiOFkyeNbiMFkweNdjNJSm9b7eW5H0Ofrq1JK9zcO/Wrt90rwEAAAAAAAAAAAAAAAAAAAAAAACGcgD8KH1Pn8wO8QAAAABJRU5ErkJggg=="
-			style="opacity: 0.5"
-			alt="TH01 Kikuri's actual hitbox"
-		/>
-	</div>
 	<figcaption>
 		{{$desc_intended := "Kikuri's intended hitbox."}}
 		{{$desc_actual := "Kikuri's actual hitbox."}}
@@ -115,6 +99,22 @@
 		hitbox in a pixel-perfect way here. The Orb must be completely within
 		the <span style="color: red">red area</span> for a hit to be registered.
 	</figcaption>
+	<div class="multilayer">
+		<!-- Force onto z-index: 1 to cover the inactive transparent image -->
+		<img src="{{$pic1}}" class="active" alt="TODO" />
+		<img
+			id="{{.Date}}-intended"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVpRwDwAADVixDUAAAAAXRSTlMAQObYZgAAAJpJREFUeJzt2LENAjEURMFFBISUQKlQGqVQAgUgTHSSTeqP8EkzBbxoo00AAAAAAGDPTm3TWrvP1pJc+uBztpbk2gdfs7Ukfa+9Z2vJYQi22VxyHIO31YJfq6nYTXUw5zH4EBQUFBQUFBQUFBQUFBQUFFwyuPrNsoerqvqdq/4Pf/FwVn+w1S8xAAAAAAAAAAAAAAAAAADA33wA8BYPrD97Uz8AAAAASUVORK5CYII="
+			style="opacity: 0.5"
+			alt="TH01 Kikuri's intended hitbox"
+		/><img
+			id="{{.Date}}-actual"
+			class="active"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVARhnwAADlWXWPAAAAAXRSTlMAQObYZgAAAIdJREFUeNrt0rENg1AQBcFnOSCkBJdqSqMUSqAAyyblSBxc8pFmCthokz/mX7GlS1BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDwbsFMNbiOFkyeNbiMFkweNdjNJSm9b7eW5H0Ofrq1JK9zcO/Wrt90rwEAAAAAAAAAAAAAAAAAAAAAAACGcgD8KH1Pn8wO8QAAAABJRU5ErkJggg=="
+			style="opacity: 0.5"
+			alt="TH01 Kikuri's actual hitbox"
+		/>
+	</div>
 </figure><p>
 	Much worse, however, are the teardrop ripples. It already starts with their
 	rendering routine, which places the sprites from <code>TAMAYEN.PTN</code>
@@ -270,7 +270,6 @@
 	<code>cputype=auto</code> and <code>cycles=max</code>, and with
 	<code>i</code> overlaid using the text chip. Caution, flashing lights:
 </p><figure style="width: 320px;">
-	{{call .VideoPlayer ($vid_be2_0.SetID "be2-0").SetActive ($vid_be2_1.SetID "be2-1")}}
 	<figcaption>
 		<p id="{{.Date}}-be2"></p>
 		<span id="{{.Date}}-be2-caption"></span>
@@ -278,6 +277,7 @@
 		>ド﻿カ﻿ー﻿ン</i> image is shifted 1 pixel to the left compared to pic
 		#1.)
 	</figcaption>
+	{{call .VideoPlayer ($vid_be2_0.SetID "be2-0").SetActive ($vid_be2_1.SetID "be2-1")}}
 </figure><p>
 	I pushed the optimized code to the <a
 	href="https://github.com/nmlgc/ReC98/tree/th01_end_pic_optimize"><code>th01_end_pic_optimize</code></a>

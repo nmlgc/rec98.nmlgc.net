@@ -45,11 +45,11 @@
 	point that probably even ZUN himself didn't know what he wanted it to look
 	like in the end:
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_orig.SetID "go-o").SetActive ($vid_wimpy.SetID "go-w") ($vid_no.SetID "go-n")}}
 	<figcaption>
 		<p id="{{.Date}}-go"></p>
 		<span id="{{.Date}}-go-caption"></span>
 	</figcaption>
+	{{call .VideoPlayer ($vid_orig.SetID "go-o").SetActive ($vid_wimpy.SetID "go-w") ($vid_no.SetID "go-n")}}
 </figure><hr /><p>
 	Finally, we get to the big <code>main()</code> function, serving as the duct
 	tape that holds this game together. It may read rather disorganized with all

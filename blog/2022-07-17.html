@@ -148,11 +148,11 @@
 	the chasing pellets for 30 frames and making the pattern quite ghostly
 	indeed. However, that's not what we see in the actual game:
 </p><figure class="th01_playfield">
-	{{call .VideoPlayer ($vid_hop_0.SetID "hop-0").SetActive ($vid_hop_1.SetID "hop-1")}}
 	<figcaption>
 		<p id="{{.Date}}-hop"></p>
 		<span id="{{.Date}}-hop-caption"></span>
 	</figcaption>
+	{{call .VideoPlayer ($vid_hop_0.SetID "hop-0").SetActive ($vid_hop_1.SetID "hop-1")}}
 </figure><p>
 	Looking at the frame counter, it appears that <i>something</i> outside the
 	pattern resets the palette every 40 frames. The only known constant with a

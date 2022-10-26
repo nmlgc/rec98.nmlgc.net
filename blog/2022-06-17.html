@@ -15,6 +15,12 @@
 {{$vid_be2_0.SetTitle "Original version" -}}
 {{$vid_be2_1.SetTitle "Optimized version" -}}
 
+{{- define "be2_caption_trail" -}}
+	(Note how the background of the <i lang='ja' style='color: red'
+	>ド﻿カ﻿ー﻿ン</i> image is shifted 1 pixel to the left compared to pic
+	#1.)
+{{- end -}}
+
 <p>
 	What's this? A simple, straightforward, easy-to-decompile TH01 boss with
 	just a few minor quirks and only two rendering-related ZUN bugs? Yup, 2½
@@ -273,9 +279,6 @@
 	<figcaption>
 		<p id="{{.Date}}-be2"></p>
 		<span id="{{.Date}}-be2-caption"></span>
-		(Note how the background of the <i lang="ja" style="color: red"
-		>ド﻿カ﻿ー﻿ン</i> image is shifted 1 pixel to the left compared to pic
-		#1.)
 	</figcaption>
 	{{call .VideoPlayer ($vid_be2_0.SetID "be2-0").SetActive ($vid_be2_1.SetID "be2-1")}}
 </figure><p>
@@ -336,9 +339,9 @@
 </p><script>
 	const _2022_06_17_be2 = switchMultipleVideos("{{.Date}}-be2");
 	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
-		"{{$vid_be2_0.Title}}", "0", true, `The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress.`
+		"{{$vid_be2_0.Title}}", "0", true, "The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress. {{$be2_caption_trail}}"
 	);
 	const _2022_06_17_be2_1 = _2022_06_17_be2.add(
-		"{{$vid_be2_1.Title}}", "1", false, `This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang="ja" style="color: red">ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration.`
+		"{{$vid_be2_1.Title}}", "1", false, "This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang='ja' style='color: red'>ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration. {{$be2_caption_trail}}"
 	);
 </script>

@@ -22,6 +22,12 @@
 {{$vid_p.AddMarker 56 "Reimu getting hit" -}}
 {{$vid_vbar.AddMarker 855 "Two collisions within the same frame" -}}
 
+{{- define "b2_caption_trail" -}}
+	The blue areas indicate the <span class='hovertext'
+		title="Within the usual caveat of the Orb's internal X position not corresponding to its on-screen one, as it's blitted on the byte-aligned 8×1-pixel VRAM grid"
+	>pixel-perfect*</span> hitboxes of each bumper.
+{{- end -}}
+
 <p>
 	Let's start right with the milestones:
 </p><ul>
@@ -79,9 +85,7 @@ if(delta_y_between_orb_and_bumper <= 0) {
 </p><figure class="th01_playfield">
 	<figcaption>
 		<p id="{{.Date}}-b2"></p>
-		<span id="{{.Date}}-b2-caption"></span> The blue areas indicate the
-		<span class="hovertext" title="Within the usual caveat of the Orb's internal X position not corresponding to its on-screen one, as it's blitted on the byte-aligned 8×1-pixel VRAM grid.">pixel-perfect*</span>
-		hitboxes of each bumper.
+		<span id="{{.Date}}-b2-caption"></span>
 	</figcaption>
 	{{call .VideoPlayer ($vid_b2_0.SetID "b2-0").SetActive ($vid_b2_1.SetID "b2-1")}}
 </figure><p>
@@ -339,9 +343,9 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><script>
 	const _2022_07_10_b2 = switchMultipleVideos("{{.Date}}-b2");
 	const _2022_07_10_b2_0 = _2022_07_10_b2.add(
-		"{{$vid_b2_0.Title}}", "0", true, "One of at least three infinite bumper loop constellations within just this 10×5-tile section of TH01's Stage 18 on the <span lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal pixels between both hitboxes, the Orb would have to travel an absolute Y distance of at least 16 vertical pixels within <code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the other bumper's hitbox. If the initial bounce reduces the Orb's Y velocity far enough for it to not manage that distance the first time, it will never reach the necessary speed again. In this loop, the bounce-off force even stabilizes, though this doesn't have to happen.");
+		"{{$vid_b2_0.Title}}", "0", true, "One of at least three infinite bumper loop constellations within just this 10×5-tile section of TH01's Stage 18 on the <span lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal pixels between both hitboxes, the Orb would have to travel an absolute Y distance of at least 16 vertical pixels within <code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the other bumper's hitbox. If the initial bounce reduces the Orb's Y velocity far enough for it to not manage that distance the first time, it will never reach the necessary speed again. In this loop, the bounce-off force even stabilizes, though this doesn't have to happen. {{$b2_caption_trail}}");
 	const _2022_07_10_b2_1 = _2022_07_10_b2.add(
-		"{{$vid_b2_1.Title}}", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still bounces back and forth between two bumpers for a while, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end."
+		"{{$vid_b2_1.Title}}", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still bounces back and forth between two bumpers for a while, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end. {{$b2_caption_trail}}"
 	);
 
 	const _2022_07_10_b3 = switchMultipleVideos("{{.Date}}-b3");

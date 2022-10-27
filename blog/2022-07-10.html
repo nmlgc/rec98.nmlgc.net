@@ -83,11 +83,26 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	bounce between two bumpers. As rudimentary as the Orb's physics may be, just
 	letting them do their work would have entirely prevented these loops:
 </p><figure class="th01_playfield">
-	<figcaption>
-		<p id="{{.Date}}-b2"></p>
-		<span id="{{.Date}}-b2-caption"></span>
-	</figcaption>
-	{{call .VideoPlayer ($vid_b2_0.SetID "b2-0").SetActive ($vid_b2_1.SetID "b2-1")}}
+	<figcaption class="dynamic"><div>
+		One of at least three infinite bumper loop constellations within just
+		this 10×5-tile section of TH01's Stage 18 on the <span
+		lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal
+		pixels between both hitboxes, the Orb would have to travel an absolute
+		Y distance of at least 16 vertical pixels within
+		<code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the
+		other bumper's hitbox. If the initial bounce reduces the Orb's Y
+		velocity far enough for it to not manage that distance the first time,
+		it will never reach the necessary speed again. In this loop, the
+		bounce-off force even stabilizes, though this doesn't have to happen.
+		{{template "b2_caption_trail"}}
+	</div><div>
+		TH01 bumper collision handling without ZUN's manual assignment of the Y
+		coordinate. The Orb still bounces back and forth between two bumpers
+		for a while, but its <code>top</code> position always follows naturally
+		from its Y velocity and the force applied to it, and gravity wins out
+		in the end. {{template "b2_caption_trail"}}
+	</div></figcaption>
+	{{call .VideoPlayer $vid_b2_0.SetActive $vid_b2_1}}
 </figure><p>
 	Now, you might be thinking that these Y assignments were just an attempt to
 	prevent the Orb from colliding with the same bumper again on the next frame.
@@ -118,11 +133,21 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	is the only part of the code that actually prevents a collision there, as
 	the newly applied force is not guaranteed to be enough:
 </p><figure class="th01_playfield">
-	<figcaption>
-		<p id="{{.Date}}-b3"></p>
-		<span id="{{.Date}}-b3-caption"></span>
-	</figcaption>
-	{{call .VideoPlayer ($vid_b3_0.SetID "b3-0").SetActive ($vid_b3_1.SetID "b3-1")}}
+	<figcaption class="dynamic"><div>
+		An infinite loop across three bumpers, made possible by the edge of the
+		playfield and bumper bars on opposite sides, an unchanged horizontal
+		direction, and the Y assignments neatly placing the Orb on either the
+		top or bottom side of a bumper. The alternating sign of the force
+		further ensures that the Orb will travel upwards half the time,
+		canceling out gravity during the short time between two hitboxes.
+	</div><div>
+		With the unchanged horizontal direction and the Y assignments removed,
+		nothing keeps an Orb at ±8 pixels per frame from flying into/over a
+		bumper. The collision force pushes the Orb slightly, but not enough to
+		truly matter. The final force sends the Orb on a significant downward
+		trajectory beyond the next bumper's hitbox, breaking the original loop.
+	</div></figcaption>
+	{{call .VideoPlayer $vid_b3_0.SetActive $vid_b3_1}}
 	</div>
 </figure><p>
 	Forgetting to handle ⅖ of your discrete X velocity cases is simply not
@@ -340,19 +365,4 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><p>
 	Next up: Mima! Let's hope that stage obstacles already were the most complex
 	part remaining in TH01…
-</p><script>
-	const _2022_07_10_b2 = switchMultipleVideos("{{.Date}}-b2");
-	const _2022_07_10_b2_0 = _2022_07_10_b2.add(
-		"{{$vid_b2_0.Title}}", "0", true, "One of at least three infinite bumper loop constellations within just this 10×5-tile section of TH01's Stage 18 on the <span lang='ja'>地﻿獄</span>/Jigoku route. With an effective 56 horizontal pixels between both hitboxes, the Orb would have to travel an absolute Y distance of at least 16 vertical pixels within <code>(56&nbsp;/&nbsp;4)&nbsp;=&nbsp;14</code> frames to escape the other bumper's hitbox. If the initial bounce reduces the Orb's Y velocity far enough for it to not manage that distance the first time, it will never reach the necessary speed again. In this loop, the bounce-off force even stabilizes, though this doesn't have to happen. {{$b2_caption_trail}}");
-	const _2022_07_10_b2_1 = _2022_07_10_b2.add(
-		"{{$vid_b2_1.Title}}", "1", false, "TH01 bumper collision handling without ZUN's manual assignment of the Y coordinate. The Orb still bounces back and forth between two bumpers for a while, but its <code>top</code> position always follows naturally from its Y velocity and the force applied to it, and gravity wins out in the end. {{$b2_caption_trail}}"
-	);
-
-	const _2022_07_10_b3 = switchMultipleVideos("{{.Date}}-b3");
-	const _2022_07_10_b3_0 = _2022_07_10_b3.add(
-		"{{$vid_b3_0.Title}}", "0", true, "An infinite loop across three bumpers, made possible by the edge of the playfield and bumper bars on opposite sides, an unchanged horizontal direction, and the Y assignments neatly placing the Orb on either the top or bottom side of a bumper. The alternating sign of the force further ensures that the Orb will travel upwards half the time, canceling out gravity during the short time between two hitboxes."
-	);
-	const _2022_07_10_b3_1 = _2022_07_10_b3.add(
-		"{{$vid_b3_1.Title}}", "1", false, "With the unchanged horizontal direction and the Y assignments removed, nothing keeps an Orb at ±8 pixels per frame from flying into/over a bumper. The collision force pushes the Orb slightly, but not enough to truly matter. The final force sends the Orb on a significant downward trajectory beyond the next bumper's hitbox, breaking the original loop."
-	);
-</script>
+</p>

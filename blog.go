@@ -31,17 +31,11 @@ type BlogVideo struct {
 	Poster   template.HTML
 	Sources  []template.HTML
 	Date     string
-	ID       string
 	Title    template.HTML
 	Alt      string
 	Active   bool
 	NoLoop   bool
 	Markers  []BlogVideoMarker
-}
-
-func (b *BlogVideo) SetID(id string) *BlogVideo {
-	b.ID = id
-	return b
 }
 
 func (b *BlogVideo) SetTitle(title template.HTML) string {
@@ -67,9 +61,6 @@ func (b *BlogVideo) AddMarker(frame uint, title string) string {
 // Tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) Tag() (ret template.HTML) {
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)
-	if b.ID != "" {
-		ret += template.HTML(fmt.Sprintf(` id="%s-%s"`, b.Date, b.ID))
-	}
 	if b.Title != "" {
 		ret += template.HTML(fmt.Sprintf(` data-title="%s"`, b.Title))
 	}

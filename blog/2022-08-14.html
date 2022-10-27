@@ -45,11 +45,25 @@
 	point that probably even ZUN himself didn't know what he wanted it to look
 	like in the end:
 </p><figure class="th01_playfield">
-	<figcaption>
-		<p id="{{.Date}}-go"></p>
-		<span id="{{.Date}}-go-caption"></span>
-	</figcaption>
-	{{call .VideoPlayer ($vid_orig.SetID "go-o").SetActive ($vid_wimpy.SetID "go-w") ($vid_no.SetID "go-n")}}
+	<figcaption class="dynamic"><div>
+		The original version unblits a 32×32 rectangle around Reimu that only
+		grows on the X axis… for the first 5 frames. The unblitting call is
+		only run if the corresponding sprite wasn't clipped at the edges of the
+		playfield in the frame before, and ZUN uses the <i>animation's frame
+		number</i> rather than the sprite loop variable to index the per-sprite
+		clip flag array. The resulting out-of-bounds access then reads the
+		sprite <i>coordinates</i> instead, which are never 0, thus interpreting
+		all 5 sprites as clipped.
+	</div><div>
+		This variant would interpret the declared 5 effect coordinates as
+		distinct sprites and unblit them correctly every frame. The end result
+		is rather wimpy though… hardly appropriate for a Game Over, especially
+		with the original animation in mind.
+	</div><div>
+		This variant would not unblit anything, and is probably closest to what
+		the final animation should have been.
+	</div></figcaption>
+	{{call .VideoPlayer $vid_orig.SetActive $vid_wimpy $vid_no}}
 </figure><hr /><p>
 	Finally, we get to the big <code>main()</code> function, serving as the duct
 	tape that holds this game together. It may read rather disorganized with all
@@ -132,9 +146,4 @@
 	href="https://github.com/32th-System/ReC98/commit/db21033c827b0c932460e4fd0ccf0b224cbca206">32th
 	System</a>, who independently decompiled half of the remaining 14
 	functions…)
-</p><script>
-	const _2022_08_14_go = switchMultipleVideos("{{.Date}}-go");
-	_2022_08_14_go.add("{{$vid_orig.Title}}", "o", true, `The original version unblits a 32×32 rectangle around Reimu that only grows on the X axis… for the first 5 frames. The unblitting call is only run if the corresponding sprite wasn't clipped at the edges of the playfield in the frame before, and ZUN uses the <i>animation's frame number</i> rather than the sprite loop variable to index the per-sprite clip flag array. The resulting out-of-bounds access then reads the sprite <i>coordinates</i> instead, which are never 0, thus interpreting all 5 sprites as clipped.`);
-	_2022_08_14_go.add("{{$vid_wimpy.Title}}", "w", false, `This variant would interpret the declared 5 effect coordinates as distinct sprites and unblit them correctly every frame. The end result is rather wimpy though… hardly appropriate for a Game Over, especially with the original animation in mind.`);
-	_2022_08_14_go.add("{{$vid_no.Title}}", "n", false, `This variant would not unblit anything, and is probably closest to what the final animation should have been.`);
-</script>
+</p>

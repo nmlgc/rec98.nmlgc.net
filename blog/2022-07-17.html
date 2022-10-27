@@ -148,11 +148,15 @@
 	the chasing pellets for 30 frames and making the pattern quite ghostly
 	indeed. However, that's not what we see in the actual game:
 </p><figure class="th01_playfield">
-	<figcaption>
-		<p id="{{.Date}}-hop"></p>
-		<span id="{{.Date}}-hop-caption"></span>
-	</figcaption>
-	{{call .VideoPlayer ($vid_hop_0.SetID "hop-0").SetActive ($vid_hop_1.SetID "hop-1")}}
+	<figcaption class="dynamic"><div>
+		Nothing in the pattern's code would cause the hardware palette to get
+		brighter before the end of the pattern, and yet…
+	</div><div>
+		The expected version doesn't look all too unfair, even on Lunatic…
+		well, at least at the default <s>rank</s> pellet speed shown in this
+		video. At maximum pellet speed, it <i>is</i> in fact rather brutal.
+	</div></figcaption>
+	{{call .VideoPlayer $vid_hop_0.SetActive $vid_hop_1}}
 </figure><p>
 	Looking at the frame counter, it appears that <i>something</i> outside the
 	pattern resets the palette every 40 frames. The only known constant with a
@@ -239,8 +243,4 @@
 	slightly more than half of all remaining code in TH01's
 	<code>REIIDEN.EXE</code> and the single biggest function in all of PC-98
 	Touhou, let's go!
-</p><script>
-	const _2022_07_17_hop = switchMultipleVideos("{{.Date}}-hop");
-	_2022_07_17_hop.add("{{$vid_hop_0.Title}}", "0", true, "Nothing in the pattern's code would cause the hardware palette to get brighter before the end of the pattern, and yet…");
-	_2022_07_17_hop.add("{{$vid_hop_1.Title}}", "1", false, "The expected version doesn't look all too unfair, even on Lunatic… well, at least at the default <s>rank</s> pellet speed shown in this video. At maximum pellet speed, it <i>is</i> in fact rather brutal.");
-</script>
+</p>

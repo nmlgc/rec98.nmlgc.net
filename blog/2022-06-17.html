@@ -276,11 +276,19 @@
 	<code>cputype=auto</code> and <code>cycles=max</code>, and with
 	<code>i</code> overlaid using the text chip. Caution, flashing lights:
 </p><figure style="width: 320px;">
-	<figcaption>
-		<p id="{{.Date}}-be2"></p>
-		<span id="{{.Date}}-be2-caption"></span>
-	</figcaption>
-	{{call .VideoPlayer ($vid_be2_0.SetID "be2-0").SetActive ($vid_be2_1.SetID "be2-1")}}
+	<figcaption class="dynamic"><div>
+		The original animation, completing in 50 frames instead of the expected
+		34, thanks to slow blitting. Combined with the lack of
+		double-buffering, this results in noticeable tearing as the screen
+		refreshes while blitting is still in progress.
+		{{template "be2_caption_trail"}}
+	</div><div>
+		This optimized version completes in the expected 34 frames. No tearing
+		happens to be visible in this recording, but the <i lang='ja'
+		style='color: red'>ド﻿カ﻿ー﻿ン</i> image is still visible on every
+		second loop iteration. {{template "be2_caption_trail"}}
+	</div></figcaption>
+	{{call .VideoPlayer $vid_be2_0.SetActive $vid_be2_1}}
 </figure><p>
 	I pushed the optimized code to the <a
 	href="https://github.com/nmlgc/ReC98/tree/th01_end_pic_optimize"><code>th01_end_pic_optimize</code></a>
@@ -336,12 +344,4 @@
 	and 98 functions until all of TH01 is decompiled! Next up: SinGyoku, who not
 	only is the quickest boss to defeat in-game, but also comes with the least
 	amount of code. See you very soon!
-</p><script>
-	const _2022_06_17_be2 = switchMultipleVideos("{{.Date}}-be2");
-	const _2022_06_17_be2_0 = _2022_06_17_be2.add(
-		"{{$vid_be2_0.Title}}", "0", true, "The original animation, completing in 50 frames instead of the expected 34, thanks to slow blitting. Combined with the lack of double-buffering, this results in noticeable tearing as the screen refreshes while blitting is still in progress. {{$be2_caption_trail}}"
-	);
-	const _2022_06_17_be2_1 = _2022_06_17_be2.add(
-		"{{$vid_be2_1.Title}}", "1", false, "This optimized version completes in the expected 34 frames. No tearing happens to be visible in this recording, but the <i lang='ja' style='color: red'>ド﻿カ﻿ー﻿ン</i> image is still visible on every second loop iteration. {{$be2_caption_trail}}"
-	);
-</script>
+</p>

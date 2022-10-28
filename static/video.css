@@ -133,3 +133,12 @@ rec98-video .timeline rec98-video-marker button:hover {
 	border-color: var(--c-link-hover);
 	color: var(--c-link-hover);
 }
+
+figcaption.dynamic {
+	display: grid;
+}
+
+figcaption.dynamic div {
+	grid-column: 1;
+	grid-row: 1;
+}

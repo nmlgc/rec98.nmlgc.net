@@ -124,6 +124,9 @@ class ReC98Video extends HTMLElement {
 	/** @type {HTMLVideoElement} */
 	videoShown;
 
+	/** @type {HTMLCollectionOf<HTMLDivElement> | undefined} */
+	dynamicCaptions;
+
 	frameCount = 0;
 	fps = 1;
 	scrubPossible = false;
@@ -438,6 +441,13 @@ class ReC98Video extends HTMLElement {
 		for(const marker of this.markers()) {
 			marker.hidden = (marker.videoIndex !== index);
 		}
+		if(this.dynamicCaptions) {
+			for(let i = 0; i < this.dynamicCaptions.length; i++) {
+				this.dynamicCaptions[i].style.visibility = (
+					(i == index) ? "visible" : "hidden"
+				);
+			}
+		}
 		return true;
 	}
 
@@ -585,6 +595,19 @@ class ReC98Video extends HTMLElement {
 		if(lastChild === null) {
 			throw "No <video> child element found.";
 		}
+
+		// Dynamic captions
+		// ----------------
+		const figcaption = this.parentElement?.querySelector(
+			"figcaption.dynamic"
+		);
+		this.dynamicCaptions = figcaption?.getElementsByTagName("div");
+		if(this.dynamicCaptions) {
+			if(this.dynamicCaptions.length != this.videos.length) {
+				throw `Expected ${this.videos.length} dynamic captions, but got ${this.dynamicCaptions.length}.`;
+			}
+		}
+		// ----------------
 
 		this.showVideo(requested ?? lastChild);
 		this.pause();

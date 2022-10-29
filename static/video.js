@@ -611,6 +611,18 @@ class ReC98Video extends HTMLElement {
 
 		this.showVideo(requested ?? lastChild);
 		this.pause();
+
+		// Some browsers (*cough* Firefox) refuse to layout the timeline at the
+		// above call to getBoundingClientRect() and just return 0. Just gotta
+		// defer setting the correct marker widths in that case…
+		if(timelineWidth === 0) {
+			window.addEventListener("DOMContentLoaded", () => {
+				const rect = this.eTimeline.getBoundingClientRect();
+				for(const marker of this.markers()) {
+					marker.setWidth(rect.width);
+				}
+			});
+		}
 	}
 };
 

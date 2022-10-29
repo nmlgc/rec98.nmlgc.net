@@ -40,18 +40,27 @@ class ReC98Video extends HTMLElement {
 	timeIntervalID = null;
 	// -------
 
+	onPlay() {
+		this.ePlay.textContent = "⏸";
+		this.ePlay.title = "Pause (Space)";
+		this.timeIntervalID = setInterval(
+			(() => this.renderTimeFromVideo()), (1000 / this.fps)
+		);
+	}
+
 	play() {
 		// Prevent a second call from the `onplay` handler.
 		if(this.timeIntervalID) {
 			return;
 		}
 
-		this.videoShown.play();
-		this.ePlay.textContent = "⏸";
-		this.ePlay.title = "Pause (Space)";
-		this.timeIntervalID = setInterval(
-			(() => this.renderTimeFromVideo()), (1000 / this.fps)
-		);
+		// https://developer.chrome.com/blog/play-request-was-interrupted/
+		const playPromise = this.videoShown.play();
+		if(playPromise !== undefined) {
+			playPromise.then(() => this.onPlay());
+		} else {
+			this.onPlay();
+		}
 	}
 
 	pause() {
@@ -70,7 +79,16 @@ class ReC98Video extends HTMLElement {
 			return;
 		}
 		event.preventDefault();
-		if(this.videoShown.paused) {
+
+		// This function might be called twice in very quick succession. As
+		// `<video>.play()` is asynchronous in modern browsers, but immediately
+		// sets `<video>.paused` to `false`, a second call checking for that
+		// flag would call `<video>.pause()` while `<video>.play()` is still
+		// running, leading to an infinite loop of "play() was interrupted by
+		// pause()" exceptions. [this.timeIntervalID] is only set after the
+		// promise resolved, and is therefore a more reliable indicator of the
+		// current playing state.
+		if(!this.timeIntervalID) {
 			this.play();
 		} else {
 			this.pause();

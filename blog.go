@@ -29,6 +29,7 @@ type BlogVideoMarker struct {
 type BlogVideo struct {
 	Metadata *VideoMetadata
 	Poster   template.HTML
+	Lossless template.HTML
 	Sources  []template.HTML
 	Date     string
 	Title    template.HTML
@@ -74,6 +75,7 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		` data-fps="%v" data-frame-count="%v"`,
 		b.Metadata.FPS, b.Metadata.FrameCount,
 	))
+	ret += (` data-lossless="` + b.Lossless + `"`)
 
 	ret += `>`
 	for _, source := range b.Sources {
@@ -83,7 +85,7 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 	if b.Alt != "" {
 		ret += template.HTML(b.Alt + ". ")
 	}
-	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Sources[0]))
+	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Lossless))
 	for _, marker := range b.Markers {
 		ret += "<rec98-video-marker"
 		ret += template.HTML(fmt.Sprintf(
@@ -99,6 +101,7 @@ func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	ret := &BlogVideo{
 		Metadata: &b.Video.Cache.Video[stem].Metadata,
 		Poster:   template.HTML(b.VideoURL(stem, &POSTER)),
+		Lossless: template.HTML(b.VideoURL(stem, &VIDEO_SOURCE)),
 		Date:     date,
 		Alt:      alt,
 	}

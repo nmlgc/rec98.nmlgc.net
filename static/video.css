@@ -55,7 +55,7 @@ rec98-video .controls {
 	display: grid;
 	font-size: small;
 	grid-row: 2;
-	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em;
+	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em;
 	justify-items: left !important;
 	width: 100%;
 }
@@ -78,10 +78,12 @@ rec98-video.with-switcher .controls {
 	font-size: large;
 }
 
-rec98-video .controls>button {
+rec98-video .controls>button,
+rec98-video .controls>a {
 	font-family: "Catrinity";
 	color: white;
 	padding: 0;
+	place-self: center;
 	user-select: none;
 	-webkit-user-select: none;
 	width: 100%;

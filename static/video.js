@@ -117,6 +117,7 @@ class ReC98Video extends HTMLElement {
 	eTimeline = document.createElement("div");
 	eTimelineBorder = document.createElement("div");
 	eTimelinePos = document.createElement("div");
+	eDownload = document.createElement("a");
 	eFullscreen = document.createElement("button");
 
 	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
@@ -356,6 +357,13 @@ class ReC98Video extends HTMLElement {
 		this.eTimelinePos.className = "pos";
 		// --------
 
+		// Download
+		// --------
+		this.eDownload.textContent = "⍗";
+		this.eDownload.title = "Lossless source file";
+		this.eDownload.className = "large";
+		// --------
+
 		// Fullscreen
 		// ----------
 		this.eFullscreen.textContent = "⛶";
@@ -466,6 +474,7 @@ class ReC98Video extends HTMLElement {
 		for(const marker of this.markers()) {
 			marker.hidden = (marker.videoIndex !== index);
 		}
+		this.eDownload.href = attributeAsString(videoNew, "data-lossless");
 		if(this.dynamicCaptions) {
 			for(let i = 0; i < this.dynamicCaptions.length; i++) {
 				this.dynamicCaptions[i].style.visibility = (
@@ -497,6 +506,7 @@ class ReC98Video extends HTMLElement {
 		this.eControls.appendChild(this.eTimeFrame);
 		this.eControls.appendChild(this.eFrameNext);
 		this.eControls.appendChild(this.eTimeline);
+		this.eControls.appendChild(this.eDownload);
 		this.eControls.appendChild(this.eFullscreen);
 		this.appendChild(this.eControls);
 
@@ -587,6 +597,7 @@ class ReC98Video extends HTMLElement {
 			});
 			this.prepend(this.eTabSwitcher);
 			this.classList.add("with-switcher");
+			this.eDownload.title = "Lossless source file of current tab";
 		}
 
 		const timelineWidth = this.eTimeline.getBoundingClientRect().width;

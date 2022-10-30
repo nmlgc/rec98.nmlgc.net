@@ -46,7 +46,7 @@ a {
 }
 
 a:hover {
-	color: var(--c-link-hover);
+	color: var(--c-link-hover) !important;
 }
 
 blockquote {

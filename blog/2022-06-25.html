@@ -2,11 +2,11 @@
 {{$vid2 := (call .Video "TH01-SinGyoku-sphere-slam-unblitting" "Video demonstrating both rendering glitches during TH01 SinGyoku's sphere movement") -}}
 {{$pic := (call .PostFileURL "TH01-SinGyoku-defeat.png") -}}
 
-{{$vid1.AddMarker  16 "<code>gx = 376</code>" -}}
-{{$vid1.AddMarker 176 "<code>gx = 380</code>" -}}
-{{$vid2.AddMarker   5 "Lazy reblitting" -}}
-{{$vid2.AddMarker  36 "Broken unblitting" -}}
-{{$vid2.AddMarker  94 "Reimu disappears" -}}
+{{$vid1.AddMarker  16 "<code>gx = 376</code>" "" -}}
+{{$vid1.AddMarker 176 "<code>gx = 380</code>" "" -}}
+{{$vid2.AddMarker   5 "Lazy reblitting" "right" -}}
+{{$vid2.AddMarker  36 "Broken unblitting" "left" -}}
+{{$vid2.AddMarker  94 "Reimu disappears" "left" -}}
 
 <p>
 	The positive:

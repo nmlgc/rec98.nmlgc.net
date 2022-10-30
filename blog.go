@@ -20,8 +20,9 @@ var blogHP = NewHostedPath("blog/", blogURLPrefix+"/static/")
 // BlogVideoMarker specifies an interesting frame in the video that should be
 // highlighted on its timeline.
 type BlogVideoMarker struct {
-	Frame uint
-	Title string
+	Frame     uint
+	Title     string
+	Alignment template.HTML
 }
 
 // BlogVideo bundles static file URLs to all encodings of a video with all
@@ -54,8 +55,10 @@ func (b *BlogVideo) SetNoLoop() *BlogVideo {
 	return b
 }
 
-func (b *BlogVideo) AddMarker(frame uint, title string) string {
-	b.Markers = append(b.Markers, BlogVideoMarker{Frame: frame, Title: title})
+func (b *BlogVideo) AddMarker(frame uint, title string, alignment template.HTML) string {
+	b.Markers = append(b.Markers, BlogVideoMarker{
+		Frame: frame, Title: title, Alignment: alignment,
+	})
 	return ""
 }
 
@@ -87,10 +90,14 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 	}
 	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Lossless))
 	for _, marker := range b.Markers {
+		if marker.Alignment == "" {
+			marker.Alignment = "right"
+		}
 		ret += "<rec98-video-marker"
 		ret += template.HTML(fmt.Sprintf(
 			` data-frame="%d" data-title="%s"`, marker.Frame, marker.Title,
 		))
+		ret += (` data-alignment="` + marker.Alignment + `"`)
 		ret += "></rec98-video-marker>"
 	}
 	ret += `</video>`

@@ -68,6 +68,7 @@ class ReC98VideoMarker extends HTMLElement {
 	init(player, videoIndex, timelineWidth, fps, frameCount) {
 		const frame = attributeAsNumber(this, "data-frame");
 		const title = attributeAsString(this, "data-title");
+		const alignment = attributeAsString(this, "data-alignment");
 		this.frameCount = frameCount;
 		this.videoIndex = videoIndex;
 
@@ -78,7 +79,7 @@ class ReC98VideoMarker extends HTMLElement {
 
 		this.style.left = timelineWidthAt(frame, frameCount);
 		this.setWidth(timelineWidth);
-		this.button.style.right = "0";
+		this.button.style[alignment] = "0";
 		this.button.innerHTML = title;
 		this.onclick = onclick;
 		this.button.onclick = onclick;

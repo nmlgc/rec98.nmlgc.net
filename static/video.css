@@ -18,15 +18,32 @@ rec98-video {
 	box-shadow: var(--blog-shadow);
 	background-color: var(--c-dark);
 	display: grid;
+	grid-template-rows: 1fr min-content;
+}
+
+rec98-video.with-switcher {
+	grid-template-rows: min-content 1fr min-content;
 }
 
 rec98-video.with-markers {
 	margin-bottom: 1.75em;
 }
 
+:fullscreen rec98-video {
+	font-size: large;
+	width: 100%;
+}
+
+/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+:-webkit-full-screen rec98-video {
+	font-size: large;
+	width: 100%;
+}
+
 rec98-video video {
 	grid-column: 1;
-	grid-row: 2;
+	grid-row: 1;
+	height: 100%;
 }
 
 rec98-video video.active {
@@ -37,10 +54,28 @@ rec98-video .controls {
 	color: var(--c-lightgray);
 	display: grid;
 	font-size: small;
-	grid-row: 3;
-	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr;
+	grid-row: 2;
+	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em;
 	justify-items: left !important;
 	width: 100%;
+}
+
+/* Firefox requires an explicit grid without gaps for `height: 100%` to work */
+rec98-video.with-switcher video {
+	grid-row: 2;
+}
+
+rec98-video.with-switcher .controls {
+	grid-row: 3;
+}
+
+:fullscreen rec98-video .controls {
+	font-size: large;
+}
+
+/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+:-webkit-full-screen rec98-video {
+	font-size: large;
 }
 
 rec98-video .controls>button {

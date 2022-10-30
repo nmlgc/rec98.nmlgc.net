@@ -117,6 +117,7 @@ class ReC98Video extends HTMLElement {
 	eTimeline = document.createElement("div");
 	eTimelineBorder = document.createElement("div");
 	eTimelinePos = document.createElement("div");
+	eFullscreen = document.createElement("button");
 
 	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
 	videos;
@@ -354,6 +355,30 @@ class ReC98Video extends HTMLElement {
 		this.eTimelineBorder.className = "border";
 		this.eTimelinePos.className = "pos";
 		// --------
+
+		// Fullscreen
+		// ----------
+		this.eFullscreen.textContent = "⛶";
+		this.eFullscreen.title = "Toggle fullscreen (F)";
+		this.eFullscreen.className = "large";
+		this.eFullscreen.onclick = (() => {
+			if(!this.parentElement) {
+				return;
+			}
+			if(!document.fullscreenElement) {
+				(this['webkitRequestFullscreen']
+					? this.parentElement['webkitRequestFullscreen']()
+					: this.parentElement.requestFullscreen()
+				);
+				this.focus();
+			} else {
+				(document['webkitExitFullscreen']
+					? document['webkitExitFullscreen']()
+					: document.exitFullscreen()
+				);
+			}
+		});
+		// ----------
 	}
 
 	/**
@@ -472,6 +497,7 @@ class ReC98Video extends HTMLElement {
 		this.eControls.appendChild(this.eTimeFrame);
 		this.eControls.appendChild(this.eFrameNext);
 		this.eControls.appendChild(this.eTimeline);
+		this.eControls.appendChild(this.eFullscreen);
 		this.appendChild(this.eControls);
 
 		// Event handlers
@@ -505,6 +531,8 @@ class ReC98Video extends HTMLElement {
 					? this.eFastForward.onclick?.(event)
 					: this.eFrameNext.onclick?.(event)
 				);
+			case '⛶':
+				return this.eFullscreen.onclick?.(event);
 			}
 		});
 
@@ -558,6 +586,7 @@ class ReC98Video extends HTMLElement {
 				return this.showVideo(i);
 			});
 			this.prepend(this.eTabSwitcher);
+			this.classList.add("with-switcher");
 		}
 
 		const timelineWidth = this.eTimeline.getBoundingClientRect().width;

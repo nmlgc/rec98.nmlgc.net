@@ -380,11 +380,22 @@ class ReC98Video extends HTMLElement {
 			if(!this.parentElement) {
 				return;
 			}
+			if(!this.parentElement.onfullscreenchange) {
+				this.parentElement.onfullscreenchange = (() => {
+					if(!document.fullscreenElement) {
+						screen.orientation.unlock();
+					}
+				})
+			}
 			if(!document.fullscreenElement) {
 				(this['webkitRequestFullscreen']
 					? this.parentElement['webkitRequestFullscreen']()
 					: this.parentElement.requestFullscreen()
 				);
+				screen.orientation.lock((this.offsetWidth > this.offsetHeight)
+					? "landscape"
+					: "portrait"
+				).catch(() => {});
 				this.focus();
 			} else {
 				(document['webkitExitFullscreen']

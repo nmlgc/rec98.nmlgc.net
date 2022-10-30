@@ -162,6 +162,12 @@ class ReC98Video extends HTMLElement {
 			return;
 		}
 
+		// Rewind if we're at the end of a non-looping video – otherwise,
+		// playback would immediately pause again.
+		if(!this.videoShown.loop && (this.frame() === (this.frameCount - 1))) {
+			this.videoShown.currentTime = 0;
+		}
+
 		// https://developer.chrome.com/blog/play-request-was-interrupted/
 		const playPromise = this.videoShown.play();
 		if(playPromise !== undefined) {

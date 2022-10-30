@@ -1,3 +1,9 @@
+@font-face {
+	/* License is embedded in the file. */
+	font-family: "Catrinity";
+	src: url(/static/Catrinity.subset.woff2?5c38d045) format("woff2");
+}
+
 :root {
 	--timeline-gradient: linear-gradient(180deg,
 		white 0%,
@@ -38,6 +44,7 @@ rec98-video .controls {
 }
 
 rec98-video .controls>button {
+	font-family: "Catrinity";
 	color: white;
 	padding: 0;
 	user-select: none;

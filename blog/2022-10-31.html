@@ -1,0 +1,659 @@
+{{$median_zmbv := (call .PostFileURL "Median-ZMBV.png") -}}
+{{$median_av1 := (call .PostFileURL "Median-AV1-crf-1.png") -}}
+{{$median_difference := (call .PostFileURL "Median-AV1-crf-1-difference.png") -}}
+{{$bleed_zmbv := (call .PostFileURL "Color-bleed-ZMBV.png") -}}
+{{$bleed_av1 := (call .PostFileURL "Color-bleed-AV1-crf-1.png") -}}
+{{$bleed_difference := (call .PostFileURL "Color-bleed-AV1-crf-1-difference.png") -}}
+{{$sub_zmbv := (call .PostFileURL "Subsampling-ZMBV.png") -}}
+{{$sub_vp9 := (call .PostFileURL "Subsampling-VP9.png") -}}
+{{$sub_difference := (call .PostFileURL "Subsampling-VP9-difference.png") -}}
+
+<style>
+	#fullres-{{.Date}} img {
+		width: 1280px;
+	}
+	#singleplayer_playfield-{{.Date}} img {
+		width: 768px;
+	}
+	#trials-{{.Date}} {
+		font-size: 75%;
+	}
+	#trials-{{.Date}} tbody td:not(:nth-child(4)) {
+		text-align: right;
+		white-space: nowrap;
+	}
+	#trials-{{.Date}} tbody td:nth-child(4) {
+		text-align: left;
+		font-family: monospace;
+	}
+	#trials-{{.Date}} tbody {
+		color: #444;
+	}
+	#trials-{{.Date}} tbody .active {
+		font-weight: bold;
+		color: black;
+	}
+	#trials-{{.Date}} .av1 {
+		background-color: rgb(220, 256, 220);
+	}
+	#trials-{{.Date}} .vp8 {
+		background-color: rgb(256, 256, 220);
+	}
+	#trials-{{.Date}} .vp9 {
+		background-color: rgb(256, 220, 220);
+	}
+</style>
+
+
+<p>
+	Yes, I'm still alive. This delivery was just plagued by all of the worst
+	luck: Data loss, physical hard drive failure, exploding phone batteries,
+	minor illness… and after taking 4 weeks to recover from all of that, I had
+	to face <i>this</i> beast of a task. 😵
+</p><p>
+	Turns out that neither part of improving video performance and usability on
+	this blog was particularly easy. Decently encoding the videos into all
+	web-supported formats required unexpected trade-offs even for the low-res,
+	low-color material we are working with, and writing custom video player
+	controls added the timing precision resistance of HTML
+	<code>&lt;video&gt;</code> on top of the inherent complexity of frontend web
+	development. Why did this need to be 800 lines of commented JavaScript and
+	200 lines of commented CSS, and consume almost more than 5 pushes?!
+	Apparently, the latest price increase also seemed to have raised the minimum
+	level of acceptable polish in my work, since that's more than the maximum of
+	3.67 pushes it should have taken. To fund the rest, I stole some of the
+	reserved JIS trail word rendering research pushes, which means that the next
+	{{HTML_Currency 10000}} towards anything will go back towards that goal.
+</p><hr /><p>
+	The codec situation is especially sad because it seems like so much of a
+	solved problem. ZMBV, the lossless capture codec introduced by DOSBox, is
+	both very well suited for retro game footage and remarkably simple too:
+	DOSBox-X's implementation of both an encoder and decoder comes in at under
+	650 lines of C++, excluding the Deflate implementation. Heck, the AVI
+	container <i>around</i> the codec is more complicated to write than the
+	compressed video data itself, and AVI is already the easiest choice you have
+	for a widely supported video container format.<br />
+	Currently, this blog contains 9:02 minutes of video across 86 files, with a
+	total frame count of 24,515. In case this post attracts a general video
+	encoding audience that isn't familiar with what I'm encoding here: The
+	maximum resolution is 640×400, and most of the video uses 16 colors, with
+	some parts occasionally using more. With ZMBV, the lossless source files
+	take up 43.8&nbsp;MiB, and that's even <i>with</i> AVI's infamously bad
+	overhead. While you can always spend more time on any compression task and
+	precisely tune your algorithm to match your source data even better,
+	43.8&nbsp;MiB looks like a more than reasonable amount for this type of
+	content.
+</p><p>
+	Especially compared with what I actually have to ship here, because sadly,
+	ZMBV is not supported by browsers. 😔 Writing a WebAssembly player for ZMBV
+	would have certainly been interesting, but it already took 5 pushes to get
+	to what we have now. So, let's instead shell out to ffmpeg and build a
+	pipeline to convert ZMBV to the ill-suited codecs supported by web browsers,
+	replacing the previously committed VP9 and VP8 files. From that point, we
+	can then look into AV1, the latest and greatest web-supported video codec,
+	to save some additional bandwidth.
+</p><p>
+	But first, we've got to gather all the ZMBV source files. While I was
+	working on the {{Blog_PostLink "2022-07-10" "2022-07-10 blog post"}}, I
+	noticed some weirdly washed-out colors in the converted videos, leading to
+	the shocking realization that my previous, historically grown conversion
+	script didn't <i>actually</i> encode in a lossless way. 😢 By extension,
+	this meant that every video before that post could have had minor
+	discolorations as well.<br />
+	For the majority of videos, I still had the original ZMBV capture files
+	straight out of DOSBox-X, and reproducing the final videos wasn't too big of
+	a deal. For the few cases where I didn't, I went the extra mile, took the
+	VP9 files, and manually fixed up all the minor color errors based on
+	reference videos from the same gameplay stage. There might be a huge ffmpeg
+	command line with a complicated filter graph to do the job, but for such a
+	small 4-digit number of frames, it is much more straightforward to just dump
+	each frame as an image and perform the color replacement with ImageMagick's
+	<code>-opaque</code> and <code>-fill</code> options.
+	{{HTML_Emoji "tannedcirno"}}
+</p><hr /><p>
+	So, time to encode our new definite collection of source files into AV1, and
+	<i>what the hell</i>, how slow <i>is</i> this codec? With ffmpeg's
+	<code>libaom-av1</code>, fully encoding all 86 videos takes <i>almost 9
+	hours</i> on my <a
+	href="https://twitter.com/lunasorcery/status/1578483707979014144">mid-range
+	development system</a>, regardless of the quality selected.<br />
+	But sure, the encoded videos are managed by a cache, and this obviously only
+	needs to be done once. If the results are amazing, they might even justify
+	these glacial encoding speeds. Unfortunately, they don't: In its lossless
+	<code>-crf 0</code> mode, AV1 performs even <i>worse</i> than VP9, taking up
+	222&nbsp;MiB rather than 182&nbsp;MiB. It might not <i>sound</i> bad now,
+	but as we're later going to find out, we want to have a <i>lot</i> of
+	keyframes in these videos, which will blow up video sizes even further.
+</p><p>
+	So, time to go lossy and maybe take a deep dive into AV1 tuning? Turns out
+	that it only gets worse from there:
+</p><ul>
+	<li>The alternative <code>libsvtav1</code> encoder is fast and creates small
+	files… but even on the highest-quality settings, <code>-crf 0</code> and
+	<code>-qp 0</code>, the video quality resembled the terrible x264 YUV420P
+	format that Twitter enforces on uploaded videos.</li>
+	<li>I don't remember the <code>librav1e</code> results, but they sure
+	weren't convincing either.</li>
+	<li><code>libaom-av1</code>'s <code>-usage realtime</code> option is a
+	complete joke. 771&nbsp;MiB for all videos, and it doesn't even compress
+	<i>in</i> real time on my system, more like 2.5× real-time. For comparison,
+	a certain stone-age technology by the name of "animated GIF" would take
+	54.3&nbsp;MiB, encode in sub-realtime (0.47×), and the only necessary tuning
+	you need is an <a
+	href="https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/">easily
+	googled palette generation and usage filter</a>. Why can't I just use
+	<i>those</i> in a <code>&lt;video&gt;</code> tag?! These results have
+	clearly proven the top-voted <q>just use modern video codecs</q> Stack
+	Overflow answers wrong.</li>
+	<li>What you're actually supposed to do is to drop <code>-cpu-used</code> to
+	maybe 2 or 3, and then selectively add back prediction filters that suit
+	your type of content. In our case, these are<ul>
+		<li><code>-enable-palette</code></li>
+		<li><code>-enable-rect-partitions</code> and friends</li>
+		<li><code>-enable-intrabc</code> (<a
+		href="https://thebroadcastknowledge.com/2020/11/05/video-av1-real-time-screen-content-coding/#video">source</a>)</li>
+	</ul> and maybe others, depending on much time you want to waste.</li>
+</ul><p>
+	Because that's what all this tuning ended up being: a complete waste of
+	time. No matter which tuning options I tried, all they did was cut down
+	encoding time in exchange for slightly larger files on average. If there is
+	a magic tuning option that would suddenly cause AV1 to maybe even beat ZMBV,
+	I haven't found it. Heck, at particularly low settings,
+	<code>-enable-intrabc</code> even caused blocky glitches with certain pellet
+	patterns that looked like the internal frame block hashes were colliding all
+	over the place. Unfortunately, I didn't save the video where it happened.
+</p><p>
+	So yeah, if you've already invested the computation time and encoded your
+	content by just specifying a <code>-crf</code> value and keeping the
+	remaining settings at their time-consuming defaults, any further tuning will
+	make no difference. Which is… an interesting choice from a usability
+	perspective. {{HTML_Emoji "thonk"}} I would have expected the exact
+	opposite: default to a reasonably fast and efficient profile, and leave the
+	vast selection of tuning options for those people to explore who <i>do</i>
+	want to wait 5× as long for their encoder for that additional 5% of
+	compression efficiency. On the other hand, that surely is one way to get
+	people to extensively study your glorious engineering efforts, I guess? You
+	know what would maybe even <i>motivate</i> people to intrinsically do that?
+	Good documentation, with examples of the intent behind every option and its
+	optimal use case. Nobody needs long help strings that just spell out all of
+	the abbreviations that occur in the name of the option…<br />
+	But hey, that at least means there's no reason to not use anything but ZMBV
+	for storing and archiving the lossless source files. Best compression
+	efficiency, encodes in real-time, and the files are much easier to edit.
+</p><p>
+	OK, end of rant. To understand why <a
+	href="https://reddit.com/r/AV1">anyone</a> could be hyped about AV1 to begin
+	with, we just have to compare it to VP9, not to ZMBV. In that light, AV1
+	<i>is</i> pretty impressive even at <code>-crf 1</code>, compressing all 86
+	videos to 68.9&nbsp;MiB, and even preserving 22.3% of frames completely
+	losslessly. The remaining frames exhibit the exact kind of quality loss
+	you'd want for retro game footage: Minor discoloration in individual pixels,
+	barely visible even if you calculated the normalized difference to the
+	lossless source and know where to look. If "compressed PNG size of the
+	normalized difference between ZMBV and AV1 <code>-crf 1</code>" is a useful
+	metric, this would be its median frame:
+</p><figure class="pixelated">
+	<rec98-image-switcher id="fullres-{{.Date}}"><img
+		src="{{$median_zmbv}}"
+		data-title="Lossless"
+		alt="The lossless source image"
+	/><img
+		src="{{$median_av1}}"
+		data-title="AV1 <code>-crf 1</code>"
+		alt="The same image encoded in AV1"
+	/><img
+		src="{{$median_difference}}"
+		data-title="Normalized difference"
+		alt="The normalized difference between both images"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	<figcaption>
+		That's frame 26 of
+		{{Blog_PostLink "2022-08-08" "YuugenMagan's reconstructed Phase 5 pattern on Easy mode"}}.
+		The AV1 version does in fact expand the original image's 16 distinct
+		colors to 38.
+	</figcaption>
+</figure><p>
+	For comparison, here's the 13th worst one. The codec only resorts to color
+	bleeding with particularly heavy effects, exactly where it doesn't matter:
+</p><figure class="pixelated">
+	<rec98-image-switcher id="singleplayer_playfield-{{.Date}}"><img
+		src="{{$bleed_zmbv}}"
+		data-title="Lossless"
+		alt="The lossless source image"
+	/><img
+		src="{{$bleed_av1}}"
+		data-title="AV1 <code>-crf 1</code>"
+		alt="The same image encoded in AV1"
+	/><img
+		src="{{$bleed_difference}}"
+		data-title="Normalized difference"
+		alt="The normalized difference between both images"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	<figcaption>
+		Frame 26 of the
+		{{Blog_PostLink "2020-08-28" "TH05 Reimu bomb animation quirk video"}}.
+		139 colors in the AV1 version.
+	</figcaption>
+</figure><p>
+	Whether you can actually spot the difference is pretty much down to the
+	glass between the physical pixels and your eyes. In any case, it's very
+	hard, even if you know where to look. As far as I'm concerned, I can
+	confidently call this "visually lossless", and it's definitely good enough
+	for regular watching and even single-frame stepping on this blog.<br />
+	Since the appeal of the original lossless files is undeniable though, I also
+	made those more easily available. You can directly download the one for the
+	currently active video with the <span style="font-family:
+	Catrinity;">⍗</span> button in the new video player – or <a
+	href="https://github.com/nmlgc/rec98.nmlgc.net/tree/master/blog/video/zmbv">directly
+	get all of them from the Git repository</a> if you don't like clicking.
+</p><hr /><p>
+	Unfortunately, even that only made up for half of the complexity in this
+	pipeline. As impressive as the AV1 <code>-crf 1</code> result may be, it
+	does in fact come with the drawback of also being impressively heavy to
+	decode within today's browsers. Seeking is dog slow, with even the latencies
+	for <i>single-frame stepping</i> being way beyond what I'd consider
+	tolerable. To compensate, we have to invest another 78&nbsp;MiB into turning
+	every 10<sup>th</sup> frame into a keyframe until single-stepping through an
+	entire video becomes as fast as it could be on my system.<br />
+	But fine, 146&nbsp;MiB, that's still less than the 178&nbsp;MiB that the old
+	committed VP9 files used to take up. However, we still want to support VP9
+	for <a href="https://caniuse.com/?search=av1">older browsers, older
+	hardware, and people who use Safari</a>. And it's this codec where keyframes
+	are so bad that there is no clear best solution, only compromises. The main
+	issue: The lower you turn VP9's <code>-crf</code> value, the slower the
+	seeking performance <i>with the same number of keyframes</i>. Conversely,
+	this means that raising quality also requires more keyframes for the same
+	seeking performance – and at these file sizes, you really don't want to
+	raise either. We're talking 1.2&nbsp;<i>GiB</i> for all 86 videos at
+	<code>-crf 10</code> and <code>-g 5</code>, and even on that configuration,
+	seeking takes 1.3× as long as it would in the optimal case.
+</p><p>
+	Thankfully, a full VP9 encode of all 86 videos only takes some 30 minutes as
+	opposed to 9 hours. At that speed, it made sense to try a larger number of
+	encoding settings during the ongoing development of the player. Here's a
+	table with all the trials I've kept:
+</p><figure><table id="trials-{{.Date}}" class="numbers">
+	<thead>
+		<tr>
+			<th>Codec</th>
+			<th><code>-﻿crf</code></th>
+			<th><code>-﻿g</code></th>
+			<th style="text-align: left;">Other parameters</th>
+			<th>Total size</th>
+			<th>Seek time</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>20</td>
+			<td>-vf format=yuv420p</td>
+			<td>111 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>10</td>
+			<td>30</td>
+			<td>-qmin 10 -qmax 10 -b:v 1G</td>
+			<td>120 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>7</td>
+			<td>30</td>
+			<td>-qmin 7 -qmax 7 -b:v 1G</td>
+			<td>140 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="av1 active">
+			<td>AV1</td>
+			<td>1</td>
+			<td>10</td>
+			<td></td>
+			<td>146 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>10</td>
+			<td>20</td>
+			<td>-qmin 10 -qmax 10 -b:v 1G</td>
+			<td>147 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8 active">
+			<td>VP8</td>
+			<td>6</td>
+			<td>30</td>
+			<td>-qmin 6 -qmax 6 -b:v 1G</td>
+			<td>149 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>15</td>
+			<td>10</td>
+			<td>-qmin 15 -qmax 15 -b:v 1G</td>
+			<td>177 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>10</td>
+			<td>10</td>
+			<td>-qmin 10 -qmax 10 -b:v 1G</td>
+			<td>225 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>10</td>
+			<td>-vf format=yuv422p</td>
+			<td>329 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>0-4</td>
+			<td>10</td>
+			<td>-qmin 0 -qmax 4 -b:v 1G</td>
+			<td>376 MiB</td>
+			<td>32 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>5</td>
+			<td>30</td>
+			<td>-qmin 5 -qmax 5 -b:v 1G</td>
+			<td>169 MiB</td>
+			<td>33 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>63</td>
+			<td>40</td>
+			<td></td>
+			<td>47 MiB</td>
+			<td>34 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>20</td>
+			<td>-vf format=yuv422p</td>
+			<td>146 MiB</td>
+			<td>34 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>4</td>
+			<td>30</td>
+			<td>-qmin 0 -qmax 4 -b:v 1G</td>
+			<td>192 MiB</td>
+			<td>34 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>4</td>
+			<td>40</td>
+			<td>-qmin 4 -qmax 4 -b:v 1G</td>
+			<td>168 MiB</td>
+			<td>35 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>25</td>
+			<td>20</td>
+			<td>-vf format=yuv422p</td>
+			<td>173 MiB</td>
+			<td>36 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>15</td>
+			<td>15</td>
+			<td>-vf format=yuv422p</td>
+			<td>252 MiB</td>
+			<td>36 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>25</td>
+			<td>-vf format=yuv422p</td>
+			<td>118 MiB</td>
+			<td>37 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>20</td>
+			<td>20</td>
+			<td>-vf format=yuv422p</td>
+			<td>190 MiB</td>
+			<td>37 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>19</td>
+			<td>21</td>
+			<td>-vf format=yuv422p</td>
+			<td>187 MiB</td>
+			<td>38 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>10</td>
+			<td></td>
+			<td>553 MiB</td>
+			<td>38 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>10</td>
+			<td>-tune-content screen</td>
+			<td>553 MiB</td>
+			<td></td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>10</td>
+			<td>-tile-columns 6 -tile-rows 2</td>
+			<td>553 MiB</td>
+			<td></td>
+		</tr>
+		<tr class="vp9 active">
+			<td>VP9</td>
+			<td>15</td>
+			<td>20</td>
+			<td>-vf format=yuv422p</td>
+			<td>207 MiB</td>
+			<td>39 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>10</td>
+			<td>5</td>
+			<td></td>
+			<td>1210 MiB</td>
+			<td>43 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>20</td>
+			<td></td>
+			<td>264 MiB</td>
+			<td>45 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>20</td>
+			<td>-vf format=yuv444p</td>
+			<td>215 MiB</td>
+			<td>46 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td>20</td>
+			<td>-vf format=gbrp10le</td>
+			<td>272 MiB</td>
+			<td>49 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>63</td>
+			<td></td>
+			<td></td>
+			<td>24 MiB</td>
+			<td>67 s</td>
+		</tr>
+		<tr class="vp8">
+			<td>VP8</td>
+			<td>0-4</td>
+			<td></td>
+			<td>-qmin 0 -qmax 4 -b:v 1G</td>
+			<td>119 MiB</td>
+			<td>76 s</td>
+		</tr>
+		<tr class="vp9">
+			<td>VP9</td>
+			<td>32</td>
+			<td></td>
+			<td></td>
+			<td>107 MiB</td>
+			<td>170 s</td>
+		</tr>
+	</tbody>
+</table><figcaption>
+	The <strong>bold rows</strong> correspond to the final encoding choices that
+	are live right now. The seeking time was measured by holding →&nbsp;Right on
+	the {{Blog_PostLink "2022-03-05" "cheeto dodge strategy video"}}.
+</figcaption></figure><p>
+	Yup, the compromise ended up including a chroma subsampling conversion to
+	YUV422P. That's the one thing you <i>don't</i> want to do for retro pixel
+	graphics, as it's the exact cause behind washed-out colors and red fringing
+	around edges:
+</p><figure class="pixelated">
+	<rec98-image-switcher id="fullres-{{.Date}}"><img
+		src="{{$sub_zmbv}}"
+		data-title="Lossless"
+		alt="The lossless source image"
+	/><img
+		src="{{$sub_vp9}}"
+		data-title="VP9 <code>-crf 15 -vf format=yuv422p</code>"
+		alt="The same image encoded in VP9, exhibiting a severe case of chroma subsampling"
+	/><img
+		src="{{$sub_difference}}"
+		data-title="Normalized difference"
+		alt="The normalized difference between both images"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	<figcaption>
+		The worst example of chroma subsampling in a VP9-encoded file according
+		to the above metric, from frame 131 of
+		{{Blog_PostLink "2022-08-08" "Sariel's restored leaf \"spark\" animation"}},
+		featuring smeared-out contours and even an all-around darker image,
+		blowing up the image to a whopping 3653 colors. It's certainly an
+		aesthetic.
+	</figcaption>
+</figure><p>
+	But there simply was no satisfying solution around the ~200&nbsp;MiB mark
+	with RGB colors, and even this compromise is still a disappointment in both
+	size and seeking speed. Let's hope that <a
+	href="https://developer.apple.com/documentation/coremedia/kcmvideocodectype_av1/">Safari
+	users do get AV1 support soon</a>… Heck, even VP8, with its exclusive
+	support for YUV420P, performs much better here, with the impact of
+	<code>-crf</code> on seeking speed being much less pronounced. Encoding VP8
+	also just takes 3 minutes for all 86 videos, so I could have experimented
+	much more. Too bad that it only matters for <i>really</i> ancient systems…
+	{{HTML_Emoji "onricdennat"}}<br />
+	Two final takeaways about VP9:
+</p><ul>
+	<li><code>-tune-content screen</code> and the tile options make no
+	difference at all.</li>
+	<li>All results used two-pass encoding. VP9 is the only codec where two
+	passes made a noticeable difference, cutting down the final encoded size
+	from 224&nbsp;MiB to 207&nbsp;MiB. For AV1, compression even seems to be
+	slightly worse with two passes, yielding 154,201,892 bytes rather than the
+	153,643,316 bytes we get with a single pass. But that's a difference of
+	0.36%, and hardly significant.</li>
+</ul><hr /><p>
+	Alright, <i>now</i> we're done with codecs and get to finish the work on the
+	pipeline with perhaps its biggest advantage. With a ffmpeg conversion
+	infrastructure in place, we can also easily output a video's first frame as
+	a <i>poster</i> image to be passed into the <code>&lt;video&gt;</code> tag.
+	If this image is kept at the exact resolution of the video, the browser
+	doesn't need to wait for an indeterminate amount of "video metadata" to be
+	loaded, and can reserve the necessary space in the page layout much faster
+	and without any of these dreaded loading spinners. For the big
+	<code>/blog</code> page, this cuts down the minimum amount of required
+	resources from 69.5 MB to 3.6 MB, finally making it usable again without
+	waiting an eternity for the page to fully load. It's become pretty bad, so I
+	really had to prioritize this task before adding any more blog posts on top.
+</p><p>
+	That leaves the player itself, which is basically a sum of lots of little
+	implementation challenges. Single-frame stepping and seeking to discrete
+	frames is the biggest one of them, as it's <a
+	href="https://github.com/w3c/media-and-entertainment/issues/4"><i>technically</i>
+	not possible within the <code>&lt;video&gt;</code> tag</a>, which only
+	returns the current time as a continuous value in seconds. It only <i>sort
+	of</i> works for us because the backend can pass the necessary FPS and frame
+	count values to the frontend. These allow us to place a discrete grid of
+	frame "frets" at regular intervals, and thus establish a consistent mapping
+	from frames to seconds and back. The only drawback here is a noticeably
+	weird jump back by one frame when pausing a video within the second half of
+	a frame, caused by snapping the continuous time in seconds back onto the
+	frame grid in order to maintain a consistent frame counter. But the whole
+	feature of frame-based seeking more than makes up for that.<br />
+	The new scrubbable timeline might be even nicer to use with a mouse or a
+	finger than just letting a video play regularly. With all the tuning work I
+	put into keyframes, seeking is buttery smooth, and much better than the
+	built-in <code>&lt;video&gt;</code> UI of either Chrome or Firefox.
+	Unfortunately, it still costs a whole lot of CPU, but I'd say it's worth it.
+	🥲
+</p><p>
+	Finally, the new player also has a few features that might not be
+	immediately obvious:
+</p><ul>
+	<li>Keybindings for almost everything you might want them for, indicated by
+	hovering on top of each button. The tab switchers additionally support the
+	↑&nbsp;Up and ↓&nbsp;Down keys to cycle through all tabs, or the number keys
+	to jump to a specific tab. Couldn't find a way to indicate these mappings in
+	the UI yet.</li>
+	<li>Per-video captions now reserve the maximum height of any caption in the
+	layout. This prevents layout reflows when switching through such videos,
+	which previously caused quite annoying lag on the big <code>/blog</code>
+	page.</li>
+	<li>Useful fullscreen modes on both desktop and mobile, including all
+	markers and the video caption. Firefox made this harder than it needed to
+	be, and if it weren't for <code>display: contents</code>, the implementation
+	would have been even worse. In the end though, we didn't even need any video
+	pixel sizes from the backend – just as it should be…</li>
+	<li>… and supporting Firefox was definitely worth it, as it's the only
+	browser to support nearest-neighbor interpolation on videos.</li>
+	<li>As some of the Unicode codepoints on the buttons aren't covered by the
+	default fonts of some operating systems, I've taken them from the <a
+	href="https://catrinity-font.de/">Catrinity font</a>, licensed under the SIL
+	Open Font License. With <a
+	href="https://github.com/nmlgc/rec98.nmlgc.net/commit/e6c81798f4d2200282f4b560302e689541e42e57">all
+	the edits I did on this font</a>, that license definitely was
+	necessary…</li>
+</ul><p>
+	And with that, development hell is over, and I finally get to return to the
+	core business! Just more than one month late. {{HTML_Emoji "tannedcirno"}}
+	Next up: Shipping the oldest still pending order, covering the TH04/TH05
+	ending script format. Meanwhile, the Seihou community also wants to keep
+	investing in Shuusou Gyoku, so we're also going to see more of that on the
+	side.
+</p>

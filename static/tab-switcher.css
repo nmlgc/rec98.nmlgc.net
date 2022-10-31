@@ -1,6 +1,7 @@
 rec98-tab-switcher {
 	display: grid;
 	font-size: 75%;
+	grid-row: 1;
 	grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
 	width: 100%;
 }
@@ -21,3 +22,22 @@ rec98-tab-switcher button:hover:not(.active) {
 	color: var(--c-link-hover);
 	background: var(--header-gradient-hover);
 }
+
+/* Image switcher
+   -------------- */
+
+rec98-image-switcher {
+	display: grid;
+}
+
+rec98-image-switcher img {
+	grid-column: 1;
+	grid-row: 2;
+	max-height: unset !important;
+}
+
+rec98-image-switcher img.active {
+	z-index: 1;
+}
+
+/* -------------- */

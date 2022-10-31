@@ -83,11 +83,12 @@ function externalEnable(hostname) {
 class ReC98ParentInit extends HTMLElement {
 	connectedCallback() {
 		if(!this.parentElement || (this.parentElement.lastChild !== this) || !(
-			(this.parentElement.tagName === 'REC98-VIDEO')
+			(this.parentElement.tagName === 'REC98-VIDEO') ||
+			(this.parentElement.tagName === 'REC98-IMAGE-SWITCHER')
 		)) {
 			throw "Must be placed at the last child of a supported element.";
 		}
-		/** @type {ReC98Video} */
+		/** @type {ReC98Video | ReC98ImageSwitcher} */
 		(this.parentElement).init();
 
 		// Let's not make the grid more complicated than it needs to be.

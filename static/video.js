@@ -103,6 +103,7 @@ class ReC98Video extends HTMLElement {
 	/** @type {ReC98TabSwitcher | null} */
 	eTabSwitcher = null;
 
+	eVideoWrap = document.createElement("div");
 	eControls = document.createElement("div");
 	ePlay = document.createElement("button");
 	eTimeSecondsIcon = document.createElement("span");
@@ -298,6 +299,7 @@ class ReC98Video extends HTMLElement {
 	// Constant property initialization
 	constructor() {
 		super();
+		this.eVideoWrap.className = "video-wrap"
 		this.eControls.className = "controls";
 
 		// Play/Pause button
@@ -510,6 +512,8 @@ class ReC98Video extends HTMLElement {
 	init() {
 		this.tabIndex = -1;
 
+		this.appendChild(this.eVideoWrap);
+
 		this.eTimelineBorder.appendChild(this.eTimelinePos);
 		this.eTimeline.appendChild(this.eTimelineBorder);
 		this.eControls.appendChild(this.ePlay);
@@ -604,7 +608,14 @@ class ReC98Video extends HTMLElement {
 		});
 		// --------------
 
+		// Reparent videos
+		// ---------------
 		this.videos = this.getElementsByTagName("video");
+		for(let i = 0; i < this.videos.length; i++) {
+			this.eVideoWrap.appendChild(this.videos[0]);
+		}
+		// ---------------
+
 		let lastChild = null;
 		let requested = null;
 

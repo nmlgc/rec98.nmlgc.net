@@ -89,6 +89,9 @@ class ReC98ParentInit extends HTMLElement {
 		}
 		/** @type {ReC98Video} */
 		(this.parentElement).init();
+
+		// Let's not make the grid more complicated than it needs to be.
+		this.parentElement.removeChild(this);
 	}
 };
 

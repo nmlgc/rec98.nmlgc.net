@@ -40,6 +40,34 @@ rec98-video.with-markers {
 	width: 100%;
 }
 
+rec98-video>div.video-wrap {
+	display: contents;
+	position: relative;
+	width: 100%;
+}
+
+:fullscreen rec98-video>div.video-wrap {
+	display: block;
+}
+
+/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+:-webkit-full-screen rec98-video>div.video-wrap {
+	display: block;
+}
+
+:fullscreen rec98-video video {
+	position: absolute;
+	left: 0;
+	width: 100%;
+}
+
+/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+:-webkit-full-screen rec98-video video {
+	position: absolute;
+	left: 0;
+	width: 100%;
+}
+
 rec98-video video {
 	grid-column: 1;
 	grid-row: 1;

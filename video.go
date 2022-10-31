@@ -73,7 +73,8 @@ var VP9 = VideoDir{"vp9", FFMPEGCodec{
 	Ext:    ".webm",
 	VCodec: "libvpx-vp9",
 	VFlags: []string{
-		"-lossless", "1",
+		"-crf", "15",
+		"-vf", "format=yuv422p",
 		"-g", "20",
 	},
 	TwoPass: true,
@@ -84,9 +85,9 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 	Ext:    ".webm",
 	VCodec: "libvpx",
 	VFlags: []string{
-		"-qmin", "0",
-		"-qmax", "4",
-		"-crf", "4",
+		"-qmin", "6",
+		"-qmax", "6",
+		"-crf", "6",
 		"-b:v", "1G",
 		"-g", "30",
 	},

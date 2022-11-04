@@ -1,7 +1,10 @@
 @font-face {
-	/* License is embedded in the file. */
-	font-family: "Catrinity";
-	src: url(/static/Catrinity.subset.woff2?5c38d045) format("woff2");
+	/**
+	 * Based on Catrinity (https://catrinity-font.de). Licensed under the SIL
+	 * Open Font License, Version 1.1, which is also embedded in the file.
+	 */
+	font-family: "ReC98 video player symbols";
+	src: url(/static/video.woff2?68c05110) format("woff2");
 }
 
 :root {
@@ -108,7 +111,7 @@ rec98-video.with-switcher .controls {
 
 rec98-video .controls>button,
 rec98-video .controls>a {
-	font-family: "Catrinity";
+	font-family: "ReC98 video player symbols";
 	color: white;
 	padding: 0;
 	place-self: center;

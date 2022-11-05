@@ -44,7 +44,6 @@
 	}
 </style>
 
-
 <p>
 	Yes, I'm still alive. This delivery was just plagued by all of the worst
 	luck: Data loss, physical hard drive failure, exploding phone batteries,
@@ -188,10 +187,12 @@
 	videos to 68.9&nbsp;MiB, and even preserving 22.3% of frames completely
 	losslessly. The remaining frames exhibit the exact kind of quality loss
 	you'd want for retro game footage: Minor discoloration in individual pixels,
-	barely visible even if you calculated the normalized difference to the
-	lossless source and know where to look. If "compressed PNG size of the
-	normalized difference between ZMBV and AV1 <code>-crf 1</code>" is a useful
-	metric, this would be its median frame:
+	so minuscule that subtracting the encoded image from the source yields an
+	almost completely black image. Even after highlighting the errors by
+	normalizing such a difference image, they are barely visible even if you
+	know where to look. If "compressed PNG size of the normalized difference
+	between ZMBV and AV1 <code>-crf 1</code>" is a useful metric, this would be
+	its median frame among the 77.7% of non-lossless frames:
 </p><figure class="pixelated">
 	<rec98-image-switcher id="fullres-{{.Date}}"><img
 		src="{{$median_zmbv}}"
@@ -208,7 +209,7 @@
 		class="active"
 	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
 	<figcaption>
-		That's frame 26 of
+		That's frame 455 (0-based) of
 		{{Blog_PostLink "2022-08-08" "YuugenMagan's reconstructed Phase 5 pattern on Easy mode"}}.
 		The AV1 version does in fact expand the original image's 16 distinct
 		colors to 38.
@@ -232,7 +233,7 @@
 		class="active"
 	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
 	<figcaption>
-		Frame 26 of the
+		Frame 25 (0-based) of the
 		{{Blog_PostLink "2020-08-28" "TH05 Reimu bomb animation quirk video"}}.
 		139 colors in the AV1 version.
 	</figcaption>
@@ -561,8 +562,8 @@
 	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
 	<figcaption>
 		The worst example of chroma subsampling in a VP9-encoded file according
-		to the above metric, from frame 131 of
-		{{Blog_PostLink "2022-08-08" "Sariel's restored leaf \"spark\" animation"}},
+		to the above metric, from frame 130 (0-based) of
+		{{Blog_PostLink "2022-01-31" "Sariel's restored leaf \"spark\" animation"}},
 		featuring smeared-out contours and even an all-around darker image,
 		blowing up the image to a whopping 3653 colors. It's certainly an
 		aesthetic.
@@ -646,9 +647,11 @@
 	default fonts of some operating systems, I've taken them from the <a
 	href="https://catrinity-font.de/">Catrinity font</a>, licensed under the SIL
 	Open Font License. With <a
-	href="https://github.com/nmlgc/rec98.nmlgc.net/commit/e6c81798f4d2200282f4b560302e689541e42e57">all
-	the edits I did on this font</a>, that license definitely was
-	necessary…</li>
+	href="https://github.com/nmlgc/rec98.nmlgc.net/commit/3c2ffbf082149d7f86e0bc57a679e8547c04ff28">all
+	the edits I did on this font</a>, that license definitely was necessary. I
+	hope I applied it correctly though; it's not straightforward at all how to
+	properly license a <q>Modified Version</q> of an original font with a
+	<q>Reserved Font Name</q>.</li>
 </ul><p>
 	And with that, development hell is over, and I finally get to return to the
 	core business! Just more than one month late. {{HTML_Emoji "tannedcirno"}}

@@ -14,6 +14,8 @@
 	--c-link: blue;
 	--c-link-hover: red;
 
+	--table-border: 1px solid gray;
+
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
 	--header-gradient: linear-gradient(180deg,
@@ -719,7 +721,7 @@ table {
 
 thead th,
 thead td {
-	border-bottom: 1px solid gray;
+	border-bottom: var(--table-border);
 }
 
 td, th {
@@ -816,7 +818,7 @@ td, th {
 
 .pushes th:not(:first-child),
 .pushes td:not(:first-child) {
-	border-left: 1px solid gray;
+	border-left: var(--table-border);
 }
 /* ---------- */
 
@@ -844,17 +846,17 @@ figure.progress {
 
 .numbers th:first-child,
 .numbers td:first-child {
-	border-right: 1px solid gray;
+	border-right: var(--table-border);
 }
 
 #progress_for .numbers th:last-child,
 #progress_for .numbers td:last-child {
-	border-left: 1px solid gray;
+	border-left: var(--table-border);
 }
 
 .numbers tfoot th,
 .numbers tfoot td {
-	border-top: 1px solid gray;
+	border-top: var(--table-border);
 }
 
 @media ( max-width: 500px ) {

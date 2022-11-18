@@ -458,12 +458,28 @@ func (r *VideoRoot) URL(stem string, vd *VideoDir) string {
 func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 	entry := r.Cache.Video[stem]
 	sourceBasename := VIDEO_SOURCE.Basename(stem)
-	sourceFN := filepath.Join(r.Root.LocalPath, VIDEO_SOURCE.RelativeFN(stem))
+	sourceDebugFN := VIDEO_SOURCE.RelativeFN(stem)
+	sourceFN := filepath.Join(r.Root.LocalPath, sourceDebugFN)
+
+	// Source file deleted?
+	_, err := os.Stat(sourceFN)
+	deleted := errors.Is(err, fs.ErrNotExist)
+	if deleted {
+		log.Printf("%s deleted, removing any encoded files.", sourceDebugFN)
+		delete(r.Cache.Video, stem)
+		r.Cache.save()
+	}
+
 	for _, vd := range VIDEO_ENCODED {
 		sourceDebugFN := strings.Repeat(" ", (len(vd.Dir) + 1))
 		sourceDebugFN += sourceBasename
 		encodedDebugFN := vd.RelativeFN(stem)
 		encodedFN := filepath.Join(r.Root.LocalPath, encodedDebugFN)
+
+		if deleted {
+			os.Remove(encodedFN)
+			continue
+		}
 
 		needsReencode := func() *cacheMiss {
 			// 1) Encoded file does not exist

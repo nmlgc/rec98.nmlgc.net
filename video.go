@@ -152,7 +152,7 @@ const (
 // necessary directories beforehand.
 func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
 	encodedDir, _ := filepath.Split(encodedFN)
-	FatalIf(os.MkdirAll(encodedDir, 0600))
+	FatalIf(os.MkdirAll(encodedDir, 0700))
 	passCount := 1
 	if codec.TwoPass {
 		passCount = 2

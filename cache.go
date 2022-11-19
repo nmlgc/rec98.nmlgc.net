@@ -31,7 +31,7 @@ func CacheLoad[Payload any](basename string) (ret Payload, err error) {
 func CacheSave(basename string, data any) {
 	fn := cacheFN(basename)
 	dir, _ := filepath.Split(fn)
-	FatalIf(os.MkdirAll(dir, 0600))
+	FatalIf(os.MkdirAll(dir, 0700))
 	f, err := os.Create(fn)
 	FatalIf(err)
 	enc := gob.NewEncoder(f)

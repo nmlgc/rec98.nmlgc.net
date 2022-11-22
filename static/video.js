@@ -296,6 +296,13 @@ class ReC98Video extends HTMLElement {
 		);
 	}
 
+	resizeMarkers() {
+		const rect = this.eTimeline.getBoundingClientRect();
+		for(const marker of this.markers()) {
+			marker.setWidth(rect.width);
+		}
+	}
+
 	// Constant property initialization
 	constructor() {
 		super();
@@ -683,17 +690,24 @@ class ReC98Video extends HTMLElement {
 		this.showVideo(requested ?? lastChild);
 		this.pause();
 
+		// Bind resizeMarkers() so that it gets called with the right
+		// context, and overwrite the old property so that we have a
+		// function reference we can unregister from events later on.
+		this.resizeMarkers = this.resizeMarkers.bind(this);
+		document.addEventListener("fullscreenchange", this.resizeMarkers);
+		document.addEventListener("webkitfullscreenchange", this.resizeMarkers);
 		// Some browsers (*cough* Firefox) refuse to layout the timeline at the
 		// above call to getBoundingClientRect() and just return 0. Just gotta
 		// defer setting the correct marker widths in that case…
 		if(timelineWidth === 0) {
-			window.addEventListener("DOMContentLoaded", () => {
-				const rect = this.eTimeline.getBoundingClientRect();
-				for(const marker of this.markers()) {
-					marker.setWidth(rect.width);
-				}
-			});
+			window.addEventListener("DOMContentLoaded", this.resizeMarkers);
 		}
+	}
+
+	disconnectedCallback() {
+		document.removeEventListener("fullscreenchange", this.resizeMarkers);
+		document.removeEventListener("webkitfullscreenchange", this.resizeMarkers);
+		window.removeEventListener("DOMContentLoaded", this.resizeMarkers);
 	}
 };
 

@@ -75,7 +75,8 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		ret += ` class="active"`
 	}
 	ret += template.HTML(fmt.Sprintf(
-		` data-fps="%v" data-frame-count="%v"`,
+		` width="%v" height="%v" data-fps="%v" data-frame-count="%v"`,
+		b.Metadata.Width, b.Metadata.Height,
 		b.Metadata.FPS, b.Metadata.FrameCount,
 	))
 	ret += (` data-lossless="` + b.Lossless + `"`)

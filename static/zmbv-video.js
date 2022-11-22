@@ -14,6 +14,17 @@ const zmbvSupported = (() => {
 /** @type {(Promise<WebAssembly.Module>|undefined)} */
 let decoderModulePromise;
 
+const intersectionObserver = IntersectionObserver ? new IntersectionObserver((entries, observer) => {
+	for(const entry of entries) {
+		if(entry.isIntersecting) {
+			observer.unobserve(entry.target);
+			entry.target.src = entry.target.dataset.src;
+		}
+	}
+}, {
+	rootMargin: "0px 0px 1000px 0px",
+}) : null;
+
 class ZMBVVideoElement extends HTMLElement {
 	/** @type {string} */
 	url;
@@ -77,16 +88,17 @@ class ZMBVVideoElement extends HTMLElement {
 		this.poster = poster;
 		if(this.poster) {
 			const img = document.createElement("img");
-			img.src = this.poster;
+			if(intersectionObserver) {
+				img.dataset.src = this.poster;
+				intersectionObserver.observe(img);
+			} else {
+				img.src = this.poster;
+			}
 			img.style.imageRendering = "crisp-edges";
 			img.style.imageRendering = "pixelated";
 			img.style.maxHeight = "100%";
-			img.onload = () => {
-				if(!this.imageData) {
-					this.img = img;
-					this.appendChild(img);
-				}
-			};
+			this.appendChild(img);
+			this.img = img;
 		}
 	}
 

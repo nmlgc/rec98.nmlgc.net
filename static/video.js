@@ -475,13 +475,16 @@ class ReC98Video extends HTMLElement {
 			// this becomes an issue.
 			this.switchingVideos = true;
 
+			// Pause the old video, but save the previous playing state to
+			// decide whether to unpause the new video.
+			const videoPrevPaused = videoPrev.paused;
+			videoPrev.pause();
 			videoNew.onseeked = (() => {
 				videoNew.classList.add("active");
 				seekedFunc();
 				videoPrev.classList.remove("active");
-				if(!videoPrev.paused) {
+				if(!videoPrevPaused) {
 					videoNew.play();
-					videoPrev.pause();
 				}
 				this.switchingVideos = false;
 				videoNew.onseeked = seekedFunc;

@@ -45,7 +45,10 @@ typedef enum {
 } zmbv_format_t;
 
 void Msg(const char fmt[], ...);
+class VideoDecoder;
 class VideoCodec {
+	friend class VideoDecoder;
+
 private:
 	struct FrameBlock {
 		int start;

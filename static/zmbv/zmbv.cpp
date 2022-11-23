@@ -16,17 +16,10 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
-
-#if (C_SSHOT)
-
 #include <zlib.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <math.h>
-#include <png.h>
 
 #include "zmbv.h"
 
@@ -40,6 +33,11 @@
 
 #define Mask_KeyFrame			0x01
 #define	Mask_DeltaPalette		0x02
+
+int abs(int n) {
+	if (n >= 0) return n;
+	return -n;
+}
 
 zmbv_format_t BPPFormat( int bpp ) {
 	switch (bpp) {
@@ -559,5 +557,3 @@ VideoCodec::VideoCodec() {
 	work = 0;
 	memset( &zstream, 0, sizeof(zstream));
 }
-
-#endif //(C_SSHOT)

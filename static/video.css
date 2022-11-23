@@ -58,7 +58,18 @@ rec98-video>div.video-wrap {
 	display: block;
 }
 
-:fullscreen rec98-video video {
+rec98-zmbv-video {
+	font-size: 0;
+}
+
+rec98-zmbv-video canvas {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+:fullscreen rec98-video video,
+:fullscreen rec98-video rec98-zmbv-video {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -66,21 +77,24 @@ rec98-video>div.video-wrap {
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video video {
+:-webkit-full-screen rec98-video video,
+:-webkit-full-screen rec98-video rec98-zmbv-video {
 	position: absolute;
 	left: 0;
 	width: 100%;
 	height: 100%;
 }
 
-rec98-video video {
+rec98-video video,
+rec98-video rec98-zmbv-video {
 	grid-column: 1;
 	grid-row: 1;
 	max-width: 100%;
 	height: auto;
 }
 
-rec98-video video.active {
+rec98-video video.active,
+rec98-video rec98-zmbv-video.active {
 	z-index: 1;
 }
 
@@ -95,7 +109,8 @@ rec98-video .controls {
 }
 
 /* Firefox requires an explicit grid without gaps for `height: 100%` to work */
-rec98-video.with-switcher video {
+rec98-video.with-switcher video,
+rec98-video.with-switcher rec98-zmbv-video {
 	grid-row: 2;
 }
 

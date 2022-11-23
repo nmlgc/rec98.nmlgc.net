@@ -16,10 +16,10 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <zlib.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include "miniz.h"
 
 #include "zmbv.h"
 
@@ -436,7 +436,7 @@ bool VideoCodec::DecompressFrame(void * framedata, int size) {
 	zstream.next_out = (Bytef *)work;
 	zstream.avail_out = (unsigned int)bufsize;
 	zstream.total_out = 0;
-	inflate(&zstream, Z_FINISH);
+	inflate(&zstream, 0);
 	workUsed= (int)zstream.total_out;
 	workPos = 0;
 	if (tag & Mask_KeyFrame) {

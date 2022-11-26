@@ -26,6 +26,8 @@
 		white 0%,
 		rgb(256, 220, 220) 100%
 	);
+	--icon-width: 1.45em;
+	--icon-height: 1.45em;
 	--logo-width: 3.5em;
 	--logo-padding: 0.5em;
 	--estimate-tl: -1px;
@@ -67,8 +69,10 @@ pre {
 
 img[src*="emoji-"] {
 	/* Shamelessly stolen from Discord's CSS */
-	width: 1.45em;
-	height: 1.45em;
+	width: var(--icon-width) !important;
+	height: var(--icon-height) !important;
+	min-width: var(--icon-width);
+	min-height: var(--icon-width);
 	margin-left: .05em;
 	margin-right: .05em;
 	vertical-align: -.4em;

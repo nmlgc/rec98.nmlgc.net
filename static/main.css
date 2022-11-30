@@ -198,7 +198,7 @@ figure button:last-child {
 }
 
 video,
-figure.pixelated img,
+.pixelated img,
 figure.singleplayer_playfield img {
 	max-height: unset;
 	image-rendering: pixelated; /* For Chrome */

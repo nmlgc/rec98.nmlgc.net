@@ -220,3 +220,6 @@ P0220	[201, 204]	Website (Video player, part 1/3: Basic controls and frame-accur
 P0221	[204, 96]	Website (Video player, part 2/3: Tabs and markers)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/ba6359b...94e48e9	0
 P0222	[96, 117]	Website (Video player, part 3/3: Dynamic captions and useful fullscreen mode)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/94e48e9...358e16f	0
 M0002	[2]	Seihou / Shuusou Gyoku (File loading cleanup + Packfile caching)	2022-11-01T21:08:01Z	nmlgc/ssg/compare/M0001...M0002	0
+P0223	[198, 162, 166, 172, 179, 190, 199]	TH03/TH04/TH05 decompilation (Cutscenes, part 1/3: State + Box and picture rendering)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/139746c...371292d	0
+P0224	[157, 158]	TH03/TH04/TH05 decompilation (Cutscenes, part 2/3: Script commpands)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/371292d...8118e61	0
+P0225	[199, 203, 206, 210, 200, 207]	TH03/TH04/TH05 decompilation (Cutscenes, part 3/3: Interpreter loop + TH05 rendering boilerplate, part 1/?)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/8118e61...4f85326	0

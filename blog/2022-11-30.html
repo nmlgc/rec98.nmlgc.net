@@ -325,7 +325,7 @@
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
 		<td>\@</td>
-		<td>Clears both VRAM pages by filling them with VRAM color 0.<br /> 🪲
+		<td>Clears both VRAM pages by filling them with VRAM color 0.<br /> 🐞
 		In TH03 and TH04, this command does not update the internal text area
 		background used for unblitting. This bug effectively restricts usage of
 		this command to either the beginning of a script (before the first
@@ -343,7 +343,7 @@
 		<td></td>
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
-		<td>🪲 In TH04 and TH05, <code>\b3</code> leads to glitched pixels when
+		<td>🐞 In TH04 and TH05, <code>\b3</code> leads to glitched pixels when
 		rendering half-width glyphs due to a bug in the newly micro-optimized
 		ASM version of
 		<code>{{Blog_PostLink "2021-04-23" "graph_putsa_fx()"}}</code>; <a
@@ -371,7 +371,7 @@
 		inside the name area on a new line, the text color is automatically set
 		to <var class="default">15</var>. Up to 8 such entries can be registered
 		before overflowing the statically allocated buffer.<br />
-		🪲 The comma is assumed to be present even if the color parameter is omitted.</td>
+		🐞 The comma is assumed to be present even if the color parameter is omitted.</td>
 	</tr><tr>
 		<td>{{HTML_Emoji "th03"}}</td>
 		<td>{{HTML_Emoji "th04"}}</td>
@@ -493,7 +493,7 @@
 		href="#{{.Date}}-advance">advance key</a> to be pressed before
 		continuing script execution. Before waiting, TH05 crossfades in any new
 		text that was previously rendered to the invisible VRAM page…<br />
-		🪲 …but TH04 doesn't, leaving the text invisible during the wait time.
+		🐞 …but TH04 doesn't, leaving the text invisible during the wait time.
 		As a workaround, <a href="#{{.Date}}-vp"><code>\vp1</code></a> can be
 		used before <code>\k</code> to immediately display that text without a
 		fade-in animation.</td>
@@ -552,7 +552,7 @@
 		<td>\p,<var>filename</var></td>
 		<td>Loads the .PI image with the given file into the single .PI slot
 		available to cutscenes. TH04 and TH05 automatically deallocate any
-		previous image, 🪲 TH03 would leak memory without a manual prior call to
+		previous image, 🐞 TH03 would leak memory without a manual prior call to
 		<a href="#{{.Date}}-p-"><code>\p-</code></a>.</td>
 	</tr><tr>
 		<td>{{HTML_Emoji "th03"}}</td>
@@ -644,7 +644,7 @@
 			loops, given in the first parameter, and fall back on calling
 			<code>\w</code> and <code>\wk</code> with the second parameter as
 			the frame number if BGM is disabled.<br />
-			🪲 Neither PMD nor MMD reset the internal measure when stopping
+			🐞 Neither PMD nor MMD reset the internal measure when stopping
 			playback. If no BGM is playing and the previous BGM hasn't been
 			played back for at least the given number of measures, this command
 			will deadlock.</li>

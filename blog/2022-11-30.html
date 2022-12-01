@@ -794,7 +794,7 @@
 	and TH04 cutscene executables.<br />
 	Once we're there, the "Virgin" old-school way of static translation patching
 	for Latin-script languages could be implemented fairly quickly:
-</p><ul>
+</p><ol>
 	<li>Establish basic UTF-8 parsing for less painful manual editing of the
 	source files</li>
 	<li>Procedurally generate glyphs for the few required additional letters
@@ -808,14 +808,14 @@
 	don't provide either.</li>
 	<li><i>(Optional)</i> Change automatic line breaks to work on a per-word
 	basis, rather than per-glyph</li>
-</ul><p>
+</ol><p>
 	That's it – script editing and distribution would be handled by your local
 	translation group. It might seem as if this would also work for Greek and
 	Cyrillic scripts due to their presence in the PC-98 font ROM, but I'm not
 	sure if I want to attempt procedurally shrinking these glyphs from 16×16 to
 	8×16… For any more thorough solution, we'd need to go for a more "Chad" kind
 	of full-blown translation support:
-</p><ul>
+</p><ol>
 	<li>Implement text subdivisions at a sensible granularity while retaining
 	automatic line and box breaks</li>
 	<li>Compile translatable text into a Japanese→target language dictionary
@@ -833,18 +833,27 @@
 	a single package file in the game's directory)</li>
 	<li>Add a nice language selection option to the main menu</li>
 	<li><i>(Optional)</i> Support proportional fonts</li>
-</ul><p>
+</ol><p>
 	Which sounds more like a separate project to be commissioned from
 	{{DB_CustomerByID 9}}'s Open Collective funds, separate from the ReC98 cap.
 	This way, we can make sure that the feature is completely implemented, and I
 	can talk with every interested translator to make sure that their language
-	works. It's still cheaper overall to do this on PC-98 than to first port the
-	games to a modern system and <i>then</i> translate them, but as always, it's
-	up to all of you to decide which way we should go, or whether it's worth
-	doing at all. Maybe we even want both, and use procedural glyph generation
-	even for otherwise dynamic translations to keep text rendering consistent
-	with the rest of the PC-98 system? In any case, I've added both options to
-	the order form.
+	works.<br />
+	It's still cheaper overall to do this on PC-98 than to first port the games
+	to a modern system and <i>then</i> translate them. On the other hand, most
+	of the tasks in the Chad variant (3, 4, 5, and half of 2) purely deal with
+	the difficulty of getting arbitrary Unicode characters to work natively in a
+	PC-98 DOS game at all, and would be either unnecessary or trivial if we had
+	already ported the game. Depending on where the patrons' interests lie, it
+	<i>may</i> not be worth it. So let's see what all of you think about  which
+	way we should go<s>, or whether it's worth doing at all</s>. (<strong>Edit
+	(2022-12-01):</strong> With {{DB_CustomerByID 6}}'s {{HTML_Currency 6000}}
+	order towards the stage dialogue system, we've pretty much confirmed that it
+	is.) Maybe we want to meet in the middle – using e.g. procedural glyph
+	generation for dynamic translations to keep text rendering consistent with
+	the rest of the PC-98 system, and just not support non-Latin-script
+	languages in the beginning? In any case, I've added both options to the
+	order form.
 </p><hr /><p>
 	Surprisingly, there was still a bit of RE work left in the third push after
 	all of this, which I filled with some small rendering boilerplate. Since I

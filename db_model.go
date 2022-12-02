@@ -462,7 +462,10 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 				fractionNeeded = t.consume(p, fractionNeeded)
 			}
 			if fractionNeeded != 0 {
-				log.Fatalf("%s is not fully paid for", p.ID)
+				log.Fatalf(
+					"%s is not fully paid for (missing %v pushes)",
+					p.ID, fractionNeeded,
+				)
 			}
 			return
 		}(),

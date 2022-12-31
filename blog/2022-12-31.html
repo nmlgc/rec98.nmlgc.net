@@ -1,0 +1,240 @@
+{{$32bit := (call .PostFileURL "SH01-32-bit.png") -}}
+{{$spiral := (call .Video "SH01-Ending-spiral" "TODO") -}}
+
+<blockquote>&gt; "OK, TH03/TH04/TH05 cutscenes done, let's quickly finish the {{DB_CustomerByID 9}} MediaWiki upgrade. Just some scripting and verification left, it will be done so quickly that I don't even have to mention it on this blog"
+&gt; Still not done after 3 weeks
+&gt; Blocked by <a href="https://gerrit.wikimedia.org/r/c/mediawiki/extensions/Translate/+/871904">one final critical bug that really should be fixed upstream</a>
+&gt; Code reviewers are probably on vacation</blockquote><p>
+	And so, the year unfortunately ended with yet another slow month. During the
+	MediaWiki upgrade, I was slowly decompiling the TH05 Sara fight on the side,
+	but stumbled over one interesting but high-maintenance detail there that
+	would really enhance her blog post. TH02 would need a lot of attention for
+	the basic rendering calls as well…
+</p><p>
+	…so let's end the year with Shuusou Gyoku instead, looking at its most
+	critical issue in particular. As if that were the easy option here…
+	{{HTML_Emoji "tannedcirno"}}<br />
+	The game does not run properly on modern Windows systems due to its usage of
+	the ancient DirectDraw APIs, with issues ranging from unbearable slowdown to
+	glitched colors to the game not even starting at all. Thankfully, Shuusou
+	Gyoku is not the only ancient Windows game affected by these issues, and
+	people have developed a variety of generic DirectDraw wrappers and patches
+	for playing such games on modern systems. Out of all these, <a
+	href="https://github.com/narzoul/DDrawCompat">DDrawCompat</a> is one of the
+	simpler solutions for Shuusou Gyoku in particular: Just drop its
+	<code>ddraw</code> proxy DLL into the game directory, and the game will run
+	as it's supposed to.<br />
+	So let's just bundle that DLL with all my future Shuusou Gyoku releases
+	then? That <i>would</i> have been the quick and dirty option, coming with
+	several drawbacks:
+</p><ul>
+	<li>Linux users might be annoyed by the potential need to configure a native
+	DLL override for <code>ddraw.dll</code>. It's not too much of an issue as we
+	could simply rename the DLL and replace the import with the new name.
+	However, doing that reproducibly would already involve changes to either the
+	DDrawCompat or Shuusou Gyoku build process.</li>
+	<li>Win32 API hooking is another potential point of failure in general,
+	requiring continual maintenance for new Windows versions. This is not even a
+	hypothetical concern: DDrawCompat does rely on particularly volatile Win32
+	API details, to the point that the recent Windows 11 22H2 update <a
+	href="https://github.com/narzoul/DDrawCompat/commit/f1d8dbd1cb96fb641c31d55c9cf576406a5c2d01">completely
+	broke it, causing a hang at startup that required a workaround</a>.<br />
+	But sure, it's still just a single third-party component. Keeping it up to
+	date doesn't sound too bad by itself…</li>
+	<li>…if DDrawCompat weren't evolving way beyond what we need to keep Shuusou
+	Gyoku running. Being a typical DirectDraw wrapper, it has always aimed to
+	solve all sorts of issues in old DirectDraw games. However, the latest
+	version, 0.4.0, has gone above and beyond in this regard, adding <a
+	href="https://github.com/narzoul/DDrawCompat/wiki/Configuration">lots of
+	configuration options</a> with default settings that <a
+	href="https://github.com/nmlgc/ssg/issues/3#issuecomment-1264267695">actually
+	break Shuusou Gyoku</a>.<br />
+	To get a glimpse of how this is likely to play out, we only have to look at
+	the more mature <a href="https://sourceforge.net/projects/dxwnd/">DxWnd</a>
+	project. In its expert mode, DxWnd features three rows of tabs, each packed
+	with checkboxes that toggle individual hacks, and <i>most</i> of these are
+	related to <i>something</i> that Shuusou Gyoku could be affected by. Imagine
+	checking a precise permutation of a three-digit number of checkboxes just to
+	keep an old game running at full speed on modern systems…</li>
+	<li>Finally, aesthetic and bloat considerations. If
+	{{Blog_PostLink "2022-09-04" "C++ fstreams"}} were already too embarrassing
+	with the ~100&nbsp;KB of bloat they add to the binary, a 565&nbsp;KiB DLL is
+	even worse. And that's the <i>old</i> version 0.3.2 – version 0.4.0 comes in
+	at 2.43&nbsp;<i>MiB</i>.</li>
+</ul><p>
+	Fortunately, I had the budget to dig a bit deeper and figure out what
+	<i>exactly</i> DDrawCompat does to make Shuusou Gyoku work properly. Turns
+	out that among all the hooks and patches, the game only needs the most
+	central one: Enforcing a 32-bit display mode regardless of whatever lower
+	bit depth the game requests natively, combined with converting the game's
+	pixel buffer to 32-bit on the fly.<br />
+	So does this mean that adding 32-bit to the game's list of supported bit
+	depths is everything we have to do?
+</p><figure class="fullres pixelated"><img
+	src="{{$32bit}}"
+	alt="The new 32-bit rendering option in the Shuusou Gyoku P0226 build."
+/><figcaption>
+	Interestingly, Shuusou Gyoku already saved the DirectDraw enumeration flag
+	that indicates support for 32-bit display modes. The official version just
+	did nothing with it.
+</figcaption></figure><p>
+	Well, <i>almost</i> everything. Initially, this surprised me as well: With
+	all the <code>if</code> statements checking for precise bit depths, you
+	would think that supporting one more bit depth would be way harder in this
+	code base. As it turned out though, these conditional branches are not
+	<i>really</i> about 8-bit or 16-bit color for the most part, but instead
+	differentiate between two very distinct rendering approaches:
+</p><ul>
+	<li>"8-bit" is a pure 2D mode with palettized colors,</li>
+	<li>while "16-bit" is a hybrid 2D/3D mode that uses Direct3D <span
+	class="hovertext" title="(sic)">2</span> on top of DirectDraw, with
+	3-channel RGB colors.</li>
+</ul></p><p>
+	Consequently, most of these branches deal with differences between these two
+	approaches that couldn't be nicely abstracted away in pbg's renderer
+	interface: Specific palette changes that are exclusive to "8-bit" mode, or
+	certain entities and effects whose Direct3D draw calls in "16-bit" mode
+	require tailor-made approximations for the "8-bit" mode. Since our new
+	32-bit mode is equivalent to the 16-bit mode in all of these branches, I
+	only needed to replace the raw number comparisons with more meaningful
+	method calls.
+</p><p>
+	That only left a very small number of 2D raster effects that directly write
+	to or read from DirectDraw surface memory, and therefore do need to know the
+	bit size of each pixel. Thanks to <code>std::variant</code> and
+	<code>std::visit()</code>, adding 32-bit support becomes trivial here: By
+	rewriting the code in a generic manner that derives all offsets from the
+	template type, you only have to say <q><a
+	href="https://github.com/nmlgc/ssg/commit/20e4544efcdcd01fd70c74fd312c2bc86821ee2f">hey,
+	I'd like to have 32-bit as well</a></q>, and C++ will automatically
+	instantiate correct 32-bit variants of all bit depth-dependent code
+	snippets.<br />
+	There are only three features in the entire game that access pixel buffers
+	this way: a color key retrieval function, the lens ball animation on the
+	logo screen, and… the ending staff roll? Sure, the text sprites fade in and
+	out, but so does the picture next to it, using Direct3D alpha blending or
+	palette color ramping depending on the current rendering mode. Instead, the
+	only reason why these sprites directly access their pixel buffer is… an
+	unused and pretty wild spiral effect. 😮 It's still part of the code, and
+	only doesn't show up because <a
+	href="https://github.com/nmlgc/ssg/blob/a7d4ccd2e2c4f38db68804f010ac4d6b930d51a7/GIAN07/ENDING.CPP#L314-L319">the
+	parameters that control its timing were commented out before release</a>:
+</p><figure class="fullres">{{call .VideoPlayer $spiral}}<figcaption>
+	They probably considered it <i>too </i> wild for the <a
+	href="https://www.youtube.com/watch?v=SRbwQahZBsE">mood</a> of this
+	ending.<br />
+	The main ending text was the only remaining issue of mojibake present in my
+	previous Shuusou Gyoku builds, and is now fixed as well. Windows <i>can</i>
+	render Shift-JIS text via GDI even outside Japanese locale, but only when
+	explicitly selecting a font that supports the <code>SHIFTJIS_CHARSET</code>,
+	and the game simply didn't select <i>any</i> font for rendering this text.
+	Thus, GDI fell back onto its default font, which obviously is only
+	guaranteed to support the <code>SHIFTJIS_CHARSET</code> if your system
+	locale is set to Japanese. This is why the font in the original game might
+	<a href="https://youtu.be/IWOhouJ7c04?t=1241">look</a> <a
+	href="https://youtu.be/lRH-fhSaDSE?t=361s">different</a> between systems.
+	For my build, I chose the font that would appear on a clean Windows
+	installation – a basic 400-weighted MS Gothic at font size 16, which is
+	already used all throughout the game.
+</figcaption></figure><p>
+	Alright, 32-bit mode complete, let's set it as the default if possible… and
+	break compatibility to the original <code>秋霜CFG.DAT</code> format in the
+	process? When validating this file, the original game only allows the
+	originally supported 8-bit or 16-bit modes. Setting the
+	<code>BitDepth</code> field to any other value causes the <i>entire</i> file
+	to be reset to its defaults, re-locking the Extra Stage in the process.
+	{{HTML_Emoji "onricdennat"}}<br />
+	Introducing a <a
+	href="https://github.com/nmlgc/ssg/issues/34">backward-compatible version
+	system for <code>秋霜CFG.DAT</code></a> was beyond the scope of this push.
+	Changing the validation to a per-field approach was a good small first step
+	to take though. The new build no longer validates the <code>BitDepth</code>
+	field against a fixed list, but against the actually supported bit depths on
+	your system, picking a different supported one if necessary. With the
+	original approach, this would have caused your entire configuration to fail
+	the validation check. Instead, you can now safely update to the new build
+	without losing your option settings, or your previously unlocked access to
+	the Extra Stage.<br />
+	Side note: The validation limit for starting bombs is off by one, and the
+	one for starting lives check is off by two. By modifying
+	<code>秋霜CFG.DAT</code>, you could theoretically get new games to start with
+	7 lives and 3 bombs… if you then calculate a correct checksum for your
+	hacked config file, that is. 🧑‍💻
+</p><p>
+	Interestingly, DirectDraw doesn't even indicate support for 8-bit or 16-bit
+	color on systems that are affected by the initially mentioned issues.
+	Therefore, these issues are <i>not</i> the fault of DirectDraw, but of
+	Shuusou Gyoku, as the original release requested a bit depth <i>that it has
+	even verified to be unsupported</i>. Unfortunately, Windows sides with
+	<s>Sim City</s> Shuusou Gyoku here: If you previously experimented with the
+	Windows app compatibility settings, you might have ended up with the
+	<code>DWM8And16BitMitigation</code> flag assigned to the full file path of
+	your Shuusou Gyoku executable in either
+</p><ul>
+	<li><code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers</code>, or</li>
+	<li><code>HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers</code></li>
+</ul><p>
+	As the term <i>mitigation</i> suggests, these modes are (poorly) emulated,
+	which is exactly what causes the issues with this game in the first place.
+	Sure, this might be the lesser evil from the point of view of an operating
+	system: If you don't have the budget for a full-blown DDrawCompat-style
+	DirectDraw wrapper, you might consider it better for users to have the game
+	run poorly than have it fail at startup due to incorrect API usage.
+	Controlling this with a flag that sticks around for future runs of a binary
+	is definitely suboptimal though, <a
+	href="https://github.com/nmlgc/ssg/issues/33">especially given how hard it
+	is to programmatically remove this flag within the binary itself</a>. It
+	only adds additional complexity to the ideal clean upgrade path.<br />
+	So, make sure to check your registry and manually remove these flags for the
+	time being. Without them, the new <i>Config → Graphic</i> menu will
+	correctly prevent you from selecting anything else but 32-bit on modern
+	Windows.
+</p><hr /><p>
+	After all that, there was just enough time left in this push to implement
+	basic locale independence, as requested by the <i>Seihou development</i>
+	Discord group, without looking into automatic fixes for previous mojibake
+	filenames yet. Combining <code>std::filesystem::path</code> with the native
+	Win32 API should be straightforward and bloat-free, especially with all the
+	abstractions I've been building, right?<br />
+	Well, turns out that <code>std::filesystem::path</code> does not
+	<i>actually</i> meet my expectations. At least as long as it's not
+	<code>constexpr</code>-enabled, because you <i>still</i> get the unfortunate
+	conversion from narrow to wide encoding at runtime, even for globals with
+	static storage duration. That brings us back to writing our path abstraction
+	in terms of the regular <code>std::string</code> and
+	<code>std::wstring</code> containers, which at least allow us to enforce the
+	respective encoding at compile time. Even <code>std::string_view</code> only
+	adds to the complexity here, as its strings are never inherently
+	null-terminated, which is required by both the POSIX and Win32 APIs. Not to
+	mention dynamic filenames: C++20's <code>std::format()</code> would be the
+	obvious idiomatic choice here, but using it almost <i>doubles</i> the size
+	of the compiled binary… 🤮<br />
+	In the end, the most bloat-free way of implementing C++ file I/O in 2023 is
+	still the same as it was 30 years ago: Call system APIs, roll a custom
+	abstraction that conditionally uses the <code>L</code> prefix, and pass
+	around raw pointers. And if you need a dynamic filename, just write the
+	dynamic characters into arrays at fixed positions. Just as PC-98 Touhou used
+	to do… {{HTML_Emoji "zunpet"}}<br />
+	Oh, and the game's window also uses a Unicode title bar now.
+</ul><p>
+	And that's it for this push! Make sure to rename your configuration
+	(<code>秋霜CFG.DAT</code>), score (<code>秋霜SC.DAT</code>), and replay
+	(<code>秋霜りぷ*.DAT</code>) filenames if you were previously running the
+	game on a non-Japanese locale, and then grab the new build:
+</p><p>
+	<a class="release"
+	href="https://github.com/nmlgc/ssg/releases/tag/P0226"
+	><strong>{{HTML_Emoji "sh01"}} Shuusou Gyoku P0226</strong></a>
+</p><p>
+	With that, we've got the most critical bugs out of the way, but the <a
+	href="https://github.com/nmlgc/ssg/issues?q=is%3Aopen+is%3Aissue">number of
+	potential fixes and features in Shuusou Gyoku</a> has only increased.
+	Looking forward to what's next in this apparent <a
+	href="https://twitter.com/WishMakers_TH/status/1608567030193750016">Seihou
+	revolution</a>, later in 2023!
+</p><p>
+	Next up: Starting the new year with all my plans hopefully working out for
+	once. TH05 Sara very soon, ZMBV code review afterward, low-hanging fruit of
+	the TH01 Anniversary Edition after that, and then kicking off TH02 with a
+	bunch of low-level blitting code.
+</p>

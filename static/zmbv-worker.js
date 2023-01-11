@@ -99,7 +99,7 @@ class ZMBVDecoder {
 	height = 0;
 	frameCount = 0;
 	frameDurationMicrosec = 1;
-	currentFrame = 0;
+	currentFrame = -1;
 
 	/**
 	 * @param {string} url
@@ -155,7 +155,6 @@ class ZMBVDecoder {
 		this.height = header.height;
 		this.frameCount = this.frames.length;
 		this.frameDurationMicrosec = header.microSecPerFrame;
-		this.currentFrame = -1;
 		this.loaded = true;
 	}
 
@@ -167,10 +166,12 @@ class ZMBVDecoder {
 		if(!this.loaded) return;
 		if(newFrame < 0) newFrame = 0;
 		if(newFrame >= this.frameCount) newFrame = this.frameCount - 1;
-		if(newFrame == 0) {
-			this.currentFrame = -1;
-		} else if(this.currentFrame > newFrame) {
-			this.currentFrame = -1;
+		if(this.currentFrame > newFrame) {
+			// Rewind until we hit a keyframe
+			this.currentFrame = newFrame - 1;
+			while(this.currentFrame >= 0 && (this.frames[this.currentFrame + 1][0] & 0x01) === 0) {
+				this.currentFrame--;
+			}
 		}
 
 		while(this.currentFrame < newFrame) {

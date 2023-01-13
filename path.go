@@ -38,7 +38,7 @@ func NewHostedPath(LocalPath string, URLPrefix string) *HostedPath {
 		},
 		srv: http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
 			if len(req.URL.RawQuery) > 0 {
-				wr.Header().Set("Cache-Control", "max-age: 31536000, immutable")
+				wr.Header().Set("Cache-Control", "max-age=31536000, immutable")
 			}
 			dir.ServeHTTP(wr, req)
 		}),

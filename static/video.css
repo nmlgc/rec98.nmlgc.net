@@ -108,7 +108,7 @@ rec98-video.with-switcher .controls {
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video {
+:-webkit-full-screen rec98-video .controls {
 	font-size: large;
 }
 

@@ -141,7 +141,6 @@ func (t tPushes) DeliveredAt(datestring string) []Push {
 type Cap struct {
 	Now             time.Time
 	Then            time.Time
-	FirstFree       *time.Time
 	Pushes          int
 	PushPrice       float64
 	Cap             float64
@@ -188,13 +187,6 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 	ret.Incoming = float64(centsIncoming)
 	ret.Reserved = float64(centsReserved)
 	sum := ret.Outstanding + ret.Incoming + ret.Reserved
-	if sum >= ret.Cap {
-		firstfree := start + int(sum/ret.PushPrice)
-		if firstfree < len(freetime) {
-			ret.FirstFree = &freetime[firstfree].Date.Time
-		}
-	}
-
 	fraction := func(dividend, divisor, resultIfNan float64) float64 {
 		ret := (dividend / divisor)
 		if math.IsNaN(ret) {

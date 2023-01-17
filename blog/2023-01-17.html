@@ -1,0 +1,313 @@
+{{$vid_gaps_0 := (call .Video "TH05-Sara-laser-gaps" "Video demonstrating how to pass through TH05's lasers in Sara's final pattern. A second failed attempt a few pixels down demonstrates the size of the gap between collision-detected laser segements.") -}}
+{{$vid_gaps_1 := (call .Video "TH05-Sara-laser-gap-hitboxes" "Video demonstrating how to pass through TH05's lasers in Sara's final pattern, showing the hitboxes of each laser as accurately as possible within discrete pixels") -}}
+{{$vid_giant := (call .Video "TH05-Giant-laser" "Video of a giant 127-pixel TH05 laser, demonstrating how all lasers use 12×12-pixel hitboxes, regardless of their width") -}}
+
+{{$vid_gaps_0.SetTitle "Without hitboxes" -}}
+{{$vid_gaps_1.SetTitle "With hitboxes" -}}
+
+<p>
+	Starting the year with a delivery that <i>wasn't</i> delayed until the last
+	day of the month for once, nice! Still, <q>very soon</q> and
+	<q>high-maintenance</q> did <i>not</i> go well together…
+</p><p>
+	It definitely wasn't Sara's fault though. As you would expect from a Stage 1
+	Boss, her code was no challenge at all. Most of the TH02, TH04, and TH05
+	bosses follow the same overall structure, so let's introduce a new table to
+	replace most of the boilerplate overview text:
+</p><table class="boss_overview numbers"><thead><tr>
+	<th></th>
+	<th>Phase #</th>
+	<th>Patterns</th>
+	<th>HP boundary</th>
+	<th colspan="2">Timeout condition</th>
+</tr></thead><tbody><tr>
+	<td rowspan="4"><img
+		src="data:image/gif;base64,R0lGODlhQABAALMAAACA//z8/PzszOy4qOyouKio/MxUzPxERIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAAALAAAAABAAEAAAwT/EMhJq7046827/2AojmRpnmhqEkYLtAahzgBhw61t02gQ6EBdgFfy/VgxoZEoMvqQOaeM+XH+WolEVEf1BJGJQTZ363ZYOuxgPU6bOVpcNiyY496bMXYuqOtdeBoJAHNhA31sWlqBHCx0fYh2U4wZN48CYnE7lJWOhZ8xnBkwCQVzBaalBaGiFAGoirCoprOwg6JOqbWppaVGqYy5tgVWp6hOt2+/tVnHRsavyHjLr4XHhQjNxcpWtgnZnwji2bNzb4U+vOPrCAfu4MCUzdjtSj8H4OacvYXu7kHu5ohp9enbOH/vsqwZKMpQwTn+8iXa53DOOojjDDEMlAVTJoMI/7O8y7amDqMEHj+KQ8hS3KNkXTomssiyJck+MIkUwpRFAsiaETv6MSOUjc+VQBOixMmR560E+JImhDT0nD6RUpXiLHSOAtSs+B66zBkTbECD7Fxy/AoW7cGLeNhmzbYOYUayNORmzYK05lgqWM1+mwsOsFl/gwnjRRFYcDugRmwsNtFYMGQfESfN0NtWL+aWk0mwfdyW9IHPoHl87buXNGq72fL6YN3a3eugPTcfIEA7ak2oRlh+OhBaBFQbQE0jvg0RsU4EyG3+/g38bPERBqOPVJ40gQ+uTPhCJxCR9ux2Ls/GzY55PAEr+Maezm2V3RF224EHuJ7Xbdq0X9FHkQ9/AH7SilcPGXjgggyiEAEAOw=="
+		alt="Sprite of Sara in TH05"
+	/></td>
+	<th>(Entrance)</th>
+	<td></td>
+	<th>4,650</th>
+	<td>288 frames</td>
+	<td></td>
+</tr><tr>
+	<th>2</th>
+	<td>4</td>
+	<td>2,550</td>
+	<td>2,568 frames</td>
+	<td>(= 32 patterns)</td>
+</tr><tr>
+	<th>3</th>
+	<td>4</td>
+	<td>450</td>
+	<td>5,296 frames</td>
+	<td>(= 24 patterns)</td>
+</tr><tr>
+	<th>4</th>
+	<td>1</td>
+	<td>0</td>
+	<td>1,300 frames</td>
+	<td></td>
+</tr></tbody><tfoot><tr>
+	<th>Total</th>
+	<td></td>
+	<th>9</th>
+	<td></td>
+	<th>9,452 frames</th>
+	<td></td>
+</tr></tfoot></table><ul>
+	<li>In Phases 2 and 3, Sara cycles between waiting, moving randomly for a
+	fixed 28 frames, and firing a random pattern among the 4 phase-specific
+	ones. The pattern selection makes sure to <span class="hovertext"
+	title="Since it's an infinite loop, a rogue RNG will cause the game to hang here, but that's a purely theoretical concern.">never</span>
+	pick any pattern twice in a row. Both phases contain spiral patterns that
+	only differ in the clockwise or counterclockwise turning direction of the
+	spawner; these directions are treated as individual unrelated patterns, so
+	it's possible for the "same" pattern to be fired multiple times in a row
+	with a flipped direction.<br />
+	The two phases also differ in the wait and pattern durations:
+	<ul>
+		<li>In Phase 2, the wait time starts at 64 frames and decreases by 12
+		frames after the first 5 patterns each, ending on a minimum of 4 frames.
+		In Phase 3, it's a constant 16 frames instead.</li>
+		<li>All Phase 2 patterns are fired for 28 frames, after a 16-frame
+		gather animation. The Phase 3 pattern time starts at 80 frames and
+		increases by 24 frames for the first 6 patterns, ending at 200 frames
+		for all later ones.</li>
+	</ul></li>
+	<li>Phase 4 consists of the single laser corridor pattern with additional
+	random bullets every 16 frames.</li>
+</ul><p>
+	And that's all the {{HTML_Tag "gameplay" nil}}-relevant detail that ZUN put
+	into Sara's code. It doesn't even make sense to describe the remaining
+	patterns in depth, as their groups can significantly change between
+	difficulties and rank values. The
+	{{Blog_PostLink "2022-04-30" "general code structure of TH05 bosses"}}
+	won't ever make for {{HTML_Tag "good-code" nil}}, but Sara's code is just a
+	lesser example of what I already documented for Shinki.<br />
+	So, no bugs, no unused content, only inconsequential bloat to be found here,
+	and less than 1 push to get it done… That makes 9 PC-98 Touhou bosses
+	decompiled, with 22 to go, and gets us over the sweet 50% overall
+	finalization mark! 🎉 And sure, it might be possible to pass through the
+	lasers in Sara's final pattern, but the boss script just controls the
+	origin, angle, and activity of lasers, so any quirk there would be part of
+	the laser code… wait, you can do <i>what</i>?!?
+</p><hr /><p>
+	TH05 expands TH04's one-off code for Yuuka's Master and Double Sparks into a
+	more featureful laser system, and Sara is the first boss to show it off.
+	Thus, it made sense to look at it again in more detail and finalize the code
+	I had purportedly
+	{{Blog_PostLink "2018-12-16" "reverse-engineered over 4 years ago"}}.
+	That very short delivery notice already hinted at a very time-consuming
+	future finalization of this code, and that prediction certainly came true.
+	On the surface, <i>all</i> of the low-level laser ray rendering and
+	collision detection code is undecompilable: It uses the <code>SI</code> and
+	<code>DI</code> registers without Turbo C++'s safety backups on the stack,
+	and its helper functions take their input and output parameters from
+	convenient registers, completely ignoring common calling conventions. And
+	just to raise the confusion even further, the code doesn't just <i>set</i>
+	these registers for the helper function calls and then restores their
+	original values, but <i>permanently shifts them via additions and
+	subtractions</i>. Unfortunately, these convenient registers also include the
+	<code>BP</code> base pointer to the stack frame of a function… and shifting
+	that register throws any intuition behind accessed local variables right out
+	of the window for a good part of the function, requiring a correctly shifted
+	view of the stack frame just to make sense of it again.
+	{{HTML_Emoji "godzun"}} How could such code even have been written?! This
+	goes well beyond the already wrong assumption that using more stack space is
+	somehow bad, and straight into the territory of self-inflicted pain.
+</p><p>
+	So while it's not a lot of instructions, it's quite dense and really hard to
+	follow. This code would <i>really</i> benefit from a decompilation that
+	anchors all this madness as much as possible in existing C++ structures… so
+	let's decompile it anyway? {{HTML_Emoji "tannedcirno"}}<br />
+	Doing so would involve emitting lots of raw machine code bytes to hide the
+	<code>SI</code> and <code>DI</code> registers from the compiler, but I
+	already had a certain
+	{{Blog_PostLink "2020-11-16" "batshit insane compiler bug workaround abstraction"}}
+	lying around that could make such code more readable. Hilariously, it only
+	took this one additional use case for that abstraction to reveal itself as
+	premature and way too complicated. {{HTML_Emoji "onricdennat"}} Expanding
+	the core idea into a full-on x86 instruction generator ended up simplifying
+	the code structure a lot. All we really want there is a way to set all
+	potential parameters to e.g. a specific form of the <code>MOV</code>
+	instruction, which can all be expressed as the parameters to a force-inlined
+	<code>__emit__()</code> function. Type safety <i>can</i> help by providing
+	overloads for different operand widths here, but there really is no need for
+	classes, templates, or explicit specialization of templates based <i>on</i>
+	classes. We only need a couple of <code>enum</code>s with opcode, register,
+	and prefix constants from the x86 reference documentation, and a set of
+	associated macros that token-paste pseudoregisters onto the prefixes of
+	these <code>enum</code> constants.<br />
+	And that's how you get a custom compile-time assembler in a 1994 C++
+	compiler and expand the limits of decompilability even further. What's even
+	truly left now? Self-modifying code, layout tricks that can't be replicated
+	with regularly structured control flow… and that's it. That leaves quite a
+	few functions I previously considered undecompilable to be revisited once I
+	get to work on making this game more portable.
+</p><p>
+	With that, we've turned the low-level laser code into the expected horrible
+	monstrosity that exposes all the hidden complexity in those few ASM
+	instructions. The high-level part should be no big deal now… except that
+	we're immediately bombarded with <code>Fixup overflow</code> errors at link
+	time? Oh well, time to finally learn the true way of fixing this highly
+	annoying issue in a <i>second</i> new piece of decompilation tech – and one
+	that might actually be useful for other x86 Real Mode retro developers at
+	that.<br />
+	Earlier in the RE history of TH04 and TH05, I often wrote about the need to
+	split the two original code segments into multiple segments within two
+	<i>groups</i>, which makes it possible to slot in code from different
+	translation units at arbitrary places within the original segment. If we
+	don't want to define a unique segment name for each of these slotted-in
+	translation units, we need a way to set custom segment and group names in C
+	land. Turbo C++ offers two <code>#pragma</code>s for that:
+</p><ul>
+	<li><code>#pragma option -zCsegment -zPgroup</code> – preferred in most
+	cases as it's equivalent to setting the default segment and group via the
+	command line, but can only be used at the beginning of a translation unit,
+	before the first non-preprocessor and non-comment C language token</li>
+	<li><code>#pragma codeseg segment &lt;group&gt;</code> – necessary if a
+	translation unit needs to emit code into two or more segments</li>
+</ul><p>
+	For the most part, these <code>#pragma</code>s work well, but they seemed to
+	not help much when it came to calling <code>near</code> functions declared
+	in different segments within the same group. It took a bit of trial and
+	error to figure out what was actually going on in that case, but there
+	<i>is</i> a clear logic to it:
+</p><ul>
+	<li>Symbols are allocated to the segment and group that's active during
+	their first appearance, no matter whether that appearance is a declaration
+	or definition. Any later appearance of the function in a different segment
+	is ignored.</li>
+	<li>The linker calculates the 16-bit offsets of such references relative to
+	the symbol's <i>declared</i> segment, not its actual one. Turbo C++ does
+	<i>not</i> show an error or warning if the declared and actual segments are
+	different, as referencing the same symbol from multiple segments is a valid
+	use case. The linker merely throws the <code>Fixup overflow</code> error if
+	the calculated distance exceeds 64 KiB and thus couldn't <i>possibly</i> fit
+	within a <code>near</code> reference. With a wrong segment declaration
+	though, your code can be incorrect long before a fixup hits that limit.</li>
+</ul><p>
+	Summarized in code:
+</p><pre>#pragma option -zCfoo_TEXT -zPfoo
+
+void bar(void);
+void near qux(void); // defined somewhere else, maybe in a different segment
+
+#pragma codeseg baz_TEXT baz
+
+// Despite the segment change in the line above, this function will still be
+// put into `foo_TEXT`, the active segment during the first appearance of the
+// function name.
+void bar(void) {
+}
+
+// This function hasn't been declared yet, so it will go into `baz_TEXT` as
+// expected.
+void baz(void) {
+	// This `near` function pointer will be calculated by subtracting the
+	// flat/linear address of qux() inside the binary from the base address
+	// of qux()'s declared segment, i.e., `foo_TEXT`.
+	void (near *ptr_to_qux)(void) = qux;
+}</pre><p>
+	So yeah, you might have to put <code>#pragma codeseg</code> into your
+	<i>headers</i> to tell the linker about the correct segment of a
+	<code>near</code> function in advance. 🤯 This is an important insight for
+	everyone using this compiler, and I'm shocked that none of the Borland C++
+	books documented the interaction of code segment definitions and
+	<code>near</code> references at least at this level of clarity. The TASM
+	manuals did have a few pages on the topic of groups, but that syntax
+	obviously doesn't apply to a C compiler. Fixup overflows in particular are
+	such a common error and really deserved better than the unhelpful <q>🤷</q>
+	of an explanation that ended up in the <i>User's Guide</i>. Maybe this whole
+	technique of custom code segment names was considered arcane even by 1993,
+	judging from the mere three sentences that <code>#pragma codeseg</code> was
+	documented with? Still, it must have been common knowledge among Amusement
+	Makers, because they couldn't have built these exact binaries without
+	knowing about these details. This is the true solution to
+	{{Blog_PostLink "2021-07-31" "any issues involving references to <code>near</code> functions"}},
+	and I'm glad to see that ZUN did <i>not</i> in fact lie to the compiler. 👍
+</p><hr /><p>
+	OK, but <i>now</i> the remaining laser code compiles, and we get to write
+	C++ code to draw some hitboxes during the two collision-detected states of
+	each laser. These confirm what the low-level code from earlier already
+	uncovered: Collision detection against lasers is done by testing a
+	12×12-pixel box at every 16 pixels along the length of a laser, which leaves
+	obvious 4-pixel gaps at regular intervals that the player can just pass
+	through. {{HTML_Emoji "zunpet"}} This adds
+	{{Blog_PostLink "2022-05-31" "yet"}}
+	{{Blog_PostLink "2022-07-10" "another"}}
+	{{Blog_PostLink "2022-08-08" "quirk"}} to the growing list of quirks that
+	were either intentional or must have been deliberately left in the game
+	after their initial discovery. This is what constants were invented for, and
+	there really is no excuse for not using them – <i>especially</i> during
+	intoxicated coding, and/or if you don't have a compile-time abstraction for
+	Q12.4 literals.
+</p><figure class="singleplayer_playfield">
+	{{call .VideoPlayer $vid_gaps_0 $vid_gaps_1.SetActive}}
+	<figcaption>
+		When detecting laser collisions, the game checks the player's single
+		center coordinate against any of the aforementioned 12×12-pixel boxes.
+		Therefore, it's correct to split these 12×12 pixels into two 6×6-pixel
+		boxes and assign the other half to the player for a more natural
+		visualization. Always remember that hitbox visualizations need to keep
+		all colliding entities in mind –
+		{{Blog_PostLink "2021-07-31" "assigning a constant-sized hitbox to \"the player\" and \"the bullets\" will be wrong in most other cases"}}.
+	</figcaption>
+</figure><p>
+	Using subpixel coordinates in collision detection also introduces a slight
+	inaccuracy into any hitbox visualization recorded in-engine on a 16-color
+	PC-98. Since we have to render discrete pixels, we cannot exactly place a
+	Q12.4 coordinate in the 93.75% of cases where the fractional part is
+	non-zero. This is why pretty much every laser segment hitbox in the video
+	above shows up as 7×7 rather than 6×6: The actual W×H area of each box is 13
+	pixels smaller, but since the hitbox lies <i>between</i> these pixels, we
+	cannot indicate <i>where</i> it lies <i>exactly</i>, and have to err on the
+	side of caution. It's also why Reimu's box slightly changes size as she
+	moves: Her non-diagonal movement speed is 3.5 pixels per frame, and the
+	constant focused movement in the video above halves that to 1.75 pixels,
+	making her end up on an exact pixel every 4 frames. Looking forward to the
+	glorious future of displays that will allow us to scale up the playfield to
+	16× its original pixel size, thus rendering the game at its exact internal
+	resolution of 6144×5888 pixels. Such a port would definitely add a lot of
+	value to the game…
+</p><p>
+	The remaining high-level laser code is rather unremarkable for the most
+	part, but raises one final interesting question: With no explicitly defined
+	limit, how wide can a laser be? Looking at the laser structure's 1-byte
+	width field and the unsigned comparisons all throughout the update and
+	rendering code, the answer seems to be an obvious 255 pixels. However, the
+	laser system also contains an automated shrinking state, which can be most
+	notably seen in Mai's wheel pattern. This state shrinks a laser by 2 pixels
+	every 2 frames until it reached a width of 0. This presents a problem with
+	odd widths, which would fall below 0 and overflow back to 255 due to the
+	unsigned nature of this variable. So rather than, I don't know, treating
+	width values of 0 as invalid and stopping at a width of 1, or even adding a
+	condition for that specific case, the code <i>just performs a signed
+	comparison</i>, effectively limiting the width of a shrinkable laser to a
+	maximum of 127 pixels. {{HTML_Emoji "zunpet"}} This small signedness
+	inconsistency now forces the distinction between shrinkable and
+	non-shrinkable lasers onto every single piece of code that uses lasers. Yet
+	another instance where
+	{{Blog_PostLink "2022-08-11" "aiming for a cinematic 30 FPS look"}}
+	made the resulting code much more complicated than if ZUN had just evenly
+	spread out the subtraction across 2 frames. 🤷<br />
+	Oh well, it's not as if any of the fixed lasers in the original scripts came
+	close to any of these limits. Moving lasers are much more streamlined and
+	limited to begin with: Since they're hardcoded to 6 pixels, the game can
+	safely assume that they're always thinner than the 28 pixels they get
+	gradually widened to during their decay animation.
+</p><p>
+	Finally, in case you were missing a mention of hitboxes in the previous
+	paragraph: Yes, the game always uses the aforementioned 12×12 boxes,
+	regardless of a laser's width.
+</p><figure class="singleplayer_playfield">
+	{{call .VideoPlayer $vid_giant}}
+	<figcaption>This video also showcases the 127-pixel limit because I wanted
+	to include the shrink animation for a seamless loop.</figcaption>
+</figure><p>
+	That was what, 50% of this blog post just being about complications that
+	made laser difficult for no reason? Next up: The first TH01 Anniversary
+	Edition build, where I finally get to reap the rewards of having a 100%
+	decompiled game and write some <i>good</i> code for once.
+</p>

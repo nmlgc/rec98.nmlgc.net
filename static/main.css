@@ -853,6 +853,10 @@ figure.progress {
 	border-right: var(--table-border);
 }
 
+.boss_overview tbody th:first-child {
+	border-right: unset;
+}
+
 #progress_for .numbers th:last-child,
 #progress_for .numbers td:last-child {
 	border-left: var(--table-border);

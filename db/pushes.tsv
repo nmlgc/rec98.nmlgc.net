@@ -224,3 +224,5 @@ P0223	[198, 162, 166, 172, 179, 190, 199]	TH03/TH04/TH05 decompilation (Cutscene
 P0224	[157, 158]	TH03/TH04/TH05 decompilation (Cutscenes, part 2/3: Script commpands)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/371292d...8118e61	1
 P0225	[199, 203, 206, 210, 200, 207]	TH03/TH04/TH05 decompilation (Cutscenes, part 3/3: Interpreter loop + TH05 rendering boilerplate, part 1/?)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/8118e61...4f85326	1
 P0226	[212, 215]	Seihou / Shuusou Gyoku (Running at full speed on modern systems / Basic locale independence)	2022-12-31T23:57:00Z	nmlgc/ssg/compare/M0002...P0226	0
+P0227	[197]	TH05 decompilation (Sara) / Research (Relativity of near references)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/4f85326...bfd24c6	1
+P0228	[217, 197]	TH05 finalization (Lasers)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/bfd24c6...739e1d8	1

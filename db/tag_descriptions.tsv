@@ -7,6 +7,7 @@ th03	東方夢時空　～  Phantasmagoria of Dim.Dream
 th04	東方幻想郷　～  Lotus Land Story
 th05	東方怪綺談　～  Mystic Square
 animation	Colorful, crisp images that are played in a sequence.
+anniversary-edition	Polished and bugfixed forks of 100% decompiled games.
 blitting	Getting pixel data to and from VRAM.
 bomb	Limited-use item that damages enemies and grants temporary invulnerability, while playing a flashy animation specific to the player character.
 bug	Bugs in the original code that cause catastrophic effects when given malformed input. Modders beware!
@@ -16,6 +17,7 @@ card-flipping	TH01's regular, non-boss stages.
 contribution-ideas	Potential improvements that volunteers could meaningfully contribute to this project. Mostly minor issues, or slightly out of scope of the main project.
 cutscene	Endings or staff roll animations. Also applies to the cutscenes before stages 8 and 9 in TH03.
 danmaku-pattern	A complete danmaku animation over a specified period of time.
+debloating	Cleaning up ZUN's original code into something you can actually read and maintain.
 debug	Debug features that ZUN left in the shipped game.
 dosbox-x	A DOSBox fork with support for PC-98 emulation.
 enemy	Common stage enemies with simple scripts, in contrast to midbosses or bosses.

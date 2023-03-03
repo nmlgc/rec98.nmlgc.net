@@ -226,3 +226,9 @@ P0225	[199, 203, 206, 210, 200, 207]	TH03/TH04/TH05 decompilation (Cutscenes, pa
 P0226	[212, 215]	Seihou / Shuusou Gyoku (Running at full speed on modern systems / Basic locale independence)	2022-12-31T23:57:00Z	nmlgc/ssg/compare/M0002...P0226	0
 P0227	[197]	TH05 decompilation (Sara) / Research (Relativity of near references)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/4f85326...bfd24c6	1
 P0228	[217, 197]	TH05 finalization (Lasers)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/bfd24c6...739e1d8	1
+P0229	[211, 219]	TH01 debloating (Single-executable build, part 1/2)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/6370f96...d535d87	0
+P0230	[221]	TH01 debloating (Single-executable build, part 2/2)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/d535d87...ca523b4	0
+P0231	[121, 216]	Research (Spawning TSRs from C)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/ca523b4...05a49b9	0
+P0232	[225]	Portability (PC-98 platform layer, part 1)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/f7ef7f8...abeaf85	0
+P0233	[208]	Research (Performance of various PC-98 blitting approaches)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/abeaf85...dbc5b51	0
+P0234	[219, 223, 227]	TH01 Anniversary Edition (Removing interlaced pellet rendering + Merging previous fixes)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/dd2265c...12f29c6	0

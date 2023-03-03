@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
+	<style type="text/css"><![CDATA[
+		text {
+			font-family: sans-serif;
+			line-height: 125%;
+			text-anchor: middle;
+			font-size: 0.5em;
+		}
+		text.label {
+			alignment-baseline: middle;
+		}
+		.label.binary {
+			font-family: monospace;
+		}
+		text.number {
+			font-family: monospace;
+			font-size: 0.75em;
+		}
+		path {
+			stroke-linecap: round;
+			stroke-width: 3;
+		}
+		.heap {
+			stroke-linecap: round;
+			stroke-width: 2;
+		}
+		path.alloc {
+			stroke: black;
+			fill: #ccc;
+			stroke-width: .25;
+		}
+		path.alloc.th01 {
+			stroke: black;
+			fill: #f88;
+			stroke-width: .25;
+		}
+		line.alloc.free {
+			stroke-width: .25;
+			stroke-dasharray: 1;
+		}
+		path.alloc.fixed {
+			fill: #fcc;
+		}
+	]]>	</style>
+	<line class="alloc free" x1="0" y1="0" x2="640" y2="0" stroke="#000" />
+	<text class="label" x="475" y="22.5" style="font-size: 0.4em">(free)</text>
+	<text class="number" x="0.5" y="77.5" style="text-anchor: start;">0000h</text>
+	<text class="number" x="639.5" y="77.5" style="text-anchor: end;">9FFFh</text>
+	<text class="number" x="645" y="77.5" style="text-anchor: start;">(640 KiB)</text>
+
+	<path class="alloc fixed" opacity="0.25" fill="#fcc" d="M0 0h 35v 60H 0z"/>
+	<text class="label" opacity="0.25" x="17.5" y="30">BIOS</text>
+
+	<path class="alloc" opacity="0.25" d="M35 0h 60v 60H 35z"/>
+	<text class="label" opacity="0.25" x="65" y="26">
+		<tspan>DOS,</tspan>
+		<tspan font-family="monospace" x="65" dy="12.5">COMMAND.COM</tspan>
+	</text>
+
+	<path class="alloc" d="M95 0h 40v 60H 95z"/>
+	<text class="label" x="115" y="26">
+		<tspan class="binary label">MDRV98</tspan>
+		<tspan x="115" dy="12.5">(env.)</tspan>
+	</text>
+	<path class="alloc" d="M135 0h 50v 60H 135z"/>
+	<text class="binary label" x="160" y="30">MDRV98</text>
+
+	<path class="alloc" d="M185 0h 40v 60H 185z"/>
+	<text class="label" x="205" y="26">
+		<tspan class="binary label">OP</tspan>
+		<tspan x="205" dy="12.5">(env.)</tspan>
+	</text>
+	<path class="alloc th01" d="M225 0h 125v 60H 225z"/>
+	<text class="binary label" x="287.5" y="26">OP / REIIDEN / FUUIN</text>
+
+	<path class="heap" d="M345 45v10" stroke="#000"/>
+	<path class="heap" d="M345 50h200" stroke="#000"/>
+	<path class="heap" d="M540 47.5, 545 50, 540 52.5" stroke="#000"/>
+	<text class="label" x="445" y="42.5">C heap growth direction</text>
+
+	<path class="alloc" opacity="0.25" d="M600 0h 40v 60H 600z"/>
+	<text class="label" opacity="0.25" x="620" y="26">
+		<tspan>Resident</tspan>
+		<tspan x="620" dy="12.5">structure</tspan>
+	</text>
+
+	<path class="alloc fixed" opacity="0.25" fill="#fcc" d="M640 0h 60v 60H 640z"/>
+	<text class="label" opacity="0.25" x="670" y="30">Text RAM</text>
+
+	<path d="M0 60h700" stroke="#000"/>
+	<path d="M0 55v10" stroke="#000"/>
+	<path d="M640 55v10" stroke="#000"/>
+</svg>

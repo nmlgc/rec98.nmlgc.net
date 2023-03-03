@@ -1,0 +1,928 @@
+{{$dl_blitperf := printf "%v%v" .DatePrefix "blitperf.zip" -}}
+{{$dl_anniv := printf "%v%v" .DatePrefix "th01-anniv.zip" -}}
+{{$vid_blitperf := (call .Video "BLITPERF" "Video of BLIT386.EXE running on DOSBox-X") -}}
+{{$vid_egc := (call .Video "EGC" "Video of testing arbitrarily unaligned rectangle copies with the EGC") -}}
+{{$vid_pellets_d := (call .Video "TH01-pellet-rendering-deinterlace-attempt" "Video of my initial attempt to deinterlace TH01's pellet rendering, demonstrated with Kikuri's first pattern, showing noticeable and reproducible screen tearing") -}}
+{{$vid_pellets_o := (call .Video "TH01-pellet-rendering-Original" "Video of TH01 Kikuri's first pattern in ZUN's original build, demonstrating interlaced pellet rendering at a halved frame rate") -}}
+{{$vid_pellets_a := (call .Video "TH01-pellet-rendering-Anniversary" "Video of TH01 Kikuri's first pattern in the first Anniversary Edition build, demonstrating pellet rendering at the full, non-interlaced frame rate") -}}
+{{$pic_egc_t98 := (call .PostFileURL "EGC-T98-Next.png") -}}
+{{$pic_unblit_o := (call .PostFileURL "TH01-SinGyoku-crossing-pellet-unblitting-Original.png") -}}
+{{$pic_unblit_o := (call .PostFileURL "TH01-SinGyoku-crossing-pellet-unblitting-Original.png") -}}
+{{$pic_unblit_a := (call .PostFileURL "TH01-SinGyoku-crossing-pellet-unblitting-Anniversary.png") -}}
+
+{{$vid_pellets_a.SetTitle "Anniversary Edition" -}}
+{{$vid_pellets_o.SetTitle "Original game" -}}
+
+<style>
+	.our-{{.Date}} {
+		color: green;
+	}
+
+	.borland-{{.Date}} {
+		color: red;
+	}
+
+	#blitperf-results-{{.Date}} {
+		font-size: 75%;
+	}
+
+	#blitperf-results-{{.Date}} thead {
+		border-bottom: var(--table-border);
+		border-bottom-width: 2px;
+	}
+
+	#blitperf-results-{{.Date}} thead td,
+	#blitperf-results-{{.Date}} thead th {
+		border-right-width: 2px;
+	}
+
+	#blitperf-results-{{.Date}} tbody .b {
+		border-right-width: 2px;
+	}
+
+	#blitperf-results-{{.Date}} tr.fourplane {
+		background-color: rgb(256, 220, 256);
+	}
+
+	#blitperf-results-{{.Date}} td,
+	#blitperf-results-{{.Date}} th {
+		border: var(--table-border);
+	}
+</style>
+
+<p>
+	128 commits! Who would have thought that the ideal first release of the TH01
+	Anniversary Edition would involve so much maintenance, and raise so many
+	research questions? It's almost as if the real work only starts <i>after</i>
+	the 100% finalization mark… Once again, I had to steal some funding from the
+	reserved JIS trail word pushes to cover everything I liked to research,
+	which means that the next {{HTML_Currency 15000}} towards the
+	<q>anything</q> goal will repay this debt. Luckily, this doesn't affect any
+	immediate plans, as I'll be spending March with tasks that are already fully
+	funded.
+</p><p>
+	So, how did this end up so massive? The list of things I originally set out
+	to do was pretty short:
+</p><ol>
+	<li>Build entire game into single executable</li>
+	<li>Fix rendering issues in the one or two most important parts of the game
+	for a good initial impression</li>
+</ol><p>
+	But even the first point already started with tons of little cleanup
+	commits. A part of them can definitely be blamed on the rush to hit the 100%
+	decompilation mark before the 25<sup>th</sup> anniversary last August.
+	However, all the structural changes that I can't commit to
+	<code>master</code> reveal how much of a mess the TH01 codebase actually
+	is.<br />
+	Merging the executables is mainly difficult because of all the
+	inconsistencies between <code>REIIDEN.EXE</code> and <code>FUUIN.EXE</code>.
+	The worst parts can be found in the <code>REYHI*.DAT</code> format code and
+	the High Score menu, but the little things are just as annoying, like how
+	the current <code>score</code> is an unsigned variable in
+	<code>REIIDEN.EXE</code>, but a signed one in <code>FUUIN.EXE</code>.
+	{{HTML_Emoji "zunpet"}} If it takes <i>me</i> this long and this many
+	commits just to sort out all of these issues, it's no wonder that the only
+	thing I've seen being done with this codebase since TH01's 100%
+	decompilation was a single porting attempt that ended in a rather quick
+	ragequit.<br />
+	So why are we merging the executables in preparation for the Anniversary
+	Edition, and not waiting with it until we start doing ports?
+</p><ul>
+	<li>Distributing and updating one executable is cleaner than doing the same
+	with three, especially as long as installation will still involve manually
+	dropping the new binary into the game directory.</li>
+	<li>The Anniversary Edition won't be the only fork binary. We are already
+	going to start out with a separate <code>DEBLOAT.EXE</code> that contains
+	only the bloat removal changes without any bug fixes, and <a
+	href="https://twitter.com/spaztron64/status/1630749841096671233">spaztron64
+	will probably redo his seizure-less edition</a>. We don't want to clutter
+	the game directory with three binaries for each of these fork builds, and we
+	especially don't want to remember things like <q>oh, but <i>this</i> fork
+	only modifies <code>REIIDEN.EXE</code></q>…</li>
+	<li>All forks should run side-by-side with the original game. During the
+	time I was maintaining thcrap, I've had countless bug reports of people
+	assuming that <span class="hovertext" title="In fact, that distinction 	between thcrap bugs and game bugs is the origin of the 'ZUN bug' 	classification, which I&#39;ve carried over to ReC98.">thcrap was
+	responsible for bugs that were present in the original game</span>, and the
+	same is certain to happen with the Anniversary Edition. Separate binaries
+	will make it easier for everyone to check where these bugs came from.</li>
+	<li>Also, I'd like to make a point about <i>how</i> bloated the original
+	three-executable structure really is, since I've heard people defending it
+	as neat software architecture. Really, even in Real Mode where you typically
+	want to use as little of the 640 KiB of conventional memory as possible, you
+	<i>don't</i> want to split your game up like this.</li>
+</ul><p>
+	The game actually is <i>so</i> bloated that the combined binary ended up
+	smaller than the original <code>REIIDEN.EXE</code>. If all you see are the
+	file sizes of the original three executables, this might <a
+	href="https://twitter.com/Tasos500/status/1626321988925915137">look like a
+	pretty impressive feat</a>. Like, how can we <i>possibly</i> get 407,812
+	bytes into less than 238,612 bytes, without using compression?<br />
+	If you've ever looked at the linker map though, it's not at all surprising.
+	Excluding the aforementioned inconsistencies that are hard to quantify,
+	<code>OP.EXE</code> and <code>FUUIN.EXE</code> only feature 5,767 and 6,475
+	bytes of unique code and data, respectively. All other code in these
+	binaries is already part of <code>REIIDEN.EXE</code>, with more than half of
+	the size coming from the Borland C++ runtime. The single worst offender here
+	is the C++ exception handler that Borland <a
+	href="https://github.com/nmlgc/Slices/blob/81787e49bccfc6bf22689d7aa4f14c9d25df4b48/Turbo%20C%2B%2B%204.02J%20(1994)/c0.asm#L258-L262">forces
+	onto every non-.COM binary by default</a>, which alone adds 20,512 bytes
+	even if your binary doesn't use C++ exceptions.<br />
+	On a more hilarious note, <a
+	href="https://github.com/nmlgc/ReC98/blob/6370f96d9a5850ea71e4c12d7cc3f1d45e8c9d73/th01/hardware/graph.cpp#L550">this
+	single line</a> is responsible for pulling another unnecessary 14,242 bytes
+	into <code>OP.EXE</code> and <code>FUUIN.EXE</code>. This floating-point
+	multiplication is completely unnecessary in this context because all
+	possible parameters are integers, but it's enough for Turbo C++ and TLINK to
+	pull in the entire x87 FPU emulation machinery. These two binaries don't
+	even <i>draw</i> lines, but since this function is part of the general
+	graphics code translation unit and contains other functions that these
+	binaries <i>do</i> need, TLINK links in the entire thing. Maybe, multiple
+	executables aren't the best choice either if you use a linker that can't do
+	dead code elimination…
+</p><p>
+	Since the {{Blog_PostLink "2020-06-13" "Orb's physics"}} do turn the entire
+	precision of a <code>double</code> variable into gameplay effects, it's not
+	feasible to ever get rid of all FPU code in TH01. The exception handler,
+	however, <a
+	href="https://community.embarcadero.com/article/technical-articles/162/14700">can
+	be removed</a>, which easily brings the combined binary below the size of
+	the original <code>REIIDEN.EXE</code>. Compiling all code with a single set
+	of compiler optimization flags, including the more x86-friendly
+	<code>pascal</code> calling convention, then gets us a few more KB on top.
+	As does, of course, removing unused code: The only remaining purpose of
+	features such as {{Blog_PostLink "2020-01-05" "resident palettes"}} is to
+	potentially make porting more difficult for anyone who doesn't immediately
+	realize that nothing in the game uses these functions.<br />
+	Technically, <i>all</i> unused code would be bloat, but for now, I'm keeping
+	the parts that may tell stories about the game's development history (such
+	as unused effects or the {{Blog_PostLink "2022-08-11" "mouse cursor"}}), or
+	that might help with debugging. Even with that in mind, I've only scratched
+	the surface when it comes to bloat removal, and the binary is only going to
+	get smaller from here. <i>A lot smaller.</i>
+</p><p>
+	If only we now could start MDRV98 from this new combined binary, we wouldn't
+	need a second batch file either…
+</p><hr /><p>
+	Which brings us to the first big research question of this delivery. Using
+	the C <code>spawn()</code> function works fine on this compiler, so
+	<code>spawn("MDRV98.COM")</code> would be all we need to do, right? Except
+	that the game crashes very soon after that subprocess returned.
+	{{HTML_Emoji "thonk"}}<br />
+	So it's not going to be <i>that</i> easy if the spawned process is a <a
+	href="https://en.wikipedia.org/wiki/Terminate-and-stay-resident_program">TSR</a>.
+	But why should this be a problem? Let's take a look at the DOS heap, and how
+	DOS lays out processes in conventional memory if we launch the game
+	regularly through <code>GAME.BAT</code>:
+</p><figure>
+	<embed src="{{call .PostFileURL "DOS-heap-batch.svg"}}" />
+	<figcaption>The rough layout of the DOS heap when launching TH01 from
+	<code>GAME.BAT</code>.</figcaption>
+</figure><p>
+	The batch file starts MDRV98 first, which will therefore end up <i>below</i>
+	the game in conventional memory. This is perfect for a TSR: The program can
+	resize itself arbitrarily before returning to DOS, and the rest of memory
+	will be left over for the game. If we assume such a layout, a DOS program
+	can implement a custom memory allocator in a very simple way, as it only has
+	to search for free memory in one direction – and this is exactly how Borland
+	implemented the C heap for functions like <code>malloc()</code> and
+	<code>free()</code>, and the C++ <code>new</code> and <code>delete</code>
+	operators.<br />
+	But if we spawn MDRV98 <i>after</i> starting TH01, well…
+</p><figure>
+	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-adjacent.svg"}}" />
+</figure><p>
+	MDRV98 will spawn in the next free memory location, allocate itself, return
+	to TH01… which suddenly finds its C heap blocked from growing. As a result,
+	the next big allocation will immediately fail with a rather misleading "out
+	of memory" error.
+</p><p>
+	So, what can we do about this? Still in a bloat removal mindset, my gut
+	reaction was to just throw out Borland's C heap implementation, and replace
+	it with a very thin wrapper around the DOS heap as managed by <code>INT 21h,
+	AH=<a href="https://stanislavs.org/helppc/int_21-48.html">48h</a>/<a
+	href="https://stanislavs.org/helppc/int_21-49.html">49h</a>/<a
+	href="https://stanislavs.org/helppc/int_21-4a.html">4Ah</a></code>. Like, <a
+	href="https://forum.vcfed.org/index.php?threads/can-somebody-please-explain-how-dos-memory-allocation-works.58785/#post-797612">why
+	did these DOS compilers even bother with a custom allocator in the first
+	place if DOS already comes with a perfectly fine native one</a>? Using the
+	native allocator would completely erase the distinction between TSR memory
+	and game memory, and inherently allow the game to allocate beyond
+	MDRV98.</a><br />
+	I did in fact implement this, and noticed even more benefits:
+</p><ul>
+	<li>While DOS uses 16 bytes rather than Borland's 4 bytes for the control
+	structure of each memory block, this larger size automatically aligns all
+	allocations to 16-byte boundaries. Therefore, all allocation addresses would
+	fit into 16-bit segment-only pointers rather than needing 32-bit
+	<code>far</code> ones. On the Borland heap, the 4-byte header further limits
+	regular <code>far</code> pointers to 65,532 bytes, forcing you into
+	expensive <code>huge</code> pointers for bigger allocations.</li>
+	<li>Debuggers in DOS emulators typically have features to show and manage
+	the DOS heap. No need for custom debugging code.</li>
+	<li>You can change the <a
+	href="https://stanislavs.org/helppc/int_21-58.html">memory placement
+	strategy</a> to allocate from the top of conventional memory down to the
+	bottom. This is how the games allocate their resident structures.</li>
+</ul><p>
+	Ultimately though, the drawbacks became too significant. Most of them are
+	related to the PC-98 Touhou games only ever creating a single DOS
+	<i>process</i>, even though they contain multiple <i>executables</i>.
+	Switching executables is done via <code>exec()</code>, which resizes a
+	program's main allocation to match the new binary and then overwrites the
+	old program image with the new one. If you've ever wondered why DOSBox-X
+	only ever shows <code>OP</code> as the active process name in the title bar,
+	you now know why. As far as DOS is concerned, it's still the same
+	<code>OP.EXE</code> process rooted at the same segment, and
+	<code>exec()</code> doesn't bother rewriting the name either. Most
+	importantly though, this is how <code>REIIDEN.EXE</code> can launch into
+	another <code>REIIDEN.EXE</code> process even if there are less than 238,612
+	bytes free when <code>exec()</code> is called, and without consuming more
+	memory for every successive binary.<br />
+	For now, <code>ANNIV.EXE</code> still re-<code>exec()</code>s itself at
+	every point where the original game did, as ZUN's original code really
+	depends on being reinitialized at boss and scene boundaries. The resulting
+	accidental semi-<q>hot reloading</q> is also a useful property to retain
+	during development.<br />
+	So why is the DOS heap a bad idea for regular game allocation after all?
+</p><ul>
+	<li>Even DOS automatically releases all memory associated with a process
+	during its termination. But since we keep running the same process until the
+	player quits out of the main menu, we lose the C heap's implicit cleanup on
+	<code>exec()</code>, and have to manually free all memory ourselves.</li>
+	<li>Since the binary can be larger after hot reloading, we in fact <i>have
+	to</i> allocate all regular memory using the <i>last fit</i> strategy.
+	Otherwise, <code>exec()</code> fails to resize the program's main block for
+	the same reason that crashed the game on our initial attempt to
+	<code>spawn("MDRV98.COM")</code>.</li>
+	<li>Just like Borland's heap implementation, the DOS heap stores its control
+	structures immediately before each allocation, forming a singly linked list.
+	But since the entire OS shares this single list, corruptions from heap
+	overflows also affect the whole system, and become much more disastrous.
+	Theoretically, it might be possible to recover from them by forcibly
+	releasing all blocks after the last correct one, or even by doing a
+	brute-force search for valid <a
+	href="https://stanislavs.org/helppc/memory_control_block.html">memory
+	control blocks</a>, but in reality, DOS will likely just throw error code #7
+	(<code>ERROR_ARENA_TRASHED</code>) on the next memory management syscall,
+	forcing a reboot.<br />
+	With a custom allocator, small corruptions remain isolated to the process.
+	They can be even further limited if the process adds some padding between
+	its last internal allocation and the end of the allocated DOS memory block;
+	Borland's heap sort of does this as well by always rounding up the DOS block
+	to a full KiB. All this might not make a difference in today's emulated and
+	single-tasked usage, but would have back then when software was still
+	developed inside IDEs running on the same system.</li>
+	<li>TH01's debug mode uses <code>heapcheck()</code> and
+	<code>heapchecknode()</code>, and reimplementing these on top of the DOS
+	heap is not trivial. On the contrary, it would be the most complicated part
+	of such a wrapper, by far.</li>
+	<li>Finally, and most importantly for TH01 in particular: The observable
+	effects of the
+	{{Blog_PostLink "2022-05-31" "debug mode HP bar heap corruption glitches"}}
+	are a direct result of Borland's C heap implementation.</li>
+</ul><p>
+	I could release this DOS heap wrapper in unused form for another push if
+	anyone's interested, but for now, I'm pretty happy with not actually using
+	it in the games. Instead, let's stay with the Borland C heap, and find a way
+	to push MDRV98 to the very top of conventional RAM. Like this:
+</p><figure>
+	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-top.svg"}}" />
+</figure><p>
+	Which is much easier said than done. It would be nice if we could just use
+	the <i>last fit</i> allocation strategy here, but .COM executables always
+	receive all free memory by default anyway, which eliminates any difference
+	between the strategies.<br />
+	But we can still change <i>memory</i> itself. So let's temporarily claim all
+	remaining free memory, minus the exact amount we need for MDRV98, for our
+	process. Then, the only remaining free space to spawn MDRV98 is at the exact
+	place where we want it to be:
+</p><figure>
+	<embed src="{{call .PostFileURL "DOS-heap-before-MDRV98-top.svg"}}" />
+	<figcaption>
+		Obviously, we release all the additional memory after spawning MDRV98.
+	</figcaption>
+</figure><p>
+	Now we only need to know how much memory to not temporarily allocate. First,
+	we need to replicate the assumption that MDRV98's <code>-M7</code>
+	command-line parameter corresponds to a resident size of 23,552 bytes. This
+	is not as bad as it seems, because the <code>-M</code> parameter explicitly
+	has a KiB unit, and we can nicely abstract it away for the API.<br />
+	The <i>(env.)</i> block though? Its minimum size equals the combined length
+	of all environment variables passed to the process, but its maximum size is…
+	not limited at all?! As in, DOS implementations can add and have
+	historically added more free space because some programs insisted on storing
+	their own new environment variables in this exact segment. DOSBox and
+	DOSBox-X follow this tradition by providing a configuration option for the
+	additional amount of environment space, with the latter <a
+	href="https://github.com/joncampbell123/dosbox-x/commit/1a18812">adding 1024
+	additional bytes by default, y'know, just in case someone wants to compile
+	FreeDOS on a slow emulator</a>. It's not even worth sending a bug report for
+	this specific case, because it's only a symptom of the fact that
+	unexpectedly large program environment blocks can and will happen, and are
+	to be expected in DOS land.<br />
+	So thanks to this cruel joke, it's technically impossible to achieve what we
+	want to do there. Hooray! The only thing we can kind of do here is an
+	educated guess: Sum up the length of all environment variables in our
+	environment block, compare that length against the allocated size of the
+	block, and assume that the MDRV98 process will get as much additional memory
+	as our process got. 🤷
+</p><p>
+	The remaining hurdles came courtesy of some Borland C runtime implementation
+	details. You would think that the temporary reallocation could even be done
+	in pure C using the <code>sbrk()</code>, <code>coreleft()</code>, and
+	<code>brk()</code> functions, but all values passed to or returned from
+	these functions are inaccurate because they don't factor in the
+	aforementioned KiB padding to the underlying DOS memory block. So we have to
+	directly use the DOS syscalls after all. Which at least means that learning
+	about them wasn't <i>completely</i> useless…<br />
+	The final issue is caused inside <span class="borland-{{.Date}}">Borland's
+	<code>spawn()</code> implementation</span>. The environment block for the
+	child process is built out of all the strings reachable from C's
+	<code>environ</code> pointer, which is what that FreeDOS build process
+	<i>should</i> have used. Coalescing them into a single buffer involves yet
+	another C heap allocation… and since we didn't report our DOS memory block
+	manipulation back to the C heap, the <code>malloc()</code> call might think
+	it needs to request more memory from DOS. This resets the DOS memory block
+	back to its intended level, undoing our manipulation right before the actual
+	<a href="https://stanislavs.org/helppc/int_21-4b.html"><code>INT 21h, AH=4Bh
+	EXEC</code></a> syscall. Or in short:
+</p><blockquote><span class="our-{{.Date}}"
+	>Manipulate DOS heap ➜ <code>spawn()</code> call ➜</span
+> <span class="borland-{{.Date}}"
+	><code>_LoadProg()</code> ➜ allocate and prepare environment block ➜
+	<code>_spawn()</code> ➜ DOS <code>EXEC</code> syscall</span
+></blockquote><p>
+	The obvious solution: Replace <code>_LoadProg()</code>, implement the
+	coalescing ourselves, and do it before the heap manipulation. Fortunately,
+	Borland's internal low-level <code>_spawn()</code> function is not
+	<code>static</code>, so we can call it ourselves whenever we want to:
+</p><blockquote><span class="our-{{.Date}}"
+	>Allocate and prepare environment block ➜ manipulate DOS heap ➜
+<code>_spawn()</code> call ➜</span
+> <span class="borland-{{.Date}}"
+	><code>EXEC</code> syscall</span
+></blockquote><p>
+	So yes, launching MDRV98 from C <i>can</i> be done, but it involves advanced
+	witchcraft and is completely ridiculous. {{HTML_Emoji "tannedcirno"}}
+	Launching external sound drivers from a batch file <i>is</i> the right way
+	of doing things.<br />
+	Fortunately, you don't have to rely on this auto-launching feature. You can
+	still launch <code>DEBLOAT.EXE</code> or <code>ANNIV.EXE</code> from a batch
+	file that launched <code>MDRV98.COM</code> before, and the binaries will
+	detect this case and skip the attempt of launching MDRV98 from C. It's
+	unlikely that my heuristic will ever break, but I definitely recommend
+	replicating <code>GAME.BAT</code> just to be completely sure – especially
+	for user-friendly repacks that don't want to include the original game
+	anyway.<br />
+	This is also why <code>ANNIV.EXE</code> doesn't launch
+	<code>ZUNSOFT.COM</code>: The "correct" and stable way to launch
+	<code>ANNIV.EXE</code> still involves a batch file, and I would say that
+	expecting people to remove <code>ZUNSOFT.COM</code> from that file is worse
+	than not playing the animation. It's certainly a debate we can have, though.
+</p><hr /><p>
+	This deep dive into memory allocation revealed another previously
+	undocumented bug in the original game. The RLE decompression code for the
+	<code>東方靈異.伝</code> packfile contains two heap overflows, which are
+	actually triggered by SinGyoku's <code>BOSS1_3.BOS</code> and Konngara's
+	<code>BOSS8_1.BOS</code>. They only do not immediately crash the game when
+	loading these bosses thanks to two implementation details of Borland's C
+	heap. {{HTML_Emoji "zunpet"}}<br />
+	Obviously, this is a bug we should fix, but according to the definition of
+	bugs, that fix would be exclusive to the <code>anniversary</code> branch.
+	Isn't that too restrictive for something this critical? This code is
+	guaranteed to blow up with a different heap implementation, if only in a
+	Debug build. {{HTML_Emoji "thonk"}} And besides, nobody would notice a fix
+	just by looking at the game's rendered output…
+</p><p>
+	Looks like we have to introduce a fourth category of weird code, in addition
+	to the previous <i>bloat</i>, <i>bug</i>, and <i>quirk</i> categories, for
+	invisible internal issues like these. Let's call it <i>landmine</i>, and fix
+	them on the <code>debloated</code> branch as well. <a
+	href="https://twitter.com/Clerish/status/1623990678937034752">Thanks to
+	Clerish for the naming inspiration</a>!<br />
+	With this new category, the full definitions for all categories have become
+	quite extensive. Thus, they now live in <a
+	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#labeling-weird-or-broken-code"><code>CONTRIBUTING.md</code>
+	inside the ReC98 repository</a>.
+</p><p>
+	With the new discoveries and the new landmine category, TH01 is now at 67
+	bugs and 20 landmines. And the solution for the landmine in question? <a
+	href="https://github.com/nmlgc/ReC98/commit/30325e168d50c51ad4c1402c79c29b7633ddd672">Simplifying
+	the 61 lines of the original code down to 16.</a> And yes, I'm including
+	comments in these numbers – if the interactions of the code are complex
+	enough to require multi-paragraph comments, these <i>are</i> a necessary and
+	valid part of the code.
+</p><hr /><p>
+	While we're on the topic of weird code and its visible or invisible effects,
+	there's one thing you might be concerned about. With all the rearchitecting
+	and data shifting we're doing on the <code>debloated</code> branch, what
+	will happen to the {{Blog_PostLink "2022-08-14" "negative glitch stages"}}?
+	These are the result of a clearly observable bug that, by definition, must
+	not be fixed on the <code>debloated</code> branch. But given that the
+	observable layout of the glitch stages is defined by the memory
+	<i>surrounding</i> the scene stage variable, won't the
+	<code>debloated</code> branch inherently alter their appearance (= ⚠️
+	fanfiction ⚠️), or even remove them completely?
+</p><p>
+	Well, yes, it will. But we can still preserve their layout by
+	<a
+	href="https://github.com/nmlgc/ReC98/blob/dd2265cf92022b1d7e48e0b3e701e11dd5995a67/th01/main/stage/stageobj.cpp#L30-L104">hardcoding
+	the exact original data that the game would originally read</a>, and even <a
+	href="https://github.com/nmlgc/ReC98/blob/dd2265cf92022b1d7e48e0b3e701e11dd5995a67/th01/main/stage/stageobj.cpp#L355-L370">emulate
+	the original segment relocations and other pieces of global data</a>.<br />
+	Doing this is feasible thanks to the fact that there are only 4 glitch
+	stages. Unfortunately, the same can't be said for the timer values, which
+	are determined by an array lookup with the un-modulo'd stage ID. If we
+	wanted to preserve those as well, we'd have to bundle an exact copy of the
+	original <code>REIIDEN.EXE</code> data segment to preserve the values of all
+	32,768 negative stages you could possibly enter, <i>together</i> with a map
+	of all relocations in this segment. 😵 Which I've decided against for now,
+	since this has been going on for far too long already. Let's first see <span
+	class="hovertext" title="I'm aware that me mentioning it will make this much more likely!">if
+	anyone ever actually complains</span> about details like this…
+</p><hr /><p>
+	Alright, time to start the <code>anniversary</code> branch by rendering
+	everything at its correct internal unaligned X position? Eh… maybe not quite
+	yet. If we just hacked all the necessary bit-shifting code into all the
+	format-specific blitting functions, we'd still retain all this largely
+	redundant, bad, and slow code, and would make no progress in terms of
+	portability. It'd be much better to first write a single generic blitter
+	that's decently optimized, but supports all kinds of sprites to make this
+	optimization actually worth something.<br />
+	So, next research question: How would such a blitter look like? After I
+	learned during my
+	{{Blog_PostLink "2022-06-17" "first foray into cycle counting"}} that port
+	I/O is slow on 486 CPUs, it became clear that TH04's
+	{{Blog_PostLink "2020-04-03" "GRCG batching for pellets"}} was one of the
+	more useful optimizations that probably contributed a big deal towards
+	achieving the high bullet counts of that game. This leads to two
+	conclusions:
+</p><ul>
+	<li>master.lib's <code>super_*()</code> sprite functions are slow, and not
+	worth looking at for inspiration. Even the {{Blog_PostLink "2021-11-08"
+	"tiny format"}} reinitializes the GRCG on every color change, wasting 80
+	cycles.</li>
+	<li>Hence, our low-level blitting API should not even care about colors. It
+	should only concern itself with blitting a given 1bpp sprite to a single
+	VRAM segment. This way, it can work for both 4-plane sprites and
+	single-plane sprites, and just assume that the GRCG is active.</li>
+</ul><p>
+	Maybe we should also start by not even doing these unaligned bit shifts
+	ourselves, and instead expect the call site to
+	{{Blog_PostLink "2019-02-28" "always deliver a byte-aligned sprite that is 	correctly preshifted"}},
+	if necessary? Some day, we definitely should measure how slow runtime
+	shifting would really be…
+</p><p>
+	What we should do, however, are some further general optimizations that I
+	would have expected from master.lib: <a
+	href="https://en.wikipedia.org/wiki/Duff%27s_device">Unrolling the vertical
+	loop</a>, and baking a single function for every sprite width to eliminate
+	the horizontal loop. We can then use the widest possible x86
+	<code>MOV</code> instruction for the lowest possible number of cycles per
+	row – for example, we'd blit a 56-wide sprite with three <code>MOV</code>s
+	(32-bit + 16-bit + 8-bit), and a 64-wide one with two 32-bit
+	<code>MOVs</code>.<br />
+	Or maybe not? There's a lot of blitting code in both master.lib and PC-98
+	Touhou that checks for empty bytes within sprites to skip needlessly writing
+	them to VRAM:
+</p><pre>uint8_t left_half = ((uint8_t *)(sprite))[0];
+uint8_t right_half = ((uint8_t *)(sprite))[1];
+if(right_half != 0x00) {
+	pokeb(VRAM_SEGMENT, (vram_offset + 0), left_half);
+}
+if(right_half != 0x00) {
+	pokeb(VRAM_SEGMENT, (vram_offset + 1), right_half);
+}</pre><p>
+	Which goes against everything you seem to know about computers. We aren't
+	running on an 8-bit CPU here, so wouldn't it be faster to always write both
+	halves of a sprite in a single operation?
+</p><pre>uint16_t both_halves = ((uint16_t *)(sprite))[0];
+pokew(VRAM_SEGMENT, vram_offset, both_halves);
+</pre><p>
+	That's a single CPU instruction, compared to two instructions and two
+	branches. The only possible explanation for this would be that VRAM writes
+	are <i>so slow</i> on PC-98 that you'd want to avoid them at all costs, even
+	if that means additional branching on the CPU to do so. Or maybe that was
+	something you would want to do on certain models with slow VRAM, but not on
+	others?
+</p><p>
+	So I wrote a benchmark to answer all these questions, and to compare my new
+	blitter against typical TH01 blitting code:
+</p><figure class="fullres">{{call .VideoPlayer $vid_blitperf}}<figcaption>
+	A not really representative run on DOSBox-X. Since the master.lib sprite
+	functions are also unbatched, I actually expect them to not be much faster
+	than the naive C implementation.
+</figcaption></figure><p>
+	{{HTML_Download .HostedPath $dl_blitperf}}
+	And here are the real-hardware results I've got from the <i>PC-9800
+	Central</i> Discord server:
+</p><figure><table id="blitperf-results-{{.Date}}" class="numbers">
+	<thead>
+		<tr>
+			<th colspan="3" rowspan="3"></th>
+			<th colspan="2">PC-286LS</th>
+			<th colspan="2">PC-9801ES</th>
+			<th colspan="2">PC-9821Cb/Cx</th>
+			<th colspan="2">PC-9821Ap3</th>
+			<th colspan="2">PC-9821An</th>
+			<th colspan="2">PC-9821Nw133</th>
+			<th colspan="2">PC-9821Ra20</th>
+		</tr><tr>
+			<td colspan="2">80286, 12 MHz</td>
+			<td colspan="2">i386SX, 16 MHz</td>
+			<td colspan="2">486SX, 33 MHz</td>
+			<td colspan="2">486DX4, 100 MHz</td>
+			<td colspan="2">Pentium, 90 MHz</td>
+			<td colspan="2">Pentium, 133 MHz</td>
+			<td colspan="2">Pentium Pro, 200 MHz</td>
+		</tr><tr>
+			<td colspan="2">1987</td>
+			<td colspan="2">1989</td>
+			<td colspan="2">1994</td>
+			<td colspan="2">1994</td>
+			<td colspan="2">1994</td>
+			<td colspan="2">1997</td>
+			<td colspan="2">1996</td>
+		</tr>
+	</thead><tbody>
+		<tr>
+			<th rowspan="4">Unchecked</th>
+			<th>C</th>
+			<th class="b">GRCG</th>
+			<td>36,85</td>
+			<td class="b">38,42</td>
+			<td>26,02</td>
+			<td class="b">26,87</td>
+			<td>3,98</td>
+			<td class="b">4,13</td>
+			<td>2,08</td>
+			<td class="b">2,16</td>
+			<td>1,81</td>
+			<td class="b">1,87</td>
+			<td>0,86</td>
+			<td class="b">0,89</td>
+			<td>1,25</td>
+			<td class="b">1,25</td>
+		</tr><tr>
+			<th><code>MOVS</code></th>
+			<th class="b">GRCG</th>
+			<td>15,22</td>
+			<td class="b">16,87</td>
+			<td>9,33</td>
+			<td class="b">10,19</td>
+			<td>1,22</td>
+			<td class="b">1,37</td>
+			<td></td>
+			<td class="b"></td>
+			<td></td>
+			<td class="b"></td>
+			<td>0,44</td>
+			<td class="b">0,44</td>
+			<td></td>
+			<td class="b"></td>
+		</tr><tr>
+			<th rowspan="2"><code>MOV</code></th>
+			<th class="b">GRCG</th>
+			<td>15,42</td>
+			<td class="b">17,08</td>
+			<td>9,65</td>
+			<td class="b">10,53</td>
+			<td>1,15</td>
+			<td class="b">1,3</td>
+			<td></td>
+			<td class="b"></td>
+			<td></td>
+			<td class="b"></td>
+			<td>0,44</td>
+			<td class="b">0,44</td>
+			<td></td>
+			<td class="b"></td>
+		</tr><tr class="fourplane">
+			<th class="b">4-plane</th>
+			<td>37,23</td>
+			<td class="b">43,97</td>
+			<td>29,2</td>
+			<td class="b">32,96</td>
+			<td>4,44</td>
+			<td class="b">5,01</td>
+			<td>4,39</td>
+			<td class="b">4,67</td>
+			<td>5,11</td>
+			<td class="b">5,32</td>
+			<td>5,61</td>
+			<td class="b">5,74</td>
+			<td>6,63</td>
+			<td class="b">6,64</td>
+		</tr><tr>
+			<th colspan="2" rowspan="2">Checking first</th>
+			<th class="b">GRCG</th>
+			<td>17,49</td>
+			<td class="b">19,15</td>
+			<td>10,84</td>
+			<td class="b">11,72</td>
+			<td>1,27</td>
+			<td class="b">1,44</td>
+			<td></td>
+			<td class="b"></td>
+			<td>1,04</td>
+			<td class="b">1,07</td>
+			<td>0,54</td>
+			<td class="b">0,54</td>
+			<td></td>
+			<td class="b"></td>
+		</tr><tr class="fourplane">
+			<th class="b">4-plane</th>
+			<td>46,49</td>
+			<td class="b">53,36</td>
+			<td>35,01</td>
+			<td class="b">38,79</td>
+			<td>5,66</td>
+			<td class="b">6,26</td>
+			<td>5,43</td>
+			<td class="b">5,74</td>
+			<td>6,56</td>
+			<td class="b">6,8</td>
+			<td>8,08</td>
+			<td class="b">8,29</td>
+			<td>10,25</td>
+			<td class="b">10,29</td>
+		</tr></tr><tr>
+			<th colspan="2" rowspan="2">Checking second</th>
+			<th class="b">GRCG</th>
+			<td>16,47</td>
+			<td class="b">18,12</td>
+			<td>10,77</td>
+			<td class="b">11,65</td>
+			<td>1,25</td>
+			<td class="b">1,39</td>
+			<td></td>
+			<td class="b"></td>
+			<td></td>
+			<td class="b">1,02</td>
+			<td>0,51</td>
+			<td class="b">0,51</td>
+			<td></td>
+			<td class="b"></td>
+		</tr><tr class="fourplane">
+			<th class="b">4-plane</th>
+			<td>43,41</td>
+			<td class="b">50,26</td>
+			<td>33,79</td>
+			<td class="b">37,82</td>
+			<td>5,22</td>
+			<td class="b">5,81</td>
+			<td>5,14</td>
+			<td class="b">5,43</td>
+			<td>6,18</td>
+			<td class="b">6,4</td>
+			<td>7,57</td>
+			<td class="b">7,77</td>
+			<td>9,58</td>
+			<td class="b">9,62</td>
+		</tr></tr><tr>
+			<th colspan="2" rowspan="2">Checking both</th>
+			<th class="b">GRCG</th>
+			<td>16,14</td>
+			<td class="b">18,03</td>
+			<td>10,84</td>
+			<td class="b">11,71</td>
+			<td>1,33</td>
+			<td class="b">1,49</td>
+			<td></td>
+			<td class="b"></td>
+			<td></td>
+			<td class="b">1,01</td>
+			<td>0,49</td>
+			<td class="b">0,49</td>
+			<td></td>
+			<td class="b"></td>
+		</tr><tr class="fourplane">
+			<th class="b">4-plane</th>
+			<td>43,61</td>
+			<td class="b">50,45</td>
+			<td>34,11</td>
+			<td class="b">37,87</td>
+			<td>5,39</td>
+			<td class="b">5,99</td>
+			<td>4,92</td>
+			<td class="b">5,23</td>
+			<td>5,88</td>
+			<td class="b">6,11</td>
+			<td>7,19</td>
+			<td class="b">7,43</td>
+			<td>9,1</td>
+			<td class="b">9,13</td>
+		</tr><tr>
+	</tbody>
+</table><figcaption>
+	Amount of frames required to render 2000 16×8 pellet sprites on a variety of
+	PC-98 models, using the new generic blitter. Both preshifted (first column)
+	and runtime-shifted (second column) sprites were tested; empty columns
+	correspond to times faster than a single frame. Thanks to cuba200611,
+	Shoutmon, cybermind, and Digmac for running the tests!
+</figcaption></figure><p>
+	The key takeaways:
+</p><ul>
+	<li>Checking for empty bytes has never been a good idea.</li>
+	<li>Preshifting sprites made a small difference on the 286, but it kind of
+	stopped mattering as of the 386, and makes no difference on Pentium models.
+	The memory tradeoff is especially not worth it for 4-plane sprites, given
+	that you would have to preshift each of the 4 planes.</li>
+	<li>You might want to use <code>MOVS</code> instead of <code>MOV</code> when
+	targeting the 286 and 386, but the performance gains are barely worth the
+	resulting mess you would make out of your blitting code. On Pentium models,
+	there is no difference.</li>
+	<li>Use the GRCG whenever you have to render lots of things that share a
+	static 8×1 pattern.</li>
+	<li>These are the PC-98 models that the people who are willing to test your
+	newly written PC-98 code actually use.</li>
+</ul><p>
+	Since this won't be the only piece of game-independent and explicitly
+	PC-98-specific custom code involved in this delivery, it makes sense to
+	start <a
+	href="https://github.com/nmlgc/ReC98/tree/master/platform/x86real/pc98">a
+	dedicated PC-98 platform layer</a>. This code will gradually eliminate the
+	dependency on master.lib and replace it with better optimized and more
+	readable C++ code. The blitting benchmark, for example, is already
+	implemented completely without master.lib.<br />
+	While this platform layer is mainly written to generate optimal code within
+	Turbo C++ 4.0J, it can also serve as general PC-98 documentation for
+	everyone who prefers code over machine-translating old Japanese books. Not
+	to mention the immediacy of having all actual <i>relevant</i> information in
+	one place, which might otherwise be pretty well hidden in these books, or
+	some obscure old text file. For example, did you know that uploading gaiji
+	via <code>INT 18h</code> might end up disabling the VSync interrupt trigger,
+	deadlocking the process on the next frame delay loop? This nuisance is not
+	replicated by any emulators, and it's quite frustrating to encounter it when
+	trying to run your code on real hardware. master.lib works around it by
+	simply hooking <code>INT 18h</code> and unconditionally reenabling the VSync
+	interrupt trigger after the original handler returns, and so does our
+	platform layer.
+</p><hr /><p>
+	So, with the pellet draw calls batched and routed through the new renderer,
+	we should have gained enough free CPU cycles to disable
+	{{Blog_PostLink "2020-07-12" "interlaced pellet rendering"}} without any
+	impact on frame rates?
+</p><figure class="fullres">{{call .VideoPlayer $vid_pellets_d}}</figure><p>
+	Well, kinda. We do get 56.4 FPS, but only together with noticeable and
+	reproducible tearing in the top part of the playfield, suggesting exactly
+	<i>why</i> ZUN interlaced the rendering in the first place. 😕 So have we
+	already reached the limit of single-buffered PC-98 games here, or can we
+	still do something about it?<br />
+	As it turns out, the main bottleneck actually lies in the pellet
+	<i>unblitting</i> code. Every EGC-"accelerated" unblitting call in TH01 is
+	as unbatched as the pellet blitting calls were, spending an additional 17
+	I/O port writes per call to completely set up and shut down the EGC, every
+	time. And since this is TH01, the two-instruction operation of changing the
+	active PC-98 VRAM page isn't inlined either, but instead done via a function
+	call to a faraway segment. On the 486, that's:
+</p><ul>
+	<li>&gt;341 cycles for EGC setup and teardown, plus</li>
+	<li>&gt;72 cycles for each 16-pixel chunk to be unblitted. This sums up
+	to</li>
+	<li>&gt;917 cycles of completely unnecessary work for every active pellet,
+	in the <i>optimal</i> 50% of cases where it lies on an even VRAM byte,
+	or</li>
+	<li>&gt;1493 cycles if it lies on an odd VRAM byte, because ZUN's code
+	extends the unblitted rectangle to a gargantuan 32×8 pixels in this case
+	{{HTML_Emoji "godzun"}}</li>
+</ul><p>
+	And this calculation even ignores the lack of small micro-optimizations that
+	could further optimize the blitting loop. Multiply that by the game's pellet
+	cap of 100, and we get <i>a 6-digit number of wasted CPU cycles</i>. On
+	paper, that's roughly <sup>1</sup>/<sub>6</sub> of the time we have for each
+	of our target 56.423 FPS on the game's target 33&nbsp;MHz systems. Might not
+	sound all too critical, but the single-buffered nature of the game means
+	that we're effectively racing the beam on every frame. In turn, we have to
+	be even more serious about performance.
+</p><p>
+	So, time to also add a batched EGC API to our PC-98 platform layer? Writing
+	our own EGC code presents a nice opportunity to finally look deeper into <a
+	href="https://www.webtech.co.jp/company/doc/undocumented_mem/io_egc.txt">all
+	its registers and configuration options</a>, and see what exactly we can do
+	about ZUN's enforced 16-pixel alignment.<br />
+	To nobody's surprise, this alignment is completely unnecessary, and only
+	displays a lack of knowledge about the chip. While it <i>is</i> true that
+	the EGC wants VRAM to be exclusively addressed in 16-bit chunks at
+	16-bit-aligned addresses, it specifically provides
+</p><ul>
+	<li>an address register (<code>0x4AC</code>) for shifting the horizontal
+	start offsets of the source and destination to any pixel <i>within</i> the
+	16 pixels of such a chunk,</li>
+	<li>and a bit length register (<code>0x4AE</code>) for specifying the total
+	width of pixels to be transferred, which also implies the correct end
+	offsets.</li>
+</ul><p>
+	And it gets even better: After <code>⌈bitlength&nbsp;÷&nbsp;16⌉</code> write
+	instructions, the EGC's internal shifter state automatically reinitializes
+	itself in preparation for blitting another row of pixels with the same
+	initially configured bit addresses and length. This is perfect for blitting
+	rectangles, as two I/O port writes before the start of your blitting loop
+	are enough to define your entire rectangle.
+</p><p>
+	The manual nature of reading and writing in 16-pixel chunks does come with a
+	slight pitfall though. If the source bit address is larger than the
+	destination bit address, the first 16-bit read won't fill the EGC's internal
+	shift register with all pixels that should appear in the first 16-pixel
+	destination chunk. In this case, the EGC simply won't write anything and
+	leave the first chunk unchanged. In a
+	{{Blog_PostLink "2022-06-17" "regular blitting loop"}}, however, you expect
+	that memory to be written and immediately move on to the next chunks within
+	the row. As a result, the actual blitting process for such a rectangle will
+	no longer be aligned to the configured address and bit length. The first row
+	of the rectangle will appear 16 pixels to the right of the destination
+	address, and the second one will start at bit offset 0 with pixels from the
+	rightmost byte of the first line, which weren't blitted and remained in the
+	tile register.<br />
+	There is an easy solution though: Before the horizontal loop on each line of
+	the rectangle, simply read one additional 16-pixel chunk from the source
+	location to prefill the shift register. Thankfully, it's large enough to
+	also fit the second read of the then full 16 pixels, without dropping any
+	pixels along the way.
+</p><p>
+	And that's how we get arbitrarily unaligned rectangle copies with the EGC!
+	Except for a small register allocation trick to use two-register addressing,
+	there's not much use in further optimizations, as the runtime of these
+	inter-page blit operations is dominated by the VRAM page switches anyway.
+</p><figure class="fullres">{{call .VideoPlayer $vid_egc}}</figure><p>
+	Except that T98-Next seems to disagree about the register prefilling issue:
+</p><figure class="fullres pixelated"><img
+	src="{{$pic_egc_t98}}"
+	alt="Glitched blitting results on T98-Next when trying EGC copies where the source bit address is larger than the destination bit address"
+/></figure><p>
+	Every other emulator agrees with real hardware in this regard, so we can
+	safely assume this to be a bug in T98-Next. Just in case this old emulator
+	with its last release from June 2010 still has any fans left nowadays… For
+	now though, even they can still enjoy the TH01 Anniversary Edition: The only
+	EGC copy algorithm that TH01 actually needs is the left one during the
+	single-buffered tests, which even <i>that</i> emulator gets right.<br />
+	That only leaves
+	{{Blog_PostLink "2019-11-06" "my old offer of documenting the EGC raster ops"}},
+	and we've got the EGC figured out completely!
+</p><hr /><p>
+	And that did in fact remove tearing from the pellet rendering function! For
+	the first time, we can now fight Elis, Kikuri, Sariel, and Konngara with a
+	doubled pellet frame rate:
+</p><figure class="fullres">
+	{{call .VideoPlayer $vid_pellets_a.SetActive $vid_pellets_o}}
+	<figcaption>
+		Switchable videos like these can nicely provide evidence that these
+		changes have no effect on gameplay, making it easy to see that the Orb
+		still collides with all pellets on the same frames. Also, check out the
+		difference in remaining conventional memory (<code>coreleft</code>)…
+	</figcaption>
+</figure><p>
+	With only pellets and no other animation on screen, this exact pattern
+	presents the optimal demonstration case for the new unblitter. But as you
+	can already tell from the invincibility sprites, we'd also need to route
+	every other kind of sprite through the same new code. This isn't all too
+	trivial: Most sprites are still rendered at byte-aligned positions, and
+	their blitting APIs hide that fact by taking a pixel position regardless.
+	This is why we can't just replace ZUN's original 16-pixel-aligned EGC
+	unblitting function with ours, and always have to replace both the blitter
+	<i>and</i> the unblitter on a per-sprite basis.<br />
+	To completely remove all flickering, we'd also like to get rid of all the
+	sprite-specific unblit&nbsp;➜ update&nbsp;➜ render sequences, and instead
+	gather all unblitting code to the beginning of the game loop, before any
+	update and rendering calls. So yeah, it will take a long time to completely
+	get rid of all flickering. Until we're there, I recommend any backer to tell
+	me their favorite boss, so that I can focus on getting <i>that</i> one
+	rendered without any flickering. Remember that here at ReC98, we can have a
+	Touhou character popularity contest at any time during the year, whenever
+	the store is open! {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	In the meantime, the consistent use of 8×8 rectangles during pellet
+	unblitting does significantly reduce both flickering across the entire game,
+	and shrinks certain holes that pellets tend to rip into lazily reblitted
+	sprites:
+</p><figure class="fullres pixelated">
+	<rec98-image-switcher><img
+		src="{{$pic_unblit_a}}"
+		data-title="Anniversary Edition"
+		alt="TH01 SinGyoku's crossing pellet pattern in the Anniversary Edition, demonstrating smaller unblitting artifacts"
+		class="active"
+	/><img
+		src="{{$pic_unblit_o}}"
+		data-title="Original game"
+		alt="The same frame in the original game, featuring much more giant holes ripped into the sphere sprite"
+	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	<figcaption>SinGyoku's "crossing pellets" pattern, shortly before completing
+	the transformation back to the sphere.</figcaption>
+</figure><p>
+	To round out the first release, I added all the other bug fixes to achieve
+	parity with my previously released patched <code>REIIDEN.EXE</code> builds:
+</p><ul>
+	<li>I removed the {{Blog_PostLink "2022-05-31" "shootout laser crash"}} by
+	simply leaving the lasers on screen if a boss is defeated,</li>
+	<li>prevented debug mode heap corruption from the HP bar by not letting it
+	display negative HP, and</li>
+	<li>restored {{Blog_PostLink "2022-01-31" "the two animations during the Sariel fight that were lost to type confusion errors in the original game"}}.</li>
+</ul><p>
+	So here it is, the first build of TH01's Anniversary Edition:
+	{{HTML_Download .HostedPath $dl_anniv}}
+</p><p>
+	Next up: The long overdue extended trip through the depths of TH02's
+	low-level code. From what I've seen of it so far, the work on this project
+	is finally going to become a bit more relaxing. Which is quite welcome
+	after, what, 6 months of stressful research-heavy work?
+</p>

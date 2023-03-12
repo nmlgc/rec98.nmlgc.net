@@ -72,7 +72,7 @@ function parseStrh(view) {
 
 let decoderModuleResolve, decoderModuleReject;
 /** @type {Promise<WebAssembly.Module>} */
-const decoderModulePromise = new Promise((resolve, reject) => {
+decoderModulePromise = new Promise((resolve, reject) => {
 	decoderModuleResolve = resolve;
 	decoderModuleReject = reject;
 });
@@ -160,7 +160,7 @@ class ZMBVDecoder {
 
 	/**
 	 * @param {number} newFrame
-	 * @param {ArrayBuffer} output
+	 * @param {ArrayBuffer} outputBuffer
 	 */
 	presentFrame(newFrame, outputBuffer) {
 		if(!this.loaded) return;
@@ -199,6 +199,9 @@ class ZMBVDecoder {
 				break;
 			case ZMBV_FORMAT_32BPP:
 				pixelSize = 4;
+				break;
+			default:
+				throw new Error("Unsupported pixel format");
 		}
 		let w = 0;
 		for(let row = 0; row < this.height; row++) {
@@ -238,8 +241,6 @@ class ZMBVDecoder {
 						output[w++] = frame[rowStart + col * 4 + 0];
 						output[w++] = 255;
 					}
-					break;
-				default:
 					break;
 			}
 		}

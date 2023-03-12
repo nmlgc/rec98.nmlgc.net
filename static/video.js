@@ -122,10 +122,10 @@ class ReC98Video extends HTMLElement {
 	eDownload = document.createElement("a");
 	eFullscreen = document.createElement("button");
 
-	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
+	/** @type {Array<HTMLVideoElement | ZMBVVideoElement>} */
 	videos;
 
-	/** @type {HTMLVideoElement} */
+	/** @type {HTMLVideoElement | ZMBVVideoElement} */
 	videoShown;
 
 	/** @type {HTMLCollectionOf<HTMLDivElement> | undefined} */

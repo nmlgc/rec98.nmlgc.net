@@ -29,7 +29,7 @@ class ZMBVVideoElement extends HTMLElement {
 	/** @type {string} */
 	url;
 
-	/** @type {(string|undefined)} */
+	/** @type {string} */
 	poster;
 
 	loop = false;
@@ -52,7 +52,7 @@ class ZMBVVideoElement extends HTMLElement {
 	/** @type {(HTMLCanvasElement|undefined)} @private */
 	canvas;
 
-	/** @type {(CanvasRenderingContext2D|undefined)} @private */
+	/** @type {CanvasRenderingContext2D} @private */
 	ctx;
 
 	/** @type {(ImageData|null)} */
@@ -81,8 +81,9 @@ class ZMBVVideoElement extends HTMLElement {
 
 	/**
 	 * @param {string} url
+	 * @param {string} poster
 	 */
-	constructor(url, poster = undefined) {
+	constructor(url, poster) {
 		super();
 		this.url = url;
 		this.poster = poster;
@@ -112,7 +113,7 @@ class ZMBVVideoElement extends HTMLElement {
 				decoderModulePromise = WebAssembly.compileStreaming(fetch(url));
 			} catch {
 				decoderModulePromise = fetch(url)
-					.then(resp => resp.arrayBuffer)
+					.then(resp => resp.arrayBuffer())
 					.then(bytes => WebAssembly.compile(bytes));
 			}
 		}
@@ -146,9 +147,9 @@ class ZMBVVideoElement extends HTMLElement {
 		this.height = height;
 		this.canvas.style.imageRendering = "crisp-edges";
 		this.canvas.style.imageRendering = "pixelated";
-		this.ctx = this.canvas.getContext("2d", {
-			alpha: false,
-		});
+		this.ctx = /** @type {CanvasRenderingContext2D} */ (
+			this.canvas.getContext("2d", { alpha: false })
+		);
 		this.imageData = this.ctx.createImageData(width, height);
 		if(this.img) {
 			this.ctx.drawImage(this.img, 0, 0);

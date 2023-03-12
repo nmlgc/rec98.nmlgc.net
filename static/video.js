@@ -642,8 +642,13 @@ class ReC98Video extends HTMLElement {
 					}
 				}
 				video.remove();
-				video = newVideo;
+				return newVideo;
 			}
+			// The backend code still enables controls just in case the user
+			// runs with disabled JavaScript, so we're separately disabling
+			// them here as we're about to replace them with our own.
+			video.controls = false;
+
 			return video;
 		});
 		for(const video of this.videos) {
@@ -669,11 +674,6 @@ class ReC98Video extends HTMLElement {
 		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
 			video.onclick = ((event) => this.toggle(event));
-
-			// The backend code still enables controls just in case the user
-			// runs with disabled JavaScript, so we're separately disabling
-			// them here as we're about to replace them with our own.
-			video.controls = false;
 
 			// Setup markers. Note that we mutate [markers] by reparenting its
 			// elements; a `for…of` loop would therefore skip every second

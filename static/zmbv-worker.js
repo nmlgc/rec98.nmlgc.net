@@ -166,8 +166,8 @@ class ZMBVDecoder {
 		if(!this.loaded) return;
 		if(newFrame < 0) newFrame = 0;
 		if(newFrame >= this.frameCount) newFrame = this.frameCount - 1;
-		if(this.currentFrame > newFrame) {
-			// Rewind until we hit a keyframe
+		if(this.currentFrame != newFrame) {
+			// Rewind to the closest keyframe
 			this.currentFrame = newFrame - 1;
 			while(this.currentFrame >= 0 && (this.frames[this.currentFrame + 1][0] & 0x01) === 0) {
 				this.currentFrame--;

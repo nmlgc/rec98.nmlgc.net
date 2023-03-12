@@ -57,6 +57,16 @@ var POSTER = VideoDir{"poster", FFMPEGCodec{
 	},
 }}
 
+// The lossless source videos, re-encoded with more keyframes for smoother
+// seeking in the native ZMBV player
+var ZMBV_LIVE = VideoDir{"zmbv-live", FFMPEGCodec{
+	Ext:    ".avi",
+	VCodec: "zmbv",
+	VFlags: []string{
+		"-keyint_min", "10",
+	},
+}}
+
 // Best web-supported codec in 2022
 var AV1 = VideoDir{"av1", FFMPEGCodec{
 	Ext:    ".webm",
@@ -94,11 +104,11 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 }}
 
 // VIDEO_ENCODED defines all target codec directories.
-var VIDEO_ENCODED = []*VideoDir{&POSTER, &AV1, &VP9, &VP8}
+var VIDEO_ENCODED = []*VideoDir{&POSTER, &ZMBV_LIVE, &AV1, &VP9, &VP8}
 
 // VIDEO_HOSTED defines all hosted video <source> codecs, ordered from the most
 // to the least preferred one.
-var VIDEO_HOSTED = VIDEO_ENCODED[1:]
+var VIDEO_HOSTED = VIDEO_ENCODED[2:]
 
 // ------
 

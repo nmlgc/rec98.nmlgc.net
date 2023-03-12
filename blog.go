@@ -109,7 +109,7 @@ func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	ret := &BlogVideo{
 		Metadata: &b.Video.Cache.Video[stem].Metadata,
 		Poster:   template.HTML(b.VideoURL(stem, &POSTER)),
-		Lossless: template.HTML(b.VideoURL(stem, &VIDEO_SOURCE)),
+		Lossless: template.HTML(b.VideoURL(stem, &ZMBV_LIVE)),
 		Date:     date,
 		Alt:      alt,
 	}

@@ -101,7 +101,7 @@
 	only modifies <code>REIIDEN.EXE</code></q>…</li>
 	<li>All forks should run side-by-side with the original game. During the
 	time I was maintaining thcrap, I've had countless bug reports of people
-	assuming that <span class="hovertext" title="In fact, that distinction 	between thcrap bugs and game bugs is the origin of the 'ZUN bug' 	classification, which I&#39;ve carried over to ReC98.">thcrap was
+	assuming that <span class="hovertext" title="In fact, that distinction between thcrap bugs and game bugs is the origin of the 'ZUN bug' classification, which I&#39;ve carried over to ReC98.">thcrap was
 	responsible for bugs that were present in the original game</span>, and the
 	same is certain to happen with the Anniversary Edition. Separate binaries
 	will make it easier for everyone to check where these bugs came from.</li>
@@ -349,16 +349,14 @@
 </p><blockquote><span class="our-{{.Date}}"
 	>Manipulate DOS heap ➜ <code>spawn()</code> call ➜</span
 > <span class="borland-{{.Date}}"
-	><code>_LoadProg()</code> ➜ allocate and prepare environment block ➜
-	<code>_spawn()</code> ➜ DOS <code>EXEC</code> syscall</span
+	><code>_LoadProg()</code> ➜ allocate and prepare environment block ➜ <code>_spawn()</code> ➜ DOS <code>EXEC</code> syscall</span
 ></blockquote><p>
 	The obvious solution: Replace <code>_LoadProg()</code>, implement the
 	coalescing ourselves, and do it before the heap manipulation. Fortunately,
 	Borland's internal low-level <code>_spawn()</code> function is not
 	<code>static</code>, so we can call it ourselves whenever we want to:
 </p><blockquote><span class="our-{{.Date}}"
-	>Allocate and prepare environment block ➜ manipulate DOS heap ➜
-<code>_spawn()</code> call ➜</span
+	>Allocate and prepare environment block ➜ manipulate DOS heap ➜ <code>_spawn()</code> call ➜</span
 > <span class="borland-{{.Date}}"
 	><code>EXEC</code> syscall</span
 ></blockquote><p>
@@ -920,6 +918,9 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 </ul><p>
 	So here it is, the first build of TH01's Anniversary Edition:
 	{{HTML_Download .HostedPath $dl_anniv}}
+	<strong>Edit (2023-03-12): If you're playing on Neko Project and seeing more
+	flickering than in the original game, make sure you've checked the <i>Screen
+	→ Disp vsync</i> option.</strong>
 </p><p>
 	Next up: The long overdue extended trip through the depths of TH02's
 	low-level code. From what I've seen of it so far, the work on this project

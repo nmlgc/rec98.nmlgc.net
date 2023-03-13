@@ -109,4 +109,5 @@ Date	Tags
 2022-11-30	["cutscene", "blitting", "micro-optimization", "glitch", "master.lib", "pc98", "performance", "kaja", "unused", "meta", "midboss", "animation"]
 2022-12-31	["meta", "cutscene", "unused", "file-format"]
 2023-01-17	["gameplay", "boss", "sara", "tcc", "laser", "micro-optimization", "glitch"]
-2023-03-05	["pc98", "tcc", "debloating", "file-format", "anniversary-edition", "master.lib"]
+2023-03-05	["pc98", "tcc", "debloating", "file-format", "anniversary-edition", "master.lib", "bullet"]
+2023-03-14	["rec98", "th01", "anniversary-edition", "gameplay", "bullet", "boss", "sariel", "glitch"]

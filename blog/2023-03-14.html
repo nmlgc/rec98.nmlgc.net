@@ -1,0 +1,88 @@
+{{$dl := printf "%v%v" .DatePrefix "th01-anniv.zip" -}}
+
+{{$vid_orig := (call .Video "TH01-Sariel-delay-cloud-carry-Original" "Video of pellet delay clouds being carried over from TH01 Sariel's first form to her second form, in the original game") -}}
+{{$vid_P0234 := (call .Video "TH01-Sariel-delay-cloud-carry-P0234" "Video of pellet delay clouds being carried over from TH01 Sariel's first form to her second form, in the initial P0234 release of the TH01 Anniversary Edition, demonstrating an accidental lack of unblitting") -}}
+{{$vid_fixed := (call .Video "TH01-Sariel-delay-cloud-carry-P0234-1" "Video of pellet delay clouds being carried over from TH01 Sariel's first form to her second form, in the P0234-1 release of the TH01 Anniversary Edition, fixing the bug from the previous version") -}}
+
+{{$vid_orig.SetTitle "Original game" -}}
+{{$vid_P0234.SetTitle "Anniversary Edition, P0234" -}}
+{{$vid_fixed.SetTitle "Anniversary Edition, P0234-1" -}}
+
+{{$vid_orig.AddMarker 63 "Second form" "right" -}}
+{{$vid_P0234.AddMarker 63 "Second form" "right" -}}
+{{$vid_fixed.AddMarker 63 "Second form" "right" -}}
+{{$vid_P0234.AddMarker 86 "Unblitting resumes" "left" -}}
+
+{{- define "vid_caption" -}}
+	Cutting out the lengthy defeat animation makes it easier to see where the
+	additional pellets come from.
+{{- end -}}
+
+<p>
+	Turns out I was not <i>quite</i> done with the TH01 Anniversary Edition yet.
+	You might have noticed some white streaks at the beginning of Sariel's
+	second form, which are in fact a bug that I accidentally added to the
+	initial release. {{HTML_Emoji "tannedcirno"}}<br />
+	These can be traced back to a <a
+	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirk</a>
+	I wasn't aware of, and hadn't documented so far. When defeating Sariel's
+	first form during a pattern that spawns pellets, it's likely for the second
+	form to start with additional pellets that resemble the previous pattern,
+	but come out of seemingly nowhere. This shouldn't really happen if you look
+	at the code: Nothing outside the typical pattern code spawns new pellets,
+	and all existing ones are reset before the form transition…
+</p><p>
+	<i>Except</i> if they're currently showing the 10-frame delay cloud
+	animation <img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hRLR3kgU09GVCBHSUYgRW5jb2RlcgAh+QQJHgABACwAAAAAEAAQAAACJ4wNqceR7UB7MB4pq9tZo+0xVIh0l1lC40myLddmmIetKmpblbIwBQAh+QQFCgAAACwIAAgAAQABAAACAkQBACH5BAkeAAEALAAAAAAQABAAAAIfjB8AyLb8YDsxTneztTInr3EhBYok6Jkd2iiTmjxcAQAh+QQFCgAAACwIAAgAAQABAAACAkQBADs="
+	alt="" />, activated for all pellets during the symmetrical radial 2-ring
+	pattern in Phase 2 and left activated for the rest of the fight. These
+	pellets will continue their animation after the transition to the second
+	form, and turn into regular pellets you have to dodge once their animation
+	completed.
+</p><p>
+	By itself, this is just one more quirk to keep in mind during refactoring.
+	It only turned into a bug in the Anniversary Edition because the game tracks
+	the number of living pellets in a separate counter variable. After resetting
+	all pellets, this counter is simply set to 0, regardless of any delay cloud
+	pellets that may still be alive, and it's merely incremented or decremented
+	when pellets are spawned or leave the playfield.
+	{{HTML_Emoji "zunpet"}}<br />
+	In the original game, this counter is only used as an optimization to skip
+	spawning new pellets once the cap is reached. But with batched
+	EGC-accelerated unblitting, it also makes sense to skip the rather costly
+	setup and shutdown of the EGC if no pellets are active anyway. Except if the
+	counter you use to check for that case can be 0 even if there <i>are</i>
+	pellets alive, which consequently don't get unblitted…
+	{{HTML_Emoji "onricdennat"}}<br />
+	There is an optimal fix though: Instead of unconditionally resetting the
+	living pellet counter to 0, we decrement it for every pellet that
+	<i>does</i> get reset. This preserves the quirk <i>and</i> gives us a
+	consistently correct counter, allowing us to still skip every unnecessary
+	loop over the pellet array.
+</p><figure class="th01_playfield and_hp">
+	<figcaption class="dynamic"><div>
+		{{template "vid_caption"}}
+	</div><div>
+		{{template "vid_caption"}} Also, note how regular unblitting resumes
+		once the first pellet gets clipped at the top of the playfield – the
+		living pellet counter then gets decremented to -1, and who uses
+		<code>&lt;=</code> rather than <code>==</code> on a seemingly unsigned
+		counter, right?
+	</div><div>
+		{{template "vid_caption"}}
+	</div></figcaption>
+	{{call .VideoPlayer $vid_orig $vid_P0234.SetActive $vid_fixed}}
+</figure><p>
+	Ultimately, this was a harmless bug that didn't affect gameplay, but it's
+	still something that players would have probably reported a few more times.
+	So here's a free bugfix:
+</p><p>
+	<a class="release"
+	href="https://github.com/nmlgc/ReC98/releases/tag/P0234-1"
+	><strong>{{HTML_Emoji "th01"}} TH01 Anniversary Edition, version
+	P0234-1</strong></a> {{HTML_Download .HostedPath $dl}}
+</p><p>
+	Thanks to mu021 for reporting this issue and providing helpful videos to
+	identify the cause!
+</p>

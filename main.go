@@ -66,7 +66,10 @@ func HTMLEmoji(emoji string) template.HTML {
 	}
 	url := staticHP.VersionURLFor("emoji-" + fn + ".png")
 	return template.HTML(fmt.Sprintf(
-		`<img src="%s" alt=":%s:" %s/>`, url, emoji, style,
+		// Calculated from the default `font-size` times `--icon-width` or
+		// `--icon-height`.
+		`<img src="%s" alt=":%s:" width="24" height="24" align="top" %s/>`,
+		url, emoji, style,
 	))
 }
 

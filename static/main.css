@@ -735,6 +735,21 @@ td, th {
 .icon-cell {
 	text-align: center;
 }
+
+table.comparison tr:not(:first-child) {
+	border-top: var(--table-border);
+	border-top-color: var(--c-lightgray);
+}
+
+table.comparison td:not(:first-child),
+table.comparison th:not(:first-child) {
+	border-left: var(--table-border);
+}
+
+table.comparison td:not(:last-child),
+table.comparison th:not(:last-child) {
+	border-right: var(--table-border);
+}
 /* ------ */
 
 /* Forms

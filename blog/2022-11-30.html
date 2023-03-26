@@ -27,14 +27,6 @@
 		border-top: var(--table-border);
 		border-top-color: var(--c-lightgray);
 	}
-	#games_{{.Date}} td:not(:first-child),
-	#games_{{.Date}} th:not(:first-child) {
-		border-left: var(--table-border);
-	}
-	#games_{{.Date}} td:not(:last-child),
-	#games_{{.Date}} th:not(:last-child) {
-		border-right: var(--table-border);
-	}
 	#cutscene-{{.Date}} tbody td {
 		text-align: left;
 		font-family: monospace;
@@ -166,7 +158,7 @@
 </ul><hr /><p>
 	Superficially, the list of game-specific differences doesn't look too long,
 	and can be summarized in a rather short table:
-</p><figure><table id="games_{{.Date}}" class="_{{.Date}}"><thead>
+</p><figure><table class="comparison"><thead>
 	<th></th>
 	<th>{{HTML_Emoji "th03"}} TH03</th>
 	<th>{{HTML_Emoji "th04"}} TH04</th>

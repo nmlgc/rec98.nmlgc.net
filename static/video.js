@@ -91,7 +91,7 @@ class ReC98VideoMarker extends HTMLElement {
 	setWidth(timelineWidth) {
 		const width = (timelineWidth / this.frameCount);
 
-		this.style.width = `${width}px`;
+		this.style.width = `${Math.max(width, 1)}px`;
 		this.button.style.borderWidth = `${Math.min(width, 3)}px`;
 	}
 };

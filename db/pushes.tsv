@@ -232,3 +232,6 @@ P0231	[121, 216]	Research (Spawning TSRs from C)	2023-03-05T12:56:15Z	nmlgc/ReC9
 P0232	[225]	Portability (PC-98 platform layer, part 1)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/f7ef7f8...abeaf85	0
 P0233	[208]	Research (Performance of various PC-98 blitting approaches)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/abeaf85...dbc5b51	0
 P0234	[219, 223, 227]	TH01 Anniversary Edition (Removing interlaced pellet rendering + Merging previous fixes)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/dd2265c...12f29c6	0
+P0235	[189]	TH02 RE (Stage tiles, part 1/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/e7a9262...62c4b7f	1
+P0236	[202, 205, 209]	TH02 RE (Stage tiles, part 2/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/62c4b7f...7fa9038	1
+P0237	[209, 218, 222]	TH02 RE (Spark structure + Point number popups + Bomb animation effects)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/7fa9038...c5e51e6	1

@@ -65,6 +65,7 @@ pre {
 	-moz-tab-size: 4;
 	tab-size: 4;
 	overflow-x: scroll;
+	text-align: left;
 }
 
 img[src*="emoji-"] {
@@ -135,7 +136,6 @@ figure.side_by_side {
 }
 
 figure.small {
-	line-height: 0;
 	gap: 0;
 }
 
@@ -238,6 +238,7 @@ figure.large embed {
 
 figure.small img {
 	max-height: 5em;
+	box-shadow: var(--blog-shadow);
 }
 
 figure iframe {
@@ -726,6 +727,11 @@ table {
 thead th,
 thead td {
 	border-bottom: var(--table-border);
+}
+
+tr.hr {
+	border-bottom: var(--table-border);
+	border-bottom-color: darkgray;
 }
 
 td, th {

@@ -1,0 +1,361 @@
+{{$pic_tiles := (call .PostFileURL "TH02-Stage-1-initial-with-tiles.png") -}}
+{{$vid := (call .Video "TH02-Shrine-Tank-timeout" "Video of timing out the TH02 Stage 1 midboss on Easy Mode, with regular stage enemies disabled. Shows off the track marks left by the Shrine Tank, as well as how the fight times out one tile row too late") -}}
+
+{{$vid.AddMarker 61 "First track mark" "right" -}}
+{{$vid.AddMarker 2173 "Last track mark" "right" -}}
+
+<p>
+	So, TH02! Being the only game whose main binary hadn't seen any dedicated
+	attention ever, we get to start the TH02-related blog posts at the very
+	beginning with the most foundational pieces of code. The stage tile system
+	is the best place to start here: It not only blocks every entity that is
+	rendered on top of these tiles, but is curiously placed right next to
+	master.lib code in TH02, and would need to be separated out into its own
+	translation unit before we can do the same with all the master.lib
+	functions.
+</p><p>
+	In late 2018, I already RE'd
+	{{Blog_PostLink "2018-12-30" "TH04's and TH05's stage tile 	implementation"}}, but haven't properly documented it on this
+	blog yet, so this post is also going to include the details that are unique
+	to those games. On a high level, the stage tile system works identically in
+	all three games:
+</p><ul>
+	<li>The tiles themselves are 16×16 pixels large, and a stage can use 100 of
+	them at the same time.</li>
+	<li>The optimal way of blitting tiles would involve VRAM-to-VRAM copies
+	within the same page using the EGC, and that's exactly what the games do.
+	All tiles are stored on both VRAM pages within the rightmost 64×400 pixels
+	of the screen just right next to the HUD, and you only don't see them
+	because the games cover the same area in text RAM with black cells:
+	<figure class="fullres pixelated">
+		<img src="{{$pic_tiles}}" alt="" />
+		<figcaption>The initial screen of TH02's Stage 1, with the tile source
+		area uncovered by filling the same area in text RAM with transparent
+		cells instead of black ones. In TH02, this also reveals how the tile
+		area ends with a bunch of glitch tiles, tinted blue in the image. These
+		are the result of ZUN unconditionally blitting 100 tile images every
+		time, regardless of how many are actually contained in an
+		<code>.MPN</code> file. {{HTML_Emoji "zunpet"}}<br />
+		These glitch tiles are another good example of a <a
+		href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-landmine">ZUN
+		landmine</a>. Their appearance is the result of reading heap memory
+		outside allocated boundaries, which can easily cause segmentation faults
+		when porting the game to a system with virtual memory. Therefore, these
+		would not just be removed in this game's Anniversary Edition, but on the
+		more conservative <code>debloated</code> branch as well. Since the game
+		never uses these tiles and you can't observe them unless you manipulate
+		text RAM from outside the confines of the game, it's not a <a
+		href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bug</a>
+		according to our definition.
+	</figure>
+	</li>
+	<li>To reduce the memory required for a map, tiles are arranged into fixed
+	vertical <i>sections</i> of a game-specific constant size. <figure><figure
+	class="side_by_side small">{{range loop 0 6 -}}
+		{{- $pic := printf "TH02-STAGE0.MAP-%1X.png" . -}}
+		{{- $picFN := (call $.PostFileURL $pic) -}}
+		<img src="{{$picFN}}" alt="Section {{.}} of TH02's STAGE0.MAP" />
+	{{- end}}</figure><figcaption>
+		The 6 24×8-tile sections defined in TH02's <code>STAGE0.MAP</code>, in
+		reverse order compared to how they're defined in the file. Note the
+		duplicated row at the top of the final section: The boss fight starts
+		once the game scrolled the last full row of tiles onto the top of the
+		<i>screen</i>, not the <i>playfield</i>. But since the PC-98 text chip
+		covers the top tile row of the screen with black cells, this final row
+		is never visible, which effectively reduces a map's final tile section
+		to 7 rows rather than 8.
+	</figcaption></figure></li>
+	<li>The actual stage map then is simply a list of these tile sections,
+	ordered from the start/bottom to the top/end.</li>
+	<li>Any manipulation of specific tiles within the fixed tile sections has to
+	be hardcoded. An example can be found right in Stage 1, where the Shrine
+	Tank leaves track marks on the tiles it appears to drive over:<figure
+	class="singleplayer_playfield">
+		{{call .VideoPlayer $vid}}
+		<figcaption>
+			This video also shows off the two issues with Touhou's first-ever
+			midboss: The replaced tiles are rendered <i>below</i> the midboss
+			during their first 4 frames, and maybe ZUN should have stopped the
+			tile replacements one row before the timeout. The first one is
+			clearly a bug, but it's not so clear-cut with the second one. I'd
+			need to look at the code to tell for sure whether it's a quirk or a
+			bug.
+		</figcaption>
+	</figure></li>
+</ul><p>
+	The differences between the three games can best be summarized in a table:
+</p><figure><table class="comparison"><thead>
+	<th></th>
+	<th>{{HTML_Emoji "th02"}} TH02</th>
+	<th>{{HTML_Emoji "th04"}} TH04</th>
+	<th>{{HTML_Emoji "th05"}} TH05</th>
+</thead><tbody><tr>
+	<th>Tile image file extension</th>
+	<td colspan="3">.MPN</td>
+</tr><tr>
+	<th>Tile section format</th>
+	<td colspan="3">.MAP</td>
+</tr><tr class="hr">
+	<th>Tile section order defined as part of</th>
+	<td>.DT1</td>
+	<td colspan="2">.STD</td>
+</tr><tr>
+	<th>Tile section index format</th>
+	<td colspan="2">0-based ID</td>
+	<td>0-based ID × 2</td>
+</tr>
+	<th>Tile image index format</th>
+	<td>Index between 0 and 100, 1 byte</td>
+	<td colspan="2">VRAM offset in tile source area, 2 bytes</td>
+</tr><tr>
+	<th>Scroll speed control</th>
+	<td>Hardcoded</td>
+	<td colspan="2">Part of the .STD format, defined per referenced tile
+	section</td>
+</tr><tr class="hr">
+	<th>Redraw granularity</th>
+	<td>Full tiles (16×16)</td>
+	<td colspan="2">Half tiles (16×8)</td>
+</tr><tr>
+	<th>Rows per tile section</th>
+	<td>8</td>
+	<td colspan="2">5</td>
+</tr><tr>
+	<th>Maximum number of tile sections</th>
+	<td>16</td>
+	<td colspan="2">32</td>
+</tr><tr>
+	<th>Lowest number of tile sections used</th>
+	<td>5 <small>(Stage 3 / Extra)</small></td>
+	<td>8 <small>(Stage 6)</small></td>
+	<td><span class="hovertext" title="excluding Stage 6, which uses a single dummy section">11 <small>(Stage 2 / 4)</small></span></td>
+</tr><tr class="hr">
+	<th>Highest number of tile sections used</th>
+	<td>13 <small>(Stage 4)</small></td>
+	<td>19 <small>(Extra)</small></td>
+	<td>24 <small>(Stage 3)</small></td>
+</tr><tr>
+	<th>Maximum length of a map</th>
+	<td>320 sections (static buffer)</td>
+	<td colspan="2">256 sections (format limitation)</td>
+</tr><tr>
+	<th>Shortest map</th>
+	<td>14 sections <small>(Stage 5)</small></td>
+	<td>20 sections <small>(Stage 5)</small></td>
+	<td><span class="hovertext" title="excluding Stage 6 with its dummy length of 10 sections">15 sections <small>(Stage 2)</small></span></td>
+</tr><tr>
+	<th>Longest map</th>
+	<td>143 sections <small>(Stage 4)</small></td>
+	<td>95 sections <small>(Stage 4)</small></td>
+	<td>40 sections <small>(Stage 1 / 4 / Extra)</small></td>
+</tr></tbody></table></figure><hr /><p>
+	The most interesting part about stage tiles is probably the fact that some
+	of the .MAP files contain {{HTML_Tag "unused" nil}} tile sections. 👀 Many
+	of these are empty, duplicates, or don't really make sense, but a few
+	<i>are</i> unique, fit naturally into their respective stage, and might have
+	been part of the map during development. In TH02, we can find three unused
+	sections in Stage 5:
+</p><figure><figure class="side_by_side small">{{range loop 0 8 -}}
+	{{- $pic := printf "TH02-STAGE4.MAP-%1X.png" . -}}
+	{{- $picFN := (call $.PostFileURL $pic) -}}
+	<img src="{{$picFN}}" alt="Section {{.}} of TH02's STAGE4.MAP" />
+{{- end}}</figure><figcaption>
+	The non-empty tile sections defined in TH02's <code>STAGE4.MAP</code>,
+	showing off three unused ones.
+</figcaption></figure>
+	These unused tile sections are much more common in the later games though,
+	where we can find them in TH04's Stage 3, 4, and 5, and TH05's Stage 1, 2,
+	and 4. I'll document those once I get to finalize the tile rendering code of
+	these games, to leave some more content for that blog post. TH04/TH05 tile
+	code would be quite an effective investment of your money in general, as
+	most of it is identical across both games. Or how about going for a full-on
+	PC-98 Touhou map viewer and editor GUI?
+</p><hr /><p>
+	Compared to TH04 and TH05, TH02's stage tile code definitely feels like ZUN
+	was just starting to understand how to pull off smooth vertical scrolling on
+	a PC-98. As such, it comes with a few inefficiencies and suboptimal
+	implementation choices:
+</p><ul>
+	<li>The redraw flag for each tile is stored in a 24×25 <code>bool</code>
+	array that does nothing with 7 of the 8 bits. </li>
+	<li>During bombs and the Stage 4, 5, and Extra bosses, the game disables the
+	tile system to render more elaborate backgrounds, which require the
+	playfield to be flood-filled with a single color on every frame. ZUN uses
+	the GRCG's RMW mode rather than TDW mode for this, leaving <span
+	class="hovertext" title="Source: PC-9801 Programmers' Bible">almost half of
+	the potential performance</span> on the table for no reason. Literally,
+	changing modes only involves changing a single constant.</li>
+	<li>The scroll speed could theoretically be changed at any time. However,
+	the function that scrolls in new stage tiles can only ever blit part of a
+	<i>single</i> tile row during every call, so it's up to the caller to ensure
+	that scrolling always ends up on an exact 16-pixel boundary. TH02 avoids
+	this problem by keeping the scroll speed constant across a stage, using 2
+	pixels for Stage 4 and 1 pixel everywhere else.</li>
+	<li>Since the scroll speed is given in pixels, the slowest speed would be 1
+	pixel per frame. To allow the even slower speeds seen in the final game,
+	TH02 adds a separate scroll <i>interval</i> variable that only runs the
+	scroll function every 𝑛th frame, effectively adding a prescaler to the
+	scroll speed. In TH04 and TH05, the speed is specified as a Q12.4 value
+	instead, allowing true fractional speeds at any multiple of
+	<sup>1</sup>/<sub>16</sub> pixels. This also necessitated a fixed algorithm
+	that correctly blits tile lines from two rows.</li>
+	<li>Finally, we've got a few inconsistencies in the way the code handles the
+	two VRAM pages, which cause a few unnecessary tiles to be rendered to just
+	one of the two pages. Mentioning that just in case someone tries to play
+	this game with a fully cleared text RAM and wonders where the flickering
+	tiles come from.</li>
+</ul><p>
+	Even though this was ZUN's first attempt at scrolling tiles, he already saw
+	it fit to write most of the code in assembly. This was probably a reaction
+	to all of TH01's performance issues, and the frame rate reduction
+	workarounds he implemented to keep the game from slowing down too much in
+	busy places. "If TH01 was all C++ and slow, TH02 better contain more ASM
+	code, and then it will be fast, right?" {{HTML_Emoji "zunpet"}}<br />
+	Another reason for going with ASM might be found in the kind of
+	documentation that may have been available to ZUN. Last year, the PC-98
+	community discovered and scanned two new game programming tutorial books
+	from 1991 (<a
+	href="https://archive.org/details/pc-9801-ASM-game-programming">1</a>, <a
+	href="https://archive.org/details/pc-9801-game-graphics-pc-9801">2</a>).
+	Their example code is not only entirely written in assembly, but restricts
+	itself to the bare minimum of x86 instructions that were available on the
+	8086 CPU used by the original PC-9801 model 9 years earlier. Such code is
+	not only <a
+	href="https://archive.gamedev.net/archive/reference/articles/article369.html">suboptimal</a>
+	on the 486, but can often be actually <i>worse</i> than what your C++
+	compiler would generate. TH02 is where the trend of bad hand-written ASM
+	code started, and it
+	{{Blog_PostLink "2021-02-21" "only intensified in ZUN's later games"}}. So,
+	don't copy code from these books unless you absolutely want to target the
+	earlier 8086 and 286 models. Which,
+	{{Blog_PostLink "2023-03-05" "as we've gathered from the recent blitting benchmark results"}},
+	are not all too common among current real-hardware owners.<br />
+	That said, all that ASM code really only impacts readability and
+	maintainability. Apart from the aforementioned issues, the algorithms
+	themselves are mostly fine – especially since most EGC and GRCG operations
+	are decently batched this time around, in contrast to TH01.
+</p><hr /><p>
+	Luckily, the tile functions merely use <i>inline</i> assembly within a
+	typical C function and can therefore be at least part of a C++ source file,
+	even if the result is pretty ugly. This time, we can actually be sure that
+	they weren't written directly in a .ASM file, because they feature x86
+	instruction encodings that can only be generated with Turbo C++ 4.0J's
+	inline assembler, not with TASM. The same can't unfortunately be said about
+	the following function in the same segment, which marks the tiles covered by
+	the spark sprites <img
+	src="data:image/gif;base64,R0lGODlhQAAIAPABAOy8qv///yH5BAUKAAEALAAAAABAAAgAAAJIjGGJye28nnygxuMu0hOrwE2h1yyRCZHeqaJgplhnVV6HDdIQrr/5LavxhsIMceVqqXwhlu/zZC6jTtIIBqV2rtFS5zsF53QFADs="
+	/> for redrawing. In this one, it took just one dumb hand-written ASM
+	inconsistency in the function's epilog to make the entire function
+	undecompilable.<br />
+	The standard x86 instruction sequence to set up a stack frame in a function prolog looks like this:<figure><pre>PUSH	BP
+MOV 	BP, SP
+SUB 	SP, ?? ; if the function needs the stack from local variables</pre>
+<figcaption>When compiling without optimizations, Turbo C++ 4.0J will
+	replace this sequence with a single <code>ENTER</code> instruction. That one
+	is two bytes smaller, but much slower on every x86 CPU except for the 80186
+	where it was introduced.</figcaption>
+</figure>
+	In functions without local variables, <code>BP</code> and <code>SP</code>
+	remain identical, and a single <code>POP BP</code> is all that's needed in
+	the epilog to tear down such a stack frame before returning from the
+	function. Otherwise, the function needs an additional <code>MOV SP,
+	BP</code> instruction to pop all local variables. With x86 being the helpful
+	CISC architecture that it is, the 80186 also introduced the
+	<code>LEAVE</code> instruction to perform both tasks. Unlike
+	<code>ENTER</code>, this single instruction
+	<i>is</i> faster than the raw two instructions on a lot of x86 CPUs (and
+	even current ones!), and it's always smaller, taking up just 1 byte instead
+	of 3.<br /> So what if you use <code>LEAVE</code> even if your function
+	<i>doesn't</i> use local variables? {{HTML_Emoji "thonk"}} The fact that the
+	instruction first does the equivalent of <code>MOV SP, BP</code> doesn't
+	matter if these registers are identical, and who cares about the additional
+	CPU cycles of <code>LEAVE</code> compared to just <code>POP BP</code>,
+	right? So that's definitely something you <i>could theoretically</i> do, but
+	not something that any compiler would ever generate.
+</p><p>
+	And so, TH02 <code>MAIN.EXE</code> decompilation already hits the first
+	brick wall after two pushes. Awesome! {{HTML_Emoji "godzun"}} Theoretically,
+	we <i>could</i> slowly mash through this wall using the {{Blog_PostLink
+	"2023-01-17" "code generator"}}. But having such an inconsistency in the
+	function epilog would mean that we'd have to keep Turbo C++ 4.0J from
+	emitting <i>any</i> epilog <i>or</i> prolog code so that we can write our
+	own. This means that we'd once again have to hide any use of the
+	<code>SI</code> and <code>DI</code> registers from the compiler… and doing
+	<i>that</i> requires code generation macros for 22 of the 49 instructions of
+	the function in question, almost none of which we currently have. So, this
+	gets quite silly quite fast, <i>especially</i> if we only need to do it
+	<i>for one single byte</i>.
+</p><p>
+	Instead, wouldn't it be much better if we had a separate build step between
+	compile and link time that allowed us to replicate mistakes like these by
+	just patching the compiled .OBJ files? These files still contain the names
+	of exported functions for linking, which would allow us to look up the code
+	of a function in a robust manner, navigate to specific instructions using a
+	disassembler, replace them, and write the modified .OBJ back to disk before
+	linking. Such a system could then naturally expand to cover all other
+	decompilation issues, culminating in a full-on optimizer that could even
+	recreate ZUN's self-modifying code. At that point, we would have sealed away
+	all of ZUN's ugly ASM code within a separate build step, and could finally
+	decompile everything into readable C++.
+</p><p>
+	Pulling that off would require a significant tooling investment though.
+	Patching that one byte in TH02's spark invalidation function could be done
+	within 1 or 2 pushes, but that's just one issue, and we currently have 32
+	other .ASM files with undecompilable code. Also, note that this is
+	fundamentally different from what we're doing with the
+	<code>debloated</code> branch and the Anniversary Editions. Mistake patching
+	would purely be about having readable code on <code>master</code> that
+	compiles into ZUN's exact binaries, without fixing <a
+	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#categories">weird
+	code</a>. The Anniversary Editions go much further and rewrite such code in
+	a much more fundamental way, improving it further than mistake patching ever
+	could.<br />
+	Right now, the Anniversary Editions seem <a
+	href="https://twitter.com/ReC98Project/status/1630306777391673348">much more
+	popular</a>, which suggests that people just want 100% RE as fast as
+	possible so that I can start working on them. In that case, why bother with
+	such undecompilable functions, and not just leave them in raw and unreadable
+	x86 opcode form if necessary… {{HTML_Emoji "tannedcirno"}} But let's first
+	see how much backer support there actually is for mistake patching before
+	falling back on that.
+</p><p>
+	The best part though: Once we've made a decision and then covered TH02's
+	spark and particle systems, <i>that was it, and we will have already RE'd
+	all ZUN-written PC-98-specific blitting code in this game</i>. Every further
+	sprite or shape is rendered via master.lib, and is thus decently abstracted.
+	Guess I'll need to update
+	{{Blog_PostLink "2022-08-15" "the assessment of which PC-98 Touhou game is the easiest to port"}},
+	because it sure isn't TH01, as we've seen with all the work required for the first Anniversary Edition build.
+</p><hr /><p>
+	Until then, there are still enough parts of the game that don't use any of
+	the remaining few functions in the <code>_TEXT</code> segment. Previously, I
+	mentioned in the {{Blog_PostLink "2021-05-13" "status overview blog post"}}
+	that TH02 had a seemingly weird sprite system, but the spark and point popup
+	(<img
+	src="data:image/gif;base64,R0lGODlhYAAIAPABAAAAAP///yH5BAUKAAEALAAAAABgAAgAAAJkjI+pGwAMo5wUuVfduddw3XwWtkWkV4VWKXGtejajG9Ly7dlYDOJo0mvtRKxJ7IfbAY/AZq1jgvqGUsjxRBqONp+qL2pa/bDIZxGlzJYX6qht20W210Yuc7m8C+Psrj4FyHVQAAA7"
+	alt="〇一二三四五六七八九十×÷" />) structures showed that the game just
+	stores the current and previous position of its entities in a slightly
+	different way compared to the rest of PC-98 Touhou. Instead of having
+	dedicated structure fields, TH02 uses two-element arrays indexed with the
+	active VRAM page. Same thing, and such a pattern even helps during RE since
+	it's easy to spot once you know what to look for.<br />
+	There's not much to criticize about the point popup system, except for maybe
+	a landmine that causes sprite glitches when trying to display more than
+	99,990 points. Sadly, the final push in this delivery was rounded out by yet
+	another piece of code at the opposite end of the quality spectrum. The
+	particle and smear effects for Reimu's bomb animations consist almost
+	entirely of assembly bloat, which would just be replaced with generic calls
+	to the generic blitter in this game's future Anniversary Edition.
+</p><p>
+	If I continue to decompile TH02 while avoiding the brick wall, items would
+	be next, but they probably require two pushes. Next up, therefore:
+	Integrating Stripe as an alternative payment provider into the order form.
+	There have been at least three people who reported issues with PayPal, and
+	Stripe has been working much better in tests. In the meantime, <a
+	href="https://buy.stripe.com/dR65o0eu497CdvGcMM">here's a temporary Stripe
+	order link for everyone</a>. This one is not connected to the cap yet, so
+	please make sure to stay within whatever value is currently shown on the
+	front page – I <i>will</i> treat any excess money as donations.
+	{{HTML_Emoji "onricdennat"}} If there's some time left afterward, I might
+	also add some small improvements to the TH01 Anniversary Edition.
+</p>

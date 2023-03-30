@@ -1,5 +1,5 @@
 <p>
-	<strong>Last updated: {{Blog_PostLink "2023-01-17" "2023-01-17"}}</strong>
+	<strong>Last updated: {{Blog_PostLink "2023-03-30" "2023-03-30"}}</strong>
 </p><p>
 	Secured a 30-hour RL workweek to leave plenty of time for this project,
 	{{DB_CustomerByID 9}}'s commissioned MediaWiki update work is also nearing
@@ -8,13 +8,16 @@
 	the next logical step would be:
 </p><ul>
 	<li><strong>TH02:</strong><ul>
-		<li><code>MAIN.EXE:</code> Got a few variables and functions here and there, but not a single gameplay-related structure yet. The game seems to have a weird sprite system; looks like that'll be first.</li>
-		<li><code>MAINE.EXE:</code> The ending sequences.</li>
+		<li><code>MAIN.EXE:</code> The final PC-98-specific low-level rendering functions are blocked by a single inconsistent and thus undecompilable assembly instruction. Rather than going for {{Blog_PostLink "2023-01-17" "code generation"}} and turning the rest of the function into a mess, I'd like to introduce a new build step between compilation and linking to patch "mistakes" like these. This would be an investment of 1-2 pushes into more readable code. Otherwise, I could continue with<ul>
+			<li>items, followed by player character code, or</li>
+			<li>HUD rendering, followed by the stage/game clear screens and their score calculations.</li>
+		</ul></li>
+		<li><code>MAINE.EXE:</code> The ending sequences. Required for the multilingual translations that {{DB_CustomerByID 9}} might commission once they become viable.</li>
 	</ul></li>
 	<li><strong>TH03:</strong><ul>
 		<li><code>OP.EXE:</code> Story Mode initialization, or the title screen.</li>
-		<li><code>MAIN.EXE:</code> The enemy structure? Or the bullet structure, maybe? Either way, we're still missing a lot of essential gameplay structures. At least we did make {{Blog_PostLink "2020-01-20" "first"}} {{Blog_PostLink "2020-01-29" "steps"}} in this game, in contrast to TH02.</li>
-		<li><code>MAINL.EXE:</code> The stage end / VS dialogue followed by the stage start screen.</li>
+		<li><code>MAIN.EXE:</code> The enemy structure? Or the bullet structure, maybe? Either way, we're still missing a lot of essential gameplay structures.</li>
+		<li><code>MAINL.EXE:</code> The stage end / VS dialogue followed by the stage start screen. Required for the multilingual translations that {{DB_CustomerByID 9}} might commission once they become viable.</li>
 	</ul></li>
 	<li><strong>TH04:</strong><ul>
 		<li><code>OP.EXE:</code> The game title slide-in animation, followed by the High Score menu and the Music Room. The latter will be done in parallel with the TH05 version.</li>

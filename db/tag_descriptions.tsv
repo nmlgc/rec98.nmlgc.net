@@ -50,6 +50,7 @@ resident	Data passed between the individual executables of each game.
 rng	Pseudo-randomness, in a gameplay sense. Emphasis on "pseudo".
 score	Points collected during gameplay, and stored in high score files.
 shot	Projectiles fired by the player.
+stage	The main scrolling portions of gameplay in TH02, TH04, and TH05. Mostly rendered using tile maps.
 tasm	Discoveries about Turbo Assembler.
 tcc	Discoveries about Turbo C++ 4.0J, the C++ compiler ZUN originally used for PC-98 Touhou.
 thief	Things that ZUN stole from others, without crediting them.

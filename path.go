@@ -22,8 +22,9 @@ type SymmetricPath struct {
 // SymmetricPath.
 type HostedPath struct {
 	SymmetricPath
-	srv        http.Handler
-	fileToHash sync.Map
+	srv         http.Handler
+	fileToHash  sync.Map
+	depToSource sync.Map
 }
 
 // NewHostedPath sets up a new HostedPath instance.
@@ -67,6 +68,9 @@ func (hp *HostedPath) watch() {
 		// old hash, and let the new one be generated on demand…
 		if _, deleted := hp.fileToHash.LoadAndDelete(fn); deleted {
 			log.Printf("%s: \"%s\" changed", hp.LocalPath, fn)
+			if dep, ok := hp.depToSource.Load(fn); ok {
+				hp.fileToHash.Delete(dep)
+			}
 		}
 	}
 }
@@ -83,13 +87,23 @@ func (hp *HostedPath) RegisterFileServer(r *mux.Router) {
 	r.PathPrefix(hp.URLPrefix).Handler(stripped)
 }
 
+// buildFile runs any necessary build step to generate fn. Returns an array of
+// all existing files that should invalidate fn if they are changed.
+func (hp *HostedPath) buildFile(fn string) (deps []string) {
+	return append(deps, fn)
+}
+
 // VersionQueryFor returns the current hash of fn as a query string suffix.
 func (hp *HostedPath) VersionQueryFor(fn string) string {
 	hash, ok := hp.fileToHash.Load(fn)
 	if !ok {
-		fullHash := CryptHashOfFile(hp.LocalPath + fn)
-		hash = hex.EncodeToString(fullHash[:4])
-		hp.fileToHash.Store(fn, hash)
+		deps := hp.buildFile(fn)
+		for _, dep := range deps {
+			hp.depToSource.Store(dep, fn)
+			fullHash := CryptHashOfFile(hp.LocalPath + dep)
+			hash = hex.EncodeToString(fullHash[:4])
+			hp.fileToHash.Store(dep, hash)
+		}
 	}
 	return "?" + hash.(string)
 }

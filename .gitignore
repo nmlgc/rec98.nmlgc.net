@@ -5,3 +5,5 @@ blog/video/*
 cache/
 db/incoming.tsv
 db/paypal_auth.tsv
+*.js
+*.js.map

@@ -45,7 +45,7 @@ Applies to all code written for the website:
 * `*.css`
 * `*.go`
 * `*.html` (only on the root directory of this repository)
-* `*.js`
+* `*.ts`
 * `go.mod`
 * `go.sum`
 

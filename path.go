@@ -4,9 +4,13 @@ import (
 	"encoding/hex"
 	"log"
 	"net/http"
+	"os"
+	"path"
 	"path/filepath"
+	"strings"
 	"sync"
 
+	esbuild "github.com/evanw/esbuild/pkg/api"
 	"github.com/gorilla/mux"
 	"github.com/rjeczalik/notify"
 )
@@ -90,6 +94,34 @@ func (hp *HostedPath) RegisterFileServer(r *mux.Router) {
 // buildFile runs any necessary build step to generate fn. Returns an array of
 // all existing files that should invalidate fn if they are changed.
 func (hp *HostedPath) buildFile(fn string) (deps []string) {
+	localFN := filepath.Join(hp.LocalPath + fn)
+	switch strings.ToLower(path.Ext(fn)) {
+	case ".js":
+		// Transpile TypeScript
+		tsBasename := (strings.TrimSuffix(fn, ".js") + ".ts")
+		tsFN := (hp.LocalPath + tsBasename)
+		_, err := os.Stat(tsFN)
+		if err == nil {
+			os.Remove(localFN)
+			deps = []string{tsBasename}
+
+			result := esbuild.Build(esbuild.BuildOptions{
+				LogLevel:          esbuild.LogLevelWarning,
+				EntryPoints:       []string{tsFN},
+				Outfile:           localFN,
+				MinifyWhitespace:  true,
+				MinifyIdentifiers: true,
+				MinifySyntax:      true,
+				Sourcemap:         esbuild.SourceMapLinked,
+				Write:             true,
+			})
+			if len(result.Errors) > 0 {
+				// Return [deps] without the target file, since it doesn't
+				// exist.
+				return deps
+			}
+		}
+	}
 	return append(deps, fn)
 }
 

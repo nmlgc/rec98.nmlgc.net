@@ -13,17 +13,13 @@ const fractionNumFmt = new Intl.NumberFormat(
 )
 
 /**
- * @param {number} cents
- * @returns {string} Formatted currency string.
+ * @returns Formatted currency string.
  */
-function valueInCurrency(cents) {
+function valueInCurrency(cents: number) {
 	return ((cents % 100) ? fractionNumFmt : integerNumFmt).format(cents / 100);
 }
 
-/**
- * @param {number} cents
- */
-function formatCurrency(cents) {
+function formatCurrency(cents: number) {
 	document.write(valueInCurrency(cents))
 }
 // --------
@@ -88,8 +84,7 @@ class ReC98ParentInit extends HTMLElement {
 		)) {
 			throw "Must be placed at the last child of a supported element.";
 		}
-		/** @type {ReC98Video | ReC98ImageSwitcher} */
-		(this.parentElement).init();
+		(this.parentElement as (ReC98Video | ReC98ImageSwitcher)).init();
 
 		// Let's not make the grid more complicated than it needs to be.
 		this.parentElement.removeChild(this);
@@ -99,14 +94,12 @@ class ReC98ParentInit extends HTMLElement {
 window.customElements.define("rec98-parent-init", ReC98ParentInit);
 // ---------------------------------------
 
+type VirtualKey = (' ' | '←' | '→' | '↑' | '↓' | '⏮' | '⏭' | '⛶' | null);
+
 /**
  * Translates equivalent KeyboardEvents into a virtual key.
- *
- * @typedef {' ' | '←' | '→' | '↑' | '↓' | '⏮' | '⏭' | '⛶' | null} VirtualKey
- * @param {KeyboardEvent} event
- * @returns {VirtualKey}
  */
-function virtualKey(event) {
+function virtualKey(event: KeyboardEvent): VirtualKey {
 	switch(event.code) {
 	case "Space":
 		return ' ';

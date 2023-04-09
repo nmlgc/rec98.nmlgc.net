@@ -1,7 +1,6 @@
 "use strict";
 
-/** @type {HTMLSelectElement} */
-const metric = document.getElementById("metric");
+const metric = document.getElementById("metric") as HTMLSelectElement;
 
 const goal = document.getElementById("goal");
 const info = document.getElementById("info");
@@ -9,8 +8,7 @@ const info_text = document.getElementById("info_text");
 
 const micro_container = document.getElementById("micro_container");
 
-/** @type {HTMLInputElement} */
-const micro = document.getElementById("micro");
+const micro = document.getElementById("micro") as HTMLInputElement;
 
 const micro_available = document.getElementById("micro_available");
 

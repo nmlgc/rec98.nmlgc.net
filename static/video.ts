@@ -1,9 +1,4 @@
-/**
- * @param {Element} element
- * @param {string} attribute
- * @returns {string}
- */
-function attributeAsString(element, attribute) {
+function attributeAsString(element: Element, attribute: string): string {
 	const ret = element.getAttribute(attribute);
 	if(!ret) {
 		throw `${attribute} not given.`;
@@ -11,45 +6,29 @@ function attributeAsString(element, attribute) {
 	return ret;
 }
 
-/**
- * @param {Element} element
- * @param {string} attribute
- * @returns {number}
- */
-function attributeAsNumber(element, attribute) {
+function attributeAsNumber(element: Element, attribute: string): number {
 	return Number(attributeAsString(element, attribute));
 }
 
 /**
  * Raw seconds→frame conversion.
- *
- * @param {number} seconds
- * @param {number} fps
- * @returns {number}
  */
-function frameFrom(seconds, fps) {
+function frameFrom(seconds: number, fps: number) {
 	return Math.floor(seconds * fps);
 }
 
 /**
  * Raw frame→currentTime conversion. Avoids rounding errors by returning the
  * middle of a frame.
- *
- * @param {number} frame
- * @param {number} fps
- * @returns {number}
  */
-function secondsFrom(frame, fps) {
+function secondsFrom(frame: number, fps: number) {
 	return ((frame + 0.5) / fps);
 }
 
 /**
  * Generates the CSS `width` for the timeline bar at a given frame.
- *
- * @param {number} frame
- * @param {number} frameCount
  */
-function timelineWidthAt(frame, frameCount) {
+function timelineWidthAt(frame: number, frameCount: number) {
 	return `${(frame / (frameCount - 1)) * 100}%`;
 }
 
@@ -58,14 +37,13 @@ class ReC98VideoMarker extends HTMLElement {
 	videoIndex = -1;
 	frameCount = 0;
 
-	/**
-	 * @param {ReC98Video} player
-	 * @param {number} videoIndex
-	 * @param {number} timelineWidth
-	 * @param {number} fps
-	 * @param {number} frameCount
-	 */
-	init(player, videoIndex, timelineWidth, fps, frameCount) {
+	init(
+		player: ReC98Video,
+		videoIndex: number,
+		timelineWidth: number,
+		fps: number,
+		frameCount: number
+	) {
 		const frame = attributeAsNumber(this, "data-frame");
 		const title = attributeAsString(this, "data-title");
 		const alignment = attributeAsString(this, "data-alignment");
@@ -87,8 +65,7 @@ class ReC98VideoMarker extends HTMLElement {
 		this.appendChild(this.button);
 	}
 
-	/** @param {number} timelineWidth */
-	setWidth(timelineWidth) {
+	setWidth(timelineWidth: number) {
 		const width = (timelineWidth / this.frameCount);
 
 		this.style.width = `${Math.max(width, 1)}px`;
@@ -100,8 +77,7 @@ class ReC98Video extends HTMLElement {
 	// Members
 	// -------
 
-	/** @type {ReC98TabSwitcher | null} */
-	eTabSwitcher = null;
+	eTabSwitcher: (ReC98TabSwitcher | null) = null;
 
 	eVideoWrap = document.createElement("div");
 	eControls = document.createElement("div");
@@ -122,30 +98,20 @@ class ReC98Video extends HTMLElement {
 	eDownload = document.createElement("a");
 	eFullscreen = document.createElement("button");
 
-	/** @type {HTMLCollectionOf<HTMLVideoElement>} */
-	videos;
-
-	/** @type {HTMLVideoElement} */
-	videoShown;
-
-	/** @type {HTMLCollectionOf<HTMLDivElement> | undefined} */
-	dynamicCaptions;
-
+	videos: HTMLCollectionOf<HTMLVideoElement>;
+	videoShown: HTMLVideoElement;
+	dynamicCaptions?: HTMLCollectionOf<HTMLDivElement>;
 	frameCount = 0;
 	fps = 1;
 	scrubPossible = false;
 	switchingVideos = false;
-
-	/** @type {number | null} */
-	timeIntervalID = null;
+	timeIntervalID: (number | null) = null;
 	// -------
 
 	/**
 	 * Raw currentTime→frame conversion.
-	 *
-	 * @returns {number}
 	 */
-	 frame() {
+	frame() {
 		const seconds = ((this.videoShown) ? this.videoShown.currentTime : 0);
 		return frameFrom(seconds, this.fps);
 	}
@@ -192,11 +158,8 @@ class ReC98Video extends HTMLElement {
 	/**
 	 * Returns the new currentTime after a seek by the given number of delta
 	 * frames.
-	 *
-	 * @param {number} frameDelta
-	 * @returns {number}
 	 */
-	frameSeekTime(frameDelta) {
+	frameSeekTime(frameDelta: number) {
 		if(!this.videoShown) {
 			return 0;
 		}
@@ -210,10 +173,8 @@ class ReC98Video extends HTMLElement {
 	/**
 	 * Seeks the video to the given position, waiting for a previous seek to
 	 * complete if necessary.
-	 *
-	 * @param {number} seconds
 	 */
-	seekTo(seconds) {
+	seekTo(seconds: number) {
 		if(this.videoShown.seeking) {
 			this.videoShown.onseeked = (() => {
 				this.renderTimeFromVideo();
@@ -225,19 +186,16 @@ class ReC98Video extends HTMLElement {
 		}
 	}
 
-	/** @param {number} frameDelta */
-	seekBy(frameDelta) {
+	seekBy(frameDelta: number) {
 		this.videoShown.pause();
 		this.seekTo(this.frameSeekTime(frameDelta));
 	}
 
-	/** @param {(-1 | 1)} direction */
-	seekFast(direction) {
+	seekFast(direction: (-1 | 1)) {
 		this.seekBy(direction * (this.frameCount / 10));
 	}
 
-	/** @param {PointerEvent} event */
-	scrub(event) {
+	scrub(event: PointerEvent) {
 		this.focus();
 
 		// Why is the border width included in [offsetX]?!?
@@ -251,8 +209,7 @@ class ReC98Video extends HTMLElement {
 		this.seekTo(seconds);
 	}
 
-	/** @param {Event} event */
-	toggle(event) {
+	toggle(event: Event) {
 		if(!this.videoShown) {
 			return;
 		}
@@ -274,8 +231,7 @@ class ReC98Video extends HTMLElement {
 		this.focus();
 	}
 
-	/** @param {number} seconds */
-	renderTime(seconds) {
+	renderTime(seconds: number) {
 		const frame = frameFrom(seconds, this.fps);
 		this.eTimeSeconds.textContent = (
 			Math.trunc(seconds).toString().padStart(2, "0") +
@@ -291,9 +247,9 @@ class ReC98Video extends HTMLElement {
 	}
 
 	markers() {
-		return /** @type {HTMLCollectionOf<ReC98VideoMarker>} */ (
-			this.eTimeline.getElementsByTagName("rec98-video-marker")
-		);
+		return this.eTimeline.getElementsByTagName(
+			"rec98-video-marker"
+		) as HTMLCollectionOf<ReC98VideoMarker>;
 	}
 
 	resizeMarkers() {
@@ -419,10 +375,9 @@ class ReC98Video extends HTMLElement {
 	}
 
 	/**
-	 * @param {number} index
-	 * @returns {boolean} `true` if the playing video was changed
+	 * @returns `true` if the playing video was changed
 	 */
-	showVideo(index) {
+	showVideo(index: number) {
 		const videoPrev = this.videoShown;
 		const videoNew = this.videos[index];
 		if((videoPrev === videoNew) || this.switchingVideos) {
@@ -657,10 +612,11 @@ class ReC98Video extends HTMLElement {
 			// marker.
 			const fps = attributeAsNumber(video, "data-fps");
 			const frameCount = attributeAsNumber(video, "data-frame-count");
-			const markers = video.getElementsByTagName("rec98-video-marker");
+			const markers = video.getElementsByTagName(
+				"rec98-video-marker"
+			) as HTMLCollectionOf<ReC98VideoMarker>;
 			while(markers[0]) {
-				/** @type {ReC98VideoMarker} */
-				(markers[0]).init(this, i, timelineWidth, fps, frameCount);
+				markers[0].init(this, i, timelineWidth, fps, frameCount);
 				this.eTimeline.appendChild(markers[0]);
 				this.classList.add("with-markers");
 			}

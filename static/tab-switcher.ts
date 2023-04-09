@@ -1,29 +1,21 @@
 /**
  * Returns whether this tab switching request was successful (`true`) or not
  * (`false`).
- *
- * @typedef {function(number): boolean} TabSwitchFunc
  */
+type TabSwitchFunc = (index: number) => boolean;
 
 // Generic tab switching component.
 class ReC98TabSwitcher extends HTMLElement {
 	activeIndex = -1;
 	count = 0;
+	switchFunc: TabSwitchFunc;
 
-	/** @type {TabSwitchFunc} */
-	switchFunc;
-
-	/** @param {TabSwitchFunc} switchFunc */
-	constructor(switchFunc) {
+	constructor(switchFunc: TabSwitchFunc) {
 		super();
 		this.switchFunc = switchFunc;
 	}
 
-	/**
-	 * @param {string} title
-	 * @param {boolean} initiallyActive
-	 */
-	add(title, initiallyActive) {
+	add(title: string, initiallyActive: boolean) {
 		const i = this.count;
 		const button = document.createElement("button");
 		button.innerHTML = `${i + 1}️⃣ ${title}`
@@ -40,24 +32,21 @@ class ReC98TabSwitcher extends HTMLElement {
 		}
 	}
 
-	/** @param {number} index */
-	setActive(index) {
+	setActive(index: number) {
 		this.children[this.activeIndex]?.classList.remove("active");
 		this.children[index].classList.add("active");
 		this.activeIndex = index;
 	}
 
-	/** @param {number} index */
-	switchTo(index) {
+	switchTo(index: number) {
 		this.switchFunc(index) && this.setActive(index);
 	}
 
 	/**
-	 * @param {KeyboardEvent} event
-	 * @param {VirtualKey | null} override Optionally override for [event.key]
-	 * @returns {boolean} Whether this event was handled
+	 * @param override Optional override for [event.key]
+	 * @returns Whether this event was handled
 	 */
-	keydownHandler(event, override = null) {
+	keydownHandler(event: KeyboardEvent, override: (VirtualKey | null) = null) {
 		if(event.key >= `1` && event.key <= `${this.count}`) {
 			this.switchTo(Number(event.key) - 1);
 			return true;
@@ -77,17 +66,13 @@ class ReC98TabSwitcher extends HTMLElement {
 };
 
 class ReC98ImageSwitcher extends HTMLElement {
-	/** @type {HTMLCollectionOf<HTMLImageElement>} */
-	images;
-
-	/** @type {HTMLImageElement | null} */
-	imageShown = null;
+	images: HTMLCollectionOf<HTMLImageElement>;
+	imageShown: (HTMLImageElement | null) = null;
 
 	/**
-	 * @param {number} index
-	 * @returns {boolean} `true` if the playing video was changed
+	 * @returns `true` if the playing video was changed
 	 */
-	 showImage(index) {
+	showImage(index: number) {
 		const imagePrev = this.imageShown;
 		const imageNew = this.images[index];
 		if(imagePrev === imageNew) {

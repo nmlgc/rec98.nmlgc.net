@@ -2,20 +2,21 @@
 
 let mailto_support = "support@nmlgc.net";
 const form = document.querySelector("form");
-/** @type {HTMLInputElement} */
-const amount = document.getElementById("amount");
-/** @type {HTMLSelectElement} */
-const discount = document.getElementById("discount");
-/** @type {HTMLSpanElement} */
-const discount_breakdown = document.getElementById("discount_breakdown");
-/** @type {HTMLSpanElement} */
-const discount_sponsor = document.getElementById("discount_sponsor");
-/** @type {HTMLSpanElement} */
-const roundup_amount = document.getElementById("roundup_amount");
-/** @type {HTMLSpanElement} */
-const roundup_pushes = document.getElementById("roundup_pushes");
-/** @type {HTMLSpanElement} */
-const roundup_noun = document.getElementById("roundup_noun");
+const amount = document.getElementById("amount") as HTMLInputElement;
+const discount = document.getElementById("discount") as HTMLSelectElement;
+const discount_breakdown = document.getElementById(
+	"discount_breakdown"
+) as HTMLSpanElement;
+const discount_sponsor = document.getElementById(
+	"discount_sponsor"
+) as HTMLSpanElement;
+const roundup_amount = document.getElementById(
+	"roundup_amount"
+) as HTMLSpanElement;
+const roundup_pushes = document.getElementById(
+	"roundup_pushes"
+) as HTMLSpanElement;
+const roundup_noun = document.getElementById("roundup_noun") as HTMLSpanElement;
 
 function HTMLSupportMail() {
 	return `
@@ -25,14 +26,17 @@ function HTMLSupportMail() {
 /**
  * Must match the implementation in db_discount_offers.go!
  *
- * @param {number} capRemainingBeforeAmount In €.
- * @param {number} amount In €.
- * @param {number} pushprice In €.
- * @param {number} discountFraction Fraction of a push covered by the sponsor.
- * @returns {number} Round-up € funded by the sponsor, limited to the cap.
+ * @param capRemainingBeforeAmount In €.
+ * @param amount In €.
+ * @param pushprice In €.
+ * @param discountFraction Fraction of a push covered by the sponsor.
+ * @returns Round-up € funded by the sponsor, limited to the cap.
  */
 function discountRoundupValue(
-	capRemainingBeforeAmount, amount, pushprice, discountFraction
+	capRemainingBeforeAmount: number,
+	amount: number,
+	pushprice: number,
+	discountFraction: number
 ) {
 	const pushprice_discounted = (pushprice * (1 - discountFraction));
 	const roundup_value = (pushprice - pushprice_discounted);

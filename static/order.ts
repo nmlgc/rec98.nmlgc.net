@@ -186,14 +186,6 @@ function endTransaction() {
 	document.querySelector("html")!.classList.remove("wait");
 }
 
-function cycle() {
-	return isOneTime() ? "onetime" : "monthly";
-}
-
-function thankyou() {
-	return form.submit();
-}
-
 async function sendIncoming(provider_session: string) {
 	let response = await fetch('/api/transaction-incoming', {
 		method: 'post',
@@ -207,7 +199,7 @@ async function sendIncoming(provider_session: string) {
 			Metric: metric.value,
 			Goal: goal.value,
 			Micro: micro.checked,
-			Cycle: cycle(),
+			Cycle: (isOneTime() ? "onetime" : "monthly"),
 			Discount: ((isOneTime() && discount) ? discount.selectedIndex : 0),
 			Cents: (Number(amount.value)) * 100,
 		})

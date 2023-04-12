@@ -8,7 +8,7 @@ function paypalValidate(data, actions) {
 
 async function paypalSubmit(data, actions) {
 	if(await sendIncoming(data.orderID)) {
-		thankyou();
+		form.submit();
 	}
 }
 

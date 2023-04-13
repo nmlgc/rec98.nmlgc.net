@@ -86,16 +86,6 @@ function handleSelect(option: HTMLOptionElement) {
 	micro_container.hidden = false;
 }
 
-function clampNumber(obj) {
-	obj.value = Math.max(obj.value, obj.min);
-	obj.value = Math.min(obj.value, obj.max);
-	return obj
-}
-
-function formatNumber(obj, digits) {
-	return parseFloat(obj.value).toFixed(digits);
-}
-
 function isOneTime() {
 	return onetime.checked;
 }
@@ -116,33 +106,36 @@ function onCycle() {
 	}
 
 	const onetime = isOneTime();
-	if(onetime) {
-		amount.onchange = function() {
-			const value_from_customer = clampNumber(amount);
-			updatePushAmount(push_amount, push_noun, Number(amount.value));
-			amount.value = formatNumber(value_from_customer, 2);
 
-			if(!discount) {
-				return;
-			}
+	amount.onchange = () => {
+		const val = (parseFloat(amount.value) || 0); // could be NaN
+		const min = parseFloat(amount.min);
+		const max = parseFloat(amount.max);
+		amount.value = Math.max(Math.min(val, max), min).toFixed(
+			(onetime ? 2 : 0)
+		);
+		updatePushAmount(push_amount, push_noun, Number(amount.value));
 
-			const discount_offer = discount.options[discount.selectedIndex];
-			const discount_fraction = Number(discount_offer.dataset.fraction);
-			if(discount_offer.index === 0) {
-				discount_breakdown.hidden = true;
-			} else {
-				discount_breakdown.hidden = false;
-				discount_sponsor.innerHTML = discount_offer.dataset.name!;
-				const roundup_value = discountRoundupValue(
-					Number(amount.max),
-					Number(amount.value),
-					pushprice,
-					discount_fraction
-				)
-				updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
-				roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
-			}
+		if(!onetime || !discount) {
+			return;
 		}
+
+		const discount_offer = discount.options[discount.selectedIndex];
+		const discount_fraction = Number(discount_offer.dataset.fraction);
+		if(discount_offer.index === 0) {
+			discount_breakdown.hidden = true;
+		} else {
+			discount_breakdown.hidden = false;
+			discount_sponsor.innerHTML = discount_offer.dataset.name!;
+			const roundup_value = discountRoundupValue(
+				max, Number(amount.value), pushprice, discount_fraction
+			)
+			updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
+			roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
+		}
+	}
+
+	if(onetime) {
 		amount.min = "1.00";
 		amount.step = "0.01";
 
@@ -151,10 +144,6 @@ function onCycle() {
 			discount_breakdown.hidden = false;
 		}
 	} else {
-		amount.onchange = function() {
-			amount.value = formatNumber(amount, 0);
-			updatePushAmount(push_amount, push_noun, Number(amount.value));
-		}
 		amount.min = "1";
 		amount.step = "1";
 

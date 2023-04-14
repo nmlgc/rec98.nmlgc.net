@@ -1,22 +1,20 @@
 "use strict";
 
 let mailto_support = "support@nmlgc.net";
-const form = document.querySelector("form");
+
+const cust_name = document.getElementById("cust_name") as HTMLSelectElement;
+const cust_url = document.getElementById("cust_url") as HTMLSelectElement;
+
+const form = document.querySelector("form")!;
 const amount = document.getElementById("amount") as HTMLInputElement;
 const discount = document.getElementById("discount") as HTMLSelectElement;
-const discount_breakdown = document.getElementById(
-	"discount_breakdown"
-) as HTMLSpanElement;
-const discount_sponsor = document.getElementById(
-	"discount_sponsor"
-) as HTMLSpanElement;
-const roundup_amount = document.getElementById(
-	"roundup_amount"
-) as HTMLSpanElement;
-const roundup_pushes = document.getElementById(
-	"roundup_pushes"
-) as HTMLSpanElement;
-const roundup_noun = document.getElementById("roundup_noun") as HTMLSpanElement;
+const discount_breakdown = document.getElementById("discount_breakdown")!;
+const discount_sponsor = document.getElementById("discount_sponsor")!;
+const roundup_amount = document.getElementById("roundup_amount")!;
+const roundup_pushes = document.getElementById(	"roundup_pushes")!;
+const roundup_noun = document.getElementById("roundup_noun")!;
+
+const error = document.getElementById("error")!;
 
 function HTMLSupportMail() {
 	return `
@@ -47,7 +45,7 @@ function discountRoundupValue(
 }
 
 function isOneTime() {
-	return document.getElementById("onetime").checked;
+	return onetime.checked;
 }
 
 function cycle() {
@@ -55,8 +53,8 @@ function cycle() {
 }
 
 function validateForm(data, actions) {
-	for (const el of form.querySelectorAll("[required]")) {
-		if (!el.reportValidity()) {
+	for (const el of form.querySelectorAll("input[required]")) {
+		if (!(el as HTMLInputElement).reportValidity()) {
 			actions.reject();
 			return false;
 		}
@@ -65,19 +63,21 @@ function validateForm(data, actions) {
 }
 
 function startTransaction() {
-	document.getElementById("error").hidden = true;
-	document.querySelector("html").classList.add("wait");
+	error.hidden = true;
+	document.querySelector("html")!.classList.add("wait");
 }
 
 function endTransaction() {
-	document.querySelector("html").classList.remove("wait");
+	document.querySelector("html")!.classList.remove("wait");
 }
 
 function thankyou() {
 	return form.submit();
 }
 
-async function sendIncoming(orderID, amount, discountID) {
+async function sendIncoming(
+	orderID: string, amount: number, discountID: number
+) {
 	let response = await fetch('/api/transaction-incoming', {
 		method: 'post',
 		headers: {
@@ -85,18 +85,17 @@ async function sendIncoming(orderID, amount, discountID) {
 		},
 		body: JSON.stringify({
 			PayPalID: orderID,
-			CustName: document.getElementById("cust-name").value,
-			CustURL: document.getElementById("cust-url").value,
-			Metric: document.getElementById("metric").value,
-			Goal: document.getElementById("goal").value,
-			Micro: document.getElementById("micro").checked,
+			CustName: cust_name.value,
+			CustURL: cust_url.value,
+			Metric: metric.value,
+			Goal: goal.value,
+			Micro: micro.checked,
 			Cycle: cycle(),
 			Discount: discountID,
 			Cents: amount * 100,
 		})
 	});
 	if(!response.ok) {
-		let error = document.getElementById("error");
 		error.innerHTML =
 			"Something went wrong: " + await response.text() + "<br>" +
 			"I should have received your order though, and will confirm it " +
@@ -126,7 +125,7 @@ let subscription = {
 		// For some reason, PayPal's /v2/checkout/orders/ API doesn't return
 		// the subscription amount, so for now, let's just send it ourselves…
 		// At least the server bails out if the order ID doesn't exist, so… 🤷
-		await sendIncoming(data.orderID, amount.value, 0);
+		await sendIncoming(data.orderID, Number(amount.value), 0);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,
@@ -162,15 +161,19 @@ function formatNumber(obj, digits) {
 function onCycle() {
 	let button_id = 'paypal-button-container';
 	let button_selector = '#' + button_id;
-	let button_container = document.getElementById(button_id);
+	let button_container = document.getElementById(button_id)!;
 
-	let push_amount = document.getElementById("push_amount");
-	let push_noun = document.getElementById("push_noun");
+	let push_amount = document.getElementById("push_amount")!;
+	let push_noun = document.getElementById("push_noun")!;
 
-	const pushprice = (push_amount.dataset.price / 100);
+	const pushprice = (push_amount.dataset.price! / 100);
 
-	const updatePushAmount = function(target_amount, target_noun, money) {
-		target_amount.innerHTML = (Math.round((money / pushprice) * 100) / 100);
+	const updatePushAmount = function(
+		target_amount: HTMLElement, target_noun: HTMLElement, money: number
+	) {
+		target_amount.innerHTML = (
+			(Math.round((money / pushprice) * 100) / 100).toString()
+		);
 		target_noun.innerHTML = ((money == pushprice) ? " push" : " pushes");
 	}
 
@@ -179,7 +182,7 @@ function onCycle() {
 		paypal.Buttons(order).render(button_selector);
 		amount.onchange = function() {
 			const value_from_customer = clampNumber(amount);
-			updatePushAmount(push_amount, push_noun, amount.value);
+			updatePushAmount(push_amount, push_noun, Number(amount.value));
 			amount.value = formatNumber(value_from_customer, 2);
 
 			if(!discount) {
@@ -187,14 +190,17 @@ function onCycle() {
 			}
 
 			const discount_offer = discount.options[discount.selectedIndex];
-			const discount_fraction = discount_offer.dataset.fraction;
+			const discount_fraction = Number(discount_offer.dataset.fraction);
 			if(discount_offer.index === 0) {
 				discount_breakdown.hidden = true;
 			} else {
 				discount_breakdown.hidden = false;
-				discount_sponsor.innerHTML = discount_offer.dataset.name;
+				discount_sponsor.innerHTML = discount_offer.dataset.name!;
 				const roundup_value = discountRoundupValue(
-					amount.max, amount.value, pushprice, discount_fraction
+					Number(amount.max),
+					Number(amount.value),
+					pushprice,
+					discount_fraction
 				)
 				updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
 				roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
@@ -211,7 +217,7 @@ function onCycle() {
 		paypal.Buttons(subscription).render(button_selector);
 		amount.onchange = function() {
 			amount.value = formatNumber(amount, 0);
-			updatePushAmount(push_amount, push_noun, amount.value);
+			updatePushAmount(push_amount, push_noun, Number(amount.value));
 		}
 		amount.min = 1;
 		amount.step = 1;

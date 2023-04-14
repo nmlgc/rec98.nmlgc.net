@@ -583,8 +583,8 @@ class ReC98Video extends HTMLElement {
 		}
 		// ---------------
 
-		let lastChild = null;
-		let requested = null;
+		let lastChild: (number | null) = null;
+		let requested: (number | null) = null;
 
 		if(this.videos.length >= 2) {
 			this.eTabSwitcher = new ReC98TabSwitcher((i) => {

@@ -29,7 +29,7 @@ function formatCurrency(cents: number) {
 var externals = {};
 var consent_ids = {};
 
-function externalRegister(day, target, url) {
+function externalRegister(day: string, target: string, url: string) {
 	const hostname = new URL(url).hostname;
 	const target_id = `${day}-${target}`;
 	const consent_id = `${day}-consent`;
@@ -60,12 +60,14 @@ function externalRegister(day, target, url) {
 	externals[hostname][target_id] = url;
 }
 
-function externalEnable(hostname) {
+function externalEnable(hostname: string) {
 	for(let target_id in externals[hostname]) {
-		document.getElementById(target_id).src = externals[hostname][target_id];
+		(document.getElementById(target_id) as HTMLVideoElement).src = (
+			externals[hostname][target_id]
+		);
 	}
 	for(let consent_id of consent_ids[hostname]) {
-		document.getElementById(consent_id).hidden = true;
+		document.getElementById(consent_id)!.hidden = true;
 	}
 }
 // -------------------------

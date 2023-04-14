@@ -1,19 +1,18 @@
 "use strict";
 
 const metric = document.getElementById("metric") as HTMLSelectElement;
+const goal = document.getElementById("goal") as HTMLInputElement;
+const onetime = document.getElementById("onetime") as HTMLInputElement;
 
-const goal = document.getElementById("goal");
-const info = document.getElementById("info");
-const info_text = document.getElementById("info_text");
+const info = document.getElementById("info")!;
+const info_text = document.getElementById("info_text")!;
 
-const micro_container = document.getElementById("micro_container");
-
+const micro_container = document.getElementById("micro_container")!;
 const micro = document.getElementById("micro") as HTMLInputElement;
-
-const micro_available = document.getElementById("micro_available");
+const micro_available = document.getElementById("micro_available")!;
 
 let micro_previously_checked = false;
-function handleSelect(option) {
+function handleSelect(option: HTMLOptionElement) {
 	const goal_mandatory = option.getAttribute("data-goal-mandatory");
 	const message = option.getAttribute("data-info");
 	if(message) {

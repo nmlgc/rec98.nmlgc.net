@@ -3,12 +3,12 @@
 // Currency
 // --------
 const integerNumFmt = new Intl.NumberFormat(
-	navigator.language || navigator.userLanguage,
+	navigator.language || navigator['userLanguage'],
 	{ style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }
 )
 
 const fractionNumFmt = new Intl.NumberFormat(
-	navigator.language || navigator.userLanguage,
+	navigator.language || navigator['userLanguage'],
 	{ style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }
 )
 

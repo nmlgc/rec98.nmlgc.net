@@ -18,7 +18,7 @@ function handleSelect(option: HTMLOptionElement) {
 	if(message) {
 		metric.classList.add("info");
 		info_text.innerHTML = message;
-		info.style.display = null;
+		info.style.removeProperty("display");
 	} else {
 		metric.classList.remove("info");
 		info.style.display = "none";

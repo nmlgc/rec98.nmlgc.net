@@ -166,7 +166,7 @@ function onCycle() {
 	let push_amount = document.getElementById("push_amount")!;
 	let push_noun = document.getElementById("push_noun")!;
 
-	const pushprice = (push_amount.dataset.price! / 100);
+	const pushprice = (Number(push_amount.dataset.price) / 100);
 
 	const updatePushAmount = function(
 		target_amount: HTMLElement, target_noun: HTMLElement, money: number
@@ -206,8 +206,8 @@ function onCycle() {
 				roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
 			}
 		}
-		amount.min = 1.00;
-		amount.step = 0.01;
+		amount.min = "1.00";
+		amount.step = "0.01";
 
 		if(discount) {
 			discount.disabled = false;
@@ -219,8 +219,8 @@ function onCycle() {
 			amount.value = formatNumber(amount, 0);
 			updatePushAmount(push_amount, push_noun, Number(amount.value));
 		}
-		amount.min = 1;
-		amount.step = 1;
+		amount.min = "1";
+		amount.step = "1";
 
 		if(discount) {
 			discount.disabled = true;

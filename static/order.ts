@@ -18,6 +18,9 @@ const micro = document.getElementById("micro") as HTMLInputElement;
 const micro_available = document.getElementById("micro_available")!;
 
 const amount = document.getElementById("amount") as HTMLInputElement;
+const push_amount = document.getElementById("push_amount")!;
+const push_noun = document.getElementById("push_noun")!;
+
 const discount = document.getElementById("discount") as HTMLSelectElement;
 const discount_breakdown = document.getElementById("discount_breakdown")!;
 const discount_sponsor = document.getElementById("discount_sponsor")!;
@@ -26,6 +29,8 @@ const roundup_pushes = document.getElementById("roundup_pushes")!;
 const roundup_noun = document.getElementById("roundup_noun")!;
 
 const error = document.getElementById("error")!;
+
+const pushprice = (Number(push_amount.dataset.price) / 100);
 
 function HTMLSupportMail() {
 	return `
@@ -90,51 +95,47 @@ function isOneTime() {
 	return onetime.checked;
 }
 
-function onCycle() {
-	const push_amount = document.getElementById("push_amount")!;
-	const push_noun = document.getElementById("push_noun")!;
+function updatePushAmount(
+	target_amount: HTMLElement, target_noun: HTMLElement, money: number
+) {
+	target_amount.innerHTML = (
+		(Math.round((money / pushprice) * 100) / 100).toString()
+	);
+	target_noun.innerHTML = ((money == pushprice) ? " push" : " pushes");
+}
 
-	const pushprice = (Number(push_amount.dataset.price) / 100);
-
-	const updatePushAmount = function(
-		target_amount: HTMLElement, target_noun: HTMLElement, money: number
-	) {
-		target_amount.innerHTML = (
-			(Math.round((money / pushprice) * 100) / 100).toString()
-		);
-		target_noun.innerHTML = ((money == pushprice) ? " push" : " pushes");
-	}
-
+function onAmountChange() {
 	const onetime = isOneTime();
 
-	amount.onchange = () => {
-		const val = (parseFloat(amount.value) || 0); // could be NaN
-		const min = parseFloat(amount.min);
-		const max = parseFloat(amount.max);
-		amount.value = Math.max(Math.min(val, max), min).toFixed(
-			(onetime ? 2 : 0)
-		);
-		updatePushAmount(push_amount, push_noun, Number(amount.value));
+	const val = (parseFloat(amount.value) || 0); // could be NaN
+	const min = parseFloat(amount.min);
+	const max = parseFloat(amount.max);
+	amount.value = Math.max(Math.min(val, max), min).toFixed(
+		(onetime ? 2 : 0)
+	);
+	updatePushAmount(push_amount, push_noun, Number(amount.value));
 
-		if(!onetime || !discount) {
-			return;
-		}
-
-		const discount_offer = discount.options[discount.selectedIndex];
-		const discount_fraction = Number(discount_offer.dataset.fraction);
-		if(discount_offer.index === 0) {
-			discount_breakdown.hidden = true;
-		} else {
-			discount_breakdown.hidden = false;
-			discount_sponsor.innerHTML = discount_offer.dataset.name!;
-			const roundup_value = discountRoundupValue(
-				max, Number(amount.value), pushprice, discount_fraction
-			)
-			updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
-			roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
-		}
+	if(!onetime || !discount) {
+		return;
 	}
 
+	const discount_offer = discount.options[discount.selectedIndex];
+	const discount_fraction = Number(discount_offer.dataset.fraction);
+	if(discount_offer.index === 0) {
+		discount_breakdown.hidden = true;
+	} else {
+		discount_breakdown.hidden = false;
+		discount_sponsor.innerHTML = discount_offer.dataset.name!;
+		const roundup_value = discountRoundupValue(
+			max, Number(amount.value), pushprice, discount_fraction
+		)
+		updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
+		roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
+	}
+}
+
+function onCycle() {
+	const onetime = isOneTime();
 	if(onetime) {
 		amount.min = "1.00";
 		amount.step = "0.01";
@@ -153,7 +154,7 @@ function onCycle() {
 			discount_breakdown.hidden = true;
 		}
 	}
-	amount.onchange();
+	onAmountChange();
 	paypalOnCycle(onetime);
 }
 
@@ -207,5 +208,6 @@ async function sendIncoming(provider_session: string) {
 
 window.onload = () => {
 	handleSelect(metric.options[metric.selectedIndex]);
+	amount.onchange = onAmountChange;
 	onCycle();
 }

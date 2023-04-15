@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -311,9 +312,15 @@ func measureRequestTime(next http.Handler) http.Handler {
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatalf("Usage: %s <ReC98 repository path/URL>\n", os.Args[0])
+	domainString := os.Getenv("DOMAIN")
+	if len(os.Args) < 2 || domainString == "" {
+		log.Fatalf(
+			"Usage: DOMAIN=<public URL> %s <ReC98 repository path/URL>\n",
+			os.Args[0],
+		)
 	}
+	domain, err := url.ParseRequestURI(domainString)
+	FatalIf(err)
 
 	// Concurrent initialization
 	// -------------------------
@@ -398,7 +405,7 @@ func main() {
 	}).AutogenerateTags(&repo)
 	feedHandler := FeedHandler{
 		Blog:     blog,
-		SiteURL:  "https://rec98.nmlgc.net",
+		SiteURL:  domain.String(),
 		BlogPath: "/blog",
 	}
 	// ----

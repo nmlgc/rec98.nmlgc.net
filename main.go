@@ -440,8 +440,7 @@ func main() {
 		r.Handle("/thankyou", pagesHandler("thankyou.html"))
 
 		if paypal != nil {
-			incomingHandler := transactionIncomingHandler(paypal)
-			r.Handle("/api/transaction-incoming", incomingHandler)
+			r.Handle("/api/paypal/incoming", PaypalIncomingHandler(paypal))
 		}
 	} else {
 		log.Println("`provider_auth` table is empty, disabling order pages.")

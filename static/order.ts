@@ -198,8 +198,8 @@ function endTransaction() {
 	document.querySelector("html")!.classList.remove("wait");
 }
 
-async function sendIncoming(provider_session: string) {
-	let response = await fetch('/api/transaction-incoming', {
+async function sendIncoming(provider: string, provider_session = "") {
+	const response = await fetch(`/api/${provider}/incoming`, {
 		method: 'post',
 		headers: {
 			'content-type': 'application/json'

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -66,8 +67,14 @@ func processSubscription(in *Incoming, order *paypal.Order) error {
 	return nil
 }
 
-func transactionIncomingHandler(client *paypal.Client) http.Handler {
+func PaypalIncomingHandler(client *paypal.Client) http.Handler {
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+		if client == nil {
+			respondWithError(wr, errors.New(
+				"server is not authenticated with PayPal",
+			))
+			return
+		}
 		if req.Method != "POST" {
 			http.Redirect(wr, req, "/order", http.StatusSeeOther)
 			return

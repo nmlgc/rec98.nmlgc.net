@@ -144,7 +144,7 @@
 			<hr>
 			<div id="provider_label">
 				Pick a payment provider: <small>
-					(Will load remote content from the respective domain.)
+					(Will load remote content from or redirect to the respective domain.)
 				</small>
 			</div>
 			<div id="providers">
@@ -162,6 +162,12 @@
 						</span>
 					</button>
 				</div>
+				<button type="button" onclick='stripe(this, "stripe_label");'>
+					{{HTML_Emoji "stripe"}}
+					<span id="stripe_label">
+						Stripe <code>(stripe.com)</code>
+					</span>
+				</button>
 			</div>
 			<hr>
 			<div id="error" hidden></div>
@@ -169,6 +175,7 @@
 		<span></span>
 	</aside>
 	<script src="{{call $.StaticFileURL "order.js"}}"></script>
+	<script src="{{call $.StaticFileURL "stripe.js"}}"></script>
 	<aside>
 		<span class="icon-cell">❓</span>
 		<div>

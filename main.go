@@ -418,6 +418,7 @@ func main() {
 			"PayPal_ClientID": func() string { return paypal.ClientID },
 		})
 	}
+	stripe := NewStripeClient(domain, "/api/stripe")
 	// -----------------
 
 	pages = template.Must(pages.ParseGlob("*.html"))
@@ -466,6 +467,16 @@ func main() {
 		if paypal != nil {
 			r.Methods("POST").Path("/api/paypal/incoming").
 				Handler(incomingHandler(PaypalIncomingHandler(paypal)))
+		}
+		if stripe != nil {
+			r.Methods("POST").Path(stripe.RouteAPIIncoming).
+				Handler(incomingHandler(stripe.HandleIncoming))
+
+			// Yup, Stripe does in fact send a GET request to an endpoint that
+			// is highly likely to change a server's database…
+			r.Handle(
+				stripe.RouteAPISuccess, http.HandlerFunc(stripe.HandleSuccess),
+			)
 		}
 	} else {
 		log.Println("`provider_auth` table is empty, disabling order pages.")

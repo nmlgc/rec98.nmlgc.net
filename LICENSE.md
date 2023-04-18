@@ -76,6 +76,10 @@ to contact me, and we might work something out.
 
 * `static/video.woff2` (a derivative of [Catrinity](https://catrinity-font.de))
 
+## [Stripe's Mark Usage Terms]
+
+* `static/emoji-stripe.svg`
+
 ## No license
 
 All other files not covered by any of the licenses above. These include
@@ -94,3 +98,4 @@ All other files not covered by any of the licenses above. These include
 [Twitter Trademark Guidelines]: https://about.twitter.com/en/who-we-are/brand-toolkit
 [alternate explanation of TH01's unused and glitch stages]: https://tcrf.net/index.php?title=Touhou_Reiiden:_The_Highly_Responsive_to_Prayers&oldid=1286863#Unused_Levels
 [SIL Open Font License, Version 1.1]: https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web
+[Stripe's Mark Usage Terms]: https://stripe.com/legal/marks

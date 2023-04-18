@@ -76,7 +76,7 @@ func transactionIncomingHandler(client *paypal.Client) http.Handler {
 			return
 		}
 
-		order, err := client.GetOrder(context.Background(), in.PayPalID)
+		order, err := client.GetOrder(context.Background(), in.ProviderSession)
 		if err != nil {
 			respondWithError(wr, err)
 			return

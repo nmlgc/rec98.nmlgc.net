@@ -295,7 +295,6 @@ type FreeTime struct {
 // Incoming represents an unprocessed order coming in from the client side.
 type Incoming struct {
 	// Retrieved via the POST body
-	PayPalID string
 	CustName string
 	CustURL  string
 	Metric   string
@@ -309,6 +308,9 @@ type Incoming struct {
 	Time  *time.Time
 	// Will only render the associated discount reserve as part of the cap.
 	ConfirmedAndWaitingForDiscount bool
+
+	// Session ID assigned by the payment provider
+	ProviderSession string
 }
 
 // TagDescription bundles a blog tag with a descriptive sentence.
@@ -411,7 +413,7 @@ func (i *tIncoming) Insert(new *Incoming) error {
 	}
 	for oldIn := range i.data {
 		// Duplicates?
-		if i.data[oldIn].PayPalID == new.PayPalID {
+		if i.data[oldIn].ProviderSession == new.ProviderSession {
 			return eIncomingInsertError{}
 		}
 	}

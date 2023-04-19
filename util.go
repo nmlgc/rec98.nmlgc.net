@@ -59,10 +59,14 @@ func RightPad(s string, paddedLen int) string {
 // algorithm.
 type CryptHash [sha512.Size]byte
 
+// CryptHashOfSlice hashes the given byte slice using a current
+// cryptographically secure algorithm.
+var CryptHashOfSlice = sha512.Sum512
+
 // CryptHashOfFile hashes the file with the given name using a current
 // cryptographically secure algorithm.
 func CryptHashOfFile(fn string) CryptHash {
 	f, err := os.ReadFile(fn)
 	FatalIf(err)
-	return sha512.Sum512(f)
+	return CryptHashOfSlice(f)
 }

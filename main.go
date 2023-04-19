@@ -477,6 +477,9 @@ func main() {
 			r.Handle(
 				stripe.RouteAPISuccess, http.HandlerFunc(stripe.HandleSuccess),
 			)
+
+			r.Methods("POST").Path(stripe.RouteAPICancel).
+				Handler(http.HandlerFunc(stripe.HandleCancel))
 		}
 	} else {
 		log.Println("`provider_auth` table is empty, disabling order pages.")

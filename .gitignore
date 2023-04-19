@@ -5,5 +5,6 @@ blog/video/*
 cache/
 db/incoming.tsv
 db/provider_auth.tsv
+db/stripe_subs.tsv
 *.js
 *.js.map

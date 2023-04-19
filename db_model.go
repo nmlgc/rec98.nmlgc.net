@@ -348,6 +348,12 @@ type ProviderAuth struct {
 	Secret   string
 }
 
+// StripeSub contains the key to cancel a Stripe subscription.
+type StripeSub struct {
+	Salt string
+	ID   string
+}
+
 type tCustomers []*Customer
 type tTransactions struct {
 	All    []*Transaction
@@ -368,6 +374,13 @@ type tIncoming struct {
 }
 
 func (t *tIncoming) Name() string { return "incoming" }
+
+type tStripeSubs struct {
+	sync.Mutex
+	data map[string]string
+}
+
+func (t *tStripeSubs) Name() string { return "stripe_subs" }
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
@@ -440,6 +453,27 @@ func (i *tIncoming) Insert(new *Incoming) error {
 	})
 }
 
+func (t *tStripeSubs) ToSlice() (ret []*StripeSub) {
+	for salt, id := range t.data {
+		ret = append(ret, &StripeSub{Salt: salt, ID: id})
+	}
+	return
+}
+
+func (t *tStripeSubs) Insert(salt string, id string) error {
+	return TableRWOp(&stripeSubs, func() ([]*StripeSub, error) {
+		t.data[salt] = id
+		return t.ToSlice(), nil
+	})
+}
+
+func (t *tStripeSubs) Delete(salt string) error {
+	return TableRWOp(&stripeSubs, func() ([]*StripeSub, error) {
+		delete(t.data, salt)
+		return t.ToSlice(), nil
+	})
+}
+
 var customers = tCustomers{}
 var transactions = tTransactions{}
 var pushprices = tPushPrices{}
@@ -448,6 +482,7 @@ var incoming = tIncoming{}
 var blogTags = tBlogTags{}
 var tagDescriptions = tTagDescriptions{}
 var providerAuth = make(map[string]ProviderAuth)
+var stripeSubs = tStripeSubs{data: make(map[string]string)}
 
 /// -------
 
@@ -567,6 +602,7 @@ func init() {
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
 	loadTSV(&providerAuths, "provider_auth", gocsv.UnmarshalCSV)
+	loadTSV(&stripeSubs.data, stripeSubs.Name(), gocsv.UnmarshalCSVToMap)
 
 	transactions.Scoped = make(map[IDScope][]*Transaction)
 	for _, transaction := range transactions.All {

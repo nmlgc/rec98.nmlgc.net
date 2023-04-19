@@ -1,15 +1,20 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/stripe/stripe-go/v74"
 	"github.com/stripe/stripe-go/v74/checkout/session"
+	"github.com/stripe/stripe-go/v74/subscription"
 )
 
 const STRIPE_SESSION_CACHE = "stripe_sessions.gob"
@@ -19,6 +24,7 @@ type StripeClient struct {
 	URLCancel        string
 	RouteAPIIncoming string
 	RouteAPISuccess  string
+	RouteAPICancel   string
 	sync.Mutex
 }
 
@@ -40,7 +46,63 @@ func NewStripeClient(domain *url.URL, apiPrefix string) *StripeClient {
 		URLCancel:        urlCancel.String(),
 		RouteAPIIncoming: (apiPrefix + "/incoming"),
 		RouteAPISuccess:  routeAPISuccess,
+		RouteAPICancel:   (apiPrefix + "/cancel"),
 	}
+}
+
+func stripeSaltedSubID(salt string, subID string) string {
+	hash := CryptHashOfSlice([]byte(subID + salt))
+	ret := base64.StdEncoding.EncodeToString(hash[:])
+	return ret
+}
+
+// Sub accesses encrypted subscription data.
+func (c *StripeClient) Sub(salt string) (string, error) {
+	saltedSubID, ok := stripeSubs.data[salt]
+	if !ok {
+		return "", errors.New("unknown subscription")
+	}
+	return saltedSubID, nil
+}
+
+func (c *StripeClient) subIDVerify(salt string, subID string) error {
+	expected, err := c.Sub(salt)
+	if err != nil {
+		return err
+	}
+	if expected != stripeSaltedSubID(salt, subID) {
+		return errors.New("unknown combination of salt and subscription ID")
+	}
+	return nil
+}
+
+func (c *StripeClient) subDataFromForm(req *http.Request) (salt string, subID string, err error) {
+	if err := req.ParseForm(); err != nil {
+		return "", "", err
+	}
+	salt = strings.TrimSpace(req.PostForm.Get("salt"))
+	subID = strings.TrimSpace(req.PostForm.Get("sub_id"))
+	if (len(salt) == 0) || (len(subID) == 0) {
+		return "", "", errors.New("missing form data")
+	}
+	return salt, subID, c.subIDVerify(salt, subID)
+}
+
+type stripeSessionView struct {
+	SubID string
+}
+
+func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionView, error) {
+	s, err := session.Get(sessionID, nil)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.subIDVerify(salt, s.Subscription.ID); err != nil {
+		return nil, err
+	}
+	return &stripeSessionView{
+		SubID: s.Subscription.ID,
+	}, nil
 }
 
 func (c *StripeClient) HandleIncoming(wr http.ResponseWriter, req *http.Request, in *Incoming) {
@@ -135,7 +197,47 @@ func (c *StripeClient) HandleSuccess(wr http.ResponseWriter, req *http.Request) 
 		respondWithError(wr, err)
 		return
 	}
+
+	if s.Subscription != nil {
+		saltBytes := make([]byte, 8)
+		salt := ""
+		ok = true
+		for ok {
+			_, err := rand.Read(saltBytes)
+			if err != nil {
+				respondWithError(wr, fmt.Errorf(
+					"error generating cancellation key for subscription: %v",
+					err,
+				))
+				return
+			}
+			salt = base64.URLEncoding.EncodeToString(saltBytes)
+			_, ok = stripeSubs.data[salt]
+		}
+		stripeSubs.Insert(salt, stripeSaltedSubID(salt, s.Subscription.ID))
+	}
+
 	delete(sessions, sessionID)
 	CacheSave(STRIPE_SESSION_CACHE, sessions)
 	http.Redirect(wr, req, "/thankyou", http.StatusSeeOther)
+}
+
+func (c *StripeClient) HandleCancel(wr http.ResponseWriter, req *http.Request) {
+	salt, subID, err := c.subDataFromForm(req)
+	if err != nil {
+		respondWithError(wr, err)
+		return
+	}
+	if _, err := subscription.Cancel(subID, nil); err != nil {
+		respondWithError(wr, err)
+		return
+	}
+	if err := stripeSubs.Delete(salt); err != nil {
+		//lint:ignore ST1005 People might read this one.
+		respondWithError(wr, fmt.Errorf(
+			"Failed to remove the subscription from the server: %v. It was properly canceled though.",
+			err,
+		))
+	}
+	wr.WriteHeader(http.StatusNoContent)
 }

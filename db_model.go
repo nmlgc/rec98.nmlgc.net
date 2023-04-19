@@ -152,6 +152,27 @@ func (d *LocalDateStamp) UnmarshalCSV(s string) (err error) {
 
 /// ------------
 
+type Table interface {
+	Name() string
+}
+
+type TableRW interface {
+	Table
+	sync.Locker
+}
+
+// TableRWOp runs the given operation on a read-write table, and serializes the
+// table back to disk on success.
+func TableRWOp[T any](table TableRW, op func() (data []*T, err error)) error {
+	table.Lock()
+	defer table.Unlock()
+	data, err := op()
+	if err != nil {
+		return err
+	}
+	return saveTSV(data, table.Name())
+}
+
 /// Schemas
 /// -------
 
@@ -342,9 +363,11 @@ type tTagDescriptions struct {
 }
 
 type tIncoming struct {
-	data  []*Incoming
-	mutex sync.Mutex
+	sync.Mutex
+	data []*Incoming
 }
+
+func (t *tIncoming) Name() string { return "incoming" }
 
 func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
@@ -401,20 +424,20 @@ func (e eIncomingInsertError) Error() string {
 }
 
 func (i *tIncoming) Insert(new *Incoming) error {
-	i.mutex.Lock()
-	defer i.mutex.Unlock()
-	// No timestamp?
-	if new.Time == nil {
-		return eIncomingInsertError{}
-	}
-	for oldIn := range i.data {
-		// Duplicates?
-		if i.data[oldIn].ProviderSession == new.ProviderSession {
-			return eIncomingInsertError{}
+	return TableRWOp(&incoming, func() ([]*Incoming, error) {
+		// No timestamp?
+		if new.Time == nil {
+			return nil, eIncomingInsertError{}
 		}
-	}
-	i.data = append(i.data, new)
-	return saveTSV(i.data, "incoming")
+		for oldIn := range i.data {
+			// Duplicates?
+			if i.data[oldIn].ProviderSession == new.ProviderSession {
+				return nil, eIncomingInsertError{}
+			}
+		}
+		i.data = append(i.data, new)
+		return i.data, nil
+	})
 }
 
 var customers = tCustomers{}
@@ -540,7 +563,7 @@ func init() {
 	loadTSV(&tsvPushes, "pushes", gocsv.UnmarshalCSV)
 	loadTSV(&pushprices, "pushprices", gocsv.UnmarshalCSV)
 	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
-	loadTSV(&incoming.data, "incoming", gocsv.UnmarshalCSV)
+	loadTSV(&incoming.data, incoming.Name(), gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
 	loadTSV(&providerAuths, "provider_auth", gocsv.UnmarshalCSV)

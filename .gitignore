@@ -4,6 +4,6 @@ blog/video/*
 !blog/video/zmbv/
 cache/
 db/incoming.tsv
-db/paypal_auth.tsv
+db/provider_auth.tsv
 *.js
 *.js.map

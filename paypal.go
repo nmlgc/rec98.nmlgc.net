@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/plutov/paypal/v4"
 )
 
 func NewPaypalClient() *paypal.Client {
-	auth := paypal_auth
-	if !auth.Initialized() {
+	auth, ok := providerAuth["paypal"]
+	if !ok {
 		return nil
 	}
 	client, err := paypal.NewClient(auth.ClientID, auth.Secret, auth.APIBase)
@@ -19,6 +20,7 @@ func NewPaypalClient() *paypal.Client {
 
 	_, err = client.GetAccessToken(context.Background())
 	FatalIf(err)
+	log.Println("Using PayPal auth", auth)
 	return client
 }
 

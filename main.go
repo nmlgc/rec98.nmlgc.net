@@ -223,9 +223,6 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
 	"ReC98_REBaselineRev":    REBaselineRev,
-
-	// PayPal, safe
-	"PayPal_ClientID": func() string { return paypal_auth.ClientID },
 })
 
 // pagesExecute wraps template execution on [pages], logging any errors
@@ -382,6 +379,16 @@ func main() {
 	}
 	// ----
 
+	// Payment providers
+	// -----------------
+	paypal := <-paypalClient
+	if paypal != nil {
+		pages.Funcs(map[string]interface{}{
+			"PayPal_ClientID": func() string { return paypal.ClientID },
+		})
+	}
+	// -----------------
+
 	pages = template.Must(pages.ParseGlob("*.html"))
 
 	// Badge data
@@ -421,11 +428,16 @@ func main() {
 	)
 	r.Handle("/progress", pagesHandler("progress.html"))
 	r.Handle("/progress/{rev}", pagesHandler("progress_for.html"))
-	if paypal_auth.Initialized() {
-		incomingHandler := transactionIncomingHandler(<-paypalClient)
-		r.Handle("/api/transaction-incoming", incomingHandler)
+	if len(providerAuth) > 0 {
 		r.Handle("/order", pagesHandler("order.html"))
 		r.Handle("/thankyou", pagesHandler("thankyou.html"))
+
+		if paypal != nil {
+			incomingHandler := transactionIncomingHandler(paypal)
+			r.Handle("/api/transaction-incoming", incomingHandler)
+		}
+	} else {
+		log.Println("`provider_auth` table is empty, disabling order pages.")
 	}
 	r.Handle("/donate", pagesHandler("donate.html"))
 	r.Handle("/badges", badger.Fallback)

@@ -319,16 +319,12 @@ type TagDescription struct {
 	Desc string
 }
 
-// PayPalAuth collects all data required for authenticating with PayPal.
-type PayPalAuth struct {
+// ProviderAuth collects all data required for authenticating with payment
+// providers.
+type ProviderAuth struct {
 	APIBase  string
 	ClientID string
 	Secret   string
-}
-
-// Initialized returns whether we have PayPal credentials.
-func (p PayPalAuth) Initialized() bool {
-	return p.APIBase != ""
 }
 
 type tCustomers []*Customer
@@ -428,7 +424,7 @@ var freetime = tFreeTime{}
 var incoming = tIncoming{}
 var blogTags = tBlogTags{}
 var tagDescriptions = tTagDescriptions{}
-var paypal_auth = PayPalAuth{}
+var providerAuth = make(map[string]ProviderAuth)
 
 /// -------
 
@@ -486,6 +482,11 @@ func NewPushes(transactions tTransactions, tsv []*pushTSV, repo *Repository) (re
 	return
 }
 
+type providerAuthTSV struct {
+	Provider string
+	ProviderAuth
+}
+
 // --------------------
 
 func tsvPath(table string) string {
@@ -529,7 +530,7 @@ func saveTSV(slice interface{}, table string) error {
 
 func init() {
 	var err error
-	var paypalAuths []*PayPalAuth
+	var providerAuths []*providerAuthTSV
 
 	devLocation, err = time.LoadLocation(devLocationName)
 	FatalIf(err)
@@ -542,7 +543,7 @@ func init() {
 	loadTSV(&incoming.data, "incoming", gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)
-	loadTSV(&paypalAuths, "paypal_auth", gocsv.UnmarshalCSV)
+	loadTSV(&providerAuths, "provider_auth", gocsv.UnmarshalCSV)
 
 	transactions.Scoped = make(map[IDScope][]*Transaction)
 	for _, transaction := range transactions.All {
@@ -557,10 +558,7 @@ func init() {
 		tagDescriptions.Map[td.Tag] = td.Desc
 	}
 
-	if len(paypalAuths) > 0 {
-		paypal_auth = *paypalAuths[0]
-		log.Println("Using PayPal auth", paypal_auth)
-	} else {
-		log.Println("paypal_auth table is empty, disabling integration")
+	for _, auth := range providerAuths {
+		providerAuth[auth.Provider] = auth.ProviderAuth
 	}
 }

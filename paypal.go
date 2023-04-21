@@ -75,10 +75,6 @@ func PaypalIncomingHandler(client *paypal.Client) http.Handler {
 			))
 			return
 		}
-		if req.Method != "POST" {
-			http.Redirect(wr, req, "/order", http.StatusSeeOther)
-			return
-		}
 		var in Incoming
 		err := json.NewDecoder(req.Body).Decode(&in)
 		if err != nil {

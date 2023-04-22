@@ -1,4 +1,8 @@
-{{$cap := DB_CapCurrent true}}
+{{$cap := DB_CapCurrent true -}}
+{{$stripe_session := "" -}}
+{{if .Vars.stripeSession -}}
+	{{$stripe_session = Stripe_Session .Vars.stripeSession .Vars.salt -}}
+{{end}}
 
 {{- template "cap.html" $cap -}}
 <h2>Thank you!</h2>
@@ -11,4 +15,13 @@
 </p>{{with .PostFormValue "cycle"}}{{if ne . "onetime"}}<p>
 	You can cancel your subscription at any time through PayPal's web
 	interface.
-</p>{{end}}{{end}}
+</p>{{end}}{{end}}{{with $stripe_session -}}
+	<h3>{{HTML_Emoji "stripe"}} How to cancel</h3>
+	<ol>
+		<li>Visit
+		<a href="{{.URLPageManage}}"><code>{{.URLPageManage}}</code></a></li>
+		<li>Enter <code>{{.SubID}}</code> to confirm</li>
+	</ol><p>
+		Your confirmation email will include this information as well.
+	</p>
+{{end}}

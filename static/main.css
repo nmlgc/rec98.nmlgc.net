@@ -828,7 +828,8 @@ table.comparison th:not(:last-child) {
 	font-size: 62.5%;
 }
 
-#order form #providers button:disabled {
+#order form #providers button:disabled,
+#customer_stripe form button:disabled {
 	border-color: transparent;
 	background-color: transparent;
 	color: green;

@@ -20,15 +20,18 @@ import (
 const STRIPE_SESSION_CACHE = "stripe_sessions.gob"
 
 type StripeClient struct {
-	URLSuccess       string
-	URLCancel        string
-	RouteAPIIncoming string
-	RouteAPISuccess  string
-	RouteAPICancel   string
+	URLSuccess        string
+	URLCancel         string
+	URLPageManage     string
+	RoutePageManage   string
+	RoutePageThankYou string
+	RouteAPIIncoming  string
+	RouteAPISuccess   string
+	RouteAPICancel    string
 	sync.Mutex
 }
 
-func NewStripeClient(domain *url.URL, apiPrefix string) *StripeClient {
+func NewStripeClient(domain *url.URL, apiPrefix string, pagePrefix string) *StripeClient {
 	auth, ok := providerAuth["stripe"]
 	if !ok {
 		return nil
@@ -36,17 +39,22 @@ func NewStripeClient(domain *url.URL, apiPrefix string) *StripeClient {
 	stripe.Key = auth.Secret
 
 	routeAPISuccess := apiPrefix + "/success"
+	routePageManage := pagePrefix
 	urlSuccess := domain.JoinPath(routeAPISuccess)
 	urlCancel := domain.JoinPath("/order")
+	urlPageManage := domain.JoinPath(routePageManage)
 	urlSuccess.RawQuery = "session_id={CHECKOUT_SESSION_ID}"
 
 	log.Println("Using Stripe auth", auth.Secret)
 	return &StripeClient{
-		URLSuccess:       urlSuccess.String(),
-		URLCancel:        urlCancel.String(),
-		RouteAPIIncoming: (apiPrefix + "/incoming"),
-		RouteAPISuccess:  routeAPISuccess,
-		RouteAPICancel:   (apiPrefix + "/cancel"),
+		URLSuccess:        urlSuccess.String(),
+		URLCancel:         urlCancel.String(),
+		URLPageManage:     urlPageManage.String(),
+		RoutePageManage:   pagePrefix,
+		RoutePageThankYou: (pagePrefix + "/thankyou"),
+		RouteAPIIncoming:  (apiPrefix + "/incoming"),
+		RouteAPISuccess:   routeAPISuccess,
+		RouteAPICancel:    (apiPrefix + "/cancel"),
 	}
 }
 
@@ -89,7 +97,8 @@ func (c *StripeClient) subDataFromForm(req *http.Request) (salt string, subID st
 }
 
 type stripeSessionView struct {
-	SubID string
+	SubID         string
+	URLPageManage string
 }
 
 func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionView, error) {
@@ -101,7 +110,8 @@ func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionVie
 		return nil, err
 	}
 	return &stripeSessionView{
-		SubID: s.Subscription.ID,
+		SubID:         s.Subscription.ID,
+		URLPageManage: (c.URLPageManage + "/" + salt),
 	}, nil
 }
 
@@ -198,6 +208,7 @@ func (c *StripeClient) HandleSuccess(wr http.ResponseWriter, req *http.Request) 
 		return
 	}
 
+	redirect := "/thankyou"
 	if s.Subscription != nil {
 		saltBytes := make([]byte, 8)
 		salt := ""
@@ -215,11 +226,13 @@ func (c *StripeClient) HandleSuccess(wr http.ResponseWriter, req *http.Request) 
 			_, ok = stripeSubs.data[salt]
 		}
 		stripeSubs.Insert(salt, stripeSaltedSubID(salt, s.Subscription.ID))
+
+		redirect = (c.RoutePageThankYou + "/" + sessionID + "/" + salt)
 	}
 
 	delete(sessions, sessionID)
 	CacheSave(STRIPE_SESSION_CACHE, sessions)
-	http.Redirect(wr, req, "/thankyou", http.StatusSeeOther)
+	http.Redirect(wr, req, redirect, http.StatusSeeOther)
 }
 
 func (c *StripeClient) HandleCancel(wr http.ResponseWriter, req *http.Request) {

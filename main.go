@@ -418,7 +418,16 @@ func main() {
 			"PayPal_ClientID": func() string { return paypal.ClientID },
 		})
 	}
-	stripe := NewStripeClient(domain, "/api/stripe")
+	stripe := NewStripeClient(domain, "/api/stripe", "/customer/stripe")
+	if stripe != nil {
+		pages.Funcs(map[string]interface{}{
+			"Stripe_Session":   stripe.Session,
+			"Stripe_SubVerify": stripe.Sub,
+			"Stripe_RouteAPICancel": func() string {
+				return stripe.RouteAPICancel
+			},
+		})
+	}
 	// -----------------
 
 	pages = template.Must(pages.ParseGlob("*.html"))
@@ -480,6 +489,15 @@ func main() {
 
 			r.Methods("POST").Path(stripe.RouteAPICancel).
 				Handler(http.HandlerFunc(stripe.HandleCancel))
+
+			r.Handle(
+				stripe.RoutePageThankYou+"/{stripeSession}/{salt}",
+				pagesHandler("thankyou.html"),
+			)
+			r.Handle(
+				stripe.RoutePageManage+"/{salt}",
+				pagesHandler("customer_stripe.html"),
+			)
 		}
 	} else {
 		log.Println("`provider_auth` table is empty, disabling order pages.")

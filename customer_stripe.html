@@ -1,0 +1,28 @@
+{{$_ := Stripe_SubVerify .Vars.salt}}
+
+<style>
+	.fields {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.5em;
+	}
+	#sub_id {
+		font-family: monospace;
+	}
+</style>
+
+<h2>{{HTML_Emoji "stripe"}} Cancel your Stripe subscription</h2>
+
+<form id="form_cancel" method="post">
+	<input type="hidden" name="salt" value="{{.Vars.salt}}">
+	<div class="fields">
+		<label for="sub_id">Subscription ID:</label>
+		<input type="text" name="sub_id" id="sub_id">
+	</div>
+	<p>
+		<button onclick="stripeCancel(this, '{{Stripe_RouteAPICancel}}')">
+			🛑 Cancel
+		</button>
+	</p>
+</form><hr /><p id="error"></p><p id="error"></p>
+<script src="{{call $.StaticFileURL "stripe.js"}}"></script>

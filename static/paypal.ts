@@ -46,11 +46,13 @@ let order = {
 	onClick: paypalValidate,
 };
 
-function paypalOnCycle(onetime: boolean) {
+cycle_callbacks.push((onetime: boolean) => {
 	let button_id = 'paypal-button-container';
 	let button_selector = '#' + button_id;
 	let button_container = document.getElementById(button_id)!;
 
 	button_container.innerHTML = "";
 	paypal.Buttons(onetime ? order : subscription).render(button_selector);
-}
+});
+
+onCycle();

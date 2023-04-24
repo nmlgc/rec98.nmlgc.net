@@ -134,6 +134,8 @@ function onAmountChange() {
 	}
 }
 
+const cycle_callbacks: Array<(onetime: boolean) => any> = [];
+
 function onCycle() {
 	const onetime = isOneTime();
 	if(onetime) {
@@ -155,7 +157,9 @@ function onCycle() {
 		}
 	}
 	onAmountChange();
-	paypalOnCycle(onetime);
+	for(const func of cycle_callbacks) {
+		func(onetime);
+	}
 }
 
 function validateForm() {

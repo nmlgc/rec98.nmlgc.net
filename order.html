@@ -3,9 +3,6 @@
 
 {{- template "cap.html" $cap -}}
 {{- if not $cap.Reached -}}
-	<script src="https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR">
-	</script>
-
 	<h2>Order</h2>
 	<aside>
 		<span class="icon-cell">🐶</span>
@@ -144,13 +141,34 @@
 						id="roundup_noun"></span></span>.
 				</span>
 			</div>
-			<div id="paypal-button-container"></div>
+			<hr>
+			<div id="provider_label">
+				Pick a payment provider: <small>
+					(Will load remote content from the respective domain.)
+				</small>
+			</div>
+			<div id="providers">
+				<div id="paypal_container">
+					<button type="button" onclick='
+						activateProvider(this, [
+							"https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR",
+							"{{call $.StaticFileURL "paypal.js"}}"
+						]);
+						document.getElementById("paypal_label").textContent = "Loading…"'
+					>
+						{{HTML_Emoji "paypal"}}
+						<span id="paypal_label">
+							PayPal <code>(paypal.com)</code>
+						</span>
+					</button>
+				</div>
+			</div>
+			<hr>
 			<div id="error" hidden></div>
 		</form>
 		<span></span>
 	</aside>
 	<script src="{{call $.StaticFileURL "order.js"}}"></script>
-	<script src="{{call $.StaticFileURL "paypal.js"}}"></script>
 	<aside>
 		<span class="icon-cell">❓</span>
 		<div>

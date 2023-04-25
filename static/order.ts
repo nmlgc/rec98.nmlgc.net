@@ -28,6 +28,8 @@ const roundup_amount = document.getElementById("roundup_amount")!;
 const roundup_pushes = document.getElementById("roundup_pushes")!;
 const roundup_noun = document.getElementById("roundup_noun")!;
 
+const provider_label = document.getElementById("provider_label")!;
+
 const error = document.getElementById("error")!;
 
 const pushprice = (Number(push_amount.dataset.price) / 100);
@@ -169,6 +171,22 @@ function validateForm() {
 		}
 	}
 	return true;
+}
+
+async function activateProvider(
+	button: HTMLButtonElement, scripts: Array<string> = [],
+) {
+	button.disabled = true;
+	for(const script of scripts) {
+		await new Promise((resolve) => {
+			const tag = document.createElement("script");
+			tag.src = script;
+			tag.onload = resolve;
+			button.appendChild(tag);
+		})
+	}
+	provider_label.hidden = true;
+	button.disabled = false;
 }
 
 function startTransaction() {

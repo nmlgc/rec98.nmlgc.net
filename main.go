@@ -55,16 +55,23 @@ func HTMLDate(t time.Time) template.HTML {
 func HTMLEmoji(emoji string) template.HTML {
 	fn := emoji
 	style := ""
+	ext := ".png"
 	switch emoji {
 	case "onricdennat":
 		fn = "tannedcirno"
 		style = `transform: scaleX(-1);`
+
+	// SVG icons
+	case "paypal":
+		fallthrough
+	case "stripe":
+		ext = ".svg"
 	}
 
 	if len(style) > 0 {
 		style = `style="` + style + `" `
 	}
-	url := staticHP.VersionURLFor("emoji-" + fn + ".png")
+	url := staticHP.VersionURLFor("emoji-" + fn + ext)
 	return template.HTML(fmt.Sprintf(
 		// Calculated from the default `font-size` times `--icon-width` or
 		// `--icon-height`.

@@ -47,7 +47,7 @@ let order = {
 };
 
 cycle_callbacks.push((onetime: boolean) => {
-	let button_id = 'paypal-button-container';
+	const button_id = 'paypal_container';
 	let button_selector = '#' + button_id;
 	let button_container = document.getElementById(button_id)!;
 

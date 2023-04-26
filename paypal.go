@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -67,21 +66,14 @@ func processSubscription(in *Incoming, order *paypal.Order) error {
 	return nil
 }
 
-func PaypalIncomingHandler(client *paypal.Client) http.Handler {
-	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+func PaypalIncomingHandler(client *paypal.Client) ProviderHandler {
+	return func(wr http.ResponseWriter, req *http.Request, in *Incoming) {
 		if client == nil {
 			respondWithError(wr, errors.New(
 				"server is not authenticated with PayPal",
 			))
 			return
 		}
-		var in Incoming
-		err := json.NewDecoder(req.Body).Decode(&in)
-		if err != nil {
-			respondWithError(wr, err)
-			return
-		}
-
 		order, err := client.GetOrder(context.Background(), in.ProviderSession)
 		if err != nil {
 			respondWithError(wr, err)
@@ -89,15 +81,15 @@ func PaypalIncomingHandler(client *paypal.Client) http.Handler {
 		}
 		switch in.Cycle {
 		case "onetime":
-			err = processOrder(&in, order)
+			err = processOrder(in, order)
 		case "monthly":
-			err = processSubscription(&in, order)
+			err = processSubscription(in, order)
 		}
 		if err != nil {
 			respondWithError(wr, err)
 		}
-		if err = incoming.Insert(&in); err != nil {
+		if err = incoming.Insert(in); err != nil {
 			respondWithError(wr, err)
 		}
-	})
+	}
 }

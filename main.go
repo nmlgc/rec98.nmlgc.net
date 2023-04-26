@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -283,6 +284,22 @@ func pagesHandler(template string) http.Handler {
 	})
 }
 
+type ProviderHandler = func(http.ResponseWriter, *http.Request, *Incoming)
+
+// incomingHandler wraps the given provider-specific payment processing handler
+// with common request validation and transaction parsing code.
+func incomingHandler(handler ProviderHandler) http.Handler {
+	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+		var in Incoming
+		err := json.NewDecoder(req.Body).Decode(&in)
+		if err != nil {
+			respondWithError(wr, err)
+			return
+		}
+		handler(wr, req, &in)
+	})
+}
+
 /// --------------
 
 func measureRequestTime(next http.Handler) http.Handler {
@@ -441,7 +458,7 @@ func main() {
 
 		if paypal != nil {
 			r.Methods("POST").Path("/api/paypal/incoming").
-				Handler(PaypalIncomingHandler(paypal))
+				Handler(incomingHandler(PaypalIncomingHandler(paypal)))
 		}
 	} else {
 		log.Println("`provider_auth` table is empty, disabling order pages.")

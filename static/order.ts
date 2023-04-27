@@ -199,7 +199,7 @@ function endTransaction() {
 }
 
 async function sendIncoming(provider: string, provider_session = "") {
-	const response = await fetch(`/api/${provider}/incoming`, {
+	const response = await fetchSane(`/api/${provider}/incoming`, {
 		method: 'post',
 		headers: {
 			'content-type': 'application/json'
@@ -216,16 +216,16 @@ async function sendIncoming(provider: string, provider_session = "") {
 			Cents: (Number(amount.value)) * 100,
 		})
 	});
-	if(!response.ok) {
-		error.innerHTML =
-			"Something went wrong: " + await response.text() + "<br>" +
-			"I should have received your order though, and will confirm it " +
-			"as soon as I see it.";
-		error.hidden = false;
+	const please_report = !("ok" in response);
+	if(please_report || !response.ok) {
+		fetchSetError(response, ((please_report)
+			? "Your order was probably not sent back to my server."
+			: ""
+		), please_report);
 		endTransaction();
-		return false;
+		return null;
 	}
-	return true;
+	return response;
 }
 
 window.onload = () => {

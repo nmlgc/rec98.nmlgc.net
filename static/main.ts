@@ -130,3 +130,44 @@ function virtualKey(event: KeyboardEvent): VirtualKey {
 	}
 	return null;
 }
+
+// Fetching and error handling
+// ---------------------------
+
+type FetchSaneResult = (Response | TypeError);
+
+async function fetchSane(
+	input: (RequestInfo | URL), init?: RequestInit
+): Promise<FetchSaneResult> {
+	try {
+		const ret = await fetch(input, init);
+		return ret;
+	} catch(e) {
+		return e as TypeError;
+	}
+}
+
+/**
+ * Updates the `#error` element with a text generated from the given Fetch
+ * error.
+ */
+async function fetchSetError(
+	response: FetchSaneResult, extra = "", please_report = false
+) {
+	const error = document.getElementById("error");
+	if(!error) {
+		throw "Missing an #error element on the page.";
+	}
+	error.innerHTML = "🐞 Something went wrong: ";
+	if(!("ok" in response)) {
+		error.innerHTML += `<code>${response.name}: ${response.message}</code>`;
+	} else {
+		error.innerHTML += `<code>${await response.text()}</code>`;
+	}
+	error.innerHTML += `<br>${extra} `;
+	if(please_report) {
+		error.innerHTML += "Please contact me so that I can figure out the issue.";
+	}
+	error.hidden = false;
+}
+// ---------------------------

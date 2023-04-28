@@ -169,6 +169,45 @@
 					</span>
 				</button>
 			</div>
+			<p>Key differences:</p>
+			<table class="differences"><thead>
+				<tr>
+					<th></th>
+					<th>{{HTML_Emoji "paypal"}} PayPal</th>
+					<th>{{HTML_Emoji "stripe"}} Stripe</th>
+				</tr>
+			</thead><tbody>
+				<tr>
+					<th>Payment methods</th>
+					<td>itself, debit / credit cards</td>
+					<td>lots of them, including country-specific ones</td>
+				</tr>
+				<tr>
+					<th>Subscription cancellation</th>
+					<td>through PayPal website</td>
+					<td>through my server (via custom link), or by contacting me</td>
+				</tr>
+				<tr>
+					<th>Data shared with me</th>
+					<td><ul>
+						<li>PayPal account/business name</li>
+						<li>Email address</li>
+						<li>Customer verification flag</li>
+						<li>USA or non-USA citizen</li>
+					</ul></td>
+					<td><ul>
+						<li>Name</li>
+						<li>Email address</li>
+						<li>For credit cards:<ul>
+							<li>Zip code and country</li>
+							<li>Credit card details (number reduced to last 4 digits)</li>
+						</ul></li>
+						<li>For bank accounts:<ul>
+							<li>BIC</li>
+						</ul></li>
+					</ul></td>
+				</tr>
+			</tbody></table>
 			<hr>
 			<div id="error" hidden></div>
 		</form>

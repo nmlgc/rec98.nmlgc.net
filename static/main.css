@@ -857,8 +857,16 @@ table.comparison th:not(:last-child) {
 	outline-color: red;
 }
 
-#order input[type="checkbox"]+label ul {
+#order input[type="checkbox"]+label ul,
+#order .differences * {
+	text-align: left;
+	vertical-align: top;
 	font-size: small;
+}
+
+#order .differences ul {
+	padding-inline-start: 1.5em;
+	margin-block-start: unset;
 }
 
 #order input[disabled]+label {

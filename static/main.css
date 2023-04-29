@@ -808,34 +808,34 @@ table.comparison th:not(:last-child) {
 	width: 100%;
 }
 
-#order form #providers {
+form #providers {
 	display: grid;
 	gap: 1em;
 	grid-auto-flow: row;
 	place-items: center;
 }
 
-#order form #providers button {
+form #providers button {
 	width: min-content;
 	display: grid;
 	grid-auto-flow: column;
 	place-items: center; /* Must be explicitly set for this grid as well! */
 }
 
-#order form #providers code {
+form #providers code {
 	display: block;
 	margin-top: 0.5em;
 	font-size: 62.5%;
 }
 
-#order form #providers button:disabled,
+form #providers button:disabled,
 #customer_stripe form button:disabled {
 	border-color: transparent;
 	background-color: transparent;
 	color: green;
 }
 
-#order form #providers button img {
+form #providers button img {
 	margin-right: 0.5em;
 	width: 1.5em;
 }

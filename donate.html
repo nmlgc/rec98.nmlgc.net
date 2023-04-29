@@ -1,16 +1,45 @@
+<style>
+	#donate form #providers {
+		gap: 0;
+	}
+
+	#donate form #providers button {
+		width: 100%;
+		justify-content: center;
+	}
+
+	#donate form #providers button img {
+		width: unset;
+	}
+</style>
+
 <h2>Donate</h2>
 <p>Can't wait until the store reopens, but want to give me money anyway while expecting nothing in return? You can, under these terms:</p>
-<form action="https://www.paypal.com/donate" method="post" target="_top">
-	<input type="hidden" name="hosted_button_id" value="XEFRYG66SRFDW" />
+<form target="_top">
+	<input type="hidden" id="paypal_id" name="hosted_button_id">
 	<input type="checkbox" id="consent" required>
 	<label for="consent">I agree that
 	<ul>
 		<li>this donation will be anonymous, and hidden from the public.</li>
 		<li>no work will be done in response to this donation, and there is no option to specify a priority for further development. Any requests relating to this transaction that I might communicate on other channels will be ignored.</li>
 		<li>the overall frequency of donations like these will influence how quickly regular prices (currently: {{HTML_PushPrice}} per push) will rise for everyone else.</li>
-		<li>transactions are processed through PayPal, and clicking the button will direct me to the <code>paypal.com</code> checkout flow.</li>
+		<li>transactions are processed through the respective provider, and clicking the button will direct me to the checkout flow on the respective domain.</li>
 	</ul></label>
-	<p>
-		<button>💸 Understood! 💸</button>
+	<p id="providers">
+		<button
+			formaction="https://www.paypal.com/donate"
+			formmethod="post"
+			onclick="
+				document.getElementById('paypal_id').value = 'XEFRYG66SRFDW';
+			">{{HTML_Emoji "paypal"}}<span>
+			Donate via PayPal <code>(paypal.com)</code>
+		</span></button>
+		<button
+			formaction="https://donate.stripe.com/3cs6s40De2JedvG3cd"
+			formmethod="get"
+			onclick="document.getElementById('paypal_id').value = '';"
+		>{{HTML_Emoji "stripe"}} <span>
+			Donate via Stripe <code>(stripe.com)</code>
+		</span></button>
 	</p>
 </form>

@@ -291,6 +291,10 @@ figure figcaption {
 	content:"2×"
 }
 
+.release {
+	font-weight: bold;
+}
+
 /* Header
    ------ */
 body {

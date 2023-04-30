@@ -99,6 +99,7 @@ func (c *StripeClient) subDataFromForm(req *http.Request) (salt string, subID st
 type stripeSessionView struct {
 	SubID         string
 	URLPageManage string
+	Unpaid        bool
 }
 
 func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionView, error) {
@@ -109,9 +110,11 @@ func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionVie
 	if err := c.subIDVerify(salt, s.Subscription.ID); err != nil {
 		return nil, err
 	}
+	unpaid := (s.PaymentStatus == stripe.CheckoutSessionPaymentStatusUnpaid)
 	return &stripeSessionView{
 		SubID:         s.Subscription.ID,
 		URLPageManage: (c.URLPageManage + "/" + salt),
+		Unpaid:        unpaid,
 	}, nil
 }
 
@@ -196,8 +199,9 @@ func (c *StripeClient) HandleSuccess(wr http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	if (s.Status != stripe.CheckoutSessionStatusComplete) ||
-		(s.PaymentStatus != stripe.CheckoutSessionPaymentStatusPaid) {
+	// Note that we don't check the PaymentStatus here, as certain payment
+	// providers take days or even weeks to confirm subscription transactions.
+	if s.Status != stripe.CheckoutSessionStatusComplete {
 		wr.WriteHeader(http.StatusPaymentRequired)
 		fmt.Fprintln(wr, "Nice try.")
 		return

@@ -1,13 +1,18 @@
 {{$cap := DB_CapCurrent true -}}
 {{$stripe_session := "" -}}
+{{$subscriptionUnpaid := false -}}
 {{if .Vars.stripeSession -}}
 	{{$stripe_session = Stripe_Session .Vars.stripeSession .Vars.salt -}}
+	{{$subscriptionUnpaid = true}}
 {{end}}
 
 {{- template "cap.html" $cap -}}
 <h2>Thank you!</h2>
-<p>
-	I will check your order as soon as I see it, manually enter it into the
+<p>{{if $subscriptionUnpaid -}}
+	I will check your order as soon as I see it. Since you used a payment provider that can't immediately process new subscriptions, it might take a while for the transaction to be verified. Once it is, I will manually enter your order
+{{else}}
+	I will check your order as soon as I see it, manually enter it
+{{end}} into the
 	<a href="https://github.com/nmlgc/rec98.nmlgc.net/blob/master/db/transactions.tsv">
 	transaction database</a>, and then confirm it via email. After that, the
 	newly added <span class="incoming">red part</span> of the goal bar will

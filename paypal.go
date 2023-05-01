@@ -49,6 +49,7 @@ func parseAmount(amount paypal.PurchaseUnitAmount) (cents int, err error) {
 // Pulling the amount from PayPal only seems to work for regular orders, not
 // subscriptions…
 func processOrder(in *Incoming, order *paypal.Order) error {
+	in.Cents = 0 // Don't rely on or duplicate any value sent by the frontend.
 	in.Time = order.UpdateTime
 	for _, pu := range order.PurchaseUnits {
 		cents, err := parseAmount(*pu.Amount)

@@ -75,9 +75,7 @@ function thankyou() {
 	return form.submit();
 }
 
-async function sendIncoming(
-	orderID: string, amount: number, discountID: number
-) {
+async function sendIncoming(orderID: string) {
 	let response = await fetch('/api/transaction-incoming', {
 		method: 'post',
 		headers: {
@@ -91,8 +89,8 @@ async function sendIncoming(
 			Goal: goal.value,
 			Micro: micro.checked,
 			Cycle: cycle(),
-			Discount: discountID,
-			Cents: amount * 100,
+			Discount: ((isOneTime() && discount) ? discount.selectedIndex : 0),
+			Cents: (Number(amount.value)) * 100,
 		})
 	});
 	if(!response.ok) {
@@ -102,8 +100,14 @@ async function sendIncoming(
 			"as soon as I see it.";
 		error.hidden = false;
 		endTransaction();
-	} else {
-		thankyou();
+		return false;
+	}
+	return true;
+}
+
+async function paypalSubmit(data, actions) {
+	if(await sendIncoming(data.orderID)) {
+		 thankyou();
 	}
 }
 
@@ -121,12 +125,7 @@ let subscription = {
 			'quantity': amount.value
 		}, params_shared));
 	},
-	onApprove: async function(data, actions) {
-		// For some reason, PayPal's /v2/checkout/orders/ API doesn't return
-		// the subscription amount, so for now, let's just send it ourselves…
-		// At least the server bails out if the order ID doesn't exist, so… 🤷
-		await sendIncoming(data.orderID, Number(amount.value), 0);
-	},
+	onApprove: paypalSubmit,
 	onCancel: endTransaction,
 	onClick: validateForm,
 };
@@ -140,9 +139,7 @@ let order = {
 	},
 	onApprove: async function(data, actions) {
 		await actions.order.capture();
-		await sendIncoming(
-			data.orderID, 0, (discount) ? discount.selectedIndex : 0
-		);
+		await paypalSubmit(data, actions);
 	},
 	onCancel: endTransaction,
 	onClick: validateForm,

@@ -235,3 +235,5 @@ P0234	[219, 223, 227]	TH01 Anniversary Edition (Removing interlaced pellet rende
 P0235	[189]	TH02 RE (Stage tiles, part 1/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/e7a9262...62c4b7f	1
 P0236	[202, 205, 209]	TH02 RE (Stage tiles, part 2/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/62c4b7f...7fa9038	1
 P0237	[209, 218, 222]	TH02 RE (Spark structure + Point number popups + Bomb animation effects)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/7fa9038...c5e51e6	1
+P0238	[229]	Website (TypeScript migration + Stripe integration, part 1/2: Basic support)	2023-05-01T23:56:59Z	nmlgc/rec98.nmlgc.net/compare/4698397...edf2926	0
+P0239	[238]	Website (Stripe integration, part 2/2: Subscription support) + TH01 Anniversary Edition (Minor bugfixes)	2023-05-01T23:56:59Z	nmlgc/ReC98/compare/c5e51e6...P0239	0

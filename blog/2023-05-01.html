@@ -1,0 +1,294 @@
+{{$dl := printf "%v%v" .DatePrefix "th01-anniv.zip" -}}
+{{$vid_ドカーン := (call .Video "TH01-Jigoku-Bad-Ending-shake-boom-Anniversary" "Video of the shake/boom effect during the TH01 Jigoku Bad Ending as shown in the P0239 Anniversary Edition build, matching ZUN's intentions by showing both images for two frames each, without tearing") -}}
+
+{{$vid_debug_o := (call .Video "TH01-Debug-bomb-alignment-Original" "Video of TH01's in-game debug output, demonstrating how the lack of alignment on the <code>bomb</code> variable can lead to seemingly wrong <code>timer</code> values") -}}
+{{$vid_debug_a := (call .Video "TH01-Debug-bomb-alignment-Anniversary" "Video of the in-game debug output in the TH01 P0239 Anniversary Edition build, demonstrating fixed alignment for the <code>bomb</code> variable") -}}
+
+{{$vid_debug_a.SetTitle "Anniversary Edition" -}}
+{{$vid_debug_o.SetTitle "Original game" -}}
+
+{{$vid_debug_a.AddMarker 31 "Shot fired" "" -}}
+{{$vid_debug_o.AddMarker 31 "Shot fired" "" -}}
+
+</p><p>
+	{{HTML_Emoji "stripe"}} <a href="https://stripe.com">Stripe</a> is now
+	properly integrated into this website as an alternative to PayPal! Now, you
+	can also financially support the project if PayPal doesn't work for you, or
+	if you prefer <a
+	href="https://stripe.com/docs/payments/payment-methods/overview">using a
+	provider out of Stripe's greater variety</a>. It's unfortunate that I had to
+	ship this integration while the store is still sold out, but the Shuusou
+	Gyoku OpenGL backend has turned out way too complicated to be finished next
+	to these two pushes within a month. It will take quite a while until the
+	store reopens and you all can start using Stripe, so I'll just link back to
+	this blog post when it happens.
+</p><p>
+	Integrating Stripe wasn't the simplest task in the world either. At first,
+	the <a href="https://stripe.com/docs/payments/checkout">Checkout API</a>
+	seems pretty friendly to developers: The entire payment flow is handled on
+	the backend, in the server language of your choice, and requires no frontend
+	JavaScript except for the UI feedback code you <i>choose</i> to write. Your
+	backend API endpoint initiates the Stripe Checkout session, answers with a
+	redirect to Stripe, and Stripe then sends a redirect back to your server if
+	the customer completed the payment. Superficially, this server-based
+	approach seems much more GDPR-friendly than PayPal, because there are no
+	remote scripts to obtain consent for. In reality though, Stripe shares
+	<i>much</i> more potential personal data about your credit card or bank
+	account with a merchant, compared to PayPal's almost bare minimum of
+	necessary data. {{HTML_Emoji "thonk"}}<br />
+	It's also rather annoying how the backend has to persist the order form
+	information throughout the entire Checkout session, because it would
+	otherwise be lost if the server restarts while a customer is still busy
+	entering data into Stripe's Checkout form. Compare that to the PayPal
+	JavaScript SDK, which only <code>POST</code>s back to your server after the
+	customer completed a payment. In Stripe's case, more JavaScript actually
+	only makes the integration <i>harder</i>: If you trigger the initial payment
+	HTTP request from JavaScript, you will <a
+	href="https://github.com/whatwg/fetch/issues/763#issuecomment-1430650132">have
+	to improvise a bit to avoid the CORS error when redirecting away to a
+	different domain</a>.
+</p><p>
+	But sure, it's all not too bad… for regular orders at least. With
+	subscriptions, however, things get <i>much</i> worse. Unlike PayPal, Stripe
+	kind of wants to stay out of the way of the payment process as much as
+	possible, and just be a wrapper around its supported payment methods. So if
+	customers aren't really meant to register with Stripe, how would they cancel
+	their subscriptions? {{HTML_Emoji "thonk"}}<br />
+	Answer: <a
+	href="https://support.stripe.com/questions/cancelling-a-subscription-made-through-stripe">Through
+	the… merchant?</a> Which I quite dislike in principle, because why should
+	you have to trust me to actually cancel your subscription after you
+	requested it? It also means that I probably should add some sort of UI for
+	self-canceling a Stripe subscription, ideally without adding full-blown user
+	accounts. Not that this solves the underlying trust issue, but it's more
+	convenient than contacting me via email or, worse, going through your bank
+	somehow. Here is how my solution works:
+</p><ul>
+	<li>When setting up a Stripe subscription, the server will generate a random
+	ID for authentication. This ID is then used as a <a
+	href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a> for a hash
+	of the Stripe subscription ID, linking the two without storing the latter on
+	my server.</li>
+	<li>The <q>thank you</q> page, which is parameterized with the Stripe
+	<i>Checkout session</i> ID, will use that ID to retrieve the <i>subscription
+	ID</i> via an API call to Stripe, and display it together with the above
+	salt. This works indefinitely – contrary to what the expiry field in the
+	<i>Checkout session</i> object suggests, Stripe sessions are indeed <a
+	href="https://stackoverflow.com/questions/69600941/are-stripes-checkout-sessions-stored-forever">stored
+	forever</a>. After all, Stripe also displays this session information in a
+	merchant's transaction log with an excessive amount of detail. It might have
+	been better to add my own expiration system to these pages, but this had
+	been taking long enough already. For now, be aware that sharing the link to
+	a Stripe <q>thank you</q> page is equivalent to sharing your subscription
+	cancellation password.</li>
+	<li>The salt is then used as the key for a subscription management page. To
+	cancel, you visit this page and enter the Stripe subscription ID to confirm.
+	The server then checks whether the salt and subscription ID pair belong to
+	each other, and sends the actual <a
+	href="https://stripe.com/docs/api/subscriptions/cancel">cancellation
+	request</a> back to Stripe if they do.</li>
+</ul><p>
+	I might have gone a bit overboard with the crypto there, but I liked the
+	idea of not storing any of the Stripe session IDs in the server database.
+	It's not like that makes the system more complex anyway, and it's nice to
+	have a separate confirmation step before canceling a subscription.
+</p><p>
+	But even <i>that</i> wasn't everything I had to keep in mind here. Once you
+	switch from test to production mode for the final tests, you'll notice that
+	certain <a
+	href="https://en.wikipedia.org/wiki/Single_Euro_Payments_Area">SEPA</a>-based
+	payment providers take their sweet time to process and activate new
+	subscriptions. The Checkout session object even informs you about that, by
+	including a <q>payment status</q> field. Which initially seems just like
+	another field that could indicate hacking attempts, but treating it as such
+	and rejecting any unpaid session can also reject perfectly valid
+	subscriptions. I don't <i>want</i> all this control… 🥲<br />
+	Instead, all I can do in this case is to tell you about it. In my test, the
+	Stripe dashboard said that it might take days or even weeks for the initial
+	subscription transaction to be confirmed. In such a case, the respective
+	fraction of the cap will unfortunately need to remain <span
+	class="incoming">red</span> for that entire time.
+</p><p>
+	And that was 1½ pushes just to replicate the basic functionality of a simple
+	PayPal integration with the simplest type of Stripe integration. On the
+	architectural site, all the necessary refactoring work made me finally
+	upgrade my frontend code to TypeScript at least, using the amazing <a
+	href="https://esbuild.github.io/">esbuild</a> to handle transpilation inside
+	the server binary. Let's see how long it will now take for me to upgrade to
+	SCSS…
+</p><hr /><p>
+	With the new payment options, it makes sense to go for another slight price
+	increase, from {{HTML_Currency 7500}} up to {{HTML_Currency 8500}} per push.
+	The amount of taxes I have to pay on this income is slowly becoming
+	significant, and the store has been selling out almost immediately for the
+	last few months anyway. If demand remains at the current level or even
+	increases, I plan to gradually go up to {{HTML_Currency 12500}} by the end
+	of the year. <br />
+	{{Blog_PostLink "2021-12-01" "As"}} {{Blog_PostLink "2022-08-15" "usual"}},
+	I'm going to deliver existing orders in the backlog at the value they were
+	originally purchased at. Due to the way the cap has to be calculated, these
+	contributions now appear to have increased in value by a rather awkward
+	13.33%.
+</p><hr /><p>
+	This left ½ of a push for some more work on the TH01 Anniversary Edition.
+	Unfortunately, this was too little time for the grand issue of removing
+	byte-aligned rendering of bigger sprites, which will need some additional
+	blitting performance research. Instead, I went for a bunch of smaller
+	bugfixes:
+</p><ul>
+	<li>
+		<p>
+			<code>ANNIV.EXE</code> now launches <code>ZUNSOFT.COM</code> if
+			MDRV98 wasn't resident before. In hindsight, it's completely obvious
+			why this is the right thing to do: Either you start
+			<code>ANNIV.EXE</code> directly, in which case there's no resident
+			MDRV98 and you haven't seen the ZUN Soft logo, <i>or</i> you have
+			made a single-line edit to <code>GAME.BAT</code> and replaced
+			<code>op</code> with <code>anniv</code>, in which case MDRV98 is
+			resident and you <i>have</i> seen the logo. These are the two
+			reasonable cases to support out of the box. If you are doing
+			anything else, it shouldn't be <i>that</i> hard to adjust though?
+		</p><p>
+			You might be wondering why I didn't just include all code of
+			<code>ZUNSOFT.COM</code> inside <code>ANNIV.EXE</code> together with
+			the rest of the game. The reason: <code>ZUNSOFT.COM</code> has
+			almost nothing in common with regular TH01 code. While the rest of
+			TH01 uses the custom image formats and bad rendering code I
+			documented again and again during its RE process,
+			<code>ZUNSOFT.COM</code> fully relies on master.lib for everything
+			about the bouncing-ball logo animation. Its code is much closer to
+			TH02 in that respect, which suggests that ZUN did in fact write this
+			animation <i>for</i> TH02, and just included the binary in TH01 for
+			consistency when he first sold both games together at Comiket 52.
+			Unlike the {{Blog_PostLink "2023-03-05" "various bad reasons for splitting the PC-98 Touhou games into three main executables"}},
+			it's still a good idea to split off animations that use a completely
+			different set of rendering and file format functions. Combined with
+			all the BFNT and shape rendering code, <code>ZUNSOFT.COM</code>
+			actually contains even more unique code than <code>OP.EXE</code>,
+			and only slightly less than <code>FUUIN.EXE</code>.
+		</p></li>
+	<li><p>
+		The optional <code>AUTOEXEC.BAT</code> is now correctly encoded in
+		Shift-JIS instead of accidentally being UTF-8, fixing the previous
+		mojibake in its final <code>ECHO</code> line.
+	</p><li>
+		<p>
+			The command-line option that just adds a stage selection without
+			other debug features (<code>anniv s</code>) now works reliably.
+		</p><p>
+			This one's quite interesting because it only actually ever worked
+			<i>because</i> of a ZUN bug. From a superficial look at the code, it
+			shouldn't, because ZUN forgot to initialize the debug flag inside
+			the resident structure when specifying the <code>s</code> parameter.
+			However, master.lib's <code>resdata_create()</code> function doesn't
+			clear the resident structure after allocation. So if anything on the
+			system previously happened to write something other than
+			<code>0x00</code>, <code>0x01</code>, or <code>0x03</code> to the
+			debug flag byte, the lack of initialization combined with ZUN
+			actually turns into a distinct non-test and non-debug stage
+			selection mode. {{HTML_Emoji "tannedcirno"}}<br />
+			This is what happens on a certain widely circulated .HDI copy of
+			TH01 that boots MS-DOS 3.30C. On this system, the memory that
+			master.lib will allocate to the TH01 resident structure was
+			previously used by DOS as stack for its kernel, which left the
+			future resident debug flag byte at address <code>9FF6:0012</code> at
+			a value of <code>0x12</code>. This might be the entire reason why
+			<code>game s</code> is even widely documented to trigger a stage
+			selection to begin with – on the widely circulated TH04 .HDI that
+			boots MS-DOS 6.20, or on DOSBox-X, the <code>s</code> parameter
+			doesn't work because both DOS systems leave the resident debug flag
+			byte at <code>0x00</code>. And since <code>ANNIV.EXE</code> pushes
+			MDRV98 into that area of conventional DOS RAM, <code>anniv s</code>
+			previously didn't work even on MS-DOS 3.30C.
+		</p>
+	</li>
+	<li><p>
+		Both bugs in the
+		{{Blog_PostLink "2021-10-09" "1×1 particle system during the Mima fight"}}
+		have been fixed. These include the off-by-one error that killed off the
+		very first particle on the 80<sup>th</sup>
+		frame and left it in VRAM, and, just like every other entity type, a
+		replacement of ZUN's EGC unblitter with the new pixel-perfect and fast
+		one. Until I've rearchitected unblitting as a whole, the particles will
+		now merely rip barely visible 1×1 holes into the sprites they overlap.
+	</p></li>
+	<li><p>
+		The {{Blog_PostLink "2021-09-28" "score popups for flipped cards"}} are now displayed without the two frames of flicker.
+	</p></li>
+	<li>
+		<p>
+			The <code>bomb</code> value shown in the lowest line of the in-game
+			debug mode output is now right-aligned together with the rest of the
+			values. This ensures that the game always writes a consistent number
+			of characters to TRAM, regardless of the magnitude of the
+			<code>bomb</code> value, preventing the seemingly wrong
+			<code>timer</code> values that appeared in the original game
+			whenever the value of the <code>bomb</code> variable changed to a
+			lower number of digits:
+		</p><figure class="fullres">
+			{{call .VideoPlayer $vid_debug_o.SetActive $vid_debug_a}}
+		</figure>
+	</li>
+	<li><p>
+		Finally, I've streamlined VRAM page access changes, which allowed me to
+		consistently replace ZUN's expensive function call with the optimal two
+		inlined x86 instructions. Interestingly, this change alone removed
+		2&nbsp;KiB from the binary size, which is almost all of the difference
+		between {{Blog_PostLink "2023-03-14" "the P0234-1 release"}} and this
+		one. Let's see how much longer we can make each new release of
+		<code>ANNIV.EXE</code> smaller than the previous one.
+	</p></li>
+</ul><p>
+	The final point, however, raised the question of what we're now going to do
+	about
+	{{Blog_PostLink "2022-06-17" "a certain issue in the <span lang='ja'>地﻿獄</span>/Jigoku Bad Ending"}}.
+	ZUN's original expensive way of switching the accessed VRAM page was the
+	main reason behind the lag frames on slower PC-98 systems, and
+	search-replacing the respective function calls would immediately get us to
+	the optimized version shown in that blog post. But is this something we
+	actually want? If we wanted to retain the lag, we could surely preserve that
+	function just for this one instance…<br /> The discovery of this issue
+	predates the clear distinction between bloat, quirks, and bugs, so it makes
+	sense to first classify what this issue even is. The distinction comes all
+	down to <i>observability</i>, which I defined as changes to rendered frames
+	between explicitly defined frame boundaries. That alone would be enough to
+	categorize any cause behind lag frames as bloat, but it can't hurt to be
+	more explicit here.
+</p><p>
+	Therefore, I now officially judge observability in terms of an infinitely
+	fast PC-98 that can instantly render everything between two explicitly
+	defined frames, and will never add additional lag frames. If we plan to port
+	the games to faster architectures that aren't bottlenecked by disappointing
+	blitter chips, this is the only reasonable assumption to make, in my
+	opinion: The minimum system requirements in the games' README files are
+	<i>minimums</i>, after all, not recommendations. Chasing the exact frame
+	drop behavior that ZUN must have experienced during the time he developed
+	these games can only be a guessing game at best, because how can we know
+	which PC-98 model ZUN actually developed the games on? There might even be
+	more than one model, especially when it comes to TH01 which had been in
+	development for at least two years before ZUN first sold it. It's also not
+	like any current PC-98 emulator even claims to emulate the specific timing
+	of any existing model, and I sure hope that nobody expects me to import a
+	bunch of bulky obsolete hardware just to count dropped frames.
+</p><p>
+	That leaves the tearing, where it's much more obvious how it's a bug. On an
+	infinitely fast PC-98, the <i lang='ja' style='color: red'>ド﻿カ﻿ー﻿ン</i>
+	frame would never be visible, and thus falls into the same category as the
+	{{Blog_PostLink "2022-01-31" "two unused animations in the Sariel fight"}}.
+	With only a single unconditional 2-frame delay inside the animation loop, it
+	becomes clear that ZUN intended both frames of the animation to be displayed
+	for 2 frames each:
+</p><figure style="width: 320px;">
+	{{call .VideoPlayer $vid_ドカーン}}
+	<figcaption>No tearing, and 34 frames in total for the first of the two
+	instances of this animation.</figcaption>
+</figure><p>
+	<a class="release" href="https://github.com/nmlgc/ReC98/releases/tag/P0239">
+	{{HTML_Emoji "th01"}} TH01 Anniversary Edition, version P0239</a>
+	{{HTML_Download .HostedPath $dl}}
+</p><p>
+	Next up: Taking the oldest still undelivered push and working towards TH04
+	position independence in preparation for multilingual translations. The
+	Shuusou Gyoku OpenGL backend shouldn't take <i>that</i> much longer either,
+	so I should have lots of stuff coming up in May afterward.
+</p>

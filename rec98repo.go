@@ -522,7 +522,8 @@ func (b *Blog) AutogenerateTags(repo *Repository) *Blog {
 					}
 					subject := strings.SplitN(c.Message, "\n", 2)[0]
 
-					if strings.HasPrefix(subject, "[Maintenance]") {
+					if strings.HasPrefix(subject, "[Maintenance]") ||
+						strings.HasPrefix(subject, "Merge") {
 						return nil
 					}
 					if m := rxGames.FindString(subject); m != "" {

@@ -112,7 +112,9 @@ func (r *Repository) GetCommit(rev string) (*object.Commit, error) {
 
 // GetLogAt returns an in-order log iterator for the given rev.
 func (r *Repository) GetLogAt(c *object.Commit) (object.CommitIter, error) {
-	return r.R.Log(&git.LogOptions{From: c.Hash})
+	return r.R.Log(&git.LogOptions{
+		From: c.Hash, Order: git.LogOrderCommitterTime,
+	})
 }
 
 type commitInfo struct {

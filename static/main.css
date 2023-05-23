@@ -794,6 +794,11 @@ table.comparison th:not(:last-child) {
 	width: 5em;
 }
 
+#order form input::placeholder {
+	font-size: 80%;
+	color: var(--c-border);
+}
+
 #order form .amount {
 	font-size: 175%;
 }

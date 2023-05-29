@@ -237,3 +237,5 @@ P0236	[202, 205, 209]	TH02 RE (Stage tiles, part 2/2)	2023-03-30T13:23:29Z	nmlgc
 P0237	[209, 218, 222]	TH02 RE (Spark structure + Point number popups + Bomb animation effects)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/7fa9038...c5e51e6	1
 P0238	[229]	Website (TypeScript migration + Stripe integration, part 1/2: Basic support)	2023-05-01T23:56:59Z	nmlgc/rec98.nmlgc.net/compare/4698397...edf2926	0
 P0239	[238]	Website (Stripe integration, part 2/2: Subscription support) + TH01 Anniversary Edition (Minor bugfixes)	2023-05-01T23:56:59Z	nmlgc/ReC98/compare/c5e51e6...P0239	0
+P0240	[195]	TH04 PI/RE (Stage 5 star rendering + Stage 6 Yuuka checkerboard + Custom entity structures, part 1/2)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/be69ab6...40c900f	1
+P0241	[241, 242]	TH04 PI/RE (Custom entity structures, part 2/2 + Thick laser structure + PI false positives + .STD loading)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/40c900f...08352a5	1

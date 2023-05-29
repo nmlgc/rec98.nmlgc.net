@@ -295,6 +295,10 @@ figure figcaption {
 	font-weight: bold;
 }
 
+.inline_sprite {
+	vertical-align: middle;
+}
+
 /* Header
    ------ */
 body {

@@ -1,0 +1,325 @@
+{{$s5_0 := (call .PostFileURL "TH04-Stage-5-regular.png") -}}
+{{$s5_1 := (call .PostFileURL "TH04-Stage-5-bright.png") -}}
+{{$bx2s_0 := (call .PostFileURL "TH04-Gengetsu-spawn-columns-0.png") -}}
+{{$bx2s_1 := (call .PostFileURL "TH04-Gengetsu-spawn-columns-1.png") -}}
+{{$vid_0 := (call .Video "TH04-Stage-4-Marisa-bit-clipping-original" "Video of the bit spin-out animation in TH04's Stage 4 Marisa fight, demonstrating the slightly wrong clipping conditions from the original game") -}}
+{{$vid_1 := (call .Video "TH04-Stage-4-Marisa-bit-clipping-fixed" "Video of the bit spin-out animation in TH04's Stage 4 Marisa fight, with fixed clipping conditions") -}}
+
+{{$vid_0.SetTitle "Original clipping" -}}
+{{$vid_1.SetTitle "Fixed clipping" -}}
+
+{{$vid_0.AddMarker 159 "Bottom edge" "right" -}}
+{{$vid_1.AddMarker 159 "Bottom edge" "right" -}}
+{{$vid_0.AddMarker 220 "Right edge" "left" -}}
+{{$vid_1.AddMarker 220 "Right edge" "left" -}}
+
+<p>
+	Well, well. My original plan was to ship the first step of Shuusou Gyoku
+	OpenGL support on the next day after this delivery. But unfortunately, the
+	complications just kept piling up, to a point where the required solutions
+	definitely blow the current budget for that goal. I'm currently sitting on
+	over 70 commits that would take at least 5 pushes to deliver as a meaningful
+	release, and all of that is just <i>rearchitecting</i> work, preparing the
+	game for a not too Windows-specific OpenGL backend in the first place. I
+	haven't even <i>written</i> a single line of OpenGL yet… 🥲<br />
+	This shifts the intended Big Release Month™ to June after all. Now I know
+	that the next round of Shuusou Gyoku features should better start with the
+	SC-88Pro recordings, which are much more likely to get done within their
+	current budget. At least I've already completed the configuration versioning
+	system required for that goal, which leaves only the actual audio part.
+</p><p>
+	So, TH04 position independence. Thanks to a bit of funding for stage
+	dialogue RE, non-ASCII translations will soon become viable, which finally
+	presents a reason to push TH04 to 100% position independence after
+	{{Blog_PostLink "2020-09-17" "TH05 had been there for almost 3 years"}}. I
+	haven't heard back from {{DB_CustomerByID 9}} about how much they want to be
+	involved in funding this goal, if at all, but maybe other backers are
+	interested as well.<br />
+	And sure, it would be entirely possible to implement non-ASCII translations
+	in a way that retains the layout of the original binaries and can be easily
+	compared at a binary level, in case we consider translations to be a
+	critical piece of infrastructure. This wouldn't even just be an exercise in
+	needless perfectionism, and we only have to look to Shuusou Gyoku to realize
+	why: <a href="https://www.youtube.com/watch?v=S5QFqA5fZ48">Players expected
+	that my builds were compatible with existing SpoilerAL SSG files</a>, which
+	was something I hadn't even considered the need for. I mean, the game is
+	open-source {{Blog_PostLink "2022-09-04" "and I made it easy to build"}}.
+	You can just fork the code, implement all the practice features you want in
+	a much more efficient way, and I'd probably even merge your code into my
+	builds then?<br />
+	But I get it – recompiling the game yields just yet another build that can't
+	be easily compared to the original release. A cheat table is much more
+	trustworthy in giving players the confidence that they're still practicing
+	the same original game. And given the current priorities of my backers,
+	it'll still take a while for me to implement proof by replay validation,
+	which will ultimately free every part of the community from depending on the
+	original builds of both Seihou and PC-98 Touhou.
+</p><p>
+	However, such an implementation within the original binary layout would
+	significantly drive up the budget of non-ASCII translations, and I sure
+	don't want to constantly maintain this layout during development. So, let's
+	chase TH04 position independence like it's 2020, and quickly cover a larger
+	amount of PI-relevant structures and functions at a shallow level. The only
+	parts I decompiled for now contain calculations whose intent can't be
+	clearly communicated in ASM. Hitbox visualizations or other more in-depth
+	research would have to wait until I get to the proper decompilation of these
+	features.<br />
+	But even this shallow work left us with a large amount of TH04-exclusive
+	code that had its worst parts RE'd and could be decompiled fairly quickly.
+	If you want to see big TH04 finalization% gains, general TH04 progress would
+	be a very good investment.
+</p><hr /><p>
+	The first push went to the often-mentioned stage-specific custom entities
+	that share a single statically allocated buffer. Back in 2020, I
+	{{Blog_PostLink "2020-02-29" "wrongly claimed that these were a TH05 innovation"}},
+	but the system actually originated in TH04. Both games use a 26-byte
+	structure, but TH04 only allocates a 32-element array rather than TH05's
+	64-element one. The conclusions from back then still apply, but I also kept
+	wondering why these games used a static array for these entities to begin
+	with. You know what they call an area of memory that you can cleanly
+	repurpose for things? That's right, a heap! {{HTML_Emoji "tannedcirno"}}
+	And absolutely no one would mind one additional heap allocation at the start
+	of a stage, next to the ones for all the sprites and portraits.<br />
+	However, we are still running in Real Mode with segmented memory. Accessing
+	anything outside a common data segment involves modifying segment registers,
+	which has a nonzero CPU cycle cost, and Turbo C++ 4.0J is terrible at
+	optimizing away the respective instructions. Does this matter? Probably not,
+	but you don't take "risks" like these if you're in a permanent
+	micro-optimization mindset… {{HTML_Emoji "godzun"}}
+</p><p>
+	In TH04, this system is used for:
+</p><ol><li><p>
+	Kurumi's symmetric bullet spawn rays, fired from her hands towards the left
+	and right edges of the playfield. These are rather infamous for being the
+	last thing you see before
+	{{Blog_PostLink "2022-04-18" "the <code>Divide Error</code> crash that can happen in ZUN's original build"}}.
+	Capped to 6 entities.
+</p></li><li><p>
+	<img class="inline_sprite"
+	src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAAgBAMAAAAoDG0WAAAAHlBMVEUAAAD87O2Yl/zMVM39REUgqB8AZAB0AHSJAAAAAd0qD5i/AAAAAXRSTlMAQObYZgAAAk9JREFUeJyllT2u4zAMhJ0bhP45QNS5NFS4NqAirQul38LqH1z4Ai5Uu/NtH4bSALaABRYbFgEYZL5wJIqsKg0RkYrxP7lzzvEb5NZae82NMeaae+/9NXfvGHcSoB+3bSUB+v48DxKg/4SwkJD1JFBPAvUkUE9CVVUP56KGc0/Nrd00rE25MaeGMSn3Pmh4r3nVZn2MbkLeZP222QF5nfXnaV7Iu6wPwc+pgDcBWsIjGWAJ1SMZYAnVIxlgCQBQH/cEoH5bE4D680gA6sOigPYKmK4OthUe6ivgdXUQFvXQ5isgoMlXoBYAoANYAIAOYGHmEcQJHOfcMx/BIOO2Wmuf6QgOY4x+PNMRLJ/lExaPQ0iXuE/tHvcEwH+vQzNCDwAsvF51DT0AsPCnmzvo/bNqFeCm1mlMjQIGkQZ6O9QJIFJDb16dAuZu7qD3MwDvuONxEGBR/EBAbeDhBkDxnT6HDHDR3QDWroOIEGCMOWCBAMjw+44A59x+s4CXKAMrUBkEN4AXYQVZeAc0g4wEaEjdE6C6bvYlQC+BAMtbIEDq/iBAh4H45QqIUxuVkAHsAwIOkV77gIBZOu2DfIhRAZEANKGM6MQEQBNKj05MgBAW8R060c9opDcBe2oktOLaaD9rI2krvmrtRzTSJ4TZzzqUUicCsL/vgJ/xDjiP/grwYQkZ8JfXuP7ra/z2Od8n0l5MpLWYSEcxkZY8kb4cad8OVZZwHetjMdb7Yqx/7mOdi8UVi8UWi8UUi8UXq8kVq80Wq80Uq61Yjt8t12/W+y9a9u+HWMq6EgAAAABJRU5ErkJggg=="
+	/> The 4 {{Blog_PostLink "2022-04-18" "bits"}} used in Marisa's Stage 4 boss
+	fight. Coincidentally also related to the rare <code>Divide Error</code>
+	crash in that fight.
+</p></li><li><p>
+	<img class="inline_sprite"
+	src="data:image/gif;base64,R0lGODlhIAAgAPIBAAAAAP//Vf/P3//v75qa/wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFDgABACwAAAAAIAAgAAADoBi6rPTwtUnZGzgPIau/WihwhNeAYTqSZkCkcLZyX2zP9PTaMZ5bvB6uBAyqfD+XDCdEEpUrgBQw00SlOACRMJp6qUjBNFviir9f5HgmfaDf4PBVS4Cj5ex23Z7Ge918Xn5/e4GCWWiAYxuGfIpSGY12ZYKMkokOl41PhZpvTy6ekyeimKSlfxSdoqCnrC2Phh0tLqufrbS1cLO5OhEQtAkAIfkEBQ4AAQAsAQABAB4AHAAAA4sYuksEMALhmL3ByS3EqBijbWQ3fESYkSzknR/2tOwLp2I9CK194orZBtaD/RpFns4YW9FovqPwWYr+plSJifnJ1qxELwd8EmvJZXNny01n1+t2+A1HD7z1uByfJ1PofVwUWF9rEWw7FE5QcId5OIRjhi6PSE99lZaMmGtAQVScHZ6aPZijIpFnnaMJACH5BAUOAAEALAMAAQAcAB4AAAOAGLpBBDBCx2p1MkdqF9bgRHRPaE7XqQKjUq5n+8JhS6/jreZ63EeCgUAy0w2OP1BwaBI4n0nAcwrVUa/WK5am3a6oQG9IGyYrBQQw5Hk8TiXsdLdNF1Lbo3l9vx/Jp3yBeC5XgoItDXeGfReAi3SIDA5sjxwdDXKGlpceaXybFQkAIfkEBQ4AAQAsAQADAB4AHAAAA4wYqkTyD8hJQVuYwR1rJZnGcd6XOeNYUuCCpts6tcEbS6RsiTnQryDUYDjo+G66hoBIhAl0EgeTCYNKptSUFYDNIqHd5k8XHn6t5eJzSykb2dfwG07oztkN+xoerWH3fC11U4AUS4UzLoQrRCU0flQrh44ni3QhkGaXmDWDdx4XnC51n1GPoqOIFqcYCQAh+QQFDgAEACwAAAAAIAAgAAADoEi6rPHwtUnZGzgPIau/WihwgdeAYTqSJhGkcLZyX2zP9PTaMZ5bvB6uBAyqfD+XDCdEEpUrgBQw00SlOAAxMJp6qUjBNFviir9f5HgmfaDf4PBVG4Cj5ex23Z7Ge918Xn5/e4GCWWiAYxuGfIpSGY12ZYKMkokOl41PhZpvTy6ekyeimKSlfxSdoqCnrC2Phh0tLqufrbS1cLO5OhEQtAkAIfkEBQ4ABAAsAQABAB4AHAAAA4tIuhsBMALhmL3EyS3EqBijbWQ3fEGYkSzknR/2tOwLp2I9CK194orZBtaD/RpFns4YW9FovqPwWYr+plSJifnJ1qxELwd8EmvJZXNny01n1+t2+A1HD7z1uByfJ1PofVwUWF9rEWw7FE5QcId5OIRjhi6PSE99lZaMmGtAQVScHZ6aPZijIpFnnaMJACH5BAUOAAQALAMAAQAcAB4AAAOASLoUATBCx2p1MkdqF9bgFHRPaE7XqQKjUq5n+8JhS6/jreZ63EeCgUAy0w2OP1BwaBI4n0nAcwrVUa/WK5am3a6oQG9IGyYrBQEw5Hk8TiXsdLdNF1Lbo3l9vx/Jp3yBeC5XgoItDXeGfReAi3SIDA5sjxwdDXKGlpceaXybFQkAIfkEBQ4ABAAsAQADAB4AHAAAA4xIqhHyD8hJQVuYwR1rDZnGcd6XOeNYUuCCpts6tcQbS6RsiTnQryDUYDjo+G66hoBIhAl0EgeTCYNKptSUFYDNIqHd5k8XHn6t5eJzSykb2dfwGx7oztkN+xoerWH3fC11U4AUS4UzLoQrRCU0flQrh44ni3QhkGaXmDWDdx4XnC51n1GPoqOIFqcYCQA7
+	"/> Stage 4 Reimu's spinning orbs. Note how the game uses two different sets
+	of sprites just to have two different outline colors. This was probably
+	better than messing with the palette, which can easily cause unintended
+	effects if you only have 16 colors to work with. Heck, <a
+	href="/blog/tag/palette">I have an entire blog post tag just to highlight
+	these cases</a>. Capped to the full 32 entities.
+</p></li><li><p>
+	<img class="inline_sprite"
+	src="data:image/gif;base64,R0lGODlhIAAgAPEDAP9FRf+quv///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDgADACwAAAAAIAAgAAACwJyPCAvp75hcsCoZcqAW4iyEW9NFlBaKXKkYWDqyDzMsgUoe5DrrwC2I1RqcXIWxuSWJTJcxQRsqf8nRxlWy/YI/ajf2hHqBVm1XcsxQcUlu9TqcaKzuIMzOjU/2ZGDqz4U0NwgCaAjzcnhISJgoAkIXuLdX0zf4JfClNumioaVG9xkmtiS35alm8bXTuRWYmgZ74QcaUBPLI8Vmmys24xpUNQr122cjK+NEJppM+ujV7GwFF+0DGlXto5Xtgd1RAAAh+QQJDgADACwBAAAAHwAfAAACxpyPAwvamqI8rYLA1tzyBqxxk3UJ5heKFIMCpgCqo/edqWywS2Df8g7i9TiZxwH1Gm6KoV1JmTM6PBlU0BZwTB+7U+vyhDk/WRRF+Pp6xBgrOetAJ8nPoK5t4ZFh6H4b/5en5pL0AiRAlQh295Z28hgYx6WAV9I416KlUQHIU1WTtlgRNUDnCQSEdpGjSWnFV8mit2nE1ebFEKXjk9BFF8FEtEYnhcDba2mG09ElVrwcJWQ1Ch0dmlktqxf4rPJJE1O9RSJTAAAh+QQJDgADACwBAAAAHgAfAAACwZyPaQDq/1iDlLJa75RjOv4FEhCIl8KYiEamgmB6C1meXSvmL2wvJawy1CQ7YM/1GuJoxeEKmczFAs3gIUWt0kRa2Y3mog6z0d5ViTWSnagGC1n61USdhGYhJO/m8Xud1SGll7IVULdyM6A0CJajaPh0M1Yk0FJYE2KSpVM2Queg+WK5hlMSAbfYhOX1tTkFJegl4YrpuQdyhdryRJJkNrunxJv1yyRqlgvGmsb2McIq2RfjjLySA2aBEf2pnV0NUQAAIfkEBQ4AAwAsAQABAB8AHwAAAsicf6CA7Y+WgobRqEKYb92xaMJmYVXZKcJKlgwHQpm4jtwEtCB6arRtyQgljUkrUNtockylz/UK5pDK6REJPO0qStuTSmV5EjsJVVhLj0gO3EYMWKufvG0zmZu3xsVld5S0RERhlZEmOHhB9yMwE/BxEsLoN1UX6Vhj1di0EYOBidf1RZcwE+hDEvblGYnFQne34shnuIYohOVUiSFSBWMqptSx2pYH5JMSUle7xkRIWmQsdGElk6cDuVVcaUlonZGdLdEd3nZRAAA7"
+	/> The chasing cross bullets, seen in Phase 14 of the same Stage 6 Yuuka
+	fight. Featuring some smart sprite work, making use of point symmetry to
+	achieve a fluid animation in just 4 frames. This is
+	{{HTML_Tag "good-code" nil}} in sprite form. Capped to 31 entities, because
+	the 32<sup>nd</sup> custom entity during this fight is defined to be…
+</p></li><li><p>
+	The single purple pulsating and shrinking safety circle, seen in Phase 4 of
+	the same fight. The most interesting aspect here is actually still related
+	to the cross bullets, whose spawn function is wrongly limited to 32 entities
+	and could theoretically overwrite this circle. {{HTML_Emoji "zunpet"}} This
+	is strictly landmine territory though:<ul>
+		<li>Yuuka never uses these bullets and the safety circle
+		simultaneously</li>
+		<li>She never spawns more than 24 cross bullets</li>
+		<li>All cross bullets are fast enough to have left the screen by the
+		time Yuuka restarts the corresponding subpattern</li>
+		<li>The cross bullets spawn at Yuuka's center position, and assign its
+		Q12.4 coordinates to structure fields that the safety circle interprets
+		as raw pixels. The game does try to render the circle afterward, but
+		since Yuuka's static position during this phase is nowhere near a valid
+		pixel coordinate, it is immediately clipped.</li>
+	</ul></p></li>
+	<li><p>The flashing lines seen in Phase 5 of the Gengetsu fight,
+	telegraphing the slightly random bullet columns.
+	<figure class="singleplayer_playfield">
+		<rec98-image-switcher><img
+			src="{{$bx2s_0}}"
+			data-title="First color"
+			alt="The spawn column lines in the TH05 Gengetsu fight, in the first of their two flashing colors."
+			class="active"
+		/><img
+			src="{{$bx2s_1}}"
+			data-title="Second color"
+			alt="The spawn column lines in the TH05 Gengetsu fight, in the second of their two flashing colors."
+		/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	</figure></p></li>
+</ol><p>
+	These structures only took 1 push to reverse-engineer rather than the 2 I
+	needed for their TH05 counterparts because they are much simpler in this
+	game. The "structure" for Gengetsu's lines literally uses just a single X
+	position, with the remaining 24 bytes being basically padding. The only
+	minor bug I found on this shallow level concerns Marisa's bits, which are
+	clipped at the right and bottom edges of the playfield 16 pixels earlier
+	than you would expect:
+</p><figure class="singleplayer_playfield">
+	{{call .VideoPlayer $vid_0.SetActive $vid_1}}
+</figure><hr /><p>
+	The remaining push went to a bunch of smaller structures and functions:
+</p><ul><li>
+	The structure for the up to 2 "thick" (a.k.a. "Master Spark") lasers. Much
+	saner than the
+	{{Blog_PostLink "2023-01-17" "madness of TH05's laser system"}} while being
+	equally customizable in width and duration.
+</li><li>
+	The structure for the various monochrome 16×16 shapes in the background of
+	the Stage 6 Yuuka fight, drawn on top of the checkerboard. <img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIjjI+pBrDa2kPRzVAlzbzizh2gt4HQeJolKpJZG62W9tAXUgAAOw==" alt="" /><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIrjA2Aes2PWlA00XkYzjxK52nSY31O4plbapLiZ0FtqKaaeHMVeoGbDCNJCgA7" alt="" /><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIojB8AyKzdlFwwmWfjldft2R3LBFLkiaZnl2bh6r5cLG4hBFe2jmBMAQA7" alt="" /><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIpjA2Zx6gPWoCUvXZdlEqf7oFQuExZJ54LaG6tx5Wtq9HUiN10zkq+VAAAOw==" alt="" />
+</li><li>
+	The rendering code for the three falling stars in the background of Stage 5.
+	The effect here is entirely palette-related: After blitting the stage tiles,
+	the {{Blog_PostLink "2021-11-29" "1bpp star image"}} is <code>OR</code>ed
+	into only the 4<sup>th</sup> VRAM plane, which is equivalent to setting the
+	highest bit in the palette color index of every pixel within the star-shaped
+	region. This of course raises the question of how the stage would look like
+	if it was fully illuminated: <figure class="s5-{{.Date}}">
+		<rec98-image-switcher style="width: 192px;"><img
+			src="{{$s5_0}}"
+			data-title="Lights off"
+			alt="The full tile map of TH04's Stage 5, without scrolling stars illuminating parts of the map."
+		/><img
+			src="{{$s5_1}}"
+			data-title="Lights on"
+			alt="The full tile map of TH04's Stage 5, with the illumination effect of the scrolling star animation applied equally to the entire map."
+			class="active"
+		/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+		<figcaption>
+			The full tile map of TH04's Stage 5, in both dark and fully
+			illuminated views. Since the illumination effect depends on two
+			matching sets of palette colors that are distinguished by a single
+			bit, the illuminated view is limited to only 8 of the 16 colors. The
+			dark view, on the other hand, can freely use colors from the
+			illuminated set, since those are unaffected by the <code>OR</code>
+			operation.
+		</figcaption>
+	</figure>
+</li><li>
+	Most code that modifies a stage's tile map, and directly specifies tiles via
+	their top-left offset in VRAM.<br />
+	Thanks to code alignment reasons, this forced a much longer detour into the
+	.STD format loader. Nothing all too noteworthy there since we're still
+	missing the enemy script and spawn structures before we can call .STD
+	"reverse-engineered", but maybe still helpful if you're looking for an
+	overview of the format. Also features a buffer overflow landmine if a .STD
+	file happens to contain more than 32 enemy scripts… you know, the usual
+	stuff.
+</li></ul><hr /><p>
+	To top off the second push, we've got the vertically scrolling checkerboard
+	background during the Stage 6 Yuuka fight, made up of 32×32 squares. This
+	one deserves a special highlight just because of its needless complexity.
+	You'd think that even a performant implementation would be pretty simple:
+</p><ol>
+	<li>Set the GRCG to TDW mode</li>
+	<li>Set the GRCG tile to one of the two square colors</li>
+	<li>Start with <var>Y</var> as the current scroll offset, and <var>X</var>
+	as some indicator of which color is currently shown at the start of each row
+	of squares</li>
+	<li>Iterate over all lines of the playfield, filling in all pixels that
+	should be displayed in the current color, skipping over the other ones</li>
+	<li>Count down <var>Y</var> for each line drawn</li>
+	<li>If <var>Y</var> reaches 0, reset it to 32 and flip <var>X</var></li>
+	<li>At the bottom of the playfield, change the GRCG tile to the other color,
+	and repeat with the initial value of <var>X</var> flipped</li>
+</ol><p>
+	The most important aspect of this algorithm is how it reduces GRCG state
+	changes to a minimum, avoiding the costly port I/O that we've identified
+	time and time again as one of the main bottlenecks in TH01. With just 2
+	state variables and 3 loops, the resulting code isn't that complex either. A
+	naive implementation that just drew the squares from top to bottom in a
+	single pass would barely be simpler, but much slower: By changing the GRCG
+	tile on every color, such an implementation would burn a low 5-digit number
+	of CPU cycles per frame for the 12×11.5-square checkerboard used in the
+	game.<br />
+	And indeed, ZUN retained all important aspects of this algorithm… but still
+	implemented it all in ASM, with a ridiculous layer of x86 segment arithmetic
+	on top? {{HTML_Emoji "zunpet"}} Which blows up the complexity to 4 state
+	variables, 5 nested loops, and a bunch of constants in unusual units. I'm
+	not sure what this code is supposed to optimize for, especially with that
+	rather questionable register allocation that nevertheless leaves one of the
+	general-purpose registers unused. {{HTML_Emoji "onricdennat"}} Fortunately,
+	the function was still decompilable without too many code generation hacks,
+	and retains the 5 nested loops in all their <code>goto</code>-connected
+	glory. If you want to add a checkerboard to your next <a
+	href="https://lainnet.superglobalmegacorp.com/blog/2023_05_11_n02.html">PC-98
+	demo</a>, just stick to the algorithm I gave above.<br />
+	(Using a single XOR for flipping the starting X offset between 32 and 64
+	pixels <i>is</i> pretty nice though, I have to give him that.)
+</p><hr /><p>
+	This makes for a good occasion to talk about the third and final GRCG mode,
+	completing the series I started with my previous coverage of the
+	{{Blog_PostLink "2020-12-18" "RMW"}} and
+	{{Blog_PostLink "2022-01-31" "TCR"}} modes. The TDW (Tile Data Write) mode
+	is the simplest of the three and just writes the 8×1 GRCG tile into VRAM
+	as-is, without applying any alpha bitmask. This makes it perfect for
+	clearing rectangular areas of pixels – or even all of VRAM by doing a single
+	<code>memset()</code>:
+</p><pre>// Set up the GRCG in TDW mode.
+outportb(0x7C, 0x80);
+
+// Fill the tile register with color #7 (0111 in binary).
+outportb(0x7E, 0xFF); // Plane 0: (B): (********)
+outportb(0x7E, 0xFF); // Plane 1: (R): (********)
+outportb(0x7E, 0xFF); // Plane 2: (G): (********)
+outportb(0x7E, 0x00); // Plane 3: (E): (        )
+
+// Set the 32 pixels at the top-left corner of VRAM to the exact contents of
+// the tile register, effectively repeating the tile 4 times. In TDW mode, the
+// GRCG ignores the CPU-supplied operand, so we might as well just pass the
+// contents of a register with the intended width. This eliminates useless load
+// instructions in the compiled assembly, and even sort of signals to readers
+// of this code that we do not care about the source value.
+*reinterpret_cast&lt;uint32_t far *&gt;(MK_FP(0xA800, 0)) = _EAX;
+
+// Fill the entirety of VRAM with the GRCG tile. A simple C one-liner that will
+// probably compile into a single `REP STOS` instruction. Unfortunately, Turbo
+// C++ 4.0J only ever generates the 16-bit `REP STOSW` here, even when using
+// the `__memset__` intrinsic and when compiling in 386 mode. When targeting
+// that CPU and above, you'd ideally want `REP STOSD` for twice the speed.
+memset(MK_FP(0xA800, 0), _AL, ((640 / 8) * 400));
+</pre><p>
+	However, this might make you wonder why TDW mode is even necessary. If it's
+	functionally equivalent to RMW mode with a CPU-supplied bitmask made up
+	entirely of 1 bits (i.e., <code>0xFF</code>, <code>0xFFFF</code>, or
+	<code>0xFFFFFFFF</code>), what's the point? The difference lies in the
+	hardware implementation: If all you need to do is <i>write</i> tile data to
+	VRAM, you don't need the <i>read</i> and <i>modify</i> parts of RMW mode
+	which require additional processing time. The <i>PC-9801 Programmers'
+	Bible</i> claims a speedup of almost 2× when using TDW mode over equivalent
+	operations in RMW mode.<br />
+	And that's the only performance claim I found, because none of these old
+	PC-98 hardware and programming books did any benchmarks. Then again, it's
+	not too interesting of a question to benchmark either, as the byte-aligned
+	nature of TDW blitting severely limits its use in a game engine anyway.
+	Sure, <i>maybe</i> it makes sense to temporarily switch from RMW to TDW mode
+	if you've identified a large rectangular and byte-aligned section within a
+	sprite that could be blitted without a bitmask? But the necessary
+	identification work likely nullifies the performance gained from TDW mode,
+	I'd say. In any case, that's pretty deep
+	{{HTML_Tag "micro-optimization" nil}} territory. Just use TDW mode for the
+	few cases it's good at, and stick to RMW mode for the rest.
+</p><p>
+	So is this all that can be said about the GRCG? Not quite, because there are
+	4 bits I haven't talked about yet…
+</p><hr /><p>
+	And now we're just 5.37% away from 100% position independence for TH04! From
+	this point, another 2 pushes should be enough to reach this goal. It might
+	not look like we're <i>that</i> close based on the current estimate, but a
+	big chunk of the remaining numbers are false positives from the player shot
+	control functions. Since we've got a very special deadline to hit, I'm going
+	to cobble these two pushes together from the two current general
+	subscriptions and the rest of the backlog. But you can, of course, still
+	invest in this goal to allow the existing contributions to go to something
+	else.<br />
+	… Well, if the store was actually open. {{HTML_Emoji "thonk"}} So I'd better
+	continue with a quick task to free up some capacity sooner rather than
+	later. Next up, therefore: Back to TH02, and its item and player systems.
+	Shouldn't take that long, I'm not expecting any surprises there. (Yeah, I
+	know, famous last words…)
+</p>

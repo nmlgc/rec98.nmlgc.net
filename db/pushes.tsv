@@ -239,3 +239,5 @@ P0238	[229]	Website (TypeScript migration + Stripe integration, part 1/2: Basic 
 P0239	[238]	Website (Stripe integration, part 2/2: Subscription support) + TH01 Anniversary Edition (Minor bugfixes)	2023-05-01T23:56:59Z	nmlgc/ReC98/compare/c5e51e6...P0239	0
 P0240	[195]	TH04 PI/RE (Stage 5 star rendering + Stage 6 Yuuka checkerboard + Custom entity structures, part 1/2)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/be69ab6...40c900f	1
 P0241	[241, 242]	TH04 PI/RE (Custom entity structures, part 2/2 + Thick laser structure + PI false positives + .STD loading)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/40c900f...08352a5	1
+P0242	[222, 226, 233]	TH02 RE (Score tracking + HUD rendering)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/08352a5...dfa758d	1
+P0243	[233, 240, 243]	TH02 RE (Items)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/dfa758d...ac33bd2	1

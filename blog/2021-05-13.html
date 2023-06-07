@@ -9,8 +9,9 @@
 </p><ul>
 	<li><strong>TH02:</strong><ul>
 		<li><code>MAIN.EXE:</code> The final PC-98-specific low-level rendering functions are blocked by a single inconsistent and thus undecompilable assembly instruction. Rather than going for {{Blog_PostLink "2023-01-17" "code generation"}} and turning the rest of the function into a mess, I'd like to introduce a new build step between compilation and linking to patch "mistakes" like these. This would be an investment of 1-2 pushes into more readable code. Otherwise, I could continue with<ul>
-			<li>items, followed by player character code, or</li>
-			<li>HUD rendering, followed by the stage/game clear screens and their score calculations.</li>
+			<li>player character movement and rendering code, followed by the code for player shots and the individual shot types,</li>
+			<li>bomb rendering, or</li>
+			<li>the stage/game clear screens and their score calculations.</li>
 		</ul></li>
 		<li><code>MAINE.EXE:</code> The ending sequences. Required for the multilingual translations that {{DB_CustomerByID 9}} might commission once they become viable.</li>
 	</ul></li>

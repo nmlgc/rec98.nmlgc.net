@@ -1,0 +1,305 @@
+{{$points := (call .PostFileURL "TH02-Point-item-value.png") -}}
+{{$vid := (call .Video "TH02-Score-delta-dialog-start-quirk" "Video of an attempt to maximize the effects of TH02's score-delta-as-bonus quirk when starting a boss fight, by trying to land as many A-Type / Wide / High Mobility shots as possible on all Five Magic Stones while bombing") -}}
+
+{{$vid.AddMarker 223 "Last frame of stage portion" "right" -}}
+{{$vid.AddMarker 224 "1750 extra points added" "left" -}}
+
+<style>
+	#points-{{.Date}},
+	#points-{{.Date}} > img {
+		width: 768px;
+	}
+	#collect_skill_{{.Date}} .item_row,
+	#collect_skill_{{.Date}} th {
+		border-bottom: var(--table-border);
+	}
+	#collect_skill_{{.Date}} tbody td,
+	#collect_skill_{{.Date}} tbody th {
+		text-align: right;
+	}
+	#collect_skill_{{.Date}} tbody td:last-child {
+		text-align: left;
+	}
+</style>
+
+{{- define "th02_power" -}}
+	<img class="inline_sprite" width="16" height="16" alt="Power" title="Power"
+	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAP8AAP///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI8nIOJxqffBhK00uWsFni+yQWAFFylGQ4ACIbhyD6mGm8IfLbVspaKdstsXirHJzhiHEXFyOhZTEaiVEYBADs="
+	/>
+{{- end -}}
+{{- define "th02_point" -}}
+	<img class="inline_sprite" width="16" height="16" alt="Point" title="Point"
+	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAIgAiP///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI+nIOJxqffBhK00uXsrHjf9AFSoJFcMADTAyLiagkrqpLs/JrxmW62DHQ5YCahaHQLiI7DxzKSij6ZkWmUUQAAOw=="
+	/>
+{{- end -}}
+{{- define "th02_bomb" -}}
+	<img class="inline_sprite" width="16" height="16" alt="Bomb" title="Bomb"
+	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAFWIEf///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI5nIOJxqffBhK00uWuqngKDwaAFGjmFwxAmHAieYZq6KIjjWpzibbaCLO4RsDHg9gwIpARpDPCeEYKADs="
+	/>
+{{- end -}}
+{{- define "th02_bigpower" -}}
+	<img class="inline_sprite" width="16" height="16" alt="5-power"
+	title="5-power"
+	src="data:image/gif;base64,R0lGODlhEAAQAPEDAP////8AAAAAAAAAACH5BAUKAAMALAAAAAAQABAAAAI2nAepeQ0BIwQNyRuoeXmpaXWLOHEJdnZTmZomO6qy1LreKttvjuWh98kcOD2hYFikHB1ApaEAADs="
+	/>
+{{- end -}}
+{{- define "th02_1up" -}}
+	<img class="inline_sprite" width="16" height="16" alt="1-up" title="1-up"
+	src="data:image/gif;base64,R0lGODlhEAAQAKECAIgAiP///wAAAAAAACH5BAEKAAIALAAAAAAQABAAAAIzlA2pcA0BI2RO2kDFw0tNPXVLOEUiyYVjyp7t9mwmDGM2mpQyLtEf7crsLhnE5dNAiIoFADs="
+	/>
+{{- end -}}
+
+<p>
+	OK, let's decompile TH02's HUD code first, gain a solid understanding of how
+	increasing the score works, and then look at the item system of this game.
+	Should be no big deal, no surprises expected, let's go!
+</p><p>
+	…Yeah, right, that's <i>never</i> how things end up in ReC98 land.
+	{{HTML_Emoji "godzun"}} And so, we get the usual host of newly discovered
+	oddities in addition to the expected insights into the item mechanics. Let's
+	start with the latter:
+<p><ul>
+	<li>
+		Some regular stage enemies appear to randomly drop either {{template
+		"th02_power"}} or {{template "th02_point"}} items. In reality, there is
+		very little randomness at play here: These items are picked from a
+		hardcoded, repeating ring of 10 items
+		(𝄆&nbsp;{{- template "th02_power" -}}
+		{{- template "th02_point" -}}{{- template "th02_power" -}}
+		{{- template "th02_point" -}}{{- template "th02_point" -}}
+		{{- template "th02_power" -}}{{- template "th02_power" -}}
+		{{- template "th02_point" -}}{{- template "th02_point" -}}
+		{{- template "th02_power" -}}&nbsp;𝄇), and the only source of
+		randomness is the initial position within this ring, which changes at
+		the beginning of every stage. ZUN further increased the illusion of
+		randomness by only dropping such a semi-random item for every
+		4<sup>th</sup> defeated enemy that is coded to drop one, and also having
+		enemies that drop fixed, non-random items. I'd say it's a decent way of
+		ensuring both randomness and balance.<ul><li>
+			There's a <sup>1</sup>/<sub>512</sub> chance for such a semi-random
+			item drop to turn into a {{template "th02_bomb"}} item instead –
+			which translates to <sup>1</sup>/<sub>2048</sub> enemies due to the
+			fixed drop rate.
+		</li><li>
+			After using a continue (both after a Game Over, or after manually
+			choosing to do so through the Pause menu for whatever reason), the
+			next
+		<code>(﻿<var>Stage number</var>&nbsp;+&nbsp;1)</code> semi-random item
+		drops are turned into {{template "th02_bigpower"}} items instead.
+		</li></ul>
+	</li><li>
+		Items can contribute up to 25 points to the skill value and subsequent
+		rating (<span lang="ja">あなたの腕前</span>) on the final verdict
+		screen. Doing well at item collection first increases a separate
+		<code>collect_skill</code> value:
+		<figure><table id="collect_skill_{{.Date}}">
+			<thead>
+				<tr>
+					<th>Item</th>
+					<th>Collection condition</th>
+					<th><code>collect_skill</code> change</th>
+				</tr>
+			</thead><tbody>
+				<tr>
+					<th rowspan="2">{{template "th02_power"}}</th>
+					<td>below max power</td>
+					<td>+1</td>
+				</tr><tr class="item_row">
+					<td>at or above max power</td>
+					<td>+2</td>
+				</tr><tr>
+					<th rowspan="4">{{template "th02_point"}}</th>
+					<td>value == 51,200</td>
+					<td>+8</td>
+				</tr><tr>
+					<td>value ≥20,000 and &lt;51,200</td>
+					<td>+4</td>
+				</tr><tr>
+					<td>value ≥10,000 and &lt;20,000</td>
+					<td>+2</td>
+				</tr><tr class="item_row">
+					<td>value &lt;10,000</td>
+					<td>+1</td>
+				</tr><tr class="item_row">
+					<th>{{template "th02_bomb"}}</th>
+					<td>with 5 bombs in stock</td>
+					<td>+16</td>
+			</tbody>
+		</table><figcaption>
+			Note the lack of anything involving {{template "th02_1up"}} items.
+			At the maximum of 5 lives, the item spawn function transforms them
+			into bomb items anyway. It <i>is</i> possible though to gain the
+			5<sup>th</sup> life by reaching one of the extend scores while a
+			{{template "th02_1up"}} item is still on screen; in that case,
+			collecting the 1-up has no effect at all.
+		</figcaption></figure>
+		Every 32 <code>collect_skill</code> points will then raise the
+		<code>item_skill</code> by 1, whereas every 16 dropped items will lower
+		it by 1. Before launching into the ending sequence,
+		<code>item_skill</code> is clamped to the [﻿0;&nbsp;25﻿] range and
+		added to the other skill-relevant metrics we're going to look at in
+		future pushes.
+	</li><li>
+		When losing a life, the game will drop a single
+		{{template "th02_bigpower"}} and 4 randomly picked {{template
+		"th02_power"}} or {{template "th02_point"}} items in a random order
+		around Reimu's position. Contrary to <a
+		href="https://en.touhouwiki.net/index.php?title=Story_of_Eastern_Wonderland%2FGameplay&type=revision&diff=55912&oldid=55911">an
+		unsourced Touhou Wiki edit from 2009</a>, each of the 4 does have <span
+		class="hovertext" title="Sure, under the assumption that the master.lib RNG is uniformly distributed for every seed, but the intent of ZUN's code is clear in this regard.">an
+		equal and independent chance</span> of being either a
+		{{template "th02_power"}} or {{template "th02_point"}} item.
+	</li><li>
+		Finally, and perhaps <a
+		href="https://twitter.com/jazz_cappricio/status/1665508116799053824">most
+		interestingly</a>, {{template "th02_point"}} item values! These are
+		determined by the top Y coordinate of an item during the frame it is
+		collected on. The maximum value of 51,200 points applies to the top 48
+		pixels of the playfield, and drops off as soon as an item falls below
+		that line. For the rest of the playfield, point items then use a formula
+		of <code>(﻿28,000&nbsp;-&nbsp;(﻿<var>top Y coordinate of item in
+		screen space</var>&nbsp;×&nbsp;70﻿)﻿)</code>:
+		<figure class="pixelated" id="points-{{.Date}}">
+			<img src="{{$points}}" alt="" /><figcaption>
+			Point items and their collection value in TH02. The numbers
+			correspond to items that are collected while their top Y coordinate
+			matches the line they are directly placed on. The upper
+			{{template "th02_point"}} item in the image would therefore give
+			23,450 points if the player collected it at that specific
+			position.<br />
+			Reimu collects any item whose 16×16 bounding box lies fully within
+			the <span style="color: red;">red</span> 48×40 hitbox. Note that
+			the box isn't cut off in this specific case: At Reimu's lowest
+			possible position on the playfield, the lowest 8 pixels of her
+			sprite are clipped, but the item hitbox still happens to end exactly
+			at the bottom of the playfield. Since an item's Y velocity
+			accelerates on every frame, it's entirely possible to collect a
+			point item at the lowest value of 2,240 points, on the exact frame
+			before it falls below the collection hitbox.
+		</figcaption>
+	</figure></li>
+</ul><hr /><p>
+	Onto score tracking then, which only took a single commit to raise another
+	big research question. It's widely known that TH02 grants extra lives upon
+	reaching a score of 1, 2, 3, 5, or 8 million points. But what hasn't been
+	documented is the fact that the game does not stop at the end of the
+	hardcoded extend score array. ZUN merely ends it with a sentinel value of
+	999,999,990 points, but if the score ever increased beyond this value, the
+	game will interpret adjacent memory as signed 32-bit score values and
+	continue giving out extra lives based on whatever thresholds it ends up
+	finding there. Since the following bytes happen to turn into a negative
+	number, the next extra life would be awarded right after gaining another 10
+	points at exactly 1,000,000,000 points, and the threshold after that would
+	be 11,114,905,600 points. Without an explicit counterstop, the number of
+	score-based extra lives is theoretically unlimited, and would even continue
+	after the signed 32-bit value overflowed into the negative range. Although
+	we certainly have bigger problems once scores ever reach that point…
+	{{HTML_Emoji "tannedcirno"}}<br />
+	That said, it seems impossible that any of this could ever happen
+	legitimately. The current high scores of <a
+	href="https://www.youtube.com/watch?v=Q-XY9bb50_k">42,942,800 points on
+	Lunatic</a> and <a
+	href="https://www.youtube.com/watch?v=nUmMpA1f-Kc">42,603,800 points on
+	Extra</a> don't even reach <sup>1</sup>/<sub>20</sub> of ZUN's sentinel
+	value. Without either a graze or a bullet cancel system, the scoring
+	potential in this game is fairly limited, making it unlikely for high scores
+	to ever increase by that additional order of magnitude to end up anywhere
+	near the 1 billion mark.<br />
+	But can we <i>really</i> be sure? Is this a landmine because it's impossible
+	to ever reach such high scores, or is it a quirk because these extends
+	<i>could</i> be observed under rare conditions, perhaps as the result of
+	other quirks? And if it's the latter, how many of these adjacent bytes do we
+	need to preserve in cleaned-up versions and ports? We'd pretty much need to
+	know the upper bound of high scores within the original stage and boss
+	scripts to tell. This value <i>should</i> be rather easy to calculate in a
+	game with such a simple scoring system, but doing that only makes sense
+	after we RE'd all scoring-related code and could efficiently run such
+	simulations. It's definitely something we'd need to look at before working
+	on this game's <code>debloated</code> version in the far future, which is
+	when the difference between quirks and landmines will become relevant.
+	Still, all that uncertainty just because ZUN didn't restrict a loop to the
+	size of the extend threshold array…
+</p><hr /><p>
+	TH02 marks a pivotal point in how the PC-98 Touhou games handle the current
+	score. It's the last game to use a 32-bit variable before the later games
+	would regrettably start using arrays of <a
+	href="https://en.wikipedia.org/wiki/Binary-coded_decimal">binary-coded
+	decimals</a>. More importantly though, TH02 is also the first game to
+	introduce the delayed score counting animation, where the displayed score
+	intentionally lags behind and gradually counts towards the real one over
+	multiple frames. This could be implemented in one of two ways:
+</p><ol>
+	<li>Keep the displayed score as a separate variable inside the presentation
+	layer, and let it gradually count up to the real score value passed in from
+	the logic layer</li>
+	<li>Burden the game logic with this presentation detail, and split the score
+	into two variables: One for the displayed score, and another for the
+	<i>delta</i> between that score and the actual one. Newly gained points are
+	first added to the delta variable, and then gradually subtracted from there
+	and added to the real score before being displayed.</li>
+</ol><p>
+	And by now, we can all tell which option ZUN picked for the rest of the
+	PC-98 games, even if you don't remember
+	{{Blog_PostLink "2022-03-27" "me mentioning this system last year"}}.
+	{{Blog_PostLink "2023-03-30" "Once again"}}, TH02 immortalized ZUN's initial
+	attempt at the concept, which lacks the abstraction boundaries you'd want
+	for managing this one piece of state across two variables, and messes up the
+	abstractions it <i>does</i> have. In addition to the regular score
+	transfer/render function, the codebase therefore has
+</p><ul>
+	<li>a function that transfers the current delta to the score immediately,
+	but does not re-render the HUD, and</li>
+	<li>a function that adds the delta to the score and re-renders the HUD, but
+	does not reset the delta.</li>
+</ul><p>
+	And – you guessed it – I wouldn't have mentioned any of this if it didn't
+	result in one bug and one quirk in TH02. The bug resulting from 1) is pretty
+	minor: The function is called when losing a life, and simply stops any
+	active score-counting animation at the value rendered on the frame where the
+	player got hit. This one is only a rendering issue – no points are lost, and
+	you just need to gain 10 more for the rendered value to jump back up to its
+	actual value. You'll probably never notice this one because you're likely
+	busy collecting the single {{template "th02_bigpower"}} spawned around Reimu
+	when losing a life, which always awards at least 10 points.
+</p><p>
+	The quirk resulting from 2) is more intriguing though. Without a separate
+	reset of the score delta, the function effectively awards the current delta
+	value as a one-time point bonus, since the same delta will still be
+	regularly transferred to the score on further game frames.<br />
+	This function is called at the start of every dialog sequence. However, TH02
+	stops running the regular game loop between the post-boss dialog and the
+	next stage where the delta is reset, so we can only observe this quirk for
+	the pre-boss sequences and the dialog before Mima's form change.
+	Unfortunately, it's not all too exploitable in either case: Each of the
+	pre-boss dialog sequences is preceded by an ungrazeable pellet pattern and
+	followed by multiple seconds of flying over an empty playfield with zero
+	scoring opportunities. By the time the sequence starts, the game will have
+	long transferred any big score delta from max-valued point items. It's
+	slightly better with Mima since you can at least shoot her and use a bomb to
+	keep the delta at a nonzero value, but without a health bar, there is little
+	indication of <i>when</i> the dialog starts, and it'd be long after Mima
+	gave out her last bonus items in any case.<br />
+	But two of the bosses – that is, Rika, and the Five Magic Stones – are
+	scrolled onto the playfield as part of the stage script, and can also be hit
+	with player shots and bombs for a few seconds before their dialog starts.
+	While I'll only get to cover shot types and bomb damage within the next few
+	TH02 pushes, there is an obvious initial strategy for maximizing the effect
+	of this quirk: Spreading out the A-Type / Wide / High Mobility shot to land
+	as many hits as possible on all Five Magic Stones, while firing off a bomb.
+</p><figure class="fullres">{{call .VideoPlayer $vid}}<figcaption>
+	Turns out that the infamous button-mashing mechanics of the
+	player shot are also more complicated than simply pressing and releasing the
+	Shot key at alternating frames. Even this result took way too many
+	takes.
+</figcaption></figure><p>
+	Wow, a grand total of 1,750 extra points! Totally worth wasting a bomb for…
+	yeah, probably not. {{HTML_Emoji "onricdennat"}} But at the very least, it's
+	something that a TAS score run would want to keep in mind. And all that just
+	because ZUN "forgot" a single <code>score_delta = 0;</code> assignment at
+	the end of one function…
+</p><p>
+	And that brings TH02 over the 30% RE mark! Next up: 100% position
+	independence for TH04. If anyone wants to grab the {{HTML_Currency 1033}}
+	that have now been freed up in the cap: Any small Touhou-related task would
+	be perfect to round out that upcoming TH04 PI delivery.
+</p>

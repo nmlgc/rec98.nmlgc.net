@@ -87,7 +87,7 @@
 		<code>(﻿<var>Stage number</var>&nbsp;+&nbsp;1)</code> semi-random item
 		drops are turned into {{template "th02_bigpower"}} items instead.
 		</li></ul>
-	</li><li>
+	</li><li><p>
 		Items can contribute up to 25 points to the skill value and subsequent
 		rating (<span lang="ja">あなたの腕前</span>) on the final verdict
 		screen. Doing well at item collection first increases a separate
@@ -139,7 +139,7 @@
 		<code>item_skill</code> is clamped to the [﻿0;&nbsp;25﻿] range and
 		added to the other skill-relevant metrics we're going to look at in
 		future pushes.
-	</li><li>
+	</p></li><li><p>
 		When losing a life, the game will drop a single
 		{{template "th02_bigpower"}} and 4 randomly picked {{template
 		"th02_power"}} or {{template "th02_point"}} items in a random order
@@ -149,7 +149,7 @@
 		class="hovertext" title="Sure, under the assumption that the master.lib RNG is uniformly distributed for every seed, but the intent of ZUN's code is clear in this regard.">an
 		equal and independent chance</span> of being either a
 		{{template "th02_power"}} or {{template "th02_point"}} item.
-	</li><li>
+	</p></li><li><p>
 		Finally, and perhaps <a
 		href="https://twitter.com/jazz_cappricio/status/1665508116799053824">most
 		interestingly</a>, {{template "th02_point"}} item values! These are
@@ -177,7 +177,7 @@
 			point item at the lowest value of 2,240 points, on the exact frame
 			before it falls below the collection hitbox.
 		</figcaption>
-	</figure></li>
+	</figure></p></li>
 </ul><hr /><p>
 	Onto score tracking then, which only took a single commit to raise another
 	big research question. It's widely known that TH02 grants extra lives upon

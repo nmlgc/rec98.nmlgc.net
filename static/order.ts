@@ -109,9 +109,18 @@ function updatePushAmount(
 function onAmountChange() {
 	const onetime = isOneTime();
 
-	const val = (parseFloat(amount.value) || 0); // could be NaN
+	let val = (parseFloat(amount.value) || 0); // could be NaN
 	const min = parseFloat(amount.min);
 	const max = parseFloat(amount.max);
+
+	// If some troll leaves less than the minimum transaction amount in the
+	// cap, others can't cleanly fill up the final push until other ones have
+	// freed up space in the cap. In that case, round up to the maximum
+	// transaction amount to prevent this from happening.
+	if(val > (max - min)) {
+		val = max;
+	}
+
 	amount.value = Math.max(Math.min(val, max), min).toFixed(
 		(onetime ? 2 : 0)
 	);

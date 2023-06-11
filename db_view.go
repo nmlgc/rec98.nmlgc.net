@@ -157,7 +157,7 @@ type Cap struct {
 
 // Reached returns whether the cap has been reached.
 func (c Cap) Reached() bool {
-	return c.Outstanding >= c.Cap
+	return (c.Outstanding + 1) >= c.Cap
 }
 
 // CapCurrent calculates the cap from the current point in time.

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"math"
+	"math/big"
 	"sort"
 	"time"
 )
@@ -66,14 +67,14 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 
 	for i := len(transactions.All) - 1; i >= 0; i-- {
 		t := transactions.All[i]
-		if t.Outstanding > 0 {
+		if t.Outstanding.Cmp(&big.Rat{}) > 0 {
 			tfg := transactionsForGoal(t.Goal)
 			tfg.Delayed = tfg.Delayed || t.Delayed
 			fpc := tfg.forCustomer(t.Customer)
-			pushprice := pushprices.At(t.Time)
+			fraction, _ := t.Outstanding.Float64()
 			opf := OutstandingPushFraction{
 				ID:       *t.ID,
-				Fraction: float64(t.Outstanding) / float64(pushprice),
+				Fraction: fraction,
 			}
 			fpc.Breakdown = append(fpc.Breakdown, opf)
 			fpc.PushFraction += opf.Fraction

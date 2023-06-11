@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math/big"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -238,38 +239,40 @@ type Transaction struct {
 	Delayed  bool
 
 	// Calculated after the push table has loaded
-	Outstanding int
+	Outstanding big.Rat
 }
 
 // Consumes outstanding cents up to the remaining fraction from p, and returns
 // the new remaining push fraction.
-func (t *Transaction) consume(p *pushTSV, fractionNeeded float64) float64 {
+func (t *Transaction) consume(p *pushTSV, fractionNeeded *big.Rat) *big.Rat {
 	if t.ID.Scope == SMicro {
-		t.Outstanding = 0
-		return 0
+		t.Outstanding.SetInt64(0)
+		return fractionNeeded.SetInt64(0)
 	}
 
-	if fractionNeeded <= 0 {
+	nullRat := &big.Rat{}
+	if fractionNeeded.Cmp(nullRat) <= 0 {
 		log.Fatalf(
 			"%s consumed more transactions than it should have (%v)",
 			p.ID, p.Transactions,
 		)
-	} else if t.Outstanding <= 0 {
+	} else if t.Outstanding.Cmp(nullRat) <= 0 {
 		log.Fatalf("more pushes associated with %s than it paid for", t.ID)
 	}
-	// Get out of floating-point as soon as possible
-	pushprice := float64(pushprices.At(t.Time))
-	pushpriceRem := int(pushprice * fractionNeeded)
 
-	if t.Outstanding >= pushpriceRem {
-		t.Outstanding -= pushpriceRem
-		return 0
+	t.Outstanding.Sub(&t.Outstanding, fractionNeeded)
+
+	// Did we need more than this transaction paid for?
+	if t.Outstanding.Cmp(nullRat) == -1 {
+		// If yes, we fully consumed this transaction. We still need the amount
+		// that's now in the negative.
+		fractionNeeded = fractionNeeded.Set(&t.Outstanding).Neg(fractionNeeded)
+		t.Outstanding.SetInt64(0)
+		return fractionNeeded
 	}
-	// Subtracting would also introduce rounding errors here, which are avoided
-	// by rebuilding the fraction.
-	fractionNeeded = (float64(pushpriceRem-t.Outstanding) / pushprice)
-	t.Outstanding = 0
-	return fractionNeeded
+
+	// Got the exact fraction.
+	return fractionNeeded.SetInt64(0)
 }
 
 // Push represents a single unit of work.
@@ -509,7 +512,7 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 			if len(p.Transactions) == 0 {
 				log.Fatalf("%s has no transactions associated with it", p.ID)
 			}
-			fractionNeeded := float64(1)
+			fractionNeeded := big.NewRat(1, 1)
 			for _, tid := range p.Transactions {
 				t := transactions.Scoped[p.ID.Scope.ToTransaction()][tid-1]
 				ret = append(ret, t)
@@ -517,7 +520,7 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 			for _, t := range ret {
 				fractionNeeded = t.consume(p, fractionNeeded)
 			}
-			if fractionNeeded != 0 {
+			if fractionNeeded.Cmp(&big.Rat{}) != 0 {
 				log.Fatalf(
 					"%s is not fully paid for (missing %v pushes)",
 					p.ID, fractionNeeded,
@@ -606,7 +609,8 @@ func init() {
 
 	transactions.Scoped = make(map[IDScope][]*Transaction)
 	for _, transaction := range transactions.All {
-		transaction.Outstanding = transaction.Cents
+		pushprice := int64(pushprices.At(transaction.Time))
+		transaction.Outstanding.SetFrac64(int64(transaction.Cents), pushprice)
 		transactions.Scoped[transaction.ID.Scope] = append(
 			transactions.Scoped[transaction.ID.Scope], transaction,
 		)

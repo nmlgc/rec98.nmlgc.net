@@ -1,0 +1,245 @@
+{{$vid_hide := (call .Video "TH04-Stage-4-carpet-lighting-landmines-no-TRAM" "Video of TH04's Stage 4 carpet lighting animation with an increased scroll speed of 4 pixels per frame and the text RAM layer hidden, highlighting all landmines in ZUN's original code") -}}
+{{$vid_show := (call .Video "TH04-Stage-4-carpet-lighting-landmines" "Video of TH04's Stage 4 carpet lighting animation with an increased scroll speed of 4 pixels per frame and the text RAM layer shown") -}}
+
+{{$vid_hide.SetTitle "TRAM hidden" -}}
+{{$vid_show.SetTitle "TRAM shown" -}}
+
+{{$vid_hide.AddMarker 30 "➜ 1" "" -}}
+{{$vid_show.AddMarker 30 "➜ 1" "" -}}
+{{$vid_hide.AddMarker 62 "➜ 2" "" -}}
+{{$vid_show.AddMarker 62 "➜ 2" "" -}}
+{{$vid_hide.AddMarker 86 "💡 2" "left" -}}
+{{$vid_show.AddMarker 86 "💡 2" "left" -}}
+
+<style>
+	#carpet-{{.Date}} img {
+		width: 768px;
+	}
+
+	table#power_{{.Date}},
+	table#power_{{.Date}} tbody tr td:nth-child(2) {
+		width: min-content;
+	}
+
+	table#power_{{.Date}} tbody tr th:first-child {
+		background-color: black;
+	}
+
+	table#power_{{.Date}} thead {
+		white-space: nowrap;
+	}
+
+	table#power_{{.Date}} tbody tr td:nth-child(3) {
+		text-align: center;
+		width: 100%;
+	}
+</style>
+
+<p>
+	🎉 After almost 3 years, TH04 finally caught up to TH05 and is now 100%
+	position-independent as well! 🎉
+</p><p>
+	For a refresher on what this means and does not mean, check the
+	announcements from back in 2019 and 2020 when we chased the goal for TH05's
+	{{Blog_PostLink "2019-12-29" "<code>OP.EXE</code>"}} and
+	{{Blog_PostLink "2020-09-17" "the rest of the game"}}. These also feature
+	some demo videos that show off the kind of mods you were able to efficiently
+	code back then. With the occasional reverse-engineering attention it
+	received over the years, TH04's code should now be slightly easier to work
+	with than TH05's was back in the day. Although not by much – TH04 has
+	remained relatively unpopular among backers, and only received more than the
+	funded attention because it shares most of its core code with the more
+	popular TH05. Which, coincidentally, ended up becoming
+	{{Blog_PostLink "2023-05-29" "the reason for getting this done now"}}.<br />
+	Not that it matters a lot. Ever since we reached 100% PI for TH05, community
+	and backer interest in position independence has dropped to near zero. We
+	just didn't end up seeing the expected large amount of community-made mods
+	that PI was meant to facilitate, and even the
+	{{Blog_PostLink "2022-08-15" "100% decompilation of TH01"}} changed nothing
+	about that. But that's OK; after all, I do appreciate the business of
+	continually getting commissioned for <i>all</i> the
+	{{Blog_PostLink "2022-03-05" "large-scale mods"}}. Not focusing on PI is
+	also the correct choice for everyone who likes reading these blog posts, as
+	it often means that I can't go that much into detail due to cutting corners
+	and piling up technical debt left and right.
+</p><p>
+	Surprisingly, this only took 1.25 pushes, almost twice as fast as expected.
+	As that's closer to 1 push than it is to 2, I'm OK with releasing it like
+	this – especially since it was originally meant to come out three days ago.
+	🍋 Unfortunately, it was delayed thanks to <a
+	href="https://github.com/nmlgc/rec98.nmlgc.net/commit/931197a58dd0b62b16b1294b353c4c3b5aac9e22">surprising
+	website bugs</a> and a certain piece of code that was way more difficult to
+	document than it was to decompile… The next push will have slightly less
+	content in exchange, though.
+</p><hr /><p>
+	{{Blog_PostLink "2023-05-29" "P0240 and P0241"}} already covered the final
+	remaining structures, so I only needed to do some superficial RE to prove
+	the remaining numeric literals as either constants or memory addresses. For
+	example, I initially thought I'd have to decompile the dissolve animations
+	in the staff roll, but I only needed to identify a single function pointer
+	type to prove all false positives as screen coordinates there. Now, the TH04
+	staff roll would be another fast and cheap decompilation, similar to the
+	custom entity types of TH04. (And TH05 as well!)
+</p><p>
+	The one piece of code I <i>did</i> have to decompile was Stage 4's carpet
+	lighting animation, thanks to hex literals that were way too complicated to
+	leave in ASM. And this one probably takes the crown for TH04's worst set of
+	landmines and bloat that still somehow results in no observable bugs or
+	quirks.<br />
+	This animation starts at frame 1664, roughly 29.5 seconds into the stage,
+	and quickly turns the stage background into a repeated row of dark-red plaid
+	carpet tiles by moving out from the center of the playfield towards the
+	edges. Afterward, the animation repeats with a brighter set of tiles that is
+	then used for the rest of the stage. As I explained
+	{{Blog_PostLink "2023-03-30" "a while ago in the context of TH02"}}, the
+	stage tile and map formats in PC-98 Touhou can't express animations, so all
+	of this needed to be hardcoded in the binary.
+</p><figure class="pixelated">
+	<rec98-image-switcher id="carpet-{{.Date}}" ><img
+		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAQMAAAAhYj2mAAAABlBMVEVlAAAAAAD9XicmAAAAT0lEQVR42mP4Dwan6iEYO/gXDMEgwAChzkIxDrAZimEa/v8/B8U4QDEUwzT8/3+yHoJxOGkyBFOigVQnkeppUoN1NB5G42E0HkbjYTDFAwAgub5MJE1lSQAAAABJRU5ErkJggg=="
+		data-title="Light level 0" alt="A row of the carpet tiles from TH04's Stage
+		4, at the lowest light level"
+	/><img
+		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAgMAAABmwkd2AAAACVBMVEWKAABlAAAAAAAoIf34AAAA4klEQVR4nO1VMQrEIBBcUmydFOmDLzkh94CD6A/0IalSprW9KvjKQ2NgN3hFxNJimUZmmBlhwHvnzlNq30ZF8dEdAzJMvOC9td4bE4m/5+MLn90bOQZOa4E5OJLAUSIwIkfmQOtIvKaI1pKIJDKMnHcHVQVyHVSNKNdB1ZJzHVT9pqkD57YtnFIA+9wDxUe3DEjx4gVrhTBmmiLx5wUUn92MFANn4OYOliSwlAj0SJE50LrrIrFMEcmSiCRSDJx3B1UF8h3UiuhfBzVLzndQ65vSDtoetD1oe9D2oO1B2wMrxA9toETNSUdWqgAAAABJRU5ErkJggg=="
+		data-title="Light level 1"
+		alt="A row of the carpet tiles from TH04's Stage 4, at the medium light level"
+	/><img
+		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAgMAAABmwkd2AAAADFBMVEX/RUWKAABlAAAAAAB3PiuCAAABDElEQVR4nO2VwQmEMBBFc59TYC0oEAsQEqzEBjxtHXsS7cAcUolgBTbgYZbRBEbIJcFjFj7vIj+ZvIURiMdBmWdr929jObMySeCMvQLxPBHX9Sr+3R9H5qUFTuqkbvGYYAoHTCUHNMAZewWi94jLchWP4YnGkidSwEmd1P2c4NUDUg5efaKUg1clpxy8+jcNDo7rt23War3rj+bMipHASZ3ULM7TuXUdBmul3LtOcualBU7qpO7nBOa+TWReGuCMEwjvnVuWvr9uru7bRGbFKOCkTup+TqCCA1XiQAFn2oEJDkyJgwY40w664KArcdACZ9qBDg50iQMJnNGBqPug7oO6D+o+qPug7gPv3B9P8HKMKHLEfgAAAABJRU5ErkJggg=="
+		data-title="Light level 2"
+		alt="A row of the carpet tiles from TH04's Stage 4, at the highest light level"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher><figcaption>
+		The repeating 384×16 row of carpet tiles at the beginning of TH04's
+		Stage 4 in all three light levels, shown twice for better visibility.
+	</figcaption>
+</figure><p>
+	And ZUN did start out making the right decision by only using fully-lit
+	carpet tiles for all tile sections defined in <code>ST03.MAP</code>. This
+	way, the animation can simply disable itself after it completed, letting the
+	rest of the stage render normally and use new tile sections that are only
+	defined for the final light level. This means that the "initial" dark
+	version of the carpet is as much a result of hardcoded tile manipulation as
+	the animation itself.<br />
+	But then, ZUN proceeded to implement it all by directly manipulating the
+	ring buffer of on-screen tiles. This is the lowest level before the tiles
+	are rendered, and rather detached from the defined content of the
+	{{Blog_PostLink "2023-03-30" ".MAP tile sections"}}. Which leads to a whole
+	lot of problems:
+</p><ol><li><p>
+	If you decide to do this kind of tile ring modification, it should ideally
+	happen at a very specific point: <i>after</i> scrolling in new tiles into
+	the ring buffer, but <i>before</i> blitting any scrolled or invalidated tile
+	to VRAM based on the ring buffer. Which is not where ZUN chose to put it, as
+	he placed the call to the stage-specific render function after both of those
+	operations. {{HTML_Emoji "zunpet"}} By the time the function is called, the
+	tile renderer has already blitted a few lines of the fully-lit carpet tiles
+	from the defined .MAP tile section, matching the scroll speed. Fortunately,
+	these are hidden behind the black TRAM cells above and below the playfield…
+</p></li><li><p>
+	Still, the code needs to get rid of them before they would become visible.
+	ZUN uses the regular tile invalidation function for this, which will only
+	cause actual redraws on the next frame. Again, the tile rendering call has
+	already happened by the time the Stage 4-specific rendering function gets
+	called.<br />
+	But wait, this game also flips VRAM pages between frames to provide a
+	tear-free gameplay experience. This means that the intended redraw of the
+	new tiles actually hits the wrong VRAM page. {{HTML_Emoji "tannedcirno"}}
+	And sure, the code does attempt to invalidate these newly blitted lines
+	every frame – but only relative to the current VRAM Y coordinate that
+	represents the top of the hardware-scrolled screen. Once we're back on the
+	original VRAM page on the next frame, the lines we initially set out to
+	remove could have already scrolled past that point, making it impossible to
+	ever catch up with them in this way.<br />
+	The only real "solution": Defining the height of the tile invalidation
+	rectangle at 3× the scroll speed, which ensures that each invalidation call
+	covers 3 frames worth of newly scrolled-in lines. This is not intuitive at
+	all, and requires an understanding of everything I have just written to even
+	arrive at this conclusion. Needless to say that ZUN didn't comprehend it
+	either, and just hardcoded an invalidation height that happened to be enough
+	for the small scroll speeds defined in <code>ST03.STD</code> for the first
+	30 seconds of the stage.
+</p></li><li>
+	The effect must consistently modify the tile ring buffer to "fix" any new
+	tiles, overriding them with the intended light level. During the animation,
+	the code not only needs to set the old light level for any tiles that are
+	still waiting to be replaced, but also the new light level for any tiles
+	that <i>were</i> replaced – and ZUN forgot the second part. {{HTML_Emoji
+	"zunpet"}}  As a result, newly scrolled-in tiles within the already animated
+	area will "remain" untouched at light level 2 if the scroll speed is fast
+	enough during the transition from light level 0 to 1.
+</li></ol><p>
+	All that means that we only have to raise the scroll speed for the effect to
+	fall apart. Let's try, say, 4 pixels per frame rather than the original
+	0.25:
+</p><figure class="singleplayer_playfield">
+	{{call .VideoPlayer $vid_hide.SetActive $vid_show}}
+	<figcaption>
+		By hiding the text RAM layer and revealing what's below the usually
+		opaque black cells above and below the playfield, we can observe all
+		three landmines – 1) and 2) throughout light level 0, and 3) during the
+		transition from level 0 to 1.
+	</figcaption>
+</figure><p>
+	All of this could have been so much simpler and actually stable if ZUN
+	applied the tile changes directly onto the .MAP. This is a much more
+	intuitive way of expressing what is supposed to happen to the map, and would
+	have reduced the code to the actually necessary tile changes for the first
+	frame and each individual frame of the animation. It would have still
+	required a way to force these changes into the tile ring buffer, but ZUN
+	could have just used his existing full-playfield redraw functions for that.
+	In any case, there would have been no need for <i>any</i> per-frame tile
+	fixing and redrawing. The CPU cycles saved this way could have then maybe
+	been put towards writing the tile-replacing part of the animation in C++
+	rather than ASM…
+</p><hr /><p>
+	Wow, that was an unreasonable amount of research into a feature that
+	superficially works fine, just because its decompiled code didn't make
+	sense. {{HTML_Emoji "onricdennat"}} To end on a more positive note, here are
+	some minor new discoveries that might actually matter to someone:
+</p><ul><li>
+	The laser part of Marisa's <i>Illusion Laser</i> shot type always does 3
+	points of damage per frame, regardless of the player's power level. Its
+	hitbox also remains identical on all power levels, no matter how wide the
+	laser appears on screen. The strength difference between the levels purely
+	comes from the number of <i>frames</i> the laser stays active before a fixed
+	32-frame cooldown time:
+	<figure><table id="power_{{.Date}}" class="numbers">
+		<thead><tr>
+			<th>Power level</th>
+			<th colspan="2">Frames per cycle (including 32-frame cooldown)</th>
+		</tr></thead><tbody>
+			<tr><th style="color: #f00">2</th><td>64</td><td rowspan="8"><img
+				class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAADgBAMAAABBW30DAAAAKlBMVEUAAAD/////7u7/7sz//1Xuu6qZmf+qqkTMVcz/RER3AHeIAAAAAN0AAACWojNmAAAAAXRSTlMAQObYZgAAAf5JREFUeNrt07GK20AQBuDhipBCKtz4AdQkjSuT8hqzIAgEAkGlwdeocmlYOFB9Rm9g8gAXBuYJ3LhytYUgMTJj5l3CrrQgG61NysBO+ftjmBmtAaAsyxJuC3wOEUQQQQQRRBBBBBFEEEEEEUQQQQQRRBBBBBFE8H8CEbkLnra/qLkHPteIEgKQQbpFRAqBeQbnGpGxGQfpfC5nRCIJADgVgogsaQikhTARNRACqYggcwOHUWB/Pj0LUZOsR8GMmeXHs0igw9OWiEh+f1nK+CU/bmu0PeTEgTW39oj2CkI0PiTXVtg23FwBY0q/JWPXhYb52phj/xS0J80wN2Vpug6t1lpcDfPk+DJdu8VTlWtb3ZY+B1NOJh2VTKmNzrX0jfvcvEwmUwf+ZJ+UUkq7HXw+BLLIN1mW5SzXwLVauRm+6cUiy3kGw9wNc5y6Lap2o5SWmR+yy906tgO0lbS5qvqP5fNVYoxJ+ktSm+cVuRl8/mEKxhwOdmFhYdFa3JA+B1hBkiSugxAJtZV9UzDM4dA1AGZG/yqHuZcghEjsvuZV7guY0V7S//duC0DeN18RUb2GAL/WNdd1/fZajYOWusdwfg91kGIpIsWSJTDD6Xt62QsU/a1vC9IC0t1eAAINnNntQr/24PIIXH42dwFc9g+AXB6AVB6B+zMCQPOv4C+KgKJn9nbbeQAAAABJRU5ErkJggg==" alt=""
+			/></tr>
+			<tr><th style="color: #f0f">3</th><td>72</td></tr>
+			<tr><th style="color: #f0f">4</th><td>88</td></tr>
+			<tr><th style="color: #00f">5</th><td>104</td></tr>
+			<tr><th style="color: #0f0">6</th><td>128</td></tr>
+			<tr><th style="color: #0ff">7</th><td>144</td></tr>
+			<tr><th style="color: #ff0">8</th><td>168</td></tr>
+			<tr><th style="color: #fff">9</th><td>192</td></tr>
+		</tbody>
+	</table></figure>
+</li><li>
+	The decay animation for player shots is faster in TH05 (12 frames) than in
+	TH04 (16 frames).
+</li><li>
+	In the first phase of her Stage 6 fight, Yuuka moves along one of two
+	randomly chosen hardcoded paths, defined as a set of 5 movement angles.
+	After reaching the final point and firing a danmaku pattern, she teleports
+	back to her initial position to repeat the path one more time before the
+	phase times out.
+</li><li>
+	Similarly, TH04's Stage 3 midboss also goes through 12 fixed movement angles
+	before flying off the playfield.
+</li><li>
+	The formulas for calculating the skill rating on both TH04's and TH05's
+	final verdict screen are going to be <i>very</i> long and complicated.
+	{{HTML_Emoji "zunpet"}}</li>
+</ul><p>
+	Next up: ¾ of a push filled with random boilerplate, finalization, and TH01
+	code cleanup work, while I finish the preparations for Shuusou Gyoku's
+	OpenGL backend. This month, everything should finally work out as intended:
+	I'll complete both tasks in parallel, ship the former to free up the cap,
+	and then ship the latter once its 5<sup>th</sup> push is fully funded.
+</p>

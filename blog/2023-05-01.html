@@ -176,17 +176,19 @@
 			The command-line option that just adds a stage selection without
 			other debug features (<code>anniv s</code>) now works reliably.
 		</p><p>
-			This one's quite interesting because it only actually ever worked
+			This one's quite interesting because it only ever worked
 			<i>because</i> of a ZUN bug. From a superficial look at the code, it
-			shouldn't, because ZUN forgot to initialize the debug flag inside
-			the resident structure when specifying the <code>s</code> parameter.
-			However, master.lib's <code>resdata_create()</code> function doesn't
-			clear the resident structure after allocation. So if anything on the
-			system previously happened to write something other than
-			<code>0x00</code>, <code>0x01</code>, or <code>0x03</code> to the
-			debug flag byte, the lack of initialization combined with ZUN
-			actually turns into a distinct non-test and non-debug stage
-			selection mode. {{HTML_Emoji "tannedcirno"}}<br />
+			shouldn't: While the presence of an <code>'s'</code> branch proves
+			that ZUN had such a mode during development, he nevertheless forgot
+			to initialize the debug flag inside the resident structure within
+			this branch. This mode only ever worked because master.lib's
+			<code>resdata_create()</code> function doesn't clear the resident
+			structure after allocation. If anything on the system previously
+			happened to write something other than <code>0x00</code>,
+			<code>0x01</code>, or <code>0x03</code> to the specific byte that
+			then gets repurposed as the debug mode flag, this lack of
+			initialization does in fact result in a distinct non-test and
+			non-debug stage selection mode. {{HTML_Emoji "tannedcirno"}}<br />
 			This is what happens on a certain widely circulated .HDI copy of
 			TH01 that boots MS-DOS 3.30C. On this system, the memory that
 			master.lib will allocate to the TH01 resident structure was

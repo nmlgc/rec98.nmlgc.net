@@ -95,10 +95,10 @@
 	stage tile and map formats in PC-98 Touhou can't express animations, so all
 	of this needed to be hardcoded in the binary.
 </p><figure class="pixelated">
-	<rec98-image-switcher id="carpet-{{.Date}}" ><img
+	<rec98-image-switcher id="carpet-{{.Date}}"><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAQMAAAAhYj2mAAAABlBMVEVlAAAAAAD9XicmAAAAT0lEQVR42mP4Dwan6iEYO/gXDMEgwAChzkIxDrAZimEa/v8/B8U4QDEUwzT8/3+yHoJxOGkyBFOigVQnkeppUoN1NB5G42E0HkbjYTDFAwAgub5MJE1lSQAAAABJRU5ErkJggg=="
-		data-title="Light level 0" alt="A row of the carpet tiles from TH04's Stage
-		4, at the lowest light level"
+		data-title="Light level 0"
+		alt="A row of the carpet tiles from TH04's Stage 4, at the lowest light level"
 	/><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAgMAAABmwkd2AAAACVBMVEWKAABlAAAAAAAoIf34AAAA4klEQVR4nO1VMQrEIBBcUmydFOmDLzkh94CD6A/0IalSprW9KvjKQ2NgN3hFxNJimUZmmBlhwHvnzlNq30ZF8dEdAzJMvOC9td4bE4m/5+MLn90bOQZOa4E5OJLAUSIwIkfmQOtIvKaI1pKIJDKMnHcHVQVyHVSNKNdB1ZJzHVT9pqkD57YtnFIA+9wDxUe3DEjx4gVrhTBmmiLx5wUUn92MFANn4OYOliSwlAj0SJE50LrrIrFMEcmSiCRSDJx3B1UF8h3UiuhfBzVLzndQ65vSDtoetD1oe9D2oO1B2wMrxA9toETNSUdWqgAAAABJRU5ErkJggg=="
 		data-title="Light level 1"
@@ -128,13 +128,14 @@
 </p><ol><li><p>
 	If you decide to do this kind of tile ring modification, it should ideally
 	happen at a very specific point: <i>after</i> scrolling in new tiles into
-	the ring buffer, but <i>before</i> blitting any scrolled or invalidated tile
-	to VRAM based on the ring buffer. Which is not where ZUN chose to put it, as
-	he placed the call to the stage-specific render function after both of those
-	operations. {{HTML_Emoji "zunpet"}} By the time the function is called, the
-	tile renderer has already blitted a few lines of the fully-lit carpet tiles
-	from the defined .MAP tile section, matching the scroll speed. Fortunately,
-	these are hidden behind the black TRAM cells above and below the playfield…
+	the ring buffer, but <i>before</i> blitting any scrolled or invalidated
+	tiles to VRAM based on the ring buffer. Which is not where ZUN chose to put
+	it, as he placed the call to the stage-specific render function after both
+	of those operations. {{HTML_Emoji "zunpet"}} By the time the function is
+	called, the tile renderer has already blitted a few lines of the fully-lit
+	carpet tiles from the defined .MAP tile section, matching the scroll speed.
+	Fortunately, these are hidden behind the black TRAM cells above and below
+	the playfield…
 </p></li><li><p>
 	Still, the code needs to get rid of them before they would become visible.
 	ZUN uses the regular tile invalidation function for this, which will only
@@ -202,7 +203,7 @@
 	hitbox also remains identical on all power levels, no matter how wide the
 	laser appears on screen. The strength difference between the levels purely
 	comes from the number of <i>frames</i> the laser stays active before a fixed
-	32-frame cooldown time:
+	non-damaging 32-frame cooldown time:
 	<figure><table id="power_{{.Date}}" class="numbers">
 		<thead><tr>
 			<th>Power level</th>

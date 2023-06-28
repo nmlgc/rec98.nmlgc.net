@@ -43,12 +43,12 @@
 	RNG seed, and the second one contains the input state for every frame.</li>
 </ul><p>
 	We can surely implement our own simple and uncompressed formats for these
-	things, but it's not the idea to build all future Shuusou Gyoku features on
-	top of a replay-incompatible fork. So, what do we do? On the one hand, pbg
-	expressed the clear wish to not include data reverse-engineered from the
-	original binary. On the other hand, he released the code under the MIT
-	license, which allows us to modify the code and distribute the results in
-	any way we wish.<br />
+	things, but it's not the best idea to build all future Shuusou Gyoku
+	features on top of a replay-incompatible fork. So, what do we do? On the one
+	hand, pbg expressed the clear wish to not include data reverse-engineered
+	from the original binary. On the other hand, he released the code under the
+	MIT license, which allows us to modify the code and distribute the results
+	in any way we wish.<br />
 	So, let's meet in the middle, and go for a clean-room implementation of the
 	missing features as indicated by their usage, without looking at either the
 	original binary or wangqr's reverse-engineered code.

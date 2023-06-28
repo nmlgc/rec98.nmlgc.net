@@ -249,7 +249,7 @@
 	undecompilable.<br />
 	The standard x86 instruction sequence to set up a stack frame in a function prolog looks like this:<figure><pre>PUSH	BP
 MOV 	BP, SP
-SUB 	SP, ?? ; if the function needs the stack from local variables</pre>
+SUB 	SP, ?? ; if the function needs the stack for local variables</pre>
 <figcaption>When compiling without optimizations, Turbo C++ 4.0J will
 	replace this sequence with a single <code>ENTER</code> instruction. That one
 	is two bytes smaller, but much slower on every x86 CPU except for the 80186

@@ -508,8 +508,8 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	blitter against typical TH01 blitting code:
 </p><figure class="fullres">{{call .VideoPlayer $vid_blitperf}}<figcaption>
 	A not really representative run on DOSBox-X. Since the master.lib sprite
-	functions are also unbatched, I actually expect them to not be much faster
-	than the naive C implementation.
+	functions are also unbatched, I expect them to not be much faster than the
+	naive C implementation.
 </figcaption></figure><p>
 	{{HTML_Download .HostedPath $dl_blitperf}}
 	And here are the real-hardware results I've got from the <i>PC-9800
@@ -722,10 +722,16 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	The key takeaways:
 </p><ul>
 	<li>Checking for empty bytes has never been a good idea.</li>
-	<li>Preshifting sprites made a small difference on the 286, but it kind of
-	stopped mattering as of the 386, and makes no difference on Pentium models.
-	The memory tradeoff is especially not worth it for 4-plane sprites, given
-	that you would have to preshift each of the 4 planes.</li>
+	<li>Preshifting sprites made a slight difference on the 286. Starting with
+	the 386 though, that difference got smaller and smaller, until it completely
+	vanished on Pentium models. The memory tradeoff is especially not worth it
+	for 4-plane sprites, given that you would have to preshift each of the 4
+	planes and possibly even a fifth alpha plane. Ironically, ZUN only ever
+	preshifted monochrome single-bitplane sprites with a width of 8 pixels.
+	That's the smallest possible amount of memory a sprite can possibly take,
+	and where preshifting consequently has the smallest effect on performance.
+	Shifting 8-wide sprites on the fly literally takes a single <code>ROL</code>
+	or <code>ROR</code> instruction per row.</li>
 	<li>You might want to use <code>MOVS</code> instead of <code>MOV</code> when
 	targeting the 286 and 386, but the performance gains are barely worth the
 	resulting mess you would make out of your blitting code. On Pentium models,
@@ -806,8 +812,8 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 </p><ul>
 	<li>an address register (<code>0x4AC</code>) for shifting the horizontal
 	start offsets of the source and destination to any pixel <i>within</i> the
-	16 pixels of such a chunk,</li>
-	<li>and a bit length register (<code>0x4AE</code>) for specifying the total
+	16 pixels of such a chunk, and</li>
+	<li>a bit length register (<code>0x4AE</code>) for specifying the total
 	width of pixels to be transferred, which also implies the correct end
 	offsets.</li>
 </ul><p>
@@ -890,7 +896,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	the store is open! {{HTML_Emoji "tannedcirno"}}
 </p><p>
 	In the meantime, the consistent use of 8×8 rectangles during pellet
-	unblitting does significantly reduce both flickering across the entire game,
+	unblitting does significantly reduce flickering across the entire game,
 	and shrinks certain holes that pellets tend to rip into lazily reblitted
 	sprites:
 </p><figure class="fullres pixelated">

@@ -9,10 +9,17 @@ class ReC98TabSwitcher extends HTMLElement {
 	activeIndex = -1;
 	count = 0;
 	switchFunc: TabSwitchFunc;
+	dynamicCaptions?: HTMLCollectionOf<HTMLDivElement>;
 
 	constructor(switchFunc: TabSwitchFunc) {
 		super();
 		this.switchFunc = switchFunc;
+	}
+
+	connectedCallback() {
+		this.dynamicCaptions = this.parentElement?.parentElement?.querySelector(
+			"figcaption.dynamic"
+		)?.getElementsByTagName("div");
 	}
 
 	add(title: string, initiallyActive: boolean) {
@@ -36,6 +43,13 @@ class ReC98TabSwitcher extends HTMLElement {
 		this.children[this.activeIndex]?.classList.remove("active");
 		this.children[index].classList.add("active");
 		this.activeIndex = index;
+		if(this.dynamicCaptions) {
+			for(let i = 0; i < this.dynamicCaptions.length; i++) {
+				this.dynamicCaptions[i].style.visibility = (
+					(i == index) ? "visible" : "hidden"
+				);
+			}
+		}
 	}
 
 	switchTo(index: number) {

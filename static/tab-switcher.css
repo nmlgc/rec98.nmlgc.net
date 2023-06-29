@@ -41,3 +41,12 @@ rec98-image-switcher img.active {
 }
 
 /* -------------- */
+
+figcaption.dynamic {
+	display: grid;
+}
+
+figcaption.dynamic div {
+	grid-column: 1;
+	grid-row: 1;
+}

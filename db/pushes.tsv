@@ -242,3 +242,4 @@ P0241	[241, 242]	TH04 PI/RE (Custom entity structures, part 2/2 + Thick laser st
 P0242	[222, 226, 233]	TH02 RE (Score tracking + HUD rendering)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/08352a5...dfa758d	1
 P0243	[233, 240, 243]	TH02 RE (Items)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/dfa758d...ac33bd2	1
 P0244	[214, 220, 224, 228, 245]	TH04 PI/RE (Stage 4 carpet lighting effect + 100% PI)	2023-06-13T11:07:44Z	nmlgc/ReC98/compare/ac33bd2...97f0c3b	1
+P0245	[236, 244, 227, 245, 246, 247]	TH04/TH05 finalization (Sprite clipping + gather circles + boss explosions) + TH01 Anniversary Edition (Lines, part 1/?)	2023-06-30T23:52:16Z	nmlgc/ReC98/compare/97f0c3b...5876755	1

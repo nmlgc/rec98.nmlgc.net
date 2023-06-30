@@ -1,0 +1,327 @@
+{{$miko_16 := (call .PostFileURL "TH05-MIKO16.BFT.png") -}}
+{{$st06_16 := (call .PostFileURL "TH05-ST06_16.BFT.png") -}}
+{{$vram_0 := (call .PostFileURL "TH05-Stage-5-midboss-clipping-VRAM-0.png") -}}
+{{$vram_200 := (call .PostFileURL "TH05-Stage-5-midboss-clipping-VRAM-200.png") -}}
+{{$tram_0 := (call .PostFileURL "TH05-Stage-5-midboss-clipping-TRAM-0.png") -}}
+{{$tram_200 := (call .PostFileURL "TH05-Stage-5-midboss-clipping-TRAM-200.png") -}}
+{{$uth05win_regular := (call .Video "uth05win-Stage-5-midboss-entrance" "Video of the TH05 Stage 5 midboss entrance animation in the uth05win port, featuring a sprite that smoothly enters the playfield from the top without the premature clipping seen in the PC-98 original") -}}
+{{$uth05win_noborder := (call .Video "uth05win-Stage-5-midboss-entrance-no-borders" "Video of the TH05 Stage 5 midboss entrance animation in the uth05win port, with the covering black playfield borders disabled to reveal the lack of unnecessary clipping") -}}
+
+{{$uth05win_regular.SetTitle "Playfield borders shown" -}}
+{{$uth05win_noborder.SetTitle "Playfield borders hidden" -}}
+
+<style>
+	figure#scroll-{{.Date}} button:first-child {
+		padding-left: revert;
+	}
+
+	#sheet-{{.Date}} img {
+		width: 512px;
+	}
+</style>
+
+<p>
+	And then, the supposed boilerplate code revealed yet another confusing issue
+	that quickly forced me back to serial work, leading to no parallel progress
+	made with Shuusou Gyoku after all. 🥲 The list of functions I put together
+	for the first ½ of this push seemed so boring at first, and I was so sure
+	that there was almost nothing I could possibly talk about:
+</p><ul>
+	<li>TH02's gaiji animations at the start and end of each stage, resembling
+	opening and closing window blind slats. ZUN should have maybe not defined
+	the regular whitespace gaiji as what's technically the last frame of the
+	closing animation, but that's a minor nitpick. Nothing special there
+	otherwise.</li>
+	<li>The remaining spawn functions for TH04's and TH05's gather circles. The
+	only dumb antic there is the way ZUN initializes the template for bullets
+	fired at the end of the animation, featuring ASM instructions that are
+	equivalent to what Turbo C++ 4.0J generates for the <code>__memcpy__</code>
+	intrinsic, but show up in a different order. Which means that they must have
+	been handwritten. {{HTML_Emoji "zunpet"}} I already figured that out in 2022
+	though, so this was just more of the same.</li>
+	<li>EX-Alice's override for the game's main 16×16 sprite sheet, loaded
+	during her dialog script. More of a naming and consistency challenge, if
+	anything.
+	<figure id="sheet-{{.Date}}" class="pixelated checkerboard">
+		<figcaption class="dynamic"><div>
+			The regular version of TH05's big 16×16 sprite sheet.
+		</div><div>
+			EX-Alice's variant of TH05's big 16×16 sprite sheet.
+		</div></figcaption>
+		<rec98-image-switcher><img
+			src="{{$miko_16}}"
+			data-title="<code>MIKO16.BFT</code>"
+			alt=""
+			class="active"
+		/><img
+			src="{{$st06_16}}"
+			data-title="<code>ST06_16.BFT</code>"
+			alt=""
+		/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	</figure></li>
+	<li>The rendering function for TH04's Stage 4 midboss, which seems to
+	feature the same premature clipping quirk we've seen for
+	{{Blog_PostLink "2022-11-30" "TH05's Stage 5 midboss, 7 months ago"}}?
+	{{HTML_Emoji "thonk"}}</li>
+	<li><img class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAFVBMVEUAAAD/7+//78/vuqq6urr/RUWKAAALp9jpAAAAAXRSTlMAQObYZgAAATlJREFUeNp9VEFuhDAMtHYr7mz7gF2HFyTLvYX+AJkzF/z/J1R2GAks6JxCxpOxYwciYDT8UgRRZmZOcZfGsTiihjJXImgsXhxBY/Eg9poxFRF1iJT8xj7lIwEJjaUX1bpWlanAJUciwaGfFWoiXafNJUdiqi4fqZ+XfVHNOuVvIrqfEU8iGorYQWrGfhSplM5zioSK5QULIhWLUNFqcj8nnvQDQqX4oerunVcRiXXKn0jK9pmxlsJIyj5eD6wtLZQhhV8t4wOKKmjbBz4OigOxV3CLo/aKKrnIap9uqpU3CwrEvTMN58QX3ayx67zgEtFCv/ZTwt2beo1omDfK842Et/Z2NSVX43M1cOcj2v0/1PEZTKWDejg+HL56ahBcPc5NAqIkCDYb/ACYjjCNIcRXjSHuuialXfwfWKCn4OUTyOMAAAAASUVORK5CYII=" />
+	The rendering function for the big 48×48 explosion sprite, which <i>also</i>
+	features the same clipping quirk?
+	{{HTML_Emoji "thonk"}}{{HTML_Emoji "thonk"}}</li>
+</ul><p>
+	That's three instances of ZUN removing sprites way earlier than you'd want
+	to, intentionally deciding against those sprites flying smoothly in and out
+	of the playfield. Clearly, there has to be a system and a reason behind it.
+</p><p>
+	Turns out that it can be almost completely blamed on master.lib. None of the
+	<code>super_*()</code> sprite blitting functions can clip the rendered
+	sprite to the edges of VRAM, and much less to the custom playfield rectangle
+	we would actually want here. This is exactly the wrong choice to make for a
+	game engine: Not only is the game developer now stuck with either rendering
+	the sprite in full or not at all, but they're also left with the burden of
+	manually calculating <i>when</i> not to display a sprite.<br />
+	However, strictly limiting the top-left screen-space coordinate to
+	(﻿0,&nbsp;0﻿) and the bottom-right one to (﻿640,&nbsp;400﻿) would actually
+	stop rendering some of the sprites much earlier than the clipping conditions
+	we encounter in these games. So what's going on there?
+</p><p>
+	The answer is a combination of playfield borders, hardware scrolling, and
+	master.lib needing to provide at least <i>some</i> help to support the
+	latter. Hardware scrolling on PC-98 works by dividing VRAM into two vertical
+	partitions along the Y-axis and telling the GDC to display one of them at
+	the top of the screen and the other one below. The contents of VRAM remain
+	unmodified throughout, which raises the interesting question of how to deal
+	with sprites that reach the vertical edges of VRAM. If the top VRAM row that
+	starts at offset <code>0x0000</code> ends up being displayed <i>below</i>
+	the bottom row of VRAM that starts at offset <code>0x7CB0</code> for 399 of
+	the 400 possible scrolling positions, wouldn't we then need to vertically
+	wrap most of the rendered sprites?<br />
+	For this reason, master.lib provides the <code>super_roll_*()</code>
+	functions, which unconditionally perform exactly this vertical wrapping. But
+	this creates a new problem: If these functions still can't clip, and don't
+	even know which VRAM rows currently correspond to the top and bottom row of
+	the screen (since master.lib's <code>graph_scrollup()</code> function
+	doesn't retain this information), won't we also see sprites wrapping around
+	the <i>actual</i> edges of the screen? That's something we certainly
+	wouldn't want in a vertically scrolling game…<br />
+	The answer is yes, and master.lib offers no solution for this issue. But
+	this is where the playfield borders come in, and helpfully cover 16 pixels
+	at the top and 16 pixels at the bottom of the screen. As a result, they can
+	hide at least 32 pixels of potentially wrapped sprite pixels below them:
+</p><figure id="scroll-{{.Date}}" class="pixelated fullres"><figcaption>
+	<button
+		id="scroll-0-{{.Date}}" onclick="
+		document.getElementById('vram-0-{{.Date}}').classList.add('active');
+		document.getElementById('tram-0-{{.Date}}').classList.add('active');
+		document.getElementById('vram-200-{{.Date}}').classList.remove('active');
+		document.getElementById('tram-200-{{.Date}}').classList.remove('active');
+
+		document.getElementById('scroll-0-{{.Date}}').hidden = true;
+		document.getElementById('scroll-200-{{.Date}}').hidden = false;
+	" hidden>(Scroll by 200 pixels)</button><button
+		id="scroll-200-{{.Date}}" onclick="
+		document.getElementById('vram-200-{{.Date}}').classList.add('active');
+		document.getElementById('tram-200-{{.Date}}').classList.add('active');
+		document.getElementById('vram-0-{{.Date}}').classList.remove('active');
+		document.getElementById('tram-0-{{.Date}}').classList.remove('active');
+		document.getElementById('scroll-200-{{.Date}}').hidden = true;
+		document.getElementById('scroll-0-{{.Date}}').hidden = false;
+	">(Scroll by 200 pixels)</button> • <button
+		id="tram-hide-{{.Date}}" onclick="
+		document.getElementById('tram-0-{{.Date}}').hidden = true;
+		document.getElementById('tram-200-{{.Date}}').hidden = true;
+		document.getElementById('tram-hide-{{.Date}}').hidden = true;
+		document.getElementById('tram-show-{{.Date}}').hidden = false;
+	" hidden>(Hide text layer)</button><button
+		id="tram-show-{{.Date}}" onclick="
+		document.getElementById('tram-0-{{.Date}}').hidden = false;
+		document.getElementById('tram-200-{{.Date}}').hidden = false;
+		document.getElementById('tram-show-{{.Date}}').hidden = true;
+		document.getElementById('tram-hide-{{.Date}}').hidden = false;
+	">(Show text layer)</button><br />
+	The earliest possible frame that TH05 can start rendering the Stage 5
+	midboss on. Hiding the text layer reveals how master.lib did in fact
+	"blindly" render the top part of her sprite to the bottom of the
+	playfield. That's where her sprite <i>starts</i> before it is correctly
+	wrapped around to the top of VRAM.<br />
+	If we scrolled VRAM by another 200 pixels (and faked an equally shifted
+	TRAM for demonstration purposes), we get an equally valid game scene
+	that points out why a vertically scrolling PC-98 game must wrap all sprites
+	at the vertical edges of VRAM to begin with.
+	<br />
+	Also, note how the HP bar has filled up quite a bit before the midboss can
+	actually appear on screen.
+</figcaption><div class="multilayer">
+	<img
+		id="vram-0-{{.Date}}"
+		class="active"
+		src="{{$vram_0}}"
+		alt="VRAM contents of the first possible frame that TH05's Stage 5 midboss can appear on, at their original scrolling position. Also featuring the 64×64 bounding box of the midboss sprite."
+	/><img
+		id="vram-200-{{.Date}}"
+		src="{{$vram_200}}"
+		alt="VRAM contents of the first possible frame that TH05's Stage 5 midboss can appear on, scrolled down by a further 200 pixels. Also featuring the 64×64 bounding box of the midboss sprite."
+	/><img
+		id="tram-0-{{.Date}}"
+		class="active"
+		src="{{$tram_0}}"
+		alt="TH05's in-game text layer, at its original position."
+		hidden
+	/><img
+		id="tram-200-{{.Date}}"
+		src="{{$tram_200}}"
+		alt="TH05's in-game text layer, scrolled by 200 pixels to match an equally scrolled VRAM."
+		hidden
+	/>
+</div></figure><p>
+	And that's how the lowest possible top Y coordinate for sprites blitted
+	using the master.lib <code>super_roll_*()</code> functions during the
+	scrolling portions of TH02, TH04, and TH05 is not 0, but -16. Any lower, and
+	you would <i>actually</i> see some of the sprite's upper pixels at the
+	bottom of the playfield, as there are no more opaque black text cells to
+	cover them. Theoretically, you <i>could</i> lower this number for
+	<i>some</i> animation frames that start with multiple rows of transparent
+	pixels, but I thankfully haven't found any instance of ZUN using such a
+	hack. So far, at least… {{HTML_Emoji "godzun"}}<br />
+	Visualized like that, it all looks quite simple and logical, but for days, I
+	did <i>not</i> realize that these sprites were rendered to a scrolling VRAM.
+	This led to a much more complicated initial explanation involving the
+	invisible extra space of VRAM between offsets <code>0x7D00</code> and
+	<code>0x7FFF</code> that effectively grant a hidden additional 9.6 lines
+	below the playfield. Or even above, since PC-98 hardware ignores the highest
+	bit of any offset into a VRAM bitplane segment
+	(<code>&amp;&nbsp;0x7FFF</code>), which prevents blitting operations from
+	accidentally reaching into a different bitplane. Together with the
+	aforementioned rows of transparent pixels at the top of these midboss
+	sprites, the math would have almost worked out exactly.
+	{{HTML_Emoji "tannedcirno"}}
+</p><p>
+	The need for manual clipping also applies to the X-axis. Due to the lack of
+	scrolling in this dimension, the boundaries there are much more
+	straightforward though. The minimum left coordinate of a sprite can't fall
+	below 0 because any smaller coordinate would wrap around into the
+	{{Blog_PostLink "2023-03-30" "tile source area"}} and overwrite some of the
+	pixels there, which we obviously don't want to re-blit every frame.
+	Similarly, the right coordinate must not extend into the HUD, which starts
+	at 448 pixels.<br />
+	The last part might be surprising if you aren't familiar with the PC-98 text
+	chip. Contrary to the CGA and VGA text modes of IBM-compatibles, PC-98 text
+	cells can only use a single color for <i>either</i> their foreground or
+	background, with the other pixels being transparent and always revealing the
+	pixels in VRAM below. If you look closely at the HUD in the images above,
+	you can see how the background of cells with gaiji glyphs is slightly
+	brighter (<code style="color: #100">◼ #100</code>) than the opaque black
+	cells (<code style="color: #000">◼ #000</code>) surrounding them. This
+	rather custom color clearly implies that those pixels must have been
+	rendered by the graphics GDC. If any other sprite was rendered below the
+	HUD, you would equally see it below the glyphs.
+</p><p>
+	So in the end, I did find the clear and logical system I was looking for,
+	and managed to reduce the new clipping conditions down to <a
+	href="https://github.com/nmlgc/ReC98/blob/48c18d6dac613f1478bc5873087285f17ebf5836/th02/main/playfld.hpp#L81-L120">a
+	set of basic rules for each edge</a>. Unfortunately, we also need a second
+	macro for each edge to differentiate between sprites that are smaller or
+	larger than the playfield border, which is treated as either 32×32 (for
+	<code>super_roll_*()</code>) or 32×16 (for non-"rolling"
+	<code>super_*()</code> functions). Since smaller sprites can be fully
+	contained within this border, the games can stop rendering them as soon as
+	their bottom-right coordinate is no longer seen within the playfield, by
+	comparing against the clipping boundaries with <code>&lt;=</code> and
+	<code>&gt;=</code>. For example, a 16×16 sprite would be completely
+	invisible once it reaches (﻿16,&nbsp;0﻿), so it would still be rendered at
+	(﻿17,&nbsp;1﻿). A larger sprite during the scrolling part of a stage, like,
+	say, the 64×64 midbosses, would still be rendered if their top-left
+	coordinate was (﻿0,&nbsp;-16﻿), so ZUN used <code>&lt;</code> and
+	<code>&gt;</code> comparisons to at least get an additional pixel before
+	having to stop rendering such a sprite. Turbo C++ 4.0J sadly can't
+	constant-fold away such a difference in comparison operators.
+</p><p>
+	And for the most part, ZUN did follow this system consistently. Except for,
+	of course, the typical mistakes you make when faced with such manual
+	decisions, like how he treated TH04's Stage 4 midboss as a "small" sprite
+	below 32×32 pixels (it's 64×64), losing that precious one extra pixel. Or
+	how the entire rendering code for the 48×48 boss explosion sprite pretends
+	that it's actually 64×64 pixels large, which causes even the initial
+	transformation into screen space to be misaligned from the get-go.
+	{{HTML_Emoji "zunpet"}} But these are additional bugs on top of the single
+	one that led to all this research.<br />
+	Because that's what this is, a bug. 🐞 Every resulting pixel boundary is a
+	systematic result of master.lib's unfortunate lack of clipping. It's as much
+	of a bug as TH01's byte-aligned rendering of entities whose internal
+	position is not byte-aligned. In both cases, the entities are alive,
+	simulated, and partake in collision detection, but their rendered appearance
+	doesn't accurately reflect their internal position.<br />
+	Initially, I classified
+	{{Blog_PostLink "2022-11-30" "the sudden pop-in of TH05's Stage 5 midboss"}}
+	as a quirk because we had no conclusive evidence that this wasn't
+	intentional, but now we do. There have been multiple explanations for why
+	ZUN put borders around the playfield, but master.lib's lack of sprite
+	clipping might be the biggest reason.
+</p><p>
+	And just like byte-aligned rendering, the clipping conditions can easily be
+	removed when porting the game away from PC-98 hardware. That's also what
+	uth05win chose to do: By using OpenGL and not having to rely on hardware
+	scrolling, it can simply place every sprite as a textured quad at its exact
+	position in screen space, and then draw the black playfield borders on top
+	in the end to clip everything in a single draw call. This way, the Stage 5
+	midboss can smoothly fly into the playfield, just as defined by its movement
+	code:
+</p><figure class="fullres pixelated">
+	{{call .VideoPlayer $uth05win_regular.SetActive $uth05win_noborder}}
+	<figcaption>
+		The entire smooth Stage 5 midboss entrance animation as shown in
+		uth05win. If the simultaneous appearance of the <i>Enemy!!</i> label
+		doesn't lend further proof to this having been ZUN's actual intention, I
+		don't know what will.
+	</figcaption>
+</figure><p>
+	Meanwhile, I designed the interface of the {{Blog_PostLink "2023-03-05"
+	"generic blitter used in the TH01 Anniversary Edition"}} entirely around
+	clipping the blitted sprite at any explicit combination of VRAM edges. This
+	was nothing I tacked on in the end, but a core aspect that informed the
+	architecture of the code from the very beginning. You <i>really</i> want to
+	have one and <i>only</i> one place where sprite clipping is done right – and
+	only once per sprite, regardless of how many bitplanes you want to write to.
+</p><hr /><p>
+	Which brings us to the goal for the final ¼ of this push went. I thought I
+	was going to start cleaning up the
+	{{Blog_PostLink "2021-10-20" "player movement and rendering code"}}, but
+	that turned out too complicated for that amount of time – especially if you
+	want to start with <i>just</i> cleanup, preserving all original bugs for the
+	time being.<br />
+	Fixing and smoothening player and Orb movement would be the next big task in
+	Anniversary Edition development, needing about 3 pushes. It would start with
+	more performance research into runtime-shifting of larger sprites, followed
+	by extending my generic blitter according to the results, writing new
+	optimized loaders for the original image formats, and finally rewriting all
+	rendering code accordingly. With that code in place, we can then start
+	cleaning up and fixing the unique code for each boss, one by one.
+</p><p>
+	Until that's funded, the code still contains a few smaller and easier pieces
+	of code that are equally related to rendering bugs, but could be dealt with
+	in a more incremental way. Line rendering is one of those, and first needs
+	some refactoring of every call site, including
+	{{Blog_PostLink "2022-07-17" "the rotating squares around Mima"}} and
+	{{Blog_PostLink "2022-08-08" "YuugenMagan's pentagram"}}. So far, I managed
+	to remove another 1,360 bytes from the binary within this final ¼ of a push,
+	but there's still quite a bit to do in that regard.<br />
+	This is the perfect kind of feature for smaller (micro-)transactions. Which
+	means that we've now got meaningful TH01 code cleanup and Anniversary
+	Edition subtasks at every price range, no matter whether you want to invest
+	a lot or just a little into this goal.
+</p><p>
+	If you <i>can</i>, because {{DB_CustomerByID 13}} revealed the plan behind
+	his Shuusou Gyoku contributions: A full-on Linux port of the game, which
+	will be receiving all the funding it needs to happen. 🐧 Next up, therefore:
+	Turning this into my main project within ReC98 for the next couple of
+	months, and getting started by shipping the long-awaited first step towards
+	that goal.<br />
+	I've raised the cap to avoid the potential of rounding errors, which might
+	prevent the last needed Shuusou Gyoku push from being correctly funded. I
+	already had to pick the larger one of the two pending TH02 transactions for
+	this push, because we would have mathematically ended up
+	<sup>1</sup>/<sub>25500</sub> short of a full push with the smaller
+	transaction. {{HTML_Emoji "onricdennat"}} And if I'm already at it, I might
+	as well free up enough capacity to potentially ship the complete OpenGL
+	backend in a single delivery, which is currently estimated to cost 7 pushes
+	in total.
+</p>

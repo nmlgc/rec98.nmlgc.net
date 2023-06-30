@@ -859,13 +859,16 @@
 </p><figure class="singleplayer_playfield">
 	{{call .VideoPlayer $popin}}
 	<figcaption>
-		Good chance that the pop-in might have been intended. There's even
-		another quirk here: The white flash during its first frame is actually
-		carried over from the <i>previous</i> midboss, which the game still
-		considers as actively getting hit by the player shot that defeated it.
-		It's the regular boilerplate code for <i>rendering</i> a midboss that
-		resets the responsible damage variable, and that code doesn't run during
-		the defeat explosion animation.
+		<s>Good chance that the pop-in might have been intended.</s><br />
+		<strong>Edit (2023-06-30):</strong> Actually, it's a
+		{{Blog_PostLink "2023-06-30" "systematic consequence of ZUN having to work around the lack of clipping in master.lib's sprite functions"}}.
+		<br />
+		There's even another quirk here: The white flash during its first frame
+		is actually carried over from the <i>previous</i> midboss, which the
+		game still considers as actively getting hit by the player shot that
+		defeated it. It's the regular boilerplate code for <i>rendering</i> a
+		midboss that resets the responsible damage variable, and that code
+		doesn't run during the defeat explosion animation.
 	</figcaption>
 </figure><p>
 	Next up: Staying with TH05 and looking at more of the pattern code of its

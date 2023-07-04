@@ -37,10 +37,10 @@
 </p><hr /><p>
 	The Game Over animation (how fitting) gives us TH01's final piece of weird
 	sprite blitting code, which seriously manages to include 2 bugs and 3 quirks
-	in under 50 lines of code. In debug mode, you can trigger this effect by
-	pressing the ⬇️ down arrow key, which certainly explains why I encountered
-	seemingly random Game Over events during all the tests I did with this
-	game…<br />
+	in under 50 lines of code. In test mode (<code>game t</code> or <code>game
+	d</code>), you can trigger this effect by pressing the ⬇️ down arrow key,
+	which certainly explains why I encountered seemingly random Game Over events
+	during all the tests I did with this game…<br />
 	The animation appears to have changed quite a bit during development, to the
 	point that probably even ZUN himself didn't know what he wanted it to look
 	like in the end:
@@ -77,7 +77,7 @@
 	boss fight. With all the wildly mutated global state, that was probably a
 	much saner choice.
 </p><p>
-	The final secrets can be found in the debug mode stage selection. ZUN
+	The final secrets can be found in the debug stage selection. ZUN
 	implemented the prompts using the C standard library's <code>scanf()</code>
 	function, which is the natural choice for quick-and-dirty testing features
 	like this one. However, the C standard library is also complete and utter

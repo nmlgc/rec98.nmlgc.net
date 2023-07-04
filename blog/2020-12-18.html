@@ -61,7 +61,7 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre><p>
 	inside the 32×32 sprite, instead of just writing simple helper functions.
 	<s>He <i>did</i> manage to make the result <i>mostly</i> bug-free this time
 	around, though!</s> (<strong>Edit (2022-05-31):</strong> Nope, there's a
-	{{Blog_PostLink "2022-05-31" "potential heap corruption after all, which can be triggered in some fights in debug mode"}}.)
+	{{Blog_PostLink "2022-05-31" "potential heap corruption after all, which can be triggered in some fights in test mode (<code>game t</code>) or debug mode (<code>game d</code>)"}}.)
 	There's one minor hit point discoloration bug if the red-white or white
 	sections start at an odd number of hit points, but that's never the case for
 	any of the original 7 bosses.<br />

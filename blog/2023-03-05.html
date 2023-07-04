@@ -278,7 +278,7 @@
 	of such a wrapper, by far.</li>
 	<li>Finally, and most importantly for TH01 in particular: The observable
 	effects of the
-	{{Blog_PostLink "2022-05-31" "debug mode HP bar heap corruption glitches"}}
+	{{Blog_PostLink "2022-05-31" "test/debug mode HP bar heap corruption glitches"}}
 	are a direct result of Borland's C heap implementation.</li>
 </ul><p>
 	I could release this DOS heap wrapper in unused form for another push if
@@ -918,8 +918,8 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 </p><ul>
 	<li>I removed the {{Blog_PostLink "2022-05-31" "shootout laser crash"}} by
 	simply leaving the lasers on screen if a boss is defeated,</li>
-	<li>prevented debug mode heap corruption from the HP bar by not letting it
-	display negative HP, and</li>
+	<li>prevented the HP bar heap corruption bug in test or debug mode by not
+	letting it display negative HP in the first place, and</li>
 	<li>restored {{Blog_PostLink "2022-01-31" "the two animations during the Sariel fight that were lost to type confusion errors in the original game"}}.</li>
 </ul><p>
 	So here it is, the first build of TH01's Anniversary Edition:

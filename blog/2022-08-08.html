@@ -95,10 +95,10 @@
 	</ul></li>
 	<li>Since the HP bar fills up in a phase with no collision detection,
 	YuugenMagan is immune to
-	{{Blog_PostLink "2022-05-31" "debug mode heap corruption"}}. It's generally
-	impossible to get YuugenMagan's HP into negative numbers, with collision
-	detection being disabled every other phase, and all odd-numbered phases
-	ending immediately upon reaching their HP threshold.</li>
+	{{Blog_PostLink "2022-05-31" "test/debug mode heap corruption"}}. It's
+	generally impossible to get YuugenMagan's HP into negative numbers, with
+	collision detection being disabled every other phase, and all odd-numbered
+	phases ending immediately upon reaching their HP threshold.</li>
 	<li>All phases until the very last one have a timeout condition, independent
 	from YuugenMagan's current HP:<ul>
 		<li><strong>Phase 0:</strong> 331 frames</li>
@@ -259,12 +259,13 @@ if(rank == RANK_HARD) {
 	That's why the top part of the left, right-moving laser is never visible,
 	because it's blitted before the other laser is unblitted.</li>
 	<li>ZUN forgot to unblit the lasers when phase 9 ends. This footage was
-	recorded by pressing ↵&nbsp;Return in debug mode, and it's probably
-	impossible to achieve this during actual gameplay without TAS techniques.
-	You would have to deal the required 6 points of damage within 491 frames,
-	with the eye being invincible during 240 of them. Simply shooting up an Orb
-	with a horizontal velocity of 0 would also only work a single time, as boss
-	entities always repel the Orb with a horizontal velocity of ±4.</li>
+	recorded by pressing ↵&nbsp;Return in test mode (<code>game t</code> or
+	<code>game d</code>), and it's probably impossible to achieve this during
+	actual gameplay without TAS techniques. You would have to deal the required
+	6 points of damage within 491 frames, with the eye being invincible during
+	240 of them. Simply shooting up an Orb with a horizontal velocity of 0 would
+	also only work a single time, as boss entities always repel the Orb with a
+	horizontal velocity of ±4.</li>
 	<li>The shrinking pentagram is unblitted after the eyes were blitted,
 	adding another guaranteed frame of flicker on top of the ones in 1). Like in
 	2), the blockiness of the holes is another result of unblitting 32 pixels

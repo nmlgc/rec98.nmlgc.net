@@ -90,7 +90,7 @@
 	1 HP per frame.</li>
 	<li>The completion condition only checks if
 	<code>((target_hp&nbsp;-&nbsp;1)&nbsp;==&nbsp;current_hp)</code>. With the
-	right timing, both numbers can run past each other though.</li>
+	right timing, both numbers can therefore run past each other.</li>
 	<li>In that case, the function is repeatedly called on every frame, backing
 	up the original VRAM contents for the current HP point before blitting
 	it…</li>
@@ -99,10 +99,18 @@
 	after. {{Blog_PostLink "2020-11-30" "Sounds familiar, right?"}}
 </ul><p>
 	Since Elis starts with 14 HP, which is an even number, this corruption is
-	trivial to cause: Simply hold  ↵&nbsp;Return from the beginning of the
+	trivial to cause: Simply hold ↵&nbsp;Return from the beginning of the
 	fight, and the completion condition will never be <code>true</code>, as the
 	HP and frame numbers run past the off-by-one meeting point.
-</p><figure>{{call .VideoPlayer $vid_heap.SetNoLoop}}</figure><p>
+</p><figure class="fullres">
+	{{call .VideoPlayer $vid_heap.SetNoLoop}}
+	<figcaption>
+		<strong>Edit (2023-07-21):</strong> Pressing ↵&nbsp;Return to reduce HP
+		also works in test mode (<code>game t</code>). There, the game doesn't
+		even check the heap, and consequently won't report any corruption,
+		allowing the HP bar to be glitched even further.
+	</figcaption>
+</figure><p>
 	Regular gameplay, however, entirely prevents this due to the fixed start
 	positions of Reimu and the Orb, the Orb's fixed initial trajectory, and the
 	50 frames of delay until a bomb deals damage to a boss. These aspects make
@@ -357,7 +365,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	Check the <a
 	href="https://github.com/nmlgc/ReC98/tree/th01_critical_fixes"><code>th01_critical_fixes</code></a>
 	branch for the modified TH01 code. It also contains a fix for the HP bar
-	heap corruption in debug mode – simply changing the <code>==</code>
+	heap corruption in test or debug mode – simply changing the <code>==</code>
 	comparison to <code>&lt;=</code> is enough to avoid it, and negative HP will
 	still create aesthetic glitch art.
 </p><hr /><p>

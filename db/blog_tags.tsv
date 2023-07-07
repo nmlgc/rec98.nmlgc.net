@@ -65,7 +65,7 @@ Date	Tags
 2020-10-13	["file-format", "player", "animation", "blitting", "waste", "jank"]
 2020-11-03	["pc98", "menu", "waste", "master.lib", "waste"]
 2020-11-16	["pc98", "micro-optimization", "tcc", "tasm", "meta"]
-2020-11-30	["file-format", "gameplay", "card-flipping", "waste", "hidden-content", "bug"]
+2020-11-30	["file-format", "gameplay", "card-flipping", "waste", "debug", "hidden-content", "bug"]
 2020-12-18	["pc98", "blitting", "good-code", "jank", "gameplay", "boss", "rng"]
 2021-01-06	["file-format"]
 2021-01-31	["micro-optimization", "master.lib", "tcc"]

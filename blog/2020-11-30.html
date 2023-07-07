@@ -101,8 +101,20 @@
 	And since array subscripts on <code>far</code> pointers wrap around after
 	64 KiB, trying to save the background of the 103rd object is guaranteed to
 	corrupt the memory block header at the beginning of the returned segment.
-	{{HTML_Emoji "zunpet"}}. When TH01 runs in <strong>t</strong>est mode, it
-	correctly reports a corrupted heap in this case.
+	{{HTML_Emoji "zunpet"}} When TH01 runs in <strong>d</strong>ebug mode, it
+	correctly reports a corrupted heap in this case.<br />
+	After detecting such a corruption, the game loudly reports it by playing the
+	"player hit" sound effect and locking up, freezing any further gameplay or
+	rendering. The locking loop can be left by pressing ↵&nbsp;Return, but the
+	game will simply re-enter it if the corruption is still present during the
+	next <code>heapcheck()</code>, in the next frame. And since heap
+	corruptions don't tend to repair themselves, you'd have to constantly hold
+	↵&nbsp;Return to resume gameplay. Doing that <i>could</i> actually get you
+	safely to the next boss, since the game doesn't allocate or free any further
+	heap memory during a 5-stage {{HTML_Tag "card-flipping" nil}} scene, and
+	just throws away its C heap when restarting the process for a boss. But then
+	again, holding ↵&nbsp;Return will also auto-flip all cards on the way there…
+	🤨
 </p><hr /><p>
 	Finally, some unused content! Upon discovering TH01's stage selection debug
 	feature, probably everyone tried to access Stage 21,

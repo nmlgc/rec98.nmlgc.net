@@ -194,7 +194,7 @@
 	between ZMBV and AV1 <code>-crf 1</code>" is a useful metric, this would be
 	its median frame among the 77.7% of non-lossless frames:
 </p><figure class="pixelated">
-	<rec98-image-switcher id="fullres-{{.Date}}"><img
+	<rec98-child-switcher id="fullres-{{.Date}}"><img
 		src="{{$median_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
@@ -207,7 +207,7 @@
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		That's frame 455 (0-based) of
 		{{Blog_PostLink "2022-08-08" "YuugenMagan's reconstructed Phase 5 pattern on Easy mode"}}.
@@ -218,7 +218,7 @@
 	For comparison, here's the 13th worst one. The codec only resorts to color
 	bleeding with particularly heavy effects, exactly where it doesn't matter:
 </p><figure class="pixelated">
-	<rec98-image-switcher id="singleplayer_playfield-{{.Date}}"><img
+	<rec98-child-switcher id="singleplayer_playfield-{{.Date}}"><img
 		src="{{$bleed_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
@@ -231,7 +231,7 @@
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		Frame 25 (0-based) of the
 		{{Blog_PostLink "2020-08-28" "TH05 Reimu bomb animation quirk video"}}.
@@ -546,7 +546,7 @@
 	graphics, as it's the exact cause behind washed-out colors and red fringing
 	around edges:
 </p><figure class="pixelated">
-	<rec98-image-switcher id="fullres-{{.Date}}"><img
+	<rec98-child-switcher id="fullres-{{.Date}}"><img
 		src="{{$sub_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
@@ -559,7 +559,7 @@
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-image-switcher>
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		The worst example of chroma subsampling in a VP9-encoded file according
 		to the above metric, from frame 130 (0-based) of

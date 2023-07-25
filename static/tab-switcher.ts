@@ -79,47 +79,53 @@ class ReC98TabSwitcher extends HTMLElement {
 	}
 };
 
-class ReC98ImageSwitcher extends HTMLElement {
-	images: HTMLCollectionOf<HTMLImageElement>;
-	imageShown: (HTMLImageElement | null) = null;
+class ReC98ChildSwitcher extends HTMLElement {
+	/** Not the same as [children], as we have to exclude ReC98TabSwitcher and
+	 * ReC98ParentInit. */
+	switchableChildren: Array<Element> = [];
+
+	childShown: (Element | null) = null;
 
 	/**
-	 * @returns `true` if the playing video was changed
+	 * @returns `true` if the active child was changed
 	 */
-	showImage(index: number) {
-		const imagePrev = this.imageShown;
-		const imageNew = this.images[index];
-		if(imagePrev === imageNew) {
+	showChild(index: number) {
+		const childPrev = this.childShown;
+		const childNew = this.switchableChildren[index];
+		if(childPrev === childNew) {
 			return false;
 		}
-		imagePrev?.classList.remove("active");
-		imageNew.classList.add("active");
-		this.imageShown = imageNew;
+		childPrev?.classList.remove("active");
+		childNew.classList.add("active");
+		this.childShown = childNew;
 		return true;
 	}
 
 	init() {
 		const tabSwitcher = new ReC98TabSwitcher((i) => {
 			this.focus();
-			return this.showImage(i);
+			return this.showChild(i);
 		});
 		this.prepend(tabSwitcher);
 
 		this.tabIndex = -1; // Receive `onkeydown` events from all children
-		this.images = this.getElementsByTagName("img");
 
 		let activeSeen = false;
-		for(let i = 0; i < this.images.length; i++) {
-			const image = this.images[i];
-			const active = image.classList.contains("active");
+		for(let i = 0; i < this.children.length; i++) {
+			const child = this.children[i];
+			if(child.tagName.startsWith('REC98-')) {
+				continue;
+			}
+			this.switchableChildren.push(child);
+			const active = child.classList.contains("active");
 			if(active) {
 				activeSeen = true;
-				this.showImage(i);
+				this.showChild(this.switchableChildren.length - 1);
 			}
-			tabSwitcher.add(attributeAsString(image, "data-title"), active);
+			tabSwitcher.add(attributeAsString(child, "data-title"), active);
 		}
 		if(!activeSeen) {
-			throw "No image marked as active.";
+			throw "No child marked as active.";
 		}
 
 		this.onclick = (() => this.focus());
@@ -134,4 +140,4 @@ class ReC98ImageSwitcher extends HTMLElement {
 };
 
 window.customElements.define("rec98-tab-switcher", ReC98TabSwitcher);
-window.customElements.define("rec98-image-switcher", ReC98ImageSwitcher);
+window.customElements.define("rec98-child-switcher", ReC98ChildSwitcher);

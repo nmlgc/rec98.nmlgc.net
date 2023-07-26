@@ -33,6 +33,11 @@
 		FAQ page</a>, and place your order there.
 	</p>
 	{{end}}{{end}}
+	<p class="desc">
+		Want to support translations? These are funded through
+		{{DB_CustomerByID 9}};
+		{{Blog_PostLink "2023-07-28" "check the announcement for more info"}}!
+	</p>
 	{{if len $discounts -}}<hr style="width: 100%;" />
 		<small>Current discounts:</small>
 		<ul class="discounts">{{range $discounts -}}

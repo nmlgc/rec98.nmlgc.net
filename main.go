@@ -64,6 +64,8 @@ func HTMLEmoji(emoji string) template.HTML {
 		style = `transform: scaleX(-1);`
 
 	// SVG icons
+	case "opencollective":
+		fallthrough
 	case "paypal":
 		fallthrough
 	case "stripe":

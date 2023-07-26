@@ -133,6 +133,7 @@ figure.side_by_side {
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 5%;
+	width: 100%;
 }
 
 figure.small {

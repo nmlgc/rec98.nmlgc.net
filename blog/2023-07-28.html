@@ -1,0 +1,223 @@
+{{$th03 := (call .PostFileURL "TH03-gaiji.png") -}}
+{{$th05 := (call .PostFileURL "TH05-SFT2.png") -}}
+
+<p>
+	Yet another small interruption before we get to Shuusou Gyoku, but only
+	because I've got a big announcement to make! {{DB_CustomerByID 9}} has just
+	commissioned the basic feature set that would allow PC-98 Touhou to be
+	translated into non-ASCII languages. 💸 And we're in fact doing it on PC-98,
+	and don't wait for the games to be ported to other systems first.
+</p><h5>How is this going to work?</h5><p>
+	This project will start sometime after I've completed the current big
+	project of <a href="https://github.com/nmlgc/ssg/issues/42">porting Shuusou
+	Gyoku to Linux</a>, so probably in the last few months of 2023. Similar to
+	the previous MediaWiki update, this will bypass the ReC98 push and cap
+	model: {{DB_CustomerByID 9}} is going to guarantee a minimum budget out of
+	their Open Collective funds, which can be increased with further donations
+	from the community, and I'm going to send an invoice once I'm done. In
+	addition, I'm also going to keep in contact with all interested translators
+	and backers via a Discord room throughout the process for additional
+	technical quality control.<br />
+	Since ReC98 hasn't really focused on text so far, the amount of moddable
+	text-related code would be fairly limited if I started working on it right
+	away. Currently, it only includes the following:
+</p><ul>
+	<li>All of TH01</li>
+	<li>All of TH02's <code>OP.EXE</code>, i.e., the main menu and the Music
+	Room</li>
+	<li>TH04's and TH05's endings</li>
+</ul><p>
+	Therefore, I'll put any general and unconstrained reverse-engineering,
+	position independence, or <q>anything</q> contributions that come in during
+	the next few months towards covering everything that's still missing there.
+	I've scheduled the in-game dialog system of TH04 and TH05 for mid-August,
+	after the next two Shuusou Gyoku-related deliveries, and here's what we'd
+	still be missing afterward:
+</p><ul>
+	<li>TH02's dialog system has seen no RE done yet and is completely different
+	from TH04's and TH05's, so we'd need another 2-3 pushes there. Technically,
+	we'd also need <code>MAIN.EXE</code> to be 100% position-independent for any
+	translation-related code modifications, but reaching that goal before I get
+	to work on translation support is probably unrealistic. If I tackle this
+	game last, I might figure out something to bypass that requirement.</li>
+	<li>The Music Rooms of TH03, TH04, and TH05 need roughly 2 pushes for their
+	combined RE and finalization. Most of their code is shared with TH02's Music
+	Room which I decompiled back in 2015.</li>
+	<li>TH02's <code>MAINE.EXE</code> needs to be fully RE'd since all of its
+	screens contain translatable text. Due to its highly copy-pasted nature, it
+	should be much cheaper than currently estimated on the main page. 3 pushes
+	should be enough there, though.</li>
+	<li>The main menu help strings in TH04's and TH05's <code>OP.EXE</code> are
+	very conveniently located, and could be RE'd within 0.25 pushes at
+	most.</li>
+	<li>Similarly, TH04's and TH05's <code>MAINE.EXE</code> contains some not
+	yet RE'd text in their verdict screens. 1 push there, since it's
+	unfortunately contained in the same function that also performs the highly
+	complex skill value calculation.</li>
+	<li>TH03's <code>MAINL.EXE</code> needs 100% PI to enable translations of
+	the Stage 8/9 cutscenes and endings, as well as a bit of RE for the
+	end-of-stage text. Let's go with 1.75 pushes there just to be safe, rounding
+	up the 0.25 above.</li>
+	<li>TH03's <code>MAIN.EXE</code> has the <span lang="ja">ＷＩＮＮＥＲ
+	ＢＯＮＵＳ</span> popup as its only translatable text. Like TH02's
+	<code>MAIN.EXE</code>, the entire binary should be position-independent
+	before doing translations. Let's also do that last.</li>
+</ul><p>
+	In total, that's the next 11 general pushes that will go towards ensuring
+	translatability of most of PC-98 Touhou, if possible. If you'd like your
+	contribution (or existing subscription) to go to {{HTML_Tag "gameplay" nil}}
+	code instead, be sure to tell me!
+</p><h5>What's the minimum guaranteed set of features?</h5><p>
+	The main feature will be a custom renderer for a subsetted, monospaced
+	Unicode bitmap font, and its integration into any translatable part of the
+	game. For the script files, this means UTF-8 support with Shift-JIS
+	fallback. For the glyphs, I'll use <a
+	href="https://unifoundry.com/unifont/">GNU Unifont</a> by default, but we
+	could also use any other freely licensed bitmap font with 8×16 or 16×16
+	glyphs for alphabets of certain languages. Everything about this will be the
+	real deal: The system will potentially support all of Unicode without font
+	ROM hacks so that the translations will work on real hardware, and there
+	will be no shortcuts for just a few Latin characters. And if someone wants
+	to translate this game into a language with <a
+	href="https://twitter.com/cmuratori/status/1416978255584792579">more complex
+	shaping rules</a>, I'll make sure that they look pretty as well if there's
+	some budget left.<br />
+	This will allow translation teams to build static translation patches into
+	any language by editing the original script files, and using
+	{{DB_CustomerByID 2}}'s <a href="http://lunarcast.net/mystictk.php">existing
+	tools</a> for any images. Modifications of hardcoded strings would still
+	require recompiling the binary, and each group would have to distribute and
+	advertise the result on their own.
+</p><h5>
+	<span style="font-style: normal;">🌐</span>
+	Which languages are we getting?
+</h5><p>
+	As of 2023-07-28, the following translators and teams have expressed
+	interest:
+</p><ul>
+	<li><b>Chinese, simplified</b>: ROCO2018, XiTieShiZ, Enkosama</li>
+	<li><b>Croatian</b>: <a
+	href="https://www.thpatch.net/wiki/Portal:Hr">TRDario</a></li>
+	<li><b>English, literal</b>: <a
+	href="https://www.thpatch.net/wiki/Portal:En-literal">Yova</a></li>
+	<li><b>French</b>: Lance, Slime900</li>
+	<li><b>German</b>: <a href="https://rd.mangadex.com/">Splashman / Reality
+	Dreamers</a>, PK Eager Maribel</li>
+	<li><b>Greek</b>: Tasos500</li>
+	<li><b>Hungarian</b>: <a
+	href="https://www.thpatch.net/wiki/Portal:Hu">Spectatorsatori</a></li>
+	<li><b>Italian</b>: <a
+	href="https://www.thpatch.net/wiki/Portal:It">Shin</a></li>
+	<li><b>Romanian</b>: Adi125</li>
+	<li><b>Russian</b>: <a href="https://raincat.4otaku.org/">CyrusVorazan</a>,
+	Badass1987</li>
+	<li><b>Serbian, literal</b>: <a
+	href="https://www.thpatch.net/wiki/Portal:Sr-literal">Yova</a></li>
+	<li><b>Spanish</b>: DarkeyeSide</li>
+	<li><b>Spanish, Latin American</b>: Xziled</li>
+	<li><b>Vietnamese</b>: Shinka</li>
+</ul>
+</p><h5>How much better could it be?</h5><ul>
+	<li>The most important feature: We could finally move away from the concept
+	of <i>translation patches</i>, integrate all translations as part of the
+	ReC98 repo, and ship them directly as part of new ReC98 builds. Languages
+	could then be switched at runtime, through a new setting in the Option
+	menu.<ul>
+		<li>And why stop there? How about binding a keyboard key to a new
+		language selection window that can be opened at any point during the
+		game, and even switches out any text that is currently shown on
+		screen?</li>
+	</ul></li>
+	<li>I could <a
+	href="https://github.com/thpatch/thcrap/issues/38">finally</a> translate a
+	canon Touhou game via a <a
+	href="https://en.wikipedia.org/wiki/Gettext">gettext</a>-like dictionary
+	system. This would allow modded source text to override translations, and
+	even make it possible to translate mods as well.</li>
+	<li>Ideally, all translators I get to work with are highly motivated and
+	finish translating each game they start, so that we don't even have to think
+	about <a
+	href="https://www.thpatch.net/wiki/Touhou_Patch_Center:About#Patch_stacking">translation
+	stacking</a>, but maybe we still should.</li>
+	<li>We could use proportional fonts instead of aligning every glyph to the
+	8×16 text RAM grid. Unlike the Windows Touhou games where proportional fonts
+	are crucial because adding more text space would desync replays, they are
+	not <i>that</i> important in PC-98 Touhou. With no replays to be desynced,
+	we can arbitrarily add new boxes without worrying about the font.<ul>
+		<li>However, supporting proportional fonts would make it possible to
+		lift some of the text sprites into the custom font system, allowing
+		their glyphs to be shared more easily across languages:<figure><figure
+		class="side_by_side pixelated">
+			<img src="{{$th03}}" alt="TH03's gaiji text." />
+			<img src="{{$th05}}" alt="TH04's and TH05's SFT2.CDG, containing the image text used in the main menus." />
+		</figure><figcaption>
+			Some of the image text from TH03's, TH04's, and TH05's main menus.
+			Turning these sprites into text so that translators won't have to
+			manually shift pixels around may or may not be worth it.
+		</figcaption></figure></li>
+	</ul></li>
+	<li>On the topic of new text boxes: Automatic line and box breaks at word
+	boundaries would completely remove the need for in-game proofreading.</li>
+	<li>In-game TL notes… nah, probably not. Where would we even put them in the
+	original screen layout?</li>
+	<li>Due to the continued interest in TH01's Anniversary Edition, any code
+	modifications would be exclusive to a respective game's bugfixed
+	<code>anniversary</code> branch – i.e., any translated builds will be
+	bundled with a growing number of fixes for issues in the original games that
+	fall under <a
+	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">my
+	current definition of <i>bugs</i></a>. This avoids a combinatorial explosion
+	of the number of branches, merges, and releases I'd have to do. For a small
+	amount of extra money though, I could merge them back to the ZUN
+	bug-preserving <code>debloated</code> branch. And for a <i>lot</i> of extra
+	money, I could reimplement everything on <code>master</code> while
+	preserving the original memory layout of ZUN's original binaries. This would
+	allow the translation-supporting binaries to be easily diffed against the
+	original ones, and retain compatibility with existing hacks or cheat tables.
+	The latter was already something that
+	{{Blog_PostLink "2023-05-29" "the Shuusou Gyoku community previously expected my recompiled builds to have"}}.</li>
+	<li>Just like with <a href="/blog/tag/mod">all custom PC-98 Touhou game
+	builds</a> I've shipped so far, you would install the translations by <a
+	href="https://github.com/nmlgc/ReC98/releases/tag/P0234">manually dropping
+	files into the game directory, or editing .HDI images using third-party
+	tools</a>. I can make this step pretty much arbitrarily more user-friendly
+	by writing nice installers that cover all imaginable setups and use
+	cases.</li>
+	<li>I could top off the project with some smaller, more intricate
+	localizations that translators might request for certain languages. Most
+	notably, this category would include any localization of TH01's
+	<span lang="ja">東方★靈異伝</span>,
+	<span style="color: red">STAGE #</span>, and
+	<span style="color: red">HARRY UP</span> popups that goes beyond just
+	fixing the Engrish.</li>
+	<li>Finally, if you all <i>really</i> want to, I could move all translatable
+	content to the {{DB_CustomerByID 9}} interface, which would truly turn that
+	site into the one central translation source for all canon Touhou games.
+	Automatic updates won't be feasible before porting away the games from PC-98
+	hardware, so the thpatch server would have to communicate with the ReC98
+	repo via a GitHub webhook. This will be rather expensive though, as I'd also
+	have to set up some kind of build/release CI for ReC98 first.</li>
+</ul><p>
+	You might remember most of this from
+	{{Blog_PostLink "2022-11-30" "my initial pitch back in November"}}, but I
+	did have quite a bit of additional ideas since then.
+</p><p>
+	These features are mostly independent of each other, and it will be up to
+	{{DB_CustomerByID 9}} to pick a priority order. That's also where all of you
+	could come in and influence this order with your donations. So it's closer
+	to a traditional crowdfunding campaign with stretch goals, where the sky is
+	the limit, than it is to the usual ReC98 model. And while there can be no
+	fixed prices for any of the goals, you can be sure that anything you invest
+	will improve the quality of the final product.
+</p><p>
+	<a
+		class="release" href="https://opencollective.com/thpatch"
+	>{{HTML_Emoji "opencollective"}} Touhou Patch Center on Open Collective</a>
+</p><p>
+	From now on, this will be the only way of funding any translation-related
+	goals; I've removed the respective options from the ReC98 order form.
+	Looking forward to how many of these additional ideas I get to implement –
+	but, as always, please invest responsibly.
+</p><p>
+	Shuusou Gyoku finally coming this weekend.
+</p>

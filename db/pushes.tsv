@@ -243,3 +243,9 @@ P0242	[222, 226, 233]	TH02 RE (Score tracking + HUD rendering)	2023-06-07T23:17:
 P0243	[233, 240, 243]	TH02 RE (Items)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/dfa758d...ac33bd2	1
 P0244	[214, 220, 224, 228, 245]	TH04 PI/RE (Stage 4 carpet lighting effect + 100% PI)	2023-06-13T11:07:44Z	nmlgc/ReC98/compare/ac33bd2...97f0c3b	1
 P0245	[236, 244, 227, 245, 246, 247]	TH04/TH05 finalization (Sprite clipping + gather circles + boss explosions) + TH01 Anniversary Edition (Lines, part 1/?)	2023-06-30T23:52:16Z	nmlgc/ReC98/compare/97f0c3b...5876755	1
+P0246	[232, 234]	Seihou / Shuusou Gyoku (Cleanup and deduplication)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/P0226...152ad74	0
+P0247	[234, 235]	Seihou / Shuusou Gyoku (DirectDraw surface refactoring, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/152ad74...54c3c4e	0
+P0248	[231, 215, 235]	Seihou / Shuusou Gyoku (秋霜CFG.DAT versioning)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/54c3c4e...62ff407	0
+P0249	[235]	Seihou / Shuusou Gyoku (DirectDraw surface refactoring, part 2/? + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/62ff407...a1f80a3	0
+P0250	[235, 237]	Seihou / Shuusou Gyoku (Text pre-rendering, part 1/2: Implementation + Migrating the in-game music title)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/a1f80a3...629ddd8	0
+P0251	[237, 248]	Seihou / Shuusou Gyoku (Text pre-rendering, part 2/2: Migrating the rest of the game + Replacing Win32 memory management)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/629ddd8...P0251	0

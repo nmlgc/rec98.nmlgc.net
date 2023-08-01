@@ -1,0 +1,707 @@
+{{$st03_pal := (call .PostFileURL "SH01-Gates-with-single-palette.png") -}}
+{{$st03_face := (call .PostFileURL "SH01-Gates-face.png") -}}
+{{$pack_0 := (call .PostFileURL "SH01-rectangle-packing-Menu.png") -}}
+{{$pack_1 := (call .PostFileURL "SH01-rectangle-packing-Music.png") -}}
+{{$pack_2 := (call .PostFileURL "SH01-rectangle-packing-Ingame.png") -}}
+{{$pack_3 := (call .PostFileURL "SH01-rectangle-packing-Ending.png") -}}
+{{$discolor := (call .PostFileURL "SH01-8-bit-discoloration.png") -}}
+{{$replay_255 := (call .PostFileURL "SH01-P0226-Replay-stage-select-255.png") -}}
+
+{{$mtitle_orig := (call .Video "SH01-Ingame-music-title-original" "Video of Shuusou Gyoku's in-game music title animation in the original 秋霜玉.exe running in 8-bit mode under DxWnd without any tweaks, showing off how rendering the title takes a sluggish 8-frames, as well as how DxWnd's incorrect emulation of surface DCs  results in a wildly incorrect palette") -}}
+{{$mtitle_P0251 := (call .Video "SH01-Ingame-music-title-P0251" "Video of Shuusou Gyoku's in-game music title animation in the P0251 build, showing off how it reduced the rendering time to 4 frames, and how it's unaffected by DxWnd's DC palette bug") -}}
+
+{{$mtitle_orig.SetTitle "Original game" -}}
+{{$mtitle_P0251.SetTitle "P0251 build" -}}
+
+{{$mtitle_orig.AddMarker 63 "Text rendering starts" "right" -}}
+{{$mtitle_P0251.AddMarker 63 "Text rendering starts" "right" -}}
+{{$mtitle_orig.AddMarker 71 "Gradient rendered" "left" -}}
+{{$mtitle_P0251.AddMarker 67 "Gradient rendered" "left" -}}
+
+<p>
+	And then I'm even late by yet another two days… For some reason, preparing
+	Shuusou Gyoku for an OpenGL port has been the most difficult and drawn-out
+	task I've worked on so far throughout this project. These pushes were in
+	development since April, and over two months in total. Tackling a legacy
+	codebase with such a rather vague goal while simultaneously wanting to keep
+	everything running did not do me any favors, and it was pretty hard to
+	resist the urge to fix <i>everything</i> that had better be fixed to make
+	this game portable…<br />
+	{{Blog_PostLink "2022-12-31" "2022 ended with Shuusou Gyoku working at full speed on Windows ≥8 by itself"}}, without external tools, for the first
+	time. However, since it all came down to just one small bugfix, the
+	resulting build still had several issues:
+</p><ul>
+	<li>The game might still start in the slow, <q>mitigated</q> 8-bit or 16-bit
+	mode if the respective app compatibility flag is still present in the
+	registry from the earlier {{Blog_PostLink "2022-09-04" "P0217 build"}}. A
+	player would then have to manually put the game into 32-bit mode via the
+	Option menu to make it run at its actual intended speed. Bypassing this flag
+	programmatically would require some rather fiddly .EXE patching techniques.
+	(<a href="https://github.com/nmlgc/ssg/issues/33">#33</a>)</li>
+	<li>The 32-bit mode tends to lag significantly if a lot of sprites are
+	onscreen, for example when canceling the final pattern of the Extra Stage
+	midboss. (<a href="https://github.com/nmlgc/ssg/issues/35">#35</a>)</li>
+	<li>If the game window lost and regained focus during the ending (for
+	example via Alt-Tabbing), the game reloads the wrong sprite sheet. (<a
+	href="https://github.com/nmlgc/ssg/issues/19">#19</a>)</li>
+	<li>And, of course, we still have no native windowed mode, or support for
+	rendering in the higher resolutions you'd want to use on modern high-DPI
+	displays. (<a href="https://github.com/nmlgc/ssg/issues/7">#7</a>)</li>
+</ul><p>
+	Now, we could tackle all of these issues one by one, in focused pushes… or
+	wait for one hero to fund a full-on OpenGL backend as part of the larger
+	goal of porting this game to Linux. This would take much longer, but fix all
+	these issues at once while bringing us significantly closer to Shuusou Gyoku
+	being cross-platform. Which is exactly what {{DB_CustomerByID 13}} did.
+</p><hr /><p>
+	Shuusou Gyoku is a <i>very</i> Windows-native codebase. Its usage of types
+	declared in <code>&lt;windows.h&gt;</code> even extends to core gameplay
+	code, the rendering code is completely architected around DirectDraw's
+	features and drawbacks, and text rendering is not abstracted at all. Looks
+	like it's now my task to write all the abstractions that pbg didn't manage
+	to write…<br />
+	Therefore, I chose to stay with DirectDraw for a few more pushes while I
+	would build these abstractions. In hindsight, this was the least efficient
+	approach one could possibly imagine for the exact goal of porting the game
+	to Linux. Suddenly, I had to <i>understand</i> all this  DirectDraw and GDI
+	jank, just to keep the game running at every step along the way. Retaining
+	Shuusou Gyoku's 8-bit mode in particular was a huge pain, but I didn't want
+	to remove it because it's currently the only way I can easily debug the game
+	in windowed mode at a scaled resolution, through <a
+	href="https://sourceforge.net/projects/dxwnd/">DxWnd</a>. In 16-bit or
+	32-bit mode, DxWnd slows down to a crawl, roughly resembling the performance
+	drop we used to get with Windows' own compatibility mitigations for the
+	original build.<br />
+	The upside, though, is that everything I've built so far still works with
+	the original 8-bit and 16-bit graphics modes. And with just <a
+	href="https://github.com/nmlgc/ssg/issues/43">one compiler flag to disable
+	any modern x86 instructions</a>, my build can still run on <a
+	href="https://en.wikipedia.org/wiki/Pentium_(original)">i586/P5 Pentium
+	CPUs</a>, and only requires <a
+	href="https://github.com/nmlgc/ssg/issues/43">KernelEx and its latest
+	Kstub822 patches</a> to run on Windows 98. And, surprisingly, <a
+	href="https://twitter.com/Columbio184/status/1685823332300562433">my core
+	audience does appreciate this fact</a>. Thus, I will include an i586 build
+	in all of my upcoming Shuusou Gyoku releases from now on. Once this codebase
+	can compile into a 64-bit binary (which will obviously be required for a
+	native Linux build), the i586 build will remain the only 32-bit Windows
+	build I'll include in my releases.
+</p><hr /><p>
+	So, what was DirectDraw? In the shortest way that still describes it
+	accurately from the point of view of a developer: "A hardware acceleration
+	layer over Ye Olde Win32 GDI, providing double-buffering and fast blitting
+	of rectangles." There's the <i>primary</i> double-buffered framebuffer
+	surface, the <dfn>offscreen surfaces</dfn> that you create (which are
+	comparable to what 3D rendering APIs would call <i>textures</i>), and you
+	can blit rectangular regions between the two. That's it. Except for
+	double-buffering, DirectDraw offers no feature that GDI wouldn't also
+	support, while not covering some of GDI's more complex features. I mean,
+	DirectDraw can blit rectangles only? <a
+	href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-plgblt">How
+	lame.</a> {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	However, DirectDraw's relative lack of features is not as much of a problem
+	as it might appear at first. The reason for that lies in what I consider to
+	be DirectDraw's actual killer feature: compatibility with GDI's <dfn>device
+	context</dfn> (DC) abstraction. By acquiring a DC for a DirectDraw surface,
+	you can use all existing GDI functions to draw onto the surface, and, in
+	general, it will all just work. 😮 Most notably, you can use GDI's blitting
+	functions (i.e., <code>BitBlt()</code> and friends) to transfer pixel data
+	from a GDI <code>HBITMAP</code> in system memory onto a DirectDraw surface
+	in video memory, which is the easiest and most straightforward way to, well,
+	<i>get sprite data onto a DirectDraw surface in the first place</i>.<br />
+	In theory, you could do that without ever touching GDI by locking the
+	surface memory and writing the raw bytes yourself. But in practice, you
+	probably won't, because your game has to run under multiple bit depths and
+	your data files typically only store one copy of all your sprites in a
+	single bit depth. And the necessary conversion and palette color matching…
+	is a mere implementation detail of GDI's blitting functions, using a
+	supposedly optimized code path for every permutation of source and
+	destination bit depths.
+</p><p>
+	All in all, DirectDraw doesn't look too bad so far, does it? Fast blitting,
+	and you can still use the full wealth of GDI functions whenever needed… at
+	the small cost of potentially losing your surface memory at any time. 🙄
+	Yup, if a DirectDraw game runs in true resolution-changing fullscreen mode
+	and you switch to the Windows desktop, all your surface memory is freed and
+	you have to manually restore it once the game regains focus, followed by
+	manually copying all intended bitmap data back onto all surfaces. DirectDraw
+	is where this concept of surface loss originated, which later carried over
+	to the earlier versions of Direct3D and, <a
+	href="https://web.archive.org/web/20110708090748/http://braid-game.com/news/2009/01/the-jeff-and-casey-show-on-visual-studio-2010-and-direct2d/">infamously,
+	Direct2D</a> as well.<br />
+	Looking at it from the point of view of the mid-90s, it does make sense to
+	let the application handle trashed video memory if that's an unfortunate
+	reality that your graphics API implementation has to deal with. You don't
+	want to retain a second copy of each surface in a less volatile part of
+	memory because you didn't have that much of it. Instead, the application can
+	now choose the most appropriate way to restore each individual surface. For
+	procedurally generated surfaces, it could just re-run the generating code,
+	whereas all the fixed sprite sheets could be reloaded from disk.
+</p><p>
+	In practice though, this well-intentioned freedom turns into a huge pain.
+	Suddenly, it's no longer enough to load every sprite sheet once before it's
+	needed, blit its pixel data onto the DirectDraw surface, and forget about
+	it. Now, the renderer must also be able to refresh the pixel data of every
+	surface <i>from within itself</i> whenever any of DirectDraw's blitting
+	functions fails with a <code>DDERR_SURFACELOST</code> error. This fact alone
+	is enough to push your renderer interface towards central management and
+	allocation of surfaces. You could <i>maybe</i> avoid the conceptual
+	<code>SurfaceManager</code> by bundling each surface with a regeneration
+	callback, but why should you? Any other graphics API would work with
+	straight-line procedural load-and-forget initialization code, so why slice
+	that code into little parts just because of some DirectDraw quirk?
+</p><p>
+	So if your surfaces can get trashed at any time, <i>and</i> you already use
+	GDI to copy them from system memory to DirectDraw-managed video memory,
+	<i>and</i> your game features at least one procedurally generated surface…
+	you might as well retain every currently loaded surface in the form of an
+	additional GDI device-independent bitmap. 🤷 In fact, that's even better
+	than what Shuusou Gyoku did originally: For all .BMP-sourced surfaces, it
+	only kept a buffer of the entire decompressed .BMP file data, which means
+	that it had to recreate said intermediate GDI bitmap every time it needed to
+	restore a surface. The in-game music title <i>was</i> originally restored
+	via regeneration callback that re-rendered the intended title directly onto
+	the DirectDraw surface, but this was handled by an additional "restore hook"
+	system that remained unused for anything else.<br />
+	Anything more involved would be a micro-optimization, especially since the
+	goal is to get <i>away</i> from DirectDraw here. Not much point in "neatly"
+	reloading sprite surfaces from disk if the total size of all loaded sprite
+	sheets barely exceeds the 1 MiB mark. Also, keeping these GDI DIBs loaded
+	and initialized <i>does</i> speed up getting back into the game… in theory,
+	at least. After all, the game still runs in fullscreen mode, and resolution
+	switching already takes longer on modern flat-panel displays than any
+	surface restoration method we could come up with.
+	{{HTML_Emoji "tannedcirno"}}
+</p><hr /><p>
+	So that was all pretty annoying. But once we start rendering in 8-bit mode,
+	it gets even worse as we suddenly have to bother with palette management.
+	Similar to <a href="/blog/tag/th01/palette">PC-98 Touhou</a>, Shuusou Gyoku
+	uses <i>way</i> too many different palettes. In fact, it <a
+	href="https://github.com/nmlgc/ssg/blob/e6267e99dfaac467bf42d0336c3675c74c2441af/DirectXUTYs/DD_UTY.CPP#L694-L705">creates
+	a separate DirectDraw palette to retain the palette embedded into every
+	loaded .BMP file, and simply sets the palette of the primary surface and the
+	backbuffer to the one it loaded last</a>. Like, why would you retain
+	per-surface palettes, and what effect does this even have? What even happens
+	when you blit between two DirectDraw surfaces that have different palettes?
+	Might this be the cause of the discolored in-game music title when playing
+	under DxWnd? 😵<br /> But if we try throwing out those extra palettes, it
+	only takes until Stage 3 for us to be greeted with… the infamous golf
+	course:
+</p><figure class="singleplayer_playfield">
+	<img src="{{$st03_pal}}" alt="Shuusou Gyoku's Stage 3 if it only used the palette it loaded last" /><figcaption>
+		Looks familiar? You might remember these colors from your attempts to <a
+		href="https://en.touhouwiki.net/index.php?title=Shuusou_Gyoku/Gameplay&diff=prev&oldid=336642#Running_on_the_latest_computers">run
+		the original build using D3DWindower</a>.
+	</figcaption>
+</figure><p style="
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	align-items: center;
+	gap: 0.5em;
+">
+	<img src="{{$st03_face}}" /><span>
+	As you might have guessed, these exact colors come from Gates' face sprite,
+	whose palette apparently doesn't match the sprite sheets used in Stage 3.
+	Turns out that 256 colors are not enough for what Shuusou Gyoku would like
+	to use across the entire stage. In sprite loading order:</span>
+</p><figure><table class="numbers">
+	<thead><tr>
+		<th>Sprite sheet</th>
+		<th><code>GRAPH.DAT</code> file</th>
+		<th>Additional unique colors</th>
+		<th>Total unique colors</th>
+	</tr></thead><tbody><tr>
+		<td>General system sprites</td>
+		<td>#0</td>
+		<td>+96</td>
+		<td>96</td>
+	</tr><tr>
+		<td>Stage 3 enemies</td>
+		<td>#3</td>
+		<td>+42</td>
+		<td>138</td>
+	</tr><tr>
+		<td>Stage 3 map tiles</td>
+		<td>#9</td>
+		<td>+40</td>
+		<td>178</td>
+	</tr><tr>
+		<td>Wide Shot bomb cut-in</td>
+		<td>#26</td>
+		<td>+3</td>
+		<td>181</td>
+	</tr><tr>
+		<td>VIVIT's faceset</td>
+		<td>#13</td>
+		<td>+40</td>
+		<td>221</td>
+	</tr><tr>
+		<td>Unknown face</td>
+		<td>#14</td>
+		<td>+35</td>
+		<td>256</td>
+	</tr></tbody><tfoot><tr>
+		<td>Gates' faceset</td>
+		<td>#17</td>
+		<td>+35</td>
+		<td><strong>296</strong></td>
+	</tr></tfoot>
+</table></figure><p>
+	And that's why Shuusou Gyoku does not only have to retain these palettes,
+	but also contains <a
+	href="https://github.com/nmlgc/ssg/blob/17894644715b372468f73b52eea1078e93b03344/GIAN07/SCROLL.CPP#L361-L369">stage
+	script commands</a> (!) to switch the current palette back to either the map
+	or enemy one, after the dialog system enforced the face palette.
+</p><p>
+	But the worst aspects about palettes rear their ugly head at the boundary
+	between GDI and DirectDraw, when GDI adds its own palettes into the mix.
+	None of the following points are clearly documented in either ancient or
+	current MSDN, forcing each new DirectDraw developer to figure them out on
+	their own:
+</p><ul>
+	<li>When calling <code>IDirectDraw::CreateSurface()</code> in 8-bit mode,
+	DirectDraw automatically sets up the newly created surface with a reference
+	(not a copy!) to the palette that's currently assigned to the primary
+	surface.</li>
+	<li>When locking an 8-bit surface for GDI blitting via
+	<code>IDirectDrawSurface::GetDC()</code>, DirectDraw is supposed to set the
+	GDI palette of the returned DC to the current palette of the DirectDraw…
+	<i>primary surface</i>?! Not the surface you're actually calling
+	<code>GetDC()</code> on?!<br />
+	Interestingly, it took until March of this year for DxWnd to <a
+	href="https://github.com/narzoul/DDrawCompat/issues/219">discover a
+	different game that relied on this detail</a>, while DDrawCompat had
+	implemented it for years. DxWnd version 2.05.95 then introduced the
+	<i>DirectX(2) → Fix DC palette</i> tweak, and it's this option that would
+	fix the colors of the in-game music title on any Shuusou Gyoku build older
+	than P0251.</li>
+	<li>Make sure to <i>never</i> <code>BitBlt()</code> from a 24-bit RGB GDI
+	image to a palettized 8-bit DirectDraw offscreen surface. You might be
+	tempted to just go 24-bit because there's no palette to worry about and you
+	can retain a single GDI image for every supported bit depth, but the
+	resulting palette mapping glitches will be much worse than if you just
+	stayed in 8-bit. If you want to procedurally generate a GDI bitmap for a
+	DirectDraw surface, for example if you need to render text, just <a
+	href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap">create
+	a bitmap that's <i>compatible</i> with the DC of DirectDraw's primary or
+	backbuffer surface</a>. Doing that magically removes all palette woes, and
+	<code>CreateCompatibleBitmap()</code> is much easier to call anyway.</li>
+</ul><p>
+	Ultimately, all of this is why Shuusou Gyoku's original DirectDraw backend
+	looks the way it does. It might seem redundant and inefficient in places,
+	but pbg did in fact discover the only way where all the undocumented GDI and
+	DirectDraw color mapping internals come together to make the game look as
+	intended. 🧑‍🔬<br />
+	And what else are you going to do if you want to target old hardware? My
+	PC-9821Nw133, for example, can only run the original Shuusou Gyoku in 8-bit
+	mode. For a Windows game on such old hardware, 8-bit DirectDraw looks like
+	the only viable option. You certainly don't want to use GDI alone, because
+	that's probably slow and you'd have to worry about <a
+	href="https://www.compuphase.com/palette.htm">even more palette-related
+	issues</a>. Although people have reported that Shuusou Gyoku does actually
+	run faster on their old Windows 9x machine if they <i>disable</i> DirectDraw
+	acceleration…?<br />
+	In that case, it might be worth a try to write a completely new 8-bit
+	software renderer, employing the same retained VRAM techniques that the
+	PC-98 Touhou games used to implement their scrolling playfields with a
+	minimum of redraws. The hardware scrolling feature of the PC-98 GDC would
+	then be replicated by blitting the playfield in two halves every frame. I
+	wonder how fast that would be…<br />
+	Or you go straight back to DOS, and bring your own font renderer and
+	MIDI/PCM sound driver. {{HTML_Emoji "thonk"}}
+</p><hr /><p>
+	So why did we have to learn about all this? Well, if GDI functions can
+	directly render onto any kind of DirectDraw surface, this also includes text
+	rendering functions like <code>TextOut()</code> and <code>DrawText()</code>.
+	If you're <i>really</i> lazy, you can even render your text directly onto
+	the DirectDraw backbuffer, which <i>probably</i> re-rasterizes all glyphs
+	every frame!<br />
+	Which, you guessed it, is exactly how Shuusou Gyoku renders most of its
+	text. 🐷 Granted, it's not too bad with MS Gothic thanks to its embedded
+	bitmaps for <a
+	href="https://web.archive.org/web/20160402134225/http://tomtia.plala.jp/pc/ttfont/#step04">font
+	heights between 7 and 22 inclusive</a>, which replace the usual Bézier curve
+	rasterization for TrueType fonts with a rather quick bitmap lookup. However,
+	it would not only become a hypothetical problem if future translations end
+	up choosing more complex fonts without embedded bitmaps, but also as soon as
+	we port the game to other systems. Nobody in their right mind would
+	integrate a cross-platform font renderer directly with a 3D graphics API… <a
+	href="https://learn.microsoft.com/en-us/windows/win32/opengl/font-and-text-functions"><span
+	class="hovertext" title="I haven't tried this one for obvious non-portability reasons, but having to specify a *range* of glyphs already means that it's going to be a disaster for Japanese text.">right?</span></a>
+	{{HTML_Emoji "onricdennat"}}
+</p><p>
+	Instead, let's refactor the game to render all its existing text to and from
+	a <span class="hovertext" title="Remember, we have to keep all images as both GDI bitmaps and DirectDraw surfaces.">bitmap</span>,
+	extending the way the in-game music title is rendered to the rest of the
+	game. Conceptually, this is also how the Windows Touhou games have always
+	rendered their text. Since they've always used Direct3D, they've always had
+	to blit GDI's output onto a texture. Through the definitions in
+	<code>text.anm</code>, this fixed-size texture is then turned into a sprite
+	sheet, allowing every rendered line of text to be individually placed on the
+	screen and animated.<br />
+	However, the static nature of both the sprite sheet and the texture caused
+	its fair share of problems for thcrap's translation support. Some of the
+	sprites, particularly the ones for spell card titles, don't originally take
+	up the entire width of the playfield, cutting off translations long before
+	they reach the left edge. Consequently, thcrap's <a
+	href="https://github.com/thpatch/thcrap-tsa/tree/master/base_tsa">base patch
+	for the Windows Touhou games</a> has to resize the respective sprites to
+	make translators happy. Before I added <a
+	href="https://github.com/thpatch/thcrap/releases/tag/2018-10-22">.ANM header
+	patching in late 2018</a>, this had to be done through a complete modified
+	copy of <code>text.anm</code> for every game – with possibly additional
+	variants if ZUN changed the layout of this file between game versions. Not
+	to mention that it's bound to be quite annoying to manually allocate a
+	rectangle for every line of text we want to show. After all, I have <a
+	href="https://github.com/nmlgc/ssg/issues/36">at least</a> <a
+	href="https://github.com/nmlgc/ssg/issues/12">two</a> text-heavy future
+	features in mind already…
+</p><p>
+	So let's not do <i>exactly</i> that. Since DirectDraw wants us to manage all
+	surfaces in a central place, we keep the idea of using a single surface for
+	all text. But instead of predefining anything about the surface layout, we
+	fully build up the surface at runtime based on whatever rectangles we need,
+	using a <a href="https://github.com/TeamHypersomnia/rectpack2D">rectangle
+	packing</a> algorithm… yup, I wouldn't have expected to enter such territory
+	either. For now, we still hardcode a fixed size that each piece of text is
+	allowed to maximally take up. But once we get translations, nothing is
+	stopping us from dynamically extending this size to fit even longer strings,
+	and fitting them onto the fixed screen space via smooth scrolling.<br />
+	To prevent the surface from arbitrarily growing as the game wants to render
+	more and more text, we also reset all allocated rectangles whenever the game
+	state changes. In turn, this will also recreate the text surface to match
+	the new bounding box of all rectangles before the first prerendering call
+	with the new layout. And if you remember the first bullet point about
+	DirectDraw palettes in 8-bit mode, this also means that the text surface
+	automatically receives the current  palette of the primary surface, giving
+	us correct colors even without requiring DxWnd's DC palette tweak. 🎨
+</p><p>
+	In fact, the need to dynamically create surfaces at custom sizes was the
+	main reason why I had to look into DirectDraw surface management to begin
+	with. The original game <a
+	href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/GIAN07/LOADER.CPP#L46-L84">created
+	all of its surfaces at once</a>, at startup or after changing the bit depth
+	in the main menu, which was a bad idea for many reasons:
+</p><ul>
+	<li>It hardcoded and limited the size of all sprite sheets,</li>
+	<li>added another rendering-API-specific function that game code should not
+	need to worry about,</li>
+	<li>introduced surface <i>IDs</i> that have to be synchronized with the
+	surface <i>pointers</i> used throughout the rest of the game,</li>
+	<li>and was the main reason why the game had to distribute the six 320×240
+	ending pictures across two of the fixed 640×480 surfaces, which ended up
+	causing the <a href="https://github.com/nmlgc/ssg/issues/19">sprite reload
+	bug in the ending</a>. As implied in the issue, this was a DirectDraw bug
+	that pretty much had to fix itself before I could port the game to OpenGL,
+	and was the only bug where this was the case. Check the issue comments for
+	more details about this specific bug.
+</ul><p>
+	In the end, we get four different layouts for the text surface: One for the
+	main menu, the Music Room, the in-game portion, and the ending. With,
+	perhaps surprisingly, not too much text on either of them:
+</p><figure><figure class="side_by_side small">
+	<img src="{{$pack_0}}" alt="The font-rendered text from Shuusou Gyoku's sound option menu, packed into a texture." />
+	<img src="{{$pack_1}}" alt="The font-rendered text from Shuusou Gyoku's Music Room, packed into a texture." />
+	<img src="{{$pack_2}}" alt="The font-rendered text from Shuusou Gyoku's Stage 1, packed into a texture." />
+	<img src="{{$pack_3}}" alt="The font-rendered text from Shuusou Gyoku's ending, packed into a texture." />
+</figure><figcaption>
+	Yes, the ending uses just a single rectangle that takes up the entire screen
+	space below the pictures and credits.<br />
+	For the menus, the resulting packed layout reveals how I'm assigning a
+	separately cached rectangle to each possible option – otherwise, they
+	couldn't be arranged vertically on screen with this bitmap layout. Right
+	now, I'm only storing all text for the current menu level, which requires
+	text to be rendered again when entering or leaving submenus. However, I'm
+	allocating as many rectangles as required for the submenu with the most
+	amount of items to at least prevent the single text surface from being
+	resized while navigating through the menu. As a side effect, this is also
+	why you can see multiple <code>Exit</code> labels: These simply come from
+	other submenus with more elements than the currently visited <code>Sound /
+	Music</code> one.
+</figcaption></figure><p>
+	Still, we're re-rasterizing whole lines of text exactly as they appear on
+	screen, and are even doing so multiple times to apply any drop shadows.
+	Isn't that exactly what every text rendering tutorial nowadays advises
+	against doing? Why not directly go for the classic solution to this problem
+	and render using a <a
+	href="https://straypixels.net/texture-packing-for-fonts/">font texture
+	atlas</a>? Well…
+</p><ul>
+	<li>Most of the game text is still in Japanese. If we were to build a font
+	atlas in advance, we'd have to add a separate build step that collects all
+	needed codepoints by parsing all text the game would ever print, adding a
+	build-time dependency on the original game's copyrighted data files. We'd
+	also have to move all hardcoded strings to a separate file since we surely
+	don't want to parse C++ manually during said build step. Theoretically, we
+	would then also give up the idea of modding text at run-time without
+	re-running that build step, since we'd restrict all text to the glyphs we've
+	rasterized in the atlas… yeah, that's more than enough reasons for static
+	atlas generation to be a non-starter.<br />
+	OK, then let's build the atlas dynamically, adding new glyphs as we
+	encounter them. Since this game is old, we can even be a bit lazy as far as
+	the packing is concerned, and don't have to get as fancy as the GIF in the
+	link above. Just assume a fixed height for each glyph, and fill the atlas
+	from left to right. We can even clear it periodically to keep it from
+	getting too big, like before entering the Music Room, the in-game portion,
+	or the ending, or after switching languages once we have translations.
+	Should work, right?</li>
+	<li>Except that most text in Shuusou Gyoku comes with a shadow, realized by
+	first drawing the same string in a darker color and displaced by a few
+	pixels. With a 3D renderer, none of this would be an issue because we can
+	define vertex colors. But we're still using DirectDraw, which has no way of
+	applying any sort of color formula – again, all it can do is take a
+	rectangle and blit it somewhere else. So we can't just keep one atlas with
+	white glyphs and let the renderer recolor it. Extending Shuusou Gyoku's
+	Direct3D code with support for textured quads is also out of the question
+	because then we wouldn't have any text in the Direct3D-less 8-bit mode. So
+	what do we do instead? Throw the atlas away on every color change? Keep
+	multiple atlases for every color we've seen so far? Turn shadows into a
+	high-level concept? Outright forgetting the idea seems to be the best choice
+	here…</li>
+	<li>For a rather square language like Japanese where one Shift-JIS codepoint
+	always corresponds to one glyph, a texture atlas can work fine and without
+	too much effort. But once we support languages with more complex ligatures,
+	we suddenly need to get a <a
+	href="https://harfbuzz.github.io/why-do-i-need-a-shaping-engine.html">shaping
+	engine</a> from somewhere, and directly interact with it from our rendering
+	code. This necessarily involves changing APIs and maybe even bundling the
+	first cross-platform libraries, which I wanted to avoid in an already packed
+	and long overdue delivery such as this one. If we continue to render
+	line-by-line, translations would only need a line break algorithm.</li>
+	<li>Most importantly though: <i>It's not going to matter anyway.</i> The
+	game ran fine on early 2000s hardware even though it called
+	<code>TextOut()</code> every frame, and any approach that caches the result
+	of this call is going to be faster.</li>
+</ul><p>
+	While the Music Room and the ending can be easily migrated to a prerendering
+	system, it's much harder for the main menu. Technically, <i>all</i> option
+	strings of the currently active submenu are rewritten every frame, even
+	though that would only be necessary for the scrolling MIDI device name in
+	the <code>Sound / Music</code> submenu. And since all this rewriting is done
+	via a classic <code>sprintf()</code> on fixed-size <code>char</code>
+	buffers, we'd have to deploy our own change detection before prerendering
+	can have any performance difference.<br />
+	In essence, we'd be shifting the text rendering paradigm from the original
+	immediate approach to a more retained one. If you've ever used any of the
+	hot new immediate-mode GUI or web frameworks that have become popular over
+	the last 10 years, your alarm bells are probably already ringing by now.
+	Adding retained elements is always a step back in terms of code quality, as
+	it increases complexity by storing UI state in a second place.
+</p><p>
+	Wouldn't it be better if we could just stay with the original immediate
+	approach then? Absolutely, and we only need a simple cache system to get
+	there. By remembering the string that was last rendered to every registered
+	rectangle, the text renderer can offer an immediate API that combines the
+	distinct <code>Prerender()</code> and <code>Blit()</code> steps into a
+	single <code>Render()</code> call. There still has to be an initialization
+	point that registers all rectangles for each game state (which,
+	surprisingly, was not present for the in-game portion in the original code),
+	but the rendering code remains architecturally unchanged in how we call the
+	text renderer every frame. As long as the text doesn't change, the text
+	renderer just blits whatever it previously rendered to the respective
+	rectangle. With an API like this, the whole pre-rendering part turns into a
+	mere implementation detail.
+</p><p>
+	So, how much faster is the result? Since I can only measure non-VSynced
+	performance in a quite rudimentary way using DxWnd's FPS counter, it highly
+	depends on the selected renderer. Weirdly enough, even just switching font
+	<i>creation</i> to the Unicode APIs tripled the FPS inside the Music Room
+	when rendering with OpenGL? That said, the <i>primary surface</i> renderer
+	seems to yield the most realistic numbers, as we still stay entirely within
+	DirectDraw and perform no API wrapping. Using this renderer, I get speedups
+	of roughly:
+</p><ul>
+	<li>~3.5× in the Music Room,</li>
+	<li>~1.9× during in-game dialog, and</li>
+	<li>~1.5× in the main menu.</li>
+</ul><p>
+	Not bad for something I had to do anyway to port the game away from
+	DirectDraw! Shuusou Gyoku is rather infamous among the vintage computer
+	scene for being ridiculously unoptimized, so I should definitely be able to
+	get some performance gains out of the in-game portion as well.
+</p><p>
+	For a final test of all the new blitting code, I also tried running
+	<i>outside</i> DxWnd to verify everything against real and unpatched
+	DirectDraw. Amusingly, this revealed how blitting from the new text surface
+	seems to reach the color mapping limits of the DWM mitigation in 8-bit mode:
+</p><figure class="fullres pixelated">
+	<img src="{{$discolor}}" alt="" />
+	<figcaption>
+		For some reason, my system maps the intended <code>#FFFFFF</code> text
+		color to <code>#E4E3BB</code> in the main menu?
+	</figcaption>
+</figure><p>
+	8-bit mode does render correctly when I ran the same build in a Windows 98
+	VirtualBox on the same system though, so it's not worth looking into a mode
+	that the system reports as unsupported to begin with. Let's leave this as
+	somewhat of a visual reminder for players to select 32-bit mode instead.
+</p><hr /><p>
+	Alright, enough about the annoying parts of GDI and DirectDraw for now.
+	Let's stop looking back and start looking forward, to a time within this
+	Seihou revolution when we're going to have lots of new options in the main
+	menu. Due to the nature of delivering individual pushes, we can expect lots
+	of revisions to the config file format. Therefore, we'd like to have a
+	backward-compatible system that allows players to upgrade from any older
+	build, including the original <code>秋霜玉.exe</code>, to a newer one. The
+	original game predominantly used single-byte values for all its options, but
+	we'd like our system to work with variables of any size, including strings
+	to store things like <a href="https://github.com/nmlgc/ssg/issues/14">the
+	name of the selected MIDI device</a> in a more robust way. Also, it's pure
+	evil to reset the entire configuration just because someone tried to
+	hex-edit the config file and didn't keep the checksum in mind.
+</p><p>
+	It didn't take long for me to arrive at a common
+	<code>Size()</code>/<code>Read()</code>/<code>Write()</code> interface. By
+	using the same interface for both arrays and individual values, new config
+	file versions can naturally expand older ones by taking the array of option
+	references from the previous version and wrapping it into a new array,
+	together with the new options.<br />
+	The classic way of implementing this in C++ involves a typical
+	object-oriented class hierarchy: An <code>Option</code> base class would
+	define the interface in the form of virtual abstract functions, and the
+	<code>Value</code>, <code>Array</code>, and <code>ConfigVersion</code>
+	subclasses would provide different implementations. This works, but
+	introduces quite a bit of boilerplate, not to mention the runtime bloat from
+	all the virtual functions which Visual C++ can't inline. Why should we do
+	<i>any</i> runtime dispatch here? We know the set of configuration options
+	at compile time, after all… {{HTML_Emoji "thonk"}}
+</p><p>
+	Let's try looking into the modern C++ toolbox and see if we can do better.
+	The only real challenge here is that the array type has to support
+	arbitrarily sized option value types, which sounds like a job for
+	<i>template parameter packs</i>. If we save these into a
+	<code>std::tuple</code>, we can then "iterate" over all options with <a
+	href="https://en.cppreference.com/w/cpp/utility/apply"><code>std::apply</code></a>
+	and <a href="https://en.cppreference.com/w/cpp/language/fold">fold
+	expressions</a>, in a nice functional style.<br />
+	I was amazed by just how clearly the "crazy" modern C++ approach with
+	template parameter packs, <code>std::apply()</code> over giant
+	<code>std::tuple</code>s, and fold expressions beats a classic polymorphic
+	hierarchy of abstract virtual functions. With the interface moved into an
+	even optional <code>concept</code>, the class hierarchy can be completely
+	flattened, which surprisingly also makes the code easier to both read and
+	write.
+</p><p>
+	Here's how the new system works from the player's point of view:
+</p><ul>
+	<li>The config files now use a kanji-less and explicitly forward-compatible
+	naming scheme, starting with <code>SSG_V00.CFG</code> in the P0251 build.
+	The format of this initial version simply includes all values from the
+	original <code>秋霜CFG.DAT</code> without padding bytes or a checksum. Once
+	we release a new build that adds new config options, we go up to
+	<code>SSG_V01.CFG</code>, and so on.</li>
+	<li>When <i>loading</i>, the game starts at its newest supported config file
+	version. If that file doesn't exist, the game retries with each older
+	version in succession until it reaches the last file in the chain, which is
+	always the original <code>秋霜CFG.DAT</code>. This makes it possible to
+	upgrade from any older Shuusou Gyoku build to a newer one while retaining
+	all your settings – including, most importantly, which shot types you
+	unlocked the Extra Stage with. The newly introduced settings will simply
+	remain at their initial default in this case.</li>
+	<li>When <i>saving</i>, the game always writes all versions it knows about,
+	down to and including the original <code>秋霜CFG.DAT</code>, in the
+	respective version-specific format. This means that you can change options
+	in a newer build and they'll show up changed in older builds as well if they
+	were supported there.<br />
+	And yes, this also means that we can stop writing the unsupported 32-bit bit
+	depth setting to <code>秋霜CFG.DAT</code>, which would cause a validation
+	failure on the original build. This is now avoided by simply turning 32-bit
+	into 16-bit just for the configuration that gets saved to this file. And
+	speaking of validation failures…</li>
+	<li>The <code>SSG_V*.CFG</code> files don't use checksums at all, which
+	allows you to freely hex-edit them. Each configuration value is now
+	validated individually, and reset to its default if you hex-edited it to
+	something invalid. In the future, <a
+	href="https://github.com/nmlgc/ssg/issues/12">we could even show an
+	in-engine window at startup that lists these invalid options and the
+	defaults they were reset to, if we get backer support for this idea.</a><ul>
+		<li>This per-value validation is also done if my builds loaded the
+		original <code>秋霜CFG.DAT</code>. The checksum is still written for
+		compatibility with the original build, but my builds ignore it.</li>
+	</ul></li>
+</ul><hr /><p>
+	With that, we've got more than enough code for a new build:
+</p><p>
+	<a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0251">
+	{{HTML_Emoji "sh01"}} Shuusou Gyoku P0251</a>
+</p><p>
+	This build also contains two more fixes that didn't fit into the big
+	DirectDraw or configuration categories:
+</p><ul>
+	<li>The P0226 build had a bug that allowed invalid stages to be selected for
+	replay recording. If the <code>ReplaySave</code> option was
+	<code>[O&nbsp;F&nbsp;F]</code>, pressing the ⬅️ left arrow key on the
+	<code>StageSelect</code>
+	option would overflow its value to 255. The effects of this weren't all too
+	serious: The game would simply stay on the Weapon Select screen for an
+	invalid stage number, or launch into the Extra Stage if you scrolled all the
+	way to 131. Still, it's fixed in this build.<figure class="fullres
+	pixelated">
+		<img src="{{$replay_255}}" alt="Screenshot of the negative overflow bug that the P0226 build of Shuusou Gyoku accidentally introduced into the replay stage selection" />
+		<figcaption>Whoops! That one was fully my fault.</figcaption>
+	</figure></li>
+	<li>The render time for the in-game music title is now roughly cut in half: <figure class="singleplayer_playfield pixelated">
+		{{call .VideoPlayer $mtitle_orig.SetActive.SetNoLoop $mtitle_P0251.SetNoLoop}}
+	<figcaption>
+		Achieved by simply trimming trailing whitespace and using slightly more
+		efficient GDI functions to draw the gradient. Spending 4 frames on
+		rendering a gradient is still way too much though. I'll optimize that
+		further once I actually get to port this effect away from GDI.<br />
+		These videos also show off how DxWnd's DC palette bug affected the
+		original game, and how it doesn't affect the P0251 build.
+	</figcaption></figure></li>
+</ul><p>
+	These 6 pushes still left several of Shuusou Gyoku's DirectDraw portability
+	issues unsolved, but I'd better look at them once I've set up a basic OpenGL
+	skeleton to avoid any more premature abstraction. Since the ultimate goal is
+	a Linux port, I might as well already start looking at the current best
+	platform layer libraries. SDL would be the standard choice here, and while
+	SDL_ttf looks regrettably misdesigned, the core SDL library seems to cover
+	all we could possibly want for Shuusou Gyoku, including a 2D renderer… wait,
+	<i>what</i>?!
+</p><p>
+	Yup. Admittedly, I've been living under a rock as far as SDL is concerned,
+	and thus wasn't aware that SDL 2 introduced <a
+	href="https://wiki.libsdl.org/SDL2/SDL_Renderer">its own abstraction for 2D
+	rendering</a> that just happens to almost exactly cover everything we need
+	for Shuusou Gyoku. This API even covers all of the game's Direct3D code,
+	which only draws alpha-blended, untextured, and pre-transformed
+	vertex-colored triangles and lines. It's the exact abstraction over OpenGL I
+	thought I had to write myself, and such a perfect match for this game that
+	it would be foolish to go for a custom OpenGL backend – especially since SDL
+	will automatically target the ideal graphics API for any given operating
+	system.
+</p><p>
+	Sadly, the one thing SDL_Renderer is missing is something equivalent to
+	pixel shaders, which we would need to replicate the <span lang="ja">西方
+	Ｐｒｏｊｅｃｔ</span> lens ball effect shown at startup. Looks like we have
+	to drop into <a href="https://wiki.libsdl.org/SDL2/SDL_GetWindowSurface">a
+	completely separate, unaccelerated rendering mode</a> and continue to
+	software-render this one effect before switching to hardware-accelerated
+	rendering for the rest of the game. But at least we <i>can</i> do that in a
+	cross-platform way, and <i>don't</i> have to bother with shading languages –
+	or, perhaps even worse, <a href="https://xkcd.com/927/">SDL's own shading
+	language</a>.<br />
+	If we were extremely pedantic, we'd also have to do the same for the
+	{{Blog_PostLink "2022-12-31" "unused spiral effect that was originally intended for the staff roll"}}.
+	Software rendering would be even more annoying there, since we don't
+	<i>just</i> have to software-render these staff sprites, but also the ending
+	picture and text, complete with their respective fade effects. And while I
+	typically do go the extra mile to preserve whatever code was present in
+	these games, keeping <i>this</i> effect would just needlessly drive up the
+	cost of the SDL backend. Let's just move this one to the <a
+	href="https://github.com/nmlgc/ssg/tree/master/unused">museum of unused
+	code</a> and no longer actively compile it. RIP spiral 🥲 At least you're
+	still preserved in lossless video form.
+</p><p>
+	Now that SDL has become an integral part of Shuusou Gyoku's portability plan
+	rather than just being one potential platform layer among many, the optimal
+	order of tasks has slightly changed. If we stayed within the raw Win32 API
+	any longer than absolutely necessary, we'd only risk writing  more
+	Win32-native code for things like <a
+	href="https://github.com/nmlgc/ssg/issues/9">audio streaming</a> that we'd
+	then have to throw away and rewrite in SDL later. Next up, therefore:
+	Staying with Shuusou Gyoku, but continuing in a much more focused manner by
+	fixing the input system and starting the SDL migration with input and sound.
+</p>

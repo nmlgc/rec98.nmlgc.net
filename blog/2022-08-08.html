@@ -23,13 +23,10 @@
 {{$vid_p5_l.SetTitle "Lunatic" -}}
 
 {{$vid_p5_e.AddMarker 231 "Second subpattern" "right" -}}
-{{$vid_p5_n.AddMarker 231 "Second subpattern" "right" -}}
-{{$vid_p5_h.AddMarker 231 "Second subpattern" "right" -}}
-{{$vid_p5_l.AddMarker 231 "Second subpattern" "right" -}}
 {{$vid_p5_e.AddMarker 347 "Original end" "left" -}}
-{{$vid_p5_n.AddMarker 347 "Original end" "left" -}}
-{{$vid_p5_h.AddMarker 347 "Original end" "left" -}}
-{{$vid_p5_l.AddMarker 347 "Original end" "left" -}}
+{{$vid_p5_n.LinkMarkers $vid_p5_e}}
+{{$vid_p5_h.LinkMarkers $vid_p5_e}}
+{{$vid_p5_l.LinkMarkers $vid_p5_e}}
 
 {{$vid_blit.AddMarker   5 "1" "right" -}}
 {{$vid_blit.AddMarker   9 "2" "left" -}}

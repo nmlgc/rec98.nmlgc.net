@@ -62,6 +62,11 @@ func (b *BlogVideo) AddMarker(frame uint, title string, alignment template.HTML)
 	return ""
 }
 
+func (b *BlogVideo) LinkMarkers(other *BlogVideo) string {
+	b.Markers = other.Markers
+	return ""
+}
+
 // Tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) Tag() (ret template.HTML) {
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)

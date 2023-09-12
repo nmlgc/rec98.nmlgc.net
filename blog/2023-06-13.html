@@ -5,11 +5,9 @@
 {{$vid_show.SetTitle "TRAM shown" -}}
 
 {{$vid_hide.AddMarker 30 "➜ 1" "" -}}
-{{$vid_show.AddMarker 30 "➜ 1" "" -}}
 {{$vid_hide.AddMarker 62 "➜ 2" "" -}}
-{{$vid_show.AddMarker 62 "➜ 2" "" -}}
 {{$vid_hide.AddMarker 86 "💡 2" "left" -}}
-{{$vid_show.AddMarker 86 "💡 2" "left" -}}
+{{$vid_show.LinkMarkers $vid_hide}}
 
 <style>
 	#carpet-{{.Date}} img {

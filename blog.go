@@ -113,14 +113,15 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	ret := &BlogVideo{
 		Metadata: &b.Video.Cache.Video[stem].Metadata,
-		Poster:   template.HTML(b.VideoURL(stem, &POSTER)),
-		Lossless: template.HTML(b.VideoURL(stem, &VIDEO_SOURCE)),
+		Poster:   template.HTML(*b.VideoURL(stem, &POSTER)),
+		Lossless: template.HTML(*b.VideoURL(stem, &VIDEO_SOURCE)),
 		Date:     date,
 		Alt:      alt,
 	}
 	for _, codec := range VIDEO_HOSTED {
-		codecURL := template.HTML(b.VideoURL(stem, codec))
-		ret.Sources = append(ret.Sources, codecURL)
+		if codecURL := b.VideoURL(stem, codec); codecURL != nil {
+			ret.Sources = append(ret.Sources, template.HTML(*codecURL))
+		}
 	}
 	return ret
 }
@@ -184,7 +185,11 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 func (b *Blog) OldVideoRedirectHandler(vd *VideoDir) http.Handler {
 	return http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
 		newURL := b.VideoURL(mux.Vars(req)["stem"], vd)
-		http.Redirect(wr, req, newURL, http.StatusMovedPermanently)
+		if newURL == nil {
+			wr.WriteHeader(http.StatusNotFound)
+			return
+		}
+		http.Redirect(wr, req, *newURL, http.StatusMovedPermanently)
 	})
 }
 
@@ -247,9 +252,15 @@ func (e eNoPost) Error() string {
 	return fmt.Sprintf("no blog entry posted on %s", e.date)
 }
 
-// VideoURL returns the URL of a video in a specific codec.
-func (b *Blog) VideoURL(stem string, vd *VideoDir) string {
-	return blogHP.VersionURLFor(b.Video.URL(stem, vd))
+// VideoURL returns the URL of a video in a specific codec if it exists on the
+// filesystem.
+func (b *Blog) VideoURL(stem string, vd *VideoDir) *string {
+	url := b.Video.URL(stem, vd)
+	if url == nil {
+		return nil
+	}
+	ret := blogHP.VersionURLFor(*url)
+	return &ret
 }
 
 // Render builds a new Post instance from e.

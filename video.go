@@ -449,8 +449,13 @@ func NewVideoRoot(root SymmetricPath) *VideoRoot {
 	return ret
 }
 
-func (r *VideoRoot) URL(stem string, vd *VideoDir) string {
-	return path.Join(r.Root.URLPrefix, vd.Dir, (stem + vd.Ext))
+func (r *VideoRoot) URL(stem string, vd *VideoDir) *string {
+	encodedFN := filepath.Join(r.Root.LocalPath, vd.RelativeFN(stem))
+	if _, err := os.Stat(encodedFN); errors.Is(err, fs.ErrNotExist) {
+		return nil
+	}
+	ret := path.Join(r.Root.URLPrefix, vd.Dir, (stem + vd.Ext))
+	return &ret
 }
 
 // UpdateVideo re-encodes a video in any codecs whose files are outdated.

@@ -55,6 +55,7 @@ var POSTER = VideoDir{"poster", FFMPEGCodec{
 		"-frames:v", "1",
 		"-lossless", "1",
 	},
+	VFlagsHD: []string{},
 }}
 
 // Best web-supported codec in 2022
@@ -65,6 +66,7 @@ var AV1 = VideoDir{"av1", FFMPEGCodec{
 		"-crf", "1",
 		"-g", "10",
 	},
+	VFlagsHD: nil,
 }}
 
 // Was good for visually lossless video in 2019, turns to complete trash if
@@ -76,6 +78,10 @@ var VP9 = VideoDir{"vp9", FFMPEGCodec{
 		"-crf", "15",
 		"-vf", "format=yuv422p",
 		"-g", "20",
+	},
+	VFlagsHD: []string{
+		"-crf", "50",
+		"-g", "30",
 	},
 	TwoPass: true,
 }}
@@ -91,6 +97,7 @@ var VP8 = VideoDir{"vp8", FFMPEGCodec{
 		"-b:v", "1G",
 		"-g", "30",
 	},
+	VFlagsHD: []string{},
 }}
 
 // VIDEO_ENCODED defines all target codec directories.
@@ -111,6 +118,11 @@ type FFMPEGCodec struct {
 	VCodec  string   // -vcodec
 	VFlags  []string // Encoding settings
 	TwoPass bool
+
+	// Encoding settings for non-pixelated HD video. If nil, HD videos aren't
+	// encoded for this format; if it's a valid empty array, HD videos use the
+	// settings from VFlags.
+	VFlagsHD []string
 }
 
 // EqualTo returns whether these codec parameters are the same as the given
@@ -148,9 +160,9 @@ const (
 	Decoder ffmpegCodecType = "-decoders"
 )
 
-// Encode encodes sourceFN to encodedFN with the given codec, creating any
-// necessary directories beforehand.
-func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
+// Encode encodes sourceFN to encodedFN with the given codec and flags,
+// creating any necessary directories beforehand.
+func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec, flags []string) {
 	encodedDir, _ := filepath.Split(encodedFN)
 	FatalIf(os.MkdirAll(encodedDir, 0700))
 	passCount := 1
@@ -165,7 +177,7 @@ func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec) {
 			"-i", sourceFN,
 			"-vcodec", codec.VCodec,
 		}
-		args = append(args, codec.VFlags...)
+		args = append(args, flags...)
 		if codec.TwoPass {
 			args = append(args, "-pass", strconv.FormatInt(int64(pass), 32))
 		}
@@ -462,6 +474,7 @@ func (r *VideoRoot) URL(stem string, vd *VideoDir) *string {
 // Returns the amount of videos newly encoded.
 func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 	entry := r.Cache.Video[stem]
+	sourceIsHD := strings.HasSuffix(stem, ".hd")
 	sourceBasename := VIDEO_SOURCE.Basename(stem)
 	sourceDebugFN := VIDEO_SOURCE.RelativeFN(stem)
 	sourceFN := filepath.Join(r.Root.LocalPath, sourceDebugFN)
@@ -487,6 +500,10 @@ func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 		}
 
 		needsReencode := func() *cacheMiss {
+			if sourceIsHD && vd.VFlagsHD == nil {
+				return nil
+			}
+
 			// 1) Encoded file does not exist
 			encodedFI, err := os.Stat(encodedFN)
 			if errors.Is(err, fs.ErrNotExist) {
@@ -534,7 +551,11 @@ func (r *VideoRoot) UpdateVideo(stem string) (encodedCount int) {
 
 		if miss := needsReencode(); miss != nil {
 			miss.Log("re-encoding")
-			r.ffmpeg.Encode(encodedFN, sourceFN, &vd.FFMPEGCodec)
+			flags := vd.VFlags
+			if sourceIsHD && len(vd.VFlagsHD) > 0 {
+				flags = vd.VFlagsHD
+			}
+			r.ffmpeg.Encode(encodedFN, sourceFN, &vd.FFMPEGCodec, flags)
 			encodedFI, err := os.Stat(encodedFN)
 			FatalIf(err)
 			r.Cache.Video[stem].EncodedMTime[vd.Dir] = encodedFI.ModTime()

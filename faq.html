@@ -464,6 +464,48 @@ DEATHBOMB_WINDOW = 8
 
 
 
+{{template "<q>" "mod-bugs"}}
+	I found a bug in one of your mod releases!
+</h3>
+<p>
+	Please tell me! I will release a bugfix for free, together with a short
+	explanatory blog post, if the bug is
+</p><ul>
+	<li>a clear regression (i.e., I broke something that worked fine in the
+	original game), and</li>
+	<li>not actually related to a bug or missing feature in the original game
+	that would be addressed in a future push or microtransaction.</li>
+</ul><p>
+	An example: The <a
+	href="https://github.com/nmlgc/ReC98/releases/tag/P0234">P0234 build of the
+	TH01 Anniversary Edition</a> had a bug during the transition between
+	Sariel's two forms that caused certain pellets to be rendered as white
+	streaks. This was due to a quirk I didn't keep in mind when writing the new
+	pellet rendering code that this release was all about, so I
+	{{Blog_PostLink "2023-03-14" "fixed it shortly after I received the bug report, for free"}}.
+</p><p>
+	Two counterexamples:
+</p><ul>
+	<li>The same P0234 build broke the <code>s</code> command-line parameter
+	that would start TH01 with just a stage selection and no debug features. A
+	quick investigation showed that it only ever worked in the original game if
+	a specific byte in memory was written to before launching the game, which
+	turned the issue into a ZUN bug. But since it was easy to fix, I prioritized
+	the issue after the bug report, and shipped the fix in the <a
+	href="https://github.com/nmlgc/ReC98/releases/tag/P0239">subsequent P0239
+	build.</a></li>
+	<li>The <a href="https://github.com/nmlgc/ssg/releases/tag/P0226">P0226
+	release of Shuusou Gyoku</a> added 32-bit rendering support to allow the
+	game to run at full speed on Windows ≥8, but did not include a windowed mode
+	or any scaling support. This is a separate feature that requires separate,
+	dedicated attention, and <a
+	href="https://github.com/nmlgc/ssg/issues/7">already had an entry in the
+	issue tracker</a>.</li>
+</ul>
+{{template "</q>"}}
+
+
+
 {{template "<q>" "tsa-takedown"}}
 	Can't Team Shanghai Alice take down this project and crowdfunding at any
 	time?

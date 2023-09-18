@@ -176,6 +176,10 @@ func (f *FFMPEG) Encode(encodedFN string, sourceFN string, codec *FFMPEGCodec, f
 			"-y", // force overwrite
 			"-i", sourceFN,
 			"-vcodec", codec.VCodec,
+
+			// Transparent according to
+			// https://wiki.xiph.org/Opus_Recommended_Settings
+			"-b:a", "128k",
 		}
 		args = append(args, flags...)
 		if codec.TwoPass {

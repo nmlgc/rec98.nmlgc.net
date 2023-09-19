@@ -237,6 +237,7 @@ func (f *FFMPEG) NewSourceMetadata(fn string) VideoMetadata {
 		FrameCount: mustParseUint(videoStream.NbFrames),
 		Width:      uint(videoStream.Width),
 		Height:     uint(videoStream.Height),
+		HasAudio:   probe.FirstAudioStream() != nil,
 	}
 }
 
@@ -299,6 +300,7 @@ type VideoMetadata struct {
 	FrameCount uint
 	Width      uint
 	Height     uint
+	HasAudio   bool
 }
 
 // VideoCacheEntry bundles a video's metadata with mtimes and hashes for cache

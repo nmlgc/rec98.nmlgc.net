@@ -84,6 +84,9 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		b.Metadata.Width, b.Metadata.Height,
 		b.Metadata.FPS, b.Metadata.FrameCount,
 	))
+	if b.Metadata.HasAudio {
+		ret += ` data-audio`
+	}
 	ret += (` data-lossless="` + b.Lossless + `"`)
 
 	ret += `>`

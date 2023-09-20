@@ -8,11 +8,6 @@
 }
 
 :root {
-	--timeline-gradient: linear-gradient(180deg,
-		white 0%,
-		var(--c-lightgray) 50%
-	);
-
 	/* Better contrast against black, compared to --c-link. */
 	--c-timeline-link: #0080ff;
 }
@@ -159,29 +154,11 @@ rec98-video .timeline {
 	align-self: center;
 	grid-column: 8;
 	height: 50%;
-	position: relative;
-	touch-action: none;
 	width: calc(100% - 1em);
 }
 
 rec98-video .timeline .border {
-	border-left: var(--header-border);
 	border-radius: 5em;
-	border-right: var(--header-border);
-	cursor: pointer;
-	height: 100%;
-	overflow: hidden;
-	width: 100%;
-}
-
-rec98-video .timeline .border .pos {
-	border-bottom: var(--header-border);
-	border-radius: 0;
-	border-top: var(--header-border);
-	border: 0;
-	background: var(--timeline-gradient);
-	height: 100%;
-	width: 0;
 }
 
 rec98-video .timeline rec98-video-marker {
@@ -193,7 +170,7 @@ rec98-video .timeline rec98-video-marker {
 }
 
 rec98-video .timeline rec98-video-marker button {
-	background: var(--timeline-gradient);
+	background: var(--trackbar-gradient);
 	border: 1px solid var(--c-timeline-link);
 	font-size: 85%;
 	padding: 0.15em 0.5em;

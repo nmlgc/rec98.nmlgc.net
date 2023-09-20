@@ -1,0 +1,36 @@
+:root {
+	--trackbar-gradient: linear-gradient(
+		180deg, white 0%, var(--c-lightgray) 50%
+	);
+}
+
+rec98-trackbar {
+	position: relative;
+	touch-action: none;
+}
+
+rec98-trackbar .border {
+	background-color: var(--c-dark);
+	cursor: pointer;
+	height: 100%;
+	overflow: hidden;
+	width: 100%;
+}
+
+rec98-trackbar .border .pos {
+	background: var(--trackbar-gradient);
+	border: 0;
+	border-radius: 0;
+}
+
+rec98-trackbar .border {
+	border-left: var(--header-border);
+	border-right: var(--header-border);
+}
+
+rec98-trackbar .border .pos {
+	border-bottom: var(--header-border);
+	border-top: var(--header-border);
+	height: 100%;
+	width: 0;
+}

@@ -42,6 +42,11 @@ class ReC98Trackbar extends HTMLElement {
 			this.props.onStop?.();
 		});
 	}
+
+	setFraction(fraction: number) {
+		fraction = Math.min(Math.max(fraction, 0.0), 1.0);
+		this.ePos.style.width = `${fraction * 100}%`;
+	}
 };
 
 window.customElements.define("rec98-trackbar", ReC98Trackbar);

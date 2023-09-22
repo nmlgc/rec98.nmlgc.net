@@ -26,10 +26,10 @@ function secondsFrom(frame: number, fps: number) {
 }
 
 /**
- * Generates the CSS `width` for the timeline bar at a given frame.
+ * Generates the trackbar fraction for the timeline bar at a given frame.
  */
-function timelineWidthAt(frame: number, frameCount: number) {
-	return `${(frame / (frameCount - 1)) * 100}%`;
+function timelineFractionAt(frame: number, frameCount: number) {
+	return (frame / (frameCount - 1));
 }
 
 class ReC98VideoMarker extends HTMLElement {
@@ -55,7 +55,7 @@ class ReC98VideoMarker extends HTMLElement {
 			player.focus();
 		})
 
-		this.style.left = timelineWidthAt(frame, frameCount);
+		this.style.left = `${timelineFractionAt(frame, frameCount) * 100}%`;
 		this.setWidth(timelineWidth);
 		this.button.style[alignment] = "0";
 		this.button.innerHTML = title;
@@ -235,9 +235,7 @@ class ReC98Video extends HTMLElement {
 			Math.trunc((seconds % 1) * 100).toString().padStart(2, "0")
 		);
 		this.eTimeFrame.textContent = frame.toString();
-		this.eTimeline.ePos.style.width = timelineWidthAt(
-			frame, this.frameCount
-		);
+		this.eTimeline.setFraction(timelineFractionAt(frame, this.frameCount));
 	}
 
 	renderTimeFromVideo() {
@@ -324,6 +322,7 @@ class ReC98Video extends HTMLElement {
 		let scrubWasPaused = false;
 
 		this.eTimeline = new ReC98Trackbar({
+			orientation: "horizontal",
 			onMove: ((fraction) => this.scrub(fraction)),
 			onStart: (() => scrubWasPaused = (this.videoShown?.paused ?? true)),
 			onStop: (() => (!scrubWasPaused && this.play())),

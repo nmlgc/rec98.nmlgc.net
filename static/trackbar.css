@@ -10,7 +10,6 @@ rec98-trackbar {
 }
 
 rec98-trackbar .border {
-	background-color: var(--c-dark);
 	cursor: pointer;
 	height: 100%;
 	overflow: hidden;
@@ -18,19 +17,34 @@ rec98-trackbar .border {
 }
 
 rec98-trackbar .border .pos {
-	background: var(--trackbar-gradient);
 	border: 0;
 	border-radius: 0;
 }
 
-rec98-trackbar .border {
+rec98-trackbar.horizontal .border {
+	background-color: var(--c-dark);
 	border-left: var(--header-border);
 	border-right: var(--header-border);
 }
 
-rec98-trackbar .border .pos {
+rec98-trackbar.horizontal .border .pos {
+	background: var(--trackbar-gradient);
 	border-bottom: var(--header-border);
 	border-top: var(--header-border);
 	height: 100%;
 	width: 0;
+}
+
+rec98-trackbar.vertical .border {
+	background: var(--trackbar-gradient);
+	border-top: var(--header-border);
+	border-bottom: var(--header-border);
+}
+
+rec98-trackbar.vertical .border .pos {
+	background-color: var(--c-dark);
+	border-left: var(--header-border);
+	border-right: var(--header-border);
+	height: 0;
+	width: 100%;
 }

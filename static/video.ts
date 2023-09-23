@@ -94,6 +94,8 @@ class ReC98Video extends HTMLElement {
 	eTimeFrame = document.createElement("span");
 	eFrameNext = document.createElement("button");
 	eDownload = document.createElement("a");
+	eVolume = document.createElement("button");
+	eVolumeSymbol = document.createElement("span");
 	eFullscreen = document.createElement("button");
 
 	videos: HTMLCollectionOf<HTMLVideoElement>;
@@ -337,6 +339,14 @@ class ReC98Video extends HTMLElement {
 		this.eDownload.title = "Lossless source file";
 		this.eDownload.className = "large";
 		// --------
+
+		// Volume
+		// ------
+		this.eVolumeSymbol.textContent = "🔊";
+		this.eVolume.title = "Volume";
+		this.eVolume.className = "large";
+		this.eVolume.onfocus = preventFocus;
+		// ------
 
 		// Fullscreen
 		// ----------
@@ -591,6 +601,9 @@ class ReC98Video extends HTMLElement {
 				this.eTimeline.appendChild(markers[0]);
 				this.classList.add("with-markers");
 			}
+			if(video.hasAttribute("data-audio")) {
+				this.classList.add("with-audio");
+			}
 
 			if(video.classList.contains("active")) {
 				requested = i;
@@ -606,6 +619,10 @@ class ReC98Video extends HTMLElement {
 
 		this.showVideo(requested ?? lastChild);
 		this.pause();
+
+		if(this.classList.contains("with-audio")) {
+			this.eControls.insertBefore(this.eVolume, this.eFullscreen);
+		}
 
 		// Bind resizeMarkers() so that it gets called with the right
 		// context, and overwrite the old property so that we have a

@@ -448,6 +448,8 @@ class ReC98Video extends HTMLElement {
 			videoPrev.pause();
 			videoNew.onseeked = (() => {
 				videoNew.classList.add("active");
+				videoNew.volume = videoPrev.volume;
+				videoNew.muted = videoPrev.muted;
 				seekedFunc();
 				videoPrev.classList.remove("active");
 				if(!videoPrevPaused) {
@@ -621,6 +623,15 @@ class ReC98Video extends HTMLElement {
 		this.pause();
 
 		if(this.classList.contains("with-audio")) {
+			const updateSymbol = (() => this.eVolumeSymbol.textContent = (
+				(this.videoShown.muted) ? "🔇" :
+				"🔊"
+			));
+
+			this.eVolumeSymbol.onclick = (() => {
+				this.videoShown.muted = !this.videoShown.muted;
+				updateSymbol();
+			});
 			this.eControls.insertBefore(this.eVolume, this.eFullscreen);
 		}
 

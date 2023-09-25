@@ -73,12 +73,31 @@ class ReC98VideoMarker extends HTMLElement {
 	}
 };
 
+/**
+ * Creates a function that maps a linear volume factor onto a more realistic
+ * logarithmic scale with the given decibel range. Implements the scaled and
+ * shifted variant described at
+ * https://www.dr-lex.be/info-stuff/volumecontrols.html
+ * to ensure that the returned curve goes through (0, 0) and (1, 1) – *not* the
+ * linear roll-off variant that most of this page focuses on.
+ */
+const LinearToLog = (logDBRange: number) => {
+	const factor = (10 ** (logDBRange / 20));
+	const inv = (1 / factor);
+	const power = Math.log(1 + factor);
+	return ((linear: number) => ((Math.exp(power * linear) * inv) - inv));
+};
+
+// 40 dB maps a linear 0.5 to 0.1.
+const linearToLog = LinearToLog(40);
+
 class ReC98Video extends HTMLElement {
 	// Members
 	// -------
 
 	eTabSwitcher: (ReC98TabSwitcher | null) = null;
 	eTimeline: ReC98Trackbar;
+	eVolumeBar: ReC98Trackbar;
 
 	eVideoWrap = document.createElement("div");
 	eControls = document.createElement("div");
@@ -344,7 +363,7 @@ class ReC98Video extends HTMLElement {
 		// ------
 		this.eVolumeSymbol.textContent = "🔊";
 		this.eVolume.title = "Volume";
-		this.eVolume.className = "large";
+		this.eVolume.className = "volume large";
 		this.eVolume.onfocus = preventFocus;
 		// ------
 
@@ -623,16 +642,44 @@ class ReC98Video extends HTMLElement {
 		this.pause();
 
 		if(this.classList.contains("with-audio")) {
+			const toggleBar = ((active: boolean) => (active
+				? this.eVolumeBar.classList.add("active")
+				: this.eVolumeBar.classList.remove("active")
+			));
 			const updateSymbol = (() => this.eVolumeSymbol.textContent = (
 				(this.videoShown.muted) ? "🔇" :
+				(this.videoShown.volume < 0.1) ? "🔉" :
 				"🔊"
 			));
 
+			this.eVolumeBar = new ReC98Trackbar({
+				orientation: "vertical",
+				onMove: ((fraction) => {
+					this.videoShown.volume = (
+						Math.min(Math.max(linearToLog(fraction), 0.0), 1.0)
+					);
+					this.eVolumeBar.setFraction(fraction);
+					updateSymbol();
+				}),
+			});
 			this.eVolumeSymbol.onclick = (() => {
 				this.videoShown.muted = !this.videoShown.muted;
+				toggleBar(!this.videoShown.muted);
 				updateSymbol();
 			});
+			this.eVolume.onpointerenter = (() =>
+				!this.videoShown.muted && toggleBar(true)
+			);
+			this.eVolume.onpointerleave = (() => toggleBar(false));
+
+			this.eVolume.appendChild(this.eVolumeSymbol);
+			this.eVolume.appendChild(this.eVolumeBar);
 			this.eControls.insertBefore(this.eVolume, this.eFullscreen);
+
+			// Start with the volume bar shown to draw attention to the fact
+			// that this video has audio
+			toggleBar(true);
+			this.eVolumeBar.props.onMove(0.5);
 		}
 
 		// Bind resizeMarkers() so that it gets called with the right

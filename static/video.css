@@ -192,3 +192,32 @@ rec98-video .timeline rec98-video-marker button:hover {
 	border-color: var(--c-link-hover);
 	color: var(--c-link-hover);
 }
+
+rec98-video .volume {
+	position: relative;
+}
+
+rec98-video .volume rec98-trackbar {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	height: 500%;
+
+	/*
+	 * Keep the trackbar element directly adjacent to the button to avoid
+	 * firing `pointerleave` events within the gap we want to have. That gap is
+	 * entirely defined at the `.border` level.
+	 */
+	width: 100%;
+	bottom: 100%;
+}
+
+rec98-video .volume rec98-trackbar .border {
+	width: 50%;
+	height: 95%;
+	transform: translateX(50%);
+}
+
+rec98-video .volume rec98-trackbar.active {
+	display: block;
+}

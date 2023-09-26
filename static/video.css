@@ -27,15 +27,17 @@ rec98-video.with-markers {
 	margin-bottom: 1.75em;
 }
 
-:fullscreen rec98-video {
-	font-size: large;
-	width: 100%;
+/**
+ * Fullscreen mode only displays the padded box of <rec98-video> without
+ * margins, so we need to include the markers there.
+ */
+rec98-video.with-markers:fullscreen {
+	padding-bottom: 2em;
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video {
-	font-size: large;
-	width: 100%;
+rec98-video.with-markers:-webkit-full-screen {
+	padding-bottom: 2em;
 }
 
 rec98-video>div.video-wrap {
@@ -44,16 +46,16 @@ rec98-video>div.video-wrap {
 	width: 100%;
 }
 
-:fullscreen rec98-video>div.video-wrap {
+rec98-video:fullscreen>div.video-wrap {
 	display: block;
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video>div.video-wrap {
+rec98-video:-webkit-full-screen>div.video-wrap {
 	display: block;
 }
 
-:fullscreen rec98-video video {
+rec98-video:fullscreen video {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -61,7 +63,7 @@ rec98-video>div.video-wrap {
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video video {
+rec98-video:-webkit-full-screen video {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -102,12 +104,12 @@ rec98-video.with-switcher .controls {
 	grid-row: 3;
 }
 
-:fullscreen rec98-video .controls {
+rec98-video:fullscreen .controls {
 	font-size: large;
 }
 
 /* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-:-webkit-full-screen rec98-video .controls {
+rec98-video:-webkit-full-screen .controls {
 	font-size: large;
 }
 

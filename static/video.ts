@@ -373,11 +373,8 @@ class ReC98Video extends HTMLElement {
 		this.eFullscreen.title = "Toggle fullscreen (F)";
 		this.eFullscreen.className = "large";
 		this.eFullscreen.onclick = (() => {
-			if(!this.parentElement) {
-				return;
-			}
-			if(!this.parentElement.onfullscreenchange) {
-				this.parentElement.onfullscreenchange = (() => {
+			if(!this.onfullscreenchange) {
+				this.onfullscreenchange = (() => {
 					if(!document.fullscreenElement && "orientation" in screen) {
 						screen.orientation.unlock();
 					}
@@ -385,8 +382,8 @@ class ReC98Video extends HTMLElement {
 			}
 			if(!document.fullscreenElement && !document['webkitFullscreenElement']) {
 				(this['webkitRequestFullscreen']
-					? this.parentElement['webkitRequestFullscreen']()
-					: this.parentElement.requestFullscreen()
+					? this['webkitRequestFullscreen']()
+					: this.requestFullscreen()
 				);
 				if("orientation" in screen) {
 					screen.orientation.lock((this.offsetWidth > this.offsetHeight)

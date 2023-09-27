@@ -227,7 +227,7 @@
 			<code>timer</code> values that appeared in the original game
 			whenever the value of the <code>bomb</code> variable changed to a
 			lower number of digits:
-		</p><figure class="fullres">
+		</p><figure>
 			{{call .VideoPlayer $vid_debug_o.SetActive $vid_debug_a}}
 		</figure>
 	</li>
@@ -280,7 +280,7 @@
 	With only a single unconditional 2-frame delay inside the animation loop, it
 	becomes clear that ZUN intended both frames of the animation to be displayed
 	for 2 frames each:
-</p><figure style="width: 320px;">
+</p><figure {{$vid_ドカーン.FigureAttrs}}>
 	{{call .VideoPlayer $vid_ドカーン}}
 	<figcaption>No tearing, and 34 frames in total for the first of the two
 	instances of this animation.</figcaption>

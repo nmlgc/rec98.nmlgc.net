@@ -79,7 +79,7 @@
 	are updated. That's why their initial positions seem to be a bit off – they
 	<i>are</i> spawned exactly in the corners of the square, it's just that it's
 	the square from 8 frames ago. {{HTML_Emoji "tannedcirno"}}
-</p><figure class="th01_playfield">
+</p><figure {{$vid_p0_0.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p0_0.SetActive $vid_p0_1}}
 	<figcaption>Mima's first pattern on Normal difficulty.</figcaption>
 </figure><p>
@@ -89,7 +89,7 @@
 	change. Spending an additional 16 bytes of the data segment for conveniently
 	remembering the square corner coordinates across frames was definitely a
 	decent investment.
-</p><figure class="th01_playfield">
+</p><figure {{$vid_p7.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p7}}
 	<figcaption>
 		Mima's laser pattern on Lunatic difficulty, now with correct laser spawn
@@ -107,7 +107,7 @@
 	want to sound like a broken record all too much, I'll just direct you to
 	{{Blog_PostLink "2022-06-17" "Kikuri, where we've seen the exact same issue with the teardrop ripple sprites"}}.
 	The conclusions are identical as well.
-</p><figure class="th01_playfield">
+</p><figure {{$vid_p4_h.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p4_h}}
 	<figcaption>
 		Mima's flame pillar pattern. This video was recorded on a particularly
@@ -123,7 +123,7 @@
 	is, with the circle/pillar entities updating and rendering at a meager 7
 	FPS. Why go that low on purpose when you can just make the game render ✨
 	<i>smoothly</i> ✨ instead?
-</p><figure class="th01_playfield">
+</p><figure {{$vid_p4_s.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p4_s}}
 	<figcaption>So smooth it's almost uncanny.</figcaption>
 </figure><p>
@@ -147,7 +147,7 @@
 	<code>#000</code>, leaving the player completely blind to the movement of
 	the chasing pellets for 30 frames and making the pattern quite ghostly
 	indeed. However, that's not what we see in the actual game:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_hop_0.FigureAttrs}}>
 	<figcaption class="dynamic"><div>
 		Nothing in the pattern's code would cause the hardware palette to get
 		brighter before the end of the pattern, and yet…
@@ -206,7 +206,7 @@
 	after every change. The proper defense against bugs that result from wild
 	mutation of global state is to get rid of global state, and not to put up
 	safety nets hidden in the middle of existing effect code.
-</p><figure class="pixelated fullres">
+</p><figure {{$vid_green.FigureAttrs}}>
 	{{call .VideoPlayer $vid_green}}
 	<figcaption>The easiest way of reproducing the green discoloration bug in
 	the TH01 Konngara fight, timed to show the maximum amount of time the

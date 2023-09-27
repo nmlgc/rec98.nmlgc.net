@@ -103,10 +103,9 @@
 	latencies. 32 pixels over 2 frames is also <i>harder</i> to code, so ZUN
 	must have done it on purpose. Guess he really wanted to go for that 📽
 	<i>cinematic 30 FPS look </i> 📽 here… {{HTML_Emoji "zunpet"}}
-</p><figure class="fullres">
+</p><figure {{$vid_fx_0.FigureAttrs}}>
 	{{call .VideoPlayer $vid_fx_0.SetActive $vid_fx_1}}
 	<figcaption>
-		<p id="{{.Date}}-fx"></p>
 		Removing the palette interpolation and transitioning from a black screen
 		to <code>CLEAR3.GRP</code> makes it a lot clearer how the effect works.
 	</figcaption>
@@ -157,9 +156,9 @@
 	<strong style="color:red">4</strong> →
 	<strong style="color:red">5</strong> →
 	<i>(nothing)</i>:
-</p><figure class="fullres">
+</p><figure {{$vid_metrics.FigureAttrs}}>
 	{{call .VideoPlayer $vid_metrics}}
-	<figcaption class="fullres">
+	<figcaption>
 		This footage was slowed down to show one sprite blitting operation per
 		frame. The actual game waits a hardcoded 4 milliseconds between each
 		sprite, so even theoretically, you would only see roughly every

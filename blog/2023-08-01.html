@@ -641,7 +641,7 @@
 		<img src="{{$replay_255}}" alt="Screenshot of the negative overflow bug that the P0226 build of Shuusou Gyoku accidentally introduced into the replay stage selection" />
 		<figcaption>Whoops! That one was fully my fault.</figcaption>
 	</figure></li>
-	<li>The render time for the in-game music title is now roughly cut in half: <figure class="singleplayer_playfield pixelated">
+	<li>The render time for the in-game music title is now roughly cut in half: <figure {{$mtitle_orig.FigureAttrs}}>
 		{{call .VideoPlayer $mtitle_orig.SetActive.SetNoLoop $mtitle_P0251.SetNoLoop}}
 	<figcaption>
 		Achieved by simply trimming trailing whitespace and using slightly more

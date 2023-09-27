@@ -67,6 +67,15 @@ func (b *BlogVideo) LinkMarkers(other *BlogVideo) string {
 	return ""
 }
 
+// FigureAttrs generates attributes for the <figure> tag that contains the
+// given video.
+func (b *BlogVideo) FigureAttrs() (ret template.HTMLAttr) {
+	ret += template.HTMLAttr(
+		fmt.Sprintf(`style="width: %dpx"`, b.Metadata.Width),
+	)
+	return ret
+}
+
 // Tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) Tag() (ret template.HTML) {
 	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)

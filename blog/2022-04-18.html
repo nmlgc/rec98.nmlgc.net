@@ -140,7 +140,7 @@
 	{{Blog_PostLink "2022-03-05" "<code>0x100</code>"}}) by the total number of
 	bullets…</li>
 	<li>Boom, division by zero.</li>
-</ul><figure class="fullres">
+</ul><figure {{$k_4.FigureAttrs}}>
 	{{call .VideoPlayer ($k_4.SetActive).SetNoLoop $k_16}}
 	<figcaption>
 		The pattern that causes the crash in Kurumi's fight. Also
@@ -171,7 +171,7 @@
 	softer and more controlled shutdown. Certainly the option that would be
 	closest to the behavior of the original games, and perhaps the only one to
 	be accepted in Serious, High-Level Play™.</li>
-</ol><figure class="singleplayer_playfield">
+</ol><figure>
 	{{call .VideoPlayer $k_wa_0.SetActive $k_wa_1 $k_wa_2 $k_wa_3}}
 </figure><p>
 	As I was writing this post, it felt increasingly wrong for me to make this
@@ -251,7 +251,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<code>duration</code> values of 8 or 4. These actually push Marisa
 	<i>away</i> from the intended point, as the divisor becomes negative.
 	{{HTML_Emoji "zunpet"}}</li>
-</ul><figure class="fullres">
+</ul><figure {{$m_68.FigureAttrs}}>
 	{{call .VideoPlayer $m_68 $m_112 $m_144 $m_148 ($m_152.SetActive).SetNoLoop $m_156 $m_160}}
 	<figcaption>
 		One of the two patterns in TH04's Stage 4 Marisa boss fight that feature
@@ -284,9 +284,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	have no idea… {{HTML_Emoji "tannedcirno"}}</li>
 	<li>Triggering an immediate Game O– hell no, this is the Stage 4 boss,
 	people <i>already</i> hate losing runs to this bug!</li>
-</ol><figure class="singleplayer_playfield">
-	{{call .VideoPlayer $m_wa_0.SetActive $m_wa_1 $m_wa_2}}
-</figure><p>
+</ol><figure>{{call .VideoPlayer $m_wa_0.SetActive $m_wa_1 $m_wa_2}}</figure><p>
 	Asking Twitter worked great for the Kurumi workaround, so let's do it again!
 	Gotta attach a screenshot of an earlier draft of this blog post though,
 	since this stuff is impossible to explain in tweets…
@@ -347,9 +345,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	opaque bitmap data from <code>ST00.BB</code> is instead used as a transition
 	mask from stage tiles to the backdrop image, by making clever use of the
 	tile invalidation system:
-</p><figure class="singleplayer_playfield">
-	{{call .VideoPlayer $sara}}
-</figure><p>
+</p><figure>{{call .VideoPlayer $sara}}</figure><p>
 	TH04 uses the same effect a bit more frequently, for its first three bosses.
 </p><p>
 	Next up: Shinki, for real this time! I've already managed to decompile 10 of

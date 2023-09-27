@@ -82,7 +82,7 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	these assignments are <i>exactly</i> what can cause the Orb to endlessly
 	bounce between two bumpers. As rudimentary as the Orb's physics may be, just
 	letting them do their work would have entirely prevented these loops:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_b2_0.FigureAttrs}}>
 	<figcaption class="dynamic"><div>
 		One of at least three infinite bumper loop constellations within just
 		this 10×5-tile section of TH01's Stage 18 on the <span
@@ -132,7 +132,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	simply continues in the same horizontal direction. The manual Y assignment
 	is the only part of the code that actually prevents a collision there, as
 	the newly applied force is not guaranteed to be enough:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_b3_0.FigureAttrs}}>
 	<figcaption class="dynamic"><div>
 		An infinite loop across three bumpers, made possible by the edge of the
 		playfield and bumper bars on opposite sides, an unchanged horizontal
@@ -160,7 +160,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	cleanliness from round bumpers, but it doesn't seem to keep in mind that the
 	player can fire a new shot every 4 frames when standing still. That makes it
 	immediately obvious why this works:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_hbar.FigureAttrs}}>
 	{{call .VideoPlayer $vid_hbar}}
 	<figcaption>
 		The <span style="color:green">green numbers</span> show the amount of
@@ -197,7 +197,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	of vertical bumper bars would lead them to behave more like a rope that the
 	Orb can climb, as the initial collision with two hitboxes cancels out the
 	intended sign change that reflects the Orb away from the bars:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_rope.FigureAttrs}}>
 	{{call .VideoPlayer $vid_rope}}
 	<figcaption>
 		This footage was recorded without the workaround I am about to describe.
@@ -217,7 +217,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	any two adjacent vertical bars will end up with the exact same hitbox in
 	absolute screen coordinates. Stage 17 on the
 	<span class="ja">魔﻿界</span>/Makai route contains exactly such a layout:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_fall.FigureAttrs}}>
 	{{call .VideoPlayer $vid_fall}}
 	<figcaption>
 		The collision handlers of adjacent vertical bars always activate in the
@@ -268,7 +268,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 </p><hr /><p>
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
-</p><figure class="th01_playfield">{{call .VideoPlayer $vid_vbar}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_vbar}}</figure><p>
 	At first, that workaround doesn't seem to make a difference here. As we
 	expect, the frame numbers now tell us that only one of the two bumper bars
 	in a row activates, but we couldn't have told otherwise as the number of
@@ -342,7 +342,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	This makes very little sense no matter how you look at it. The Orb doesn't
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
-</p><figure class="th01_playfield">{{call .VideoPlayer $vid_p}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_p}}</figure><p>
 	And that's it! At least the turrets don't have anything notable to say about
 	them {{Blog_PostLink "2020-11-30" "that I haven't said before"}}.
 </p><hr /><p>

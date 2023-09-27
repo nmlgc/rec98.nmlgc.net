@@ -42,13 +42,13 @@
 	difference to regular bullet movement can be best seen in Louise's final
 	pattern:
 </p><figure class="side_by_side">
-	<figure class="singleplayer_playfield">
+	<figure {{$vid1.FigureAttrs}}>
 		{{call .VideoPlayer $vid1}}
 		<figcaption>Louise's final pattern in its original form, demonstrating
 		exact linear bullet movement. Note how each bullet spawns slightly
 		behind the delay cloud: ZUN simply forgot to shift the fixed origin
 		point along with it.</figcaption>
-	</figure><figure class="singleplayer_playfield">
+	</figure><figure {{$vid2.FigureAttrs}}>
 		{{call .VideoPlayer $vid2}}
 		<figcaption>The same pattern with standard bullet movement, corrupting
 		its intended appearance. No delay cloud-related oversights here though,
@@ -101,9 +101,7 @@ head_p->angle -= angle_delta;
 	circle per frame. This reveals the optimal strategy for dodging them:
 	Maximize this delta angle by staying as close to 180° away from their
 	current direction as possible, and let their acceleration do the rest.
-</p><figure class="singleplayer_playfield">
-	{{call .VideoPlayer $vid3}}
-</figure><p>
+</p><figure>{{call .VideoPlayer $vid3}}</figure><p>
 	At least that's the theory for dodging a <i>single</i> one. As a danmaku
 	designer, you can now of course place other bullets at these technically
 	optimal places to prevent a curve bullet pattern from being cheesed like

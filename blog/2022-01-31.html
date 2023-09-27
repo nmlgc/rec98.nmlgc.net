@@ -122,7 +122,7 @@
 	top-left corner of the screen. Which the sprite is always outside of, and
 	thus never rendered again.<br />
 	The intended animation is easily restored though:
-</p><figure class="fullres">
+</p><figure {{$vid1.FigureAttrs}}>
 	{{call .VideoPlayer $vid1.SetActive $vid2}}
 	<figcaption>
 		Sariel's third pattern, and the first to spawn birds, in its original
@@ -241,7 +241,7 @@
 	This pattern also contains the second bug in the "subpixel/pixel confusion
 	hiding an entire animation" category, causing all of
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_Tag "unused" nil}}:
-</p><figure class="fullres">
+</p><figure {{$vid3.FigureAttrs}}>
 	{{call .VideoPlayer $vid3.SetActive $vid4}}
 	<figcaption>
 		The "swaying leaves" pattern. ZUN intended a splash animation to be

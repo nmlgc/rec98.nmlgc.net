@@ -506,11 +506,14 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 </p><p>
 	So I wrote a benchmark to answer all these questions, and to compare my new
 	blitter against typical TH01 blitting code:
-</p><figure class="fullres">{{call .VideoPlayer $vid_blitperf}}<figcaption>
-	A not really representative run on DOSBox-X. Since the master.lib sprite
-	functions are also unbatched, I expect them to not be much faster than the
-	naive C implementation.
-</figcaption></figure><p>
+</p><figure {{$vid_blitperf.FigureAttrs}}>
+	{{call .VideoPlayer $vid_blitperf}}
+	<figcaption>
+		A not really representative run on DOSBox-X. Since the master.lib sprite
+		functions are also unbatched, I expect them to not be much faster than
+		the naive C implementation.
+	</figcaption>
+</figure><p>
 	{{HTML_Download .HostedPath $dl_blitperf}}
 	And here are the real-hardware results I've got from the <i>PC-9800
 	Central</i> Discord server:
@@ -767,7 +770,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	we should have gained enough free CPU cycles to disable
 	{{Blog_PostLink "2020-07-12" "interlaced pellet rendering"}} without any
 	impact on frame rates?
-</p><figure class="fullres">{{call .VideoPlayer $vid_pellets_d}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_pellets_d}}</figure><p>
 	Well, kinda. We do get 56.4 FPS, but only together with noticeable and
 	reproducible tearing in the top part of the playfield, suggesting exactly
 	<i>why</i> ZUN interlaced the rendering in the first place. 😕 So have we
@@ -848,7 +851,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	Except for a small register allocation trick to use two-register addressing,
 	there's not much use in further optimizations, as the runtime of these
 	inter-page blit operations is dominated by the VRAM page switches anyway.
-</p><figure class="fullres">{{call .VideoPlayer $vid_egc}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_egc}}</figure><p>
 	Except that T98-Next seems to disagree about the register prefilling issue:
 </p><figure class="fullres pixelated"><img
 	src="{{$pic_egc_t98}}"
@@ -867,7 +870,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	And that did in fact remove tearing from the pellet rendering function! For
 	the first time, we can now fight Elis, Kikuri, Sariel, and Konngara with a
 	doubled pellet frame rate:
-</p><figure class="fullres">
+</p><figure {{$vid_pellets_a.FigureAttrs}}>
 	{{call .VideoPlayer $vid_pellets_a.SetActive $vid_pellets_o}}
 	<figcaption>
 		Switchable videos like these can nicely provide evidence that these

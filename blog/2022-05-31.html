@@ -102,7 +102,7 @@
 	trivial to cause: Simply hold ↵&nbsp;Return from the beginning of the
 	fight, and the completion condition will never be <code>true</code>, as the
 	HP and frame numbers run past the off-by-one meeting point.
-</p><figure class="fullres">
+</p><figure {{$vid_heap.FigureAttrs}}>
 	{{call .VideoPlayer $vid_heap.SetNoLoop}}
 	<figcaption>
 		<strong>Edit (2023-07-21):</strong> Pressing ↵&nbsp;Return to reduce HP
@@ -146,7 +146,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 </p><hr /><p>
 	As for the fight itself, it doesn't take long until we reach its most janky
 	danmaku pattern, right in phase 1:
-</p><figure class="fullres">
+</p><figure {{$vid_3_0.FigureAttrs}}>
 	{{call .VideoPlayer $vid_3_0.SetActive $vid_3_1}}
 	<figcaption>
 		The "pellets along circle" pattern on Lunatic, in its original version
@@ -189,9 +189,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	And then Elis transforms into her bat form at the beginning of Phase 5,
 	which displays some rather unique hitboxes. The one against the Orb is fine,
 	but the one against player shots…
-</p><figure class="fullres">
-	{{call .VideoPlayer $vid_hitbox}}
-</figure><p>
+</p><figure>{{call .VideoPlayer $vid_hitbox}}</figure><p>
 	… uses the bat's X coordinate for both X and Y dimensions.
 	{{HTML_Emoji "zunpet"}} In regular gameplay, it's not <i>too</i> bad as most
 	of the bat patterns fire aimed pellets which typically don't allow you to
@@ -206,14 +204,14 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	pattern. This one is almost easiest to dodge on Lunatic, where the 5-spreads
 	are not only always fired downwards, but also at the hardcoded narrow delta
 	angle, leaving plenty of room for the player to move out of the way:
-</p><figure class="fullres">
+</p><figure {{$vid_7_e.FigureAttrs}}>
 	{{call .VideoPlayer $vid_7_e $vid_7_n $vid_7_h $vid_7_l.SetActive}}
 	<figcaption>The "slow pellet spreads" pattern of Elis' bat form, on every
 	difficulty. Which version do you think is the easiest one?</figcaption>
 </figure><p>
 	Finally, we've got another potential timesave in the girl form's "safety
 	circle" pattern:
-</p><figure class="fullres">{{call .VideoPlayer $vid_12}}</figure><p>
+</p><figure>{{call .VideoPlayer $vid_12}}</figure><p>
 	After the circle spawned completely, you lose a life by moving outside it,
 	but doing that immediately advances the pattern past the circle part. This
 	part takes 200 frames, but the defeat animation only takes 82 frames, so

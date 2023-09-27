@@ -755,7 +755,7 @@
 		ASM code, but in this instance, you really can't argue against it if the
 		original C++ version was equally incorrect.
 	</figcaption>
-</figure><figure id="{{.Date}}-dissolve">
+</figure><figure id="{{.Date}}-dissolve" {{$dissolve.FigureAttrs}}>
 	{{call .VideoPlayer $dissolve}}
 	<figcaption>
 		Combining <a href="#{{.Date}}-b"><code>\b</code></a> and <a
@@ -763,7 +763,7 @@
 		animation. The speed can be controlled with <a
 		href="#{{.Date}}-v-th04"><code>\v</code></a>.
 	</figcaption>
-</figure><figure id="{{.Date}}-w-example">
+</figure><figure id="{{.Date}}-w-example" {{$w.FigureAttrs}}>
 	{{call .VideoPlayer $w}}
 	<figcaption>
 		Simulating TH03's typing effect in TH04 and TH05 via <a
@@ -860,7 +860,7 @@
 	The other small function pointed out how TH05's Stage 5 midboss pops into
 	the playfield quite suddenly, since its clipping test thinks it's only 32
 	pixels tall rather than 64:
-</p><figure class="singleplayer_playfield">
+</p><figure {{$popin.FigureAttrs}}>
 	{{call .VideoPlayer $popin}}
 	<figcaption>
 		<s>Good chance that the pop-in might have been intended.</s><br />

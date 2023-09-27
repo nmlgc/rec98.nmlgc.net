@@ -146,7 +146,7 @@ if(rank == RANK_HARD) {
 		eye_east.fire_aimed_wide_5_spread();
 	}
 }</pre>
-</p><figure class="th01_playfield and_hp">
+</p><figure {{$vid_p0_h.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p0_h $vid_p0_l $vid_p0_u.SetActive}}
 	<figcaption>
 		Featuring the weirdly extended hitbox for the eastern laser, as well as
@@ -231,7 +231,7 @@ if(rank == RANK_HARD) {
 	ever getting close to the top of the playfield. If we extend that range to a
 	full 360° though, we can see how ZUN might have originally planned the
 	pattern to end:
-</p><figure class="th01_playfield and_hp">
+</p><figure {{$vid_p5_e.FigureAttrs}}>
 	{{call .VideoPlayer $vid_p5_e $vid_p5_n $vid_p5_h $vid_p5_l.SetActive}}
 	<figcaption>YuugenMagan's phase 5 patterns on every difficulty, with the
 	second subpattern extended to reveal the different pellet behavior that
@@ -244,9 +244,7 @@ if(rank == RANK_HARD) {
 	enough, they can all be demonstrated within a short 9-second part of the
 	fight, from the end of phase 9 up until the pentagram starts spinning in
 	phase 13:
-</p><figure class="th01_playfield and_hp">
-	{{call .VideoPlayer $vid_blit}}
-</figure><ol>
+</p><figure>{{call .VideoPlayer $vid_blit}}</figure><ol>
 	<li>General flickering whenever any sprite overlaps an eye. This is caused
 	by only reblitting each eye every 3 frames, and is an issue all throughout
 	the fight. You might have already spotted it in the videos above.</li>
@@ -329,7 +327,7 @@ if(rank == RANK_HARD) {
 	shortly after the start of the phase?! {{HTML_Emoji "godzun"}}</li>
 </ul><p>
 	Adding some debug output sheds light on what's going on there:
-</p><figure class="th01_playfield">
+</p><figure {{$vid_邪.FigureAttrs}}>
 	{{call .VideoPlayer $vid_邪}}
 	<figcaption>
 		Since each iteration of phase 12 adds 63 to the red component, integer

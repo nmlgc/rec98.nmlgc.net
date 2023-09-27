@@ -53,7 +53,7 @@
 	you want the shot hitbox to be <i>both</i> offset to the left a bit
 	<i>and</i> stretch the entire width of SinGyoku's sprite? You get a hitbox
 	that ends in mid-air, far away from the right edge of the sprite:
-</p><figure class="th01_playfield">
+</p><figure {{$vid1.FigureAttrs}}>
 	{{call .VideoPlayer $vid1}}
 	<figcaption>
 		Due to VRAM byte alignment, all player shots fired between
@@ -84,7 +84,7 @@
 	left in VRAM for one frame, until the alignment has caught up with the
 	sphere's movement in the next one.</li>
 </ul>
-</p><figure class="th01_playfield">
+</p><figure {{$vid2.FigureAttrs}}>
 	{{call .VideoPlayer $vid2}}
 	<figcaption>
 		By having the sphere move from the right edge of the playfield to the

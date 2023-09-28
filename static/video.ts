@@ -617,7 +617,6 @@ class ReC98Video extends HTMLElement {
 			while(markers[0]) {
 				markers[0].init(this, i, timelineWidth, fps, frameCount);
 				this.eTimeline.appendChild(markers[0]);
-				this.classList.add("with-markers");
 			}
 			if(video.hasAttribute("data-audio")) {
 				this.classList.add("with-audio");

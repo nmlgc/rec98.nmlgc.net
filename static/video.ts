@@ -135,32 +135,23 @@ class ReC98Video extends HTMLElement {
 	}
 
 	onPlay() {
-		this.ePlay.textContent = "⏸";
-		this.ePlay.title = "Pause (Space)";
-		this.timeIntervalID = setInterval(
-			(() => this.renderTimeFromVideo()), (1000 / this.fps)
-		);
-	}
-
-	play() {
-		// Prevent a second call from the `onplay` handler.
-		if(this.timeIntervalID) {
-			return;
-		}
-
 		// Rewind if we're at the end of a non-looping video – otherwise,
 		// playback would immediately pause again.
 		if(!this.videoShown.loop && (this.frame() === (this.frameCount - 1))) {
 			this.videoShown.currentTime = 0;
 		}
 
-		// https://developer.chrome.com/blog/play-request-was-interrupted/
-		const playPromise = this.videoShown.play();
-		if(playPromise !== undefined) {
-			playPromise.then(() => this.onPlay());
-		} else {
-			this.onPlay();
+		this.ePlay.textContent = "⏸";
+		this.ePlay.title = "Pause (Space)";
+		if(!this.timeIntervalID) {
+			this.timeIntervalID = setInterval(
+				(() => this.renderTimeFromVideo()), (1000 / this.fps)
+			);
 		}
+	}
+
+	play() {
+		this.videoShown.play();
 	}
 
 	pause() {
@@ -237,9 +228,9 @@ class ReC98Video extends HTMLElement {
 		// sets `<video>.paused` to `false`, a second call checking for that
 		// flag would call `<video>.pause()` while `<video>.play()` is still
 		// running, leading to an infinite loop of "play() was interrupted by
-		// pause()" exceptions. [this.timeIntervalID] is only set after the
-		// promise resolved, and is therefore a more reliable indicator of the
-		// current playing state.
+		// pause()" exceptions. [this.timeIntervalID] is only set at the end of
+		// the `onplay` handler, and is therefore a more reliable indicator of
+		// the current playing state.
 		if(!this.timeIntervalID) {
 			this.play();
 		} else {
@@ -423,7 +414,7 @@ class ReC98Video extends HTMLElement {
 			videoNew.oncanplay = null;
 		})
 		videoNew.onclick = ((event) => this.toggle(event));
-		videoNew.onplay = (() => this.play());
+		videoNew.onplay = (() => this.onPlay());
 		videoNew.onpause = (() => {
 			this.pause();
 

@@ -256,6 +256,10 @@ figure figcaption {
 	grid-row: 3; /* Tab switcher, video, caption. */
 }
 
+figure figcaption hr {
+	width: 100%;
+}
+
 .checkerboard img,
 img.checkerboard {
 	background-image:
@@ -387,7 +391,7 @@ footer * {
 
 /* Link icons
    ---------- */
-a:not(.customer):not(.release)[href^="https://github.com/"]:before {
+a:not(.customer):not(.release):not(.goal)[href^="https://github.com/"]:before {
 	background-image: url('/static/github.svg?29bc319c');
 	display: inline-block;
 	width: 1em;
@@ -413,6 +417,10 @@ a[href^="mailto"] {
 
 a[href^="mailto"]:before {
 	content: "📧 ";
+}
+
+a.goal:before {
+	content: "💸 ";
 }
 
 a.download {

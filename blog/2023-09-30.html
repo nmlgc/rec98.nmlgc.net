@@ -1,0 +1,1380 @@
+{{$vid_ref_wav := (call .Video "SH01-SE-48000-Reference-wav.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects if they were perfectly resampled to 48,000&nbsp;Hz") -}}
+{{$vid_ref_flac := (call .Video "SH01-SE-48000-Reference-FLAC.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects if they were perfectly resampled to 48,000&nbsp;Hz, but converted from floating-point samples to an integer bit depth which clamps any inter-sample peaks to the maximum amplitude, thus permanently baking the resulting distortion into the file") -}}
+{{$vid_dsound := (call .Video "SH01-SE-48000-DirectSound.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects, resampled to 48,000&nbsp;Hz and recorded through the game's original DirectSound backend") -}}
+{{$vid_ma_1 := (call .Video "SH01-SE-48000-miniaudio-LPF-1.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects resampled to 48,000&nbsp;Hz, as rendered by the new miniaudio-based backend. Shows off the slight additional high-frequency content added by miniaudio's resampler in comparison to the original DirectSound backend") -}}
+{{$vid_ma_8 := (call .Video "SH01-SE-48000-miniaudio-LPF-8.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects resampled to 48,000&nbsp;Hz using miniaudio's 8<sup>th</sub>-order low-pass filter, the highest quality level supported") -}}
+
+{{$unmap_orig := (call .PostFileURL "SH01-Joypad-unmapping-original.png") -}}
+{{$unmap_P0256 := (call .PostFileURL "SH01-Joypad-unmapping-P0256.png") -}}
+
+{{$vid_ref_wav.SetTitle "Reference conversion, float" -}}
+{{$vid_ref_flac.SetTitle "Reference conversion, FLAC" -}}
+{{$vid_dsound.SetTitle "DirectSound" -}}
+{{$vid_ma_1.SetTitle "miniaudio, LPF&nbsp;1" -}}
+{{$vid_ma_8.SetTitle "miniaudio, LPF&nbsp;8" -}}
+
+{{$vid_ref_wav.AddMarker    0 "<code>KEBARI</code>" "" -}}
+{{$vid_ref_wav.AddMarker    6 "<code>TAME</code>" "left" -}}
+{{$vid_ref_wav.AddMarker  186 "<code>LASER</code>" "" -}}
+{{$vid_ref_wav.AddMarker  246 "<code>LASER2</code>" "" -}}
+{{$vid_ref_wav.AddMarker  282 "<code>BOMB</code>" "" -}}
+{{$vid_ref_wav.AddMarker  330 "<code>WARNING</code>" "" -}}
+{{$vid_ref_wav.AddMarker  402 "<code>SBLASER</code>" "" -}}
+{{$vid_ref_wav.AddMarker  468 "<code>MISSILE</code>" "" -}}
+{{$vid_ref_wav.AddMarker  505 "<code>DEAD</code>" "left" -}}
+{{$vid_ref_wav.AddMarker  565 "<code>SBBOMB</code>" "left" -}}
+{{$vid_ref_wav.AddMarker  656 "<code>BOSSBOMB</code>" "left" -}}
+{{$vid_ref_wav.AddMarker  955 "<code>ENEMYSHOT</code>" "" -}}
+{{$vid_ref_wav.AddMarker  958 "<code>HLASER</code>" "left" -}}
+{{$vid_ref_wav.AddMarker 1006 "<code>TAMEFAST</code>" "left" -}}
+{{$vid_ref_wav.AddMarker 1156 "<code>WARP</code>" "left" -}}
+
+{{$vid_ref_flac.LinkMarkers $vid_ref_wav}}
+{{$vid_dsound.LinkMarkers $vid_ref_wav}}
+{{$vid_ma_1.LinkMarkers $vid_ref_wav}}
+{{$vid_ma_8.LinkMarkers $vid_ref_wav}}
+
+<style>
+	#waveform-{{.Date}} {
+		overflow: scroll hidden;
+		width: 100%;
+	}
+	#waveform-{{.Date}} th {
+		position: relative;
+		font-family: monospace;
+		padding-left: 1ch;
+		padding-right: 1ch;
+		box-sizing: border-box;
+	}
+	#waveform-{{.Date}} th:after {
+		content: attr(data-name);
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 1;
+		text-shadow:
+			-1px -1px 0 white,
+			 1px -1px 0 white,
+			-1px  1px 0 white,
+			 1px  1px 0 white;
+	}
+	#waveform-{{.Date}} tbody td {
+		padding: 0;
+		position: relative;
+		height: 151px;
+	}
+	#waveform-{{.Date}} tbody {
+		border-bottom: var(--table-border);
+	}
+	#waveform-{{.Date}} tbody td::after {
+		position: absolute;
+		left: 0;
+		top: 50%;
+		width: 100%;
+		height: 1px;
+		background-color: black;
+		content: "";
+	}
+	#waveform-{{.Date}} th:not(:last-child),
+	#waveform-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+	#waveform-{{.Date}} td img {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	#waveform-{{.Date}}.clipped td img {
+		clip-path: inset(73px 0px 73px 0px);
+	}
+</style>
+
+<p>
+	And now we're taking this small indie game from the year 2000 and porting
+	its game window, input, and sound to the industry-standard cross-platform
+	API with "simple" in its name.
+</p><p>
+	Why did this have to be so complicated?! I expected this to take maybe 1-2
+	weeks and result in an equally short blog post. Instead, it raised so many
+	questions that I ended up with the longest blog post so far, by quite a wide
+	margin. These pushes ended up covering so many aspects that could be
+	interesting to a general and non-Seihou-adjacent audience, so I think we
+	need a table of contents for this one:
+</p><ol>
+	<li><a href="#zig-{{.Date}}">Evaluating Zig</a></li>
+	<li><a href="#concepts-{{.Date}}">Visual Studio doesn't implement concepts
+	correctly?</a></li>
+	<li><a href="#tup-{{.Date}}">Reusable building blocks for Tup</a></li>
+	<li><a href="#sdl-{{.Date}}">Compiling SDL&nbsp;2</a></li>
+	<li><a href="#fps-{{.Date}}">The new frame rate limiter</a></li>
+	<li><a href="#sdlaudio-{{.Date}}">Audio via SDL or SDL_mixer? (Nope,
+	neither)</a></li>
+	<li><a href="#miniaudio-{{.Date}}">miniaudio</a></li>
+	<li><a href="#resampling-{{.Date}}">Resampling defective sound effects
+	(including FLAC is not always being lossless)</a></li>
+	<li><a href="#sdlinput-{{.Date}}">Joypad input with SDL</a></li>
+	<li><a href="#screenshots-{{.Date}}">Restoring the original screenshot
+	feature</a></li>
+	<li><a href="#utmath-{{.Date}}">Integer math in hand-written ASM</a></li>
+</ol><hr /><p id="zig-{{.Date}}">
+	Before we can start migrating to SDL, we of course have to integrate it into
+	the build somehow. On Linux, we'd ideally like to just dynamically link to a
+	distribution's SDL development package, but since there's no such thing on
+	Windows, we'd like to compile SDL from source there. This allows us to reuse
+	our debug and release flags and ensures that we get debug information,
+	without <a href="https://vcpkg.io/">needing to clone build scripts for every
+	C++ library ever in the process</a> or something.<br />
+	So let's get my Tup build scripts ready for compiling vendored libraries… or
+	maybe not? Recently, I've kept hearing about a <a
+	href="https://www.youtube.com/watch?v=YXrb-DqsBNU&t=455s">hot new
+	technology</a> that not only provides the rare kind of jank-free
+	cross-compiling build system for C/C++ code, but innovates by even
+	<i>bundling a C++ compiler</i> into a single 279&nbsp;MiB package with no
+	further dependencies. Realistically replacing both Visual Studio and Tup
+	with a single tool that could target every OS is quite a selling point. The
+	upcoming Linux port makes for the perfect occasion to evaluate Zig, and to
+	find out whether Tup is still my favorite build system in 2023.
+</p><p>
+	Even apart from its main selling point, there's a lot to like about Zig:
+</p><ul>
+	<li>First and foremost: It's a modern systems programming language with
+	seamless C interop that we could gradually migrate parts of the codebase to.
+	The feature set of the core language seems to hit the sweet spot between C
+	and C++, although I'd have to use it more to be completely sure.</li>
+	<li>A native, optimized Hello World binary with no string formatting is
+	4&nbsp;KiB when compiled for Windows, and 6.4&nbsp;KiB when cross-compiled
+	from Windows to Linux. It's so refreshing to see a systems language in 2023
+	that doesn't bundle a bulky runtime for trivial programs and then defends it
+	with the old excuse of <i>"but all this runtime code will come in handy the
+	larger your program gets"</i>. With a first impression like this, Zig
+	managed to realize the "don't pay for what you don't use" mantra that C++
+	typically claims for itself, but only pulls off maybe half of the time.</li>
+	<li>You can <a
+	href="https://github.com/ziglang/zig/blob/ff61c428793ff382c8d521638b416ca288e53de5/lib/std/target/x86.zig">directly
+	target specific CPU models, down to even the oldest 386 CPUs</a>?! How
+	amazing is that?! In contrast, Visual Studio only describes its <code><a
+	href="https://learn.microsoft.com/en-us/cpp/build/reference/arch-x86">/arch:IA32</a></code>
+	compatibility option in very vague terms, leaving it up to you to figure out
+	that <i>"legacy 32-bit x86 instruction set without any vector
+	operations"</i> actually means <i>"i586/P5 Pentium, because the startup code
+	still includes an unconditional <code>CPUID</code> instruction"</i>. In any
+	case, it means that Zig could also cover the i586 build.<ul>
+		<li>Even better, changing Zig's CPU model setting recompiles both its
+		bundled C/C++ standard library and Zig's own compiler-rt polyfill
+		library for that architecture. This ensures that no unsupported
+		instructions ever show up in the binary, and also removes the need for
+		any <code>CPUID</code> checks. This is so much better than the Visual
+		Studio model of linking against a fixed pre-compiled standard library
+		because you don't have to trust that all these newer instructions
+		wouldn't actually be executed on older CPUs that don't have them.</li>
+	</ul></li>
+	<li>I love the auto-formatter. Want to lay out your struct literal into
+	multiple lines? Just add a trailing comma to the end of the last element.
+	It's very snappy, and a joy to use.</li>
+	<li>Like every modern programming language, Zig comes with a test framework
+	built into the language. While it's not all too important for my grand plan
+	of having one big test that runs a bunch of replays and compares their game
+	states against the original binary, small tests could still be useful for
+	protecting gameplay code against accidental changes. It would be great if I
+	didn't have to evaluate and choose <a
+	href="https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#C++">among
+	the many testing frameworks for C++</a> and could just use a language
+	standard.</li>
+	<li><a
+	href="https://zig.news/edyu/zig-package-manager-wtf-is-zon-558e">Package
+	management is still in its infancy</a>, but it's looking pretty good so far,
+	resembling Go's decentralized approach of just pointing to a URL but with
+	specific version selection from the get-go.</li>
+</ul><p>
+	However, as a version number of 0.11.0 might already suggest, the whole
+	experience was then bogged down by quite a lot of issues:
+</p><ul>
+	<li>While Zig's C/C++ compilation feature is <a
+	href="https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html">very
+	well architected to reuse the C/C++ standard libraries of GCC and MinGW and
+	thus automatically keeps up with changes to the C++ standard library</a>,
+	it's ultimately still just a Clang frontend. If you've been working with a
+	Visual Studio-exclusive codebase – which, as we're going to see below, can
+	easily happen even <i>if</i> you compile in C++23 mode – you'd now have to
+	migrate to Clang <i>and</i> Zig in a single step. Obviously, this can't ever
+	be fixed without Microsoft open-sourcing their C++ compiler. And even then,
+	supporting a separate set of command-line flags might not be worth it.</li>
+	<li>The standard library is very poorly documented, <i>especially</i> in the
+	build-related parts that are meant to attract the C++ audience.</li>
+	<li>Often, the only documentation is found in blog posts from a few years
+	ago, with example code written against old Zig versions that doesn't compile
+	on the newest version anymore. It's all very far from stable.</li>
+	<li>However, Zig's project generation sub-commands (<code>zig
+	init-exe</code> and friends) <i>do</i> emit well-documented boilerplate
+	code? It does make sense for that code to double as a comprehensive example,
+	but Zig advertises itself as so simple that I didn't even think about
+	bootstrapping my project with a CLI tool at first – unlike, say, Rust, where
+	a project always starts with filling out a small form in
+	<code>Cargo.toml</code>.</li>
+	<li>There's no progress output for C/C++ compilation? Like, at all?</li>
+	<li>This hurts especially because compilation times are significantly longer
+	than they were with Visual Studio. By default, the current Tupfile builds
+	Shuusou Gyoku in both debug and release configurations simultaneously. If I
+	fully rebuild everything from a clean cache, Visual Studio finishes such a
+	build in roughly the same amount of time that Zig takes to compile just a
+	debug build.</li>
+	<li>The <code>--global-cache-dir</code> option is only supported by specific
+	subcommands of the <code>zig</code> CLI rather than being a top-level
+	setting, and throws an error if used for any other subcommand. Not having a
+	system-wide way to change it and being forced into writing a wrapper script
+	for that is fine, but it would be nice if said wrapper script didn't have to
+	also parse and switch over the subcommand just to figure out whether it is
+	allowed to append the setting.</li>
+	<li>compiler-rt still needs a bit of dead code elimination work. As soon as
+	your program needs a single polyfilled function, you get all of them,
+	because they get referenced in some exception-related table even if nothing
+	uses them? Changing the <code>link_eh_frame_hdr</code> option had no
+	effect.</li>
+	<li>And that was not the only <code>std.Build.Step.Compile</code> option
+	that did nothing. Worse, if I just tweaked the options and changed nothing
+	about the code itself, Zig <i>simply copied a previously built executable
+	out of its build cache into the output directory</i>, as revealed by the
+	timestamp on the .EXE. While I am willing to believe that Zig correctly
+	detects that all these settings would just produce the same binary, I do not
+	like how this behavior inspires distrust and uncertainty in Zig's build
+	process as a whole. After all, we still live in a world where <i>clearing
+	the build cache</i> is way too often the solution for weird problems in
+	software, especially when using CMake. And it makes sense why it would be:
+	If you develop a complex system and then try solving the infamously hard
+	problem of cache invalidation on top, the risk of getting cache invalidation
+	wrong is, by definition, higher than if that was the only thing your system
+	did. That's the reason why I like Tup so much: It <i>solely</i> focuses on
+	getting cache invalidation right, and rather errs on the side of caution by
+	maybe unnecessarily rebuilding certain files every once in a while. But this
+	is the one job I expect a build system to do, and Tup has been delivering
+	for years and has become fundamentally more trustworthy as a result.</li>
+	<li>Zig activates Clang's <a
+	href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html">UBSan</a>
+	in debug builds by default, which executes a program-crashing
+	<code>UD2</code> instruction whenever the program is about to rely on
+	undefined C++ behavior. In theory, that's a great help for spotting hidden
+	portability issues, but it's not helpful at all if all these crashes are
+	seemingly caused by C++ standard library code?! <a
+	href="https://github.com/ziglang/zig/issues/5163">Without any clear info
+	about the actual cause</a>, this just turned into yet another annoyance on
+	top of all the others. Especially because I apparently kept searching for
+	the wrong terms when I first encountered this issue, and only <a
+	href="https://github.com/ziglang/zig/issues/4830#issuecomment-605451561">found
+	out how to deactivate it</a> after I already decided against Zig.</li>
+	<li>Also, can we get <code><a
+	href="https://learn.microsoft.com/en-us/cpp/build/reference/pdbaltpath-use-alternate-pdb-path?view=msvc-170">/PDBALTPATH</a></code>?
+	Baking absolute paths from the filesystem of the developer's machine into
+	released binaries is not only cringe in itself, but can also cause potential
+	privacy or security accidents.</li>
+</ul><p>
+	So for the time being, I still prefer Tup. But give it maybe two or three
+	years, and I'm sure that Zig will eventually become the best tool for
+	resurrecting legacy C++ codebases. That is, if the <a
+	href="https://github.com/ziglang/zig/issues/16270">proposed divorce of the
+	core Zig compiler from LLVM</a> <i>isn't</i> an indication that the
+	productive parts of the Zig community consider the C/C++ building features
+	to be "good enough", and are about to de-emphasize them to focus more
+	strongly on the actual Zig language. Gaining adoption for your new systems
+	language by bundling it with a C/C++ build system is such a great and unique
+	strategy, and it almost worked in my case. And who knows, maybe Zig will
+	already be good enough by the time I get to port PC-98 Touhou to modern
+	systems.
+</p><p>
+	(If you came from the <a
+	href="https://github.com/ziglang/zig/wiki/Third-Party-Tracking-Issues-(what-is-important-to-other-people%3F)">Zig
+	wiki</a>, you can stop reading here.)
+</p><hr /><p id="concepts-{{.Date}}">
+	A few remnants of the Zig experiment still remain in the final delivery. If
+	that experiment worked out, I would have had to immediately change the
+	execution encoding to UTF-8, and decompile a few ASM functions exclusive to
+	the 8-bit rendering mode which we could have otherwise ignored. While Clang
+	does support inline assembly with Intel syntax via
+	<code>-fms-extensions</code>, it has trouble with <code>; comments</code>
+	and instructions like <code>REP STOSD</code>, and if I have to touch that
+	code anyway… (The <code>REP STOSD</code> function translated into a single
+	call to <code>memcpy()</code>, by the way.)
+</p><p>
+	Another smaller issue was Visual Studio's lack of standard library header
+	hygiene, where #including some of the high-level STL features also includes
+	more foundational headers that Clang requires to be included separately, but
+	I've already known about that. Instead, the biggest shocker was that Visual
+	Studio accepts invalid syntax for a language feature as recent as <i>C++20
+	concepts</i>:
+</p><figure><pre>
+// Defines the interface of a text rendering session class. To simplify this
+// example, it only has a single `Print(const char* str)` method.
+template &lt;class T&gt; concept Session = requires(T t, const char* str) {
+	t.Print(str);
+};
+
+// Once the rendering backend has started a new session, it passes the session
+// object as a parameter to a user-defined function, which can then freely call
+// any of the functions defined in the `Session` concept to render some text.
+template &lt;class F, class S&gt; concept UserFunctionForSession = (
+	Session&lt;S&gt; && requires(F f, S& s) {
+		{ f(s) };
+	}
+);
+
+// The rendering backend defines a `Prerender()` method that takes the
+// aforementioned user-defined function object. Unfortunately, C++ concepts
+// don't work like this: The standard doesn't allow `auto` in the parameter
+// list of a `requires` expression because it defines another implicit
+// template parameter. Nevertheless, Visual Studio compiles this code without
+// errors.
+template &lt;class T, class S&gt; concept BackendAttempt = requires(
+	T t, UserFunctionForSession&lt;S&gt; auto func
+) {
+	t.Prerender(func);
+};
+
+// A syntactically correct definition would use a different constraint term for
+// the type of the user-defined function. But this effectively makes the
+// resulting concept unusable for actual validation because you are forced to
+// specify a type for `F`.
+template &lt;class T, class S, class F&gt; concept SyntacticallyFixedBackend = (
+	UserFunctionForSession&lt;F, S&gt; && requires(T t, F func) {
+		t.Prerender(func);
+	}
+);
+
+// The solution: Defining a dummy structure that behaves like a lambda as an
+// "archetype" for the user-defined function.
+struct UserFunctionArchetype {
+	void operator ()(Session auto& s) {
+	}
+};
+
+// Now, the session type disappears from the template parameter list, which
+// even allows the concrete session type to be private.
+template &lt;class T&gt; concept CorrectBackend = requires(
+	T t, UserFunctionArchetype func
+) {
+	t.Prerender(func);
+};</pre><figcaption>
+	<a href="https://godbolt.org/z/r8aqsE49v">Here's a Godbolt link, configured
+	with both Visual Studio and Clang compilers.</a>
+</figcaption></figure><p>
+	What's this, Visual Studio's infamous delayed template parsing applied to
+	concepts, because they're templates as well? <a
+	href="https://devblogs.microsoft.com/cppblog/two-phase-name-lookup-support-comes-to-msvc/">Didn't
+	they get rid of that 6 years ago?</a> You would think that we've moved
+	beyond the age where compilers differed in their interpretation of the core
+	language, and that opting into a current C++ standard turns off any
+	remaining antiquated behaviors…
+</p><hr /><p id="tup-{{.Date}}">
+	So let's <i>actually</i> get my Tup build scripts ready for compiling
+	vendored libraries, because the
+	{{Blog_PostLink "2022-09-04" "previous 70 lines of Lua"}} definitely
+	weren't. For this use case, we'd like to have some notion of distinct build
+	targets that can have a unique set of compilation and linking flags. We'd
+	also like to always build them in debug and release versions even if you
+	only intend to build your actual program in one of those versions – with the
+	previous system of specifying a single version for all code, Tup would
+	delete the other one, which forces a time-consuming and ultimately needless
+	rebuild once you switch to the other version.
+</p><p>
+	The solution I came up with treats the set of compiler command-line options
+	like a tree whose branches can concatenate new options and/or filter the
+	versions that are built on this branch. In total, this is my 4<sup>th</sup>
+	attempt at writing a compiler abstraction layer for Tup. Since <span
+	class="hovertext" title="Sure, we can write them in any language that can generate a regular Tupfile, but we'd then incur an additional build dependency on that language. And don't you *dare* suggest Python.">we're
+	effectively forced</span> to write such layers in Lua, it will always be a
+	bit janky, but I think I've finally arrived at a solid underlying design
+	that might also be interesting for others. Hence, I've split off the result
+	into <a href="https://github.com/nmlgc/tupblocks">its own separate
+	repository and added high-level documentation and a documented example</a>.
+	And yes, that's a <a href="http://code.grevit.net:8084/">Code Nutrition</a>
+	label! I've wanted to add one of these ever since I first heard about the
+	idea, since it communicates nicely how seriously such an open-source project
+	should be treated. Which, in this case, is actually not all <i>too</i>
+	seriously, especially since development of the core Tup project has all but
+	stagnated. If Zig does indeed get better and better at being a Clang
+	frontend/build system, the only niches left for Tup will be Visual
+	Studio-exclusive projects, or retrocoding with nonstandard toolchains (i.e.,
+	ReC98). Quite ironic, given Tup's Unix heritage…<br />
+	Oh, and maybe general Makefile-like tasks where you just want to run
+	specific programs. Maybe once the general hype swings back around and people
+	start demanding proper graph-based dependency tracking instead of <a
+	href="https://github.com/casey/just">just a command runner</a>…
+</p><hr /><p id="sdl-{{.Date}}">
+	Alright, alternatives evaluated, build system ready, time to include SDL!
+	Once again, I went for Git submodules, but this time they're held together
+	by <a
+	href="https://github.com/nmlgc/ssg/blob/f5858791fb08af3e295d88f1ebe3b2041ec88c9b/build.bat">a
+	batch file that ensures that the intended versions are checked out before
+	starting Tup</a>. Git submodules have a bad rap mainly because of their
+	usability issues, and such a script should <i>hopefully</i> work around
+	them? Let's see how this plays out. If it ends up causing issues after all,
+	I'll just switch to a Zig-like model of downloading and unzipping a source
+	archive. Since Windows comes with <code>curl</code> and <code>tar</code>
+	these days, this can even work without any further dependencies, and will
+	also remove all the test code bloat.
+</p><p>
+	Compiling SDL from a non-standard build system requires <a
+	href="https://github.com/nmlgc/ssg/blob/f5858791fb08af3e295d88f1ebe3b2041ec88c9b/Tupfile.lua#L28-L79">a
+	bit of globbing to include all the code that is being referenced</a>, as
+	well as a few linker settings, but it's ultimately not much of a big deal.
+	I'm quite happy that it was possible at all without pre-configuring a build,
+	but hey, that's what maintaining a Visual Studio project file does to a
+	project. {{HTML_Emoji "tannedcirno"}}<br />
+	By building SDL with the stock Windows configuration, we then end up with
+	exactly what the SDL developers want us to use… which is a DLL. You
+	<i>can</i> statically link SDL, but they <i>really</i> don't want you to do
+	that. So strongly, in fact, that they <a
+	href="https://github.com/libsdl-org/SDL/blob/0b9d8e679a26ee98bb055efd244c703b7dda8727/docs/README-dynapi.md">not
+	merely argue how well the textbook advantages of dynamic linking have worked
+	for them and gamers as a whole, but implemented a whole <i>dynamic API</i>
+	system that enforces overridable dynamic function loading even in static
+	builds</a>. Nudging developers to their preferred solution by removing most
+	advantages from static linking by default… that's certainly a strategy. It
+	definitely fits with SDL's grassroots marketing, which is very good at
+	painting SDL as the industry standard and the only reliable way to keep your
+	game running on all originally supported operating systems. Well, at least
+	until SDL&nbsp;3 is so stable that SDL&nbsp;2 gets deprecated and won't
+	receive any code for new backends…
+</p><p>
+	However, dynamic linking does make sense if you consider what SDL <i>is</i>.
+	Offering all those multiple rendering, input, and sound backends is what
+	sets it apart from its more hip competition, and you want to have all of
+	them available at any time so that SDL can dynamically select them based on
+	what works best on a system. As a result, everything in SDL is being
+	referenced somewhere, so there's no dead code for the linker to reduce.
+	Linking SDL statically with link-time code generation just prolongs your
+	link time for no benefit, even without the dynamic API thwarting any chance
+	of SDL calls getting inlined.<br />
+	However, the one thing I still don't like about all this is that the dynamic
+	API's table references force you to include all of SDL's subsystems in the
+	DLL even if you don't want to use some of them. But it does fit with their
+	intention – swapping the <code>SDL2.dll</code> of an older game with a newer
+	version that came with any other random game requires that both DLLs contain
+	a fixed set of functions, and you wouldn't want that to fail just because
+	that newer <code>SDL2.dll</code> was size-optimized to not include some of
+	the subsystems that the older game required. Maybe. You can always just use
+	<a href="https://github.com/libsdl-org/SDL/releases">the official Windows
+	DLL</a>, which is sure to include everything, after all.
+</p><p>
+	So, what do we get in these 1.5&nbsp;MiB? There are:
+</p><ul>
+	<li>renderer backends for Direct3D 9/11/12, regular OpenGL, OpenGL ES 2.0,
+	Vulkan, and a software renderer,</li>
+	<li>input backends for DirectInput, XInput, Raw Input, and <a
+	href="https://github.com/libsdl-org/SDL/tree/37dee79b74723b7021ccaa946e31872f0539df4a/src/joystick/hidapi">all
+	the official game console controllers that can be connected via
+	USB</a>,</li>
+	<li>and audio backends for WinMM, DirectSound, WASAPI, and direct-to-disk
+	recording.</li>
+</ul><p>
+	Unfortunately, SDL&nbsp;2 also statically references some newer Windows API
+	functions and therefore doesn't run with Windows 98. Since this build of
+	Shuusou Gyoku doesn't introduce any new features to the input or sound
+	interfaces, we can still use pbg's original DirectSound and DirectInput code
+	for the i586 build to keep it working with the rest of the new code, but it
+	will start to lag behind in features as soon as we add support for SC-88Pro
+	BGM or <a class="goal" href="https://github.com/nmlgc/ssg/issues/48">more
+	sophisticated input remapping</a>. If we do want to keep this build at the
+	same feature level as the SDL one, we now have a choice: Do we write new
+	DirectInput and DirectSound code and get it done quickly but only for
+	Shuusou Gyoku, or do we port SDL&nbsp;2 to Windows 98 and benefit all other
+	SDL&nbsp;2 games as well? <a class="goal"
+	href="https://github.com/nmlgc/ssg/issues/53">I leave that for my backers to
+	decide.</a>
+</p><hr /><p id="fps-{{.Date}}">
+	Immediately after writing the first bits of actual SDL code to initialize
+	the library and create the game window, you notice that SDL makes it very
+	simple to gradually migrate a game. After creating the game window, you can
+	call <a
+	href="https://wiki.libsdl.org/SDL2/SDL_GetWindowWMInfo"><code>SDL_GetWindowWMInfo()</code></a>
+	to retrieve <code>HWND</code> and <code>HINSTANCE</code> handles that allow
+	you to continue using your original DirectDraw, DirectSound, and DirectInput
+	code and focus on porting one subsystem at a time.<br />
+	Sadly, D3DWindower can no longer turn SDL's fullscreen mode into a windowed
+	one, but DxWnd still works, albeit behaving a bit janky and insisting on
+	minimizing the game whenever the game window loses focus. In exchange, the
+	game window can surprisingly be moved now! Turns out that the originally
+	fixed window position had nothing to do with the way the game created its
+	DirectDraw context, and everything to do with <a
+	href="https://github.com/nmlgc/ssg/commit/fa254107071d7d62d728365ffcb237972aefc482">pbg
+	blocking the Win32 "syscommand" that allows a window to be moved</a>. By
+	deleting a <i>system menu</i>… seriously?! Now I'm dying to hear the Raymond
+	Chen explanation for how this behavior dates back to an unfortunate decision
+	during the Win16 days or something.<br />
+	As implied by that commit, I immediately backported window movability to the
+	i586 build.
+</p><p>
+	However, the most important part of Shuusou Gyoku's main loop is its frame
+	rate limiter, whose Win32 version leaves a bit of room for improvement.
+	Outside of the uncapped <code lang="ja">[おまけ] DrawMode</code>, the
+	original main loop continuously checks whether at least 16 milliseconds have
+	elapsed since the last simulated (but not necessarily rendered) frame. And
+	by that I mean <i>continuously</i>, and deliberately without using any of
+	the Windows system facilities to sleep the process in the meantime, as
+	evidenced by a commented-out <code>Sleep(1)</code> call. This has two
+	important effects on the game:
+</p><ul>
+	<li>The <code lang="ja">60Fps DrawMode</code> actually corresponds to a
+	frame rate of
+	<code>(1000&nbsp;/&nbsp;16)&nbsp;=&nbsp;</code><strong>62.5</strong> FPS,
+	not 60. Since the game didn't account for the missing
+	<sup>2</sup>/<sub>3</sub>&nbsp;ms to bring the limit down to exactly 60 FPS,
+	62.5&nbsp;FPS is Shuusou Gyoku's <i>actual</i> official frame rate in a
+	non-VSynced setting, which we should also maintain in the SDL port.</li>
+	<li>Not sleeping the process turns Shuusou Gyoku's frame rate limitation
+	into a busy-waiting loop, which always uses 100% of a single CPU core just
+	to wait for the next frame. {{HTML_Emoji "onricdennat"}}</li>
+</ul><p>
+	Unsurprisingly, SDL features <a
+	href="https://wiki.libsdl.org/SDL2/SDL_Delay">a delay function that properly
+	sleeps the process for a given number of milliseconds</a>. But just
+	specifying 16 here is not <i>exactly</i> what we want:
+</p><ol>
+	<li>Sure, modern computers are fast, but a frame won't ever take an
+	infinitely fast 0 milliseconds to render. So we still need to take the
+	current frame time into account.</li>
+	<li><code>SDL_Delay()</code>'s documentation says that the wake-up could be
+	further delayed due to OS scheduling.</li>
+</ol><p>
+	To address both of the issues, I went with a base delay time of
+	<i>15</i>&nbsp;ms minus the time spent on the current frame, followed by
+	busy-waiting for the last millisecond to make sure that the next frame
+	starts on the exact frame boundary. And lo and behold: Even though this
+	still technically wastes up to 1&nbsp;ms of CPU time, it still dropped CPU
+	usage into the 0%-2% range during gameplay on my Intel Core i5-8400T CPU,
+	which is over 5 years old at this point. Your laptop battery will appreciate
+	this new build quite a bit.
+</p><hr /><p id="sdlaudio-{{.Date}}">
+	Time to look at audio then, because it sure looks less complicated than
+	input, doesn't it? Loading sounds from .WAV file buffers, playing a fixed
+	number of instances of every sound at a given position within the stereo
+	field and with optional looping… and that's everything already. The
+	DirectSound implementation is so straightforward that the most complex part
+	of its code is the .WAV file parser.<br />
+	Well, the big problem with audio is actually <i>finding</i> a cross-platform
+	backend that implements these features in a way that seamlessly works with
+	Shuusou Gyoku's original files. DirectSound really is the perfect sound API
+	for this game:
+</p><ul>
+	<li>It doesn't require the game code to specify any output sample format.
+	Just load the individual sound effects in their original format, and
+	playback just works and sounds correctly.</li>
+	<li>Its final sound stream seems to have a latency of 10&nbsp;ms, which is
+	more than enough for a game running at 62.5&nbsp;FPS.</li>
+	<li>Sound effect looping? Specified by passing the
+	<code>DSBPLAY_LOOPING</code> flag to
+	<code>IDirectSoundBuffer::Play()</code>.</li>
+	<li>Stereo <s>panning</s> balancing? One method call.</li>
+	<li>Playing the same sound multiple times simultaneously from a single
+	memory buffer? <a
+	href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/mt708944(v=vs.85)">One
+	method call</a>. (It can fail though, requiring you to copy the data after
+	all.)</li>
+	<li>Pausing all sounds while the game window is not focused? That's the
+	default behavior, but it can be equally easily disabled with <a
+	href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ee416818(v=vs.85)#members">just
+	a single per-buffer flag</a>.</li>
+	<li>Future streaming of waveform BGM? No problem either. Windows Touhou has
+	always done that, and <a
+	href="https://github.com/nmlgc/musicroom/blob/cf1e97209c279fbbeb210601e7466af35f9848fd/src/stream.cpp">here's
+	some code I wrote 12½ years ago</a> that would even work without DirectSound
+	8's notification feature.</li>
+	<li>No further binary bloat, because it's part of the operating system.</li>
+</ul><p>
+	The last point can't really be an argument against anything, but we'd still
+	be left with 7 other boxes that a cross-platform alternative would have to
+	tick. We already picked SDL for our portability needs, so how does its audio
+	subsystem stack up? Unfortunately, not great:
+</p><ul>
+	<li>It's fully DIY. All you get is a single output buffer, and you have to
+	do all the mixing and effect processing yourself. In other words, it's <a
+	href="https://discourse.libsdl.org/t/playing-wav-file-with-native-sdl2-audio/22251">the
+	masochistic approach</a> to cross-platform audio.</li>
+	<li>There are helper functions for <a
+	href="https://wiki.libsdl.org/SDL2/SDL_ConvertAudio">resampling</a> and <a
+	href="https://wiki.libsdl.org/SDL2/SDL_MixAudioFormat">mixing</a>, but the
+	documentation of the latter is full of FUD. With a disclaimer that so
+	vehemently discourages the use of this function, what are you supposed to do
+	if you're newly integrating SDL audio into a game? Hunt for a separate sound
+	mixing library, even though your only quality goal is parity with stone-age
+	DirectSound? 🙄</li>
+	<li>It forces the game to explicitly define the PCM sampling rate, bit
+	depth, and channel count of the output buffer. You <a
+	href="https://github.com/libsdl-org/SDL/blob/60070d0b3d3c55d608af58d6a74f9fa540dfb3b0/src/audio/SDL_audio.c#L1264">can't
+	just pass a <code>nullptr</code> to <code>SDL_OpenAudioDevice()</code></a>,
+	and if you pass a zeroed <code>SDL_AudioSpec</code> structure, SDL just <a
+	href="https://github.com/libsdl-org/SDL/blob/60070d0b3d3c55d608af58d6a74f9fa540dfb3b0/src/audio/SDL_audio.c#L1211">defaults
+	to an unacceptable 22,050&nbsp;Hz sampling rate</a>, regardless of what the
+	audio device would actually prefer. It took until <a
+	href="https://github.com/libsdl-org/SDL/pull/5868">last year for them to
+	notice that people would at least like to <i>query</i> the native
+	format</a>. But of course, this approach requires the backend to actually
+	provide this information – and since we've seen above that DirectSound
+	doesn't care, <a
+	href="https://github.com/libsdl-org/SDL/blob/60070d0b3d3c55d608af58d6a74f9fa540dfb3b0/src/audio/directsound/SDL_directsound.c#L160-L168">the
+	DirectSound version of this function has to actually use the more modern
+	WASAPI, and remains unimplemented if that API is not available</a>.<br />
+	Standardizing the game on a single sampling rate, bit depth, and channel
+	count might be a decent choice for games that consistently use a single
+	format for all its sounds anyway. In that case, you get to do all mixing and
+	processing in that format, and the audio backend will at most do one final
+	conversion into the playback device's native format. But in Shuusou Gyoku,
+	most sound effects use 22,050&nbsp;Hz, the boss explosion sound effect uses
+	11,025&nbsp;Hz, and the future SC-88Pro BGM will obviously use
+	44,100&nbsp;Hz. In such a scenario, you would have to pick the highest
+	sampling rate among all sound sources, and resample any lower-quality sounds
+	to that rate. But if the audio device uses a different sampling rate, those
+	lower-quality sounds would get resampled a second time.<br />
+	I know that <a href="https://wiki.libsdl.org/SDL3/SDL_OpenAudioDevice">this
+	will be fixed in SDL 3</a>, but that version is still under heavy
+	development.</li>
+	<li>Positives? Uh… the callback-based nature means that BGM streaming is
+	rather trivial, and would even be comparatively less complicated than with
+	DirectSound. Having a <a
+	href="https://wiki.libsdl.org/SDL2/SDL_LockAudioDevice">mutex</a> to prevent
+	writes to your sound instance structures while they're being read by the
+	audio thread is nice too.</li>
+</ul><p>
+	OK, sure, but you're not <i>supposed</i> to use it for anything more than a
+	single stream of audio. SDL_mixer exists precisely to cover such non-trivial
+	use cases, and it even supports sound effect looping and panning with just a
+	single function call! But as far as the rest of the library is concerned, it
+	manages to be an even bigger disappointment than raw SDL audio:
+</p><ul>
+	<li>As it sits on top of SDL's audio subsystem, it still can't just use your
+	audio device's native sample format.</li>
+	<li>Even worse, it insists on <a
+	href="https://wiki.libsdl.org/SDL2_mixer/Mix_OpenAudioDevice">initializing
+	the audio device itself</a>, and thus always needs to duplicate whatever you
+	would do for raw SDL.</li>
+	<li>It only offers a very opinionated system for streaming – and of course,
+	its opinion is wrong. 😛 The fact that it only supports a single streaming
+	audio track wouldn't matter all too much if you could switch to another
+	track at sample precision. But since you can't, you're forced to implement
+	looping BGM using a single file…</li>
+	<li>…which brings us to the unfortunate issue of loop point definitions.
+	And, perhaps most importantly, the complete lack of any way to set them
+	through the API?! It doesn't take long until you come up with a theory for
+	why the API only offers a function to <i>retrieve</i> loop points: The
+	"music" abstraction is <i>so</i> format-agnostic that it even supports MIDI
+	and tracker formats where a typical loop point in PCM samples doesn't make
+	sense. Both of these formats already have in-band ways of specifying loop
+	points in their respective time units. <a
+	href="https://github.com/stuerp/foo_midi/blob/bb44a68bfde3913016c1004e896852882d855603/foo_midi.rc#L32-L35">They
+	might not be standardized</a>, but it's still much better than usual
+	single-file solutions for PCM streams where the loop point has to be stored
+	in an out-of-band way – such as in a metadata tag or an entirely separate
+	file.<ul>
+		<li>Speaking of MIDI, why is it so common among these APIs to not have
+		any way of specifying the MIDI device? The fact that Windows Vista
+		removed the Control Panel option for specifying the system-wide default
+		MIDI output device is no excuse for your API lacking the option as well.
+		In fact, your MIDI API now needs such a setting <i>more</i> than it was
+		needed in the Windows XP and 9x days.</li>
+		<li>Actually, wait, <a
+		href="https://wiki.libsdl.org/SDL2_mixer/Mix_ModMusicJumpToOrder">the
+		API does have a function that is exclusive to tracker formats</a>. Which
+		means that they aren't <i>actually</i> insisting on a clean, consistent,
+		and minimal API here… 🤔</li>
+	</ul></li>
+	<li>Funnily enough, they did once receive a patch for a function to set loop
+	points which was never upstreamed… and this patch came <a
+	href="https://discourse.libsdl.org/t/loop-points-support-for-sdl-mixer/19586">from
+	the main developer behind PyTouhou</a>, who needed that feature for obvious
+	reasons. The world sure is a small place.</li>
+	<li>As a result, they turned loop points into a property that each
+	individual format <a
+	href="https://github.com/libsdl-org/SDL_mixer/blob/49d2e332c54b39e4b5593dfb52b7dc6ac214c7b1/src/codecs/music_drflac.c#L407">may</a>
+	or <a
+	href="https://github.com/libsdl-org/SDL_mixer/blob/49d2e332c54b39e4b5593dfb52b7dc6ac214c7b1/src/codecs/music_mpg123.c#L542">may
+	not</a> have. Want to <a
+	href="https://www.thpatch.net/w/index.php?title=Touhou_Patch_Center:BGM_modding&oldid=2500522#How_to_loop_MP3_files">loop
+	MP3 files at sample precision</a>? Tough luck, time to reconvert to another
+	lossy format. 🙄 This is the exact jank I decided against when I implemented
+	BGM modding for thcrap back in <a
+	href="https://github.com/thpatch/thcrap/releases/tag/2018-12-03">2018</a>,
+	where I concluded that <a
+	href="https://github.com/Wintiger0222/uth05win/issues/10">separate intro and
+	loop files are the way to go</a>.<br />
+	But OK, we only plan to use FLAC and Ogg Vorbis for the SC-88Pro BGM, for
+	which SDL_mixer does support loop points in the form of <a
+	href="https://github.com/libsdl-org/SDL_mixer/blob/49d2e332c54b39e4b5593dfb52b7dc6ac214c7b1/src/codecs/music_drflac.c#L122-L129">Vorbis</a>
+	<a
+	href="https://github.com/libsdl-org/SDL_mixer/blob/49d2e332c54b39e4b5593dfb52b7dc6ac214c7b1/src/codecs/music_ogg.c#L285-L292">comments</a>,
+	and hey, we can even pass them at sample accuracy. Sure, it's wrong and
+	everything, but nothing I <i>couldn't</i> work with…</li>
+	<li>However, the final straw that makes SDL_mixer unsuitable for Shuusou
+	Gyoku is its core sound mixing paradigm of distributing all sound effects
+	onto a fixed number of channels, set to <a
+	href="https://github.com/libsdl-org/SDL_mixer/blob/5ce3f9268bf60a0412bfd7c46b8858f84eaec1ab/include/SDL3_mixer/SDL_mixer.h#L214-L219">8
+	by default</a>. Which raises the quite ridiculous question of how many we
+	would actually need to cover the maximum amount of sounds that can
+	simultaneously be played back in any game situation. The theoretic maximum
+	would be 41, which is the combined sum of individual sound buffer instances
+	of all 20 original sound effects. The practical limit would surely be a lot
+	smaller, but we could only find out that one through experiments, which
+	honestly is quite a silly proposition.<ul>
+		<li>It makes you wonder why they went with this paradigm in the first
+		place. And sure enough, they <a
+		href="https://github.com/libsdl-org/SDL_mixer/blob/5ce3f9268bf60a0412bfd7c46b8858f84eaec1ab/src/mixer.c#L417">actually
+		use the aforementioned SDL core function for mixing audio</a>. Yes, the
+		same function whose current documentation advises against using it for
+		this exact use case. 🙄 What's the argument here? <i>"Sure, 8 is
+		significantly more than 2, but any mixing artifacts that will occur for
+		the next 6 sounds are not worrying about, but they get <i>really</i> bad
+		after the 8<sup>th</sup> sound, so we're just going to protect you from
+		that</i>"? {{HTML_Emoji "tannedcirno"}}</li>
+	</ul>
+</ul><p>
+	There is <a href="https://github.com/WohlSoft/SDL-Mixer-X">a fork</a> that
+	does add support for an arbitrary number of music streams, but the rest of
+	its features leave me questioning the priorities and focus of this project.
+	Because surely, when I think about missing features in an audio backend, I
+	immediately think about <a
+	href="https://wohlsoft.github.io/SDL-Mixer-X/SDL_mixer_ext.html#Mix_005fLoadMUS_005fRW_005fGME">support
+	for a vast array of chiptune file formats</a>… 🤪<br /> And wait,
+	<i>what</i>, <a href="https://github.com/libsdl-org/SDL_mixer/pull/378">they
+	merged this piece of bloat back into the official SDL_mixer library</a>?!
+	Thanks for <a
+	href="https://scarybeastsecurity.blogspot.com/2016/11/0day-exploit-compromising-linux-desktop.html">opening
+	up a vast attack surface for potential security vulnerabilities</a> in code
+	that would never run for the majority of users, just to cover some niche
+	formats that nobody would seriously expect in a general audio library. And
+	that's coming from someone who loves listening to that stuff!<br />
+	At this rate, I'm expecting SDL_mixer to gain <a
+	href="https://en.wikipedia.org/wiki/Jamie_Zawinski#Zawinski's_Law">a mail
+	client</a> by the end of the decade. Hmm, what's the closest audio thing to
+	a mail client… oh, right, WebRTC! Yeah, let's just casually <a
+	href="https://www.webrtc-developers.com/did-i-choose-the-right-webrtc-stack/#libwebrtc-c-the-original-one">drop
+	a giant part of the Chromium codebase</a> into SDL_mixer, what could
+	possibly go wrong?
+</p><p id="miniaudio-{{.Date}}"></p>
+	This dire situation made me wonder if SDL was the wrong choice for Shuusou
+	Gyoku to begin with. Looking at other low-level cross-platform game
+	libraries, you'll quickly notice that <i>all</i> of them come with mostly
+	equally capable 2D renderers these days, and mainly differentiate themselves
+	in minute API details that you'd only notice upon a really close look.<br />
+	<a href="https://www.raylib.com/">raylib</a> is another one of those
+	libraries and has been getting exceptionally popular in recent years, to the
+	point of even having more than twice as many GitHub stars as SDL. By
+	restricting itself to OpenGL, it can even <a
+	href="https://www.raylib.com/cheatsheet/cheatsheet.html">offer an
+	abstraction for shaders</a>, which we'd <i>really</i> like for the <span
+	lang="ja">西方Ｐｒｏｊｅｃｔ</span> lens ball effect.<br />
+	In the case of raylib's audio system, the lack of sound effect looping is
+	the minute API detail that would make it annoying to use for Shuusou Gyoku.
+	But it might be worth a look at how raylib implements all this if it doesn't
+	use SDL… which turned out to be the best look I've taken in a long time,
+	because raylib builds on top of <a href="https://miniaud.io/">miniaudio</a>
+	which is <i>exactly</i> the kind of audio library I was hoping to find.
+	Let's check the list from above:
+</p><ul>
+	<li>🟢 miniaudio's high-level API initialization defaults to the native
+	sample format of the playback device. Its internal processing uses 32-bit
+	floating-point samples and only converts back to the native bit depth as
+	necessary when writing the final stream into the backend's audio buffer.
+	WASAPI, for example, never needs any further conversion because it operates
+	with 32-bit floats as well.</li>
+	<li>🟢 The final audio stream uses the same 10&nbsp;ms update period (and
+	thus, sound effect latency) that I was getting with DirectSound.</li>
+	<li>🟢 Stereo <s>panning</s> balancing? <code>ma_sound_set_pan()</code>,
+	although it does require a conversion from Shuusou Gyoku's dB units into a
+	linear attenuation factor.</li>
+	<li>🟢 Sound effect looping? <code>ma_sound_set_looping()</code>.</li>
+	<li>🟢 Playing the same sound multiple times simultaneously from a single
+	memory buffer? Perfectly possible, but requires a bit of digging in the
+	header to find the best solution. <a
+	href="#miniaudio-instancing-{{.Date}}">More on that below.</a></li>
+	<li>🟢 Future streaming of waveform BGM? Just call
+	<code>ma_sound_init_from_file()</code> with the
+	<code>MA_SOUND_FLAG_STREAM</code> flag.<ul>
+		<li>👍 It also comes with a FLAC decoder in the core library and an Ogg
+		Vorbis one as part of the repo, …</li>
+		<li>🤩 … and even supports gapless switching between the intro and loop
+		files via a single declarative call to
+		<code>ma_data_source_set_next()</code>!<br />
+		(Oh, and it also has <code>ma_data_set_loop_point_in_pcm_frames()</code>
+		for anyone who still believes in <i>obviously</i> and <i>objectively</i>
+		inferior out-of-band loop points.)</li>
+	</ul></li>
+	<li>🟢 Pausing all sounds while the game window is not focused? It's not
+	automatic, but adding new functions to the sound interface and calling
+	<code>ma_engine_stop()</code> and <code>ma_engine_start()</code> does the
+	trick, and most importantly doesn't cause any samples to be lost in the
+	process.</li>
+	<li>🟡 Sound control is implemented in a lock-free way, allowing your main
+	game thread to call these at any time without causing glitches on the audio
+	thread. While that looks nice and optimal on the surface, you now have to
+	either believe in the soundness (ha) of the implementation, or verify that
+	atomic structure fields actually <i>are</i> enough to not cause any race
+	conditions (which I did for the calls that Shuusou Gyoku uses, and I didn't
+	found any of note). <i>"It's all lock-free, don't worry about it"</i> might
+	be <i>easier</i>, but I consider SDL's approach of just providing a mutex to
+	prevent the output callback from running while you mutate the sound state to
+	actually be <i>simpler</i> conceptually.</li>
+	<li>🟡 miniaudio adds 247&nbsp;KB to the binary in its minimum
+	configuration, a bit more than expected. Some of that is bloat from effect
+	code that we never use, but it does include backends for all three Windows
+	audio subsystems (WASAPI, DirectSound, and WinMM).</li>
+	<li>✅ But perhaps most importantly: It natively supports all modern
+	operating systems that one could seriously want to port this game to, and
+	could be easily ported to any other backend, <a
+	href="https://miniaud.io/docs/examples/custom_backend.html">including
+	SDL</a>.</li>
+</ul><p>
+	Oh, and it's written by the same developer who also wrote the best FLAC
+	library back in 2018. And that's despite them being single-file C libraries,
+	which I consider to be massively overrated…
+</p><p>
+	The drawback? Similar to Zig, it's only on version 0.11.18, and also focuses
+	on good high-level documentation at the expense of an API reference. Unlike
+	Zig though, the three issues I ran into turned out to be actual and fixable
+	bugs: <a href="https://github.com/mackron/miniaudio/issues/716">Two minor
+	ones related to looping of streamed sounds shorter than 2 seconds which
+	won't ever actually affect us before we get into BGM modding</a>, and <a
+	href="https://github.com/mackron/miniaudio/pull/722">a critical one that
+	added high-frequency corruption to any mono sound effect during its
+	expansion to stereo</a>. The latter took days to track down – with symptoms
+	like these, you'd immediately suspect the bug to lie in the resampler or its
+	low-pass filter, both of which are so much more of a fickle and configurable
+	part of the conversion chain here. Compared to that, stereo expansion is so
+	conceptually simple that you wouldn't imagine anyone getting it wrong.<br />
+	While the latter PR has been merged, the fix is still only part of the
+	<code>dev</code> branch and hasn't been properly released yet. Fortunately,
+	raylib is not affected by this bug: It does <a
+	href="https://github.com/raysan5/raylib/commit/3a3e672804d7c0efb429d45b22554b357c0dc11d">currently
+	ship version 0.11.16 of miniaudio</a>, but its usage of the library predates
+	miniaudio's high-level API and it therefore uses a different,
+	non-SSE-optimized code path for its format conversions.
+</p><p id="miniaudio-instancing-{{.Date}}">
+	The only slightly tricky part of implementing a miniaudio backend for
+	Shuusou Gyoku lies in setting up multiple simultaneously playing instances
+	for each individual sound. The documentation and answers on the issue
+	tracker heavily push you toward miniaudio's resource manager and its file
+	abstractions to handle this use case. We surely could turn Shuusou Gyoku's
+	numeric sound effect IDs into fake file names, but it doesn't really fit the
+	existing architecture where the sound interface just receives in-memory .WAV
+	file buffers loaded from the <code>SOUND.DAT</code> packfile.<br />
+	In that case, this seems to be the best way:
+</p><ul>
+	<li>Call <code>ma_decode_memory()</code> to decode from any of the supported
+	audio formats to a buffer of raw PCM samples.<br /> At this point, you can
+	choose between<ol>
+		<li>decoding into the original format the sound effect is stored in,
+		which would cause it to get converted into the playback format every
+		time, or</li>
+		<li>decoding into 32-bit floats (the native bit depth of the miniaudio
+		engine) and the native sampling rate of the playback device, which
+		avoids any further resampling and floating-point conversion, but takes
+		up more memory.</li>
+	</ol>Nowadays, it's not clear at all which of the two approaches is faster.
+	Does it actually matter if we save the audio thread from doing all those
+	floating-point operations on every sample? Or is that no longer true these
+	days because the audio thread is probably running on a different CPU core,
+	the rest of the game largely doesn't touch the floating-point parts of your
+	CPU anyway, and you'd rather want to keep sound effects small so that they
+	can better fit into the CPU cache? That would be an interesting question to
+	benchmark, but just like the similar text rendering question from the last
+	blog posts, <i>it doesn't matter for this tiny 2000s retro game</i>. 😌
+	<br />
+	I went with 2) mainly because it simplified all the debugging I was doing.
+	At a sampling rate of 48,000&nbsp;Hz, this increases the memory usage for
+	all sound effects from 379&nbsp;KiB to 3.67&nbsp;MiB. At least I'm not
+	channel-expanding all sound effects as well here…
+	{{HTML_Emoji "onricdennat"}} We've seen earlier that mono➜stereo expansion
+	is SSE-optimized, so it's very hard to justify a further doubling of the
+	memory usage here.</li>
+	<li>Then, for each instance of the sound, call<ul>
+		<li><code>ma_audio_buffer_ref_init()</code> to create a <i>reference
+		buffer</i> with its own playback cursor, and</li>
+		<li><code>ma_sound_init_from_data_source()</code> to create a new
+		high-level sound node that will play back the <i>reference
+		buffer</i>.</li>
+	</ul></li>
+</ul><hr /><p id="resampling-{{.Date}}">
+	As a side effect of hunting that one critical bug in miniaudio, I've now
+	learned a fair bit about audio resampling in general. You'll probably need
+	some knowledge about <a href="https://xiph.org/video/vid2.shtml">basic
+	digital signal behavior</a> to follow this section, and this video is still
+	probably the best introduction to the topic.
+</p><p>
+	So, how could this ever be an issue? The only time I ever consciously
+	thought about resampling used to be in the context of the Opus codec and its
+	enforced sampling rate of 48,000&nbsp;Hz, and how <a
+	href="https://hydrogenaud.io/index.php/topic,97051.0.html">Opus advocates
+	claim that resampling is a solved problem and nothing to worry about,
+	especially in the context of a lossy codec</a>. Still, I didn't add Opus to
+	thcrap's BGM modding feature entirely because the mere thought of having to
+	downsample to 44,100&nbsp;Hz in the decoder was off-putting enough. But even
+	<i>if</i> my worries were unfounded in that specific case: Recording the
+	Stereo Mix of Shuusou Gyoku's now two audio backends revealed that
+	apparently not every audio processing chain features an Opus-quality
+	resampler…
+</p><p>
+	If we take a look at the material that resamplers actually have to work with
+	here, it quickly becomes obvious why their results are so varied. As
+	mentioned above, Shuusou Gyoku's sound effects use rather low sampling rates
+	that are pretty far away from the 48,000&nbsp;Hz your audio device is most
+	definitely outputting. Therefore, any potential imaging noise across the
+	extended high-frequency range – i.e., from the original Nyquist frequencies
+	of 11,025&nbsp;Hz/5,512.5&nbsp;Hz up to the new limit of 24,000&nbsp;Hz – is
+	still within the audible range of most humans and can clearly color the
+	resulting sound.<br />
+	But it gets worse if the audio data you put into the resampler is
+	objectively defective to begin with, which is exactly the problem we're
+	facing with over half of Shuusou Gyoku's sound effects. Encoding them all as
+	8-bit PCM is definitely excusable because it was the turn of the millennium
+	and the resulting noise floor is masked by the BGM anyway, but the blatant
+	clipping and DC offsets definitely aren't:
+</ul><figure class="pixelated"><div id="waveform-{{.Date}}" class="clipped">
+	<table><thead><tr>
+		<td colspan="20" style="height: 38px; border-bottom: unset;"></td>
+	</tr><tr>
+		<th style="min-width:  14px;" data-name="KEBARI">KEBARI</th>
+		<th style="min-width: 451px;" data-name="TAME">TAME</th>
+		<th style="min-width: 152px;" data-name="LASER">LASER</th>
+		<th style="min-width:  91px;" data-name="LASER2">LASER2</th>
+		<th style="min-width:  75px;" data-name="BOMB">BOMB</th>
+		<th style="min-width:  16px;" data-name="SELECT">SELECT</th>
+		<th style="min-width:  15px;" data-name="HIT">HIT</th>
+		<th style="min-width:  15px;" data-name="CANCEL">CANCEL</th>
+		<th style="min-width: 182px;" data-name="WARNING">WARNING</th>
+		<th style="min-width: 149px;" data-name="SBLASER">SBLASER</th>
+		<th style="min-width:  15px;" data-name="BUZZ">BUZZ</th>
+		<th style="min-width:  75px;" data-name="MISSILE">MISSILE</th>
+		<th style="min-width:  17px;" data-name="JOINT">JOINT</th>
+		<th style="min-width: 151px;" data-name="DEAD">DEAD</th>
+		<th style="min-width: 225px;" data-name="SBBOMB">SBBOMB</th>
+		<th style="min-width: 753px;" data-name="BOSSBOMB">BOSSBOMB</th>
+		<th style="min-width:   9px;" data-name="ENEMYSHOT">ENEMYSHOT</th>
+		<th style="min-width: 121px;" data-name="HLASER">HLASER</th>
+		<th style="min-width: 376px;" data-name="TAMEFAST">TAMEFAST</th>
+		<th style="min-width: 120px;" data-name="WARP">WARP</th>
+	</tr></thead><tbody><tr>{{range loop 0 20 -}}
+		{{- $se := printf "SH01-SOUND.DAT-%02d.png" . -}}
+		{{- $seFN := (call $.PostFileURL $se) -}}
+		<td><img
+			src="{{$seFN}}" alt="<code>SOUND.DAT</code>, file {{inc .}}/20"
+		/></td>
+	{{- end}}</tr></tbody><tfoot><tr>
+		<td colspan="20" style="height: 53px;"></td>
+	</tr></tfoot></table>
+</div><figcaption>
+	Waveforms for all 20 of Shuusou Gyoku's sound effects, in the order they
+	appear inside <code>SOUND.DAT</code> and with their internal names. We can
+	see quite an abundance of <span style="color: red">clipping</span>, as well
+	as a significant <a href="https://en.wikipedia.org/wiki/DC_bias">DC
+	offset</a> in <code>WARNING</code>, <code>BUZZ</code>, <code>JOINT</code>,
+	<code>SBBOMB</code>, and <code>BOSSBOMB</code>.
+	<form>
+		<input type="checkbox" id="peak-toggle-{{.Date}}" onchange="
+			const container = document.getElementById('waveform-{{.Date}}');
+			if(this.checked) {
+				container.classList.remove('clipped');
+			} else {
+				container.classList.add('clipped');
+			}
+		">
+		<label for="peak-toggle-{{.Date}}">Show true peaks</label>
+	</form>
+</figcaption></figure><p>
+	Wait a moment, <i>true peaks</i>? Where do those come from? And, equally
+	importantly, how can we even observe, measure, and store <i>anything</i>
+	above the maximum amplitude of a digital signal?
+</p><p>
+	The answer to the first question can be directly derived from the Xiph.org
+	video I linked above: Digital signals are lollipop graphs, not stairsteps as
+	commonly depicted in audio editing software. Converting them back to an
+	analog signal involves constructing a continuous curve that passes through
+	each sample point, and whose frequency components stay below the Nyquist
+	frequency. And if the amplitude of that reconstructed wave changes too
+	strongly and too rapidly, the resulting curve can easily overshoot the
+	maximum digital amplitude of <a href="https://en.wikipedia.org/wiki/DBFS">0
+	dBFS</a> even if none of the defined samples are above that limit.
+</p><p>
+	But I can assure you that I did not create the waveform images above by
+	recording the analog output of some speakers or headphones and then matching
+	the levels to the original files, so how did I end up with that image? It's
+	not an Audacity feature either because <a
+	href="https://forum.audacityteam.org/t/29575/4">the development team argues
+	that there is no "true waveform" to be visualized as every DAC behaves
+	differently</a>. While this is correct in <i>theory</i>, we'd be happy just
+	to get a rough approximation here.<br />
+	ffmpeg's <code>ebur128</code> filter has a parameter to measure the true
+	peak of a waveform and fairly understandable source code, and once I looked
+	at it, all the pieces suddenly started to make sense: For our purpose of
+	only looking at digital samples, 💡 <i>resampling to a floating-point signal
+	with an infinite sampling rate is equivalent to a DAC</i>. And that's
+	exactly what this filter does: It <a
+	href="https://github.com/FFmpeg/FFmpeg/blob/9ef20920ab82c46de095499deec2777b48a19370/libavfilter/f_ebur128.c#L492-L514">picks
+	192,000&nbsp;Hz and 64-bit float</a> as a format that's close enough to the
+	ideal of "analog infinity" <a
+	href="https://people.xiph.org/~xiphmont/demo/neil-young.html">for all
+	practical purposes that involve digital audio</a>, and then simply <a
+	href="https://github.com/FFmpeg/FFmpeg/blob/9ef20920ab82c46de095499deec2777b48a19370/libavfilter/f_ebur128.c#L642-L644">converts
+	each incoming 100&nbsp;ms of audio</a> and <a
+	href="https://github.com/FFmpeg/FFmpeg/blob/9ef20920ab82c46de095499deec2777b48a19370/libavfilter/f_ebur128.c#L647-L656">keeps
+	the sample with the largest floating-point value</a>.
+</p><p>
+	So let's store the resampled output as a FLAC file and load it into Audacity
+	to visualize the clipped peaks… only to find all of them replaced with the
+	typical kind of clipping distortion? 😕 Turns out that I've stumbled over
+	the one case where the FLAC format <i>isn't</i> lossless and there's
+	<i>actually</i> no alternative to .WAV: FLAC just doesn't support
+	floating-point samples and simply truncates them to discrete integers during
+	encoding. When we measured inter-sample peaks above, we weren't only
+	resampling to a floating-point format to avoid any quantization to discrete
+	integer values, but also to make it possible to store amplitudes beyond the
+	0&nbsp;dBFS point of ±1.0 in the first place. Once we lose that ability,
+	these amplitudes are clipped to the maximum value of the integer bit depth,
+	and baked into the waveform with no way to get rid of them again. After all,
+	the resampled file now uses a higher sampling rate, and the clipping
+	distortion is now a defined part of what the sound <i>is</i>.<br />
+	Finally, storing a digital signal with inter-sample peaks in a
+	floating-point format also makes it possible for <i>you</i> to reduce the
+	volume, which moves these peaks back into the regular, unclipped amplitude
+	range. This is especially relevant for Shuusou Gyoku as you'll probably
+	never listen to sound effects at full volume.
+</p><p>
+	Now that we understand what's going on there, we can finally compare the
+	output of various resamplers and pick a suitable one to use with miniaudio.
+	And immediately, we see how they fall into two categories:
+</p><ul>
+	<li>High-quality resamplers are the ones I described earlier: They cleanly
+	recreate the signal at a higher sampling rate from its raw frequency
+	representation and thus add no high-frequency noise, but can lead to
+	inter-sample peaks.</li>
+	<li><i>Linear</i> resamplers use much simpler math to merely interpolate
+	between neighboring samples. This actually smooths away any clipping and
+	thus fully removes inter-sample peaks, but at the expense of adding
+	high-frequency imaging noise that has to then be removed using a low-pass
+	filter.</li>
+</ul><p>
+	miniaudio only comes with a linear resampler – but so does DirectSound as it
+	turns out, so we can get actually pretty close to how the game sounded
+	originally:
+</p><figure {{$vid_ref_wav.FigureAttrs}}>
+	<figcaption class="dynamic"><div>
+		All of Shuusou Gyoku's sound effects combined and resampled into a
+		single 48,000&nbsp;Hz&nbsp;/ 32-bit float .WAV file, using <a
+		href="https://goldwave.com/">GoldWave</a>'s File Merger tool. By
+		converting to 32-bit float first and <i>then</i> resampling, the
+		conversion preserved the exact frequency range of the original
+		22,050&nbsp;Hz and 11,025&nbsp;Hz files, even despite clipping. There
+		<i>are</i> small noise peaks across the entire frequency range, but they
+		only occur at the exact boundary between individual sound effects. These
+		are a simple result of the discontinuities that naturally occur in the
+		waveform when concatenating signals that don't start or end at a 0
+		sample.<br />
+		As mentioned above, you'll only get this sound out of your DAC at lower
+		volumes where all of the resampled peaks still fit within 0&nbsp;dBFS.
+		But you most likely will have reduced your volume anyway, because these
+		effects would be ear-splittingly loud otherwise.
+	</div><div>
+		The result of converting 1️⃣ into FLAC. The necessary bit depth
+		conversion from 32-bit float to 16-bit integers clamps any data above
+		0&nbsp;dBFS or <code>±1.0f</code> to the discrete
+		<code>-32,678</code>&nbsp;<code>32,767</code>, the maximum value of such
+		an integer. The resulting straight lines at maximum amplitude in the
+		time domain then turn into distortion across the entire 24,000&nbsp;Hz
+		frequency domain, which then remains a part of the waveform even at
+		lower volumes. The locations of the high-frequency noise exactly match
+		the clipped locations in the time-domain waveform images above.<br />
+		The resulting additional distortion can be best heard in
+		<code>BOSSBOMB</code>, where the low source frequency ensures that any
+		distortion stays firmly within the hearing range of most humans.
+	</div><div>
+		All of Shuusou Gyoku's sound effects as played through DirectSound and
+		recorded through Stereo Mix. DirectSound also seems to use a linear
+		low-pass filter that leaves quite a bit of high-frequency noise in the
+		signals, making these effects sound crispier than they should be.
+		Depending on where you stand, this is either highly inaccurate and
+		something that should be fixed, or actually good because the sound
+		effects really benefit from that added high end. I myself am definitely
+		in the latter camp – and hey, this sound is the result of original game
+		code, so it <i>is</i> accurate at least in that regard.
+		{{HTML_Emoji "tannedcirno"}}
+	</div><div>
+		All of Shuusou Gyoku's sound effects as converted by miniaudio and
+		directly saved to a file, with the same low-pass filter setting used in
+		the P0256 build. This first-order low-pass filter is a decent
+		approximation of DirectSound's resampler, even though it sounds slightly
+		crispier as the high-frequency noise is boosted a little further. By
+		default, miniaudio would use a 4<sup>th</sup>-order low-pass filter, so
+		this is the second-lowest resampling quality you can get, short of
+		disabling the low-pass filter altogether.
+	</div><div>
+		Conversion results when using miniaudio's 8<sup>th</sup>-order low-pass
+		filter for resampling, the highest quality supported. This is the
+		closest we can get to the reference conversion without using a custom
+		resampler. If we do want to go for perfect accuracy though, we might as
+		well <a class="goal" href="https://github.com/nmlgc/ssg/issues/50">go
+		for 1️⃣ directly</a>?
+	</div><hr /><span>
+		These spectrum images were initially created using ffmpeg's <code>-lavfi
+		showspectrumpic=mode=combined:s=1280x720</code> filter. The samples
+		appear in the same order as in the <a
+		href="#waveform-{{.Date}}">waveform above</a>.
+	</span></figcaption>
+	{{call .VideoPlayer
+		$vid_ref_wav $vid_ref_flac $vid_dsound.SetActive $vid_ma_1 $vid_ma_8
+	}}
+</figure><p>
+	And yes, these are indeed the first videos on this blog to have sound! I
+	spent another push on preparing the
+	{{Blog_PostLink "2022-10-31" "video conversion pipeline"}} for audio
+	support, and on adding the highly important volume control to the player.
+	Web video codecs only support lossy audio, so the sound in these videos will
+	not exactly match the spectrum image, but the lossless source files do
+	contain the original audio as uncompressed PCM streams.
+</p><hr /><p id="sdlinput-{{.Date}}">
+	Compared to that whole mess of signals and noise, keyboard and joypad input
+	is indeed much simpler. Thanks to SDL, it's <i>almost</i> trivial, and only
+	slightly complicated because SDL offers two subsystems with seemingly
+	identical APIs:
+</p><ul>
+	<li>SDL_Joystick simply numbers all axes and buttons of a joypad and <a
+	href="https://wiki.libsdl.org/SDL2/SDL_JoystickGetAxis">doesn't assign any
+	meaning to these numbers</a>, but works with every joypad ever.</li>
+	<li>SDL_GameController provides a consistent interface for the typical kind
+	of modern gamepad with two analog sticks, a D-pad, and at least 4 face and 2
+	shoulder buttons. This API is implemented by simply combining SDL_Joystick
+	with <a
+	href="https://github.com/libsdl-org/SDL/blob/9772d0512c8a0bb1841244ef9043e598ba0c0ff7/src/joystick/SDL_gamecontrollerdb.h">a
+	long list of mappings for specific controllers</a>, and therefore doesn't
+	work with joypads that don't match this standard.
+	<figure>
+		<embed src="{{call .PostFileURL "SDL_GameController.svg"}}" />
+		<figcaption>
+			<a
+			href="https://raw.githubusercontent.com/libsdl-org/SDL/SDL2/test/controllermap.bmp">According
+			to SDL</a>, this is what a "game controller" looks like. <a
+			href="https://github.com/AntiMicroX/antimicrox/issues/346#issuecomment-1268499016">Here's
+			the source of the SVG.</a>
+		</figcaption>
+	</figure></li>
+</ul><p>
+	To match Shuusou Gyoku's original WinMM backend, we'd ideally want to keep
+	the best aspects from both APIs but without being restricted to
+	SDL_GameController's idea of a controller. The <code lang="ja">Joy
+	Pad</code> menu just identifies each button with a numeric ID, so
+	SDL_Joystick would be a natural fit. But what do we do about directional
+	controls if SDL_Joystick doesn't tell us which joypad axes correspond to the
+	X and Y directions, and we don't have the SDL-recommended <a class="goal"
+	href="https://github.com/nmlgc/ssg/issues/51">configuration UI</a> yet?
+	Doing that right would also mean <a
+	href="https://github.com/thpatch/thcrap/releases/tag/2018-05-21">supporting
+	POV hats and D-pads,</a> after all… Luckily, all joypads we've tested map
+	their main X axis to ID 0 and their main Y axis to ID 1, so this seems like
+	a reasonable default guess.
+</p><p>
+	Fortunately, <a
+	href="https://discourse.libsdl.org/t/difference-between-joysticks-and-game-controllers/24028/2">there
+	is a solution for our exact issue</a>. We can still <i>try</i> to open a
+	joypad via SDL_GameController, and if that succeeds, we can use <a
+	href="https://wiki.libsdl.org/SDL_GameControllerGetBindForAxis">a function
+	to retrieve the SDL_Joystick ID for the main X and Y axis</a>, close the
+	SDL_GameController instance, and keep using SDL_Joystick for the rest of the
+	game.<br />
+	And with that, the SDL build no longer needs DirectInput 7, <a href="https://www.hybrid-analysis.com/sample/e7e5e6206500b69e870d4861984165cddfa32c68c9e197594b4241b85f4fbfa4">certain antivirus scanners will no longer complain about
+	its low-level keyboard hook</a>, and I turned the original game's
+	single-joypad hot-plugging into multi-joypad hot-plugging with barely any
+	code. 🎮
+</p><p>
+	The necessary consolidation of the game's original input handling uncovered
+	several minor bugs around the High Score and Game Over screen that I
+	sufficiently described in the release notes of the new build. But it also
+	revealed an interesting detail about the <code lang="ja">Joy Pad</code>
+	screen: Did you know that Shuusou Gyoku lets you <i>unbind</i> all these
+	actions by pressing more than one joypad button at the same time? The
+	original game indicated unbound actions with a <code lang="ja">[Button
+	0]</code> label, which is pretty confusing if you have ever programmed
+	anything because you now no longer know whether the game starts numbering
+	buttons at 0 or 1. This is now communicated much more clearly.
+</p><figure class="fullres">
+	<rec98-child-switcher><img
+		src="{{$unmap_orig}}"
+		data-title="Original game"
+		alt="Joypad button unbinding in the original version of Shuusou Gyoku, indicated by a rather confusing [Button 0] label"
+		/><img
+		src="{{$unmap_P0256}}"
+		data-title="P0256 build"
+		alt="Joypad button unbinding in the P0256 build of Shuusou Gyoku, using a much clearer [--------] label"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption><code lang="ja">ESC</code> is not bound to any joypad button in
+	either screenshot, but it's only really obvious in the P0256
+	build.</figcaption>
+</figure><p>
+	With that, we're finally feature-complete as far as this delivery is
+	concerned! Let's send a build over to the backers as a quick sanity check…
+	a~nd they quickly found a bug when running on Linux and Wine. When holding a
+	button, the game randomly stops registering directional inputs for a short
+	while on some joypads? Sounds very much like a Wine bug, especially if the
+	same pad works without issues on Windows.<br />
+	And indeed, on certain joypads, Wine maps the buttons to completely
+	different and disconnected IDs, as if it simply invents new buttons or axes
+	to fill the resulting gaps. Until we can <a class="goal"
+	href="https://github.com/nmlgc/ssg/issues/52">differentiate joypad bindings
+	per controller</a>, it's therefore unlikely that you can use the same joypad
+	mapping on both Windows and Linux/Wine without entering the <code
+	lang="ja">Joy Pad</code> menu and remapping the buttons every time you
+	switch operating systems.
+</p><p>
+	Still, by itself, this shouldn't cause any issues with my SDL event handling
+	code… except, of course, if I forget a <code>break;</code> in a switch case.
+	🫠<br />
+	This completely preventable implicit fallthrough has now caused a few hours
+	of debugging on my end. I'd better crank up the warning level to keep this
+	from ever happening again. Opting into this specific warning also revealed
+	why we haven't been getting it so far: Visual Studio did gain a whole host
+	of new warnings related to the <a
+	href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines">C++ Core
+	Guidelines</a> a while ago, including <a
+	href="https://learn.microsoft.com/en-us/cpp/code-quality/c26819">the one I
+	was looking for</a>, but actually getting the compiler to throw these
+	requires <a
+	href="https://learn.microsoft.com/en-us/cpp/build/reference/analyze-code-analysis?view=msvc-170">activating
+	a separate static analysis mode together with a plugin</a>, which
+	significantly slows down build times. Therefore I only activate them for
+	release builds, since these already take long enough. {{HTML_Emoji
+	"onricdennat"}}<br />
+</p><p>
+	But that wasn't the only step I took as a result of this blunder. In
+	addition, I'm now offering <a href="/faq#mod-bugs">free fixes for
+	regressions in my mod releases if anyone else reports an issue before I find
+	it myself</a>. I've already been following this policy
+	{{Blog_PostLink "2023-03-14" "earlier this year when mu021 reported the unblitting bug in the initial release of the TH01 Anniversary Edition"}},
+	and merely made it official now. If I was the one who broke a thing, I'll
+	fix it for free.
+</p><hr /><p id="screenshots-{{.Date}}">
+	Since all that input debugging already started a 5<sup>th</sup> push, I
+	might as well fill that one by restoring the original screenshot feature.
+	After all, it's triggered by a key press (and is thus related to the input
+	backend), reads the contents of the frame buffer (and is thus related to the
+	graphics backend), and it honestly looks bad to have this disclaimer in the
+	release notes just because we're one small feature away from 100% parity
+	with pbg's original binary.<br />
+	Coincidentally, I had already written code to save a DirectDraw surface to a
+	.BMP file for all the debugging I did in the last delivery, so we were
+	<i>basically</i> only missing filename generation. Except that Shuusou
+	Gyoku's original choice of mapping screenshots to the PrintScreen key did
+	not age all too well:
+</p><ul>
+	<li>As of Windows XP's 64-bit version, <a
+	href="https://github.com/libsdl-org/SDL/issues/551">you can no longer use
+	standard window messages to detect that this key is being pressed</a>.</li>
+	<li>And as of Windows 11, the OS takes full control of the key by binding it
+	to the Snipping Tool by default, complete with a UI that politely steals
+	focus when hitting that key.</li>
+</ul><p>
+	As a result, both {{DB_CustomerByID 18}} and I independently arrived at the
+	idea of remapping screenshots to the P key, which is the same screenshot key
+	used by every Windows Touhou game since TH08.
+</p><p>
+	The rest of the feature remains unchanged from how it was in pbg's original
+	build and will save every distinct frame rendered by the game (i.e., before
+	flipping the two framebuffers) to a .BMP file as long as the P key is being
+	held. At a 32-bit color depth, these screenshots take up 1.2&nbsp;MB per
+	frame, which will quickly add up – especially since you'll probably hold the
+	P key for more than <sup>1</sup>/<sub>60</sub> of a second and therefore end
+	up saving multiple frames in a row. <a class="goal"
+	href="https://github.com/nmlgc/ssg/issues/54">We should probably compress
+	them one day.</a>
+</p><hr /><p id="utmath-{{.Date}}">
+	Since I already translated some of Shuusou Gyoku's ASM code to C++ during
+	the Zig experiment, it made sense to finish the fifth push by covering the
+	rest of those functions. The integer math functions are used all throughout
+	the game logic, and are the main reason why this goal is important for a
+	Linux port, or any port to a 64-bit architecture for that matter. If you've
+	ever read a {{HTML_Tag "micro-optimization" nil}}-related blog post, you'll
+	know that hand-written ASM is a great recipe that often results in the
+	finest jank, and the game's square root function definitely delivers in that
+	regard, right out of the gate.<br />
+	What slightly differentiates this algorithm from the typical definition of
+	an <a href="https://en.wikipedia.org/wiki/Integer_square_root">integer
+	square root</a> is that it rounds up: In real numbers, <code>√﻿3</code> is
+	≈&nbsp;1.73, so <code>isqrt(3)</code> returns 2 instead of 1. However,
+	implementing this rounding step is trivial as long as the difference between
+	the <a href="https://en.wiktionary.org/wiki/radicand">radicand</a> and the
+	calculated root naturally falls out of the algorithm – and even if it
+	doesn't, you can always square the returned root and compare it to the
+	radicand. Which is what Shuusou Gyoku's implementation does, completely
+	forgetting that the algorithm does in fact produce said difference.
+	{{HTML_Emoji "tannedcirno"}}
+</p><p>
+	That's one suboptimal detail already. Let's call the original ASM function
+	in a loop over the entire supported range of radicands from 0 to
+	2<sup>31</sup> and produce a list of results that I can verify my C++
+	translation against… and watch as the function's linear time complexity with
+	regard to the radicand causes the loop to run for over <i>15 hours</i> on my
+	system. 🐌 In a way, I've found the literal opposite of <code><a
+	href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Q_rsqrt()</a></code>
+	here: Not fast, not inverse, no bit hacks, and surely without the
+	awe-inspiring kind of WTF.<br />
+	I really didn't want to run the same loop over a literal C++ translation of
+	the same algorithm afterward. Calculating integer square roots is a common
+	problem with lots of solutions, so let's see if we can go better than
+	linear.
+</p><p>
+	And indeed, <a
+	href="https://en.wikipedia.org/w/index.php?title=Methods_of_computing_square_roots&oldid=1174851812#Binary_numeral_system_(base_2)">Wikipedia
+	also has a bitwise algorithm that runs in logarithmic time</a>, uses only
+	additions, subtractions, and bit shifts, and even ends up with an error term
+	that we can use to round up the result as necessary, without a
+	multiplication. And this algorithm delivers the exact same results over the
+	exact same range in… 50 seconds. 🏎️ And that's <i>with</i> the I/O to print
+	the first value that returns each of the 46,341 different square root
+	results.
+</p><p>
+	<i>"But wait a moment!"</i>, I hear you say. <i>"Why are you bothering with
+	an integer square root algorithm to begin with? Shouldn't good old
+	<code>round(sqrt(x))</code> from <code>&lt;math.h&gt;</code> do the trick
+	just fine? Our CPUs have had SSE for a long time, and this probably compiles
+	into the single <code>SQRTSD</code> instruction. All that extra
+	floating-point hardware might mean that this instruction could even run in
+	parallel with non-SSE code!"</i><br />
+	And yes, all of that is technically true. So I tested it, and my very
+	synthetic and constructed micro-benchmark did indeed deliver the same
+	results in… 48 seconds. {{HTML_Emoji "thonk"}} That's not enough of a
+	difference to justify breaking the spirit of treating the FPU as lava that
+	permeates Shuusou Gyoku's code base. Besides, it's not used for that much to
+	begin with:
+</p><ul>
+	<li>pre-calculating the 西方Ｐｒｏｊｅｃｔ lens ball effect</li>
+	<li>the fade animation when entering and leaving stages</li>
+	<li>rendering the circular part of stationary lasers</li>
+	<li>pulling items to the player when bombing</li>
+</ul><p>
+	After a quick C++ translation of the RNG function that spells out a 32-bit
+	multiplication on a 32-bit CPU using 16-bit instructions, we reach the final
+	pieces of ASM code for the 8-bit <code>atan2()</code> and trapezoid
+	rendering. These could actually pass for well-written ASM code in how they
+	express their 64-bit calculations: <code>atan8()</code> prepares its 64-bit
+	dividend in the combined <code>EDX</code> and <code>EAX</code> registers in
+	a way that isn't obvious at all from a cursory look at the code, and the
+	trapezoid functions effectively use Q32.32 subpixels. C++ allows us to
+	cleanly model all these calculations with 64-bit variables, but
+	unfortunately compiles the divisions into a call to a comparatively much
+	more bloated 64-bit/64-bit-division polyfill function. So yeah, we've
+	actually found a well-optimized piece of inline assembly that even Visual
+	Studio 2022's optimizer can't compete with. But then again, this is all
+	about code generation details that are specific to 32-bit code, and it
+	wouldn't be surprising if that part of the optimizer isn't getting much
+	attention anymore. Whether that optimization was useful, on the other hand…
+	Oh well, it will be much more efficient in 64-bit builds.
+</p><p>
+	And with that, there's no more ASM code left in Shuusou Gyoku's codebase,
+	and the original <code>DirectXUTYs</code> directory is slowly getting
+	emptier and emptier.
+</p><hr /><p>
+	Phew! Was that everything for this delivery? I think that was everything.
+	Here's the new build, which checks off 7 of the 15 remaining portability
+	boxes:
+</p><p>
+	<a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0256">
+	{{HTML_Emoji "sh01"}} Shuusou Gyoku P0256</a>
+</p><p>
+	Next up: Taking a well-earned break from Shuusou Gyoku and starting with the
+	preparations for multilingual PC-98 Touhou translatability by looking at
+	TH04's and TH05's in-game dialog system, and definitely writing a shorter
+	blog post about all that…
+</p>

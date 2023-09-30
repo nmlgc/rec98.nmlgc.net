@@ -249,3 +249,9 @@ P0248	[231, 215, 235]	Seihou / Shuusou Gyoku (秋霜CFG.DAT versioning)	2023-08-
 P0249	[235]	Seihou / Shuusou Gyoku (DirectDraw surface refactoring, part 2/? + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/62ff407...a1f80a3	0
 P0250	[235, 237]	Seihou / Shuusou Gyoku (Text pre-rendering, part 1/2: Implementation + Migrating the in-game music title)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/a1f80a3...629ddd8	0
 P0251	[237, 248]	Seihou / Shuusou Gyoku (Text pre-rendering, part 2/2: Migrating the rest of the game + Replacing Win32 memory management)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/629ddd8...P0251	0
+P0252	[253, 248]	Seihou / Shuusou Gyoku (Building SDL from source within Tup)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/P0251...e98feef	0
+P0253	[248]	Seihou / Shuusou Gyoku (Game logic portability, part 1/? + Cross-platform APIs, part 1/?: Window creation via SDL)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/e98feef...24df71c	0
+P0254	[248]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 2/?: Sound via miniaudio)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/24df71c...b7b863b	0
+P0255	[255]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Input via SDL)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/b7b863b...2b8218e	0
+P0256	[255]	Seihou / Shuusou Gyoku (Restoring the screenshot feature + Translating inline ASM code to C++)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/2b8218e...P0256	0
+P0257	[261]	Website (Video player code cleanup + audio support)	2023-09-30T21:01:36Z	nmlgc/rec98.nmlgc.net/compare/b79c667...e2ba49b	0

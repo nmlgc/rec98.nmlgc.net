@@ -3,6 +3,7 @@ module github.com/nmlgc/rec98.nmlgc.net
 go 1.19
 
 require (
+	github.com/evanw/esbuild v0.17.15
 	github.com/go-git/go-git/v5 v5.6.1
 	github.com/gocarina/gocsv v0.0.0-20230325173030-9a18a846a479
 	github.com/gorilla/feeds v1.1.1

@@ -11,8 +11,10 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
+	esbuild "github.com/evanw/esbuild/pkg/api"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gorilla/mux"
 )
@@ -241,6 +243,61 @@ func respondWithError(wr http.ResponseWriter, err error) {
 	fmt.Fprintln(wr, err)
 }
 
+// staticAssetHandler handles building versioned URLs for page templates and
+// building assets from source files.
+type staticAssetHandler struct {
+	hp *HostedPath
+
+	mu       sync.Mutex // guards versions
+	versions map[string]string
+}
+
+// StaticFileURL returns a versioned URL for a static asset file. It may block
+// until the said file is transpiled.
+func (h *staticAssetHandler) StaticFileURL(name string) string {
+	switch filepath.Ext(name) {
+	case ".ts":
+		h.mu.Lock()
+		defer h.mu.Unlock()
+		version := h.hp.VersionQueryFor(name)
+		outName := strings.TrimSuffix(name, ".ts") + ".bundle.js"
+		if h.versions[name] != version {
+			result := esbuild.Build(esbuild.BuildOptions{
+				EntryPoints:       []string{filepath.Join(h.hp.LocalPath, name)},
+				Outfile:           filepath.Join(h.hp.LocalPath, outName),
+				Bundle:            true,
+				MinifyWhitespace:  true,
+				MinifyIdentifiers: true,
+				MinifySyntax:      true,
+				Target:            esbuild.ES2015,
+				Sourcemap:         esbuild.SourceMapLinked,
+				Write:             true,
+			})
+			name = outName
+			if len(result.Errors) > 0 {
+				for _, buildError := range result.Errors {
+					if buildError.Location != nil {
+						log.Printf("esbuild error: %s:%d:%d: %s",
+							buildError.Location.File,
+							buildError.Location.Line,
+							buildError.Location.Column+1,
+							buildError.Text)
+					} else {
+						log.Printf("esbuild error: %s", buildError.Text)
+					}
+				}
+				// Create an empty file if it does not exist
+				outputFile, err := os.OpenFile(filepath.Join(h.hp.LocalPath, outName), os.O_CREATE|os.O_EXCL, 0o666)
+				if err == nil {
+					outputFile.Close()
+				}
+			}
+			h.versions[name] = version
+		}
+	}
+	return h.hp.VersionURLFor(name)
+}
+
 // PageDot bundles all data handed to a page template via dot.
 type PageDot struct {
 	*http.Request
@@ -251,9 +308,11 @@ type PageDot struct {
 
 // NewPageDot builds a new PageDot structure.
 func NewPageDot(req *http.Request, templateName string) PageDot {
-	return PageDot{req, mux.Vars(req), templateName, func(fn string) string {
-		return staticHP.VersionURLFor(fn)
-	}}
+	staticAssets := &staticAssetHandler{
+		hp:       staticHP,
+		versions: make(map[string]string),
+	}
+	return PageDot{req, mux.Vars(req), templateName, staticAssets.StaticFileURL}
 }
 
 // pagesHandler returns a handler that executes the given template of [pages],

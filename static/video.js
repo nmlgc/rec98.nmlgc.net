@@ -622,9 +622,34 @@ class ReC98Video extends HTMLElement {
 
 		// Reparent videos
 		// ---------------
-		this.videos = this.getElementsByTagName("video");
-		for(let i = 0; i < this.videos.length; i++) {
-			this.eVideoWrap.appendChild(this.videos[0]);
+		this.videos = Array.from(this.getElementsByTagName("video")).map(video => {
+			// If we have the lossless source, turn the video into a
+			// ZMBVVideoElement.
+			if(video.dataset.lossless) {
+				const newVideo = new ReC98ZMBVVideo();
+				newVideo.className = video.className;
+				newVideo.src = video.dataset.lossless;
+				newVideo.poster = video.poster;
+				newVideo.loop = video.loop;
+				newVideo.width = video.width;
+				newVideo.height = video.height;
+				for(const attr of video.attributes) {
+					newVideo.setAttribute(attr.name, attr.value);
+				}
+				while(video.children.length > 0) {
+					if(video.children[0].tagName.toLowerCase().startsWith("rec98-")) {
+						newVideo.appendChild(video.children[0]);
+					} else {
+						video.children[0].remove();
+					}
+				}
+				video.remove();
+				video = newVideo;
+			}
+			return video;
+		});
+		for(const video of this.videos) {
+			this.eVideoWrap.appendChild(video);
 		}
 		// ---------------
 

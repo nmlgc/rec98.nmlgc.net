@@ -92,7 +92,7 @@
 	<span style="font-style: normal;">🌐</span>
 	Which languages are we getting?
 </h5><p>
-	As of 2023-10-09, the following translators and teams have expressed
+	As of 2023-10-10, the following translators and teams have expressed
 	interest:
 </p><ul>
 	<li><b>Arabic</b>: Team Fantasy Boundary</li>
@@ -122,8 +122,24 @@
 	<li><b>Spanish, Latin American</b>: Xziled, DarkeyeSide, Mr. Tremolo
 	Measure</li>
 	<li><b>Vietnamese</b>: Shinka</li>
-</ul>
-</p><h5>How much better could it be?</h5><ul>
+</ul><h5>Wait, Arabic?! On my PC-98?! What's the plan there?</h5><p>
+	The two challenges with Arabic scripts are <a
+	href="https://en.wikipedia.org/w/index.php?title=Arabic_script_in_Unicode&oldid=1179025150#Contextual_forms">transforming
+	a text to use the codepoints for contextual glyph forms</a>
+	(<q>shaping</q>), and right-to-left rendering. Shaping requires <a
+	href="https://github.com/eloraiby/arabtype/blob/master/arabtype.c">not too
+	much code</a>, which is easily added to the font subsetting build step.
+	Right-to-left rendering, on the other hand, must be a feature of the new
+	PC-98-native text renderer, because there are several in PC-98 Touhou where
+	text is gradually typed character-by-character. So it will require a bit of
+	dedicated budget, but not all too much from what I can tell. <a
+	href="https://en.wikipedia.org/wiki/Bidirectional_text">Bidirectional
+	text</a> <i>would</i> add a great deal of complexity here, but we most
+	likely won't need to implement it – I'll simply pick a direction based
+	on <span class="hovertext" title="Which can be a U+200F RIGHT-TO-LEFT MARK if the line starts with a non-Arabic-script character.">the
+	first codepoint on a line</span>, and ask translators to manually reverse
+	any Latin-script runs of text in the middle of an Arabic-script line.
+</p><h5>How much better could it all be?</h5><ul>
 	<li>The most important feature: We could finally move away from the concept
 	of <i>translation patches</i>, integrate all translations as part of the
 	ReC98 repo, and ship them directly as part of new ReC98 builds. Languages

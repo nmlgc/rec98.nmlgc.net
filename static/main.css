@@ -774,6 +774,19 @@ table.comparison td:not(:last-child),
 table.comparison th:not(:last-child) {
 	border-right: var(--table-border);
 }
+
+table.vm tbody td {
+	text-align: left;
+	font-family: monospace;
+}
+
+table.vm tbody td:last-child {
+	font-family: unset;
+}
+
+table.vm var.default {
+	font-weight: bold;
+}
 /* ------ */
 
 /* Forms

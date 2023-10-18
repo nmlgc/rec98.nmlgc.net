@@ -27,10 +27,6 @@
 		border-top: var(--table-border);
 		border-top-color: var(--c-lightgray);
 	}
-	#cutscene-{{.Date}} tbody td {
-		text-align: left;
-		font-family: monospace;
-	}
 	#cutscene-{{.Date}} tbody td:nth-child(1),
 	#cutscene-{{.Date}} tbody td:nth-child(2),
 	#cutscene-{{.Date}} tbody td:nth-child(3) {
@@ -45,18 +41,6 @@
 	}
 	#cutscene-{{.Date}} tbody td:nth-child(3) {
 		padding-left: 0;
-	}
-	#cutscene-{{.Date}} tbody td:last-child {
-		font-family: unset;
-	}
-	#cutscene-{{.Date}} .default {
-		font-weight: bold;
-	}
-	#cutscene-{{.Date}} .optional {
-		color: silver;
-	}
-	#cutscene-{{.Date}} .bug {
-		font-weight: bold;
 	}
 </style>
 <p>
@@ -311,7 +295,7 @@
 		<tr><td>0</td><td>1</td></tr>
 		<tr><td>2</td><td>3</td></tr>
 	</table></li>
-</ul><figure id="cutscene-{{.Date}}" class="_{{.Date}}"><table>
+</ul><figure id="cutscene-{{.Date}}" class="_{{.Date}}"><table class="vm">
 	<tr id="{{.Date}}-at">
 		<td>{{HTML_Emoji "th03"}}</td>
 		<td>{{HTML_Emoji "th04"}}</td>

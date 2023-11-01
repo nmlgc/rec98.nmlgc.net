@@ -255,3 +255,7 @@ P0254	[248]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 2/?: Sound via min
 P0255	[255]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Input via SDL)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/b7b863b...2b8218e	0
 P0256	[255]	Seihou / Shuusou Gyoku (Restoring the screenshot feature + Translating inline ASM code to C++)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/2b8218e...P0256	0
 P0257	[261]	Website (Video player code cleanup + audio support)	2023-09-30T21:01:36Z	nmlgc/rec98.nmlgc.net/compare/b79c667...e2ba49b	0
+P0258	[249, 251]	Decompilation (TH04/TH05 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/5876755...e8a0b3e	1
+P0259	[266, 213]	Decompilation (TH04/TH05 stage dialogs, part 2/2) + TH02 RE (Stage dialog preparations)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/e8a0b3e...dfaa3c6	1
+P0260	[243, 252, 258, 262]	Decompilation (TH02 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/dfaa3c6...ed9ee93	1
+P0261	[247, 257]	Decompilation (TH02 stage dialogs, part 2/2 + TH03 win messages + TH04/TH05 MIKO.CFG + TH04 game startup)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/ed9ee93...ae2fc28	1

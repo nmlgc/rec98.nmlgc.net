@@ -305,6 +305,10 @@ img.checkerboard {
 	vertical-align: middle;
 }
 
+.unused {
+	color: silver;
+}
+
 /* Header
    ------ */
 body {
@@ -778,10 +782,12 @@ table.comparison th:not(:last-child) {
 table.vm tbody td {
 	text-align: left;
 	font-family: monospace;
+	white-space: nowrap;
 }
 
 table.vm tbody td:last-child {
 	font-family: unset;
+	white-space: unset;
 }
 
 table.vm var.default {

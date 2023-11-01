@@ -20,26 +20,21 @@
 	technical quality control.<br />
 	Since ReC98 hasn't really focused on text so far, the amount of moddable
 	text-related code would be fairly limited if I started working on it right
-	away. Currently, it only includes the following:
+	away. As of 2023-11-01, it only includes the following:
 </p><ul>
 	<li>All of TH01</li>
 	<li>All of TH02's <code>OP.EXE</code>, i.e., the main menu and the Music
 	Room</li>
+	<li>TH02's, TH04's, and TH05's in-game dialog
+	({{Blog_PostLink "2023-11-01" "completed in P0261"}})</li>
+	<li>TH03's win messages
+	({{Blog_PostLink "2023-11-01" "completed in P0261"}})</li>
 	<li>TH04's and TH05's endings</li>
 </ul><p>
 	Therefore, I'll put any general and unconstrained reverse-engineering,
 	position independence, or <q>anything</q> contributions that come in during
-	the next few months towards covering everything that's still missing there.
-	I've scheduled the in-game dialog system of TH04 and TH05 for mid-August,
-	after the next two Shuusou Gyoku-related deliveries, and here's what we'd
-	still be missing afterward:
+	the next few months towards covering everything that's still missing there:
 </p><ul>
-	<li>TH02's dialog system has seen no RE done yet and is completely different
-	from TH04's and TH05's, so we'd need another 2-3 pushes there. Technically,
-	we'd also need <code>MAIN.EXE</code> to be 100% position-independent for any
-	translation-related code modifications, but reaching that goal before I get
-	to work on translation support is probably unrealistic. If I tackle this
-	game last, I might figure out something to bypass that requirement.</li>
 	<li>The Music Rooms of TH03, TH04, and TH05 need roughly 2 pushes for their
 	combined RE and finalization. Most of their code is shared with TH02's Music
 	Room which I decompiled back in 2015.</li>
@@ -54,16 +49,22 @@
 	yet RE'd text in their verdict screens. 1 push there, since it's
 	unfortunately contained in the same function that also performs the highly
 	complex skill value calculation.</li>
-	<li>TH03's <code>MAINL.EXE</code> needs 100% PI to enable translations of
-	the Stage 8/9 cutscenes and endings, as well as a bit of RE for the
-	end-of-stage text. Let's go with 1.75 pushes there just to be safe, rounding
-	up the 0.25 above.</li>
-	<li>TH03's <code>MAIN.EXE</code> has the <span lang="ja">ＷＩＮＮＥＲ
-	ＢＯＮＵＳ</span> popup as its only translatable text. Like TH02's
-	<code>MAIN.EXE</code>, the entire binary should be position-independent
-	before doing translations. Let's also do that last.</li>
+	<li>TH03's <code>MAINL.EXE</code> needs 100% PI to enable convenient
+	translations of the win messages, the character titles and names at the
+	beginning of a stage, the Stage 8/9 cutscenes, and the endings. Let's go
+	with 1.75 pushes there just to be safe, rounding up the 0.25 above.</li>
+	<li>Technically, we'd need TH02's <code>MAIN.EXE</code> to be 100%
+	position-independent for any translation-related code modifications, but
+	reaching that goal before I get to work on translation support is probably
+	unrealistic. However, this new translation code needs to work across <span
+	class="hovertext" title="1 for TH01's Anniversary Edition, and 3 executables for the other 4 games">13
+	executables</span> to begin with, so I'm going to put most of it into a
+	separate TSR program anyway. Including this TSR in a non-PI'd executable
+	shouldn't be that painful, then.</li>
+	<li>The same is true for TH03's <code>MAIN.EXE</code>, but the <span
+	lang="ja">ＷＩＮＮＥＲ ＢＯＮＵＳ</span> popup is the only translatable piece of text there. Should be even less of a problem.</li>
 </ul><p>
-	In total, that's the next 11 general pushes that will go towards ensuring
+	In total, that's the next 8 general pushes that will go towards ensuring
 	translatability of most of PC-98 Touhou, if possible. If you'd like your
 	contribution (or existing subscription) to go to {{HTML_Tag "gameplay" nil}}
 	code instead, be sure to tell me!

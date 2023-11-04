@@ -181,7 +181,7 @@
 	script for the currently played character.</li>
 	<li>Since there is no need for whitespace in a binary format, you can now
 	use ASCII <code>0x20</code> spaces even as the first byte of a 2-byte text
-	chunk!🥳</li>
+	chunk! 🥳</li>
 	<li>All command parameters are now mandatory.</li>
 	<li>Filenames are now passed directly by pointer to the respective game
 	function. Therefore, they now need to be null-terminated, but can in turn be
@@ -598,11 +598,11 @@
 			src="{{$miko_k}}"
 			style="width: 512px; left: unset; top: unset; right: 0; bottom: 0;"
 			alt="TH02's MIKO_K.PTN"
+			hidden
 		/>
 		<img
 			id="miko_k-grid-{{.Date}}"
 			src="{{$miko_k_grid}}"
-			class="active"
 			alt="TH02's MIKO_K.PTN with the 16×16 tile grid overlaid"
 		/>
 	</div>
@@ -711,19 +711,18 @@
 	That's all the issues and quirks in the system itself. The scripts
 	themselves don't leave much room for bugs as they basically just loop over
 	the hardcoded face ID array at this level… until we reach the end of the
-	game. Previously, the slide-in animation used the tile invalidation and
-	re-rendering system to unblit the box on each frame, which also explained
-	why Reimu had to be separately rendered on top. But this no longer works
-	with a custom-rendered boss background, and so the game just chooses to
-	flood-fill the area with graphics chip color #0:
+	game. Previously, the slide-in animation could simply use the tile
+	invalidation and re-rendering system to unblit the box on each frame, which
+	also explained why Reimu had to be separately rendered on top. But this no
+	longer works with a custom-rendered boss background, and so the game just
+	chooses to flood-fill the area with graphics chip color #0:
 </p><figure {{$vid_mima_formchange.FigureAttrs}}>
 	{{call .VideoPlayer $vid_mima_formchange.SetNoLoop}}
 	<figcaption>Then again, transferring pixels from the back page would be just
 	as wrong as they lag one frame behind. No way around capturing these 384×64
-	pixels to main memory here… This flood-fill at least ensures that the text
-	is not printed on top of a single white pixel, no matter how many bullets
-	happen to be moving through the text box area. Unlike the next
-	one…</figcaption>
+	pixels to main memory here… Oh well, this flood-fill at least adds even more
+	legibility on top of the already half-transparent text box. A property that
+	the following dialog sequence unfortunately lacks…</figcaption>
 </figure><p>
 	For Mima's final defeat dialog though, ZUN chose to not even show the box.
 	He might have realized the issue by that point, or simply preferred the more

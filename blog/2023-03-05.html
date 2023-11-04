@@ -785,8 +785,8 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	call to a faraway segment. On the 486, that's:
 </p><ul>
 	<li>&gt;341 cycles for EGC setup and teardown, plus</li>
-	<li>&gt;72 cycles for each 16-pixel chunk to be unblitted. This sums up
-	to</li>
+	<li>&gt;72 cycles for each 16-pixel chunk to be unblitted.</li>
+</ul><p>This sums up to<ul>
 	<li>&gt;917 cycles of completely unnecessary work for every active pellet,
 	in the <i>optimal</i> 50% of cases where it lies on an even VRAM byte,
 	or</li>

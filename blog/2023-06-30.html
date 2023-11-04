@@ -106,7 +106,7 @@
 	The answer is yes, and master.lib offers no solution for this issue. But
 	this is where the playfield borders come in, and helpfully cover 16 pixels
 	at the top and 16 pixels at the bottom of the screen. As a result, they can
-	hide at least 32 pixels of potentially wrapped sprite pixels below them:
+	hide up to 32 rows of potentially wrapped sprite pixels below them:
 </p><figure id="scroll-{{.Date}}" class="pixelated fullres"><figcaption>
 	<button
 		id="scroll-0-{{.Date}}" onclick="
@@ -282,8 +282,8 @@
 	have one and <i>only</i> one place where sprite clipping is done right – and
 	only once per sprite, regardless of how many bitplanes you want to write to.
 </p><hr /><p>
-	Which brings us to the goal for the final ¼ of this push went. I thought I
-	was going to start cleaning up the
+	Which brings us to the goal that the final ¼ of this push went toward. I
+	thought I was going to start cleaning up the
 	{{Blog_PostLink "2021-10-20" "player movement and rendering code"}}, but
 	that turned out too complicated for that amount of time – especially if you
 	want to start with <i>just</i> cleanup, preserving all original bugs for the

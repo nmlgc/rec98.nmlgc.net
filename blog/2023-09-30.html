@@ -111,7 +111,7 @@
 	neither)</a></li>
 	<li><a href="#miniaudio-{{.Date}}">miniaudio</a></li>
 	<li><a href="#resampling-{{.Date}}">Resampling defective sound effects
-	(including FLAC is not always being lossless)</a></li>
+	(including FLAC not always being lossless)</a></li>
 	<li><a href="#sdlinput-{{.Date}}">Joypad input with SDL</a></li>
 	<li><a href="#screenshots-{{.Date}}">Restoring the original screenshot
 	feature</a></li>
@@ -245,15 +245,17 @@
 	wrong is, by definition, higher than if that was the only thing your system
 	did. That's the reason why I like Tup so much: It <i>solely</i> focuses on
 	getting cache invalidation right, and rather errs on the side of caution by
-	maybe unnecessarily rebuilding certain files every once in a while. But this
-	is the one job I expect a build system to do, and Tup has been delivering
-	for years and has become fundamentally more trustworthy as a result.</li>
+	maybe unnecessarily rebuilding certain files every once in a while because
+	the compiler may have read from an environment variable that has changed in
+	the meantime. But this is the one job I expect a build system to do, and Tup
+	has been delivering for years and has become fundamentally more trustworthy
+	as a result.</li>
 	<li>Zig activates Clang's <a
 	href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html">UBSan</a>
 	in debug builds by default, which executes a program-crashing
 	<code>UD2</code> instruction whenever the program is about to rely on
 	undefined C++ behavior. In theory, that's a great help for spotting hidden
-	portability issues, but it's not helpful at all if all these crashes are
+	portability issues, but it's not helpful at all if these crashes are
 	seemingly caused by C++ standard library code?! <a
 	href="https://github.com/ziglang/zig/issues/5163">Without any clear info
 	about the actual cause</a>, this just turned into yet another annoyance on
@@ -387,7 +389,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	And yes, that's a <a href="http://code.grevit.net:8084/">Code Nutrition</a>
 	label! I've wanted to add one of these ever since I first heard about the
 	idea, since it communicates nicely how seriously such an open-source project
-	should be treated. Which, in this case, is actually not all <i>too</i>
+	should be taken. Which, in this case, is actually not all <i>too</i>
 	seriously, especially since development of the core Tup project has all but
 	stagnated. If Zig does indeed get better and better at being a Clang
 	frontend/build system, the only niches left for Tup will be Visual
@@ -439,20 +441,23 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	sets it apart from its more hip competition, and you want to have all of
 	them available at any time so that SDL can dynamically select them based on
 	what works best on a system. As a result, everything in SDL is being
-	referenced somewhere, so there's no dead code for the linker to reduce.
+	referenced somewhere, so there's no dead code for the linker to eliminate.
 	Linking SDL statically with link-time code generation just prolongs your
 	link time for no benefit, even without the dynamic API thwarting any chance
 	of SDL calls getting inlined.<br />
-	However, the one thing I still don't like about all this is that the dynamic
+	There's one thing I still don't like about all this, though. The dynamic
 	API's table references force you to include all of SDL's subsystems in the
-	DLL even if you don't want to use some of them. But it does fit with their
-	intention – swapping the <code>SDL2.dll</code> of an older game with a newer
-	version that came with any other random game requires that both DLLs contain
-	a fixed set of functions, and you wouldn't want that to fail just because
-	that newer <code>SDL2.dll</code> was size-optimized to not include some of
-	the subsystems that the older game required. Maybe. You can always just use
-	<a href="https://github.com/libsdl-org/SDL/releases">the official Windows
-	DLL</a>, which is sure to include everything, after all.
+	DLL even if your game doesn't need some of them. But it does fit with their
+	intention of having <code>SDL2.dll</code> be swappable: If an older game
+	stopped working because of an outdated <code>SDL2.dll</code>, it should be
+	possible for anyone to get that game working again by replacing that DLL
+	with any newer version that was bundled with any random newer game. And
+	since that would fail if the newer <code>SDL2.dll</code> was size-optimized
+	to not include some of the subsystems that the older game required, they
+	simply removed (or <q><q>de-prioritized</q></q>) the possibility altogether.
+	Maybe that was their train of thought? You can always just use <a
+	href="https://github.com/libsdl-org/SDL/releases">the official Windows
+	DLL</a>, whose whole point is to include everything, after all. 🤷
 </p><p>
 	So, what do we get in these 1.5&nbsp;MiB? There are:
 </p><ul>
@@ -466,19 +471,19 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	recording.</li>
 </ul><p>
 	Unfortunately, SDL&nbsp;2 also statically references some newer Windows API
-	functions and therefore doesn't run with Windows 98. Since this build of
+	functions and therefore doesn't run on Windows 98. Since this build of
 	Shuusou Gyoku doesn't introduce any new features to the input or sound
 	interfaces, we can still use pbg's original DirectSound and DirectInput code
-	for the i586 build to keep it working with the rest of the new code, but it
-	will start to lag behind in features as soon as we add support for SC-88Pro
-	BGM or <a class="goal" href="https://github.com/nmlgc/ssg/issues/48">more
-	sophisticated input remapping</a>. If we do want to keep this build at the
-	same feature level as the SDL one, we now have a choice: Do we write new
-	DirectInput and DirectSound code and get it done quickly but only for
-	Shuusou Gyoku, or do we port SDL&nbsp;2 to Windows 98 and benefit all other
-	SDL&nbsp;2 games as well? <a class="goal"
-	href="https://github.com/nmlgc/ssg/issues/53">I leave that for my backers to
-	decide.</a>
+	for the i586 build to keep it working with the rest of the
+	platform-independent game logic code, but it will start to lag behind in
+	features as soon as we add support for SC-88Pro BGM or <a class="goal"
+	href="https://github.com/nmlgc/ssg/issues/48">more sophisticated input
+	remapping</a>. If we do want to keep this build at the same feature level as
+	the SDL one, we now have a choice: Do we write new DirectInput and
+	DirectSound code and get it done quickly but only for Shuusou Gyoku, or do
+	we port SDL&nbsp;2 to Windows 98 and benefit all other SDL&nbsp;2 games as
+	well? <a class="goal" href="https://github.com/nmlgc/ssg/issues/53">I leave
+	that for my backers to decide.</a>
 </p><hr /><p id="fps-{{.Date}}">
 	Immediately after writing the first bits of actual SDL code to initialize
 	the library and create the game window, you notice that SDL makes it very
@@ -490,7 +495,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	code and focus on porting one subsystem at a time.<br />
 	Sadly, D3DWindower can no longer turn SDL's fullscreen mode into a windowed
 	one, but DxWnd still works, albeit behaving a bit janky and insisting on
-	minimizing the game whenever the game window loses focus. In exchange, the
+	minimizing the game whenever its window loses focus. But in exchange, the
 	game window can surprisingly be moved now! Turns out that the originally
 	fixed window position had nothing to do with the way the game created its
 	DirectDraw context, and everything to do with <a
@@ -508,8 +513,9 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	original main loop continuously checks whether at least 16 milliseconds have
 	elapsed since the last simulated (but not necessarily rendered) frame. And
 	by that I mean <i>continuously</i>, and deliberately without using any of
-	the Windows system facilities to sleep the process in the meantime, as
-	evidenced by a commented-out <code>Sleep(1)</code> call. This has two
+	the Windows system facilities to sleep the process in the meantime, <a
+	href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/MAIN/MAIN.CPP#L71">as
+	evidenced by a commented-out <code>Sleep(1)</code> call</a>. This has two
 	important effects on the game:
 </p><ul>
 	<li>The <code lang="ja">60Fps DrawMode</code> actually corresponds to a
@@ -534,7 +540,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	<li><code>SDL_Delay()</code>'s documentation says that the wake-up could be
 	further delayed due to OS scheduling.</li>
 </ol><p>
-	To address both of the issues, I went with a base delay time of
+	To address both of these issues, I went with a base delay time of
 	<i>15</i>&nbsp;ms minus the time spent on the current frame, followed by
 	busy-waiting for the last millisecond to make sure that the next frame
 	starts on the exact frame boundary. And lo and behold: Even though this
@@ -558,7 +564,8 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	Just load the individual sound effects in their original format, and
 	playback just works and sounds correctly.</li>
 	<li>Its final sound stream seems to have a latency of 10&nbsp;ms, which is
-	more than enough for a game running at 62.5&nbsp;FPS.</li>
+	perfectly fine for a game running at 62.5&nbsp;FPS. Even 15&nbsp;ms would be
+	OK.</li>
 	<li>Sound effect looping? Specified by passing the
 	<code>DSBPLAY_LOOPING</code> flag to
 	<code>IDirectSoundBuffer::Play()</code>.</li>
@@ -806,8 +813,8 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	either believe in the soundness (ha) of the implementation, or verify that
 	atomic structure fields actually <i>are</i> enough to not cause any race
 	conditions (which I did for the calls that Shuusou Gyoku uses, and I didn't
-	found any of note). <i>"It's all lock-free, don't worry about it"</i> might
-	be <i>easier</i>, but I consider SDL's approach of just providing a mutex to
+	find any). <i>"It's all lock-free, don't worry about it"</i> might be
+	<i>easier</i>, but I consider SDL's approach of just providing a mutex to
 	prevent the output callback from running while you mutate the sound state to
 	actually be <i>simpler</i> conceptually.</li>
 	<li>🟡 miniaudio adds 247&nbsp;KB to the binary in its minimum
@@ -859,8 +866,8 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	audio formats to a buffer of raw PCM samples.<br /> At this point, you can
 	choose between<ol>
 		<li>decoding into the original format the sound effect is stored in,
-		which would cause it to get converted into the playback format every
-		time, or</li>
+		which would require it to be converted to the playback format every
+		time it's played, or</li>
 		<li>decoding into 32-bit floats (the native bit depth of the miniaudio
 		engine) and the native sampling rate of the playback device, which
 		avoids any further resampling and floating-point conversion, but takes
@@ -886,14 +893,13 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		<li><code>ma_audio_buffer_ref_init()</code> to create a <i>reference
 		buffer</i> with its own playback cursor, and</li>
 		<li><code>ma_sound_init_from_data_source()</code> to create a new
-		high-level sound node that will play back the <i>reference
-		buffer</i>.</li>
+		high-level sound node that will play back the reference buffer.</li>
 	</ul></li>
 </ul><hr /><p id="resampling-{{.Date}}">
 	As a side effect of hunting that one critical bug in miniaudio, I've now
 	learned a fair bit about audio resampling in general. You'll probably need
 	some knowledge about <a href="https://xiph.org/video/vid2.shtml">basic
-	digital signal behavior</a> to follow this section, and this video is still
+	digital signal behavior</a> to follow this section, and that video is still
 	probably the best introduction to the topic.
 </p><p>
 	So, how could this ever be an issue? The only time I ever consciously
@@ -1001,7 +1007,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	ffmpeg's <code>ebur128</code> filter has a parameter to measure the true
 	peak of a waveform and fairly understandable source code, and once I looked
 	at it, all the pieces suddenly started to make sense: For our purpose of
-	only looking at digital samples, 💡 <i>resampling to a floating-point signal
+	only looking at digital signals, 💡 <i>resampling to a floating-point signal
 	with an infinite sampling rate is equivalent to a DAC</i>. And that's
 	exactly what this filter does: It <a
 	href="https://github.com/FFmpeg/FFmpeg/blob/9ef20920ab82c46de095499deec2777b48a19370/libavfilter/f_ebur128.c#L492-L514">picks
@@ -1041,12 +1047,12 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	<li>High-quality resamplers are the ones I described earlier: They cleanly
 	recreate the signal at a higher sampling rate from its raw frequency
 	representation and thus add no high-frequency noise, but can lead to
-	inter-sample peaks.</li>
+	inter-sample peaks above 0&nbsp;dBFS.</li>
 	<li><i>Linear</i> resamplers use much simpler math to merely interpolate
-	between neighboring samples. This actually smooths away any clipping and
-	thus fully removes inter-sample peaks, but at the expense of adding
-	high-frequency imaging noise that has to then be removed using a low-pass
-	filter.</li>
+	between neighboring samples. Since the newly interpolated samples can only
+	ever stay within 0&nbsp;dBFS, this approach fully avoids inter-sample
+	clipping, but at the expense of adding high-frequency imaging noise that has
+	to then be removed using a low-pass filter.</li>
 </ul><p>
 	miniaudio only comes with a linear resampler – but so does DirectSound as it
 	turns out, so we can get actually pretty close to how the game sounded
@@ -1239,9 +1245,9 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	"onricdennat"}}<br />
 </p><p>
 	But that wasn't the only step I took as a result of this blunder. In
-	addition, I'm now offering <a href="/faq#mod-bugs">free fixes for
-	regressions in my mod releases if anyone else reports an issue before I find
-	it myself</a>. I've already been following this policy
+	addition, I now offer <a href="/faq#mod-bugs">free fixes for regressions in
+	my mod releases if anyone else reports an issue before I find it myself</a>.
+	I've already been following this policy
 	{{Blog_PostLink "2023-03-14" "earlier this year when mu021 reported the unblitting bug in the initial release of the TH01 Anniversary Edition"}},
 	and merely made it official now. If I was the one who broke a thing, I'll
 	fix it for free.
@@ -1292,14 +1298,16 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	What slightly differentiates this algorithm from the typical definition of
 	an <a href="https://en.wikipedia.org/wiki/Integer_square_root">integer
 	square root</a> is that it rounds up: In real numbers, <code>√﻿3</code> is
-	≈&nbsp;1.73, so <code>isqrt(3)</code> returns 2 instead of 1. However,
-	implementing this rounding step is trivial as long as the difference between
-	the <a href="https://en.wiktionary.org/wiki/radicand">radicand</a> and the
-	calculated root naturally falls out of the algorithm – and even if it
-	doesn't, you can always square the returned root and compare it to the
-	radicand. Which is what Shuusou Gyoku's implementation does, completely
-	forgetting that the algorithm does in fact produce said difference.
-	{{HTML_Emoji "tannedcirno"}}
+	≈&nbsp;1.73, so <code>isqrt(3)</code> returns 2 instead of 1. However, if
+	the result is always rounded down, you can determine whether you have to
+	round up by simply squaring the calculated root and comparing it to the <a
+	href="https://en.wiktionary.org/wiki/radicand">radicand</a>. And even that
+	is only necessary if the difference between the two doesn't naturally fall
+	out of the algorithm – which is what also happens with Shuusou Gyoku's
+	original ASM code, but <a
+	href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/DirectXUTYs/UT_MATH.C#L182-L188">pbg
+	didn't realize this and squared the result regardless</a>. {{HTML_Emoji
+	"tannedcirno"}}
 </p><p>
 	That's one suboptimal detail already. Let's call the original ASM function
 	in a loop over the entire supported range of radicands from 0 to
@@ -1310,10 +1318,11 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Q_rsqrt()</a></code>
 	here: Not fast, not inverse, no bit hacks, and surely without the
 	awe-inspiring kind of WTF.<br />
-	I really didn't want to run the same loop over a literal C++ translation of
-	the same algorithm afterward. Calculating integer square roots is a common
-	problem with lots of solutions, so let's see if we can go better than
-	linear.
+	I really didn't want to run the same loop over <a
+	href="https://github.com/nmlgc/ssg/commit/5f06cd419f646eb363db528eda7186a29be2fb73">a
+	literal C++ translation of the same algorithm</a> afterward. Calculating
+	integer square roots is a common problem with lots of solutions, so let's
+	see if we can go better than linear.
 </p><p>
 	And indeed, <a
 	href="https://en.wikipedia.org/w/index.php?title=Methods_of_computing_square_roots&oldid=1174851812#Binary_numeral_system_(base_2)">Wikipedia
@@ -1360,7 +1369,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	about code generation details that are specific to 32-bit code, and it
 	wouldn't be surprising if that part of the optimizer isn't getting much
 	attention anymore. Whether that optimization was useful, on the other hand…
-	Oh well, it will be much more efficient in 64-bit builds.
+	Oh well, the new C++ version will be much more efficient in 64-bit builds.
 </p><p>
 	And with that, there's no more ASM code left in Shuusou Gyoku's codebase,
 	and the original <code>DirectXUTYs</code> directory is slowly getting

@@ -17,6 +17,9 @@ rec98-video {
 	background-color: var(--c-dark);
 	display: grid;
 	grid-template-rows: 1fr min-content;
+
+	/* Necessary for .popup. */
+	position: relative;
 }
 
 rec98-video.with-switcher {
@@ -222,4 +225,45 @@ rec98-video .volume rec98-trackbar .border {
 
 rec98-video .volume rec98-trackbar.active {
 	display: block;
+}
+
+rec98-video .popup {
+	position: absolute;
+
+	/* Necessary for the popup to remain centered in fullscreen mode. */
+	left: 50%;
+	transform: translateX(-50%);
+
+	grid-row: 1;
+	grid-column: 1;
+	z-index: 1;
+	background-color: rgba(var(--dark), 0.75);
+	box-shadow: var(--shadow) var(--c-dark);
+	padding: 0.25em;
+	color: white;
+	height: min-content;
+	width: max-content;
+	max-width: 100%;
+	box-sizing: border-box;
+	animation: linear popup-fade-out 5s forwards;
+}
+
+rec98-video.with-switcher .popup {
+	grid-row: 2;
+}
+
+@keyframes popup-fade-out {
+	0% {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		visibility: hidden;
+		opacity: 0;
+	}
 }

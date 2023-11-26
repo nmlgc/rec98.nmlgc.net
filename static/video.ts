@@ -41,6 +41,7 @@ if(navigator?.["userAgentData"]?.brands) {
 		}
 	}
 }
+let edgeAV1PopupShown = false;
 
 class ReC98VideoMarker extends HTMLElement {
 	button = document.createElement("button");
@@ -557,6 +558,7 @@ class ReC98Video extends HTMLElement {
 		// Preloading the video is required for seeking to work before the
 		// video has been play()ed the first time.
 		this.onpointerenter = (() => {
+			let av1Removed = false;
 			for(const video of this.videos) {
 				// Nuke AV1 sources on Edge…
 				// https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/
@@ -565,11 +567,20 @@ class ReC98Video extends HTMLElement {
 						"source[src *= '/av1/']"
 					)) {
 						source.remove();
+						av1Removed = true;
 					}
 				}
 				video.load();
 				video.preload = "auto";
 			}
+			if(av1Removed && !edgeAV1PopupShown) {
+				const ePopup = document.createElement("span");
+				ePopup.className = "popup";
+				ePopup.innerHTML = "⚠️ Edge does not support AV1, falling back on low-quality video…";
+				this.eVideoWrap.appendChild(ePopup);
+				edgeAV1PopupShown = true;
+			}
+
 			this.onpointerenter = null;
 		});
 

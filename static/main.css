@@ -5,7 +5,8 @@
 	 * Not picking #000 as the background for videos and tab switchers allows
 	 * them to frame the video in fullscreen mode, clarifying its aspect ratio.
 	 */
-	--c-dark: #111;
+	--dark: 16, 16, 16;
+	--c-dark: rgb(var(--dark));
 
 	--c-lightgray: rgb(220, 220, 220);
 	--c-border: silver;
@@ -33,7 +34,8 @@
 	--estimate-tl: -1px;
 	--estimate-br:  1px;
 	--estimate-blur: 1px;
-	--blog-shadow: 0 0 0.5em 0 var(--c-border);
+	--shadow: 0 0 0.5em 0;
+	--blog-shadow: var(--shadow) var(--c-border);
 
 	--footer-height: 1.75em;
 }

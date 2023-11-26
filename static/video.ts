@@ -465,11 +465,11 @@ class ReC98Video extends HTMLElement {
 			const videoPrevPaused = videoPrev.paused;
 			videoPrev.pause();
 			videoNew.onseeked = (() => {
-				videoNew.classList.add("active");
+				videoNew.hidden = false;
 				videoNew.volume = videoPrev.volume;
 				videoNew.muted = videoPrev.muted;
 				seekedFunc();
-				videoPrev.classList.remove("active");
+				videoPrev.hidden = true;
 				if(!videoPrevPaused) {
 					videoNew.play();
 				}
@@ -643,8 +643,10 @@ class ReC98Video extends HTMLElement {
 				this.classList.add("with-audio");
 			}
 
-			if(video.classList.contains("active")) {
+			if(video.hasAttribute("data-active")) {
 				requested = i;
+			} else if(this.videos.length !== 1) {
+				video.hidden = true;
 			}
 			this.eTabSwitcher?.add(
 				attributeAsString(video, "data-title"), (i === requested)

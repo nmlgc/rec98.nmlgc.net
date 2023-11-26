@@ -86,7 +86,7 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		ret += ` loop`
 	}
 	if b.Active {
-		ret += ` class="active"`
+		ret += ` data-active`
 	}
 	ret += template.HTML(fmt.Sprintf(
 		` width="%v" height="%v" data-fps="%v" data-frame-count="%v" style="aspect-ratio: %[1]d / %[2]d"`,

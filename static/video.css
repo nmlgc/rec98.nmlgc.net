@@ -80,10 +80,6 @@ rec98-video video {
 	height: auto;
 }
 
-rec98-video video.active {
-	z-index: 1;
-}
-
 rec98-video .controls {
 	color: var(--c-lightgray);
 	display: grid;

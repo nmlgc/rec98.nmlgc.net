@@ -32,6 +32,16 @@ function timelineFractionAt(frame: number, frameCount: number) {
 	return (frame / (frameCount - 1));
 }
 
+let runningOnEdge = false;
+if(navigator?.["userAgentData"]?.brands) {
+	for(const brand of navigator?.["userAgentData"].brands) {
+		if(brand.brand === "Microsoft Edge") {
+			runningOnEdge = true;
+			break;
+		}
+	}
+}
+
 class ReC98VideoMarker extends HTMLElement {
 	button = document.createElement("button");
 	videoIndex = -1;
@@ -548,6 +558,15 @@ class ReC98Video extends HTMLElement {
 		// video has been play()ed the first time.
 		this.onpointerenter = (() => {
 			for(const video of this.videos) {
+				// Nuke AV1 sources on Edge…
+				// https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/
+				if(runningOnEdge) {
+					for(const source of video.querySelectorAll(
+						"source[src *= '/av1/']"
+					)) {
+						source.remove();
+					}
+				}
 				video.load();
 				video.preload = "auto";
 			}

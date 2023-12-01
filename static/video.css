@@ -233,10 +233,10 @@ rec98-video .popup {
 	grid-row: 1;
 	grid-column: 1;
 	z-index: 1;
-	background-color: rgba(var(--dark), 0.75);
-	box-shadow: var(--shadow) var(--c-dark);
+	background-color: white;
+	box-shadow: var(--shadow) white;
 	padding: 0.25em;
-	color: white;
+	color: black;
 	height: min-content;
 	width: max-content;
 	max-width: 100%;

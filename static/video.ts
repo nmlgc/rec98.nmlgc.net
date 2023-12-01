@@ -577,7 +577,7 @@ class ReC98Video extends HTMLElement {
 			if(av1Removed && !edgeAV1PopupShown) {
 				const ePopup = document.createElement("span");
 				ePopup.className = "popup";
-				ePopup.innerHTML = "⚠️ Edge does not support AV1, falling back on low-quality video…";
+				ePopup.innerHTML = "⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…";
 				this.eVideoWrap.appendChild(ePopup);
 				edgeAV1PopupShown = true;
 			}

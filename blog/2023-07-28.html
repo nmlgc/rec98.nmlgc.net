@@ -20,7 +20,7 @@
 	technical quality control.<br />
 	Since ReC98 hasn't really focused on text so far, the amount of moddable
 	text-related code would be fairly limited if I started working on it right
-	away. As of 2023-11-01, it only includes the following:
+	away. As of 2023-11-30, it only includes the following:
 </p><ul>
 	<li>All of TH01</li>
 	<li>All of TH02's <code>OP.EXE</code>, i.e., the main menu and the Music
@@ -29,22 +29,21 @@
 	({{Blog_PostLink "2023-11-01" "completed in P0261"}})</li>
 	<li>TH03's win messages
 	({{Blog_PostLink "2023-11-01" "completed in P0261"}})</li>
+	<li>TH04's and TH05's first-launch sound setup menu ({{Blog_PostLink "2023-11-30" "completed in P0263"}})</li>
+	<li>TH04's and TH05's main menu ({{Blog_PostLink "2023-11-30" "completed in P0262"}})</li>
 	<li>TH04's and TH05's endings</li>
 </ul><p>
 	Therefore, I'll put any general and unconstrained reverse-engineering,
 	position independence, or <q>anything</q> contributions that come in during
 	the next few months towards covering everything that's still missing there:
 </p><ul>
-	<li>The Music Rooms of TH03, TH04, and TH05 need roughly 2 pushes for their
+	<li>The Music Rooms of TH03, TH04, and TH05 need roughly 1 push for their
 	combined RE and finalization. Most of their code is shared with TH02's Music
 	Room which I decompiled back in 2015.</li>
 	<li>TH02's <code>MAINE.EXE</code> needs to be fully RE'd since all of its
 	screens contain translatable text. Due to its highly copy-pasted nature, it
 	should be much cheaper than currently estimated on the main page. 3 pushes
-	should be enough there, though.</li>
-	<li>The main menu help strings in TH04's and TH05's <code>OP.EXE</code> are
-	very conveniently located, and could be RE'd within 0.25 pushes at
-	most.</li>
+	should be enough there.</li>
 	<li>Similarly, TH04's and TH05's <code>MAINE.EXE</code> contains some not
 	yet RE'd text in their verdict screens. 1 push there, since it's
 	unfortunately contained in the same function that also performs the highly
@@ -52,7 +51,7 @@
 	<li>TH03's <code>MAINL.EXE</code> needs 100% PI to enable convenient
 	translations of the win messages, the character titles and names at the
 	beginning of a stage, the Stage 8/9 cutscenes, and the endings. Let's go
-	with 1.75 pushes there just to be safe, rounding up the 0.25 above.</li>
+	with 2 pushes there just to be safe, and finalize the missing code to not {{Blog_PostLink "2021-12-15" "incur more technical debt"}}.</li>
 	<li>Technically, we'd need TH02's <code>MAIN.EXE</code> to be 100%
 	position-independent for any translation-related code modifications, but
 	reaching that goal before I get to work on translation support is probably
@@ -64,7 +63,7 @@
 	<li>The same is true for TH03's <code>MAIN.EXE</code>, but the <span
 	lang="ja">ＷＩＮＮＥＲ ＢＯＮＵＳ</span> popup is the only translatable piece of text there. Should be even less of a problem.</li>
 </ul><p>
-	In total, that's the next 8 general pushes that will go towards ensuring
+	In total, that's the next 7 general pushes that will go towards ensuring
 	translatability of most of PC-98 Touhou, if possible. If you'd like your
 	contribution (or existing subscription) to go to {{HTML_Tag "gameplay" nil}}
 	code instead, be sure to tell me!

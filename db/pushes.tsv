@@ -259,3 +259,5 @@ P0258	[249, 251]	Decompilation (TH04/TH05 stage dialogs, part 1/2)	2023-11-01T23
 P0259	[266, 213]	Decompilation (TH04/TH05 stage dialogs, part 2/2) + TH02 RE (Stage dialog preparations)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/e8a0b3e...dfaa3c6	1
 P0260	[243, 252, 258, 262]	Decompilation (TH02 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/dfaa3c6...ed9ee93	1
 P0261	[247, 257]	Decompilation (TH02 stage dialogs, part 2/2 + TH03 win messages + TH04/TH05 MIKO.CFG + TH04 game startup)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/ed9ee93...ae2fc28	1
+P0262	[254, 260, 264, 268, 257, 265]	Decompilation (TH04/TH05 main/option menu)	2023-11-30T23:56:14Z	nmlgc/ReC98/compare/ae2fc28...741d889	1
+P0263	[265, 269]	Decompilation (TH04/TH05 first-launch sound setup menu + TH05 title screen animation)	2023-11-30T23:56:14Z	nmlgc/ReC98/compare/741d889...46cd6e7	1

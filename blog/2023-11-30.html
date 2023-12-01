@@ -1,0 +1,91 @@
+{{$edge_popup := (call .PostFileURL "Edge-AV1-popup.png") -}}
+{{$vid_4 := (call .Video "TH04-SE-change" "Video demonstrating how changing the sound effect mode in TH04's Option menu doesn't take immediate effect") -}}
+{{$vid_5 := (call .Video "TH05-SE-change" "Video demonstrating how TH05 fixed TH04's sound effect mode change bug") -}}
+{{$setup_4 := (call .PostFileURL "TH04-Sound-setup.png") -}}
+{{$setup_5 := (call .PostFileURL "TH05-Sound-setup.png") -}}
+
+{{$vid_4.SetTitle "TH04" -}}
+{{$vid_5.SetTitle "TH05" -}}
+
+<p>
+	And once again, the Shuusou Gyoku task was too complex to be satisfyingly  solved within a single month. Even just <i>finding</i> provably correct loop sections in both the original and arranged MIDI files required some rather involved detection algorithms. I could have just defined what <i>sounded</i> like correct loops, but the results of these algorithms were quite surprising indeed. Turns out that not even Seihou is safe from ZUN quirks, and some tracks technically loop much later than you'd think they do, or don't loop at all. And since I then wanted to put these MIDI loops back into the game to ensure perfect synchronization between the recordings and MIDI versions, I ended up rewriting basically <i>all</i> the MIDI code in a cross-platform way. This rewrite also uncovered <a href="https://twitter.com/ReC98Project/status/1724916760053211163">a pbg bug that has traveled from Shuusou Gyoku into Windows Touhou</a>, where it survived until ZUN ultimately removed all MIDI code in <span class="hovertext" title="Yes, TH10 still has MIDI code, even though no publicly released version included a MIDI soundtrack.">TH11&nbsp;(!)</span>…
+</p><p>
+	Fortunately, the backlog still had enough general PC-98 Touhou funds that I could spend on picking some soon-important low-hanging fruit, giving me something to deliver for the end of the month after all. TH04 and TH05 use almost identical code for their main/option menus, so decompiling it would make number go up quite significantly and the associated blog post won't be that long…
+</p><p>
+	Wait, what's this, a bug report from <a href="https://touhou-memories.com">touhou-memories</a> concerning the website?
+</p><ol>
+	<li>Tab switchers tended to break on certain Firefox versions, and</li>
+	<li>video playback didn't work on Microsoft Edge at all?</li>
+</ol><p>
+	Those are definitely some high-priority bugs that demand immediate attention.
+</p><ol>
+	<li><a href="#edge-{{.Date}}">Microsoft Edge's anti-support of AV1</a></li>
+	<li><a href="#main-{{.Date}}">TH04/TH05's main/option menu</a></li>
+	<li><a href="#setup-{{.Date}}">TH04/TH05's first-launch sound setup menu</a></li>
+	<li><a href="#title5-{{.Date}}">TH05's title animation ☯️</a></li>
+</ol><hr/><p id="edge-{{.Date}}">
+	The tab switcher issue was easily fixed by replacing the previous <code>z-index</code> trickery with a more robust solution involving the <code>hidden</code> attribute. The second one, however, is much more aggravating, because video playback on Edge has been broken ever since I {{Blog_PostLink "2022-10-31" "switched the preferred video codec to AV1"}}.<br />
+	This goes so far beyond not supporting a specific codec. Usually, unsupported codecs aren't <i>supposed</i> to be an issue: As soon as you start using the HTML <code>&lt;video&gt;</code> tag, you'll learn that not every browser supports all codecs. And so you set up an encoding pipeline to serve each video in a mix of new and ancient formats, put the <code>&lt;source&gt;</code> tag of the most preferred codec first, and rest assured that browsers will fall back on the best-supported option as necessary. Except that Edge doesn't even <i>try</i>, and insists on staying on a non-playing AV1 video. 🙄
+</p><p>
+	The <a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter"><code>codecs</code> parameter for the <code>&lt;source&gt; type</code> attribute</a> was the first potential solution I came across. Specifying the video codec down to the finest encoding details right in the HTML markup sounds like a good idea, similar to specifying sizes of images and videos to prevent layout reflows on long pages during the initial page load. So why was this the first time I heard of this feature? The fact that there isn't a simple <code>ffprobe -show_html_codecs_string</code> command to retrieve this string might already give a clue about how useful it is in practice. Instead, you have to <a href="https://jakearchibald.com/2022/html-codecs-parameter-for-av1/">manually piece the string together by <code>grep</code>ping your way through all of a video's metadata</a>…<br />
+	…and then it <i>still</i> doesn't change anything about Edge's behavior, even when also specifying the string for the VP9 and VP8 sources. Calling the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType">infamously ridiculous <code>HTMLMediaElement.canPlayType()</code> method</a> with a representative parameter of <code>"video/webm; codecs=av01.1.04M.08.0.000.01.13.00.0"</code> explains why: Both the AV1-supporting Chrome and Edge return <code>"probably"</code>, but only the former can actually play this format. 🤦
+</p><p>
+	But wait, there is an <a href="https://apps.microsoft.com/detail/9MVZQVXJBQ9V">AV1 video extension in the Microsoft Store</a> that would add support to any unspecified <q>favorite video app</q>. Except that it <a href="https://www.reddit.com/r/AV1/comments/16mmm35/av1_and_edge/">stopped working inside Edge</a> as of <a href="https://caniuse.com/av1">version 116</a>. And even if it did: If you can't query the presence of this extension via JavaScript, it might as well not exist at all.<br />
+	Not to mention that the <q>favorite video app</q> part is obviously a lie as a lot of widely preferred Windows video apps are bundled with their own codecs, and have probably long supported AV1.
+</p><p>
+	In the end, there's no way around the utter desperation move of removing the AV1 <code>&lt;source&gt;</code> for Edge users. Serving each video in two other formats means that we can at least do <i>something</i> here – try visiting <a href="https://github.com/nmlgc/ReC98/releases/tag/P0234-1">the GitHub release page of the P0234-1 TH01 Anniversary Edition build</a> in Edge and you also don't get to see anything, because that video uses AV1 and GitHub understandably doesn't re-encode every uploaded video into a variety of old formats.<br />
+	Just for comparison, I tried both that page and the ReC98 blog on an old Android 6 phone from 2014, and even that phone picked and played the AV1 videos with the latest available Chrome and Firefox versions. This was the phone whose available Firefox version didn't support VP9 in 2019, which was my initial reason for adding the VP8 versions. Looks like it's finally time to drop those… 🤔 Maybe in the far future once I start running out of space on this server.
+</p><p>
+	Removing the <code>&lt;source&gt;</code> tags can be done in one of two places:
+</p><ol>
+	<li>server-side, detecting Edge via the <code>User-Agent</code> header, or </li>
+	<li>client-side, using <a href="https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/"><code>navigator.userAgentData.brands</code></a>.</li>
+</ol><p>
+	I went with 2) because more dynamic server-side code would only move us further away from static site generation, which would make a lot of sense as the next evolutionary step in the architecture of this website. The client-side solution is much simpler too, and we can defer the deletion until a user actually hovers over a specific video.<br />
+	And while we're at it, let's also add a popup complaining about this whole state of affairs. Edge is heavily marketed inside Windows as "the modern browser recommended by Microsoft", and you sure wouldn't expect low-quality chroma-subsampled VP9 from such a tagline. With such a level of anti-support for AV1, Edge users deserve to know exactly what's going on, especially since this post also explains what they will encounter on other websites.
+</p><figure>
+	<!-- Blurring it a bit so that it doesn't come across as clickable. -->
+	<img
+		style="width: 640px;"
+		src="{{$edge_popup}}"
+		alt='A popup on top of a ReC98 blog video, showing the caption "⚠️ Edge does not support AV1, falling back on low-quality video…"'
+	/>
+	<figcaption>That's the polite way of putting it.</figcaption>
+</figure><hr /><p id="main-{{.Date}}">
+	Alright, where was I? For TH01, the main menu was the last thing I decompiled before the 100% finalization mark, so it's rather anticlimactic to already cover the TH04/TH05 one now, with both of the games still being very far away from 100%, just because people will soon want to translate the description text in the bottom-right corner of the screen. But then again, the ZUN Soft logo animation would make for an even nicer final piece of decompiled code, especially since the bouncing-ball logo from TH01, TH02, and TH03 was <a href="https://github.com/nmlgc/ReC98/commit/f861b0a5c37ef645cd88949c4f41d7e81a65f80b">the very first decompilation I did, all the way back in 2015</a>.
+</p><p>
+	The code quality of ZUN's VRAM-based menus has barely increased between TH01 and TH05. Both the top-level and option menu still need to know the bounding rectangle of the other one to unblit the right pixels when switching between the two. And since ZUN sure loved hardcoded and copy-pasted numbers in the PC-98 days, the coordinates both tend to be excessively large, and excessively wrong. {{HTML_Emoji "zunpet"}} Luckily, each menu item comes with its own correct unblitting rectangle, which avoids any graphical glitches that would otherwise occur.<br />
+	As for actual observable quirks and bugs, these menus only contain one of each, and both are exclusive to TH04:
+</p><ul>
+	<li>Quitting out of the Music Room moves the cursor to the <i>Start</i> option. In TH05, it stays on <i>Music Room</i>.</li>
+	<li>Changing the <i>S.E.</i> mode seems to do nothing within TH04's menus, and would only take effect if you also change the <i>Music</i> mode afterward, or launch into the game.</li>
+</ul><figure {{$vid_4.FigureAttrs}}>
+	{{call .VideoPlayer $vid_4.SetActive $vid_5}}
+	<figcaption>And yes, these videos do have a frame rate of 2 FPS.</figcaption>
+</figure><p>
+	Now that 100% finalization of their <code>OP.EXE</code> binaries is within reach, all this bloat made me think about the viability of a {{Blog_PostLink "2022-03-05" "single-executable build"}} for TH04's and TH05's <code>debloated</code> and <code>anniversary</code> versions. It would be really nice to have such a build ready before I start working on the non-ASCII translations – not just because they will be based on the <code>anniversary</code> branch by default, but also because it would significantly help their development if there are 4 fewer executables to worry about.<br />
+	However, it's not as simple for these games as it was for TH01. The unique code in their <code>OP.EXE</code> and <code>MAINE.EXE</code> binaries is much larger than Borland's easily removed C++ exception handler, so I'd have to remove a lot more bloat to keep the resulting single binary at or below the size of the original <code>MAIN.EXE</code>. But I'm sure going to try.
+</p><hr /><p id="setup-{{.Date}}">
+	Speaking of code that can be debloated for great effect: The second push of this delivery focused on the first-launch sound setup menu, whose BGM and sound effect submenus are almost complete code duplicates of each other. The <code>debloated</code> branch could easily remove more than half of the code in there, yielding another ≈800 bytes in case we need them.<br />
+	If hex-editing <code>MIKO.CFG</code> is more convenient for you than deleting that file, you can set its first byte to <code>FF</code> to re-trigger this menu. Decompiling this screen was not only relevant now because it contains text rendered with font ROM glyphs and it would help dig our way towards more important strings in the data segment, but also because of its visual style. I can imagine many potential mods that might want to use the same backgrounds and box graphics for their menus.
+</p><figure>
+	<rec98-child-switcher><img
+		src="{{$setup_4}}"
+		data-title="TH04, BGM"
+		alt="TH04's first-launch sound setup menu, showing the BGM mode selection"
+		class="active"
+	/><img
+		src="{{$setup_5}}"
+		data-title="TH05, sound effects"
+		alt="TH05's first-launch sound setup menu, showing the sound effect mode selection"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>How about an initial language selection menu in the same style?</figcaption>
+</figure><p>
+	With the two submenus being shown in a fixed sequence, there's not a lot of room for the code to do anything wrong, and it's even more identical between the two games than the main menu already was. Thankfully, ZUN just reblits the respective options in the new color when moving the cursor, with no {{Blog_PostLink "2021-11-08" "palette tricks"}}. TH04's background image only uses 7 colors, so he could have easily reserved 3 colors for that. In exchange, the TH05 image gets to use the full 16 colors with no change to the code.
+</p><hr /><p id="title5-{{.Date}}">
+	Rounding out this delivery, we also got TH05's rolling Yin-Yang Orb animation before the title screen… and it's just more bloat and landmines on a smaller scale that might be noticeable on slower PC-98 models. In total, there are three unnecessary inter-page copies of the entire VRAM that can easily insert lag frames, and two minor page-switching landmines that can potentially lead to tearing on the first frame of the roll or fade animation. Clearly, ZUN did not have smoothness or code quality in mind there, as evidenced by the fact that this animation simply displays 8 .PI files in sequence. But hey, a short animation like this is {{Blog_PostLink "2022-08-11" "another perfectly appropriate place for a quick-and-dirty solution if you develop with a deadline"}}.<br />
+	And that's 1.30% of all PC-98 Touhou code finalized in two pushes! We're slowly running out of these big shared pieces of ASM code…
+</p><p>
+	I've been neglecting TH03's <code>OP.EXE</code> quite a bit since it simply doesn't contain any translatable plaintext outside the Music Room. All menu labels are {{HTML_Tag "gaiji" nil}}, and even the character selection menu displays its monochrome character names using the 4-plane sprites from <code>CHNAME.BFT</code>. Splitting off half of its data into a separate .ASM file was more akin to getting out a jackhammer to free up the room in front of the third remaining Music Room, but now we're there, and I can decompile all three of them in a natural way, with all referenced data.<br />
+	Next up, therefore: Doing just that, securing another important piece of text for the upcoming non-ASCII translations and delivering another big piece of easily finalized code. I'm going to work full-time on ReC98 for almost all of December, and delivering that and the Shuusou Gyoku SC-88Pro recording BGM back-to-back should free up about half of the slightly higher cap for this month.
+</p>

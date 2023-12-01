@@ -156,7 +156,8 @@ class ReC98Video extends HTMLElement {
 		this.ePlay.title = "Pause (Space)";
 		if(!this.timeIntervalID) {
 			this.timeIntervalID = setInterval(
-				(() => this.renderTimeFromVideo()), (1000 / this.fps)
+				(() => this.renderTimeFromVideo()),
+				(1000 / Math.max(this.fps, 10))
 			);
 		}
 	}

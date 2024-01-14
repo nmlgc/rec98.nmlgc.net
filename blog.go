@@ -361,10 +361,16 @@ func (b *Blog) Posts(filters []string) chan Post {
 }
 
 // PostLink returns a nicely formatted link to the given blog post.
-func (b *Blog) PostLink(date string, text string) template.HTML {
+func (b *Blog) PostLink(dateAndAnchor string, text string) template.HTML {
+	date := dateAndAnchor
+	anchor := ""
+	if index := strings.LastIndexByte(dateAndAnchor, '#'); index != -1 {
+		date = dateAndAnchor[:index]
+		anchor = (dateAndAnchor[index:] + "-" + date)
+	}
 	_, err := b.FindEntryByString(date)
 	FatalIf(err)
 	return template.HTML(fmt.Sprintf(
-		`<a href="%s/%s">📝 %s</a>`, blogURLPrefix, date, text,
+		`<a href="%s/%s%s">📝 %s</a>`, blogURLPrefix, date, anchor, text,
 	))
 }

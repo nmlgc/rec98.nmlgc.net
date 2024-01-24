@@ -28,46 +28,56 @@
 			</label>
 			<select id="metric" onchange="handleSelect(this.options[this.selectedIndex])">
 				<option data-info="Won't go to Seihou by default, unless you explicitly allow me to.">Anything (including tooling)</option>
-				<option>Reverse-engineering</option>
-				<option>Finalization</option>
-				<option>Position independence</option>
-				<option data-info='<ul>
-					<li>Removes <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bloat">bloat</a> and <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-landmine">landmines</a>, and cleans up the architecture of a 100% position-independent game, to build a better foundation for both mods and ports to other systems.</li>
-					<li>Will not fix any <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bugs</a> or <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirks</a>. Gameplay and visuals will remain unchanged, and hypothetical replays will remain compatible with the original game.
-					<li>Please specify whether I should focus on portability or moddability for this order.</li>
-				</ul>' data-goal-mandatory data-micro>ZUN code cleanup</option>
-				<option data-info='<ul>
-					<li>Will fix everything that matches the definition of a <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bug</a>, achieving a smoother, flicker-free gameplay experience on the PC-98 platform.</li>
-					<li>Includes the <i>ZUN code cleanup</i> goal.
-					<li>Will not attempt to fix any <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirks</a>. Hypothetical replays will remain compatible with the original game.</li>
-					<li>Replay support itself is not included, and sold separately.</li>
-				</ul>'data-micro>TH01 Anniversary Edition</option>
-				<option data-info="<ul>
-					<li>Please specify which game(s) would be most important to you.</li>
-					<li>Requires all movement-related code of the games in question to be reverse-engineered. If the backlog contains no other pushes which could cover that code, I will use this order to cover them.</li>
-					<li>As replays are critical infrastructure, this will <i>not</i> require 100% position independence, and be implemented in an <span class='hovertext' title='That is, as a TSR with a minimal amount of hooks in original game code.'>easily diffable way</span> even for games where 100% PI has been reached.</li>
-				</ul>" data-goal-mandatory data-micro>Replay support (on PC-98)</option>
-				<option data-info="Please specify which game(s) would be most important to you. Will consist of the following steps, in order:<ol>
-					<li>Decompilations of ZUN's hand-written ASM</li>
-					<li>Building a PC-98 abstraction interface in C++ and routing all the game's hardware accesses through it. Ports to generic 640×400×16-color framebuffers, other retro systems with hardware sprites, or headless servers with no graphical output, would then only reimplement that interface, and don't need to touch any game code.</li>
-					<li>Getting rid of master.lib, PiLoad, and SPRITE16</li>
-				</ol>All new code will make appropriate use of the C++ language features available in Turbo C++. Requires 100% position independence of the game(s) in question, as they will continue to run on PC-98 hardware during the entire process, perhaps even at higher performance. Does <i>not</i> imply a port to any specific system; these can be ordered separately once they become realistic." data-goal-mandatory data-micro>Portability to non-PC-98 systems</option>
-				<option data-info="If you <i>really</i> insist on building this code with ancient C-only compilers, rather than hacking support for your target platform into modern C++ toolchains… Will only focus on the pieces of code that wouldn't also be touched by the portability goal initially. Note that C89 conformance will in fact be a <i>mod</i>, as it's impossible to generate ZUN's original machine code without C++ and only C89 features. However, that means that the resulting code can (and will) be refactored into more clean and idiomatic C. Requires 100% position independence of the game(s) in question." data-micro>C89 conformance</option>
-				<option data-info="Requires the 16-bit build system to be completed, delivery will be delayed until that point." data-micro>Easier verification against original binaries</option>
-				<option data-info="<ul>
-					<li>Will reveal any changes between the trial and full versions. Most of those are likely to be uninteresting software architecture details, though.</li>
-					<li>Will mostly stick to and catch up with features that have already been RE'd for the full version, unless I come across trial-exclusive code.</li>
-					<li>The trial versions will be a separate build artifact on the <code>master</code> branch, sharing all previously decompiled and reverse-engineered code with the full version of the respective game.
-				</ul>" data-micro>Reconstructing the trial versions</option>
-				<option>Reconstructing the original installers</option>
-				<option data-info="Please specify which game(s) would be most important to you. Will be more efficient after that game reached 100% position independence, but definitely possible before. No guarantees that it will actually <i>perform</i> well on such old systems, though!" data-goal-mandatory data-micro>Compatibility with pre-386 PC-98 models</option>
-				<option data-micro>Improving the website</option>
-				<option>Build server experiments</option>
-				<option data-info='<ul>
-					<li>For Shuusou Gyoku: Pick any of the <a href="https://github.com/nmlgc/ssg/issues">existing GitHub issues</a>, or suggest your own.</li>
-					<li>For Kioh Gyoku: The first goal will be to get <a href="https://github.com/pbghogehoge/kog">pbg&apos;s source code release</a> into a working and compilable state, by adding clean-room reimplementations of missing functionality as necessary.</li>
-				</ul>If you use Discord, also tell me your account name if you want to join the group chat with the current developer team as well as all other Seihou backers.' data-goal-mandatory data-micro>Seihou</option>
-				<option>Something else?</option>
+				<optgroup label="PC-98 Touhou source code reconstruction">
+					<option>Reverse-engineering</option>
+					<option>Finalization</option>
+					<option>Position independence</option>
+					<option data-info="<ul>
+						<li>Will reveal any changes between the trial and full versions. Most of those are likely to be uninteresting software architecture details, though.</li>
+						<li>Will mostly stick to and catch up with features that have already been RE'd for the full version, unless I come across trial-exclusive code.</li>
+						<li>The trial versions will be a separate build artifact on the <code>master</code> branch, sharing all previously decompiled and reverse-engineered code with the full version of the respective game.
+					</ul>" data-micro>Reconstructing the trial versions</option>
+					<option>Reconstructing the original installers</option>
+				</optgroup>
+				<optgroup label="PC-98 Touhou mods and ports">
+					<option data-info='<ul>
+						<li>Removes <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bloat">bloat</a> and <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-landmine">landmines</a>, and cleans up the architecture of a 100% position-independent game, to build a better foundation for both mods and ports to other systems.</li>
+						<li>Will not fix any <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bugs</a> or <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirks</a>. Gameplay and visuals will remain unchanged, and hypothetical replays will remain compatible with the original game.
+						<li>Please specify whether I should focus on portability or moddability for this order.</li>
+					</ul>' data-goal-mandatory data-micro>ZUN code cleanup</option>
+					<option data-info='<ul>
+						<li>Will fix everything that matches the definition of a <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bug</a>, achieving a smoother, flicker-free gameplay experience on the PC-98 platform.</li>
+						<li>Includes the <i>ZUN code cleanup</i> goal.
+						<li>Will not attempt to fix any <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirks</a>. Hypothetical replays will remain compatible with the original game.</li>
+						<li>Replay support itself is not included, and sold separately.</li>
+					</ul>'data-micro>TH01 Anniversary Edition</option>
+					<option data-info="<ul>
+						<li>Please specify which game(s) would be most important to you.</li>
+						<li>Requires all movement-related code of the games in question to be reverse-engineered. If the backlog contains no other pushes which could cover that code, I will use this order to cover them.</li>
+						<li>As replays are critical infrastructure, this will <i>not</i> require 100% position independence, and be implemented in an <span class='hovertext' title='That is, as a TSR with a minimal amount of hooks in original game code.'>easily diffable way</span> even for games where 100% PI has been reached.</li>
+					</ul>" data-goal-mandatory data-micro>Replay support (on PC-98)</option>
+					<option data-info="Please specify which game(s) would be most important to you. Will consist of the following steps, in order:<ol>
+						<li>Decompilations of ZUN's hand-written ASM</li>
+						<li>Building a PC-98 abstraction interface in C++ and routing all the game's hardware accesses through it. Ports to generic 640×400×16-color framebuffers, other retro systems with hardware sprites, or headless servers with no graphical output, would then only reimplement that interface, and don't need to touch any game code.</li>
+						<li>Getting rid of master.lib, PiLoad, and SPRITE16</li>
+					</ol>All new code will make appropriate use of the C++ language features available in Turbo C++. Requires 100% position independence of the game(s) in question, as they will continue to run on PC-98 hardware during the entire process, perhaps even at higher performance. Does <i>not</i> imply a port to any specific system; these can be ordered separately once they become realistic." data-goal-mandatory data-micro>Portability to non-PC-98 systems</option>
+					<option data-info="Please specify which game(s) would be most important to you. Will be more efficient after that game reached 100% position independence, but definitely possible before. No guarantees that it will actually <i>perform</i> well on such old systems, though!" data-goal-mandatory data-micro>Compatibility with pre-386 PC-98 models</option>
+					<option data-info="If you <i>really</i> insist on building this code with ancient C-only compilers, rather than hacking support for your target platform into modern C++ toolchains… Will only focus on the pieces of code that wouldn't also be touched by the portability goal initially. Note that C89 conformance will in fact be a <i>mod</i>, as it's impossible to generate ZUN's original machine code without C++ and only C89 features. However, that means that the resulting code can (and will) be refactored into more clean and idiomatic C. Requires 100% position independence of the game(s) in question." data-micro>C89 conformance</option>
+				</optgroup>
+				<optgroup label="Free/libre software development">
+					<option data-info='<ul>
+						<li>For Shuusou Gyoku: Pick any of the <a href="https://github.com/nmlgc/ssg/issues">existing GitHub issues</a>, or suggest your own.</li>
+						<li>For Kioh Gyoku: The first goal will be to get <a href="https://github.com/pbghogehoge/kog">pbg&apos;s source code release</a> into a working and compilable state, by adding clean-room reimplementations of missing functionality as necessary.</li>
+					</ul>If you use Discord, also tell me your account name if you want to join the group chat with the current developer team as well as all other Seihou backers.' data-goal-mandatory data-micro>Seihou</option>
+				</optgroup>
+				<optgroup label="Infrastructure">
+					<option data-info="Requires the 16-bit build system to be completed, delivery will be delayed until that point." data-micro>Easier verification against original binaries</option>
+					<option data-micro>Improving the website</option>
+					<option>Build server experiments</option>
+				</optgroup>
+				<optgroup>
+					<option>Something else?</option>
+				</optgroup>
 			</select>
 			<label for="goal">
 				Any specific game or aspect?

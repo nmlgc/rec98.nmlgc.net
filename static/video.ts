@@ -279,6 +279,13 @@ class ReC98Video extends HTMLElement {
 		}
 	}
 
+	showPopup(text: string) {
+		const ePopup = document.createElement("span");
+		ePopup.className = "popup";
+		ePopup.innerHTML = text;
+		this.eVideoWrap.appendChild(ePopup);
+	}
+
 	// Constant property initialization
 	constructor() {
 		super();
@@ -575,10 +582,7 @@ class ReC98Video extends HTMLElement {
 				video.preload = "auto";
 			}
 			if(av1Removed && !edgeAV1PopupShown) {
-				const ePopup = document.createElement("span");
-				ePopup.className = "popup";
-				ePopup.innerHTML = "⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…";
-				this.eVideoWrap.appendChild(ePopup);
+				this.showPopup("⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…");
 				edgeAV1PopupShown = true;
 			}
 

@@ -127,6 +127,7 @@ class ReC98Video extends HTMLElement {
 	eVolume = document.createElement("button");
 	eVolumeSymbol = document.createElement("span");
 	eFullscreen = document.createElement("button");
+	ePopups = document.createElement("div");
 
 	videos: HTMLCollectionOf<HTMLVideoElement>;
 	videoShown: HTMLVideoElement;
@@ -280,10 +281,10 @@ class ReC98Video extends HTMLElement {
 	}
 
 	showPopup(text: string) {
-		const ePopup = document.createElement("span");
+		const ePopup = document.createElement("div");
 		ePopup.className = "popup";
 		ePopup.innerHTML = text;
-		this.eVideoWrap.appendChild(ePopup);
+		this.ePopups.appendChild(ePopup);
 	}
 
 	// Constant property initialization
@@ -291,6 +292,7 @@ class ReC98Video extends HTMLElement {
 		super();
 		this.eVideoWrap.className = "video-wrap"
 		this.eControls.className = "controls";
+		this.ePopups.className = "popups";
 
 		// Play/Pause button
 		// -----------------
@@ -513,6 +515,7 @@ class ReC98Video extends HTMLElement {
 		this.tabIndex = -1;
 
 		this.appendChild(this.eVideoWrap);
+		this.eVideoWrap.appendChild(this.ePopups);
 
 		this.eControls.appendChild(this.ePlay);
 		this.eControls.appendChild(this.eTimeSecondsIcon);

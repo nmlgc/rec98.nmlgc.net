@@ -223,28 +223,31 @@ rec98-video {
 		}
 	}
 
-	.popup {
+	.popups {
 		position: absolute;
 
 		/* Necessary for the popup to remain centered in fullscreen mode. */
 		left: 50%;
 		transform: translateX(-50%);
+		height: min-content;
+		width: max-content;
 
 		grid-row: 1;
 		grid-column: 1;
 		z-index: 1;
-		background-color: white;
-		box-shadow: var(--shadow) white;
-		padding: 0.25em;
-		color: black;
-		height: min-content;
-		width: max-content;
-		max-width: 100%;
-		box-sizing: border-box;
-		animation: linear popup-fade-out 5s forwards;
+
+		.popup {
+			background-color: white;
+			box-shadow: var(--shadow) white;
+			padding: 0.25em;
+			color: black;
+			max-width: 100%;
+			box-sizing: border-box;
+			animation: linear popup-fade-out 5s forwards;
+		}
 	}
 
-	&.with-switcher .popup {
+	&.with-switcher .popups {
 		grid-row: 2;
 	}
 }

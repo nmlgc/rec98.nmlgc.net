@@ -473,7 +473,13 @@ class ReC98Video extends HTMLElement {
 			// Pause the old video, but save the previous playing state to
 			// decide whether to unpause the new video.
 			const videoPrevPaused = videoPrev.paused;
+
+			// Calling the raw pause() function on the <video> element is fine
+			// here: its sole purpose is to save processing power for an
+			// invisible video, so it makes sense to avoid the DOM manipulation
+			// done in `this.pause()`.
 			videoPrev.pause();
+
 			videoNew.onseeked = (() => {
 				videoNew.hidden = false;
 				videoNew.volume = videoPrev.volume;
@@ -481,7 +487,7 @@ class ReC98Video extends HTMLElement {
 				seekedFunc();
 				videoPrev.hidden = true;
 				if(!videoPrevPaused) {
-					videoNew.play();
+					this.play();
 				}
 				this.switchingVideos = false;
 				videoNew.onseeked = seekedFunc;

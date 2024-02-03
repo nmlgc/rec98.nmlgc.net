@@ -60,7 +60,12 @@
 	significantly than RE%. Therefore, make sure to order the new
 	<i>Finalization</i> option rather than <i>Reverse-engineering</i> if you
 	want to make number go up.
-</p><hr /><p>
+</p><ol>
+	<li><a href="#overview-{{.Date}}">General overview</a></li>
+	<li><a href="#games-{{.Date}}">Game-specific differences</a></li>
+	<li><a href="#ref-{{.Date}}">Command reference</a></li>
+	<li><a href="#translations-{{.Date}}">Thoughts about translation support</a></li>
+</ol><hr id="overview-{{.Date}}" /><p>
 	So, cutscenes. On the surface, the .TXT files look simple enough: You
 	directly write the text that should appear on the screen into the file
 	without any special markup, and add commands to define visuals, music, and
@@ -139,7 +144,7 @@
 	Due to the blocking nature of all commands, the <kbd>ESC</kbd> key state is
 	only updated between commands or 2-byte text groups though, so it can't
 	interrupt an ongoing delay.</li>
-</ul><hr /><p>
+</ul><hr id="games-{{.Date}}" /><p>
 	Superficially, the list of game-specific differences doesn't look too long,
 	and can be summarized in a rather short table:
 </p><figure><table class="comparison"><thead>
@@ -249,7 +254,7 @@
 	the often dithered 16-color artwork you typically see on PC-98</a>, and
 	deserves better than master.lib's implementation which is both slow to
 	decode and slow to blit.
-</p></li></ul><hr /><p>
+</p></li></ul><hr id="ref-{{.Date}}" /><p>
 	That brings us to the individual script commands… and yes, I'm going to
 	document every single one of them. Some of their interactions and edge cases
 	are not clear at all from just looking at the code.
@@ -762,7 +767,7 @@
 	other system, so I won't have to deal with it until we're close to finishing
 	<code>MAIN.EXE</code>… that is, unless someone requests it before. And it
 	won't involve text encodings or unblitting…
-</p><hr /><p>
+</p><hr id="translations-{{.Date}}" /><p>
 	The cutscene system got me thinking in greater detail about how I would
 	implement translations, being one of the main dependencies behind them. This
 	goal has been on the order form for a while and could soon be implemented

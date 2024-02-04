@@ -24,10 +24,6 @@ const devLocationName = "Europe/Berlin"
 
 var devLocation *time.Location
 
-// CapWindow defines the maximum acceptable backlog size, based on the free
-// time from now to this point in the future.
-const CapWindow = time.Duration(time.Hour * 24 * 7 * 4)
-
 // FreeTimeDecisionPoint defines the cut-off time for deciding whether a day
 // will be spent working on ReC98 or not.
 const FreeTimeDecisionPoint = time.Duration(time.Hour * 16)
@@ -318,11 +314,6 @@ type PriceAt struct {
 	Price[int]
 }
 
-// FreeTime represents a single day that can be spent on getting a push done.
-type FreeTime struct {
-	Date LocalDateStamp
-}
-
 // Incoming represents an unprocessed order coming in from the client side.
 type Incoming struct {
 	// Retrieved via the POST body
@@ -371,7 +362,6 @@ type tTransactions struct {
 }
 type tPushes []*Push
 type tPrices []*PriceAt
-type tFreeTime []*FreeTime
 type tBlogTags map[string][]string
 type tTagDescriptions struct {
 	Ordered []*TagDescription
@@ -411,15 +401,6 @@ func (p tPrices) Current() (prices Price[float64]) {
 		Push:  float64(price.Push),
 		Micro: float64(price.Micro),
 	}
-}
-
-func (f tFreeTime) IndexBefore(t time.Time) int {
-	for i := range f {
-		if f[i].Date.After(t) {
-			return i
-		}
-	}
-	return len(f)
 }
 
 // Total calculates the total amount of incoming and reserved cents, with
@@ -491,7 +472,6 @@ func (t *tStripeSubs) Delete(salt string) error {
 var customers = tCustomers{}
 var transactions = tTransactions{}
 var prices = tPrices{}
-var freetime = tFreeTime{}
 var incoming = tIncoming{}
 var blogTags = tBlogTags{}
 var tagDescriptions = tTagDescriptions{}
@@ -611,7 +591,6 @@ func init() {
 	loadTSV(&transactions.All, "transactions", gocsv.UnmarshalCSV)
 	loadTSV(&tsvPushes, "pushes", gocsv.UnmarshalCSV)
 	loadTSV(&prices, "prices", gocsv.UnmarshalCSV)
-	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
 	loadTSV(&incoming.data, incoming.Name(), gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
 	loadTSV(&tagDescriptions.Ordered, "tag_descriptions", gocsv.UnmarshalCSV)

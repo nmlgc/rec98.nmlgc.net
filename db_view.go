@@ -140,8 +140,6 @@ func (t tPushes) DeliveredAt(datestring string) []Push {
 // Cap bundles all information about the current state of the backlog, with
 // regard to the crowdfunding cap.
 type Cap struct {
-	Now             time.Time
-	Then            time.Time
 	Pushes          int
 	PushPrice       float64
 	MicroPrice      float64
@@ -166,13 +164,8 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 	scopePrices := prices.Current()
 	ret.PushPrice = scopePrices.Push
 	ret.MicroPrice = scopePrices.Micro
-	ret.Now = time.Now()
-	ret.Then = ret.Now.Add(CapWindow)
 
-	start := freetime.IndexBefore(ret.Now)
-	end := freetime.IndexBefore(ret.Then)
-
-	ret.Pushes = end - start
+	ret.Pushes = 10
 	ret.Cap = float64(ret.Pushes) * ret.PushPrice
 
 	backlog := TransactionBacklog()

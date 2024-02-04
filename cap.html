@@ -20,19 +20,13 @@
 		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div><!--
 		--><div class="incoming" style="width: {{.FracIncoming}}%;"></div><!--
 		--><div class="reserved" style="width: {{.FracReserved}}%;"></div>
-	</div><p class="desc">
-	{{- if .Reached -}}
+	</div>{{- if .Reached -}}<p class="desc">
 		Currently sold out, please check back after the next delivery.<br />
 		In the meantime, you can <a href="/donate">donate</a>.
-	{{- else -}}
-		Based on my free time in the 4 weeks from now to {{HTML_Date .Then}}.
-	{{- end -}}</p>
-	{{if not .Ctx}}{{if not .Reached}}
-	<p>
+	</p>{{- else if not .Ctx -}}<p>
 		Interested in contributing? Make sure you've read the <a href="/faq">
 		FAQ page</a>, and place your order there.
-	</p>
-	{{end}}{{end}}
+	</p>{{- end -}}
 	<p class="desc">
 		Want to support translations? These are funded through
 		{{HTML_Emoji "opencollective"}} <a href="https://opencollective.com/thpatch">Touhou Patch Center</a>;

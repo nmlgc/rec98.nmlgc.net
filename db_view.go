@@ -162,7 +162,7 @@ func (c Cap) Reached() bool {
 
 // CapCurrent calculates the cap from the current point in time.
 func CapCurrent(ctx interface{}) (ret Cap) {
-	ret.PushPrice = pushprices.Current()
+	ret.PushPrice = prices.Current()
 	ret.Now = time.Now()
 	ret.Then = ret.Now.Add(CapWindow)
 

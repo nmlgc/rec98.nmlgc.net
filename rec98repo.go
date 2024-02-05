@@ -401,7 +401,7 @@ type REProgressEstimate struct {
 // function really should also report it to the reader. So you'd have to
 // retrieve it anyway.
 func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgress) REProgressEstimate {
-	price := pushprices.Current()
+	price := prices.Current()
 	done := REProgressAtTree(tree)
 	return REProgressEstimate{
 		Done: done.Pct(baseline),

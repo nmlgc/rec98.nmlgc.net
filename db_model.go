@@ -305,8 +305,8 @@ func (p Push) FundedAt() (ret time.Time) {
 	return
 }
 
-// PushPrice represents the price of one push at a given point in time.
-type PushPrice struct {
+// PriceAt represents the price of one push at a given point in time.
+type PriceAt struct {
 	Time  time.Time
 	Cents int
 }
@@ -363,7 +363,7 @@ type tTransactions struct {
 	Scoped map[IDScope][]*Transaction
 }
 type tPushes []*Push
-type tPushPrices []*PushPrice
+type tPrices []*PriceAt
 type tFreeTime []*FreeTime
 type tBlogTags map[string][]string
 type tTagDescriptions struct {
@@ -389,7 +389,7 @@ func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
 }
 
-func (p tPushPrices) At(t time.Time) (price int) {
+func (p tPrices) At(t time.Time) (price int) {
 	for _, pushprice := range p {
 		if pushprice.Time.Before(t) {
 			price = pushprice.Cents
@@ -398,7 +398,7 @@ func (p tPushPrices) At(t time.Time) (price int) {
 	return
 }
 
-func (p tPushPrices) Current() (price float64) {
+func (p tPrices) Current() (price float64) {
 	return float64(p.At(time.Now()))
 }
 
@@ -479,7 +479,7 @@ func (t *tStripeSubs) Delete(salt string) error {
 
 var customers = tCustomers{}
 var transactions = tTransactions{}
-var pushprices = tPushPrices{}
+var prices = tPrices{}
 var freetime = tFreeTime{}
 var incoming = tIncoming{}
 var blogTags = tBlogTags{}
@@ -599,7 +599,7 @@ func init() {
 	loadTSV(&customers, "customers", gocsv.UnmarshalCSV)
 	loadTSV(&transactions.All, "transactions", gocsv.UnmarshalCSV)
 	loadTSV(&tsvPushes, "pushes", gocsv.UnmarshalCSV)
-	loadTSV(&pushprices, "pushprices", gocsv.UnmarshalCSV)
+	loadTSV(&prices, "prices", gocsv.UnmarshalCSV)
 	loadTSV(&freetime, "freetime", gocsv.UnmarshalCSV)
 	loadTSV(&incoming.data, incoming.Name(), gocsv.UnmarshalCSV)
 	loadTSV(&blogTags, "blog_tags", gocsv.UnmarshalCSVToMap)
@@ -609,7 +609,7 @@ func init() {
 
 	transactions.Scoped = make(map[IDScope][]*Transaction)
 	for _, transaction := range transactions.All {
-		pushprice := int64(pushprices.At(transaction.Time))
+		pushprice := int64(prices.At(transaction.Time))
 		transaction.Outstanding.SetFrac64(int64(transaction.Cents), pushprice)
 		transactions.Scoped[transaction.ID.Scope] = append(
 			transactions.Scoped[transaction.ID.Scope], transaction,

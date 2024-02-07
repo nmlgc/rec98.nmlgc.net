@@ -32,7 +32,10 @@ const provider_label = document.getElementById("provider_label")!;
 
 const error = document.getElementById("error")!;
 
-const pushprice = (Number(push_amount.dataset.price) / 100);
+const scope_prices = [
+	(Number(push_amount.dataset.pricePush) / 100),
+	(Number(push_amount.dataset.priceMicro) / 100),
+];
 
 function HTMLSupportMail() {
 	return `
@@ -88,6 +91,10 @@ function handleSelect(option: HTMLOptionElement) {
 		micro_available.textContent = " (not possible with this goal, full push required for delivery)";
 	}
 
+	// Micro availability will have an impact on the push amount, and the
+	// `onchange` event isn't fired for programmatic changes.
+	onAmountChange();
+
 	goal.required = (goal_mandatory !== null);
 	goal.reportValidity();
 	micro_container.hidden = false;
@@ -100,10 +107,11 @@ function isOneTime() {
 function updatePushAmount(
 	target_amount: HTMLElement, target_noun: HTMLElement, money: number
 ) {
+	const price = scope_prices[Number(micro.checked)]
 	target_amount.innerHTML = (
-		(Math.round((money / pushprice) * 100) / 100).toString()
+		(Math.round((money / price) * 100) / 100).toString()
 	);
-	target_noun.innerHTML = ((money == pushprice) ? " push" : " pushes");
+	target_noun.innerHTML = ((money == price) ? " push" : " pushes");
 }
 
 function onAmountChange() {
@@ -138,7 +146,7 @@ function onAmountChange() {
 		discount_breakdown.hidden = false;
 		discount_sponsor.innerHTML = discount_offer.dataset.name!;
 		const roundup_value = discountRoundupValue(
-			max, Number(amount.value), pushprice, discount_fraction
+			max, Number(amount.value), scope_prices[0], discount_fraction
 		)
 		updatePushAmount(roundup_pushes, roundup_noun, roundup_value);
 		roundup_amount.innerHTML = valueInCurrency(roundup_value * 100);
@@ -240,5 +248,6 @@ async function sendIncoming(provider: string, provider_session = "") {
 window.onload = () => {
 	handleSelect(metric.options[metric.selectedIndex]);
 	amount.onchange = onAmountChange;
+	micro.onchange = onAmountChange;
 	onCycle();
 }

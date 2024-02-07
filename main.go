@@ -114,7 +114,7 @@ func HTMLCurrency(cents float64) template.HTML {
 
 // HTMLPushPrice returns the current push price, rendered as HTML.
 func HTMLPushPrice() template.HTML {
-	return HTMLCurrency(prices.Current())
+	return HTMLCurrency(prices.Current().Push)
 }
 
 // HTMLDownload returns a file download link for basename, hosted at hp.
@@ -403,7 +403,7 @@ func main() {
 			return customers.HTMLByID(id)
 		},
 		"DB_DiscountOffers": func() []DiscountOfferView {
-			return DiscountOffers(prices.Current())
+			return DiscountOffers(prices.Current().Push)
 		},
 		"DB_TransactionBacklog": TransactionBacklog,
 		"DB_Pushes":             pushes.All,

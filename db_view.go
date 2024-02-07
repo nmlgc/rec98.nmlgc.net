@@ -144,6 +144,7 @@ type Cap struct {
 	Then            time.Time
 	Pushes          int
 	PushPrice       float64
+	MicroPrice      float64
 	Cap             float64
 	Outstanding     float64
 	Incoming        float64
@@ -162,7 +163,9 @@ func (c Cap) Reached() bool {
 
 // CapCurrent calculates the cap from the current point in time.
 func CapCurrent(ctx interface{}) (ret Cap) {
-	ret.PushPrice = prices.Current()
+	scopePrices := prices.Current()
+	ret.PushPrice = scopePrices.Push
+	ret.MicroPrice = scopePrices.Micro
 	ret.Now = time.Now()
 	ret.Then = ret.Now.Add(CapWindow)
 

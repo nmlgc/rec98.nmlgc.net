@@ -16,6 +16,7 @@ import (
 
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gocarina/gocsv"
+	"golang.org/x/exp/constraints"
 )
 
 const dbPath = "db/"
@@ -305,10 +306,16 @@ func (p Push) FundedAt() (ret time.Time) {
 	return
 }
 
-// PriceAt represents the price of one push at a given point in time.
+type Price[T constraints.Integer | constraints.Float] struct {
+	Push  T
+	Micro T
+}
+
+// PriceAt represents the price of one push or push-equivalent microtransaction
+// at a given point in time.
 type PriceAt struct {
-	Time  time.Time
-	Cents int
+	Time time.Time
+	Price[int]
 }
 
 // FreeTime represents a single day that can be spent on getting a push done.
@@ -389,17 +396,21 @@ func (c tCustomers) ByID(id CustomerID) Customer {
 	return *c[id]
 }
 
-func (p tPrices) At(t time.Time) (price int) {
+func (p tPrices) At(t time.Time) (price Price[int]) {
 	for _, pushprice := range p {
 		if pushprice.Time.Before(t) {
-			price = pushprice.Cents
+			price = pushprice.Price
 		}
 	}
 	return
 }
 
-func (p tPrices) Current() (price float64) {
-	return float64(p.At(time.Now()))
+func (p tPrices) Current() (prices Price[float64]) {
+	price := p.At(time.Now())
+	return Price[float64]{
+		Push:  float64(price.Push),
+		Micro: float64(price.Micro),
+	}
 }
 
 func (f tFreeTime) IndexBefore(t time.Time) int {
@@ -609,8 +620,12 @@ func init() {
 
 	transactions.Scoped = make(map[IDScope][]*Transaction)
 	for _, transaction := range transactions.All {
-		pushprice := int64(prices.At(transaction.Time))
-		transaction.Outstanding.SetFrac64(int64(transaction.Cents), pushprice)
+		scopePrices := prices.At(transaction.Time)
+		price := int64(scopePrices.Push)
+		if transaction.ID.Scope == SMicro {
+			price = int64(scopePrices.Micro)
+		}
+		transaction.Outstanding.SetFrac64(int64(transaction.Cents), price)
 		transactions.Scoped[transaction.ID.Scope] = append(
 			transactions.Scoped[transaction.ID.Scope], transaction,
 		)

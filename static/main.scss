@@ -883,6 +883,14 @@ form #providers button img {
 	color: var(--c-border);
 }
 
+#order input+label ul {
+	list-style-type: "☐ ";
+}
+
+#order input:checked+label ul {
+	list-style-type: "☑ ";
+}
+
 #error {
 	color: red;
 }

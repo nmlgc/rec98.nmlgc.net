@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -154,48 +155,71 @@ func (e eNoDescription) Error() string {
 	return fmt.Sprintf("no description for tag \"%s\"", e.Tag)
 }
 
-// HTMLTag returns a rendered blog tag, styled depending on its presence in the
-// given filters, and with additional links to manipulate the filters.
-func HTMLTag(tag string, filters []string) (template.HTML, error) {
-	linkFor := func(allTags []string, title string, text string) string {
+type htmlTagLinkData struct {
+	url   string
+	title string
+	body  string
+}
+
+// HTMLTagData bundles all strings of a HTML-rendered tag that are constant
+// between rendering methods.
+type HTMLTagData struct {
+	class string
+	links []htmlTagLinkData
+}
+
+// NewHTMLTagData generates all strings to render a blog tag as HTML with the
+// given filters.
+func NewHTMLTagData(tag string, filters []string) (ret HTMLTagData, err error) {
+	link := func(allTags []string, title string, text string) htmlTagLinkData {
 		url := "/blog/tag"
 		if len(allTags) >= 1 {
 			url += `/` + strings.Join(allTags, "/")
 		}
-		escTitle := template.HTMLEscapeString(title)
-		return `<a href="` + url + `" title="` + escTitle + `">` + text + `</a>`
-	}
-
-	indexInFilters := -1
-	for i, filter := range filters {
-		if filter == tag {
-			indexInFilters = i
-			break
-		}
+		return htmlTagLinkData{url, template.HTMLEscapeString(title), text}
 	}
 
 	desc, ok := tagDescriptions.Map[tag]
 	if !ok {
 		// Nope, no log.Fatalf() here, don't want a mistyped or outdated tag
 		// filter URL to crash the entire server process.
-		return "", eNoDescription{tag}
+		return HTMLTagData{}, eNoDescription{tag}
 	}
-	body := linkFor([]string{tag}, desc, tag)
-	class := "tag"
+	ret.links = []htmlTagLinkData{link([]string{tag}, desc, tag)}
+	ret.class = "tag"
 
 	// Any append() call that involves filters, or any sub-slice of it, will
 	// modify the underlying array!
-	if indexInFilters != -1 {
-		class += " active"
+	if indexInFilters := slices.Index(filters, tag); indexInFilters != -1 {
+		ret.class += " active"
 		filterMod := append([]string{}, filters[:indexInFilters]...)
 		filterMod = append(filterMod, filters[indexInFilters+1:]...)
-		body += linkFor(filterMod, "Remove from filters", "-")
+		ret.links = append(
+			ret.links, link(filterMod, "Remove from filters", "-"),
+		)
 	} else if len(filters) >= 1 {
 		filterMod := append([]string{}, filters...)
 		filterMod = append(filterMod, tag)
-		body += linkFor(filterMod, "Add to filters", "+")
+		ret.links = append(ret.links, link(filterMod, "Add to filters", "+"))
 	}
-	return template.HTML(`<span class="` + class + `">` + body + `</span>`), nil
+	return ret, nil
+}
+
+// HTMLTag returns a rendered blog tag, styled depending on its presence in the
+// given filters, and with additional links to manipulate the filters.
+func HTMLTag(tag string, filters []string) (template.HTML, error) {
+	data, err := NewHTMLTagData(tag, filters)
+	if err != nil {
+		return "", err
+	}
+	ret := `<span class="` + data.class + `">`
+	for _, l := range data.links {
+		ret += `<a href="` + l.url + `" title="` + l.title + `">`
+		ret += l.body
+		ret += `</a>`
+	}
+	ret += `</span>`
+	return template.HTML(ret), nil
 }
 
 var pages = template.New("").Funcs(map[string]interface{}{

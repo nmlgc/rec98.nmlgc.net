@@ -114,8 +114,7 @@
 	/> The chasing cross bullets, seen in Phase 14 of the same Stage 6 Yuuka
 	fight. Featuring some smart sprite work, making use of point symmetry to
 	achieve a fluid animation in just 4 frames. This is
-	{{HTML_Tag "good-code" nil}} in sprite form. Capped to 31 entities, because
-	the 32<sup>nd</sup> custom entity during this fight is defined to be…
+	{{HTML_TagInline "good-code"}} in sprite form. Capped to 31 entities, because the 32<sup>nd</sup> custom entity during this fight is defined to be…
 </p></li><li><p>
 	The single purple pulsating and shrinking safety circle, seen in Phase 4 of
 	the same fight. The most interesting aspect here is actually still related
@@ -299,7 +298,7 @@ memset(MK_FP(0xA800, 0), _AL, ((640 / 8) * 400));
 	sprite that could be blitted without a bitmask? But the necessary
 	identification work likely nullifies the performance gained from TDW mode,
 	I'd say. In any case, that's pretty deep
-	{{HTML_Tag "micro-optimization" nil}} territory. Just use TDW mode for the
+	{{HTML_TagInline "micro-optimization"}} territory. Just use TDW mode for the
 	few cases it's good at, and stick to RMW mode for the rest.
 </p><p>
 	So is this all that can be said about the GRCG? Not quite, because there are

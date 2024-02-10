@@ -169,7 +169,7 @@ type HTMLTagData struct {
 }
 
 // NewHTMLTagData generates all strings to render a blog tag as HTML with the
-// given filters.
+// given filters, and with additional links to manipulate the filters.
 func NewHTMLTagData(tag string, filters []string) (ret HTMLTagData, err error) {
 	link := func(allTags []string, title string, text string) htmlTagLinkData {
 		url := "/blog/tag"
@@ -205,10 +205,10 @@ func NewHTMLTagData(tag string, filters []string) (ret HTMLTagData, err error) {
 	return ret, nil
 }
 
-// HTMLTag returns a rendered blog tag, styled depending on its presence in the
-// given filters, and with additional links to manipulate the filters.
-func HTMLTag(tag string, filters []string) (template.HTML, error) {
-	data, err := NewHTMLTagData(tag, filters)
+// HTMLTagInline renders a tag using inline elements, using GET request-sending
+// <a> elements for links.
+func HTMLTagInline(tag string) (template.HTML, error) {
+	data, err := NewHTMLTagData(tag, nil)
 	if err != nil {
 		return "", err
 	}
@@ -217,6 +217,23 @@ func HTMLTag(tag string, filters []string) (template.HTML, error) {
 		ret += `<a href="` + l.url + `" title="` + l.title + `">`
 		ret += l.body
 		ret += `</a>`
+	}
+	ret += `</span>`
+	return template.HTML(ret), nil
+}
+
+// HTMLTagBlock renders a tag using block elements, using POST request-sending
+// form buttons for links
+func HTMLTagBlock(tag string, filters []string) (template.HTML, error) {
+	data, err := NewHTMLTagData(tag, filters)
+	if err != nil {
+		return "", err
+	}
+	ret := `<span class="` + data.class + `">`
+	for _, l := range data.links {
+		ret += `<form action="` + l.url + `" method="POST">`
+		ret += `<button type="submit" title="` + l.title + `">` + l.body
+		ret += `</button></form>`
 	}
 	ret += `</span>`
 	return template.HTML(ret), nil
@@ -251,7 +268,8 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_Currency":     HTMLCurrency,
 	"HTML_PushPrice":    HTMLPushPrice,
 	"HTML_Download":     HTMLDownload,
-	"HTML_Tag":          HTMLTag,
+	"HTML_TagBlock":     HTMLTagBlock,
+	"HTML_TagInline":    HTMLTagInline,
 	"HTML_Screen_Y":     HTMLScreenY,
 	"HTML_200_Y":        HTML200Y,
 

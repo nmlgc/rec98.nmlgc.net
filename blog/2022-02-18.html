@@ -103,13 +103,7 @@
 	2}}&nbsp;/ 2×{{HTML_200_Y 1}} pixels, TH03 only requires an adequate total
 	of 6,624 bytes of memory for the collision bitmaps of both playfields.
 </p><p>
-	So how did the implementation not earn the {{HTML_Tag "good-code" nil}} tag
-	this time? Because the code for drawing into these bitmaps is undecompilable
-	hand-written x86 assembly. {{HTML_Emoji "zunpet"}} And not just your usual
-	ASM that was basically compiled from C and then edited to maybe optimize
-	register allocation and maybe replace a bunch of local variables with
-	self-modifying code, oh no. This code is full of overly clever bit
-	twiddling, abusing the fact that the 16-bit <code>AX</code>,
+	So how did the implementation not earn the {{HTML_TagInline "good-code"}} tag this time? Because the code for drawing into these bitmaps is undecompilable hand-written x86 assembly. {{HTML_Emoji "zunpet"}} And not just your usual ASM that was basically compiled from C and then edited to maybe optimize register allocation and maybe replace a bunch of local variables with self-modifying code, oh no. This code is full of overly clever bit twiddling, abusing the fact that the 16-bit <code>AX</code>,
 	<code>BX</code>, <code>CX</code>, and <code>DX</code> registers can also be
 	accessed as two 8-bit registers, calculations that change the semantic
 	meaning behind the value of a register, or just straight-up reassignments of
@@ -276,6 +270,6 @@ asm { movsw; }
 	{{HTML_Emoji "onricdennat"}}
 </p><p>
 	Next up: The final missing piece of TH04's and TH05's
-	{{HTML_Tag "bullet" nil}}-moving code, which will include a certain other
+	{{HTML_TagInline "bullet"}}-moving code, which will include a certain other
 	type of projectile as well.
 </p>

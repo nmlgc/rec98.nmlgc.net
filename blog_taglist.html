@@ -2,7 +2,7 @@
 <h3>List of tags</h3>
 <table>{{range Blog_TagDescriptions -}}
 	<tr>
-		<td>{{HTML_Tag .Tag nil}}</td>
+		<td>{{HTML_TagBlock .Tag nil}}</td>
 		<td>{{.Desc}}</td>
 	</tr>
 {{- end}}</table>

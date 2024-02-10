@@ -110,7 +110,7 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	16 bytes, but the majority just use (the same) two, with only Stage 4 Reimu
 	using a whopping seven different ones. To reverse-engineer the various uses
 	of these variables, I pretty much had to map out which of the undecompiled
-	{{HTML_Tag "danmaku-pattern" nil}} functions corresponds to which boss
+	{{HTML_TagInline "danmaku-pattern"}} functions corresponds to which boss
 	fight. In the end, I assigned 29 different variable names for each of the
 	semantically different use cases, which made up another full push on its
 	own.

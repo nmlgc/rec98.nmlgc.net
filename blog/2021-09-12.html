@@ -20,7 +20,7 @@
 	the entire text RAM that fills every 16×16 cell with a differently colored
 	space character, fully clearing the text RAM as a side effect. For once, he
 	even removed some redundancy here by using helper functions! It's all still
-	far from {{HTML_Tag "good-code" nil}} though. For example, there's a
+	far from {{HTML_TagInline "good-code"}} though. For example, there's a
 	function for filling 5 rows worth of cells, which he uses for both the top
 	and bottom margin of these letters. But since the bottom margin starts at
 	the 22nd line, the code writes past the 25th line and into the second TRAM
@@ -44,7 +44,6 @@
 	longer. 😕 The player- and HUD-related functions, which previously delayed
 	further progress there, turned out to call a lot of not yet RE'd functions
 	themselves. Seems as if we're doing most of the
-	{{HTML_Tag "card-flipping" nil}} code second, after all? Next up: Point and
-	bomb items, which at least are a significant step in terms of position
+	{{HTML_TagInline "card-flipping"}} code second, after all? Next up: Point and bomb items, which at least are a significant step in terms of position
 	independence.
 </p>

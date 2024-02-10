@@ -4,6 +4,6 @@
 <h3><a href="/blog/tag">⮜ List of tags</a></h3>
 <h4>Showing all posts tagged {{range $i, $filter := $filters -}}
 	{{- if $i}}{{if eq (inc $i) (len $filters)}} and {{else}}, {{end}}{{end -}}
-	{{- HTML_Tag $filter $filters -}}
+	{{- HTML_TagBlock $filter $filters -}}
 {{- end}}</h4>
 {{range Blog_Posts $filters}}{{template "blog_post.html" .}}{{end}}

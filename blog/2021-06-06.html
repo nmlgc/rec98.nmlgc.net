@@ -14,12 +14,12 @@
 </p><ul>
 	<li>Yes, I manually went through every one of the 82 posts I've written so
 	far, and assigned labels to them.</li>
-	<li>The per-project ({{HTML_Tag "rec98" nil}} and
-	{{HTML_Tag "website" nil}}) and per-game ({{HTML_Tag "th01" nil}}
-	{{HTML_Tag "th02" nil}}
-	{{HTML_Tag "th03" nil}}
-	{{HTML_Tag "th04" nil}}
-	{{HTML_Tag "th05" nil}}) tags are automatically generated from the
+	<li>The per-project ({{HTML_TagInline "rec98"}} and
+	{{HTML_TagInline "website"}}) and per-game ({{HTML_TagInline "th01"}}
+	{{HTML_TagInline "th02"}}
+	{{HTML_TagInline "th03"}}
+	{{HTML_TagInline "th04"}}
+	{{HTML_TagInline "th05"}}) tags are automatically generated from the
 	database and the Git commit history, respectively. That might have
 	ended us up with a fair bit of category clutter, as any single change
 	to a tiny aspect is enough for a blog post to be tagged with an
@@ -66,7 +66,7 @@
 	want to subject users to the unacceptable burden of manually remembering
 	which version of which patch stack they've recorded a given replay with.
 	So, we'd somehow need to calculate a hash of everything that defines the
-	{{HTML_Tag "gameplay" nil}}, exclude the things that don't, and only show
+	{{HTML_TagInline "gameplay"}}, exclude the things that don't, and only show
 	replays that were recorded on the hash that matches the currently running
 	patch stack. Well, turns out that True Touhou Fans™ quite enjoy watching
 	the games get broken in every possible way. That's the way ZUN intended the

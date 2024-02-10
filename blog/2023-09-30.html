@@ -1291,10 +1291,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	rest of those functions. The integer math functions are used all throughout
 	the game logic, and are the main reason why this goal is important for a
 	Linux port, or any port to a 64-bit architecture for that matter. If you've
-	ever read a {{HTML_Tag "micro-optimization" nil}}-related blog post, you'll
-	know that hand-written ASM is a great recipe that often results in the
-	finest jank, and the game's square root function definitely delivers in that
-	regard, right out of the gate.<br />
+	ever read a {{HTML_TagInline "micro-optimization"}}-related blog post, you'll know that hand-written ASM is a great recipe that often results in the finest jank, and the game's square root function definitely delivers in that regard, right out of the gate.<br />
 	What slightly differentiates this algorithm from the typical definition of
 	an <a href="https://en.wikipedia.org/wiki/Integer_square_root">integer
 	square root</a> is that it rounds up: In real numbers, <code>√﻿3</code> is

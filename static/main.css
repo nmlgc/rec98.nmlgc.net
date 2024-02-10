@@ -41,7 +41,7 @@
 }
 /* --------- */
 
-html, a.download::after {
+html, .tag form button, a.download::after {
 	height: 100%;
 	font-family: sans-serif;
 }
@@ -175,7 +175,8 @@ figure.singleplayer_playfield .multilayer {
 	aspect-ratio: 24 / 23;
 }
 
-figure button {
+figure button,
+.tag button {
 	border: 0;
 	background: inherit;
 	font-size: inherit;
@@ -183,7 +184,8 @@ figure button {
 	color: var(--c-link);
 }
 
-figure button:hover {
+figure button:hover,
+.tag button:hover {
 	color: var(--c-link-hover);
 	cursor: pointer;
 }
@@ -1016,22 +1018,26 @@ article figure {
 	border: 1px solid var(--c-link);
 }
 
-.tag.active {
+.tag.active * {
 	font-weight: bold;
 }
 
-.tag * {
+.tag form *,
+.tag a {
 	display: flex;
 	align-items: center;
+	padding: unset;
 	padding-left: 0.25em;
+	text-align: left;
 }
 
-.tag :first-child::before {
+.tag form:first-child button:first-child::before,
+.tag a:first-child::before {
 	padding-right: 0.25em;
 	content: "○";
 }
 
-.tag :last-child {
+.tag > :last-child {
 	/* Since we want the links of these small + and - "icons" to take up as
 	 * much space as possible, we assign `padding-right` to them. */
 	padding-right: 0.25em;

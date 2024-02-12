@@ -498,6 +498,7 @@ func main() {
 	r.Handle(blogHP.URLPrefix+"{stem}.webm", blog.OldVideoRedirectHandler(&VP9))
 	staticHP.RegisterFileServer(r)
 	blogHP.RegisterFileServer(r)
+	r.Handle("/robots.txt", staticHP.Server())
 	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/faq", pagesHandler("faq.html"))

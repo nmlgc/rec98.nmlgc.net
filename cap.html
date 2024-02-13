@@ -16,11 +16,11 @@
 		out of
 		<span class="amount">{{HTML_Currency .Cap}}</span>
 	</p>
-	<div class="meter">
-		<div class="confirmed" style="width: {{.FracOutstanding}}%;"></div><!--
-		--><div class="incoming" style="width: {{.FracIncoming}}%;"></div><!--
-		--><div class="reserved" style="width: {{.FracReserved}}%;"></div>
-	</div>{{- if .Reached -}}<p class="desc">
+	<div class="meter"><div
+		style="{{CSS_Meter 100}} width: {{ .FracOutstanding}}%"></div><div
+		style="{{CSS_Meter   0}} width: {{ .FracIncoming}}%"></div><div
+		style="{{CSS_Meter  50}} width: {{ .FracReserved}}%"></div
+	></div>{{- if .Reached -}}<p class="desc">
 		Currently sold out, please check back after the next delivery.<br />
 		In the meantime, you can <a href="/donate">donate</a>.
 	</p>{{- else if not .Ctx -}}<p>

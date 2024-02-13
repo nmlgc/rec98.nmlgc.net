@@ -483,13 +483,11 @@ a.download:after {
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
-	background: linear-gradient(
-		#dddddd,
-		#eeeeee 20%,
-		#cccccc 45%,
-		#cccccc 55%,
-		#dddddd
-	);
+	background: linear-gradient(#dddddd,
+			#eeeeee 20%,
+			#cccccc 45%,
+			#cccccc 55%,
+			#dddddd);
 	text-align: left;
 }
 
@@ -499,40 +497,8 @@ a.download:after {
 	margin: 0;
 }
 
-#cap div.meter .confirmed {
-	background: linear-gradient(
-		#aadd77,
-		#cceeaa 20%,
-		#77aa33 45%,
-		#77aa33 55%,
-		#aadd77
-	);
-}
-
 span.confirmed { color: green; }
-
-#cap div.meter .incoming {
-    background: linear-gradient(
-		#ffc7c7,
-		#ffcccc 20%,
-		#dd4444 45%,
-		#dd4444 55%,
-		#ffc7c7
-	);
-}
-
 span.incoming { color: red; }
-
-#cap div.meter .reserved {
-	background: linear-gradient(
-		#ffefc7,
-		#fff1cc 20%,
-		#ddb246 45%,
-		#ddb246 55%,
-		#ffefc7
-	);
-}
-
 span.reserved { color: orange; }
 
 #cap .discounts li {

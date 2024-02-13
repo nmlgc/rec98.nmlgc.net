@@ -40,8 +40,8 @@ func (g GradientTable) GetInterpolatedColorFor(t float64) colorful.Color {
 
 // MustParseHex is a very nice thing Golang forces you to do! It is necessary
 // so that we can write out the literal of the color table below.
-func MustParseHex(s badge.Color) colorful.Color {
-	c, err := colorful.Hex(s.String())
+func MustParseHex(s string) colorful.Color {
+	c, err := colorful.Hex(s)
 	if err != nil {
 		panic("MustParseHex: " + err.Error())
 	}
@@ -49,9 +49,9 @@ func MustParseHex(s badge.Color) colorful.Color {
 }
 
 var gradientPoints = GradientTable{
-	{MustParseHex(badge.ColorRed), 0},
-	{MustParseHex(badge.ColorYellow), 50},
-	{MustParseHex(badge.ColorGreen), 100},
+	{MustParseHex(badge.ColorRed.String()), 0},
+	{MustParseHex(badge.ColorYellow.String()), 50},
+	{MustParseHex(badge.ColorGreen.String()), 100},
 }
 
 /// ----------------

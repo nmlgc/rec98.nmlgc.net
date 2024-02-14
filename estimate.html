@@ -1,7 +1,7 @@
 <h3>{{.Title}}</h3>
-<div>
+<div class="meter">
+	<div style="{{CSS_Meter .Done}} width: {{.Done}}%;"></div>
 	<div class="number">{{HTML_Percentage .Done}}</div>
-	<progress max="100" value="{{.Done}}"></progress>
 </div>
 <span class="cost">{{- if .Money -}}
 		~<span class="amount">{{HTML_Currency .Money}}</span>

@@ -31,9 +31,6 @@
 	--icon-height: 1.45em;
 	--logo-width: 3.5em;
 	--logo-padding: 0.5em;
-	--estimate-tl: -1px;
-	--estimate-br:  1px;
-	--estimate-blur: 1px;
 	--shadow: 0 0 0.5em 0;
 	--blog-shadow: var(--shadow) var(--c-border);
 
@@ -480,21 +477,24 @@ a.download:after {
 }
 
 #cap div.meter {
-	height: 100%;
 	width: 100%;
+}
+
+div.meter {
+	height: 90%;
 	box-sizing: border-box;
 	background: linear-gradient(#dddddd,
 			#eeeeee 20%,
 			#cccccc 45%,
 			#cccccc 55%,
 			#dddddd);
-	text-align: left;
+	text-align: left !important;
 }
 
-#cap div.meter * {
+div.meter * {
 	display: inline-block;
 	height: 100%;
-	margin: 0;
+	margin: 0 !important;
 }
 
 span.confirmed { color: green; }
@@ -566,11 +566,6 @@ section.overall, section.game, section.binary {
 #index div .number {
 	position: absolute;
 	margin: 0;
-	text-shadow:
-		var(--estimate-tl) var(--estimate-tl) var(--estimate-blur) white,
-		var(--estimate-tl) var(--estimate-br) var(--estimate-blur) white,
-		var(--estimate-br) var(--estimate-tl) var(--estimate-blur) white,
-		var(--estimate-br) var(--estimate-br) var(--estimate-blur) white;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
@@ -579,6 +574,8 @@ section.overall, section.game, section.binary {
 
 #index .overall .number {
 	font-size: 112.5%;
+	top: 47.5%;
+	transform: translate(-50%, -52.5%);
 }
 
 #index .overall .number,

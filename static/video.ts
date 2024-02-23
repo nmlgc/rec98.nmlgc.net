@@ -114,8 +114,11 @@ abstract class ReC98Player extends HTMLElement {
 
 	/**
 	 * Called after connecting all common controls to the DOM.
+	 * @returns Element collection, and whether to enable audio controls.
 	 */
-	abstract initSubclass();
+	abstract initSubclass(): [HTMLCollection, boolean];
+
+	abstract preload(): void;
 
 	// Members
 	// -------
@@ -139,7 +142,6 @@ abstract class ReC98Player extends HTMLElement {
 	eFullscreen = document.createElement("button");
 	ePopups = document.createElement("div");
 
-	videos: HTMLCollectionOf<HTMLVideoElement>;
 	videoShown: HTMLVideoElement;
 	duration: number | null = null;
 	frameCount = 0;
@@ -522,26 +524,7 @@ abstract class ReC98Player extends HTMLElement {
 		// Preloading the video is required for seeking to work before the
 		// video has been play()ed the first time.
 		this.onpointerenter = (() => {
-			let av1Removed = false;
-			for(const video of this.videos) {
-				// Nuke AV1 sources on Edge…
-				// https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/
-				if(runningOnEdge) {
-					for(const source of video.querySelectorAll(
-						"source[src *= '/av1/']"
-					)) {
-						source.remove();
-						av1Removed = true;
-					}
-				}
-				video.load();
-				video.preload = "auto";
-			}
-			if(av1Removed && !edgeAV1PopupShown) {
-				this.showPopup("⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…");
-				edgeAV1PopupShown = true;
-			}
-
+			this.preload();
 			this.onpointerenter = null;
 		});
 
@@ -552,19 +535,12 @@ abstract class ReC98Player extends HTMLElement {
 		this.eEnd.onclick = ((event) => this.handleKey('⏭', event));
 		// --------------
 
-		this.initSubclass();
-
-		// Reparent videos
-		// ---------------
-		for(let i = 0; i < this.videos.length; i++) {
-			this.eVideoWrap.appendChild(this.videos[0]);
-		}
-		// ---------------
+		const [elements, withAudio] = this.initSubclass();
 
 		let lastChild: (number | null) = null;
 		let requested: (number | null) = null;
 
-		if(this.videos.length >= 2) {
+		if(elements.length >= 2) {
 			this.eTabSwitcher = new ReC98TabSwitcher((i) => {
 				this.focus();
 				return this.show(i);
@@ -574,37 +550,25 @@ abstract class ReC98Player extends HTMLElement {
 			this.eDownload.title = "Lossless source file of current tab";
 		}
 
-		for(let i = 0; i < this.videos.length; i++) {
-			const video = this.videos[i];
-			video.onclick = ((event) => this.handleKey(' ', event));
-
-			// The backend code still enables controls just in case the user
-			// runs with disabled JavaScript, so we're separately disabling
-			// them here as we're about to replace them with our own.
-			video.controls = false;
-
-			if(video.hasAttribute("data-audio")) {
-				this.classList.add("with-audio");
-			}
-
-			if(video.hasAttribute("data-active")) {
+		for(let i = 0; i < elements.length; i++) {
+			const element = elements[i];
+			if(element.hasAttribute("data-active")) {
 				requested = i;
-			} else if(this.videos.length !== 1) {
-				video.hidden = true;
 			}
 			this.eTabSwitcher?.add(
-				attributeAsString(video, "data-title"), (i === requested)
+				attributeAsString(element, "data-title"), (i === requested)
 			);
 			lastChild = i;
 		}
 		if(lastChild === null) {
-			throw "No <video> child element found.";
+			throw "No child element found.";
 		}
 
 		this.show(requested ?? lastChild);
 		this.uiPause();
 
-		if(this.classList.contains("with-audio")) {
+		if(withAudio) {
+			this.classList.add("with-audio");
 			const toggleBar = ((active: boolean) => (active
 				? this.eVolumeBar.classList.add("active")
 				: this.eVolumeBar.classList.remove("active")
@@ -654,6 +618,7 @@ class ReC98Video extends ReC98Player {
 	eTimeFrame = document.createElement("span");
 	eFrameNext = document.createElement("button");
 
+	videos: HTMLCollectionOf<HTMLVideoElement>;
 	switchingVideos = false;
 
 	renderCustomTime(seconds: number) {
@@ -775,6 +740,28 @@ class ReC98Video extends ReC98Player {
 		);
 	}
 
+	preload() {
+		let av1Removed = false;
+		for(const video of this.videos) {
+			// Nuke AV1 sources on Edge…
+			// https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/
+			if(runningOnEdge) {
+				for(const source of video.querySelectorAll(
+					"source[src *= '/av1/']"
+				)) {
+					source.remove();
+					av1Removed = true;
+				}
+			}
+			video.load();
+			video.preload = "auto";
+		}
+		if(av1Removed && !edgeAV1PopupShown) {
+			this.showPopup("⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…");
+			edgeAV1PopupShown = true;
+		}
+	}
+
 	constructor() {
 		super();
 
@@ -805,7 +792,7 @@ class ReC98Video extends ReC98Player {
 		// ----
 	}
 
-	initSubclass() {
+	initSubclass(): [HTMLCollection, boolean] {
 		this.eFramePrevious.onclick = ((event) => this.handleKey('←', event));
 		this.eFrameNext.onclick = ((event) => this.handleKey('→', event));
 
@@ -816,9 +803,26 @@ class ReC98Video extends ReC98Player {
 
 		const timelineWidth = this.eTimeline.getBoundingClientRect().width;
 
+		// Reparent
 		this.videos = this.getElementsByTagName("video");
 		for(let i = 0; i < this.videos.length; i++) {
+			this.eVideoWrap.appendChild(this.videos[0]);
+		}
+
+		let withAudio = false;
+		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
+			video.onclick = ((event) => this.handleKey(' ', event));
+			withAudio ||= video.hasAttribute("data-audio");
+
+			// The backend code still enables controls just in case the user
+			// runs with disabled JavaScript, so we're separately disabling
+			// them here as we're about to replace them with our own.
+			video.controls = false;
+			if((this.videos.length !== 1) && !("active" in video.dataset)) {
+				video.hidden = true;
+			}
+
 			// Setup markers. Note that we mutate [markers] by reparenting its
 			// elements; a `for…of` loop would therefore skip every second
 			// marker.
@@ -846,6 +850,7 @@ class ReC98Video extends ReC98Player {
 		if(timelineWidth === 0) {
 			window.addEventListener("DOMContentLoaded", this.resizeMarkers);
 		}
+		return [this.videos, withAudio];
 	}
 
 	disconnectedCallback() {

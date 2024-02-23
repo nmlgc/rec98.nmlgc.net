@@ -49,7 +49,10 @@ class ReC98VideoMarker extends HTMLElement {
 	frameCount = 0;
 
 	init(
-		player: ReC98Video,
+		player: {
+			seekToDiscrete: (seconds: number) => void;
+			focus: () => void;
+		},
 		videoIndex: number,
 		timelineWidth: number,
 		fps: number,
@@ -102,7 +105,10 @@ const LinearToLog = (logDBRange: number) => {
 // 40 dB maps a linear 0.5 to 0.1.
 const linearToLog = LinearToLog(40);
 
-class ReC98Video extends HTMLElement {
+abstract class ReC98Player extends HTMLElement {
+	/** Should call `super.renderCustomTimeBase()`. */
+	abstract renderCustomTime(seconds: number): void;
+
 	// Members
 	// -------
 
@@ -119,10 +125,6 @@ class ReC98Video extends HTMLElement {
 	eTimeSeconds = document.createElement("span");
 	eFastForward = document.createElement("button");
 	eEnd = document.createElement("button");
-	eTimeFrameIcon = document.createElement("span");
-	eFramePrevious = document.createElement("button");
-	eTimeFrame = document.createElement("span");
-	eFrameNext = document.createElement("button");
 	eDownload = document.createElement("a");
 	eVolume = document.createElement("button");
 	eVolumeSymbol = document.createElement("span");
@@ -187,7 +189,7 @@ class ReC98Video extends HTMLElement {
 		this.ePlay.title = "Pause (Space)";
 		if(!this.timeIntervalID) {
 			this.timeIntervalID = setInterval(
-				(() => this.renderTimeFromVideo()),
+				(() => this.renderCurrentTime()),
 				(1000 / Math.max(this.fps, 10))
 			);
 		}
@@ -210,9 +212,9 @@ class ReC98Video extends HTMLElement {
 	seekToContinuous(seconds: number) {
 		if(this.videoShown.seeking) {
 			this.videoShown.onseeked = (() => {
-				this.renderTimeFromVideo();
+				this.renderCurrentTime();
 				this.videoShown.currentTime = seconds;
-				this.videoShown.onseeked = (() => this.renderTimeFromVideo());
+				this.videoShown.onseeked = (() => this.renderCurrentTime());
 			});
 		} else {
 			this.videoShown.currentTime = seconds;
@@ -275,7 +277,7 @@ class ReC98Video extends HTMLElement {
 		let frame = frameFrom((fraction * this.videoShown.duration), this.fps);
 		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
 		const seconds = secondsFrom(frame, this.fps);
-		this.renderTime(seconds); // Immediate feedback
+		this.renderCustomTime(seconds); // Immediate feedback
 		this.seekToDiscrete(seconds);
 	}
 
@@ -297,19 +299,17 @@ class ReC98Video extends HTMLElement {
 		return true;
 	}
 
-	renderTime(seconds: number) {
-		const frame = frameFrom(seconds, this.fps);
+	renderCustomTimeBase(seconds: number, timelineFraction: number) {
 		this.eTimeSeconds.textContent = (
 			Math.trunc(seconds).toString().padStart(2, "0") +
 			":" +
 			Math.trunc((seconds % 1) * 100).toString().padStart(2, "0")
 		);
-		this.eTimeFrame.textContent = frame.toString();
-		this.eTimeline.setFraction(timelineFractionAt(frame, this.frameCount));
+		this.eTimeline.setFraction(timelineFraction);
 	}
 
-	renderTimeFromVideo() {
-		this.renderTime(this.videoShown.currentTime);
+	renderCurrentTime() {
+		this.renderCustomTime(this.currentTime());
 	}
 
 	markers() {
@@ -431,19 +431,10 @@ class ReC98Video extends HTMLElement {
 		this.eFastForward.title = "Fast forward (Ctrl-→️ / Ctrl-D / Ctrl-L)";
 		this.eFastForward.onfocus = preventFocus;
 
-		this.eFramePrevious.textContent = "⏴";
-		this.eFramePrevious.title = "Previous frame (←️ / A / H)";
-		this.eFramePrevious.onfocus = preventFocus;
-		this.eFrameNext.textContent = "⏵";
-		this.eFrameNext.title = "Next frame (→️ / D / L)";
-		this.eFrameNext.onfocus = preventFocus;
-
 		this.eHome.className = "seconds";
 		this.eRewind.className = "seconds";
 		this.eFastForward.className = "seconds";
 		this.eEnd.className = "seconds";
-		this.eFramePrevious.className = "frame previous";
-		this.eFrameNext.className = "frame next";
 		// ---------------
 
 		// Time
@@ -451,14 +442,9 @@ class ReC98Video extends HTMLElement {
 		this.eTimeSecondsIcon.textContent = "⌚";
 		this.eTimeSecondsIcon.title = "Seconds";
 		this.eTimeSeconds.title = "Seconds";
-		this.eTimeFrameIcon.textContent = "🎞️";
-		this.eTimeFrameIcon.title = "Frame";
-		this.eTimeFrame.title = "Frame";
 
 		this.eTimeSecondsIcon.className = "seconds icon";
 		this.eTimeSeconds.className = "seconds time";
-		this.eTimeFrameIcon.className = "frame icon";
-		this.eTimeFrame.className = "frame time";
 		// ----
 
 		// Timeline
@@ -472,7 +458,6 @@ class ReC98Video extends HTMLElement {
 			onStop: (() => (wasPlayingBeforeScrub && this.playbackStart())),
 		})
 		this.eTimeline.classList.add("timeline");
-		this.renderTime(0);
 		// --------
 
 		// Download
@@ -509,7 +494,7 @@ class ReC98Video extends HTMLElement {
 			return false;
 		}
 
-		const seekedFunc = (() => this.renderTimeFromVideo());
+		const seekedFunc = (() => this.renderCurrentTime());
 
 		this.fps = attributeAsNumber(videoNew, "data-fps");
 		this.frameCount = attributeAsNumber(videoNew, "data-frame-count");
@@ -587,6 +572,7 @@ class ReC98Video extends HTMLElement {
 	 */
 	init() {
 		this.tabIndex = -1;
+		this.renderCustomTime(0);
 
 		this.appendChild(this.eVideoWrap);
 		this.eVideoWrap.appendChild(this.ePopups);
@@ -598,10 +584,6 @@ class ReC98Video extends HTMLElement {
 		this.eControls.appendChild(this.eTimeSeconds);
 		this.eControls.appendChild(this.eFastForward);
 		this.eControls.appendChild(this.eEnd);
-		this.eControls.appendChild(this.eTimeFrameIcon);
-		this.eControls.appendChild(this.eFramePrevious);
-		this.eControls.appendChild(this.eTimeFrame);
-		this.eControls.appendChild(this.eFrameNext);
 		this.eControls.appendChild(this.eTimeline);
 		this.eControls.appendChild(this.eDownload);
 		this.eControls.appendChild(this.eFullscreen);
@@ -650,8 +632,6 @@ class ReC98Video extends HTMLElement {
 		this.eRewind.onclick = ((event) => this.handleKey('⏪', event));
 		this.eFastForward.onclick = ((event) => this.handleKey('⏩', event));
 		this.eEnd.onclick = ((event) => this.handleKey('⏭', event));
-		this.eFramePrevious.onclick = ((event) => this.handleKey('←', event));
-		this.eFrameNext.onclick = ((event) => this.handleKey('→', event));
 		// --------------
 
 		// Reparent videos
@@ -778,6 +758,63 @@ class ReC98Video extends HTMLElement {
 		document.removeEventListener("fullscreenchange", this.resizeMarkers);
 		document.removeEventListener("webkitfullscreenchange", this.resizeMarkers);
 		window.removeEventListener("DOMContentLoaded", this.resizeMarkers);
+	}
+};
+
+/** `<video>` content with support for frame-based seeking. */
+class ReC98Video extends ReC98Player {
+	eTimeFrameIcon = document.createElement("span");
+	eFramePrevious = document.createElement("button");
+	eTimeFrame = document.createElement("span");
+	eFrameNext = document.createElement("button");
+
+	renderCustomTime(seconds: number) {
+		const frame = frameFrom(seconds, this.fps);
+		const fraction = timelineFractionAt(frame, this.frameCount);
+		this.eTimeFrame.textContent = frame.toString();
+		super.renderCustomTimeBase(seconds, fraction);
+	}
+
+	constructor() {
+		super();
+
+		// Seeking buttons
+		// ---------------
+
+		const preventFocus = (() => this.focus());
+
+		this.eFramePrevious.textContent = "⏴";
+		this.eFramePrevious.title = "Previous frame (←️ / A / H)";
+		this.eFramePrevious.onfocus = preventFocus;
+		this.eFrameNext.textContent = "⏵";
+		this.eFrameNext.title = "Next frame (→️ / D / L)";
+		this.eFrameNext.onfocus = preventFocus;
+
+		this.eFramePrevious.className = "frame previous";
+		this.eFrameNext.className = "frame next";
+		// ---------------
+
+		// Time
+		// ----
+		this.eTimeFrameIcon.textContent = "🎞️";
+		this.eTimeFrameIcon.title = "Frame";
+		this.eTimeFrame.title = "Frame";
+
+		this.eTimeFrameIcon.className = "frame icon";
+		this.eTimeFrame.className = "frame time";
+		// ----
+	}
+
+	init() {
+		super.init();
+
+		this.eFramePrevious.onclick = ((event) => this.handleKey('←', event));
+		this.eFrameNext.onclick = ((event) => this.handleKey('→', event));
+
+		this.eControls.appendChild(this.eTimeFrameIcon);
+		this.eControls.appendChild(this.eFramePrevious);
+		this.eControls.appendChild(this.eTimeFrame);
+		this.eControls.appendChild(this.eFrameNext);
 	}
 };
 

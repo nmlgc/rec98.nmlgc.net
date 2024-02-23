@@ -206,15 +206,16 @@ class ReC98Video extends HTMLElement {
 		} else {
 			this.videoShown.currentTime = seconds;
 		}
+		return true;
 	}
 
 	seekBy(frameDelta: number) {
 		this.videoShown.pause();
-		this.seekTo(this.frameSeekTime(frameDelta));
+		return this.seekTo(this.frameSeekTime(frameDelta));
 	}
 
 	seekFast(direction: (-1 | 1)) {
-		this.seekBy(direction * (this.frameCount / 10));
+		return this.seekBy(direction * (this.frameCount / 10));
 	}
 
 	scrub(fraction: number) {
@@ -230,12 +231,7 @@ class ReC98Video extends HTMLElement {
 		this.seekTo(seconds);
 	}
 
-	toggle(event: Event) {
-		if(!this.videoShown) {
-			return;
-		}
-		event.preventDefault();
-
+	toggle() {
 		// This function might be called twice in very quick succession. As
 		// `<video>.play()` is asynchronous in modern browsers, but immediately
 		// sets `<video>.paused` to `false`, a second call checking for that
@@ -250,6 +246,7 @@ class ReC98Video extends HTMLElement {
 			this.pause();
 		}
 		this.focus();
+		return true;
 	}
 
 	renderTime(seconds: number) {
@@ -285,6 +282,67 @@ class ReC98Video extends HTMLElement {
 		ePopup.className = "popup";
 		ePopup.innerHTML = text;
 		this.ePopups.appendChild(ePopup);
+	}
+
+	/**
+	 * Should only be called from overrides of this method; call `handleKey()`
+	 * to handle events.
+	 */
+	handleKeySwitch(key: VirtualKey) {
+		switch(key) {
+		case ' ':
+			return this.toggle();
+		case '⏮':
+			return this.seekTo(0);
+		case '⏭':
+			return this.seekTo(secondsFrom((this.frameCount - 1), this.fps));
+		case '←':
+			return this.seekBy(-1);
+		case '→':
+			return this.seekBy(+1);
+		case '⏪':
+			return this.seekFast(-1);
+		case '⏩':
+			return this.seekFast(+1);
+		case '⛶':
+			if(!this.onfullscreenchange) {
+				this.onfullscreenchange = (() => {
+					if(!document.fullscreenElement && "orientation" in screen) {
+						screen.orientation.unlock();
+					}
+				});
+			}
+			if(
+				!document.fullscreenElement &&
+				!document['webkitFullscreenElement']
+			) {
+				(this['webkitRequestFullscreen']
+					? this['webkitRequestFullscreen']()
+					: this.requestFullscreen()
+				);
+				if("orientation" in screen) {
+					const or = ((this.offsetWidth > this.offsetHeight)
+						? "landscape"
+						: "portrait"
+					);
+					screen.orientation.lock(or).catch(() => {});
+				}
+				this.focus();
+			} else {
+				(document['webkitExitFullscreen']
+					? document['webkitExitFullscreen']()
+					: document.exitFullscreen()
+				);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	handleKey(key: VirtualKey, event: Event) {
+		if(this.handleKeySwitch(key)) {
+			event.preventDefault();
+		}
 	}
 
 	// Constant property initialization
@@ -384,33 +442,7 @@ class ReC98Video extends HTMLElement {
 		this.eFullscreen.textContent = "⛶";
 		this.eFullscreen.title = "Toggle fullscreen (F)";
 		this.eFullscreen.className = "large";
-		this.eFullscreen.onclick = (() => {
-			if(!this.onfullscreenchange) {
-				this.onfullscreenchange = (() => {
-					if(!document.fullscreenElement && "orientation" in screen) {
-						screen.orientation.unlock();
-					}
-				})
-			}
-			if(!document.fullscreenElement && !document['webkitFullscreenElement']) {
-				(this['webkitRequestFullscreen']
-					? this['webkitRequestFullscreen']()
-					: this.requestFullscreen()
-				);
-				if("orientation" in screen) {
-					screen.orientation.lock((this.offsetWidth > this.offsetHeight)
-						? "landscape"
-						: "portrait"
-					).catch(() => {});
-				}
-				this.focus();
-			} else {
-				(document['webkitExitFullscreen']
-					? document['webkitExitFullscreen']()
-					: document.exitFullscreen()
-				);
-			}
-		});
+		this.eFullscreen.onclick = ((event) => this.handleKey('⛶', event));
 		// ----------
 	}
 
@@ -434,7 +466,6 @@ class ReC98Video extends HTMLElement {
 			this.scrubPossible = true;
 			videoNew.oncanplay = null;
 		})
-		videoNew.onclick = ((event) => this.toggle(event));
 		videoNew.onplay = (() => this.onPlay());
 		videoNew.onpause = (() => {
 			this.pause();
@@ -548,28 +579,7 @@ class ReC98Video extends HTMLElement {
 			if(this.eTabSwitcher?.keydownHandler(event)) {
 				return;
 			}
-			switch(virtualKey(event)) {
-			case ' ':
-				return this.ePlay.onclick?.(event);
-			case '⏮':
-				event.preventDefault();
-				return this.eHome.onclick?.(event);
-			case '⏭':
-				event.preventDefault();
-				return this.eEnd.onclick?.(event);
-			case '←':
-				return ((event.ctrlKey)
-					? this.eRewind.onclick?.(event)
-					: this.eFramePrevious.onclick?.(event)
-				);
-			case '→':
-				return ((event.ctrlKey)
-					? this.eFastForward.onclick?.(event)
-					: this.eFrameNext.onclick?.(event)
-				);
-			case '⛶':
-				return this.eFullscreen.onclick?.(event);
-			}
+			this.handleKey(virtualKey(event), event);
 		});
 
 		// Preloading the video is required for seeking to work before the
@@ -598,15 +608,13 @@ class ReC98Video extends HTMLElement {
 			this.onpointerenter = null;
 		});
 
-		this.ePlay.onclick = ((event) => this.toggle(event));
-		this.eHome.onclick = (() => this.seekTo(0));
-		this.eRewind.onclick = (() => this.seekFast(-1));
-		this.eFastForward.onclick = (() => this.seekFast(+1));
-		this.eEnd.onclick = (() =>
-			this.seekTo(secondsFrom((this.frameCount - 1), this.fps))
-		);
-		this.eFramePrevious.onclick = (() => this.seekBy(-1));
-		this.eFrameNext.onclick = (() => this.seekBy(+1));
+		this.ePlay.onclick = ((event) => this.handleKey(' ', event));
+		this.eHome.onclick = ((event) => this.handleKey('⏮', event));
+		this.eRewind.onclick = ((event) => this.handleKey('⏪', event));
+		this.eFastForward.onclick = ((event) => this.handleKey('⏩', event));
+		this.eEnd.onclick = ((event) => this.handleKey('⏭', event));
+		this.eFramePrevious.onclick = ((event) => this.handleKey('←', event));
+		this.eFrameNext.onclick = ((event) => this.handleKey('→', event));
 		// --------------
 
 		// Reparent videos
@@ -634,7 +642,7 @@ class ReC98Video extends HTMLElement {
 
 		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
-			video.onclick = ((event) => this.toggle(event));
+			video.onclick = ((event) => this.handleKey(' ', event));
 
 			// The backend code still enables controls just in case the user
 			// runs with disabled JavaScript, so we're separately disabling

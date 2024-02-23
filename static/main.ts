@@ -96,7 +96,9 @@ class ReC98ParentInit extends HTMLElement {
 window.customElements.define("rec98-parent-init", ReC98ParentInit);
 // ---------------------------------------
 
-type VirtualKey = (' ' | '←' | '→' | '↑' | '↓' | '⏮' | '⏭' | '⛶' | null);
+type VirtualKey = (
+	' ' | '←' | '→' | '↑' | '↓' | '⏪' | '⏩' | '⏮' | '⏭' | '⛶' | null
+);
 
 /**
  * Translates equivalent KeyboardEvents into a virtual key.
@@ -108,11 +110,11 @@ function virtualKey(event: KeyboardEvent): VirtualKey {
 	case "ArrowLeft":
 	case "KeyA":
 	case "KeyH":
-		return '←';
+		return ((event.ctrlKey) ? '⏪' : '←');
 	case "ArrowRight":
 	case "KeyD":
 	case "KeyL":
-		return '→';
+		return ((event.ctrlKey) ? '⏩' : '→');
 	case "ArrowUp":
 	case "KeyW":
 	case "KeyK":

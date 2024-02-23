@@ -107,7 +107,7 @@ abstract class ReC98Player extends HTMLElement {
 	abstract renderCustomTime(seconds: number): void;
 
 	/**
-	 * Should `return super.showBase(index)` on success.
+	 * Should `return super.showBase(fps, losslessURL)` on success.
 	 * @returns `true` if the played element was changed.
 	 */
 	abstract show(index: number): boolean;
@@ -145,7 +145,6 @@ abstract class ReC98Player extends HTMLElement {
 	frameCount = 0;
 	fps = 1;
 	scrubPossible = false;
-	switchingVideos = false;
 	timeIntervalID: (number | null) = null;
 	// -------
 
@@ -479,79 +478,9 @@ abstract class ReC98Player extends HTMLElement {
 		// ----------
 	}
 
-	showBase(index: number) {
-		const videoPrev = this.videoShown;
-		const videoNew = this.videos[index];
-		if((videoPrev === videoNew) || this.switchingVideos) {
-			return false;
-		}
-
-		const seekedFunc = (() => this.renderCurrentTime());
-
-		this.fps = attributeAsNumber(videoNew, "data-fps");
-		this.frameCount = attributeAsNumber(videoNew, "data-frame-count");
-		this.videoShown = this.videos[index];
-		this.duration = this.videoShown.duration;
-
-		videoNew.oncanplay = (() => {
-			// This can still be NaN above.
-			this.duration = this.videoShown.duration;
-
-			this.scrubPossible = true;
-			videoNew.oncanplay = null;
-		})
-		videoNew.onplay = (() => this.onPlay());
-		videoNew.onpause = (() => {
-			this.uiPause();
-			this.seekToDiscrete(this.videoShown.currentTime);
-		});
-
-		if(videoPrev && this.eTabSwitcher) {
-			// If a user switches videos fast enough, they could easily hit an
-			// ongoing seek where an otherwise playing video might still be
-			// paused. This would cause the new video to stay paused when it
-			// shouldn't be. Blocking a switch in this case works well enough,
-			// and probably won't be noticeable at the switching speeds where
-			// this becomes an issue.
-			this.switchingVideos = true;
-
-			// Pause the old video, but save the previous playing state to
-			// decide whether to unpause the new video.
-			const videoPrevPaused = videoPrev.paused;
-
-			// Calling the raw pause() function on the <video> element is fine
-			// here: its sole purpose is to save processing power for an
-			// invisible video, so it makes sense to avoid the DOM manipulation
-			// done in `this.uiPause()`.
-			videoPrev.pause();
-
-			videoNew.onseeked = (() => {
-				videoNew.hidden = false;
-				videoNew.volume = videoPrev.volume;
-				videoNew.muted = videoPrev.muted;
-				seekedFunc();
-				videoPrev.hidden = true;
-				if(!videoPrevPaused) {
-					this.uiPlay();
-				}
-				this.switchingVideos = false;
-				videoNew.onseeked = seekedFunc;
-			});
-		} else {
-			videoNew.onseeked = seekedFunc;
-		}
-
-		if(videoPrev) {
-			// Stop any further events from mutating [this.videoShown] based on
-			// changes to the previous video.
-			videoPrev.onplay = null;
-			videoPrev.onpause = null;
-			videoPrev.onseeked = null;
-
-			this.seekToContinuous(videoPrev.currentTime);
-		}
-
-		this.eDownload.href = attributeAsString(videoNew, "data-lossless");
+	showBase(fps: number, losslessURL: string) {
+		this.fps = fps;
+		this.eDownload.href = losslessURL;
 		return true;
 	}
 
@@ -725,6 +654,8 @@ class ReC98Video extends ReC98Player {
 	eTimeFrame = document.createElement("span");
 	eFrameNext = document.createElement("button");
 
+	switchingVideos = false;
+
 	renderCustomTime(seconds: number) {
 		const frame = frameFrom(seconds, this.fps);
 		const fraction = timelineFractionAt(frame, this.frameCount);
@@ -746,10 +677,102 @@ class ReC98Video extends ReC98Player {
 	}
 
 	show(index: number) {
+		const videoPrev = this.videoShown;
+		const videoNew = this.videos[index];
+		if((videoPrev === videoNew) || this.switchingVideos) {
+			return false;
+		}
+
+		const seekedFunc = (() => this.renderCurrentTime());
+
+		this.frameCount = attributeAsNumber(videoNew, "data-frame-count");
+		this.videoShown = this.videos[index];
+		this.duration = this.videoShown.duration;
+
+		videoNew.oncanplay = (() => {
+			// This can still be NaN above.
+			this.duration = this.videoShown.duration;
+
+			this.scrubPossible = true;
+			videoNew.oncanplay = null;
+		});
+		videoNew.onplay = (() => this.onPlay());
+		videoNew.onpause = (() => {
+			this.uiPause();
+
+			// Since `currentTime` is continuous, every (1 / [fps]) time span
+			// within the video can always correspond to at least two discrete
+			// frames. The actual frame for a specific `currentTime` value is
+			// therefore defined by the browser's rounding algorithm, and will
+			// certainly not match the one used in frame(), which defines the
+			// number shown in [eTimeFrame]. As a result, the frame number is
+			// very likely to be incorrect half of the time.
+			// It doesn't matter during playback, where the frame number is
+			// constantly updating anyway, but manifests itself in inconsistent
+			// frame numbers when seeking a paused video, or whenever a
+			// non-looping video finished playing.
+			// As a workaround, we perform a round-trip conversion from
+			// `currentTime` to frames and back, which gets us back onto our
+			// discrete seek grid in any case. This might lead to a noticeable
+			// jump back by one frame, but is unfortunately the best compromise
+			// in view of what we're given here.
+			const frame = Math.min(
+				frameFrom(videoNew.currentTime, this.fps), (this.frameCount - 1)
+			);
+			videoNew.currentTime = secondsFrom(frame, this.fps);
+		});
+
+		if(videoPrev && this.eTabSwitcher) {
+			// If a user switches videos fast enough, they could easily hit an
+			// ongoing seek where an otherwise playing video might still be
+			// paused. This would cause the new video to stay paused when it
+			// shouldn't be. Blocking a switch in this case works well enough,
+			// and probably won't be noticeable at the switching speeds where
+			// this becomes an issue.
+			this.switchingVideos = true;
+
+			// Pause the old video, but save the previous playing state to
+			// decide whether to unpause the new video.
+			const videoPrevPaused = videoPrev.paused;
+
+			// Calling the raw pause() function on the <video> element is fine
+			// here: its sole purpose is to save processing power for an
+			// invisible video, so it makes sense to avoid the DOM manipulation
+			// done in `this.uiPause()`.
+			videoPrev.pause();
+
+			videoNew.onseeked = (() => {
+				videoNew.hidden = false;
+				videoNew.volume = videoPrev.volume;
+				videoNew.muted = videoPrev.muted;
+				seekedFunc();
+				videoPrev.hidden = true;
+				if(!videoPrevPaused) {
+					this.uiPlay();
+				}
+				this.switchingVideos = false;
+				videoNew.onseeked = seekedFunc;
+			});
+		} else {
+			videoNew.onseeked = seekedFunc;
+		}
+
+		if(videoPrev) {
+			// Stop any further events from mutating [this.videoShown] based on
+			// changes to the previous video.
+			videoPrev.onplay = null;
+			videoPrev.onpause = null;
+			videoPrev.onseeked = null;
+
+			this.seekToContinuous(videoPrev.currentTime);
+		}
 		for(const marker of this.markers()) {
 			marker.hidden = (marker.videoIndex !== index);
 		}
-		return this.showBase(index);
+		return super.showBase(
+			attributeAsNumber(videoNew, "data-fps"),
+			attributeAsString(videoNew, "data-lossless")
+		);
 	}
 
 	constructor() {

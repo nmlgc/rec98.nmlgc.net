@@ -106,6 +106,18 @@ abstract class ReC98Player extends HTMLElement {
 	/** Should call `super.renderCustomTimeBase()`. */
 	abstract renderCustomTime(seconds: number): void;
 
+	/** Should call `super.playbackStartBase(refreshRate)`. */
+	abstract playbackStart(): void;
+
+	/**
+	 * Should call `super.playbackStopSubclass()`.
+	 * @returns Previous playing state of the shown element.
+	 **/
+	abstract playbackStopSubclass(): boolean;
+
+	/** Should call `super.uiPlayBase()`. */
+	abstract uiPlay(): void;
+
 	/**
 	 * Should `return super.showBase(fps, losslessURL)` on success.
 	 * @returns `true` if the played element was changed.
@@ -166,46 +178,28 @@ abstract class ReC98Player extends HTMLElement {
 		return this.videoShown.loop;
 	}
 
-	playbackStart() {
-		this.videoShown.play();
-	}
-
-	/**
-	 * @returns Previous playing state of the shown element.
-	 */
-	playbackStop() {
-		let ret = false;
-		if(this.timeIntervalID) {
-			ret = (ret || true);
-			clearInterval(this.timeIntervalID);
-			this.timeIntervalID = null;
-		}
-		if(this.videoShown) {
-			ret = (ret || !this.videoShown.paused);
-			this.videoShown.pause();
-		}
-		return ret;
-	}
-
-	onPlay() {
-		// Rewind if we're at the end of a non-looping video – otherwise,
-		// playback would immediately pause again.
-		if(!this.videoShown.loop && (this.frame() === (this.frameCount - 1))) {
-			this.videoShown.currentTime = 0;
-		}
-
-		this.ePlay.textContent = "⏸";
-		this.ePlay.title = "Pause (Space)";
+	playbackStartBase(refreshRate: number) {
 		if(!this.timeIntervalID) {
 			this.timeIntervalID = setInterval(
-				(() => this.renderCurrentTime()),
-				(1000 / Math.max(this.fps, 10))
+				(() => this.renderCurrentTime()), refreshRate,
 			);
 		}
 	}
 
-	uiPlay() {
-		this.playbackStart();
+	playbackStop() {
+		let intervalStopped = false;
+		if(this.timeIntervalID) {
+			intervalStopped = true;
+			clearInterval(this.timeIntervalID);
+			this.timeIntervalID = null;
+		}
+		let subclassStopped = this.playbackStopSubclass();
+		return (intervalStopped || subclassStopped);
+	}
+
+	uiPlayBase() {
+		this.ePlay.textContent = "⏸";
+		this.ePlay.title = "Pause (Space)";
 	}
 
 	uiPause() {
@@ -296,8 +290,8 @@ abstract class ReC98Player extends HTMLElement {
 		// sets `<video>.paused` to `false`, a second call checking for that
 		// flag would call `<video>.pause()` while `<video>.play()` is still
 		// running, leading to an infinite loop of "play() was interrupted by
-		// pause()" exceptions. [this.timeIntervalID] is only set at the end of
-		// the `onplay` handler, and is therefore a more reliable indicator of
+		// pause()" exceptions. [this.timeIntervalID] is only set in
+		// playbackStartBase(), and is therefore a more reliable indicator of
 		// the current playing state.
 		if(!this.timeIntervalID) {
 			this.uiPlay();
@@ -639,6 +633,33 @@ class ReC98Video extends ReC98Player {
 		for(const marker of this.markers()) {
 			marker.setWidth(rect.width);
 		}
+	}
+
+	onPlay() {
+		// Rewind if we're at the end of a non-looping video – otherwise,
+		// playback would immediately pause again.
+		if(!this.videoShown.loop && (this.frame() === (this.frameCount - 1))) {
+			this.videoShown.currentTime = 0;
+		}
+		super.playbackStartBase(1000 / Math.max(this.fps, 10));
+		super.uiPlayBase();
+	}
+
+	playbackStart() {
+		this.videoShown.play();
+	}
+
+	playbackStopSubclass() {
+		if(this.videoShown) {
+			let ret = !this.videoShown.paused;
+			this.videoShown.pause();
+			return ret;
+		}
+		return false;
+	}
+
+	uiPlay() {
+		this.playbackStart();
 	}
 
 	show(index: number) {

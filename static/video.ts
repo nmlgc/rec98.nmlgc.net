@@ -155,6 +155,27 @@ class ReC98Video extends HTMLElement {
 		return this.videoShown.loop;
 	}
 
+	playbackStart() {
+		this.videoShown.play();
+	}
+
+	/**
+	 * @returns Previous playing state of the shown element.
+	 */
+	playbackStop() {
+		let ret = false;
+		if(this.timeIntervalID) {
+			ret = (ret || true);
+			clearInterval(this.timeIntervalID);
+			this.timeIntervalID = null;
+		}
+		if(this.videoShown) {
+			ret = (ret || !this.videoShown.paused);
+			this.videoShown.pause();
+		}
+		return ret;
+	}
+
 	onPlay() {
 		// Rewind if we're at the end of a non-looping video – otherwise,
 		// playback would immediately pause again.
@@ -172,18 +193,14 @@ class ReC98Video extends HTMLElement {
 		}
 	}
 
-	play() {
-		this.videoShown.play();
+	uiPlay() {
+		this.playbackStart();
 	}
 
-	pause() {
-		this.videoShown?.pause();
+	uiPause() {
+		this.playbackStop();
 		this.ePlay.textContent = "▶";
 		this.ePlay.title = "Play (Space)";
-		if(this.timeIntervalID) {
-			clearInterval(this.timeIntervalID);
-			this.timeIntervalID = null;
-		}
 	}
 
 	/**
@@ -246,7 +263,7 @@ class ReC98Video extends HTMLElement {
 		} else {
 			seconds = Math.min(Math.max(seconds, 0), this.duration);
 		}
-		this.videoShown.pause();
+		this.playbackStop();
 		return this.seekToDiscrete(seconds);
 	}
 
@@ -259,7 +276,6 @@ class ReC98Video extends HTMLElement {
 		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
 		const seconds = secondsFrom(frame, this.fps);
 		this.renderTime(seconds); // Immediate feedback
-		this.pause();
 		this.seekToDiscrete(seconds);
 	}
 
@@ -273,9 +289,9 @@ class ReC98Video extends HTMLElement {
 		// the `onplay` handler, and is therefore a more reliable indicator of
 		// the current playing state.
 		if(!this.timeIntervalID) {
-			this.play();
+			this.uiPlay();
 		} else {
-			this.pause();
+			this.uiPause();
 		}
 		this.focus();
 		return true;
@@ -447,13 +463,13 @@ class ReC98Video extends HTMLElement {
 
 		// Timeline
 		// --------
-		let scrubWasPaused = false;
+		let wasPlayingBeforeScrub = false;
 
 		this.eTimeline = new ReC98Trackbar({
 			orientation: "horizontal",
 			onMove: ((fraction) => this.scrub(fraction)),
-			onStart: (() => scrubWasPaused = (this.videoShown?.paused ?? true)),
-			onStop: (() => (!scrubWasPaused && this.play())),
+			onStart: (() => wasPlayingBeforeScrub = this.playbackStop()),
+			onStop: (() => (wasPlayingBeforeScrub && this.playbackStart())),
 		})
 		this.eTimeline.classList.add("timeline");
 		this.renderTime(0);
@@ -509,7 +525,7 @@ class ReC98Video extends HTMLElement {
 		})
 		videoNew.onplay = (() => this.onPlay());
 		videoNew.onpause = (() => {
-			this.pause();
+			this.uiPause();
 			this.seekToDiscrete(this.videoShown.currentTime);
 		});
 
@@ -529,7 +545,7 @@ class ReC98Video extends HTMLElement {
 			// Calling the raw pause() function on the <video> element is fine
 			// here: its sole purpose is to save processing power for an
 			// invisible video, so it makes sense to avoid the DOM manipulation
-			// done in `this.pause()`.
+			// done in `this.uiPause()`.
 			videoPrev.pause();
 
 			videoNew.onseeked = (() => {
@@ -539,7 +555,7 @@ class ReC98Video extends HTMLElement {
 				seekedFunc();
 				videoPrev.hidden = true;
 				if(!videoPrevPaused) {
-					this.play();
+					this.uiPlay();
 				}
 				this.switchingVideos = false;
 				videoNew.onseeked = seekedFunc;
@@ -701,7 +717,7 @@ class ReC98Video extends HTMLElement {
 		}
 
 		this.showVideo(requested ?? lastChild);
-		this.pause();
+		this.uiPause();
 
 		if(this.classList.contains("with-audio")) {
 			const toggleBar = ((active: boolean) => (active

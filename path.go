@@ -91,36 +91,40 @@ func (hp *HostedPath) RegisterFileServer(r *mux.Router) {
 	r.PathPrefix(hp.URLPrefix).Handler(stripped)
 }
 
+// esbuild runs the esbuild Build API with common settings on the given file.
+func (hp *HostedPath) esbuild(outBasename, inBasename string) (deps []string) {
+	inFN := filepath.Join(hp.LocalPath, inBasename)
+	_, err := os.Stat(inFN)
+	if err == nil {
+		outFN := filepath.Join(hp.LocalPath, outBasename)
+		os.Remove(outFN)
+		deps = []string{inBasename}
+
+		result := esbuild.Build(esbuild.BuildOptions{
+			LogLevel:          esbuild.LogLevelWarning,
+			EntryPoints:       []string{inFN},
+			Outfile:           outFN,
+			MinifyWhitespace:  true,
+			MinifyIdentifiers: true,
+			MinifySyntax:      true,
+			Sourcemap:         esbuild.SourceMapLinked,
+			Write:             true,
+		})
+		if len(result.Errors) > 0 {
+			// Return [deps] without the target file, since it doesn't exist.
+			return deps
+		}
+	}
+	return append(deps, outBasename)
+}
+
 // buildFile runs any necessary build step to generate fn. Returns an array of
 // all existing files that should invalidate fn if they are changed.
 func (hp *HostedPath) buildFile(fn string) (deps []string) {
-	localFN := filepath.Join(hp.LocalPath + fn)
 	switch strings.ToLower(path.Ext(fn)) {
 	case ".js":
 		// Transpile TypeScript
-		tsBasename := (strings.TrimSuffix(fn, ".js") + ".ts")
-		tsFN := (hp.LocalPath + tsBasename)
-		_, err := os.Stat(tsFN)
-		if err == nil {
-			os.Remove(localFN)
-			deps = []string{tsBasename}
-
-			result := esbuild.Build(esbuild.BuildOptions{
-				LogLevel:          esbuild.LogLevelWarning,
-				EntryPoints:       []string{tsFN},
-				Outfile:           localFN,
-				MinifyWhitespace:  true,
-				MinifyIdentifiers: true,
-				MinifySyntax:      true,
-				Sourcemap:         esbuild.SourceMapLinked,
-				Write:             true,
-			})
-			if len(result.Errors) > 0 {
-				// Return [deps] without the target file, since it doesn't
-				// exist.
-				return deps
-			}
-		}
+		return hp.esbuild(fn, (strings.TrimSuffix(fn, ".js") + ".ts"))
 	}
 	return append(deps, fn)
 }

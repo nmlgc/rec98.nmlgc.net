@@ -106,6 +106,12 @@ abstract class ReC98Player extends HTMLElement {
 	/** Should call `super.renderCustomTimeBase()`. */
 	abstract renderCustomTime(seconds: number): void;
 
+	/**
+	 * @returns The given timeline fraction converted to seconds, or `null` if
+	 * scrubbing is not possible yet.
+	 */
+	abstract secondsFromFraction(fraction: number): number | null;
+
 	/** Should call `super.playbackStartBase(refreshRate)`. */
 	abstract playbackStart(): void;
 
@@ -158,7 +164,6 @@ abstract class ReC98Player extends HTMLElement {
 	duration: number | null = null;
 	frameCount = 0;
 	fps = 1;
-	scrubPossible = false;
 	timeIntervalID: (number | null) = null;
 	// -------
 
@@ -273,13 +278,11 @@ abstract class ReC98Player extends HTMLElement {
 	}
 
 	scrub(fraction: number) {
-		if(!this.scrubPossible) {
+		const seconds = this.secondsFromFraction(fraction);
+		if(!seconds) {
 			return;
 		}
 		this.focus();
-		let frame = frameFrom((fraction * this.videoShown.duration), this.fps);
-		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
-		const seconds = secondsFrom(frame, this.fps);
 		this.renderCustomTime(seconds); // Immediate feedback
 		this.seekToDiscrete(seconds);
 	}
@@ -614,12 +617,22 @@ class ReC98Video extends ReC98Player {
 
 	videos: HTMLCollectionOf<HTMLVideoElement>;
 	switchingVideos = false;
+	scrubPossible = false;
 
 	renderCustomTime(seconds: number) {
 		const frame = frameFrom(seconds, this.fps);
 		const fraction = timelineFractionAt(frame, this.frameCount);
 		this.eTimeFrame.textContent = frame.toString();
 		super.renderCustomTimeBase(seconds, fraction);
+	}
+
+	secondsFromFraction(fraction: number) {
+		if(!this.scrubPossible) {
+			return null;
+		}
+		let frame = frameFrom((fraction * this.videoShown.duration), this.fps);
+		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
+		return secondsFrom(frame, this.fps);
 	}
 
 	markers() {

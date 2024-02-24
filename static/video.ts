@@ -49,10 +49,7 @@ class ReC98VideoMarker extends HTMLElement {
 	frameCount = 0;
 
 	init(
-		player: {
-			seekToDiscrete: (seconds: number) => void;
-			focus: () => void;
-		},
+		player: ReC98Video,
 		videoIndex: number,
 		timelineWidth: number,
 		fps: number,
@@ -108,6 +105,17 @@ const linearToLog = LinearToLog(40);
 abstract class ReC98Player extends HTMLElement {
 	/** Should call `super.renderCustomTimeBase()`. */
 	abstract renderCustomTime(seconds: number): void;
+
+	/**
+	 * Should `return super.showBase(index)` on success.
+	 * @returns `true` if the played element was changed.
+	 */
+	abstract show(index: number): boolean;
+
+	/**
+	 * Called after connecting all common controls to the DOM.
+	 */
+	abstract initSubclass();
 
 	// Members
 	// -------
@@ -312,19 +320,6 @@ abstract class ReC98Player extends HTMLElement {
 		this.renderCustomTime(this.currentTime());
 	}
 
-	markers() {
-		return this.eTimeline.getElementsByTagName(
-			"rec98-video-marker"
-		) as HTMLCollectionOf<ReC98VideoMarker>;
-	}
-
-	resizeMarkers() {
-		const rect = this.eTimeline.getBoundingClientRect();
-		for(const marker of this.markers()) {
-			marker.setWidth(rect.width);
-		}
-	}
-
 	showPopup(text: string) {
 		const ePopup = document.createElement("div");
 		ePopup.className = "popup";
@@ -484,10 +479,7 @@ abstract class ReC98Player extends HTMLElement {
 		// ----------
 	}
 
-	/**
-	 * @returns `true` if the playing video was changed
-	 */
-	showVideo(index: number) {
+	showBase(index: number) {
 		const videoPrev = this.videoShown;
 		const videoNew = this.videos[index];
 		if((videoPrev === videoNew) || this.switchingVideos) {
@@ -559,9 +551,6 @@ abstract class ReC98Player extends HTMLElement {
 			this.seekToContinuous(videoPrev.currentTime);
 		}
 
-		for(const marker of this.markers()) {
-			marker.hidden = (marker.videoIndex !== index);
-		}
 		this.eDownload.href = attributeAsString(videoNew, "data-lossless");
 		return true;
 	}
@@ -634,9 +623,10 @@ abstract class ReC98Player extends HTMLElement {
 		this.eEnd.onclick = ((event) => this.handleKey('⏭', event));
 		// --------------
 
+		this.initSubclass();
+
 		// Reparent videos
 		// ---------------
-		this.videos = this.getElementsByTagName("video");
 		for(let i = 0; i < this.videos.length; i++) {
 			this.eVideoWrap.appendChild(this.videos[0]);
 		}
@@ -648,14 +638,12 @@ abstract class ReC98Player extends HTMLElement {
 		if(this.videos.length >= 2) {
 			this.eTabSwitcher = new ReC98TabSwitcher((i) => {
 				this.focus();
-				return this.showVideo(i);
+				return this.show(i);
 			});
 			this.prepend(this.eTabSwitcher);
 			this.classList.add("with-switcher");
 			this.eDownload.title = "Lossless source file of current tab";
 		}
-
-		const timelineWidth = this.eTimeline.getBoundingClientRect().width;
 
 		for(let i = 0; i < this.videos.length; i++) {
 			const video = this.videos[i];
@@ -666,18 +654,6 @@ abstract class ReC98Player extends HTMLElement {
 			// them here as we're about to replace them with our own.
 			video.controls = false;
 
-			// Setup markers. Note that we mutate [markers] by reparenting its
-			// elements; a `for…of` loop would therefore skip every second
-			// marker.
-			const fps = attributeAsNumber(video, "data-fps");
-			const frameCount = attributeAsNumber(video, "data-frame-count");
-			const markers = video.getElementsByTagName(
-				"rec98-video-marker"
-			) as HTMLCollectionOf<ReC98VideoMarker>;
-			while(markers[0]) {
-				markers[0].init(this, i, timelineWidth, fps, frameCount);
-				this.eTimeline.appendChild(markers[0]);
-			}
 			if(video.hasAttribute("data-audio")) {
 				this.classList.add("with-audio");
 			}
@@ -696,7 +672,7 @@ abstract class ReC98Player extends HTMLElement {
 			throw "No <video> child element found.";
 		}
 
-		this.showVideo(requested ?? lastChild);
+		this.show(requested ?? lastChild);
 		this.uiPause();
 
 		if(this.classList.contains("with-audio")) {
@@ -739,25 +715,6 @@ abstract class ReC98Player extends HTMLElement {
 			toggleBar(true);
 			this.eVolumeBar.props.onMove(0.5);
 		}
-
-		// Bind resizeMarkers() so that it gets called with the right
-		// context, and overwrite the old property so that we have a
-		// function reference we can unregister from events later on.
-		this.resizeMarkers = this.resizeMarkers.bind(this);
-		document.addEventListener("fullscreenchange", this.resizeMarkers);
-		document.addEventListener("webkitfullscreenchange", this.resizeMarkers);
-		// Some browsers (*cough* Firefox) refuse to layout the timeline at the
-		// above call to getBoundingClientRect() and just return 0. Just gotta
-		// defer setting the correct marker widths in that case…
-		if(timelineWidth === 0) {
-			window.addEventListener("DOMContentLoaded", this.resizeMarkers);
-		}
-	}
-
-	disconnectedCallback() {
-		document.removeEventListener("fullscreenchange", this.resizeMarkers);
-		document.removeEventListener("webkitfullscreenchange", this.resizeMarkers);
-		window.removeEventListener("DOMContentLoaded", this.resizeMarkers);
 	}
 };
 
@@ -773,6 +730,26 @@ class ReC98Video extends ReC98Player {
 		const fraction = timelineFractionAt(frame, this.frameCount);
 		this.eTimeFrame.textContent = frame.toString();
 		super.renderCustomTimeBase(seconds, fraction);
+	}
+
+	markers() {
+		return this.eTimeline.getElementsByTagName(
+			"rec98-video-marker"
+		) as HTMLCollectionOf<ReC98VideoMarker>;
+	}
+
+	resizeMarkers() {
+		const rect = this.eTimeline.getBoundingClientRect();
+		for(const marker of this.markers()) {
+			marker.setWidth(rect.width);
+		}
+	}
+
+	show(index: number) {
+		for(const marker of this.markers()) {
+			marker.hidden = (marker.videoIndex !== index);
+		}
+		return this.showBase(index);
 	}
 
 	constructor() {
@@ -805,9 +782,7 @@ class ReC98Video extends ReC98Player {
 		// ----
 	}
 
-	init() {
-		super.init();
-
+	initSubclass() {
 		this.eFramePrevious.onclick = ((event) => this.handleKey('←', event));
 		this.eFrameNext.onclick = ((event) => this.handleKey('→', event));
 
@@ -815,6 +790,45 @@ class ReC98Video extends ReC98Player {
 		this.eControls.appendChild(this.eFramePrevious);
 		this.eControls.appendChild(this.eTimeFrame);
 		this.eControls.appendChild(this.eFrameNext);
+
+		const timelineWidth = this.eTimeline.getBoundingClientRect().width;
+
+		this.videos = this.getElementsByTagName("video");
+		for(let i = 0; i < this.videos.length; i++) {
+			const video = this.videos[i];
+			// Setup markers. Note that we mutate [markers] by reparenting its
+			// elements; a `for…of` loop would therefore skip every second
+			// marker.
+			const fps = attributeAsNumber(video, "data-fps");
+			const frameCount = attributeAsNumber(video, "data-frame-count");
+			const markers = video.getElementsByTagName(
+				"rec98-video-marker"
+			) as HTMLCollectionOf<ReC98VideoMarker>;
+			while(markers[0]) {
+				markers[0].init(this, i, timelineWidth, fps, frameCount);
+				this.eTimeline.appendChild(markers[0]);
+			}
+		}
+
+		// Bind resizeMarkers() so that it gets called with the right context,
+		// and overwrite the old property so that we have a function reference
+		// we can unregister from events later on.
+		this.resizeMarkers = this.resizeMarkers.bind(this);
+		document.addEventListener("fullscreenchange", this.resizeMarkers);
+		document.addEventListener("webkitfullscreenchange", this.resizeMarkers);
+
+		// Some browsers (*cough* Firefox) refuse to layout the timeline at the
+		// above call to getBoundingClientRect() and just return 0. Just gotta
+		// defer setting the correct marker widths in that case…
+		if(timelineWidth === 0) {
+			window.addEventListener("DOMContentLoaded", this.resizeMarkers);
+		}
+	}
+
+	disconnectedCallback() {
+		document.removeEventListener("fullscreenchange", this.resizeMarkers);
+		document.removeEventListener("webkitfullscreenchange", this.resizeMarkers);
+		window.removeEventListener("DOMContentLoaded", this.resizeMarkers);
 	}
 };
 

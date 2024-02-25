@@ -127,6 +127,19 @@ abstract class ReC98Player extends HTMLElement {
 	 */
 	abstract seekToDiscrete(seconds: number): void;
 
+	/**
+	 * @returns Object that can be `muted`, or `null` if muting doesn't make
+	 * sense for the subclass.
+	 */
+	abstract muter(): { muted: boolean } | null;
+
+	/**
+	 * @returns Linear volume between 0.0 and 1.0.
+	 */
+	abstract volume(): number;
+
+	abstract setVolume(linear: number): void;
+
 	/** Should call `super.playbackStartBase(refreshRate)`. */
 	abstract playbackStart(): void;
 
@@ -175,7 +188,6 @@ abstract class ReC98Player extends HTMLElement {
 	eFullscreen = document.createElement("button");
 	ePopups = document.createElement("div");
 
-	videoShown: HTMLVideoElement;
 	duration: number | null = null;
 	fps = 1;
 	timeIntervalID: (number | null) = null;
@@ -520,34 +532,44 @@ abstract class ReC98Player extends HTMLElement {
 
 		if(withAudio) {
 			this.classList.add("with-audio");
+			const muter = this.muter();
 			const toggleBar = ((active: boolean) => (active
 				? this.eVolumeBar.classList.add("active")
 				: this.eVolumeBar.classList.remove("active")
 			));
-			const updateSymbol = (() => this.eVolumeSymbol.textContent = (
-				(this.videoShown.muted) ? "🔇" :
-				(this.videoShown.volume < 0.1) ? "🔉" :
-				"🔊"
-			));
+			const updateSymbol = (() => {
+				const volume = this.volume();
+				const muter = this.muter();
+				this.eVolumeSymbol.textContent = (
+					(muter ? muter.muted : (volume === 0.0)) ? "🔇" :
+					(volume < 0.1) ? "🔉" :
+					"🔊"
+				);
+			});
 
 			this.eVolumeBar = new ReC98Trackbar({
 				orientation: "vertical",
 				onMove: ((fraction) => {
-					this.videoShown.volume = (
+					this.setVolume(
 						Math.min(Math.max(linearToLog(fraction), 0.0), 1.0)
 					);
 					this.eVolumeBar.setFraction(fraction);
 					updateSymbol();
 				}),
 			});
-			this.eVolumeSymbol.onclick = (() => {
-				this.videoShown.muted = !this.videoShown.muted;
-				toggleBar(!this.videoShown.muted);
-				updateSymbol();
-			});
-			this.eVolume.onpointerenter = (() =>
-				!this.videoShown.muted && toggleBar(true)
-			);
+			if(muter) {
+				this.eVolumeSymbol.onclick = (() => {
+					const muter = this.muter();
+					muter!.muted = !muter?.muted;
+					toggleBar(!muter!.muted);
+					updateSymbol();
+				});
+				this.eVolume.onpointerenter = (() => {
+					!(this.muter()?.muted) && toggleBar(true);
+				});
+			} else {
+				this.eVolume.onpointerenter = (() => toggleBar(true));
+			}
 			this.eVolume.onpointerleave = (() => toggleBar(false));
 
 			this.eVolume.appendChild(this.eVolumeSymbol);
@@ -570,6 +592,7 @@ class ReC98Video extends ReC98Player {
 	eFrameNext = document.createElement("button");
 
 	videos: HTMLCollectionOf<HTMLVideoElement>;
+	videoShown: HTMLVideoElement;
 	switchingVideos = false;
 	scrubPossible = false;
 	frameCount = 0;
@@ -640,6 +663,18 @@ class ReC98Video extends ReC98Player {
 			frameFrom(seconds, this.fps), (this.frameCount - 1)
 		);
 		return this.seekToContinuous(secondsFrom(frame, this.fps));
+	}
+
+	muter() {
+		return this.videoShown;
+	}
+
+	volume(): number {
+		return this.videoShown.volume;
+	}
+
+	setVolume(linear: number) {
+		this.videoShown.volume = linear;
 	}
 
 	markers() {

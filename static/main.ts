@@ -82,11 +82,14 @@ class ReC98ParentInit extends HTMLElement {
 	connectedCallback() {
 		if(!this.parentElement || (this.parentElement.lastChild !== this) || !(
 			(this.parentElement.tagName === 'REC98-VIDEO') ||
+			(this.parentElement.tagName === 'REC98-AUDIO') ||
 			(this.parentElement.tagName === 'REC98-CHILD-SWITCHER')
 		)) {
 			throw "Must be placed at the last child of a supported element.";
 		}
-		(this.parentElement as (ReC98Video | ReC98ChildSwitcher)).init();
+		(this.parentElement as (
+			ReC98Video | ReC98Audio | ReC98ChildSwitcher
+		)).init();
 
 		// Let's not make the grid more complicated than it needs to be.
 		this.parentElement.removeChild(this);

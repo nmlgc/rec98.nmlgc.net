@@ -253,6 +253,25 @@ rec98-video {
 	}
 }
 
+rec98-audio {
+	>div.wrap>img {
+		max-height: 100% !important;
+
+		&.cursor {
+			position: absolute;
+			left: 0;
+			top: 0;
+			filter: hue-rotate(180deg);
+		}
+	}
+
+	&:not(:fullscreen)>div.wrap>img {
+		height: 180px !important;
+		aspect-ratio: 640 / 180;
+		object-fit: fill;
+	}
+}
+
 @keyframes popup-fade-out {
 	0% {
 		visibility: visible;

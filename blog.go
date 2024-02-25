@@ -169,6 +169,47 @@ func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	return ret
 }
 
+type BlogAudio struct {
+	BlogPlayerElementMeta
+	FLAC     template.HTML
+	Waveform template.HTML
+}
+
+func (b *BlogAudio) SetTitle(title template.HTML) string {
+	b.Title = title
+	return ""
+}
+
+func (b *BlogAudio) SetActive() *BlogAudio {
+	b.Active = true
+	return b
+}
+
+func (b *BlogAudio) SetNoLoop() *BlogAudio {
+	b.NoLoop = true
+	return b
+}
+
+func (b *BlogAudio) Tag() (ret template.HTML) {
+	ret += (`<audio src="` + b.FLAC + `" data-waveform="` + b.Waveform + `"`)
+	ret += b.tagAttributes()
+	ret += `>`
+	ret += `</audio>`
+	return ret
+}
+
+func (b *Blog) NewBlogAudio(stem, date, alt string) *BlogAudio {
+	base := path.Join("audio", stem)
+	return &BlogAudio{
+		BlogPlayerElementMeta: BlogPlayerElementMeta{
+			Date: date,
+			Alt:  alt,
+		},
+		FLAC:     template.HTML(blogHP.VersionURLFor(base + ".flac")),
+		Waveform: template.HTML(blogHP.VersionURLFor(base + ".png")),
+	}
+}
+
 // BlogEntry describes an existing blog entry, together with information about
 // its associated pushes parsed from the database.
 type BlogEntry struct {
@@ -271,7 +312,9 @@ type PostDot struct {
 	// Generates [HostedPath.URLPrefix] + [DatePrefix]
 	PostFileURL func(fn string) template.HTML
 	Video       func(fn string, alt string) *BlogVideo
+	Audio       func(fn string, alt string) *BlogAudio
 	VideoPlayer func(videos ...*BlogVideo) template.HTML
+	AudioPlayer func(videos ...*BlogAudio) template.HTML
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -320,6 +363,9 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 		Video: func(fn string, alt string) *BlogVideo {
 			return b.NewBlogVideo((datePrefix + fn), e.Date, alt)
 		},
+		Audio: func(fn string, alt string) *BlogAudio {
+			return b.NewBlogAudio((datePrefix + fn), e.Date, alt)
+		},
 		VideoPlayer: func(videos ...*BlogVideo) (ret template.HTML) {
 			ret = `<rec98-video class="rec98-player`
 			for _, video := range videos {
@@ -331,6 +377,12 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 			ret += `">`
 			ret += blogPlayerBody(videos)
 			ret += `</rec98-video>`
+			return ret
+		},
+		AudioPlayer: func(videos ...*BlogAudio) (ret template.HTML) {
+			ret += `<rec98-audio class="rec98-player">`
+			ret += blogPlayerBody(videos)
+			ret += `</rec98-audio>`
 			return ret
 		},
 	}

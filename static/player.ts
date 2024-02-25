@@ -936,5 +936,202 @@ class ReC98Video extends ReC98Player {
 	}
 };
 
+class ReC98Audio extends ReC98Player {
+	eWaveform = document.createElement("img");
+	eCursor = document.createElement("img");
+
+	static ctx: AudioContext | null = null;
+	static refreshRate: number | null = null;
+
+	audios: HTMLCollectionOf<HTMLAudioElement>;
+	audioBuffers: Array<AudioBuffer | Promise<void> | undefined>;
+	audioSource: AudioBufferSourceNode | undefined;
+	gain: GainNode | null = null;
+
+	startTime = 0;
+	seekTime: number | null = 0;
+	indexShown: number;
+	volume_: number;
+
+	renderCustomTime(seconds: number) {
+		const fraction = seconds / (this.duration ?? 1);
+		this.eCursor.style.clipPath = `rect(0% ${fraction * 100}% 100% 0%)`;
+		super.renderCustomTimeBase(seconds, fraction);
+	}
+
+	secondsFromFraction(fraction: number) {
+		if(!this.duration) {
+			return null;
+		}
+		return (Math.min(Math.max(fraction, 0), 1) * this.duration);
+	}
+
+	playing() {
+		return (ReC98Audio.ctx?.state === "running");
+	}
+
+	currentTime() {
+		if(!this.duration || !ReC98Audio.ctx) {
+			return 0;
+		} else if(this.seekTime != null) {
+			return this.seekTime;
+		}
+		return ((ReC98Audio.ctx.currentTime - this.startTime) % this.duration);
+	}
+
+	looping() {
+		return this.audios[this.indexShown].loop;
+	}
+
+	seekToContinuous(seconds: number) {
+		const wasPlaying = this.playing();
+		this.seekTime = (seconds % this.duration!);
+		this.renderCustomTime(this.seekTime);
+		wasPlaying && this.playbackStart();
+	}
+
+	seekToDiscrete(seconds: number) {
+		return this.seekToContinuous(seconds);
+	}
+
+	muter() {
+		return null;
+	}
+
+	volume(): number {
+		return this.volume_;
+	}
+
+	setVolume(linear: number) {
+		this.volume_ = linear;
+		if(this.gain) {
+			this.gain.gain.value = this.volume_;
+		}
+	}
+
+	playbackStart() {
+		const buf = this.audioBuffers[this.indexShown];
+		if(!ReC98Audio.ctx || !this.gain || !buf || !("duration" in buf)) {
+			return;
+		}
+		if(this.audioSource) {
+			this.audioSource.stop();
+		}
+
+		const seconds = this.currentTime();
+		this.gain.gain.value = this.volume_;
+		this.audioSource = ReC98Audio.ctx.createBufferSource();
+		this.audioSource.buffer = buf;
+		this.audioSource.loop = this.looping();
+		this.audioSource.connect(this.gain);
+		this.startTime = (ReC98Audio.ctx.currentTime - seconds);
+		this.audioSource.start(0, seconds);
+		ReC98Audio.ctx.resume();
+
+		this.seekTime = null;
+		super.playbackStartBase(ReC98Audio.refreshRate ?? (1 / 10));
+	}
+
+	playbackStopSubclass() {
+		let ret = this.playing();
+		if(ReC98Audio.ctx && this.audioSource) {
+			ReC98Audio.ctx.suspend();
+			this.audioSource.stop();
+		}
+		return ret;
+	}
+
+	uiPlay() {
+		const buf = this.audioBuffers[this.indexShown];
+		if(buf && ("then" in buf)) {
+			this.classList.add("wait");
+			buf.then(() => {
+				this.classList.remove("wait");
+				this.uiPlay();
+			});
+			return;
+		}
+		this.playbackStart();
+		super.uiPlayBase();
+	}
+
+	show(index: number) {
+		const audioNew = this.audios[index];
+		const waveNew = attributeAsString(audioNew, "data-waveform");
+		if(this.eWaveform.src === waveNew) {
+			return false;
+		}
+		this.indexShown = index;
+
+		const buf = this.audioBuffers[index];
+		if(buf && ("duration" in buf)) {
+			this.duration = buf.duration;
+		}
+
+		if(this.eWaveform.src) {
+			this.seekToContinuous(this.currentTime());
+		}
+		this.eWaveform.src = waveNew;
+		this.eCursor.src = waveNew;
+		return super.showBase(this.fps, audioNew.src);
+	}
+
+	preload() {
+		if(!ReC98Audio.ctx) {
+			ReC98Audio.ctx = new AudioContext();
+			ReC98Audio.ctx.suspend();
+		}
+		this.gain = ReC98Audio.ctx.createGain();
+		this.gain.connect(ReC98Audio.ctx.destination);
+		for(let i = 0; i < this.audios.length; i++) {
+			const audio = this.audios[i];
+			this.audioBuffers[i] = fetchSane(audio.src!).then((response) => {
+				if(!response || !("ok" in response)) {
+					throw response.message;
+				}
+				return response.arrayBuffer();
+			}).then((buffer) =>
+				buffer ? ReC98Audio.ctx?.decodeAudioData(buffer) : undefined
+			).then((buffer) => {
+				this.audioBuffers[i] = buffer;
+				this.duration = buffer?.duration ?? null;
+			}).catch((reason) => {
+				this.showPopup(
+					`⚠️ Error loading <code>${audio.src}</code>: ${reason}`
+				);
+			})
+			if(!ReC98Audio.refreshRate) {
+				requestAnimationFrame((t1) => requestAnimationFrame((t2) => {
+					ReC98Audio.refreshRate = (t2 - t1);
+					this.fps = (1000 / ReC98Audio.refreshRate);
+				}));
+			} else {
+				this.fps = (1000 / ReC98Audio.refreshRate);
+			}
+		}
+	}
+
+	constructor() {
+		super();
+		this.eCursor.className = "cursor";
+	}
+
+	initSubclass(): [HTMLCollection, boolean] {
+		this.eWaveform.onclick = ((event) => this.handleKey(' ', event));
+		this.eCursor.onclick = ((event) => this.handleKey(' ', event));
+
+		this.eElementWrap.appendChild(this.eWaveform);
+		this.eElementWrap.appendChild(this.eCursor);
+
+		this.audios = this.getElementsByTagName("audio");
+		this.audioBuffers = Array(this.audios.length);
+		for(const audio of this.audios) {
+			audio.hidden = true;
+		}
+		return [this.audios, true];
+	}
+};
+
 window.customElements.define("rec98-video", ReC98Video);
 window.customElements.define("rec98-video-marker", ReC98VideoMarker);
+window.customElements.define("rec98-audio", ReC98Audio);

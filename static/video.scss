@@ -20,232 +20,233 @@ rec98-video {
 
 	/* Necessary for .popup. */
 	position: relative;
-}
 
-rec98-video.with-switcher {
-	grid-template-rows: min-content 1fr min-content;
-}
+	&.with-switcher {
+		grid-template-rows: min-content 1fr min-content;
+	}
 
-rec98-video.with-markers {
-	margin-bottom: 1.75em;
-}
+	&.with-markers {
+		margin-bottom: 1.75em;
 
-/**
- * Fullscreen mode only displays the padded box of <rec98-video> without
- * margins, so we need to include the markers there.
- */
-rec98-video.with-markers:fullscreen {
-	padding-bottom: 2em;
-}
+		/**
+		 * Fullscreen mode only displays the padded box of this element without
+		 * margins, so we need to include the markers there.
+		 */
+		&:fullscreen {
+			padding-bottom: 2em;
+		}
 
-/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-rec98-video.with-markers:-webkit-full-screen {
-	padding-bottom: 2em;
-}
+		/* Firefox ignores rules that also match a `:-webkit-full-screen`
+		 * selector? */
+		&:-webkit-full-screen {
+			padding-bottom: 2em;
+		}
+	}
 
-rec98-video>div.video-wrap {
-	display: contents;
-	position: relative;
-	width: 100%;
-}
+	&>div.video-wrap {
+		display: contents;
+		position: relative;
+		width: 100%;
 
-rec98-video:fullscreen>div.video-wrap {
-	display: block;
-}
+		>video {
+			grid-column: 1;
+			grid-row: 1;
+			max-width: 100%;
+			height: auto;
+		}
+	}
 
-/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-rec98-video:-webkit-full-screen>div.video-wrap {
-	display: block;
-}
+	&:fullscreen>div.video-wrap {
+		display: block;
 
-rec98-video:fullscreen video {
-	position: absolute;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
+		>video {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
 
-/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-rec98-video:-webkit-full-screen video {
-	position: absolute;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
+	/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+	&:-webkit-full-screen>div.video-wrap {
+		display: block;
 
-rec98-video video {
-	grid-column: 1;
-	grid-row: 1;
-	max-width: 100%;
-	height: auto;
-}
+		>video {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
 
-rec98-video .controls {
-	color: var(--c-lightgray);
-	display: grid;
-	font-size: small;
-	grid-row: 2;
-	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em;
-	justify-items: left !important;
-	width: 100%;
-}
+	.controls {
+		color: var(--c-lightgray);
+		display: grid;
+		font-size: small;
+		grid-row: 2;
+		grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em;
+		justify-items: left !important;
+		width: 100%;
 
-rec98-video.with-audio .controls {
-	grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em 2.5em;
-}
+		&>button,
+		&>a {
+			font-family: "ReC98 video player symbols";
+			color: white;
+			padding: 0;
+			place-self: center;
+			user-select: none;
+			-webkit-user-select: none;
+			width: 100%;
+		}
 
-/* Firefox requires an explicit grid without gaps for `height: 100%` to work */
-rec98-video.with-switcher video {
-	grid-row: 2;
-}
+		&>.time {
+			/* Prevent alignment shaking from digits with different widths. */
+			font-family: monospace;
+		}
+	}
 
-rec98-video.with-switcher .controls {
-	grid-row: 3;
-}
+	&.with-audio .controls {
+		grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em 2.5em;
+	}
 
-rec98-video:fullscreen .controls {
-	font-size: large;
-}
+	/* Firefox requires an explicit grid without gaps for `height: 100%` to
+	 * work */
+	&.with-switcher>div.video-wrap>video {
+		grid-row: 2;
+	}
 
-/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-rec98-video:-webkit-full-screen .controls {
-	font-size: large;
-}
+	&.with-switcher .controls {
+		grid-row: 3;
+	}
 
-rec98-video .controls>button,
-rec98-video .controls>a {
-	font-family: "ReC98 video player symbols";
-	color: white;
-	padding: 0;
-	place-self: center;
-	user-select: none;
-	-webkit-user-select: none;
-	width: 100%;
-}
+	&:fullscreen .controls {
+		font-size: large;
+	}
 
-rec98-video .controls>.time {
-	/* Prevent alignment shaking from digits with different widths. */
-	font-family: monospace;
-}
+	/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
+	&:-webkit-full-screen .controls {
+		font-size: large;
+	}
 
-rec98-video .large,
-rec98-video .timeline {
-	grid-row: 1 / 3;
-}
+	.large,
+	.timeline {
+		grid-row: 1 / 3;
+	}
 
-rec98-video .seconds {
-	grid-row: 1;
-}
+	.seconds {
+		grid-row: 1;
+	}
 
-rec98-video .frame {
-	grid-row: 2;
-}
+	.frame {
+		grid-row: 2;
 
-rec98-video .frame.previous {
-	grid-column: 3 / 5;
-	text-align: right;
-}
+		&.previous {
+			grid-column: 3 / 5;
+			text-align: right;
+		}
 
-rec98-video .frame.time {
-	grid-column: 5;
-}
+		&.time {
+			grid-column: 5;
+		}
 
-rec98-video .frame.next {
-	grid-column: 6 / 8;
-	text-align: left;
-}
+		&.next {
+			grid-column: 6 / 8;
+			text-align: left;
+		}
+	}
 
-rec98-video .timeline {
-	align-self: center;
-	grid-column: 8;
-	height: 50%;
-	width: calc(100% - 1em);
-}
+	.timeline {
+		align-self: center;
+		grid-column: 8;
+		height: 50%;
+		width: calc(100% - 1em);
 
-rec98-video .timeline .border {
-	border-radius: 5em;
-}
+		.border {
+			border-radius: 5em;
+		}
 
-rec98-video .timeline rec98-video-marker {
-	background-color: var(--c-timeline-link);
-	cursor: pointer;
-	height: 200%;
-	position: absolute;
-	top: -50%;
-}
+		rec98-video-marker {
+			background-color: var(--c-timeline-link);
+			cursor: pointer;
+			height: 200%;
+			position: absolute;
+			top: -50%;
 
-rec98-video .timeline rec98-video-marker button {
-	background: var(--trackbar-gradient);
-	border: 1px solid var(--c-timeline-link);
-	font-size: 85%;
-	padding: 0.15em 0.5em;
-	position: absolute;
-	top: 100%;
-	width: max-content;
-}
+			button {
+				background: var(--trackbar-gradient);
+				border: 1px solid var(--c-timeline-link);
+				font-size: 85%;
+				padding: 0.15em 0.5em;
+				position: absolute;
+				top: 100%;
+				width: max-content;
+			}
 
-rec98-video .timeline rec98-video-marker:hover {
-	background-color: var(--c-link-hover);
-}
+			&:hover {
+				background-color: var(--c-link-hover);
+			}
 
-rec98-video .timeline rec98-video-marker:hover button,
-rec98-video .timeline rec98-video-marker button:hover {
-	border-color: var(--c-link-hover);
-	color: var(--c-link-hover);
-}
+			&:hover button,
+			button:hover {
+				border-color: var(--c-link-hover);
+				color: var(--c-link-hover);
+			}
+		}
+	}
 
-rec98-video .volume {
-	position: relative;
-}
+	.volume {
+		position: relative;
 
-rec98-video .volume rec98-trackbar {
-	display: none;
-	position: absolute;
-	z-index: 1;
-	height: 500%;
+		rec98-trackbar {
+			display: none;
+			position: absolute;
+			z-index: 1;
+			height: 500%;
 
-	/*
-	 * Keep the trackbar element directly adjacent to the button to avoid
-	 * firing `pointerleave` events within the gap we want to have. That gap is
-	 * entirely defined at the `.border` level.
-	 */
-	width: 100%;
-	bottom: 100%;
-}
+			/*
+			 * Keep the trackbar element directly adjacent to the button to
+			 * avoid firing `pointerleave` events within the gap we want to
+			 * have. That gap is entirely defined at the `.border` level.
+			 */
+			width: 100%;
+			bottom: 100%;
 
-rec98-video .volume rec98-trackbar .border {
-	width: 50%;
-	height: 95%;
-	transform: translateX(50%);
-}
+			.border {
+				width: 50%;
+				height: 95%;
+				transform: translateX(50%);
+			}
 
-rec98-video .volume rec98-trackbar.active {
-	display: block;
-}
+			&.active {
+				display: block;
+			}
+		}
+	}
 
-rec98-video .popup {
-	position: absolute;
+	.popup {
+		position: absolute;
 
-	/* Necessary for the popup to remain centered in fullscreen mode. */
-	left: 50%;
-	transform: translateX(-50%);
+		/* Necessary for the popup to remain centered in fullscreen mode. */
+		left: 50%;
+		transform: translateX(-50%);
 
-	grid-row: 1;
-	grid-column: 1;
-	z-index: 1;
-	background-color: white;
-	box-shadow: var(--shadow) white;
-	padding: 0.25em;
-	color: black;
-	height: min-content;
-	width: max-content;
-	max-width: 100%;
-	box-sizing: border-box;
-	animation: linear popup-fade-out 5s forwards;
-}
+		grid-row: 1;
+		grid-column: 1;
+		z-index: 1;
+		background-color: white;
+		box-shadow: var(--shadow) white;
+		padding: 0.25em;
+		color: black;
+		height: min-content;
+		width: max-content;
+		max-width: 100%;
+		box-sizing: border-box;
+		animation: linear popup-fade-out 5s forwards;
+	}
 
-rec98-video.with-switcher .popup {
-	grid-row: 2;
+	&.with-switcher .popup {
+		grid-row: 2;
+	}
 }
 
 @keyframes popup-fade-out {

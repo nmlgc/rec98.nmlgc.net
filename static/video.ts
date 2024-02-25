@@ -112,6 +112,21 @@ abstract class ReC98Player extends HTMLElement {
 	 */
 	abstract secondsFromFraction(fraction: number): number | null;
 
+	abstract currentTime(): number;
+	abstract looping(): boolean;
+
+	/**
+	 * Seeks the element to the given position in seconds, as accurately as
+	 * possible. Directly called when switching between elements.
+	 */
+	abstract seekToContinuous(seconds: number): void;
+
+	/**
+	 * Seeks the video to the closest discrete frame. Called during interactive
+	 * seeking.
+	 */
+	abstract seekToDiscrete(seconds: number): void;
+
 	/** Should call `super.playbackStartBase(refreshRate)`. */
 	abstract playbackStart(): void;
 
@@ -162,26 +177,9 @@ abstract class ReC98Player extends HTMLElement {
 
 	videoShown: HTMLVideoElement;
 	duration: number | null = null;
-	frameCount = 0;
 	fps = 1;
 	timeIntervalID: (number | null) = null;
 	// -------
-
-	/**
-	 * Raw currentTime→frame conversion.
-	 */
-	frame() {
-		const seconds = ((this.videoShown) ? this.videoShown.currentTime : 0);
-		return frameFrom(seconds, this.fps);
-	}
-
-	currentTime() {
-		return this.videoShown.currentTime;
-	}
-
-	looping() {
-		return this.videoShown.loop;
-	}
 
 	playbackStartBase(refreshRate: number) {
 		if(!this.timeIntervalID) {
@@ -211,50 +209,6 @@ abstract class ReC98Player extends HTMLElement {
 		this.playbackStop();
 		this.ePlay.textContent = "▶";
 		this.ePlay.title = "Play (Space)";
-	}
-
-	/**
-	 * Seeks the element to the given position in seconds, as accurately as
-	 * possible. Directly called when switching between elements.
-	 */
-	seekToContinuous(seconds: number) {
-		if(this.videoShown.seeking) {
-			this.videoShown.onseeked = (() => {
-				this.renderCurrentTime();
-				this.videoShown.currentTime = seconds;
-				this.videoShown.onseeked = (() => this.renderCurrentTime());
-			});
-		} else {
-			this.videoShown.currentTime = seconds;
-		}
-		return true;
-	}
-
-	/**
-	 * Seeks the video to the closest discrete frame. Called during interactive
-	 * seeking.
-	 */
-	seekToDiscrete(seconds: number) {
-		// Since `currentTime` is continuous, every (1 / [fps]) time span within
-		// the video can always correspond to at least two discrete frames. The
-		// actual frame for a specific `currentTime` value is therefore defined
-		// by the browser's rounding algorithm, and will certainly not match the
-		// one used in frame(), which defines the number shown in [eTimeFrame].
-		// As a result, the frame number is very likely to be incorrect half of
-		// the time.
-		// It doesn't matter during playback, where the frame number is
-		// constantly updating anyway, but manifests itself in inconsistent
-		// frame numbers when seeking a paused video, or whenever a non-looping
-		// video finished playing.
-		// As a workaround, we perform a round-trip conversion from seconds to
-		// frames and back, which gets us back onto our discrete seek grid in
-		// any case. This might lead to a noticeable jump back by one frame, but
-		// is unfortunately the best compromise in view of what we're given
-		// here.
-		const frame = Math.min(
-			frameFrom(seconds, this.fps), (this.frameCount - 1)
-		);
-		return this.seekToContinuous(secondsFrom(frame, this.fps));
 	}
 
 	seekBy(secondsDelta: number) {
@@ -618,6 +572,7 @@ class ReC98Video extends ReC98Player {
 	videos: HTMLCollectionOf<HTMLVideoElement>;
 	switchingVideos = false;
 	scrubPossible = false;
+	frameCount = 0;
 
 	renderCustomTime(seconds: number) {
 		const frame = frameFrom(seconds, this.fps);
@@ -633,6 +588,58 @@ class ReC98Video extends ReC98Player {
 		let frame = frameFrom((fraction * this.videoShown.duration), this.fps);
 		frame = Math.min(Math.max(frame, 0), (this.frameCount - 1));
 		return secondsFrom(frame, this.fps);
+	}
+
+	/**
+	 * Raw currentTime→frame conversion.
+	 */
+	frame() {
+		const seconds = ((this.videoShown) ? this.videoShown.currentTime : 0);
+		return frameFrom(seconds, this.fps);
+	}
+
+	currentTime() {
+		return this.videoShown.currentTime;
+	}
+
+	looping() {
+		return this.videoShown.loop;
+	}
+
+	seekToContinuous(seconds: number) {
+		if(this.videoShown.seeking) {
+			this.videoShown.onseeked = (() => {
+				this.renderCurrentTime();
+				this.videoShown.currentTime = seconds;
+				this.videoShown.onseeked = (() => this.renderCurrentTime());
+			});
+		} else {
+			this.videoShown.currentTime = seconds;
+		}
+		return true;
+	}
+
+	seekToDiscrete(seconds: number) {
+		// Since `currentTime` is continuous, every (1 / [fps]) time span within
+		// the video can always correspond to at least two discrete frames. The
+		// actual frame for a specific `currentTime` value is therefore defined
+		// by the browser's rounding algorithm, and will certainly not match the
+		// one used in frame(), which defines the number shown in [eTimeFrame].
+		// As a result, the frame number is very likely to be incorrect half of
+		// the time.
+		// It doesn't matter during playback, where the frame number is
+		// constantly updating anyway, but manifests itself in inconsistent
+		// frame numbers when seeking a paused video, or whenever a non-looping
+		// video finished playing.
+		// As a workaround, we perform a round-trip conversion from seconds to
+		// frames and back, which gets us back onto our discrete seek grid in
+		// any case. This might lead to a noticeable jump back by one frame, but
+		// is unfortunately the best compromise in view of what we're given
+		// here.
+		const frame = Math.min(
+			frameFrom(seconds, this.fps), (this.frameCount - 1)
+		);
+		return this.seekToContinuous(secondsFrom(frame, this.fps));
 	}
 
 	markers() {

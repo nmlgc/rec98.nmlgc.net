@@ -6,5 +6,7 @@ cache/
 db/incoming.tsv
 db/provider_auth.tsv
 db/stripe_subs.tsv
+*.css
+*.css.map
 *.js
 *.js.map

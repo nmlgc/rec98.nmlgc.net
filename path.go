@@ -91,6 +91,10 @@ func (hp *HostedPath) RegisterFileServer(r *mux.Router) {
 	r.PathPrefix(hp.URLPrefix).Handler(stripped)
 }
 
+var esbuildLoader = map[string]esbuild.Loader{
+	".scss": esbuild.LoaderGlobalCSS,
+}
+
 // esbuild runs the esbuild Build API with common settings on the given file.
 func (hp *HostedPath) esbuild(outBasename, inBasename string) (deps []string) {
 	inFN := filepath.Join(hp.LocalPath, inBasename)
@@ -104,10 +108,12 @@ func (hp *HostedPath) esbuild(outBasename, inBasename string) (deps []string) {
 			LogLevel:          esbuild.LogLevelWarning,
 			EntryPoints:       []string{inFN},
 			Outfile:           outFN,
+			Loader:            esbuildLoader,
 			MinifyWhitespace:  true,
 			MinifyIdentifiers: true,
 			MinifySyntax:      true,
 			Sourcemap:         esbuild.SourceMapLinked,
+			Supported:         map[string]bool{"nesting": false},
 			Write:             true,
 		})
 		if len(result.Errors) > 0 {
@@ -125,6 +131,9 @@ func (hp *HostedPath) buildFile(fn string) (deps []string) {
 	case ".js":
 		// Transpile TypeScript
 		return hp.esbuild(fn, (strings.TrimSuffix(fn, ".js") + ".ts"))
+	case ".css":
+		// Minify and polyfill CSS
+		return hp.esbuild(fn, (strings.TrimSuffix(fn, ".css") + ".scss"))
 	}
 	return append(deps, fn)
 }

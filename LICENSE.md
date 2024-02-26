@@ -74,7 +74,7 @@ to contact me, and we might work something out.
 
 ## [SIL Open Font License, Version 1.1]
 
-* `static/video.woff2` (a derivative of [Catrinity](https://catrinity-font.de))
+* `static/player.woff2` (a derivative of [Catrinity](https://catrinity-font.de))
 
 ## [Stripe's Mark Usage Terms]
 

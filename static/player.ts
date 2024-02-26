@@ -173,7 +173,7 @@ abstract class ReC98Player extends HTMLElement {
 	eTimeline: ReC98Trackbar;
 	eVolumeBar: ReC98Trackbar;
 
-	eVideoWrap = document.createElement("div");
+	eElementWrap = document.createElement("div");
 	eControls = document.createElement("div");
 	ePlay = document.createElement("button");
 	eTimeSecondsIcon = document.createElement("span");
@@ -360,7 +360,7 @@ abstract class ReC98Player extends HTMLElement {
 	// Constant property initialization
 	constructor() {
 		super();
-		this.eVideoWrap.className = "video-wrap"
+		this.eElementWrap.className = "wrap"
 		this.eControls.className = "controls";
 		this.ePopups.className = "popups";
 
@@ -457,8 +457,8 @@ abstract class ReC98Player extends HTMLElement {
 		this.tabIndex = -1;
 		this.renderCustomTime(0);
 
-		this.appendChild(this.eVideoWrap);
-		this.eVideoWrap.appendChild(this.ePopups);
+		this.appendChild(this.eElementWrap);
+		this.eElementWrap.appendChild(this.ePopups);
 
 		this.eControls.appendChild(this.ePlay);
 		this.eControls.appendChild(this.eTimeSecondsIcon);
@@ -882,7 +882,7 @@ class ReC98Video extends ReC98Player {
 		// Reparent
 		this.videos = this.getElementsByTagName("video");
 		for(let i = 0; i < this.videos.length; i++) {
-			this.eVideoWrap.appendChild(this.videos[0]);
+			this.eElementWrap.appendChild(this.videos[0]);
 		}
 
 		let withAudio = false;

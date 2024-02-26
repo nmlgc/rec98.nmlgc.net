@@ -3,8 +3,8 @@
 	 * Based on Catrinity (https://catrinity-font.de). Licensed under the SIL
 	 * Open Font License, Version 1.1, which is also embedded in the file.
 	 */
-	font-family: "ReC98 video player symbols";
-	src: url(/static/video.woff2?68c05110) format("woff2");
+	font-family: "ReC98 player symbols";
+	src: url(/static/player.woff2?68c05110) format("woff2");
 }
 
 :root {
@@ -12,7 +12,7 @@
 	--c-timeline-link: #0080ff;
 }
 
-rec98-video {
+.rec98-player {
 	box-shadow: var(--blog-shadow);
 	background-color: var(--c-dark);
 	display: grid;
@@ -43,23 +43,25 @@ rec98-video {
 		}
 	}
 
-	&>div.video-wrap {
-		display: contents;
+	&>div.wrap {
 		position: relative;
 		width: 100%;
 
-		>video {
+		>* {
 			grid-column: 1;
 			grid-row: 1;
+		}
+
+		>:not(.popups) {
 			max-width: 100%;
 			height: auto;
 		}
 	}
 
-	&:fullscreen>div.video-wrap {
+	&:fullscreen>div.wrap {
 		display: block;
 
-		>video {
+		>:not(.popups) {
 			position: absolute;
 			left: 0;
 			width: 100%;
@@ -68,10 +70,10 @@ rec98-video {
 	}
 
 	/* Firefox ignores rules that also match a `:-webkit-full-screen` selector? */
-	&:-webkit-full-screen>div.video-wrap {
+	&:-webkit-full-screen>div.wrap {
 		display: block;
 
-		>video {
+		>:not(.popups) {
 			position: absolute;
 			left: 0;
 			width: 100%;
@@ -90,7 +92,7 @@ rec98-video {
 
 		&>button,
 		&>a {
-			font-family: "ReC98 video player symbols";
+			font-family: "ReC98 player symbols";
 			color: white;
 			padding: 0;
 			place-self: center;
@@ -111,7 +113,7 @@ rec98-video {
 
 	/* Firefox requires an explicit grid without gaps for `height: 100%` to
 	 * work */
-	&.with-switcher>div.video-wrap>video {
+	&.with-switcher>div.wrap>* {
 		grid-row: 2;
 	}
 
@@ -231,9 +233,6 @@ rec98-video {
 		transform: translateX(-50%);
 		height: min-content;
 		width: max-content;
-
-		grid-row: 1;
-		grid-column: 1;
 		z-index: 1;
 
 		.popup {
@@ -246,9 +245,11 @@ rec98-video {
 			animation: linear popup-fade-out 5s forwards;
 		}
 	}
+}
 
-	&.with-switcher .popups {
-		grid-row: 2;
+rec98-video {
+	&>div.wrap {
+		display: contents;
 	}
 }
 

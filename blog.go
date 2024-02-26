@@ -290,14 +290,14 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 			return b.NewBlogVideo((datePrefix + fn), e.Date, alt)
 		},
 		VideoPlayer: func(videos ...*BlogVideo) (ret template.HTML) {
-			ret = "<rec98-video"
+			ret = `<rec98-video class="rec98-player`
 			for _, video := range videos {
 				if len(video.Markers) > 0 {
-					ret += ` class="with-markers"`
+					ret += ` with-markers`
 					break
 				}
 			}
-			ret += ">"
+			ret += `">`
 			for _, video := range videos {
 				ret += video.Tag()
 			}

@@ -25,18 +25,59 @@ type BlogVideoMarker struct {
 	Alignment template.HTML
 }
 
+type BlogPlayerElement interface {
+	// Tag generates a complete HTML tag for a single element.
+	Tag() (ret template.HTML)
+}
+
+// BlogPlayerElementMeta bundles all shared metadata for an element shown in
+// a <rec98-player> subclass.
+type BlogPlayerElementMeta struct {
+	Date   string
+	Title  template.HTML
+	Alt    string
+	Active bool
+	NoLoop bool
+}
+
+func (m *BlogPlayerElementMeta) tagAttributes() (ret template.HTML) {
+	ret += ` preload="none" controls`
+	if m.Title != "" {
+		ret += template.HTML(fmt.Sprintf(` data-title="%s"`, m.Title))
+	}
+	if !m.NoLoop {
+		ret += ` loop`
+	}
+	if m.Active {
+		ret += ` data-active`
+	}
+	return
+}
+
+func (m *BlogPlayerElementMeta) tagBody(lossless template.HTML) (ret template.HTML) {
+	if m.Alt != "" {
+		ret += template.HTML(m.Alt + ". ")
+	}
+	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, lossless))
+	return ret
+}
+
+func blogPlayerBody[T BlogPlayerElement](elements []T) (ret template.HTML) {
+	for _, element := range elements {
+		ret += element.Tag()
+	}
+	ret += `<rec98-parent-init></rec98-parent-init>`
+	return
+}
+
 // BlogVideo bundles static file URLs to all encodings of a video with all
 // necessary metadata.
 type BlogVideo struct {
+	BlogPlayerElementMeta
 	Metadata *VideoMetadata
 	Poster   template.HTML
 	Lossless template.HTML
 	Sources  []template.HTML
-	Date     string
-	Title    template.HTML
-	Alt      string
-	Active   bool
-	NoLoop   bool
 	Markers  []BlogVideoMarker
 }
 
@@ -76,18 +117,9 @@ func (b *BlogVideo) FigureAttrs() (ret template.HTMLAttr) {
 	return ret
 }
 
-// Tag generates a complete HTML <video> tag for a video.
 func (b *BlogVideo) Tag() (ret template.HTML) {
-	ret += (`<video preload="none" controls poster="` + b.Poster + `"`)
-	if b.Title != "" {
-		ret += template.HTML(fmt.Sprintf(` data-title="%s"`, b.Title))
-	}
-	if !b.NoLoop {
-		ret += ` loop`
-	}
-	if b.Active {
-		ret += ` data-active`
-	}
+	ret += (`<video poster="` + b.Poster + `"`)
+	ret += b.tagAttributes()
 	ret += template.HTML(fmt.Sprintf(
 		` width="%v" height="%v" data-fps="%v" data-frame-count="%v" style="aspect-ratio: %[1]d / %[2]d"`,
 		b.Metadata.Width, b.Metadata.Height,
@@ -103,10 +135,7 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 		ret += `<source src="` + source + `" type="video/webm">`
 	}
 
-	if b.Alt != "" {
-		ret += template.HTML(b.Alt + ". ")
-	}
-	ret += template.HTML(fmt.Sprintf(`<a href="%s">Download</a>`, b.Lossless))
+	ret += b.tagBody(b.Lossless)
 	for _, marker := range b.Markers {
 		if marker.Alignment == "" {
 			marker.Alignment = "right"
@@ -124,11 +153,13 @@ func (b *BlogVideo) Tag() (ret template.HTML) {
 
 func (b *Blog) NewBlogVideo(stem, date, alt string) *BlogVideo {
 	ret := &BlogVideo{
+		BlogPlayerElementMeta: BlogPlayerElementMeta{
+			Date: date,
+			Alt:  alt,
+		},
 		Metadata: &b.Video.Cache.Video[stem].Metadata,
 		Poster:   template.HTML(*b.VideoURL(stem, &POSTER)),
 		Lossless: template.HTML(*b.VideoURL(stem, &VIDEO_SOURCE)),
-		Date:     date,
-		Alt:      alt,
 	}
 	for _, codec := range VIDEO_HOSTED {
 		if codecURL := b.VideoURL(stem, codec); codecURL != nil {
@@ -298,10 +329,7 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 				}
 			}
 			ret += `">`
-			for _, video := range videos {
-				ret += video.Tag()
-			}
-			ret += `<rec98-parent-init></rec98-parent-init>`
+			ret += blogPlayerBody(videos)
 			ret += `</rec98-video>`
 			return ret
 		},

@@ -2,10 +2,10 @@
 	<thead>
 		<tr>
 			<th>Push ID</th>
-			<th>Time purchased</th>
+			<th>Date purchased</th>
 			<th>Funded by</th>
 			<th>Goal</th>
-			<th>Time delivered</th>
+			<th>Date delivered</th>
 			<th>Commits</th>
 			<th>Summary</th>
 		</tr>
@@ -13,12 +13,12 @@
 	<tbody>
 		{{range .}}<tr id="{{.ID}}">
 			<th>{{.ID}}</th>
-			<td>💰 {{HTML_Time .FundedAt}}</td>
+			<td>💰 {{HTML_Date .FundedAt}}</td>
 			<td>{{range $i, $customer := .FundedBy -}}
 				{{- if $i}}, {{end}}{{DB_CustomerByID $customer}}
 			{{- end}}</td>
 			<td>{{.Goal}}</td>
-			<td>🚚 {{HTML_Time .Delivered}}</td>
+			<td>🚚 {{HTML_Date .Delivered}}</td>
 			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
 			<td class="icon-cell">{{with Blog_FindEntryForPush . -}}
 				{{Blog_PostLink .Date ""}}

@@ -56,6 +56,10 @@
 						<li>Requires all movement-related code of the games in question to be reverse-engineered. If the backlog contains no other pushes which could cover that code, I will use this order to cover them.</li>
 						<li>As replays are critical infrastructure, this will <i>not</i> require 100% position independence, and be implemented in an <span class='hovertext' title='That is, as a TSR with a minimal amount of hooks in original game code.'>easily diffable way</span> even for games where 100% PI has been reached.</li>
 					</ul>" data-goal-mandatory data-micro>Replay support (on PC-98)</option>
+					<option data-info="<ul>
+						<li>Please specify which game I should start with.</li>
+						<li>TH02 will be slightly more expensive as long as it's not fully position-independent.</li>
+					</ul>" data-goal-mandatory data-micro>TH01/TH02 joystick support (on PC-98)</option>
 					<option data-info="Please specify which game(s) would be most important to you. Will consist of the following steps, in order:<ol>
 						<li>Decompilations of ZUN's hand-written ASM</li>
 						<li>Building a PC-98 abstraction interface in C++ and routing all the game's hardware accesses through it. Ports to generic 640×400×16-color framebuffers, other retro systems with hardware sprites, or headless servers with no graphical output, would then only reimplement that interface, and don't need to touch any game code.</li>

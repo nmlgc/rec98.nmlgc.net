@@ -57,12 +57,17 @@ blockquote {
 	white-space: pre-line;
 }
 
+i [lang="ja"] {
+	font-style: normal;
+}
+
 pre {
 	border: var(--header-border);
 	box-shadow: var(--blog-shadow);
 	padding: 1em;
 	-moz-tab-size: 4;
 	tab-size: 4;
+	max-width: 100%;
 	overflow-x: scroll;
 	text-align: left;
 }

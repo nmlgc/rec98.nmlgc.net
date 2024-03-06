@@ -8,6 +8,7 @@ th04	東方幻想郷　～  Lotus Land Story
 th05	東方怪綺談　～  Mystic Square
 animation	Colorful, crisp images that are played in a sequence.
 anniversary-edition	Polished and bugfixed forks of 100% decompiled games.
+bgm	The music behind Touhou. Arguably the core of what motivated ZUN to create this series to begin with.
 blitting	Getting pixel data to and from VRAM.
 bomb	Limited-use item that damages enemies and grants temporary invulnerability, while playing a flashy animation specific to the player character.
 bug	Bugs in the original code that cause catastrophic effects when given malformed input. Modders beware!
@@ -84,3 +85,4 @@ shinki	TH05's Stage 6 boss.
 ex-alice	TH05's Extra Stage boss.
 seihou	A dormant shooting game series by ZUN's former fellow students, who released the source code to the first two games in 2019.
 sh01	秋霜玉 / Shuusou Gyoku
+midi-projects	MIDI-related side projects involving visualization, manipulation, and other useful algorithms.

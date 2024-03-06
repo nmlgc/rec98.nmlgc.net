@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-2 -2 63 23"
+	style="background-color: black;">
+	<style type="text/css">
+		<![CDATA[
+		text {
+			font-family: sans-serif;
+			font-size: 0.035em;
+		}
+
+		.title text {
+			writing-mode: vertical-rl;
+			text-anchor: end;
+			fill: black;
+		}
+
+		.label.x text {
+			text-anchor: middle;
+			dominant-baseline: hanging;
+			fill: white;
+		}
+
+		.label.y text {
+			dominant-baseline: middle;
+			text-anchor: end;
+		}
+
+		.peaks text {
+			text-anchor: middle;
+		}
+
+		path {
+			stroke-linecap: square;
+		}
+
+		path.axis {
+			stroke: white;
+			stroke-width: 0.005em;
+		}
+
+		path.db {
+			stroke: #d73414;
+			stroke-width: 0.0025em;
+		}
+
+		path.grid {
+			stroke: #888;
+			stroke-width: 0.00125em;
+		}
+
+		.heap {
+			stroke-linecap: round;
+			stroke-width: 2;
+		}
+
+		path.bar {
+			stroke: none;
+		}
+
+		.clean {
+			fill: #75b635;
+		}
+
+		.clipped {
+			fill: #d73414;
+		}
+		]]>
+	</style>
+	<clipPath id="clipped">
+		<path d="M0 10 h60 v-20 h-60 z" />
+	</clipPath>
+
+	<path class="db" d="M0 0 h60" />
+	<path class="db" d="M0 10 h60" />
+	<path class="grid" d="M0 12.5 h60" />
+	<path class="grid" d="M0 15.0 h60" />
+	<path class="grid" d="M0 17.5 h60" />
+	<path class="grid" d="M0  2.5 h60" />
+	<path class="grid" d="M0  5.0 h60" />
+	<path class="grid" d="M0  7.5 h60" />
+
+	<g class="bar clean">
+		<path d="M01 20 h2 v-7.64097 h-2 z" />
+		<path d="M04 20 h2 v-9.16549 h-2 z" />
+		<path d="M07 20 h2 v-10.47258 h-2 z" />
+		<path d="M10 20 h2 v-12.09388 h-2 z" />
+		<path d="M13 20 h2 v-11.84717 h-2 z" />
+		<path d="M16 20 h2 v-11.52415 h-2 z" />
+		<path d="M19 20 h2 v-9.1172 h-2 z" />
+		<path d="M22 20 h2 v-9.74865 h-2 z" />
+		<path d="M25 20 h2 v-12.1478 h-2 z" />
+		<path d="M28 20 h2 v-11.4127 h-2 z" />
+		<path d="M31 20 h2 v-12.59642 h-2 z" />
+		<path d="M34 20 h2 v-10.24155 h-2 z" />
+		<path d="M37 20 h2 v-10.2287 h-2 z" />
+		<path d="M40 20 h2 v-9.43029 h-2 z" />
+		<path d="M43 20 h2 v-8.99623 h-2 z" />
+		<path d="M46 20 h2 v-20.33419 h-2 z" />
+		<path d="M49 20 h2 v-12.9076 h-2 z" />
+		<path d="M52 20 h2 v-16.51488 h-2 z" />
+		<path d="M55 20 h2 v-10.24603 h-2 z" />
+	</g>
+	<g class="bar clipped" clip-path="url(#clipped)">
+		<path d="M01 20 h2 v-7.64097 h-2 z" />
+		<path d="M04 20 h2 v-9.16549 h-2 z" />
+		<path d="M07 20 h2 v-10.47258 h-2 z" />
+		<path d="M10 20 h2 v-12.09388 h-2 z" />
+		<path d="M13 20 h2 v-11.84717 h-2 z" />
+		<path d="M16 20 h2 v-11.52415 h-2 z" />
+		<path d="M19 20 h2 v-9.1172 h-2 z" />
+		<path d="M22 20 h2 v-9.74865 h-2 z" />
+		<path d="M25 20 h2 v-12.1478 h-2 z" />
+		<path d="M28 20 h2 v-11.4127 h-2 z" />
+		<path d="M31 20 h2 v-12.59642 h-2 z" />
+		<path d="M34 20 h2 v-10.24155 h-2 z" />
+		<path d="M37 20 h2 v-10.2287 h-2 z" />
+		<path d="M40 20 h2 v-9.43029 h-2 z" />
+		<path d="M43 20 h2 v-8.99623 h-2 z" />
+		<path d="M46 20 h2 v-20.33419 h-2 z" />
+		<path d="M49 20 h2 v-12.9076 h-2 z" />
+		<path d="M52 20 h2 v-16.51488 h-2 z" />
+		<path d="M55 20 h2 v-10.24603 h-2 z" />
+	</g>
+	<g class="title" style="transform: translateY(19.75px)">
+		<text x="02">
+			<tspan lang="ja">秋霜玉 ～</tspan> Clockworks
+		</text>
+		<text x="05" lang="ja">フォルスストロベリー</text>
+		<text x="08" lang="ja">プリムローズシヴァ</text>
+		<text x="11" lang="ja">幻想帝都</text>
+		<text x="14" lang="ja">ディザストラスジェミニ</text>
+		<text x="17" lang="ja">華の幻想  紅夢の宙</text>
+		<text x="20" lang="ja">天空アーミー</text>
+		<text x="23" lang="ja">スプートニク幻夜</text>
+		<text x="26">
+			<tspan lang="ja">機械サーカス ～</tspan> Reverie
+		</text>
+		<text x="29" lang="ja">カナベラルの夢幻少女</text>
+		<text x="32" lang="ja">魔法少女十字軍</text>
+		<text x="35" lang="ja">アンティークテラー</text>
+		<text x="38">
+			<tspan lang="ja">夢機械 ～</tspan> Innocent Power
+		</text>
+		<text x="41">
+			<tspan lang="ja">幻想科学 ～</tspan> Doll's Phantom
+		</text>
+		<text x="44">
+			<tspan lang="ja">少女神性 ～</tspan> Pandora's Box
+		</text>
+		<text x="47" lang="ja">シルクロードアリス</text>
+		<text x="50" lang="ja">魔女達の舞踏会</text>
+		<text x="53">
+			<tspan lang="ja">二色蓮花蝶 ～</tspan> Ancients
+		</text>
+		<text x="56" lang="ja">ハーセルヴス</text>
+	</g>
+
+	<g class="label x" style="transform: translateY(20.25px)">
+		<text x="02">#1</text>
+		<text x="05">#2</text>
+		<text x="08">#3</text>
+		<text x="11">#4</text>
+		<text x="14">#5</text>
+		<text x="17">#6</text>
+		<text x="20">#7</text>
+		<text x="23">#8</text>
+		<text x="26">#9</text>
+		<text x="29">#10</text>
+		<text x="32">#11</text>
+		<text x="35">#12</text>
+		<text x="38">#13</text>
+		<text x="41">#14</text>
+		<text x="44">#15</text>
+		<text x="47">#16</text>
+		<text x="50">#17</text>
+		<text x="53">#18</text>
+		<text x="56">#19</text>
+	</g>
+
+	<g class="label y" style="transform: translateX(-0.25px)">
+		<text class="clean" y="20">0.00</text>
+		<text class="clean" y="15">0.50</text>
+		<text class="clipped" y="10">1.00</text>
+		<text class="clipped" y="05">1.50</text>
+		<text class="clipped" y="00">2.00</text>
+	</g>
+
+	<g class="peaks">
+		<text class="clean" x="02" y="11.85903">0.764097</text>
+		<text class="clean" x="05" y="10.33451">0.916549</text>
+		<text class="clipped" x="08" y="9.02742">1.047258</text>
+		<text class="clipped" x="11" y="7.40612">1.209388</text>
+		<text class="clipped" x="14" y="7.65283">1.184717</text>
+		<text class="clipped" x="17" y="7.97585">1.152415</text>
+		<text class="clean" x="20" y="10.3828">0.91172</text>
+		<text class="clean" x="23" y="9.75135">0.974865</text>
+		<text class="clipped" x="26" y="7.3522">1.21478</text>
+		<text class="clipped" x="29" y="8.0873">1.14127</text>
+		<text class="clipped" x="32" y="6.90358">1.259642</text>
+		<text class="clipped" x="35" y="9.25845">1.024155</text>
+		<text class="clipped" x="38" y="9.2713">1.02287</text>
+		<text class="clean" x="41" y="10.06971">0.943029</text>
+		<text class="clean" x="44" y="10.50377">0.899623</text>
+		<text class="clipped" x="47" y="-0.83419">2.033419</text>
+		<text class="clipped" x="50" y="6.5924">1.29076</text>
+		<text class="clipped" x="53" y="2.98512">1.651488</text>
+		<text class="clipped" x="56" y="9.25397">1.024603</text>
+	</g>
+
+	<path class="axis" d="M0 20 V-1" />
+	<path class="axis" d="M0 20 h60" />
+</svg>

@@ -1,0 +1,887 @@
+{{$aud_o20_rtp := (call .Audio "SH01-o20-RomantiqueTp" "The first 4 beats of Shuusou Gyoku's name registration theme (タイトルドメイド), as recorded by Romantique Tp, pointing out how the first bass drum hit occurs slightly too late") -}}
+{{$aud_o20_scva := (call .Audio "SH01-o20-SCVA" "The first 4 beats of Shuusou Gyoku's name registration theme (タイトルドメイド), as rendered by Sound Canvas VA, showing off how all notes are aligned perfectly to the beat") -}}
+{{$aud_o18_rtp := (call .Audio "SH01-o18-RomantiqueTp" "The first 4 beats of Reimu's theme in Shuusou Gyoku (二色蓮花蝶　～ Ancients), as recorded by Romantique Tp, pointing out how the first drum hit is delayed so much that the 5 hits bleed into 4") -}}
+{{$aud_o18_scva := (call .Audio "SH01-o18-SCVA" "The first 4 beats of Reimu's theme in Shuusou Gyoku (二色蓮花蝶　～ Ancients), as rendered by Sound Canvas VA, showing off how all notes are aligned perfectly to the beat") -}}
+{{$aud_a14_rtp := (call .Audio "SH01-a14-RomantiqueTp" "The first 3 beats of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom), as recorded by Romantique Tp, showing off how a barrage of MIDI Program Change events ends up delaying the first crash hit by roughly 50 ms") -}}
+{{$aud_a14_scva := (call .Audio "SH01-a14-SCVA" "The first 3 beats of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom), as rendered by Sound Canvas VA, showing off how all notes are aligned perfectly to the beat") -}}
+{{$aud_a14_half_rtp := (call .Audio "SH01-a14-half-RomantiqueTp" "The first 3 beats of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom), as recorded by Romantique Tp, slowed down 50% to emphasize the delay of the first crash hit") -}}
+{{$aud_a14_half_scva := (call .Audio "SH01-a14-half-SCVA" "The first 3 beats of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom), as rendered by Sound Canvas VA, slowed down 50% to to show off how all notes are still aligned perfectly to the beat") -}}
+{{$xws := (call .PostFileURL "XGworks-SysEx.png") -}}
+{{$sc88pro_reverb := (call .PostFileURL "SC88Pro-Reverb-SysEx.svg") -}}
+{{$gsae := (call .PostFileURL "GSAE.png") -}}
+{{$gsae_sysex := (call .PostFileURL "SH01-o20-GSAE-SysEx.png") -}}
+{{$domino_1 := (call .PostFileURL "Domino-1-Model-map.png") -}}
+{{$domino_2 := (call .PostFileURL "Domino-2-Analyze.png") -}}
+{{$domino_3 := (call .PostFileURL "Domino-3-Decoded-SysEx.png") -}}
+{{$reaper := (call .PostFileURL "SH01-o02-REAPER.png") -}}
+{{$lq_o02 := (call .Video "SH01-loop-quirk-o02.hd" "MIDI visualization of the loop quirk in the OST version of the Stage 1 theme (フォルスストロベリー)") -}}
+{{$lq_a02 := (call .Video "SH01-loop-quirk-a02.hd" "MIDI visualization of the loop quirk in the AST version of the Stage 1 theme (フォルスストロベリー)") -}}
+{{$lq_a05 := (call .Video "SH01-loop-quirk-a05.hd" "MIDI visualization of the loop quirk in the AST version of Mei and Mai's theme (ディザストラスジェミニ)") -}}
+{{$lq_o06 := (call .Video "SH01-loop-quirk-o06.hd" "MIDI visualization of the loop quirk in the OST version of the Stage 3 theme (華の幻想&nbsp;&nbsp;紅夢の宙)") -}}
+{{$lq_a06 := (call .Video "SH01-loop-quirk-a06.hd" "MIDI visualization of the loop quirk in the AST version of the Stage 3 theme (華の幻想&nbsp;&nbsp;紅夢の宙)") -}}
+{{$lq_a09 := (call .Video "SH01-loop-quirk-a09.hd" "MIDI visualization of the loop quirk in the AST version of Marie's theme (機械サーカス　～ Reverie)") -}}
+{{$lq_o10 := (call .Video "SH01-loop-quirk-o10.hd" "MIDI visualization of the loop quirk in the OST version of the Stage 5 theme (カナベラルの夢幻少女)") -}}
+{{$lq_a10 := (call .Video "SH01-loop-quirk-a10.hd" "MIDI visualization of the loop quirk in the AST version of the Stage 5 theme (カナベラルの夢幻少女)") -}}
+{{$lq_a12 := (call .Video "SH01-loop-quirk-a12.hd" "MIDI visualization of the loop quirk in the AST version of the Stage 6 theme (アンティークテラー)") -}}
+{{$lq_a13 := (call .Video "SH01-loop-quirk-a13.hd" "MIDI visualization of the loop quirk in the AST version of VIVIT-captured-'s first theme (夢機械　～ Innocent Power)") -}}
+{{$lq_o14 := (call .Video "SH01-loop-quirk-o14.hd" "MIDI visualization of the loop quirk in the OST version of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom)") -}}
+{{$lq_a14 := (call .Video "SH01-loop-quirk-a14.hd" "MIDI visualization of the loop quirk in the AST version of VIVIT-captured-'s second theme (幻想科学 ～ Doll's Phantom)") -}}
+{{$lq_o15 := (call .Video "SH01-loop-quirk-o15.hd" "MIDI visualization of the loop quirk in the OST version of VIVIT-captured-'s third theme (少女神性　～ Pandora's Box)") -}}
+{{$lq_a15 := (call .Video "SH01-loop-quirk-a15.hd" "MIDI visualization of the loop quirk in the AST version of VIVIT-captured-'s third theme (少女神性　～ Pandora's Box)") -}}
+{{$lq_a17 := (call .Video "SH01-loop-quirk-a17.hd" "MIDI visualization of the loop quirk in the AST version of Marisa's theme (魔女達の舞踏会)") -}}
+{{$lq_a19 := (call .Video "SH01-loop-quirk-a19.hd" "MIDI visualization of the loop quirk in the AST version of the ending theme (ハーセルヴズ)") -}}
+{{$sync := (call .Video "SH01-Music-Room-MIDI-Waveform-sync" "Video of Shuusou Gyoku's Music Room as seen in the P0275 build, showing off MIDI visualization despite playing back the Sound Canvas VA rendering of the OST version of the ending theme (ハーセルヴズ)")}}
+{{$peaks_ost := (call .PostFileURL "SH01-Peaks-OST.svg") -}}
+{{$peaks_ast := (call .PostFileURL "SH01-Peaks-AST.svg") -}}
+{{$a16_rtp := (call .PostFileURL "SH01-a16-RomantiqueTp.png") -}}
+{{$a16_scva := (call .PostFileURL "SH01-a16-SCVA.png") -}}
+{{$packs := (call .PostFileURL "SH01-BGM-pack-menu.png") -}}
+{{$opts := (call .PostFileURL "SH01-Sound-Music-options.png") -}}
+{{$mtitle_orig := (call .Video "SH01-Ingame-music-title-original" "Video of Shuusou Gyoku's original in-game music title animation for Stage 2, demonstrating an instance where a track title that appears almost centered") -}}
+{{$mtitle_P0275 := (call .Video "SH01-Ingame-music-title-P0275" "Video of Shuusou Gyoku's in-game music title animation for Stage 2 as seen in the P0275 build, using correct right-alignment which unfortunately affects the animation") -}}
+{{$missing := (call .PostFileURL "SH01-Missing.png") -}}
+
+{{$aud_o18_rtp.SetTitle "Romantique Tp recording" -}}
+{{$aud_o20_rtp.SetTitle "Romantique Tp recording" -}}
+{{$aud_a14_rtp.SetTitle "Romantique Tp recording" -}}
+{{$aud_a14_half_rtp.SetTitle "Romantique Tp recording" -}}
+{{$aud_o18_scva.SetTitle "Sound Canvas VA" -}}
+{{$aud_o20_scva.SetTitle "Sound Canvas VA" -}}
+{{$aud_a14_scva.SetTitle "Sound Canvas VA" -}}
+{{$aud_a14_half_scva.SetTitle "Sound Canvas VA" -}}
+
+{{$lq_o02.SetTitle "OST version" -}}
+{{$lq_a02.SetTitle "AST version" -}}
+{{$lq_o06.SetTitle "OST version" -}}
+{{$lq_a06.SetTitle "AST version" -}}
+{{$lq_o10.SetTitle "OST version" -}}
+{{$lq_a10.SetTitle "AST version" -}}
+{{$lq_o14.SetTitle "OST version" -}}
+{{$lq_a14.SetTitle "AST version" -}}
+{{$lq_o15.SetTitle "OST version" -}}
+{{$lq_a15.SetTitle "AST version" -}}
+
+{{$lq_o02.AddMarker   0 "Quirk" "" -}}
+{{$lq_o02.AddMarker  97 "Loop start" "" -}}
+{{$lq_o02.AddMarker 193 "Quirk" "" -}}
+{{$lq_o02.AddMarker 290 "Loop end" "" -}}
+
+{{$lq_a02.AddMarker   0 "Quirk" "" -}}
+{{$lq_a02.AddMarker  98 "Loop start" "" -}}
+{{$lq_a02.AddMarker 196 "Quirk" "" -}}
+{{$lq_a02.AddMarker 294 "Loop end" "" -}}
+
+{{$lq_a05.AddMarker   0 "Quirk" "" -}}
+{{$lq_a05.AddMarker  92 "E♭" "" -}}
+{{$lq_a05.AddMarker 184 "Quirk" "" -}}
+{{$lq_a05.AddMarker 276 "G♭" "" -}}
+
+{{$lq_o06.AddMarker   0 "Quirk" "" -}}
+{{$lq_o06.AddMarker 285 "Loop start" "" -}}
+{{$lq_o06.AddMarker 474 "Quirk" "" -}}
+{{$lq_o06.AddMarker 759 "Loop end" "" -}}
+{{$lq_a06.LinkMarkers $lq_o06 -}}
+
+{{$lq_a09.AddMarker 189 "G♯m" "" -}}
+{{$lq_a09.AddMarker 582 "Piece repeats" "" -}}
+{{$lq_a09.AddMarker 968 "Am" "" -}}
+{{$lq_a09.AddMarker 1361 "Piece repeats" "" -}}
+
+{{$lq_o10.AddMarker   0 "Quirk" "" -}}
+{{$lq_o10.AddMarker 205 "Quirk" "" -}}
+
+{{$lq_a10.AddMarker 220 "Fixed quirk" "" -}}
+
+{{$lq_a12.AddMarker   0 "Quirk" "" -}}
+{{$lq_a12.AddMarker 186 "Quirk" "" -}}
+
+{{$lq_a13.AddMarker  800 "Gm" "" -}}
+{{$lq_a13.AddMarker 1600 "Em" "" -}}
+{{$lq_a13.AddMarker 2400 "Fm" "" -}}
+{{$lq_a13.AddMarker 3200 "F♯m" "" -}}
+
+{{$lq_o14.AddMarker   0 "Quirk" "" -}}
+{{$lq_o14.AddMarker  90 "Loop start" "" -}}
+{{$lq_o14.AddMarker 193 "Quirk" "" -}}
+{{$lq_o14.AddMarker 283 "Loop end" "" -}}
+{{$lq_a14.LinkMarkers $lq_o14 -}}
+
+{{$lq_o15.AddMarker   0 "Quirk" "" -}}
+{{$lq_o15.AddMarker 166 "Loop start" "" -}}
+{{$lq_o15.AddMarker 365 "Quirk" "" -}}
+{{$lq_o15.AddMarker 532 "Loop end" "" -}}
+
+{{$lq_a15.AddMarker   0 "Quirk" "" -}}
+{{$lq_a15.AddMarker 147 "Loop start" "" -}}
+{{$lq_a15.AddMarker 373 "Quirk" "" -}}
+{{$lq_a15.AddMarker 521 "Loop end" "" -}}
+
+{{$lq_a17.AddMarker 797 "Cm" "" -}}
+{{$lq_a17.AddMarker 1592 "C♯m, first" "" -}}
+{{$lq_a17.AddMarker 2387 "C♯m, second" "" -}}
+
+{{$sync.AddMarker 500 "Loop" "" -}}
+
+{{$mtitle_orig.SetTitle "Original game" -}}
+{{$mtitle_P0275.SetTitle "P0275 build" -}}
+
+<style>
+	.loopquirks-{{.Date}} dl {
+		display: grid;
+		border: none;
+		width: max-content;
+		place-items: baseline right;
+		padding-bottom: 0;
+		max-width: 100%;
+	}
+	.loopquirks-{{.Date}} dl dt {
+		grid-column: 1;
+		margin-right: 1ch;
+	}
+	.loopquirks-{{.Date}} dl dd {
+		grid-column: 2;
+	}
+	.viz-{{.Date}} rec98-video:not(:fullscreen) video {
+		width: 640px;
+		height: 360px;
+		aspect-ratio: 640 / 360;
+		object-fit: fill;
+	}
+	#sysex-bugs-{{.Date}} rec98-child-switcher div {
+		color: white;
+		overflow-x: scroll;
+	}
+	#sysex-bugs-{{.Date}} h4 {
+		margin-block: 0;
+	}
+	#sysex-bugs-{{.Date}} pre {
+		margin: 0;
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+	}
+</style>
+
+{{- define "ssg_11"}}<span lang="ja" class="hovertext"title="Stage 5 Boss/Erich's theme">魔法少女十字軍</span>{{end -}}
+{{- define "ssg_13"}}<span lang="ja" class="hovertext" title="Stage 6 Boss/VIVIT-captured-'s first theme">夢機械　～ Innocent Power</span>{{end -}}
+{{- define "ssg_14"}}<span lang="ja" class="hovertext" title="Stage 6 Boss/VIVIT-captured-'s second theme">幻想科学 ～ Doll's Phantom</span>{{end -}}
+{{- define "ssg_16"}}<span lang="ja" class="hovertext" title="Extra Stage theme">シルクロードアリス</span>{{end -}}
+{{- define "ssg_17"}}<span lang="ja" class="hovertext" title="Marisa's theme">魔女達の舞踏会</span>{{end -}}
+{{- define "ssg_18"}}<span lang="ja" class="hovertext" title="Reimu's theme">二色蓮花蝶　～ Ancients</span>{{end -}}
+{{- define "ssg_19"}}<span lang="ja" class="hovertext" title="Ending theme">ハーセルヴズ</span>{{end -}}
+{{- define "ssg_20"}}<span lang="ja" class="hovertext" title="Name registration theme">タイトルドメイド</span>{{end -}}
+
+<p>
+	{{Blog_PostLink "2022-01-31" "Over two years since the previous largest delivery"}}, we've now got a new record in every regard: 12 pushes across 5 repos, 215 commits, and a blog post with over 14,000 words and 48 pieces of media. 😱 Who would have thought that the superficially simple task of putting SC-88Pro recordings into Shuusou Gyoku would actually mainly focus on deep research into the underlying MIDI files? I don't typically cover much music-related content because it's a non-issue as far as PC-98 Touhou code is concerned, so it's quite fitting how extensive this one turned out. So here we go, the result of virtually unlimited funding and patience:
+</p><ol>
+	<li><a href="#controversy-{{.Date}}">The SC-88Pro recording controversy</a></li>
+	<li><a href="#sysex-{{.Date}}">Undefined SysEx behavior</a></li>
+	<li><a href="#choice-{{.Date}}">Resolving the controversy, and making a choice (contains personal opinion)</a></li>
+	<li><a href="#mly-{{.Date}}">A Unix-style command-line MIDI filter (in Rust BTW)</a></li>
+	<li><a href="#midiviz-{{.Date}}">Visualizing MIDI files (for science, and not for playing them on a keyboard)</a></li>
+	<li><a href="#loopquirks-{{.Date}}">Shuusou Gyoku's individual loop quirks 🎺</a></li>
+	<li><a href="#pbgmidi-{{.Date}}">Rewriting pbg's MIDI code</a></li>
+	<li><a href="#bgmpacks-{{.Date}}">Putting together the BGM packs</a></li>
+	<li><a href="#libs-{{.Date}}">Outgrowing miniaudio (and raging about single-file C libraries for a while)</a></li>
+	<li><a href="#impl-{{.Date}}">Remaining implementation details</a></li>
+	<li><a href="#pricing-{{.Date}}">Pricing changes (and no, not everything's getting more expensive)</a></li>
+</ol><hr id="controversy-{{.Date}}" /><p>
+	So where's the controversy? Romantique Tp obviously made <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.0">the best and most careful real-hardware SC-88Pro recordings of all of ZUN's old MIDIs</a>, including the original (<dfn>OST</dfn>) and <a href="https://www16.big.or.jp/~zun/html/music_old.html">arranged</a> (<dfn>AST</dfn>) soundtrack of Shuusou Gyoku, right? Surely all I have to do now is to cut them into seamless loops to save a bit of disk space, and then put them into the game? Let's start at the end of the track list with the name registration theme, since it's light on instruments and has an obvious loop point that will be easy to spot in the waveform. But, um… wait a moment, that very first drum note comes a bit late, doesn't it?
+</p><figure class="waveform-{{.Date}}" >
+	<figcaption class="dynamic"><div>
+		This can also be heard in <a href="https://www.youtube.com/watch?v=eXU3XDJy6Cg">Romantique Tp's YouTube upload.</a>
+	</div><div>
+		At a notated tempo of 96 BPM, these first four beats should take exactly 2.5 seconds, which they do in this seamlessly looping softsynth rendering.
+	</div></figcaption>
+	{{call .AudioPlayer $aud_o20_rtp.SetActive $aud_o20_scva}}
+</figure><p>
+	That's… not quite the accuracy and perfection I was expecting. {{HTML_Emoji "thonk"}} But I think I know what we're seeing and hearing there. Let's look at the first few MIDI events on the drum channel:
+</p><figure class="side_by_side">
+	<pre>Delta	Pulse	 Beat	Channel	Event
+ +540	   960	  2:000	      1	Controller { CC   0, value   0 }
+   +0	   960	  2:000	      1	Controller { CC  32, value   0 }
+   +0	   960	  2:000	      1	ProgramChange {  37 }
+[…]
+   +0	   960	  2:000	      2	Controller { CC   0, value   0 }
+   +0	   960	  2:000	      2	Controller { CC  32, value   0 }
+   +0	   960	  2:000	      2	ProgramChange {  19 }
+[…]
+   +0	   960	  2:000	      3	Controller { CC   0, value   0 }
+   +0	   960	  2:000	      3	Controller { CC  32, value   0 }
+   +0	   960	  2:000	      3	ProgramChange {   6 }
+[…]
+   +0	   960	  2:000	      4	Controller { CC   0, value   0 }
+   +0	   960	  2:000	      4	Controller { CC  32, value   0 }
+   +0	   960	  2:000	      4	ProgramChange {   2 }
+[…]</pre>
+	<pre>Delta	Pulse	 Beat	Channel	Event
+   +0	  960	2:000	     10	Controller { CC   0, value   0 }
+   +0	  960	2:000	     10	Controller { CC  32, value   0 }
+   +0	  960	2:000	     10	ProgramChange {  25 }
+   +0	  960	2:000	     10	Controller { CC   7, value 127 }
+   +0	  960	2:000	     10	Controller { CC  11, value 127 }
+   +0	  960	2:000	     10	Controller { CC  10, value  64 }
+   +0	  960	2:000	     10	Controller { CC  91, value  80 }
+   +0	  960	2:000	     10	Controller { CC  93, value  40 }
+   +0	  960	2:000	     10	NoteOn { Key  42, Vel.  94 }
+   +0	  960	2:000	     10	NoteOn { Key  36, Vel. 110 }
+   +1	  961	2:001	     10	NoteOn { Key  42, Vel.   0 }
+   +0	  961	2:001	     10	NoteOn { Key  36, Vel.   0 }
+ +119	 1080	2:120	     10	NoteOn { Key  42, Vel.  34 }
+   +1	 1081	2:121	     10	NoteOn { Key  42, Vel.   0 }
+ +119	 1200	2:240	     10	NoteOn { Key  42, Vel.  64 }
+   +0	 1200	2:240	     10	NoteOn { Key  36, Vel.  64 }</pre>
+	<figcaption>
+	Also, the fact that GS doesn't put its drums on a non-general voice bank and instead relies on external channel configuration to differentiate drums from pitched instruments is making this Yamaha kid uncontrollably furious. 🤬
+	</figcaption>
+</figure><p>
+	Yup. That's the sound of a vintage hardware synth being slow and taking a two-digit number of milliseconds to process a barrage of simultaneous Program Change messages, playing a MIDI file that doesn't take this reality into account and expects program changes to happen instantly.<br />
+	I can only speak from my own experience of writing MIDIs for hardware synths here, but having the first note displaced by 50&nbsp;ms is very much <i>not</i> the way a composer would have <i>intended</i> the music to be heard if the note is clearly notated to occur <i>on</i> the beat. If you had told me about such an issue when playing one of my MIDIs on a certain synth, I would have thanked you for the bug report! And I would have promptly released a fixed version of the MIDI with the Program Change events moved back by a beat or two. In the case of Shuusou Gyoku's MIDIs, this wouldn't even have added any additional delay in-game, as all of these files already start with at least one beat of leading silence to make room for setting Roland-specific synth parameters.
+</p><p>
+	OK, but that's just a single isolated bass drum hit. If we wanted to, we could even fix this issue ourselves by splicing the same note from around the loop end point. Maybe this is just an isolated case and the rest of Romantique Tp's recordings are fine? Well…
+</p><figure class="waveform-{{.Date}}">
+	<figcaption class="dynamic"><div>
+		Again, <a href="https://www.youtube.com/watch?v=xFovQWYiJEw">check Romantique Tp's YouTube upload for proof.</a>
+	</div><div>
+		By the way, this seamless audio player is what consumed most of the two website pushes this time. The rest went to the slightly redesigned main page, whose progress bars now use the cap bar style and the GitHub badge colors.
+	</div></figcaption>
+	{{call .AudioPlayer $aud_o18_rtp.SetActive $aud_o18_scva}}
+</figure><p>
+	This one is even worse. Here, the delay is so long relative to the tempo of the piece that the intended five drum hits pretty much turn into four.
+</p><p>
+	This type of issue doesn't even have to be isolated to the very beginning of a piece. A few of the tracks in both the OST and AST start with an <a href="https://en.wikipedia.org/wiki/Anacrusis#Music">anacrusis</a> on just one or two channels and leave the Program Change event barrage at the beginning of the first full measure. In {{template "ssg_14"}} for example, this creates a flam-like glitch where the bass on channel 2 is pretty much on time, but the crash hit on channel 10 only follows 50&nbsp;ms later, after the SC-88Pro took its sweet time to process all the Program Change events on the channels between:
+</p><figure class="waveform-{{.Date}}">
+	<figcaption>This is from the arranged soundtrack for a change. In that one, ZUN at least fixed the issue in the final three MIDIs ({{template "ssg_16"}}, {{template "ssg_17"}}, and {{template "ssg_18"}}) that closed out this rearranging project in May 2001, which spread out their per-channel setup events over at least a single measure before playing any note.</figcaption>
+	{{call .AudioPlayer $aud_a14_rtp.SetActive $aud_a14_scva}}
+</figure><p id="halfspeed-{{.Date}}">
+	Let's listen to that at half speed:
+</p><figure class="waveform-{{.Date}}">
+	<figcaption class="dynamic"><div>
+		<a href="https://www.youtube.com/watch?v=zpkAyjPZiaM">Romantique Tp's YouTube upload.</a>
+	</div><div>
+		Still on point.
+	</div></figcaption>
+	{{call .AudioPlayer $aud_a14_half_rtp.SetActive $aud_a14_half_scva}}
+</figure><p>
+	Sure, all of this is barely noticeable in casual listening, but <i>very</i> noticeable if you're the one who now has to cut these recordings into seamless loops. And these are just the most obvious timing issues that can be easily pinpointed and documented – the <i>actual</i> worst aspects are all the minor tempo and timing fluctuations <i>throughout</i> most of the pieces. With recordings that deviate ever so slightly from the tempo defined in the MIDI files, you can no longer rely on mathematically exact sample positions when cutting loops. Even if those positions do work out from time to time, there'd pretty much always be a discontinuity in the waveform at both ends of the loop, manifesting as a clearly audible click. In the end, the only way of finding good loop points in existing recordings involves straining your ears and listening very, <i>very</i> closely to avoid any audible glitches. 😩
+</p><p>
+	But if you've taken a look at the second tabs in the clips above, you will have noticed that we don't necessarily have to be stuck with recordings from real hardware. In late 2015, Roland released <a href="https://www.roland.com/products/rc_sound_canvas_va/"><cite>Sound Canvas VA</cite></a>, a VST plugin that emulates the classic core of Roland's old Sound Canvas lineup, including the SC-88Pro. As long as we run such a software synthesizer through <a href="https://github.com/stuerp/foo_midi">a quality VST host</a>, a purely software-based solution should be way superior for recording looped BGM:
+</p><ul>
+	<li>By moving from real-time recording to an offline rendering paradigm, we get perfectly accurate note timing, as it no longer matters how long the synth takes to produce each output sample.</li>
+	<li>We stay entirely in the digital realm instead of going from digital (SC-88Pro) to analog (RCA cable) to digital (line-in recording) again, removing any chance for noise or distortion to ruin audio quality.</li>
+	<li>We get to directly render at 44,100&nbsp;Hz instead of being limited to the 32,000&nbsp;Hz signal coming out of the SC-88Pro's DAC. This can be easily noticed in the <a href="#halfspeed-{{.Date}}">half-speed video above</a>, whose SCVA version retains significantly more sibilant high-frequency content compared to the more muffled sound of Romantique Tp's recording.</li>
+	<li>Good recordings from real hardware involve careful observation of the output volume. You ideally want to <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.msg1285441#msg1285441">set the synth's master volume to a level that's simultaneously quiet enough to avoid clipping <i>and</i> loud enough to ensure the highest possible signal-to-noise ratio</a>, which requires lots of trial-and-error attempts for each individual track. With a softsynth, this becomes a non-issue: {{Blog_PostLink "2023-09-30#resampling" "As we've seen during the last look at Shuusou Gyoku's sound"}}, rendering to 32-bit floating-point .WAV files would preserve all waveform information above 0&nbsp;dBFS. So we could simply render everything at Sound Canvas VA's default maximum volume and later algorithmically scale the volume of the rendered files to fit within 0&nbsp;dBFS, without having to touch SCVA's sluggish interface.<ul>
+		<li>Doing that also makes it feasible to preserve loudness differences <i>between</i> the pieces of a soundtrack instead of eradicating them by normalizing the volume of each <i>individual</i> track to the digital maximum.</li>
+	</ul></li>
+	<li>Finally, it's much more time-efficient. We simply hit foobar2000's <i>Convert</i> button and get all MIDIs rendered within a few seconds each, instead of having to wait the entire length of a piece.</li>
+</ul><p>
+	Any drawbacks? For our use case, all of them are found in the abysmal software quality of everything <i>around</i> the synth engine. As it's typical for the VST industry, Sound Canvas VA is excessively DRM'd – it takes multiple seconds to start up, and even then only allows a single process to run at any given time, immediately quitting every process beyond the first one with a misleading <i>Parameter File1 Read Error</i> message box. I totally believe anyone who claims that this makes SCVA more annoying than real hardware when composing new music. Retro gamers also dislike how Roland themselves no longer sells the 32-bit builds they used to offer for the first few versions. These old versions are now exclusively available through resellers, or on the seven seas.<br />
+	But as far as the SC-88Pro emulation is concerned, there don't seem to be any technical reasons against it. There is <a href="https://www.vogons.org/viewtopic.php?f=62&t=46111">a long thread over at VOGONS discussing all sorts of issues</a>, but you have to dig quite deep to find any clear descriptions of bugs in SCVA's synth engine. Everything I found either <a href="https://www.vogons.org/viewtopic.php?p=1197315#p1197315">only applies to the SC-55 emulation and not the SC-88Pro</a>, <a href="https://www.vogons.org/viewtopic.php?p=498459#p498459">was fixed by Roland in the meantime</a>, or <a href="https://www.vogons.org/viewtopic.php?p=1183092#p1183092">turned out to be a fixable bug in a MIDI file</a>.
+</p><p>
+	Nevertheless, Romantique Tp has <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.msg1276848#msg1276848">a very negative opinion about SCVA, getting quite angry and defensive in this instance where someone favorably compared SCVA to their recordings</a>. 8 years later, the community unanimously accepts the Romantique Tp recordings as the intended way to listen to ZUN's old MIDIs, so choosing Sound Canvas VA for our Shuusou Gyoku builds might be a bad idea purely for PR reasons. At best, people would slightly wonder why I intentionally went with the opposite of the accepted reference recordings, but at worst, this entire project could face a violent backlash…
+</p><hr id="sysex-{{.Date}}" /><p>
+	But wait, we've already heard one obvious difference between the real SC-88Pro and Sound Canvas VA. Let's listen to the very first clip again:
+</p><figure class="waveform-{{.Date}}">
+	{{call .AudioPlayer $aud_o20_rtp.SetActive $aud_o20_scva}}
+</figure><p>
+	Ha! You can clearly hear a panning echo in the real-hardware recording that is missing from the Sound Canvas VA rendering. That's an obvious case of a core system effect not being reproduced correctly. If even <i>that's</i> undeniably broken, who knows which other subtle bugs SCVA suffers from, right? Case closed, Romantique Tp was right all along, SCVA is trash, real hardware reigns supreme {{HTML_Emoji "godzun"}}
+</p><p>
+	Actually, let's look closer into this one. Panning delay effects like this are typically reverb-related, but General MIDI only specifies a single controller to specify the per-channel reverb <i>level</i> from 0 to 127. Any specific characteristics of the reverb therefore have to be configured using vendor-specific system-exclusive messages, or <i>SysEx</i> for short.<br />
+	So it's down to one of the four SysEx messages at the beginning of the MIDI file:
+</p><figure>
+	<pre>Delta	Pulse	 Beat	Event
+   +0	    0	0:000	SysEx(41 10 42 12 40 00 7F 00 41 F7)
+ +240	  240	0:240	SysEx(41 10 42 12 40 01 30 14 7B F7)
+ +120	  360	0:360	SysEx(41 10 42 12 40 01 33 0F 7D F7)
+  +60	  420	0:420	SysEx(41 10 42 12 40 01 34 30 5B F7)</pre>
+</figure><p>
+	Since these byte strings represent Roland-specific instructions, we can't learn anything from a raw MIDI event dump alone here. No problem though, let's just load these files into some old MIDI sequencer that targeted Roland synths, open its MIDI event list, and then they will be automatically decoded into a human-readable representation…<br />
+	…or at least that's what I expected. In Yamaha land, XGworks has done that for <a href="https://en.wikipedia.org/wiki/Yamaha_XG">Yamaha's own XG</a> SysEx messages ever since 1997:
+</p><figure class="pixelated" style="width: 698px;">
+	<img src="{{$xws}}"
+	alt="Screenshot of the MIDI Event Viewer in Yamaha's XGworks, showing off its automatic XG SysEx decoding feature." />
+	<figcaption>No configuration required. You can even edit the textual <code>Value1</code> representation and XGworks parses it back into the closest supported value!</figcaption>
+</figure><p>
+	But for Roland synths, there's… nothing similar? Seriously? 😶 Roland fanboys, how do you even <i>live</i>?! I mean, they are quick to recommend the typical bloated and sluggish big-name DAWs that take up multiple gigabytes of disk space, but none of the ones I tried seemed to have this feature. They can't have <i>possibly</i> been flinging around raw byte strings for the past 33 years?!<br />
+	But once you look more into today's MIDI community, it becomes clear that this is exactly what they've been doing. Why else would so many people use the word <a href="https://mididesigner.com/qa/7181/most-basic-sysex-questions?show=7260"><q>complicated</q></a> to describe Roland SysEx, or call it <q><a href="https://scpurist.wordpress.com/2018/06/10/activating-the-efx-control-switches/">an old school/cryptic communication protocol in hexadecimal format</a></q>? The latter is particularly hilarious because if you removed the word <i>cryptic</i>, this might as well describe all of MIDI, not just SysEx. {{HTML_Emoji "tannedcirno"}} Everything about this is a tooling issue, and Yamaha showed how easily it could have been solved. Instead, we get <a href="https://scpurist.wordpress.com/2017/05/13/software-bugs-updates-on-sound-canvas-va/">Sound Canvas experts</a>, who <i>should</i> know more about the ecosystem than I do, making the incredible mental leap from <i>"my DAW doesn't decode or easily generate SysEx"</i> to <i>"SysEx is antiquated"</i> to <i>"please just lift up these settings to the VST level and into my proprietary DAW's proprietary project format, that would be so much better"</i>…
+</p><p>
+	Thankfully that's not entirely true. After some more digging and configuration, I found a somewhat workable solution involving a comparatively modern sequencer called <cite>Domino</cite>:
+</p><ol>
+	<li>Download either <a href="https://takabosoft.com/domino">Domino's original Japanese version</a> or <a href="https://github.com/Hans5958/Domino-English-Translation/releases/tag/en.5-nightly.20230403">the partial English translation</a>. The .zip file on the release page contains a full standalone build.</li>
+	<li>Open the <i>File → Preferences</i> menu and associate your MIDI output device with a module map. This makes sense for SysEx <i>en</i>coding/generation since it can limit the options in the UI to what's actually available on your target hardware, but is also required for selecting the respective SysEx map into Domino's SysEx <i>de</i>coder. There is no <i>technical</i> reason for this because SC-88Pro SysEx messages can be uniquely identified by the three vendor, device, and model ID bytes that every message starts with, but would be too easy and user-friendly. The perception of SysEx being <a href="https://www.youtube.com/watch?v=JKJMeHwydUQ">a black art</a> must be upheld at all costs.
+		<figure style="width: 296px;">
+			<img
+				src="{{$domino_1}}"
+				alt="Screenshot of Domino's MIDI-OUT window, complete with garbled text"
+			/>
+			<figcaption>I've kept the garbled text of the partial translation to emphasize the sheer amount of jank involved in this entire process.</figcaption>
+		</figure></li>
+	<li>Load a MIDI file and let Domino "analyze" it:
+		<figure style="width: 203.5px">
+			<img
+				src="{{$domino_2}}"
+				alt="Screenshot of Domino's analysis message box"
+			/>
+		</figure></li>
+	<li>Strangely enough, this will take quite a while – on my system, this analysis step runs at a speed of roughly 4.25 KB/s of MIDI data. Yes, <i>kilobytes</i>.</li>
+	<li>Unfortunately, "control change macro restoration" also seems to mean that you don't get to see <i>any</i> raw bytes when selecting the respective MIDI track in the UI, but at least we get what we were looking for:
+		<figure class="side_by_side">
+			<figure class="pixelated" style="width: 322px">
+				<img
+					src="{{$domino_3}}"
+					alt="Screenshot of the four SysEx messages of タイトルドメイド, Shuusou Gyoku's name registration theme, as decoded by Domino"
+				/>
+				<figcaption>…for the most part?</figcaption>
+			</figure><figure>
+				<pre>Pulse	Event
+    0	SysEx(41 10 42 12 40 00 7F 00 41 F7)
+  240	SysEx(41 10 42 12 40 01 30 14 7B F7)
+  360	SysEx(41 10 42 12 40 01 33 0F 7D F7)
+  420	SysEx(41 10 42 12 40 01 34 30 5B F7)</pre>
+			</figure>
+		</figure>
+	</li>
+</ol><p>
+	Alright, that's something we can work with. The <i>GS Reset</i> message is something that every Roland GS MIDI should start with, but it's immediately followed by a message that Domino failed to decode? The two subsequent reverb parameters make sense, but panning delays typically have more parameters than just a reverb level and time.<br />
+	That unknown SysEx message shares much of the same bytes with the decoded ones though. So let's do what we maybe should have done all along, return to caveman, and check the <a href="https://cdn.roland.com/assets/media/pdf/SC-88PRO_OM.pdf">SC-88Pro manual</a>:
+</p><figure><embed src="{{$sc88pro_reverb}}" /><figcaption>
+	The relevant section from page 194. We can see how the address and value correspond to bytes 5-7 and 8 in the SysEx messages. Byte 9 is a checksum and byte 10 signals the end of the message.
+</figcaption></figure><p>
+	And that's where we find what this particular issue boils down to. The missing SysEx message is clearly intended to be a Reverb Macro command, whose value can range from 0 to 7 inclusive on the SC-88Pro, but ZUN tries to specify Reverb Macro #<code>14h</code>, or 20 in decimal. The SC-88Pro manual does not specify what happens if a SysEx message wants to write an invalid value to a valid address, which means that we've firmly entered the territory of undefined behavior. At this point, we can argue for anything, and pick our favorite interpretation depending on our personal bias. Sorted in ascending order of spiciness: 🌶️
+</p><ul>
+	<li>Clearly, ZUN deliberately used the undocumented Reverb Macro #20 here, which results in a very specific panning delay setting on real hardware that you maybe can't get any other way, and that's the way the track was intended to be heard.</li>
+	<li>Clearly, ZUN did want to specify a valid Reverb Macro, but made a typo when manually entering the SysEx byte string, as he was forced to do thanks to terrible tooling. He clearly liked the resulting sound though, so the track should still be preserved with the panning reverb intact.</li>
+	<li>Clearly, the real SC-88Pro clamps these Reverb Macro IDs to the supported range of 0-7, and the panning delay in the recording is equivalent to macro #7. This might be considered a bug in Sound Canvas VA, but since it's undefined behavior, we can cut it some slack. The appropriate course of action would be to fix the MIDI file and specify Reverb Macro #7 instead.</li>
+	<li>Clearly, the typical behavior for MIDI synths is to ignore invalid and unsupported SysEx messages, because validating user input is an important characteristic of quality software. This is what SCVA does, and what we hear in its rendering is the default hall reverb with ZUN's level and time adjustments. Therefore, SCVA is right, and the fact that we get a panning delay on the real SC-88Pro is a bug in real hardware.</li>
+	<li>Clearly, ZUN did not care enough about the reverb to specify a valid Reverb Macro. Whether we get the default reverb or a panning delay is an irrelevant performance detail, and does intentionally not matter when it comes to the intended sound of this track – especially since these four SysEx messages are the full extent of Roland GS-specific sound design in this piece, and the rest of it only uses standard MIDI features.</li>
+	<li>Clearly, the panning delay was something that accidentally slipped into Romantique Tp's recording process, or even a conscious fanfiction decision… nah, those are some rude assumptions, let's not imply that that's what actually happened.</li>
+</ul><p>
+	In fact, 32 out of the 39 MIDIs across both of Shuusou Gyoku's soundtrack use this invalid Reverb Macro. The only ones that don't are
+</p><ul>
+	<li>both versions of Gates' theme (<span lang="ja">天空アーミー</span>), which use the equally invalid Reverb Macro #11,</li>
+	<li>both versions of Milia's theme (<span lang="ja">プリムローズシヴァ</span>), which use Reverb Macro #0 (Room 1),</li>
+	<li>and, again, the three arranged MIDIs that ZUN released last ({{template "ssg_16"}}, {{template "ssg_17"}}, and {{template "ssg_18"}}), which feature a more detailed effect setup with custom chorus and EQ settings. In the case of Reimu's theme, these settings are even commented within the MIDI file.</li>
+</ul><hr /><p>
+	And that's where this quest seemed to end, until <a href="https://twitter.com/Romantique_Tp/status/1737161116575236559">Romantique Tp themselves came in</a> and suggested that I take a closer look at the <cite>GS Advanced Editor</cite>, or GSAE for short.
+</p><figure class="pixelated" style="width: 488px;">
+	<img src="{{$gsae}}" alt="The splash screen of GSAE version 4.01e." />
+	<figcaption>Make sure to connect a MIDI input device before starting GSAE, or it will silently crash immediately after this splash screen. At least it accepts <i>any</i> controller, so this might just be a bug instead of the typical user-hostile kind of hardware dongle DRM that is pervasive in today's synth industry. 1999 would seem a bit too early for that, thankfully.</figcaption>
+</figure><p>
+	I was aware of this tool, but hadn't initially considered it because it's always described as just a SysEx generator/encoder. In fact, the very existence of such a tool made no sense to me at first, and seemed to prove my point that the usability of GS SysEx was wholly inferior to what I was used to in Yamaha land. Like, why not build at least a tiny and stripped-down MIDI sequencer around this functionality that would allow you to insert SC-88Pro-specific messages at any point within a sequence, and not just the beginning? I can see the need for such a tool in today's world of closed-source DAWs where hardware MIDI modules are niche and retro and are only kept alive by a small community of enthusiasts. But why would its developers guarantee that MIDI composers would have to hop between programs even back in 1997? I can only imagine that they saw how every just slightly advanced MIDI sequencer or DAW back then already used its own project format instead of raw Standard MIDI Files, and assumed that composers would therefore be program-hopping anyway?<br />
+	However, GSAE does support the <i>import</i> of settings from a MIDI file and features a SysEx history window that decodes every newly processed Roland SysEx byte string, which is all I was looking for. So let's throw in that same MIDI and…
+</p><figure class="pixelated" style="width: 507px;">
+	<img src="{{$gsae_sysex}}" alt="Screenshot of GSAE's SysEx history window,showing the results of sending a GS Reverb Macro #20 message" />
+	<figcaption>That's the result of sending just the single <code>F0 41 10 42 12 40 01 30 14 7B F7</code> message at the top.</figcaption>
+</figure><p>
+	Now that's some wild numbers. An equally invalid Reverb Character, and Reverb Level and Time values that even exceed their defined range of 0-127? Could it be that GSAE emulates the real-hardware response to invalid Reverb Macros here, and gives us the exact reverb setting we can hear in Romantique Tp's recording? This could even be the reason why GSAE is still used and recommended within today's Roland MIDI sequencing scene, and hasn't been supplanted by some more modern open-source tool written by the community.
+</p><p>
+	In any case, these values have to come from somewhere, so let's reverse-engineer GSAE and figure out the logic behind them. Shoutout to <a href="https://github.com/crypto2011/IDR">IDR</a> for being a great help with its automatic generation of IDC debug symbols for the Delphi standard library, and even including a few names of application-level widget class methods by reading Delphi-specific type information from the binary. This little sub-project made me also come around to appreciating Ghidra, whose decompiler and data type manager helped a lot and allowed me to find the relevant code section within just a few hours.<br />
+	A~nd it turns out that the values all come from out-of-bounds accesses into arrays on the stack. {{HTML_Emoji "onricdennat"}} If we combine 25, 235, and 132 back into a 32-bit value, we get <code>0x19EB84</code>, which is the <span class="hovertext" title="Remember, it's 1999 and ASLR isn't a thing yet.">virtual address</span> of the relevant function's stack frame base pointer.<br />
+	But it gets even more hilarious: If you enable debug text output via <i>Option → Other Options → SMF → Insert text events to setup measures</i> and export these imported settings back into a MIDI file, GSAE not only retains these invalid Reverb Macro IDs, but stringifies them via a simple lookup into a hardcoded string pointer array, again without any bounds checks. The effects of this are roughly what you would expect:
+</p><ul>
+	<li>Reverb Macro IDs between 8 and 27 simply insert wrong strings from adjacent string pointer arrays</li>
+	<li>Reverb Macro 28 crashes GSAE</li>
+	<li>Reverb Macro 64 causes GSAE to vomit 65,512&nbsp;bytes of garbage into the MIDI file {{HTML_Emoji "tannedcirno"}}</li>
+</ul><p>
+	In the end, we have Domino not decoding the Reverb Macro message, and GSAE, the premier SysEx tool for Roland synths, responding to it in even more undefined and clearly bugged ways than real hardware apparently does. That's two programs confirming that whatever ZUN intended was never supposed to work reliably. And while we still don't know <i>exactly</i> what these reverb parameters are supposed to be, these observations solve the mystery as far as I'm concerned, and solidify my personal opinion on the matter.
+</p><hr id="choice-{{.Date}}" /><p>
+	So what do we do now, and which version do we go with? Optimally, I'd offer both versions and turn this controversy into a personal choice so that everybody wins… and {{DB_CustomerByID 13}} agreed and generously provided all the funding to make it happen. 💸<br />
+	If you haven't picked your favorite yet, here are some final arguments:
+</p><p>
+	The Romantique Tp recordings certainly have something going for them with their provenance of coming from real hardware, and the care that Romantique Tp put into manually recording every single track, warts and all. I wholeheartedly agree that preserving the raw sound of playing the MIDI files into the hardware without thinking about bugs or quirks is an important angle to take when it comes to preservation. It's good that these recordings exist – after all, you wouldn't know which musical elements you'd possibly be missing in an emulation if you have nothing to compare it to. Even the muffled sound in the half-speed clip above can be an argument in their favor, as the SC-88Pro's DAC operates at 32&nbsp;kHz and you wouldn't expect any meaningful frequency content between 16,000 and 22,050&nbsp;Hz to begin with. Any frequency content in that range that does remain in Romantique Tp's recording is simply {{Blog_PostLink "2023-09-30#resampling" "rolled-off imaging noise added during the ADC's resampling process"}}.<br />
+	All this is why they are a definite improvement over <a href="http://kaorin.pestermom.com/Music/ssg_mp3/">kaorin's 2007 recordings of only the AST</a>, which used to be the previous reference recordings within the community. Those had all of the same timing issues and more, in addition to being so excessively volume-boosted that 0.15% of the samples across the entire soundtrack ended up clipped. That's 6.25 seconds out of 68:39m being lost to pure digital noise.
+</p><p>
+	Most importantly though: ZUN himself said that only the real SC-88Pro will play back these files as he intended them to sound. This quote is likely where the tagline of Romantique Tp's entire recording project came from in the first place:
+</p><blockquote>&gt; <span lang="ja">全てのデエタはSC-88ProもしくはSC-8850（ロオランド社）にて最適に聴けるように調整してあります</span>
+	&gt; <span lang="ja">それ以外の音源でも、<strong>作者の意図した音</strong>ではない場合があります。</span>
+	— ZUN on <a href="https://www16.big.or.jp/~zun/html/music_old.html"><span class="ja">東方幻想的音楽</span>, his old MIDI page</a>
+</blockquote><p>
+	<i>However.</i> ZUN is not exactly known for accurately and carefully preserving the legacy of his series, or really doing anything beyond parading his old games as unobtainable showpieces at conventions. With all the issues we've seen, preferring real hardware is ultimately just that: <i>an</i> angle, and <i>a</i> preference. This is why I disagree with the <a href="https://www.shrinemaiden.org/forum/index.php/topic,18989.msg1286680.html#msg1286680">heavy and uncritical advertising</a> that is mainly responsible for elevating the Romantique Tp recordings to their current reference status within the community, especially if at least half of the alleged superiority of real hardware is founded on undefined behavior that can easily be fixed in the MIDI files themselves if people only bothered to look.
+</p><p>
+	Here's where I stand: MIDI files are digital sheet music first and foremost, not an inferior version of tracker modules where the samples are sold separately. As such, the specific synth a MIDI file was written for is merely a secondary property of the composition – and even more so if the MIDI file contains little to nothing in terms of sound design and mostly restricts itself to the basic feature set of General MIDI. In turn, synth quirks and bugs are not a defined part of the composition either, unless they are clearly annotated and documented in the file itself. And most importantly: If the MIDI file specifies a certain timing and a recording fails to reproduce that timing, then that recording is not an accurate representation of the MIDI file.<br />
+	In that regard, Sound Canvas VA is not only <q>the closest alternative to the real thing</q>, as a few people in the MIDI and retrogaming scene do have to admit, but <i>superior</i> to the real thing. I'll gladly take clarity and perfect timing accuracy in exchange for minor differences in effects, especially if the MIDI file does not explicitly and correctly define said effects to begin with. If I want a panning delay as part of the reverb, I add the respective <i>and correct</i> SysEx message to define one – and if I don't, I <i>do not care about the reverb</i>. You might still <i>get</i> a panning delay on a certain synth, and you might even prefer how it sounds, but it's ultimately a rendering artifact and not a consciously intended part of the composition. In that way, it's similar to the individual flavor a musician adds to a performance of a piece of classical music.<br />
+	And as far as the differences in frequency response and resonant filters are concerned: In Yamaha land, these are exactly the main distinguishing factors between vintage WF-192XG sound cards (resembling the real SC-88Pro in these characteristics) and the <a href="https://veg.by/en/projects/syxg50/">S-YXG50 softsynth</a> (resembling SCVA). Once I found out about that softsynth and how much clearer it sounded in comparison, I sold that old PCI sound card soon after.
+</p><p>
+	In the interest of preservation though, there's still one more unexplored solution that could be the ideal middle ground between the two approaches:
+</p><ol>
+	<li>Play the MIDIs through a real-hardware SC-88Pro again</li>
+	<li>Capture the actually observed system-exclusive settings that fall within the synth's supported and documented ranges</li>
+	<li>Insert them back into the MIDI file, creating a new bugfixed version</li>
+	<li>Re-record that bugfixed version through Sound Canvas VA</li>
+</ol><p>
+	But good luck getting real-hardware owners to cooperate on something that
+	hurts the usual narrative of real hardware being unquestionably superior to VST emulations. If anyone <a href="https://github.com/nmlgc/BGMPacks/issues/1">does want to document this</a> after all, I'll happily release new BGM packs for free, and add another final angle to the preservation of these soundtracks. For now though, the Sound Canvas VA packs will sound like they do in the preview videos above.
+</p><p>
+	Or, you know… Maybe none of this actually matters. <a href="https://www.youtube.com/watch?v=W7fK540Fkk0&t=712s">Here's beatMARIO streaming some Shuusou Gyoku gameplay using what looks like a real-hardware SC-8850</a>, which plays these MIDIs with occasionally noticeably different instrument patches and <a href="https://www.youtube.com/watch?v=W7fK540Fkk0&t=4360s">no panning delay in the name registration theme</a>, and he still enjoyed every second of it. Imagine undefined SysEx behavior not even being consistent within the same <i>family</i> of Roland synths… nah, I'm done arguing, let's get back to the actual work and cut some loops.
+</p><hr id="mly-{{.Date}}" /><p>
+	Just to be clear: I'm not suggesting that Romantique Tp should have been the one to cut their recordings into loops, or even just the one who defined where the loop points are supposed to be. On the surface, this seems to be a non-issue, and you'd just pick a point wherever each track <i>appears</i> to loop, right? But with 39 MIDIs to cut and all the financial support from {{DB_CustomerByID 13}}, it made sense to also solve this problem more thoroughly, and algorithmically detect provably correct loop points for all of these files. Who knows, maybe we even find some surprises that make it all worth it?<br />
+	This is the algorithm I came up with:
+</p><ul>
+	<li>At a basic level, we loop over the list of MIDI events and return the earliest and longest subrange that is immediately followed by an identical copy.</li>
+	<li>MIDI players, however, need loop point definitions that use MIDI pulse units rather than event list indices. This is especially necessary for <a href="https://en.wikipedia.org/w/index.php?title=MIDI&oldid=1199792271#Standard_files">multi-track/SMF Type 1 sequences</a>, which would otherwise require one loop start/end index pair per track, and then it <i>still</i> wouldn't work because some of the tracks might not even have an event at the loop start/end point. This requires the detection algorithm and the player to agree on how to map event indices to time points and back, and simply going for the first event of each pulse (i.e., any event with a nonzero delta time) makes the most sense here. In turn, we can skip any potential start or end events that have a delta time of 0, speeding up the algorithm significantly for typical compositions with a high degree of polyphony.</li>
+	<li>Naively considering just the raw MIDI events works for MIDI playback. But as soon as we want to cut a recording based on the detected loop points, we need to account for the fact that MIDI playback is inherently stateful. Each of the 16 channels <span class="hovertext" title="Yes, even MIDI 1.0 specified a way to have more than 16 channels in a multi-track/SMF Type 1 container. Look up FF 21 01 and FF 09.">at the protocol level</span> features at least the 128 <i>continuous controllers</i> (CCs) with a 7-bit state, the 14-bit pitch bend controller, and the 7-bit instrument program value, in addition to the global tempo of the piece. As a result, two ranges of events might look identical, but can still <i>sound</i> differently if the events before the first range changed one piece of state which is then only touched again near the end of that range. This requires us to track the full MIDI state at both the start and end of a loop, and reject any potential loop that differs in these states:<figure>
+		<pre>Delta	Pulse	  Beat	Event
+   +0	 1200	 2:240	Controller { CC 7, value  50 }
+
++240	 1440	 3:000	NoteOn { Key 60 }
++240	 1680	 3:240	NoteOn { Key 65 }
++240	 1920	 4:000	NoteOn { Key 67 }
++240	 2160	 4:240	NoteOn { Key 70 }
++240	 2400	 5:000	Controller { CC 7, value 100 }
+  +0	 2400	 5:000	NoteOn { Key 67 }
++240	 2640	 5:240	NoteOn { Key 65 }
+
++240	 2880	 6:000	NoteOn { Key 60 }
++240	 3120	 6:240	NoteOn { Key 65 }
++240	 3360	 7:000	NoteOn { Key 67 }
++240	 3600	 7:240	NoteOn { Key 70 }
++240	 3840	 8:000	Controller { CC 7, value 100 }
+  +0	 3840	 8:000	NoteOn { Key 67 }
++240	 4080	 8:240	NoteOn { Key 65 }
+
++240	 4320	 9:000	NoteOn { Key 60 }
++240	 4560	 9:240	NoteOn { Key 65 }
++240	 4800	10:000	NoteOn { Key 67 }
++240	 5040	10:240	NoteOn { Key 70 }
++240	 5280	11:000	Controller { CC 7, value 100 }
+  +0	 5280	11:000	NoteOn { Key 67 }
++240	 5520	11:240	NoteOn { Key 65 }</pre><figcaption>
+		In this example, a naive event-level scan would detect a loop between beats 3 and 6 as the same events are immediately repeated between beats 6 and 9. However, the piece starts with the first four notes at a channel volume of 50, which is only set to its later value of 100 on beat 5. Therefore, the actual loop ranges from beat 5 to 8. In turn, the piece needed to be at least 11 beats long to include the full second copy of the looped events and prove the loop as such.
+	</figcaption></figure></li>
+	<li>This check can be a bit too strict in some cases, though. A channel might start with one of its CCs at a specific value but then change the same CC to a different value at a later point before playing the first note. In such a case, the detected loop would be delayed to the second CC change even though the initial CC value has no impact on the sound. By filtering these redundant CC changes, we get to move the loop start point of a few tracks (original {{template "ssg_13"}} and arranged {{template "ssg_11"}}) back by a few seconds, to the position you'd expect.</li>
+	<li>Finally, we reject any overlong loops that themselves fully consist of multiple successive copies of the first N events.<br />
+	Shuusou Gyoku's original MIDI files hide the original game's lack of MIDI looping by simply duplicating the looping sections enough times so that a typical player won't notice. The algorithm we have so far, however, would return a much longer loop if a MIDI file contains more than three successive copies of a looping section. The original version of {{template "ssg_19"}} in particular repeats its 8 looping bars a total of 15 times before the MIDI ends, and this condition is necessary to detect the actual 8-bar loop instead of a 56-bar one.</li>
+</ul><p>
+	Of course, this algorithm isn't perfect and won't work for every MIDI file out there. It doesn't consider things like differently ordered events within the same MIDI pulse, <a href="https://en.wikipedia.org/wiki/NRPN">(non-)registered parameter numbers</a>, or the effect that SysEx messages can have on the state of individual channels. The latter would require the general SysEx decoding logic that I would have liked to have for the research above… actually, <a class="goal" href="https://github.com/nmlgc/mly/issues/1">let's add an issue</a> and add the project to the order form. I'd really like to see a comprehensive open-source cross-vendor SysEx decoder library in my lifetime.
+</p><p>
+	As for the implementation, I was happy to write some Rust again for a change, as it's a great fit for these standalone greenfield command-line tools that don't have to directly interact with the legacy C++ code bases that this project usually deals with. It's even better if the foundational functionality is not just available in <i>a</i> crate, but <a href="https://github.com/kovaxis/midly/tree/5b1300c6c0a634031e03589a44afb0c6cda639a8?tab=readme-ov-file#speed">in four, with the community already having gone through multiple iterations to arrive at a tried and tested winner</a>. Who knows, maybe I even get to rewrite this website in it one day? Just for the sheer meme value of doing so, of course.<br />
+	I also enjoyed this a lot from a technical point of view:
+</p><ul>
+	<li>You might think that Rust's typical safety guarantees don't matter for the problem at hand. But then you accidentally write <code>-=</code> instead of <code>+=</code> for a <code>u32</code> that starts out at 0, and Rust immediately panics instead of silently underflowing to <code>u32::MAX</code>. This must have saved me at least 5 minutes of debugging the resulting logic error.</li>
+	<li>As it turns out, my loop detection algorithm is <a href="https://en.wikipedia.org/wiki/Embarrassingly%20parallel">embarrassingly parallel</a>. You might initially <i>think</i> about it in a sequential way because we always want the <i>earliest</i> occurrence of the longest repeating section of MIDI events, which means that each new loop candidate further into the track has to be longer than the previous one. But since we always iterate over the entire MIDI, it makes perfect sense to divide and conquer the problem. Let's split the list of possible loop end points into equal chunks, scan them all in parallel for the earliest and longest loop within that chunk, and then pick the earliest and longest loop among <i>those</i> intermediate results as the final one. In Rust, you don't even have to think much about the chunks, as all of that can be easily done by replacing the iteration with <a href="https://docs.rs/rayon/1.8.0/rayon/iter/trait.ParallelIterator.html#method.fold">Rayon's parallel fold</a> and adding a <code>reduce()</code> with the same condition for the final step. This sped up the algorithm by <i>exactly</i> the number of cores in my system.</li>
+</ul><p>
+	This algorithm works well for the long MIDI files of Shuusou Gyoku's OST that all contain multiple duplicates of their loop section, but it quickly reaches its limit with the AST. Following the classic two-loop + fade-out format, that soundtrack was meant to be played back in generic MIDI players, and not to actually be put back into the game in looped form. Since the loop algorithm did, in fact, find inconsistencies even in the OST, two copies of the <i>apparent</i> loop are sometimes not enough to prove cases where the <i>actual</i> loop ends much later than you think it does. In a few cases, it would be enough to simply remove all volume change events from the fade-out to prove the actual loop, but in others, the algorithm would need MIDI event data far past the end of the fade-out.
+</p><p>
+	However, just giving up and not looping any of these tracks would be equally unfortunate. So how about shifting the question, from <q>what's the best loop in this MIDI file</q> to <q>what's the best loop if the MIDI didn't fade out and instead repeated its apparent second loop a third time</q>? As long as the detected loop in such a pre-processed file ends before the repeated range, it's still a valid loop in terms of the unmodified original.<br />
+	Ideally, we want to do this pre-processing programmatically with the same Rust library instead of manually editing the MIDI. Many sequencers (and <i>especially</i> XGworks) apply significant changes to a MIDI file's internal structure when saving its internal representation back to a MIDI file, which might even mess with our loop algorithm. So it would be very nice to have a more trustworthy tool that applies only the edit we actually want, and perfectly retains the rest of the MIDI.
+</p><p>
+	And that's how this sub-project turned into a small suite of command-line MIDI operations in the classic Unix filter/pipeline style: Each command reads a MIDI file from <code>stdin</code>, transforms it, and outputs text or the resulting MIDI file on <code>stdout</code>. This way, we gain maximum transparency and reproducibility  as I can document the unique pre-processing steps for each AST track by <a href="https://github.com/nmlgc/ssg/blob/P0275/GIAN07/LOADER.CPP#L31-L165">simply providing the command lines</a>. And sure, we're re-encoding and re-decoding the full MIDI sequence at every step along such a pipeline, but <a href="https://computers-are-fast.github.io/">computers are fast</a>, Rust and the midly library in particular are ⚡&nbsp;blazingly fast&nbsp;⚡, and the usability benefits of this pipeline model far outweigh any theoretical performance drops.<br />
+	Here's the full list of commands that made it into the resulting <code>mly</code> tool:
+</p><ul>
+	<li><kbd>cut</kbd>: Extremely basic removal of MIDI events within a certain range.</li>
+	<li><kbd>dump</kbd>: Dumps all MIDI events into a textual table. All event lists in this blog post are based on this output.</li>
+	<li><kbd>duration</kbd>: Shows the duration of a MIDI file in pulses, beats, seconds, and PCM samples.</li>
+	<li><kbd>filter-note</kbd>: Removes all Note On events within a certain range, retaining all other events. This allows us to generate separate intro and loop MIDIs, whose renderings we can then splice back into a single loopable waveform with no discontinuities, which is not guaranteed when rendering a single MIDI file. This provides the last missing piece needed for rendering perfect, sample-accurate loops through Sound Canvas VA.</li>
+	<li><kbd>loop-find</kbd>: The loop detection algorithm described above.</li>
+	<li><kbd>loop-unfold</kbd>: Duplicates MIDI events from a given point to the end of the track. A budget solution for the problem of creating synthetic loops – arbitrary copying of arbitrary subranges to arbitrary destinations would have been undeniably nicer, but also much more complex, and I didn't need that full flexibility for the task at hand.</li>
+	<li><kbd>smf0</kbd>: Flattening multi-track/SMF Type 1 MIDI sequences into single-track/SMF Type 0 ones. Having this conversion as a distinct operation in our toolset allows other operations to exclusively support SMF Type 0 if a Type 1 implementation would either take significant additional effort or just duplicate the Type 0 flattening algorithm. This group of operations includes <kbd>loop-find</kbd>, <kbd>cut</kbd>, and even the real-time output for <kbd>duration</kbd> because tempo events can theoretically occur on any track.</li>
+</ul><p>
+	This feature set should strike a good balance between not spending <i>too</i> much of the Shuusou Gyoku budget on tangential problems, but still offering a decent solution for the problem at hand. As a counterexample, the obvious killer feature – deserializing a <code>dump</code> back into a Standard MIDI File – would have gone way past the budget. While <a href="https://docs.rs/parse-display/latest/parse_display/">there are crates that free you from the need to write manual parsing code for basic data structures</a>, they would instead require <i>a lot</i> of attribute boilerplate – and if the library that provided the structures doesn't already come with these attributes, you now have to duplicate all the structures, and convert back and forth between the original structures and your copies. Not to mention that we'd still have to write code for the high-level structure of the <code>dump</code> output…
+</p><p>
+	If we put it all together, this is what we can do:
+</p><figure>
+	<pre>$ &lt;ssg_02.mid mly loop-find
+Best loop in note space: 4 events (between event #[117, 121[ and [121, 125[)
+First note: event    71 / pulse    960 / beat   2:000 / 0:00:800m
+Loop start: event   117 / pulse   1680 / beat   3:240 / 0:01:400m
+  Loop end: event   121 / pulse   1920 / beat   4:000 / 0:01:600m
+
+$ &lt;ssg_02.mid mly cut 466: | mly loop-unfold 240: | mly -r 44100 loop-find
+Track #0: Removing events #[16439, 19881[
+Track #0: Repeating events #[8344, 16439[ at the end of the sequence
+Best loop in note space: 8095 events (between event #[5625, 13720[ and [13720, 21815[)
+First note: event    71 / pulse    960 / beat   2:000 / 0:00:800m
+Loop start: event  5625 / pulse  75361 / beat 157:001 / 1:03:531m
+  Loop end: event 13720 / pulse 183841 / beat 383:001 / 2:34:726m
+
+Best loop in recording space:  8095 events (between event #[5709, 13804[ and [13804, 21899[)
+First note: event    71 / pulse    960 / beat   2:000 / 0:00:800m / sample    35280.00
+Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873667.66
+  Loop end: event 13804 / pulse 185760 / beat 387:000 / 2:36:358m / sample  6895375.27</pre>
+</figure><p>
+	Translation:
+</p><ul>
+	<li>The best loop found in the raw MIDI file spans 4 events and 200 milliseconds. Clearly, this is not the loop we're looking for.</li>
+	<li>Let's <kbd>cut</kbd> off all events from the start of the fade-out to the end, do a <kbd>loop-unfold</kbd> copy of all events from the position during the apparent second loop that corresponds to where the fade-out started, and try looking for a loop in that modified MIDI.</li>
+	<li>The resulting loop is 1:31m long, which is exactly what we were hoping to find.<ul>
+		<li>The <i>note space</i> loop represents the earliest possible event range with equivalent per-channel controller and pitch bend state at both ends. This loop is only appropriate for MIDI players, as its bounds can fall into the middle of notes that are played with a different channel state at the start and end of the loop. This is why it doesn't show any sample positions.</li>
+		<li>The <i>recording space</i> loop ensures that this doesn't happen. It's also always placed on a Note On event with non-zero velocity, which eases the splicing of separate <code>filter-note</code> recordings. This way, it's enough to remove leading silence from the loop part and mix it exactly at the indicated sample position.</li>
+		<li>The detected loop is also nowhere close to the cut point at beat 466, matching our condition for validity. All events within the loop came from ZUN's original composition, and the <kbd>cut</kbd>/<kbd>loop-unfold</kbd> combo merely provided the remaining 63% of events necessary to prove this loop as such.</li>
+	</ul></li>
+</ul><hr id="midiviz-{{.Date}}" /><p>
+	So, where are these loop quirks that justify why some of these audio files are longer than you'd think they should be? Just listing them as text wouldn't really communicate just how minor these are. It would be much nicer to visualize them in a way that highlights the exact inconsistencies within a fixed range of MIDI measures. Screenshots of MIDI sequencer or DAW windows won't capture these aspects all too well because these programs are geared toward fine-grained editing of single tracks, not visualization of details across all channels.
+</p><figure class="fullres">
+	<img
+		src="{{$reaper}}"
+		alt="Screenshot of the first 8 measures of Shuusou Gyoku's Stage 1 theme (フォルスストロベリー) in its OST version, as visualized by REAPER's piano roll"
+		style="max-height: unset;"
+	/>
+	<figcaption>REAPER's piano roll nicely snaps to a certain range, but good luck picking out the individual lines from the single volume lane at the bottom of the screen, or spotting a 7-point difference. Not to mention that CC&nbsp;#11 (Expression) makes up an equal part of a channel's final perceived volume, which is the metric we'd <i>actually</i> want to visualize.</figcaption>
+</figure><p>
+	Typical MIDI visualizers, however, are on the complete opposite end of the spectrum. In recent years, <q>MIDI visualization</q> has become synonymous with the typical Synthesia style of YouTube videos with a big keyboard at the bottom, note bars flying in from the top, and optional fancy effects once those notes hit the top of the keyboard. The Black MIDI community has been churning out <a href="https://hans5958.github.io/Black-MIDI-Meta/links/">tons of identically looking MIDI visualizers</a> in recent years that mainly seem to differ in the programming language they're written in, and in how well they can cope with the blackest of black MIDIs.<br />
+	Thankfully, most of these visualizers are open-source and have small and manageable codebases. <a href="https://github.com/kosua20/MIDIVisualizer">The project with the most GitHub stars and the most generic name</a> seemed to be the best starting point for hacking in the missing features, despite using GLSL shaders which I had no prior experience with. It was long overdue that I did something with GLSL though – it added a nice educational aspect to these hacks, and it still was easier than <a href="https://github.com/arduano/wasabi">deciphering whatever the fastest and hyper-optimized Rust visualizer is doing</a>.<br />
+	Still, this visualizer needed a total of 18 small features and bugfixes to be actually usable for demonstrating Shuusou Gyoku's loop quirks. As such, these hacks turned into yet another tangential sub-project that could have easily consumed another two pushes if I cleaned up the code and published the result. But that would have <i>really</i> gone way past the budget for something that people might not even care about. So here's what we're going to do:
+</p><ul>
+	<li>I've added this <i>MIDI visualizer</i> as a new goal to the order form. This goal is eligible for microtransactions, so you don't have to fund a full push to see the first changes committed and released.</li>
+	<li>The upstream project seems to have been abandoned recently, which is the perfect excuse for not even trying to merge in my sweeping changes with a series of pull requests. {{HTML_Emoji "onricdennat"}} The code sure needs a lot of cleanup and deduplication, and <i>especially</i> a more build system-friendly way of embedding its shader source code.</li>
+	<li>Every backer who supports this goal with at least 0.1 pushes or microtransactions will get a Windows binary with my current hacked-in changes as a preview, immediately after the purchase. Shoutout to the MIT license for letting me do this 😛<br />
+	As usual, once the code is done, the final cleaned-up version will be available for free for everyone, in both source code and binary release form.</li>
+</ul><hr id="loopquirks-{{.Date}}" /><p>
+	Alright then! Here's how to read the visualizations:
+</p><ul>
+	<li>The transparency of each note represents its velocity multiplied by the channel volume and expression. To spot volume inconsistencies, you'd compare the opacity of equivalent notes in the two ranges.</li>
+	<li>The X-axis of these visualizations uses linear/real time, so the width of each measure represents the exact time it takes to be played relative to the other measures in the visualized range. To spot tempo inconsistencies, you'd compare the distance between the bar lines.</li>
+	<li>Notes that are duplicated on two or more channels may be colored differently in the loop start and end views. These are rendering order inconsistencies and don't communicate anything about the MIDI.</li>
+</ul><hr /><ul class="loopquirks-{{.Date}}">
+	<li>
+		<i>Stage 1 theme (<span lang="ja">フォルスストロベリー</span>), original and arranged version</i>: The string and harmonica channels are slightly louder on the apparent first loop than on the others.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:31m</dd>
+			<dt>Actual loop:</dt><dd>1:04m – 2:34m</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_o02.SetActive $lq_a02}}
+		</figure>
+	</li><li>
+		<i>Mei and Mai's theme (<span lang="ja">ディザストラスジェミニ</span>), arranged version</i>: The one and only quirk that's caused by different notes – the first loop has an E♭ on the slap bass channel in measure 32, but the second loop has a G♭ in the corresponding measure 72.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:02m</dd>
+			<dt>Actual loop:</dt><dd>0:50m – 1:51m</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_a05}}
+		</figure>
+	</li><li>
+		<i>Stage 3 theme (<span lang="ja">華の幻想&nbsp;&nbsp;紅夢の宙</span>), original and arranged version</i>:
+		The trumpet channel starts out panned to the center of the stereo field (64), before being left-panned by 25% (48) at 1:04m, where it stays for the rest of the track.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:29m</dd>
+			<dt>Actual loop:</dt><dd>1:04m – 2:32m</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_o06.SetActive $lq_a06}}
+			<figcaption>
+				I didn't come up with a good way of visualizing panning in a 2D plane, so you have to trust your ears with this one.
+			</figcaption>
+		</figure>
+	</li><li>
+		<i>Marie's theme (<span lang="ja">機械サーカス　～ Reverie</span>), arranged version</i>: Every apparent loop modulates up by a semitone 16 measures before it ends, and remains in that new key at the start of the next loop, so the piece technically doesn't loop at all. The original stays in G♯m throughout.
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_a09}}
+		</figure>
+	</li><li>
+		<i>Stage 5 theme (<span lang="ja">カナベラルの夢幻少女</span>), original version</i>: The ritardando near the supposed end of the first loop drops from 145 BPM to 118 BPM, but only to 129 BPM in all further loops.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:39m</dd>
+			<dt>Actual loop:</dt><dd>1:33m – 3:11m</dd>
+		</dl>
+		Yup, that means that the intro part technically makes almost up the entire apparent loop. {{HTML_Emoji "zunpet"}} ZUN replaced the ritardando with instant tempo changes in the arranged version, which moves the loop to its expected place at the start of the track.
+		<figure class="viz-{{.Date}}">
+			<figcaption class="dynamic"><div>
+				The loop start and end points are in the respective next measure past this range.
+			</div><div></div></figcaption>
+			{{call .VideoPlayer $lq_o10.SetActive $lq_a10}}
+		</figure>
+	</li><li>
+		<i>Stage 6 theme (<span lang="ja">アンティークテラー</span>), arranged version</i>: The string channel starts out with the maximum expression of 127, but then only goes up to 120 after some fading notes later in the piece, where it stays for the beginning of the second loop.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:53m</dd>
+			<dt>Actual loop:</dt><dd>0:13m – 2:05m</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			<figcaption>Same here.</figcaption>
+			{{call .VideoPlayer $lq_a12}}
+		</figure>
+	</li><li id="lq-a13-{{.Date}}">
+		<i>VIVIT-captured-'s first theme (<span lang="ja">夢機械　～ Innocent Power</span>), arranged version</i>: Has a unique ending section that starts in Gm and then modulates through Em and Fm before it fades out on F♯m.
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_a13}}
+		</figure>
+	</li><li>
+		<i>VIVIT-captured-'s second theme (<span lang="ja">幻想科学 ～ Doll's Phantom</span>), original and arranged version</i>: Another fade-related 127 vs. 120 expression inconsistency, this time on the orange square channel.
+		<dl>
+			<dt>Apparent loop:</dt><dd>0:01m – 1:32m</dd>
+			<dt>Actual loop:</dt><dd>1:03m – 2:34m</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_o14.SetActive $lq_a14}}
+		</figure>
+	</li><li>
+		<i>VIVIT-captured-'s third theme (<span lang="ja">少女神性　～ Pandora's Box</span>), original and arranged version</i>: Another tempo inconsistency: A slightly differently shaped ritardando before the bell tree hit in the supposed first loop.
+		<dl>
+			<dt>Apparent loop:</dt>
+			<dd>0:40m&nbsp;–&nbsp;1:57m&nbsp;(original),
+				0:41m&nbsp;–&nbsp;1:59m&nbsp;(arranged)</dd>
+			<dt>Actual loop:</dt>
+			<dd>1:17m&nbsp;–&nbsp;2:34m&nbsp;(original),
+				1:18m&nbsp;–&nbsp;2:37m&nbsp;(arranged)</dd>
+		</dl>
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_o15.SetActive $lq_a15}}
+		</figure>
+	</li><li id="lq-a17-{{.Date}}">
+		<i>Marisa's theme (<span lang="ja">魔女達の舞踏会</span>), arranged version</i>: Has a unique 8-bar ending section that is first played in Cm and then loops in C♯m while fading out.
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_a17}}
+		</figure>
+	</li><li id="lq-a19-{{.Date}}">
+		<i>Ending theme (<span lang="ja">ハーセルヴズ</span>), arranged version</i>: Probably the best-known one out of these, and I'm talking of course about the beautiful ending section. I'm making the executive decision to not loop this track in-game, and letting it fade to silence instead.
+		<figure class="viz-{{.Date}}">
+			{{call .VideoPlayer $lq_a19.SetNoLoop}}
+		</figure>
+	</li>
+</ul><hr id="pbgmidi-{{.Date}}" /><p>
+	Before we package up these looped soundtracks, let's take a quick look at how they would be shown off in the Music Room. The Seihou Music Rooms carry over the per-channel keyboards from TH05, add the current per-channel volume, expression, and pan pot values, and top it off with a fake spectrum analyzer. All of these visualizations rely on MIDI data, and the Music Room would feel very dull and boring without them. Just look at Kioh Gyoku, whose Music Room basically turns into a still image in <span lang="ja">WAVE</span> mode.<br />
+	Retaining these visualizations even when playing waveform BGM was very important for me, and not just because it would make for a unique high-quality feature that would break new ground. It can also double as proof that the waveform versions are, in fact, in perfect sync with both the MIDIs they are based on, and, by extension, the respective stage scripts.<br />
+	However, this would require the game to process the MIDIs and update the internal visualization state without simultaneously playing them back through the WinMM&nbsp;/ MME&nbsp;/ <code>midiOut*()</code> API. And just like graphics and text rendering, Shuusou Gyoku's original code came with zero architectural separation between platform-independent processing logic and platform-specific playback…
+</p><p>
+	So I accidentally rewrote almost the entire MIDI code to achieve said separation. {{HTML_Emoji "tannedcirno"}} This also provided a great occasion to modernize this code and add some much-needed robustness for potential MIDI mods, while retaining the original code's approach of iterating over raw SMF byte streams. It might all have been very excessive for a delivery that was supposed to be just about waveform BGM support, but on the plus side, MIDI output is now portable to any other system's MIDI API as well.
+</p><p>
+	Surprisingly though, it was Shuusou Gyoku's original MIDI timing that quickly turned out to be rather inaccurate, and not the waveforms. The exact numbers vary depending on the piece, but the game played back every MIDI about 1% slower than notated, adding about 2 or 3 seconds to their total playback time after 5 minutes. Tempo changes in particular were the biggest causes of desynchronizations with the waveforms… {{HTML_Emoji "thonk"}}<br />
+	To understand how this can happen to begin with, we have to look closer at how you're supposed to use the <code>midiOut*()</code> API. This API is as low-level as it gets, only covering the transmission of a single MIDI message to the selected output device <i>right now</i>. There is no concept of note timing at this low level, so it's completely up to the program to parse delta times and tempo change events out of the MIDI file and correctly time the calls to this API for each MIDI message. With all the code that runs between the API and the actual renderer of the synth <i>for every single message</i>, the resulting timing can only ever be an approximation of the MIDI file. This doesn't really matter for the timescales and polyphony levels of typical music because, again, <a href="https://computers-are-fast.github.io/">computers are fast</a>, but such an API is fundamentally unsuitable for accurately playing back even just a moderately complex million-note Black MIDI. {{HTML_Emoji "onricdennat"}}
+</p><p>
+	Shuusou Gyoku handles this required manual timing in the simplest possible way: It runs a MIDI processing function (<code>Mid_Proc()</code> in the code) at an interval of 10&nbsp;ms, which processes and instantly sends out all MIDI events that have occurred at <i>any</i> point within the last 10&nbsp;ms, maintaining merely their order. This explains not only why the original game incremented its <code>MIDI TIMER</code> by multiples of 10, but also <a class="goal" href="https://github.com/nmlgc/ssg/issues/8">the infamous missing drums when playing the soundtrack through the Microsoft GS Wavetable Synth</a>:
+</p><ul>
+	<li>ZUN reduced all drum notes to the minimum possible length allowed by the 480 PPQN pulse resolution of these MIDI files.</li>
+	<li>In regular music notation, this corresponds to <sup>1</sup>/<sub>1920</sub>th notes.</li>
+	<li>While the exact real-time length in purely mathematical terms depends on the tempo of a piece, it only has to be ≥13 BPM for a <sup>1</sup>/<sub>1920</sub>th note to be shorter than 10&nbsp;ms.</li>
+	<li>Therefore, the higher the BPM, the higher the chance that both a drum note's <i>Note On</i> and <i>Note Off</i> messages are sent within the same call to <code>Mid_Proc()</code>, with the respective two <code>midiOut*()</code> API calls only being at best a two-digit number of <i>micro</i>seconds apart.</li>
+	<li>So it only makes sense why cheap MIDI synths that don't even respond to reverb or release time messages completely drop any note with such a short length. After all, at a sampling rate of 44,100&nbsp;Hz, a note would have to be at least 22.7&nbsp;µs long to be represented by even a single PCM sample.</li>
+	<li>This also extends to the visualizations above, and was the reason why I chose to render all drum notes as fixed-size diamonds. Otherwise, they would barely be visible.</li>
+</ul><p>
+	But while sending MIDI events in such quantized chunks might not be perfect, it can't be the cause behind multi-second playback slowdowns. Instead, this issue has to boil down to the way Shuusou Gyoku times each individual message, and specifically how it converts between MIDI pulse units and real-time (milli)seconds. pbg's original MIDI code chose to do this in an equally confusing and inaccurate way: it kept two counters that tracked the current MIDI pulse before and after the latest tempo change, used the value of the latter counter to decide which events to process, and only added the pulse equivalent of 10&nbsp;ms to this counter at the end of <code>Mid_Proc()</code> in the then current tempo. <a href="https://github.com/nmlgc/ssg/commit/47c7f3ceb11b3674979da83488d09ec6b221f01e">The commit message for my rewritten algorithm details the problems with this approach using nice ASCII art in case you're interested</a>, but in short, the main problem lies in how the single final addition can only consider a single tempo change within each call to <code>Mid_Proc()</code>. If a MIDI file contains tempo ramps with less than 10&nbsp;ms between each different tempo, the original game would only use the last of these tempo values as the basis for converting <i>the entire</i> 10&nbsp;ms back into MIDI pulses. Not to mention that <i>maybe</i> MIDI pulses aren't the best unit in a game that still {{Blog_PostLink "2023-09-30#utmath" "treats the FPU as lava"}} and doesn't use any fixed-point means of increasing the resolution of the 10&nbsp;ms→pulse division either…
+</p><p>
+	On the contrary, it's much more accurate to immediately convert every encountered MIDI delta time to a real-time quantity and use that unit for event timing, especially if we want to restrict ourselves to integer math. Signed 64-bit integers are enough to fit the product of the slowest possible MIDI tempo ((﻿2<sup>24</sup>&nbsp;-&nbsp;1﻿)&nbsp;µs per quarter note) and the highest possible MIDI delta time (﻿2<sup>28</sup>&nbsp;-&nbsp;1﻿) at nanosecond precision (10<sup class="hovertext" title="Tempo values already are in microseconds, so nanoseconds only add a factor of 1000 here.">3</sup>), with one bit to spare. Then, we arrive at a much simpler timing algorithm:
+</p><ul>
+	<li>Each simultaneously playing track gets a <i>next event</i> timer, starting out at 0</li>
+	<li>When looking at the next event, add the converted nanosecond value of its delta time to this timer</li>
+	<li>Subtract the equivalent of 10&nbsp;ms from each track's timer at the beginning of the processing function</li>
+	<li>As long as the timer is ≤0, process and send the next message</li>
+</ul><p>
+	The additive nature of this timer not only naturally allows more than one event to happen within a single <code>Mid_Proc()</code> call, but also averages out any minor timing inconsistencies across the length of a track.
+</p><p>
+	This new algorithm did improve the overall timing accuracy, but only barely, shaving off just ≈100&nbsp;ms of the total duration. Turns out that the main source behind the slowness was hiding somewhere else entirely, in <a href="https://github.com/pbghogehoge/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/DirectXUTYs/PBGMIDI.C#L597">the single line that deserializes tempo values from MIDI's big-endian representation into the native integer format</a>:
+</p><figure><pre class="chroma">assert(length_of_tempo_message == 3);
+uint32_t tempo = 0;
+for(int i = 0; i &lt; length_of_tempo_message; i++) {
+<span class="gd">-	tempo += ((tempo &lt;&lt; 8) + (*track_data++));</span>
+<span class="gi">+	tempo  = ((tempo &lt;&lt; 8) + (*track_data++));</span>
+}</pre></figure><p>
+	Yup – the original code performed two additions per byte, which incorrectly added the interim value at every byte to the final result, and yielded a tempo that is ≈0.8%&nbsp;/ ≈1&nbsp;BPM slower than notated in the MIDI file, matching the number we were looking for. That's why the <code>|</code>/<code>OR</code> operator is the safer one to use in such a bit-twiddling context…<br />
+	But now I'm curious. This is such a tiny bug that is bound to remain unnoticed until someone compares the game's MIDI output to another renderer. It must have certainly made it into other games whose MIDI code is based on Shuusou Gyoku's, or that pbg was involved with. And sure enough, not only did this bug <a href="https://github.com/pbghogehoge/kog/blob/7d45ba8ddc1b01987ccca416dbd7901a23f4412f/NewPBGLib/MIDI/MidiSub.cpp#L70">survive Kioh Gyoku's OOP refactoring</a>, but it even traveled into Windows Touhou, where it remained in every single game that supported MIDI playback. Now we know for a fact that pbg's <i>Program Support</i> role in the TH06 credits involved sharing ready-made, finished code with ZUN:
+</p>
+<figure class="side_by_side small">
+	{{range loop 6 11 -}}
+		{{- $pic := printf "TH%02d-MIDI-tempo-bug.png" . -}}
+		{{- $picFN := (call $.PostFileURL $pic) -}}
+		<a href="{{$picFN}}"><img
+			src="{{$picFN}}"
+			alt="{{printf "Disassembly of the Shuusou Gyoku MIDI tempo deserialization bug in TH%02d" .}}"
+		/></a>
+	{{- end}}
+	<figcaption>The broken tempo deserialization in the respective latest full versions of TH06 through TH10. And yes, that's TH10 – even though TH09's trial version was the last game to ship MIDI versions of its soundtrack, TH10 still contained all of pbg's MIDI code that originated back in Shuusou Gyoku, before TH11 finally removed it.<br />
+	Amusingly, ZUN's compiler even started optimizing the combination of left-shifting and addition to a multiplication with 257 for TH09, which even sort of highlights this bug if you're used to reading x86 ASM.</figcaption>
+</figure><p>
+	That leaves support for MIDI loop points as the only missing feature for syncing MIDI data with a looping waveform track. While it didn't require all <i>too</i> much code, pbg's original zero-copy approach of iterating over raw MIDI data definitely injected a lot of complexity into the required branches. Multi-track/SMF Type 1 files require quite a bit of extra thought to correctly calculate delta times across loop boundaries that reach past the end of the respective track, while still allowing the real-time delta values to be resynchronized at tempo changes within the loop – and yes, 3 of ZUN's 19 arranged MIDI files actually <i>do</i> use more than one track, so this wasn't just about maximizing MIDI compatibility for mods. I stuck to the original approach mostly as a challenge and to prove that it's possible without first parsing the entire MIDI sequence into a friendlier internal representation, but I absolutely do <i>not</i> recommend this to anyone else. {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	After hardcoding the loop points detected by mly into the binary, we only need to call <code>Mid_Proc()</code> once per frame in the Music Room and pass the frame delta time instead of the 10&nbsp;ms constant. And then, we get this:
+</p><figure {{$sync.FigureAttrs}}>
+	{{call .VideoPlayer $sync}}
+	<figcaption>
+		The <code>MIDI TIMER</code> now shows off the arguably more interesting current MIDI pulse value rather than just formatting the <code>PASSED TIME</code> in milliseconds. Ironically, displaying this value in a constantly counting way takes <i>more</i> effort now – the new nanosecond-based timing code doesn't use any measure of total MIDI pulses anymore, and they don't naturally fall out of the algorithm either. Instead, the code remembers the total pulse value of the last event it processed and adds the real-time duration that has passed since, similar to the original timing algorithm.<br />
+		This naturally causes the timer to jump from the loop end pulse to the loop start pulse, proving that <code>Mid_Proc()</code> is in fact looping the sequence.
+	</figcaption>
+</figure><hr id="bgmpacks-{{.Date}}" /><p>
+	Alright, now we know what to package:
+</p><ul>
+	<li>
+		We're going to have 8 <i>BGM packs</i> for each permutation of soundtrack (OST&nbsp;/ AST), sound source (Romantique Tp&nbsp;/ Sound Canvas VA), and codec (FLAC&nbsp;/ Vorbis), making up 1.15&nbsp;GiB of music data in total.<br />
+		When looking at the package names, you will notice that I don't particularly highlight the FLAC versions as <q>lossless</q>. And for good reason – the Romantique Tp recordings had <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.msg1218444#msg1218444">dithering and noise shaping applied to them</a>, and the Sound Canvas VA versions will necessarily have to be volume-normalized and quantized to 16-bit during the conversion to FLAC. If we wanted a BGM pack with the <i>actual</i> raw Sound Canvas VA output, we'd have to implement WavPack support, which is the only lossless codec that supports 32-bit float – and even that codec could only compress these files down to 14&nbsp;MiB per minute of music, or 508&nbsp;MB for the entire original soundtrack. That's 1.4× the size of an equivalent <code>thbgm.dat</code>! {{HTML_Emoji "zunpet"}}
+	</li><li>
+		The whole packaging process will be complex enough to warrant <a href="https://github.com/nmlgc/BGMPacks/blob/P0269/Tupfile.lua">a build system</a>. I'd also like to generate an extensive README file for each package, not least to describe the Sound Canvas VA rendering and loop-cutting process in complete detail.
+	</li><li>
+		The AST packs need to bundle the MIDI files from ZUN's site for Music Room visualization. We might as well add a 9<sup>th</sup> MIDI-only AST pack then, as it will naturally fall out of the packaging pipeline anyway. Some people sure love their MIDI synths, after all.
+	</li><li>
+		The OST packs can fall back on the original game's MIDI files from <code>MUSIC.DAT</code> for their Music Room visualization, so there's no need to bundle those and infringe copyright. Ironically, the game will still require a <code>MUSIC.DAT</code> even <i>if</i> you use a BGM pack, if only for the one number in that file that says that Shuusou Gyoku's soundtrack consists of 20 tracks in total.
+	</li><li>
+		ZUN didn't arrange {{template "ssg_20"}}, so we need to copy the OST version recorded with the respective sound source into the AST pack.
+	</li>
+</ul><p>
+	Unfortunately, we <i>still</i> haven't reached the end of the complications and weird issues that haunt Shuusou Gyoku's music:
+</p><ol>
+	<li><p>The original game reads the in-game track title directly out of the first Sequence Name event of the playing MIDI file. The waveform equivalent would be the Vorbis comment <code>TITLE</code> tag, which therefore should exactly match the original track's title, down to the exact placement of whitespace. As usual, if I emphasize minor things like this, it's not without reason: {{template "ssg_14"}} inconsistently uses halfwidth spaces at both sides of the <span lang="ja">～</span>, and wouldn't fit into the Music Room's limited space otherwise.</p></li>
+	<li>However, the AST MIDI files jam a bunch of other metadata into their Sequence Names, roughly following the format
+	<pre>【 $title 】 from 秋霜玉  for sc88Pro comp.ZUN</pre>
+	The track titles should definitely not appear in this format in-game, but how do we get rid of this format without hardcoding either the names or the magic to parse the names out of this format? {{HTML_Emoji "thonk"}}</li>
+	<li><p>The absolute state of GS SysEx tooling rears its ugly head one final time in three of the AST MIDIs, which for some reason are missing the Roland vendor prefix byte in all of their SysEx messages and are therefore undeniably bugged. There even seemed to be another SysEx-related bug which <a href="https://twitter.com/Romantique_Tp/status/1734985007616151562">Romantique Tp explained away</a>, but not this one:</p><figure id="sysex-bugs-{{.Date}}">
+		<rec98-child-switcher><div data-title="ZUN's MIDI files" class="active">
+			<h4><code>ssg_04.mid</code></h4>
+			<pre>0:000	SysEx(   10 42 12 40 00 7F 00 41 F7)
+0:240	SysEx(   10 42 12 40 01 30 14 7B F7)
+0:360	SysEx(   10 42 12 40 01 33 14 78 F7)
+0:420	SysEx(   10 42 12 40 01 34 50 3B F7)</pre>
+			<h4><code>ssg_05.mid</code></h4>
+			<pre>0:000	SysEx(   10 42 12 40 00 7F 00 41 F7)
+0:240	SysEx(   10 42 12 40 01 30 14 7B F7)
+0:360	SysEx(   10 42 12 40 01 33 00 0C F7)
+0:420	SysEx(   10 42 12 40 01 34 14 77 F7)</pre>
+			<h4><code>ssg_10.mid</code></h4>
+			<pre>0:000	SysEx(   10 42 12 40 00 7F 00 41 F7)
+0:240	SysEx(   10 42 12 40 01 30 14 7B F7)
+0:360	SysEx(   10 42 12 40 01 33 00 0C F7)
+0:420	SysEx(   10 42 12 40 01 34 60 2B F7)</pre>
+		</div><div data-title="Fixed versions">
+			<h4><code>ssg_04.mid</code></h4>
+<pre>0:000	SysEx(41 10 42 12 40 00 7F 00 41 F7)	GS Reset
+0:240	SysEx(41 10 42 12 40 01 30 14 7B F7)	Reverb Macro #20
+0:360	SysEx(41 10 42 12 40 01 33 14 78 F7)	Reverb Level 20
+0:420	SysEx(41 10 42 12 40 01 34 50 3B F7)	Reverb Time 80</pre>
+			<h4><code>ssg_05.mid</code></h4>
+<pre>0:000	SysEx(41 10 42 12 40 00 7F 00 41 F7)	GS Reset
+0:240	SysEx(41 10 42 12 40 01 30 14 7B F7)	Reverb Macro #20
+0:360	SysEx(41 10 42 12 40 01 33 00 0C F7)	Reverb Level 0
+0:420	SysEx(41 10 42 12 40 01 34 14 77 F7)	Reverb Time 20</pre>
+			<h4><code>ssg_10.mid</code></h4>
+<pre>0:000	SysEx(41 10 42 12 40 00 7F 00 41 F7)	GS Reset
+0:240	SysEx(41 10 42 12 40 01 30 14 7B F7)	Reverb Macro #20
+0:360	SysEx(41 10 42 12 40 01 33 00 0C F7)	Reverb Level 0
+0:420	SysEx(41 10 42 12 40 01 34 60 2B F7)	Reverb Time 96</pre>
+		</div>
+
+		<rec98-parent-init></rec98-parent-init>
+	</rec98-child-switcher>
+		<figcaption>
+			The irony of using invalid Reverb Macros within already invalid SysEx messages is not lost on me.
+		</figcaption>
+	</figure>
+	<p>This is something we should fix even before running these files through Sound Canvas VA in order to render these with the reverb settings that ZUN clearly (and, for once, unironically) intended.</p></li>
+	<li><p>For perfect preservation of the original BGM/gameplay synchronicity, it makes sense for the waveform versions to retain the leading 1 or 2 beats of silence that the original MIDI files use for their SysEx setup. While some of the AST tracks use a slightly different tempo compared to their OST counterparts, they would still be largely in sync as ZUN didn't rearrange the layout of their setup area… <i>except</i> for, once again, the three tracks used in the Extra Stage. {{HTML_Emoji "zunpet"}} Marisa's and Reimu's boss themes aren't <i>too</i> bad with their 4 beats of setup, but {{template "ssg_16"}} takes the cake with a whopping 12 beats of leading silence. That's 5 seconds from the start of the Extra Stage to the first note you'd hear. 🐌</p></li>
+</ol><p>
+	2) and 4) could theoretically be worked around in Shuusou Gyoku's MIDI code, but there's no way around editing the MIDI files themselves as far as 3) is concerned. Thus, it makes sense to apply all of the workarounds to the AST MIDIs as part of the BGM build process – parsing the titles out of the 【﻿brackets﻿】, inserting the Roland vendor prefix byte where necessary, and compressing the setup bars in the Extra Stage themes to match their OST counterparts. Adding any hidden magic to the MIDI code would only have needlessly increased complexity and/or annoyed some modder in the future who would then have to work around it.<br />
+	Ideally, these edits would involve taking the <code>mly dump</code> output, performing the necessary replacements at a plaintext level, and rebuilding the result back into a MIDI file, bu~t we're unfortunately missing the latter feature. Luckily, someone else had the same idea 13 years ago and
+	<a href="https://github.com/markc/midicomp">wrote a tool in C</a> that does exactly what we need. Getting it to compile in 2024 only <a href="https://github.com/markc/midicomp/pull/8">required fixing a typical C thing</a>… why are students and boomers defending this antiquity of a language again? 🙄
+</p><p>
+	The single most glaring issue, however, is the drastic difference in volume between the individual tracks in both soundtracks. While Romantique Tp had to normalize each track to the maximum possible volume individually as a consequence of the recording process, the Sound Canvas VA renderings reveal just how inconsistent the volume levels of these MIDI files really are:
+</p><figure id="peaks-{{.Date}}">
+	<rec98-child-switcher style="width: 100%;">
+		<embed data-title="OST" src="{{$peaks_ost}}" />
+		<embed data-title="AST" src="{{$peaks_ast}}" class="active" />
+		<rec98-parent-init></rec98-parent-init>
+	</rec98-child-switcher>
+	<figcaption>The peak amplitudes of every track in both soundtracks, as rendered by Sound Canvas VA at maximum volume. Looking at these, you might think that kaorin's 2007 recordings were purposely trying to preserve the clipping that would come out of an SC-88Pro if you don't manually adjust the volume knob for each song, but those recordings are still much louder than even these numbers.</figcaption>
+</figure><p>
+	So how do we interpret this? Is this a bug, because no one in their right mind would want their music to clip on purpose, and that in turn means that <i>everything</i> about these volume levels is arbitrary and unintentional? Or is this a quirk, and ZUN deliberately chose these volume levels for compositional reasons? It certainly would make sense for the name registration theme.<br />
+	Once again, the AST version of {{template "ssg_16"}} is the worst offender in this regard as well, but it might also provide some evidence for the quirk interpretation. The fact that almost all of its MIDI channels blast away at full volume might have been an accident that could have gone unnoticed if the volume knob of ZUN's SC-88Pro was turned rather low during the time he arranged this piece, but the excessive left-panning <i>must</i> have been deliberate. Even Romantique Tp agrees:
+</p><figure style="width: 640px;">
+	<rec98-child-switcher><img
+		src="{{$a16_scva}}"
+		data-title="Sound Canvas VA"
+		alt="Stereo waveform of the Sound Canvas VA rendering of Shuusou Gyoku's Extra Stage theme (シルクロードアリス), highlighting the excessive left-panning"
+	/><img
+		src="{{$a16_rtp}}"
+		data-title="Romantique Tp"
+		alt="Stereo waveform of Romantique Tp's recording of Shuusou Gyoku's Extra Stage theme (シルクロードアリス), highlighting the excessive left-panning"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>It might have even made compositional sense if <cite>Silk Road Alice</cite> was supposed to be a <q>"Western-style piece"</q>, <a href="https://en.touhouwiki.net/wiki/Shuusou_Gyoku/Music#Extra_Stage_Theme">but it's not</a>. {{HTML_Emoji "zunpet"}}</figcaption>
+</figure><p>
+	And that's with the volume already normalized. Because this one channel of this one track is almost twice as loud as anything else in the AST, we would consequently have to bring down the volume of every other arranged track <i>and the right channel of the same track</i> by almost 50% if we wanted to maintain the volume differences between the individual tracks of the AST. In the process, we lose almost one entire bit of dynamic range. At this rate, you might even consider <span class="hovertext" title="In the literal sense of the word, i.e., changing volume levels. Not rearranging.">remixing</span> and remastering the entire thing, but that would involve so many creative decisions to definitely fall into fanfiction territory…
+</ul><p>
+	However, normalizing each track to a peak level of 0&nbsp;dBFS makes much more sense for in-game playback if you consider how loud Shuusou Gyoku's sound effects are. Once again, the best solution would involve offering both versions, but should we really add two more SCVA BGM packs just to cover <i>volume differences</i>? {{HTML_Emoji "thonk"}}<br />
+	<a href="https://en.wikipedia.org/wiki/ReplayGain">ReplayGain</a> solves this exact problem for regular music listening in a non-destructive way by writing the per-track and per-album gain levels into an audio file's metadata. Since we need metadata support for titles anyway, we can do something similar, albeit not <i>exactly</i> the same for two reasons:
+</p><ul>
+	<li>ReplayGain is specified to target an <a href="http://stephan.win31.de/music.htm#rg-levels"><i>average</i> volume of −17&nbsp;dBFS</a>, whereas we'd like to target a <i>peak</i> volume of 0&nbsp;dBFS in order to always use the entire available digital scale. We've got some loud sound effects to compete with, after all.</li>
+	<li>ReplayGain expresses its gain values in dB, which is cumbersome to work with. In the realm of PCM, volume changes don't need to involve more than a simple multiplication, so let's go with a simple scalar <code>GAIN FACTOR</code>.</li>
+</ul><p>
+	And so, we hard-apply the <i>volume-level</i> gain during the conversion from 32-bit float to FLAC to preserve the volume differences between the tracks, calculate the <i>track-level</i> <code>GAIN FACTOR</code> based on the resulting peak levels, add a volume normalization toggle to the <code>Sound / Config</code> menu, enable it by default, and thus make everyone happy. ✅
+</p><p>
+	The final interesting tidbit in building these packages can be found in the way the Sound Canvas VA recordings are looped. When manually cutting loops, you always have to consider that the intro might end with unique notes that aren't present at the end of the loop, which will still be fading out at the calculated loop start point. This necessitates shifting the loop start point by a few bars until these notes are no longer audible – or you could simply ignore the issue because ZUN's compositions are so frantic that no one would ever notice. {{HTML_Emoji "onricdennat"}}<br />
+	With the separate intro and loop files generated by mly, on the other hand, the reverb/release trails are immediately visible and, after trimming trailing silence, exactly define the number of samples that the calculated loop start point needs to be shifted by. The <code>.loop</code> file then remains always exactly as long, <i>in samples</i>, as the duration of the loop reported by mly. If a piece happens to have a constant tempo whose beat duration corresponds to an integer number of samples, we get some very satisfying, round loop durations out of this process. ☺️
+</p><hr id="libs-{{.Date}}" /><p>
+	So let's play it all back in-game… and immediately run into two unexpected miniaudio limitations, what the…?!
+</p><ol>
+	<li>miniaudio uses a fixed linear function for its fade-out envelope, and doesn't offer anything else? We might not even want a <a href="https://www.dr-lex.be/info-stuff/volumecontrols.html">logarithmic one</a> this time because <a href="https://music.stackexchange.com/questions/123032/why-is-midi-gain-based-on-a-factor-of-40/123067#123067">symmetry with MIDI's simple quadratic curve would be neat</a>, but we sure don't want a linear function – those stay near the original volume for too long, and then turn quiet way too quickly.</li>
+	<li>There is no way to access FLAC metadata from miniaudio's public API, even though the library bundles the author's own FLAC library which has this feature?</li>
+</ol><p>
+	{{Blog_PostLink "2023-09-30#miniaudio" "Back when I evaluated miniaudio"}}, I alluded that I consider single-file C libraries to be massively overrated, and this is exactly why: Once they grow as massive as miniaudio (how ironic), they can quickly lead to their authors treating their dependencies as implementation details and melting down the interfaces that would naturally arise. In a regular library, dr_flac would be a separate, proper dependency, and the API would have a way to initialize a stream from an externally loaded <code>drflac</code> object. But since the C community collectively pretends that multi-file libraries are a burden on other developers, miniaudio ended up with dr_flac copy-pasted into its giant single file, with a silly <code>ma_</code> namespacing prefix added to all its functions. And why? Did we have to move so far in the other direction just because <a href="https://stackoverflow.com/a/18538444">CMake doesn't support globbing</a>? That's a symptom of CMake not actually solving any problem, not a valid architectural decision that libraries should bend around. 🙄<br />
+	So unless we fork and hack around in miniaudio, there's now no way around depending on a second, regular copy of dr_flac. Which has now led to the same project organization bloat that single-file libraries originally set out to prevent…
+</p><p>
+	Sigh. At this rate, it makes more sense to just copy-paste and adapt the old BGM streaming code I wrote for thcrap in late 2018, which used dr_flac directly, and extend it with metadata support. With the streaming code moved out of the platform layer and into game logic, it also makes much more sense to implement the squared fade-out curve at that same level instead of copy-pasting and adjusting an unhealthy amount of miniaudio's verbose C code.<br />
+	While I'm doing the same for the old Vorbis streaming code, it would also make sense to rewrite that one to use stb_vorbis instead of the old libogg+libvorbis reference libraries. There's no need to add two more dependencies if miniaudio already comes with <code>stb_vorbis.c</code>, and that library is <a href="https://phoboslab.org/log/2023/02/qoa-time-domain-audio-compression">widely</a> <a href="https://twitter.com/flibitijibibo/status/1717599317333074213">acclaimed</a>. So, integration should be a breeze, right?<br />
+	Well, surprise, rarely have I seen a C library so actively hostile toward being integrated. Both of its API variants are completely unreasonable:
+</p><ul>
+	<li>The <dfn>pulldata</dfn> API pulls Vorbis data as needed from either a memory buffer containing the entire Vorbis file, or a C <code>FILE*</code> handle.<br />
+	Effectively, this forces either you to give up disk streaming completely, or your program into C's terrible I/O API with all its buffering slowness and Unicode issues on Windows. The documentation even goes on to suggest <a href="https://github.com/nothings/stb/blob/ae721c50eaf761660b4f90cc590453cdb0c2acd0/stb_vorbis.c#L250-L255">just modifying the code if you need anything else</a>, which might be acceptable in the strange world of game development this library originates from, but it sure isn't in the kind of open-source development I do.
+	</li>
+	<li>The <dfn>pushdata</dfn> API expects the caller to gradually feed chunks of Vorbis data. How large do these chunks have to be? Nobody knows – and, even worse, the API doesn't retain <i>any</i> of the data already pushed in. If the buffer you passed is too small, which you don't get to know in advance, you have to pass the same data <i>plus</i> more in the next call. I get that you might want an API like this to avoid dynamic memory allocations, but not only does this API perform plenty of allocations itself, it actively forces its caller to <code>realloc()</code> over and over again. 🙄 The lack of seeking support reveals that this API is geared towards live-streamed audio, and it might very well be acceptable in such a case, but it's nothing we could use for BGM.</li>
+</ul><p>
+	What happened to the tried-and-true idea of providing a structure with read, tell, and seek callbacks, and then providing an optional variant for C <code>FILE*</code> handles if you absolutely must? Sure, the whole point of Vorbis is to be small and nobody these days would care about spending a few MB on keeping an entire Vorbis file in memory, but <i>come on</i>. If <i>pulldata</i> made the deliberate and opinionated choice to only support buffers of complete Vorbis streams and argued in the name of simplicity that <span class="hovertext" title="And I'm not just assuming the typical background tracks for games that aren't larger than a few MB. With memory-mapped I/O and the 48-bit address-space for 64-bit programs, this can work just as well for giant files.">hand-coded disk streaming isn't worth it in this day and age</span>, I might have even been convinced. And this is from the guy who popularized the concept of single-file C libraries in the first place? {{HTML_Emoji "thonk"}}
+</p><p>
+	Oh well, <a href="https://github.com/nmlgc/ssg/blob/P0275/Tupfile.lua#L96-L116">tupblocks go brrr</a>. libvorbis definitely shows its age with all the old command-line tools in the <code>lib/</code> directory that they never moved away and that we now have to remove from our glob. But even that just adds <a href="https://github.com/nmlgc/ssg/blob/P0275/Tupfile.lua#L112">a single line to the Tupfile</a>, and then we get to enjoy its much friendlier API. That sure beats the almost 800 lines of code that miniaudio had to write to integrate stb_vorbis… which I can't even link because the file is too big for GitHub. 🤷<br />
+	At this point, it would have even made sense to upgrade from a 24-year-old lossy codec to an 11-year-old lossy codec and use Opus instead, since the enforced 48,000&nbsp;Hz sampling rate is a non-issue when you control the entire audio pipeline. But let's keep compatibility with existing thcrap mods for now.
+</p><p>
+	The last time I added dependencies, {{Blog_PostLink "2023-09-30#sdl" "I wondered whether just downloading and extracting official Windows binary builds might be superior to pasting batch script duct tape over the usability issues of Git submodules"}}. However, I still wanted to try out Git's <a href="https://git-scm.com/docs/git-sparse-checkout/2.44.0">sparse checkout</a> feature before, in an attempt to remove all the unneeded bloat… and as it turned out, this might just be the idealistic and perfect nirvana of vendoring libraries in C++ projects. I particularly like how the <a href="https://git-scm.com/docs/git-sparse-checkout/2.44.0#_internalscone_mode_handling">limitations of its default mode</a> (always checking out all files within each directory level that shows up in a filter) can be turned into a guideline about how to structure a repository: All non-essential stuff that consumers of your code might not need – tests, high-level documentation, or optional features – should go into a subdirectory where it can be easily filtered.<br />
+	And that's how the size of our <code>libs/</code> directory went down from 82.7&nbsp;MiB in the P0256 build to 30.4&nbsp;MiB in the P0275 build, despite <i>adding</i> 4 more libraries in the latter. Now if only this didn't require <a href="https://github.com/nmlgc/ssg/blob/P0275/build.bat#L40-L55">even more duct tape to actually set up shallow clones correctly</a>…
+</p><p>
+	In the end, the Windows build ended up using only a single one of the miniaudio features that DirectSound doesn't have, and that's the ability to use the more modern WASAPI <i>instead</i> of DirectSound. We're still going to use miniaudio for the Linux port, but as far as Windows is concerned, it would be quite nice to backport BGM streaming to the game's original DirectSound backend. The P0275 build is pushing 1&nbsp;MiB of binary size for a game that originally came in a 220&nbsp;KiB binary, so it would remove a noticeable amount of bloat from <code>GIAN07.EXE</code>, but it would also allow waveform BGM to work in the Windows 98-compatible i586 build. If that sounds cool to you, <a class="goal" href="https://github.com/nmlgc/ssg/issues/53">this is the issue you want to fund</a>.
+</p><hr id="impl-{{.Date}}" /><p>
+	That only left some logic and UI busywork to put it all together, which means that we've almost reached the end of things to talk about! Here's what it all looks like:
+</p><ul>
+	<li>BGM pack selection is done in-game through a new submenu. The <code>&lt;Download&gt;</code> option will open the BGM pack release page in the system's preferred browser:
+		<figure class="fullres pixelated">
+			<img
+				src="{{$packs}}"
+				alt="Screenshot of the BGM pack selection menu introduced in the Shuusou Gyoku P0275 build, highlighting the &lt;Download&gt; option."
+			/>
+			<figcaption>
+				This window presented a great occasion for already implementing the generic boilerplate for vertically scrolling windows with an unlimited number of items. That will come in quite handy once we <a class="goal" href="https://github.com/nmlgc/ssg/issues/36">introduce better replay support</a>… 👀
+			</figcaption>
+		</figure>
+	</li>
+	<li>Even with per-track BGM volume normalization, Shuusou Gyoku's sound effects are still a bit too loud in comparison, especially when mixed on top of that excessively and unfixably left-panned AST version of the Extra Stage theme. Adding separate volume controls for BGM and sound effects really was the only sustainable solution here, and conveniently checks an important quality-of-life box the original game lacked. So important that it was <a href="https://github.com/nmlgc/ssg/issues/1">the very first issue I added to the GitHub tracker of my fork</a>:
+	<figure class="fullres pixelated">
+		<img
+			src="{{$opts}}"
+			alt="Screenshot of the Sound / Music menu of the Shuusou Gyoku P0275 build, showing off the new volume control and BGM pack selection options."
+			/>
+		</figure></li>
+	<li>I really wanted to have Japanese help text in these menus, as it makes them look just so much more consistent and polished. Many thanks to <a href="https://twitter.com/Wafflesespeon24">Elfin</a>, who responded to my bounty offer, and will most likely also provide localizations for future features.</li>
+	<li><p>In-game music titles are now consistently right-aligned. Leading whitespace in 4 of the original MIDI Sequence Names suggests that pbg might have intended these titles to be centered within the 216 maximum pixels that the original code designated for music titles, but none of those 4 had the correct amount of spaces that would have been required for exact centering:</p><figure>
+	<pre>#04 |・・・幻想帝都・・・・
+#07 |・・天空アーミー・・・
+#11 |・魔法少女十字軍・・・
+#16 |・・シルクロードアリス</pre></figure>
+	Right-aligned text matches the one certain intention I can read out of the code, and allows us to consistently trim whitespace from both the original MIDI Sequence Names and the <code>TITLE</code> tags in the BGM packs… at the cost of significantly changing the animation. 🤔 <figure {{$mtitle_orig.FigureAttrs}}>
+		{{call .VideoPlayer $mtitle_orig.SetActive $mtitle_P0275}}
+		<figcaption>
+			Maybe, all this whitespace had the explicit purpose of making the animation look the way it did originally? But hard-padding the title tags in the BGM packs would be <i>so dumb…</i> 😩 Let's keep it like this for now and <a class="goal" href="https://github.com/nmlgc/ssg/issues/55">fix the animation later</a>.
+		</figcaption>
+	</figure></li>
+	<li>At startup, the game now shows a new screen if any of the game's .DAT files are missing, displaying their expected absolute path. This is bound to be very important on Linux because each distribution might have its own idea of where these files are supposed to be stored. But even on Windows, this allows <code>GIAN07.EXE</code> to at least <i>run</i> and show something if one or more of these files are not present, instead of crashing at the first attempt of loading anything from them.<figure class="fullres pixelated">
+		<img
+			src="{{$missing}}"
+			alt="The new 'missing game data' screen shown at startup in the P0275 build of Shuusou Gyoku, listing any missing files at their absolute directories and offering the possibility to recheck their existence without quitting the game."
+		/>
+		<figcaption>The <code>¥</code> instead of <code>\</code> is, {{Blog_PostLink "2022-11-30#ref" "once again"}}, a font issue. Good luck finding a font not named MS Gothic that looks good when rendered in this game…</figcaption>
+	</figure></li>
+	<li>On a more unfortunate note, I dropped the i586 build from this release. Visual Studio 2022's CRT implements the new filesystem and threading code using Win32 API functions that are only available on Vista or later and are not covered by the one ready-made KernelEx package I was able to find, so I couldn't easily test such a build on Windows 98 anymore. Resurrecting the i586 build would therefore involve additional platform abstraction layers that we wouldn't need otherwise. <a href="https://github.com/nmlgc/ssg/issues/58" class="goal">Writing them wouldn't be too expensive</a>, but it only makes sense if there's actual demand. <a class="goal" href="https://github.com/nmlgc/ssg/issues/53">Backporting waveform BGM to DirectSound</a> to restore feature parity would also be a good idea here, as it would avoid the need to litter the current code with <code>#ifdef</code>s at any place that references anything related to BGM packs.</li>
+</ul><hr /><ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0275">
+	{{HTML_Emoji "sh01"}} Shuusou Gyoku P0275</a></li>
+	<li><a class="release" href="https://github.com/nmlgc/BGMPacks/releases/tag/P0269">
+	{{HTML_Emoji "sh01"}} Shuusou Gyoku SC-88Pro BGM packs</a></li>
+	<li><a class="release" href="https://github.com/nmlgc/mly/releases/tag/v0.1.0">
+	mly 0.1.0</a></li>
+</ul><hr id="pricing-{{.Date}}" /><p>
+	After half a year of being bought out way past the cap, I've finally got some small room left for new orders again. If it weren't for this blog post and the required research and web development work, this delivery would have probably come out in early January, taking half the time it ended up taking. So I really have to start factoring the blog posts into the push prices in a better and fairer way.<br />
+	Meanwhile, the hate toward my day job only keeps growing, but there's little point in looking for a new one as long as ReC98 remains this motivating and complex. It leaves pretty much no cognitive room for any similarly demanding job. Thus, I want 2024 to be the year where ReC98 either becomes profitable enough to be my only full-time job, or where we conclusively find out that it can't, I go look for a better day job, and ReC98 shifts to a slower pace. Here's the plan:
+</p><ul>
+	<li>From now on, I will immediately increase the push price whenever we reach 100% of the cap, either directly through new orders or indirectly through existing subscriptions. The price increase will be relative to how long it took to reach that point since the last re-opening.</li>
+	<li>If the store continues selling out, I will aim for {{HTML_Currency 25000}} per push by the end of the year.</li>
+	<li>In exchange, microtransactions (i.e., deliveries containing just code and no blog posts) will now be half the price of regular pushes for the same amount of delivered code. Or in other words: If you want to fund a goal that's eligible for microtransactions, you can now decide whether your fixed amount of money goes to 2× coding work and 0× blogging, or 1× coding work and 1× blogging.</li>
+	<li> I'll permanently increase the default level of the cap from 8 to 10 pushes. The past 12 months were full of mod releases that raised the bar, and 2024 shows no signs of stopping that trend.</li>
+	<li>If we ever reach {{HTML_Currency 40000}} per push, I plan to hire people for some of the {{HTML_TagInline "contribution-ideas"}} or anything else that might improve this project. (Well-produced YouTube videos about the findings of this project might be a nice idea!) At that point, I will have reached my goal of living decently off this project alone, and it's time for others to make money in this space as well.</li>
+</ul><p>
+	With the new price of {{HTML_Currency 12500}} per push, this means that there's now a small window in which you can get a full push worth of functionality for {{HTML_Currency 6250}}, until the current cap is filled up again.
+</p><p>
+	Next up: Probably TH02's endings to relax a bit. Maybe we're also getting some new Touhou-related contributions?
+</p>

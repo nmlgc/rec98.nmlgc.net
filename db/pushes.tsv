@@ -263,3 +263,15 @@ P0262	[254, 260, 264, 268, 257, 265]	Decompilation (TH04/TH05 main/option menu)	
 P0263	[265, 269]	Decompilation (TH04/TH05 first-launch sound setup menu + TH05 title screen animation)	2023-11-30T23:56:14Z	nmlgc/ReC98/compare/741d889...46cd6e7	1
 P0264	[272, 276, 269, 273]	TH03/TH04/TH05 decompilation (Music Rooms, part 1/2)	2024-02-03T08:03:19Z	nmlgc/ReC98/compare/46cd6e7...78728f6	1
 P0265	[273, 250]	TH03/TH04/TH05 decompilation (Music Rooms, part 2/2 + MAINE.EXE main()) + TH02 PI/RE (Boss damage and position)	2024-02-03T08:03:19Z	nmlgc/ReC98/compare/78728f6...ff19bed	1
+P0266	[256]	mly (CLI preparation + MIDI event dumping + Basic loop detection algorithm)	2024-03-09T15:23:29Z	nmlgc/mly/compare/eb2b0c8...b356884	0
+P0267	[256]	mly (Refined loop detection algorithm + SMF Type 0 conversion + Cut/unfold operations)	2024-03-09T15:23:29Z	nmlgc/mly/compare/b356884...1c70db0	0
+P0268	[259]	mly (Recording-space loops + Rendering helpers) + Seihou / Shuusou Gyoku (BGM packs, part 1/?: Sound Canvas VA versions)	2024-03-09T15:23:29Z	nmlgc/mly/compare/1c70db0...db0c195	0
+P0269	[259, 263]	Seihou / Shuusou Gyoku (BGM packs, part 2/6: Loop-cutting Romantique Tp recordings + Arranged MIDI pipeline + Packaging)	2024-03-09T15:23:29Z	nmlgc/BGMPacks/compare/2f9bce5...45087c2	0
+P0270	[263]	Seihou / Shuusou Gyoku (BGM packs, part 3/6: Dependency setup + UTF-8 paths)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/P0256...a9ca081	0
+P0271	[263, 267]	Seihou / Shuusou Gyoku (MIDI refactoring and bugfixes)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/a9ca081...8db918f	0
+P0272	[267]	Seihou / Shuusou Gyoku (MIDI looping + BGM packs, part 4/6: MIDI/waveform BGM subsystem)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/8db918f...3de48ab	0
+P0273	[267, 271]	Seihou / Shuusou Gyoku (BGM packs, part 5/6: Modding logic + FLAC/Vorbis waveform streaming)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/3de48ab...9467705	0
+P0274	[271, 275]	Seihou / Shuusou Gyoku (BGM packs, part 6/6: Configuration UI + Music Room adjustments)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/9467705...241a6c9	0
+P0275	[275]	Seihou / Shuusou Gyoku (BGM/sound effect volume controls + Missing .DAT file screen)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/241a6c9...P0275	0
+P0276	[230]	Website (CSS compilation via esbuild + Audio player, part 1/2)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/dbc369f...883ac40	0
+P0277	[239]	Website (Audio player, part 2/2 + Front page progress bar redesign + Goal grouping)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/883ac40...6ac72f3	0

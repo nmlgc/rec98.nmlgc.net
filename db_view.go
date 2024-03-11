@@ -174,7 +174,14 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 			continue
 		}
 		for _, fpc := range tpg.PerCustomer {
-			ret.Outstanding += fpc.PushFraction * ret.PushPrice
+			for _, opf := range fpc.Breakdown {
+				switch opf.ID.Scope {
+				case STransaction:
+					ret.Outstanding += opf.Fraction * ret.PushPrice
+				case SMicro:
+					ret.Outstanding += opf.Fraction * ret.MicroPrice
+				}
+			}
 		}
 	}
 

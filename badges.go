@@ -96,7 +96,7 @@ func (b Badger) Parse(typ string, game string) (*BadgeContent, error) {
 		cap := CapCurrent(nil)
 		outstandingUncapped := (cap.Outstanding / cap.Cap) * 100.0
 		return &BadgeContent{
-			"4-week crowdfunding goal", outstandingUncapped, " reached",
+			"Crowdfunding cap", outstandingUncapped, " reached",
 		}, nil
 	}
 

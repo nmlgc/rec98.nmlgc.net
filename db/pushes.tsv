@@ -275,3 +275,5 @@ P0274	[271, 275]	Seihou / Shuusou Gyoku (BGM packs, part 6/6: Configuration UI +
 P0275	[275]	Seihou / Shuusou Gyoku (BGM/sound effect volume controls + Missing .DAT file screen)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/241a6c9...P0275	0
 P0276	[230]	Website (CSS compilation via esbuild + Audio player, part 1/2)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/dbc369f...883ac40	0
 P0277	[239]	Website (Audio player, part 2/2 + Front page progress bar redesign + Goal grouping)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/883ac40...6ac72f3	0
+P0278	[262, 270, 274, 277]	TH02 decompilation (Endings)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/b6a7285...f0fbaf6	1
+P0279	[277, 280, 286, 289]	TH02 decompilation (Staff Roll + Verdict screen + Stage bonus tables)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/f0fbaf6...20bac82	1

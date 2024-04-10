@@ -1,5 +1,5 @@
 <p>
-	<strong>Last updated: {{Blog_PostLink "2024-02-03" "2024-02-03"}}</strong>
+	<strong>Last updated: {{Blog_PostLink "2024-04-11" "2024-04-11"}}</strong>
 </p><p>
 	Secured a 22.5-hour RL workweek to leave plenty of time for this project,
 	{{DB_CustomerByID 9}}'s commissioned MediaWiki update work is also nearing
@@ -9,11 +9,11 @@
 </p><ul>
 	<li><strong>TH02:</strong><ul>
 		<li><code>MAIN.EXE:</code> The final PC-98-specific low-level rendering functions are blocked by a single inconsistent and thus undecompilable assembly instruction. Rather than going for {{Blog_PostLink "2023-01-17" "code generation"}} and turning the rest of the function into a mess, I'd like to introduce a new build step between compilation and linking to patch "mistakes" like these. This would be an investment of 1-2 pushes into more readable code. Otherwise, I could continue with<ul>
-			<li>player character movement and rendering code, followed by the code for player shots and the individual shot types,</li>
-			<li>bomb rendering, or</li>
-			<li>the stage/game clear screens and their score calculations.</li>
+			<li>player character movement,</li>
+			<li>player shots and the control code for the three shot types, or</li>
+			<li>bomb rendering.</li>
 		</ul></li>
-		<li><code>MAINE.EXE:</code> The ending sequences, which will be nice to have for the {{Blog_PostLink "2023-07-28" "upcoming multilingual translations commissioned by Touhou Patch Center"}}.</li>
+		<li><code>MAINE.EXE:</code> <code>main()</code> and the congratulation picture screens.</li>
 	</ul></li>
 	<li><strong>TH03:</strong><ul>
 		<li><code>OP.EXE:</code> Story Mode initialization or the title screen.</li>

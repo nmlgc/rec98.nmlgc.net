@@ -1,0 +1,261 @@
+{{$be_scroll := (call .Video "TH02-Bad-Endings-scroll" "Video of the scrolling effect from Reimu's head to Marisa's head seen in TH02's Bad Endings")}}
+{{$ge_13 := (call .PostFileURL "TH02-Good-Endings-line-13.png") -}}
+{{$ge_14 := (call .PostFileURL "TH02-Good-Endings-line-14.png") -}}
+{{$be_expanded := (call .PostFileURL "TH02-Bad-Endings-expanded.png") -}}
+{{$ge_expanded := (call .PostFileURL "TH02-Good-Endings-expanded.png") -}}
+{{$e2s := (call .Video "TH02-Good-Ending-2-to-Staff-Roll" "Video of TH02's transition animation from the Reimu-B Good Ending to the Staff Roll, drawing attention to its two off-by-four errors and the green 1-pixel line at the right side of the final Ending image")}}
+{{$endft_bft := (call .PostFileURL "TH02-ENDFT.BFT.gif") -}}
+{{$ed06_1_s2 := (call .PostFileURL "TH02-ED06.PI-1-Stage-2-palette.png") -}}
+{{$ed06_1_pi := (call .PostFileURL "TH02-ED06.PI-1-PI-palette.png") -}}
+{{$ed06_1_rgb := (call .PostFileURL "TH02-ED06.PI-1-ED06B.RGB-palette.png") -}}
+{{$staff_2 := (call .Video "TH02-Staff-Roll-ED06.PI-2" "Video of the transition from picture #2 to #3 in TH02's Staff Roll, demonstrating the palette change with the unfitting red-tinted white color") -}}
+{{$ed06_2_pi := (call .PostFileURL "TH02-ED06.PI-2.png") -}}
+{{$ed06_2_rec := (call .PostFileURL "TH02-ED06.PI-2-final-shots.png") -}}
+{{$ed07_1_pi := (call .PostFileURL "TH02-ED07.PI-1.png") -}}
+{{$ed07_1_rec := (call .PostFileURL "TH02-ED07.PI-1-final-shots.png") -}}
+{{$holes := (call .Video "TH02-Staff-Roll-text-holes" "Video of the last 5 screens in TH02's Staff Roll and their rotating rectangle animations, showing off how the original way of unblitting can cut holes into the text")}}
+
+{{$e2s.AddMarker 462 "Shift animation starts" "" -}}
+
+{{$holes.AddMarker   7 "First hole" "" -}}
+{{$holes.AddMarker 132 "Second hole" "" -}}
+{{$holes.AddMarker 373 "ＴＥＳＴ　ＰＬＡＹＥＲ" "left" -}}
+
+<style>
+	.colors-{{.Date}} img {
+		width: 640px;
+	}
+
+	.numbers.skill-{{.Date}} td {
+		text-align: left;
+	}
+
+	.numbers.skill-{{.Date}} tbody th {
+		font-weight: normal;
+	}
+
+	.numbers.bonus-{{.Date}} th {
+		text-align: left;
+		font-weight: normal;
+	}
+</style>
+
+<p>
+	That was quick: In a surprising turn of events, Romantique Tp themselves came in just one day after the last blog post went up, <a href="https://twitter.com/Romantique_Tp/status/1766898006329053256">updated me with their current and much more positive opinion on Sound Canvas VA</a>, and <a href="https://twitter.com/Romantique_Tp/status/1766895996645056902">confirmed that real SC-88Pro hardware clamps invalid Reverb Macro values to the specified range</a>. I promised to release a new Sound Canvas VA BGM pack for free once I knew the exact behavior of real hardware, so let's go right back to Seihou and also integrate the necessary SysEx patches into the game's MIDI player behind a toggle. This would also be a great occasion to quickly incorporate some long overdue code maintenance and build system improvements, and a migration to <a href="https://en.cppreference.com/w/cpp/language/modules">C++ modules</a> in particular. When I started the Shuusou Gyoku Linux port a year ago, the combination of modules and <code>&lt;windows.h&gt;</code> threw lots of weird errors and even crashed the Visual Studio compiler. But nowadays, <a href="https://devblogs.microsoft.com/cppblog/integrating-c-header-units-into-office-using-msvc-2-n/">Microsoft even uses modules in the Office code base</a>. This <i>must</i> mean that these issues are fixed by now, right?<br />
+	Well, there's <i>still</i> a bug that causes the modularized C++ standard library to be basically unusable in combination with the static analyzer, <a href="https://developercommunity.visualstudio.com/t/Module-compilation-with-analyze-ignores/10627451">and somehow, I was the first one to report it</a>. So it's 3½ years after C++20 was finalized, and somehow, modules are still a bleeding-edge feature and a second-class citizen in even <a href="https://en.cppreference.com/w/Template:cpp/compiler_support/20">the compiler that supports them the best</a>. I want fast compile times already! 😕<br />
+	Thankfully, Microsoft <a href="https://developercommunity.visualstudio.com/t/Module-compilation-with-analyze-ignores/10627451#T-N10628920">agrees that this is a bug, and will work on it at some point</a>. While we're waiting, let's return to the original plan of decompiling the endings of the one PC-98 Touhou game that still needed them decompiled.
+</p><ol>
+	<li><a href="#endings-{{.Date}}">TH02's endings</a></li>
+	<li><a href="#staffroll-{{.Date}}">TH02's Staff Roll</a></li>
+	<li><a href="#verdict-{{.Date}}">TH02's verdict screen, and its hidden challenge</a></li>
+	<li><a href="#bonus-{{.Date}}">TH02's end-of-stage bonus screens</a></li>
+</ol><hr id="endings-{{.Date}}" /><p>
+	After the textless slideshows of TH01, TH02 was the first Touhou game to feature lore text in its endings. Given that this game stores its {{Blog_PostLink "2023-11-01#th02" "in-game dialog text"}} in fixed-size plaintext files, you wouldn't expect anything more fancy for the endings either, so it's not surprising to see that the <code>END?.TXT</code> files use the same concept, with 44 visible bytes per line followed by two bytes of padding for the CR/LF newline sequence. Each of these lines is typed to the screen in full, with all whitespace and a fixed time for each 2-byte chunk.<br />
+	As a result, everything surrounding the text is just as hardcoded as TH01's endings were, which once again opens up the possibility of freely integrating all sorts of creative animations without the overhead of an interpreter. Sadly, TH02 only makes use of this freedom in a mere two cases: the picture scrolling effect from Reimu's head to Marisa's head in the Bad Endings, and a single hardware palette change in the Good Endings.
+</p><figure class="side_by_side">
+	<figure {{$be_scroll.FigureAttrs}}>
+		{{call .VideoPlayer $be_scroll}}
+		<figcaption>Powered by master.lib's <code>egc_shift_down()</code>.</figcaption>
+	</figure>
+	<figure class="fullres pixelated">
+		<rec98-child-switcher><img
+			src="{{$ge_13}}"
+			data-title="Line 13"
+			alt="Screenshot of the (0-based) line #13 in TH02's Good Endings, together with its associated (and colored) picture"
+		/><img
+			src="{{$ge_14}}"
+			data-title="Line 14"
+			alt="Screenshot of the (0-based) line #14 in TH02's Good Endings, showing off how it doesn't change the picture of the previous line and only applies a different grayscale palette"
+			class="active"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		<figcaption>
+			Same image, different palette. Note how the palette for 2️⃣ must still contain a green color for the VRAM-rendered bold text, which the image is not supposed to use.
+		</figcaption>
+	</figure>
+</figure><p>
+	Hardcoding also still made sense for this game because of how the ending text is structured. The Good and Bad Endings for the individual shot types respectively share 55% and 77% of their text, and both only diverge after the first 27 lines. In straight-line procedural code, this translates to one branch for each shot type at a single point, neatly matching the high-level structure of these endings.
+</p><p>
+	But that's the end of the positive or neutral aspects I can find in these scripts. The worst part, by far, is ZUN's approach to displaying the text in alternating colors, and how it impacts the entire structure of the code.<br />
+	The simplest solution would have involved a hardcoded array with the color of each line, <a href="https://github.com/nmlgc/ReC98/blob/ae2fc2865a74b095bdbc8b469073f43c8cbc2d98/th02_main.asm#L29994-L30170">just like how the in-game dialogs store the face IDs for each text box</a>. But for whatever reason, ZUN did not apply this piece of wisdom to the endings and instead hardcoded these color changes by… mutating a global variable before calling the text typing function for every individual line.{{HTML_Emoji "zunpet"}} This approach ruins any possibility of compressing the script code into loops. While ZUN <i>did</i> use loops, all of them are very short because they can only last until the next color change. In the end, the code contains <i>90</i> explicitly spelled-out calls to the 5-parameter line typing function that only vary in the pointer to each line and in the slower speed used for the one or two final lines of each ending. As usual, I've <a href="TODO">deduplicated the code in the ReC98 repository down to a sensible level</a>, but here's the full inlined and macro-expanded horror:
+</p><figure><div><a
+	href="{{$be_expanded}}"><img
+	src="{{$be_expanded}}" alt="Raw decompilation of TH02's script function for its three Bad Endings, without inline function or macro trickery" /></a><a
+	href="{{$ge_expanded}}"><img
+	src="{{$ge_expanded}}" alt="Raw decompilation of TH02's script function for its three Good Endings, without inline function or macro trickery" /></a></div><figcaption>
+	It's highly likely that this is what ZUN hacked into his PC-98 and was staring at back in 1997. {{HTML_Emoji "godzun"}}
+</figcaption></figure><p>
+	All this redundancy bloats the two script functions for the 6 endings to a whopping 3,344 bytes inside TH02's <code>MAINE.EXE</code>. In particular, the single function that covers the three Good Endings ends up with a total of 631 x86 ASM instructions, making it the single largest function in TH02 and the <span class="hovertext" title="The other 6 functions are all part of TH01.">7<sup>th</sup> longest function</span> in all of PC-98 Touhou. If the {{Blog_PostLink "2022-03-05" "single-executable build"}} for TH02's <code>debloated</code> and <code>anniversary</code> branches ends up needing a few more KB to reduce its size below the original <code>MAIN.EXE</code>, there are lots of opportunities to compress it all.
+</p><p>
+	The ending text can also be fast-forwarded by holding any key. As we've come to expect for this sort of ZUN code, the text typing function runs its own rendering loop with VSync delays and input detection, which means that we {{Blog_PostLink "2023-11-01#ref" "once"}} {{Blog_PostLink "2023-11-01#ref" "again"}} have to talk about the infamous quirk of the PC-98 keyboard controller in relation to held keys. We've still got 54 not yet decompiled calls to input detection functions left in this codebase, are you excited yet?! {{HTML_Emoji "tannedcirno"}}<br />
+	Holding any key speeds up the text of all ending lines before the last one by displaying two kana/kanji instead of one per rendered frame and reducing the delay between the rendered frames to <sup>1</sup>/<sub>3</sub> of its regular length. In pseudocode:
+</p><figure><pre>for(i = 0; i &lt; number_of_2_byte_chunks_on_displayed_line; i++) {
+	input = convert_current_pc98_bios_input_state_to_game_specific_bitflags();
+	add_chunk_to_internal_text_buffer(i);
+	blit_internal_text_buffer_from_the_beginning();
+	if(input == INPUT_NONE) {
+		// Basic case, no key pressed
+		frame_delay(frames_per_chunk);
+	} else if((i % 2) == 1) {
+		// Key pressed, chunk number is odd.
+		frame_delay(frames_per_chunk / 3);
+	} else {
+		// Key pressed, chunk number is even.
+		// No delay; next iteration adds to the same frame.
+	}
+}</pre></figure><p>
+	This is exactly the kind of code you would write if you wanted to deliberately maximize the impact of this hardware quirk. If the game happens to read the current input state right after a <i>key up</i> scancode for the last previously held and game-relevant key, it will then wrongly take the branch that uninterruptibly waits for the regular, non-divided amount of VSync interrupts. In my tests, this broke the rhythm of the fast-forwarded text about once per line. Note how this branch can also be taken on an even chunk: Rendering glyphs straight from font ROM to VRAM is not exactly cheap, and if each iteration (needlessly) blits one more full-width glyph than the last one, the probability of a <i>key up</i> scancode arriving in the middle of a frame only increases.<br />
+	The fact that TH02 allows <i>any</i> of the supported input keys to be held points to another detail of this quirk I haven't mentioned so far. If you press multiple keys at once, the PC-98's keyboard controller only sends the periodic <i>key up</i> scancodes as long as you are holding the <i>last</i> key you pressed. Because the controller only remembers this last key, pressing and releasing any other key would get rid of these scancodes for all keys you are still holding.<br />
+	As usual, this ZUN bug only occurs on real hardware and with DOSBox-X's correct emulation of the PC-98 keyboard controller.
+</p><hr id="staffroll-{{.Date}}" /><p>
+	After the ending, we get to witness the most seamless transition between ending and Staff Roll in any Touhou game as the BGM immediately changes to the Staff Roll theme, and the ending picture is shifted into the same place where the Staff Roll pictures will appear. Except that the code misses the exact position by four pixels, and cuts off another four pixels at the right edge of the picture:
+</p><figure {{$e2s.FigureAttrs}}>
+	{{call .VideoPlayer $e2s}}
+	<figcaption>Also, note the green 1-pixel line at the right edge of this specific picture. This is a bug in the .PI file where the picture is indeed shifted one pixel to the left. {{HTML_Emoji "zunpet"}}</figcaption>
+</figure><p>
+	What follows is a comparatively large amount of {{HTML_TagInline "unused"}} content for a single scene. It starts right at the end of this underappreciated 11-frame animation loaded from <code>ENDFT.BFT</code>:
+</p><figure class="pixelated" style="width: 320px;">
+	<img src="{{$endft_bft}}" alt="TH02's ENDFT.BFT" style="width: 320px" />
+	<figcaption>
+		Wastefully using the 4bpp BFNT format. The single <img class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAgAQAAAACtSMLBAAAAWUlEQVR42mOgE6j/8cHmgw2YmWCQIBEhAWEmJEjkQJgMB1CYaRAmY0OCRDKEycwAZ7IBmYkzwEweIDPhBpRpYABlSkgAmRFgpoGEzIMEC6gb2Bs+SDDQFQAA718X4R8AtXYAAAAASUVORK5CYII=" width="80" height="32" alt="ZUN" /> frame at the end of the animation is {{HTML_TagInline "unused"}}; while it might look identical to the <span lang="ja">ＺＵＮ</span> glyphs later on in the Staff Roll, that's only because both are independently rendered boldfaced versions of the same font ROM glyphs. Then again, it does prove that ZUN created this animation on a PC-98 model made by NEC, as the <a href="https://en.wikipedia.org/w/index.php?title=PC-98&oldid=1209823165#Epson_clones">Epson clones</a> used a font ROM with a distinctly different look.
+	</figcaption>
+</figure><p>
+	TH02's Staff Roll is also unique for the pre-made screenshots of all 5 stages that get shown together with a fancy rotating rectangle animation while the Staff Roll progresses in sync with the BGM. The first interesting detail shows up immediately after the first image, where the code jumps over one of the 320×200 quarters in <code>ED06.PI</code>, leaving the screenshot of the Stage 2 midboss {{HTML_TagInline "unused"}}.<br />
+	All of the cutscenes in PC-98 Touhou store their pictures as 320×200 quarters within a single 640×400 .PI file. Anywhere else, all four quarters are supposed to be displayed with the same palette specified in the .PI header, but TH02's Staff Roll screenshots are also unique in how all quarters beyond the top-left one require palettes loaded from external .RGB files to look right. Consequently, the game doesn't clearly specify the intended palette of this unused screenshot, and leaves two possibilities:
+</p><figure class="fullres pixelated">
+	<figcaption class="dynamic"><div>
+		The unused second 320×200 quarter of TH02's <code>ED06.PI</code>, displayed in the Stage 2 color palette used in-game.
+	</div><div>
+		The unused second 320×200 quarter of TH02's <code>ED06.PI</code>, displayed in the palette specified in the .PI header. These are the colors you'd see when looking at the file in a .PI viewer, when converting it into another format with the usual tools, or <a href="https://www.spriters-resource.com/nec_pc_9801/touhoufuumarokuthestoryofeasternwonderland/sheet/103862/">in sprite rips that don't take TH02's hardcoded palette changes into account</a>. These colors are only intended for the Stage 1 screenshot in the top-left quarter of the file.
+	</div><div>
+		The unused second 320×200 quarter of TH02's <code>ED06.PI</code>, displayed in the palette from <code>ED06B.RGB</code>, which the game uses for the following screenshot of the Meira fight. As it's from the same stage, it <i>almost</i> matches the in-game colors seen in 1️⃣, and only differs in the white color (<code style="background-color: #fff">#FFF</code>) being slightly red-tinted (<code style="background-color: #fcc">#FCC</code>).
+	</div></figcaption><rec98-child-switcher><img
+		src="{{$ed06_1_s2}}" data-title="Stage 2 palette" alt=""
+	/><img
+		src="{{$ed06_1_pi}}" data-title="<code>ED06.PI</code> palette" alt=""
+	/><img
+		src="{{$ed06_1_rgb}}"
+		data-title="<code>ED06B.RGB</code> palette"
+		alt=""
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	It might seem obvious that the Stage 2 palette in 1️⃣ is the correct one, but ZUN indeed uses <code>ED06B.RGB</code> with the red-tinted white color for the following screenshot of the Meira fight. Not only does this palette not match Meira's in-game appearance, but it also discolors the rectangle animation and the surrounding Staff Roll text:
+</p><figure {{$staff_2.FigureAttrs}}>
+	{{call .VideoPlayer $staff_2.SetNoLoop}}
+	<figcaption>Also, that tearing on frame #1 is not a recording artifact, but the expected result of yet another VSync-related landmine. 💣 This time, it's caused by the combination of 1) the entire sequence from the ending to the verdict screen being single-buffered, and 2) this animation always running <i>immediately</i> after an expensive operation (640×400 .PI image loading and blitting to VRAM, 320×200 VRAM inter-page copy, or hardware palette loading from a packed file), without waiting for the VSync interrupt. This makes it highly likely for the first frame of this animation to start rendering at a point where the (real or emulated) electron beam has already traveled over a significant portion of the screen.</figcaption>
+</figure><p>
+	But when I went into Stage 2 to compare these colors to the in-game palette, I found something even more curious. ZUN obviously made this screenshot with the Reimu-C shot type, but one of the shot sprites looks slightly different from how it does in-game. {{HTML_Emoji "thonk"}} These screenshots must have been made earlier in development when the sprite didn't yet feature the second ring at the top. The same applies to the Stage 4 screenshot later on:
+</p><figure class="colors-{{.Date}} pixelated" style="line-height: 0;">
+	<rec98-child-switcher><div data-title="Staff Roll screenshots"><img
+		src="{{$ed06_2_pi}}"
+		alt="Original version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight and showing off an old version of the Reimu-C shot sprites" /><img
+		src="{{$ed07_1_pi}}"
+		alt="Original version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4 and showing off an old version of the Reimu-C shot sprites"
+	/>	</div><div data-title="Final sprites and colors" class="active"><img
+		src="{{$ed06_2_rec}}"
+		alt="Edited version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight; Reimu-C's shot sprites were replaced with their final version" /><img
+		src="{{$ed07_1_rec}}"
+		alt="Edited version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4; Reimu-C's shot sprites were replaced with their final version"
+	/></div>
+	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	Finally, the rotating rectangle animation delivers one more minor rendering bug. Each of the 20 frames removes the largest and outermost rectangle from VRAM by redrawing it in the same black color of the background before drawing the remaining rectangles on top. The corners of these rectangles are placed on a shrinking circle that starts with a radius of 256 pixels and is centered at (﻿192,&nbsp;200﻿), which results in a maximum possible X coordinate of 448 for the rightmost corner of the rectangle. However, the Staff Roll text starts at an X coordinate of 416, causing the first two full-width glyphs to still fall within the area of the circle. Each line of text is also only rendered once before the animation. So if any of the rectangles then happens to be placed at an angle that causes its edges to overlap the text, its removal will cut small holes of black pixels into the glyphs:
+</p><figure {{$holes.FigureAttrs}}>
+	{{call .VideoPlayer $holes.SetNoLoop}}
+	<figcaption>The green dotted circle corresponds to the newest/smallest rectangle. Note how ZUN only happened to avoid the holes for the two final animations by choosing an initial angle and angular velocity that causes the resulting rectangles to just barely avoid touching the <span lang="ja">ＴＥＳＴ　ＰＬＡＹＥＲ</span> glyphs.</figcaption>
+</figure><hr id="verdict-{{.Date}}" /><p>
+	At least the following verdict screen manages to have no bugs aside from the slightly imperfect centering of its table values, and only comes with a small amount of additional bloat. Let's get right to the mapping from skill points to the 12 title strings from <code>END3.TXT</code>, because one of them is not like the others:
+</p><figure><table class="numbers skill-{{.Date}}">
+	<thead>
+		<tr><th>Skill</th><th style="text-align: left;">Title</th></tr>
+	</thead><tbody>
+		<tr><th>≥100</th><td lang="ja">神を超えた巫女！！</td></tr>
+		<tr><th>90 - 99</th><td lang="ja">もはや神の領域！！</td></tr>
+		<tr><th>80 - 99</th><td lang="ja">Ａ級シューター！！</td></tr>
+		<tr><th>78 - 79</th><td lang="ja">うきうきゲーマー！</td></tr>
+		<tr><th><b>77</b></th><td lang="ja"><b>バニラはーもにー！</b></td></tr>
+		<tr><th>70 - 76</th><td lang="ja">うきうきゲーマー！</td></tr>
+		<tr><th>60 - 69</th><td lang="ja">どきどきゲーマー！</td></tr>
+		<tr><th>50 - 59</th><td lang="ja">要練習ゲーマー</td></tr>
+		<tr><th>40 - 49</th><td lang="ja">非ゲーマー級</td></tr>
+		<tr><th>30 - 39</th><td lang="ja">ちょっとだめ</td></tr>
+		<tr><th>20 - 29</th><td lang="ja">非人間級</td></tr>
+		<tr><th>10 - 19</th><td lang="ja">人間でない何か</td></tr>
+		<tr><th>≤9</th><td lang="ja">死んでいいよ、いやいやまじで</td></tr>
+	</tbody>
+</table><figcaption>
+	Looks like I'm the first one to document the required skill points as well? <a href="https://en.touhouwiki.net/index.php?title=Story_of_Eastern_Wonderland/Translation&oldid=465792#End-of-Game_Player_Ratings">Everyone</a> <a href="https://seesaawiki.jp/toho-motoneta_2nd/d/%c5%ec%ca%fd%c9%f5%cb%e2%cf%bf#content_block_37">else</a> just copy-pastes <code>END3.TXT</code> without providing context.
+</figcaption></figure><p>
+	So how would you get exactly 77 and achieve <a href="https://www.youtube.com/clip/Ugkxdl4YKalsywHCrS0stLkG7fJCWR2oG-32">vanilla harmony</a>? Here's the formula:
+</p><figure><table class="numbers"><tr>
+	<td></td><td>Difficulty level*<code> × 20</code></td>
+</tr><tr>
+	<td>+</td><td><code>10 - (</code>Continues used<code> × 3)</code></td>
+</tr><tr>
+	<td>+</td><td><code>max((50 - (</code>Lives lost<sup>†</sup><code> × 3) - </code>Bombs used<sup>†</sup><code>), 0)</code></td>
+</tr><tr>
+	<td>+</td><td><code>min(max({{Blog_PostLink "2023-06-07" "item_skill"}}, 0), 25)</td>
+</tr></table><figcaption>
+	* Ranges from 0 (Easy) to 3 (Lunatic).<br />
+	<sup>†</sup> Across all 5 stages.<br />
+</figcaption></figure>
+	With Easy Mode capping out at <span class="hovertext" title="Perfect run with no continues (+10), lives or bombs lost (+50), and a maximum item_skill of (+25)">85</span>, this is possible on every difficulty, although it requires increasingly perfect play the lower you go. Reaching 77 on purpose, however, pretty much demands a careful route through the entire game, as every collected and missed item will influence the <code>item_skill</code> in some way. This almost feels it's like the ultimate challenge that this game has to offer. Looking forward to the first Vanilla Harmony% run!
+</p><p>
+	And with that, TH02's <code>MAINE.EXE</code> is both fully position-independent and ready for translation. There's a tiny bit of undecompiled bit of code left in the binary, but I'll leave that for rounding up a future TH02 decompilation push.
+</p><hr id="bonus-{{.Date}}" /><p>
+	With one of the game's skill-based formulas decompiled, it's fitting to round out the second push with the other two. The in-game bonus tables at the end of a stage also have labels that we'd eventually like to translate, after all.<br />
+	The bonus formula for the <span class="hovertext" title="Yup, this bonus not granted for clearing the final stage.">4</span> regular stages is also the first place where we encounter TH02's <i>rank</i> value, as well as the only instance in PC-98 Touhou where the game actually displays a rank-derived value to the player. {{DB_CustomerByID 11}} and Colin Douglas Howell <a href="https://en.touhouwiki.net/index.php?title=Story_of_Eastern_Wonderland/Gameplay&oldid=454863#Rank">accurately documented the rank mechanics over at Touhou Wiki two years ago</a>, which helped quite a bit as rank would have been slightly out of scope for these two pushes. {{Blog_PostLink "2021-10-09" "Similar to TH01"}}, TH02's rank value only affects bullet speed, but the exact details of <i>how</i> rank is factored in will have to wait until RE progress arrives at this game's bullet system.<br />
+	These bonuses are calculated by taking a sum of various gameplay metrics and multiplying it with the amount of point items collected during the stage. In the 4 regular stages, the sum consists of:
+</p><figure><table class="numbers bonus-{{.Date}}"><tbody><tr>
+	<th lang="ja"><span class="hovertext" title="What's that space doing here? None of the other labels even attempt to be centered.">&nbsp;</span>難易度</th>
+	<td>Difficulty level*<code> × 2,000</code></td>
+</tr><tr>
+	<th lang="ja">ステージ</th>
+	<td><code>(</code>Rank<code> + 16) ×   200</code></td>
+</tr><tr>
+	<th lang="ja">ボム</th>
+	<td><code>max((2,500 - (</code>Bombs used*<code> ×   500)), 0)</code></td>
+</tr><tr>
+	<th lang="ja">ミス</th>
+	<td><code>max((3,000 - (</code>Lives lost*<code> × 1,000)), 0)</code></td>
+</tr><tr>
+	<th lang="ja">靈撃初期数</th>
+	<td><code>(4 - </code>Starting bombs<code>) ×   800</code></td>
+</tr><tr>
+	<th lang="ja">靈夢初期数</th>
+	<td><code>(5 - </code>Starting lives<code>) × 1,000</code></td>
+</tr></tbody></table><figcaption>
+	* Within this stage, across all continues.<br />
+	Yup, <code>封魔録.TXT</code> does indeed document this correctly.
+</figcaption></figure><p>
+	As rank can range from -6 to +4 on Easy and +16 on the other difficulties, this sum can range between:
+</p><figure><table class="numbers">
+	<tr><th></th><th>Easy</th><th>Normal</th><th>Hard</th><th>Lunatic</th></tr>
+	<tr>
+		<th>Minimum</th>
+		<td>2,800</td><td>4,800</td><td>6,800</td><td>8,800</td>
+	</tr>
+	<tr>
+		<th>Maximum</th>
+		<td>16,700</td><td>21,100</td><td>23,100</td><td>25,100</td>
+	</tr>
+</table></figure><p>
+	The sum for the Extra Stage is not documented in <code>封魔録.TXT</code>:
+</p><figure><table class="numbers bonus-{{.Date}}"><tbody><tr>
+	<th lang="ja">クリア</th>
+	<td><code>10,000</code></td>
+</tr><tr>
+	<th lang="ja">ミス回数</th>
+	<td><code>max((20,000 - (</code>Lives lost<code> × 4,000)), 0)</code></td>
+</tr><tr>
+	<th lang="ja">ボム回数</th>
+	<td><code>max((20,000 - (</code>Bombs used<code> × 4,000)), 0)</code></td>
+</tr><tr>
+	<th lang="ja">クリアタイム</th>
+	<td><code>⌊max((20,000 - </code>Boss fight frames*<code>), 0) ÷ 10⌋ × 10</code></td>
+</tr></tbody></table><figcaption>
+	* Amount of frames spent fighting Evil Eye Σ, counted from the end of the pre-boss dialog until the start of the defeat animation.
+</figcaption></figure><hr /><p><p>
+	And that's two pushes packed full of the most bloated and copy-pasted code that's unique to TH02! So bloated, in fact, that TH02 RE as a whole jumped by almost 7%, which in turn finally pushed overall RE% over the 60% mark. 🎉 It's been a while since we hit a similar milestone; 50% overall RE happened <a href="/progress/39da5da2eaddd56d7dad3f70f8a86f05c5dad863">almost 2 years ago</a> during {{Blog_PostLink "2022-07-10" "P0204"}}, a month before I completed the TH01 decompilation.<br />
+	Next up: Continuing to wait for Microsoft to fix the static analyzer bug until May at the latest, and working towards the newly popular dreams of TH03 netplay by looking at some of its foundational {{HTML_TagInline "gameplay"}} code.
+</p>

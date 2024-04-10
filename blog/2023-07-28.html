@@ -10,7 +10,7 @@
 </p><h5>How is this going to work?</h5><p>
 	This project will start sometime after I've completed the current big
 	project of <a href="https://github.com/nmlgc/ssg/issues/42">porting Shuusou
-	Gyoku to Linux</a>, so probably in the last few months of 2023. Similar to
+	Gyoku to Linux</a>, so probably during the summer of 2024. Similar to
 	the previous MediaWiki update, this will bypass the ReC98 push and cap
 	model: {{DB_CustomerByID 9}} is going to guarantee a minimum budget out of
 	their Open Collective funds, which can be increased with further donations
@@ -18,9 +18,7 @@
 	addition, I'm also going to keep in contact with all interested translators
 	and backers via a Discord room throughout the process for additional
 	technical quality control.<br />
-	Since ReC98 hasn't really focused on text so far, the amount of moddable
-	text-related code would be fairly limited if I started working on it right
-	away. As of 2023-11-30, it only includes the following:
+	<strong>Edit (2024-04-11):</strong> Over the last few months, I've focused all unconstrained RE funding on increasing the amount of moddable text-related code. As a result, the translation project could now cover the majority of text in PC-98 Touhou, including:
 </p><ul>
 	<li>All of TH01</li>
 	<li>All of TH02's <code>OP.EXE</code>, i.e., the main menu</li>
@@ -31,20 +29,19 @@
 	({{Blog_PostLink "2023-11-01" "completed in P0261"}})</li>
 	<li>TH04's and TH05's first-launch sound setup menu ({{Blog_PostLink "2023-11-30" "completed in P0263"}})</li>
 	<li>TH04's and TH05's main menu ({{Blog_PostLink "2023-11-30" "completed in P0262"}})</li>
-	<li>TH04's and TH05's endings</li>
+	<li>TH02's, TH04's and TH05's endings</li>
+	<li>TH02's verdict screen ({{Blog_PostLink "2024-04-11" "completed in P0279"}})</li>
 </ul><p>
-	Therefore, I'll put any general and unconstrained reverse-engineering,
+	With still a bit of time left until the Shuusou Gyoku Linux port is done,
+	I'll put any general and unconstrained reverse-engineering,
 	position independence, or <q>anything</q> contributions that come in during
 	the next few months towards covering everything that's still missing there:
 </p><ul>
-	<li>TH02's <code>MAINE.EXE</code> needs to be fully RE'd since all of its
-	screens contain translatable text. Due to its highly copy-pasted nature, it
-	should be much cheaper than currently estimated on the main page. 3 pushes
-	should be enough there.</li>
-	<li>Similarly, TH04's and TH05's <code>MAINE.EXE</code> contains some not
-	yet RE'd text in their verdict screens. 1 push there, since it's
+	<li>TH04's and TH05's <code>MAINE.EXE</code> contains some not
+	yet RE'd text in their verdict screens. 1.5 pushes there, since it's
 	unfortunately contained in the same function that also performs the highly
 	complex skill value calculation.</li>
+	<li>TH05's Extra Stage ending is followed by an <i>All Cast</i> screen listing the characters of all 5 games, to the tune of <a lang="ja" href="https://www.youtube.com/watch?v=-BZUMv5gAkk">Peaceful Romancer</a>. Shouldn't take longer than 0.5 pushes.</li>
 	<li>TH03's <code>MAINL.EXE</code> needs 100% PI to enable convenient
 	translations of the win messages, the character titles and names at the
 	beginning of a stage, the Stage 8/9 cutscenes, and the endings. Let's go
@@ -59,9 +56,10 @@
 	shouldn't be that painful, then.</li>
 	<li>The same is true for TH03's <code>MAIN.EXE</code>, but the <span
 	lang="ja">ＷＩＮＮＥＲ ＢＯＮＵＳ</span> popup is the only translatable piece of text there. Should be even less of a problem.</li>
+	<li>TH04's and TH05's High Score menus contain a single string about scores not being recorded in Slow Mode (<code>スローモードでのプレイでは、スコアは記録されません</code>). Regularly, this means that we'd have to decompile the whole menu, together with TH05's intricate "glyph ball" animation, which would be way too excessive just for this one string. If the Shuusou Gyoku Linux port gets done sooner than this gets decompiled, I'll figure something out.</li>
 </ul><p>
-	In total, that's the next 6 general pushes that will go towards ensuring
-	translatability of most of PC-98 Touhou, if possible. If you'd like your
+	In total, that's the next 4 general pushes that will go towards ensuring
+	translatability of most of PC-98 Touhou. If you'd like your
 	contribution (or existing subscription) to go to {{HTML_TagInline "gameplay"}} code instead, be sure to tell me!
 </p><h5>What's the minimum guaranteed set of features?</h5><p>
 	The main feature will be a custom renderer for a subsetted, monospaced

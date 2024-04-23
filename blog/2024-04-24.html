@@ -1,0 +1,140 @@
+{{$th03_win95 := (call .PostFileURL "TH03-Windows-95-ingame-crash.png") -}}
+{{$vid_same := (call .Video "TH03-player-hit-circles-same" "Video of TH03's white player hit circle animation, showing off how P2 takes precedence when both players get hit on the same frame") -}}
+{{$vid_displaced := (call .Video "TH03-player-hit-circles-displaced" "Video of TH03's white player hit circle animation, showing off how the single animation slot causes this animation to get canceled if the other player gets hit within its 16 frames") -}}
+
+{{$vid_same.SetTitle "Both players get hit on the same frame" -}}
+{{$vid_displaced.SetTitle "Other player gets hit during circle animation" -}}
+
+{{$vid_same.AddMarker 87 "Hit" "" -}}
+{{$vid_displaced.AddMarker 79 "P1 gets hit" "right" -}}
+{{$vid_displaced.AddMarker 87 "P2 gets hit" "left"  -}}
+
+<p>
+	TH03 gameplay! {{Blog_PostLink "2022-02-18" "It's been over two years."}} People have been investing some decent money with the intention of eventually getting netplay, so let's cover some more foundations around player movement… and quickly notice that there's almost no overlap between gameplay RE and netplay preparations? That makes for a fitting opportunity to think about what TH03 netplay would look like:
+</p><ul>
+	<li>
+		<p><i>Data exchange protocol:</i> <a href="https://github.com/progre/junowen">The unofficial TH19 battle tool</a> considered a few possibilities and ultimately chose WebRTC Data Channels. <a href="https://www.youtube.com/watch?v=YRDMGuSNF70&t=211s">The argument goes like this:</a>
+	</p><ul>
+		<li>You'd want UDP rather than TCP for both its low latency and its NAT hole-punching ability</li>
+		<li>However, raw UDP does not guarantee that the packets arrive in order, or that they even arrive at all</li>
+		<li>WebRTC implements these reliability guarantees on top of UDP in a modern package, providing the best of both worlds</li>
+	</ul><p>
+		I'm not too deep into networking to argue here, and it clearly works for Ju.N.Owen. If we do explore other options, it would mainly be because I can't easily get something as modern as WebRTC to natively run on Windows 9x or DOS, if we decide to go for that route.
+	</p></li><li>
+		<p><i>Matchmaking:</i> I like Ju.N.Owen's initial way of <a href="https://youtube.com/clip/UgkxjUUb2lOcKvX51GlR-eM9vCme71hgI0Lx?si=o-5eweSxTmCnr_18">copy-pasting signaling codes into chat clients</a> to establish a peer-to-peer connection without a dedicated matchmaking server. progre eventually implemented rooms <a href="https://github.com/progre/junowen/tree/8f3f0d825a88ad98c353bf3ea9bd6565b1659d88/junowen-server">on the AWS cloud</a>, but signaling codes are still used for spectating and the Pure P2P mode. We'll probably copy the same evolution, with a slight preference for Pure P2P – if only because you would have to check a GDPR consent box before I can put the combination of your room name and IP address into a database. Server costs shouldn't be an issue at the scale I expect this to have.
+	</li><li>
+		<p><i>Rollback:</i> In emulators, rollback netcode can be and <a href="https://www.fightcade.com/about">has been</a> implemented by keeping savestates of the last few frames together with the local player's inputs and then replaying the emulation with updated inputs of the remote player if a prediction turned out to be incorrect. This technique is a great fit for TH03 for two reasons:<ul>
+			<li>All game state is contained within a relatively small bit of memory. The only heap allocations done in <code>MAIN.EXE</code> are the {{Blog_PostLink "2020-11-16" ".MRS images for gauge attack portraits and bomb backgrounds"}}, and the enemy scripts and formations, both of which remain constant throughout a round. All other state is statically allocated, which can reduce per-frame snapshots from the naive 640&nbsp;KiB of conventional DOS memory to just the 37&nbsp;KiB of <code>MAIN.EXE</code>'s data segment. And that's the <i>upper</i> bound – this number is only going to go down as we move towards 100% PI, figure out how TH03 uses all its static data, and get to consolidate all mutated data into an even smaller block of memory.</li>
+			<li>For input prediction, we could even let the game's existing AI play the remote player until the actual inputs come in, guaranteeing perfect play until the remote inputs prove otherwise. {{HTML_Emoji "tannedcirno"}} Then again… probably only while the remote player is not moving, because the chance for a human to replicate the AI's infamous erratic dodging is fairly low.</li>
+		</ul><p>
+		The only issue with rollback in specifically a PC-98 emulator is its implications for performance. Rendering is way more computationally expensive on PC-98 than it is on consoles with hardware sprites, involving lots of memory writes to the disjointed 4 bitplane segments that make up the 128&nbsp;KB framebuffer, and equally as many reads and bitshift operations on sprite data. TH03 lessens the impact somewhat thanks to most of its rendering being EGC-accelerated and thus running inside the emulator as optimized native code, but we'd still be emulating all the x86 code <i>surrounding</i> the EGC accesses – from the emulator's point of view, it looks no different than game logic. Let's take my aging i5 system for example:</p><ul>
+			<li>With the <i>Screen → No wait</i> option, Neko Project 21/W can emulate TH03 gameplay at 260&nbsp;FPS, or 4.6× its regular speed.</li>
+			<li>This leaves room for each frame to contain 3.6 frames of rollback in addition to the frame that's supposed to be displayed,</li>
+			<li>which results in a maximum safe ping time of ≈63&nbsp;ms. According to <a href="https://www.meter.net/tools/world-ping-test/">this site</a>, that's enough for a smooth connection from Germany to any other place in Europe. At this ping, my system could still run the game without slowdown even if every single frame required a rollback, which is highly unlikely.</li>
+			<li>Any higher ping, however, could occasionally lead to a rollback queue that's too large for my system to process within a single frame at the intended 56.4 FPS rate. As a result, playing anyone in the US is highly likely to involve at least occasional slowdowns. Delaying inputs on purpose is the usual workaround, but isn't Touhou that kind of game series where people use vpatch to get rid of even the default input delay in the Windows games? {{HTML_Emoji "thonk"}}</li>
+		</ul><p>
+		So we'd ideally want to put TH03 into an update-only mode that skips all rendering calls during re-simulation of rolled-back frames. Ironically, this means that netplay-focused RE would actually focus on the game's <i>rendering</i> code and ensure that it doesn't mutate any statically allocated data, allowing it to be freely skipped without affecting the game. Imagine palette-based flashing animations that are implemented by gradually mutating statically allocated values – these would cause wrong colors for the rest of the game if the animation doesn't run on every frame.</p></li>
+</ul><p>
+	Implementing all of this into TH03 can be done in one, a few, or all of the following five ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
+</p><ol>
+	<li id="emu-{{.Date}}"><p>
+		<i>Generic PC-98 netcode for one or more emulators</i>
+	</p><p>
+		This is the most basic and puristic variant that implements generic netplay for PC-98 games in general by effectively providing remote control of the emulated keyboard and joypad. The emulator will be unaware of the game, and the game will be unaware of being netplayed, which makes this solution particularly interesting for the non-Touhou PC-98 scene, or competitive players who absolutely insist on using ZUN's original binaries and won't trust any of my modded game builds.<br>
+		Applied to TH03, this means that players would select the regular hot-seat <i>1P vs 2P</i> mode and then initiate a match through a new menu in the emulator UI. The same UI must then provide an option to manually remap incoming key and button presses to the 2P controls (newly introducing remapping to the emulator if necessary), as well as blocking any non-2P keys. The host then sends an initial savestate to the guest to ensure an identical starting state, and starts synchronizing and rolling back inputs at VSync boundaries.
+	</p><p>
+		This generic nature means that we don't get to include any of the TH03-specific rollback optimizations mentioned above, leading to the highest CPU and memory requirements out of all the variants. It sure is the easiest to implement though, as we get to freely use <a href="https://github.com/paullouisageneau/libdatachannel">modern C++ WebRTC libraries</a> that are designed to work with the network stack of the underlying OS.<br>
+		I <i>can</i> try to build this netcode as a generic library that can work with any PC-98 emulator, but it would ultimately be up to the respective upstream developers to integrate it into official releases. Therefore, expect this variant to require separate funding and custom builds for each individual emulator codebase that we'd like to support.
+	</p></li><li id="integrated-{{.Date}}"><p>
+		<i>Emulator-level netcode with optional game integration</i>
+	</p><p>
+		Takes the generic netcode developed in 1) and adds the possibility for the game to control it via a special interrupt API. This enables several improvements:<ul>
+			<li>Online matches could be initiated through new options in TH03's main menu rather than the emulator's UI.</li>
+			<li>The game could communicate the memory region that should be backed up every frame, cutting down memory usage as described above.</li>
+			<li>The exchanged input data could use the game's internal format instead of keyboard or joypad inputs. This removes the need for key remapping at the emulator level and naturally prevents the inherent issue of remote control where players could mess with each other's controls.</li>
+			<li>The game could be aware of the rollbacks, allowing it to jump over its rendering code while processing the queue of remote inputs and thus gain some performance as explained above.</li>
+			<li>The game could add synchronization points that block gameplay until both players have reached them, preventing the rollback queue from growing infinitely. This solves the issue of 1) not having any inherent way of working around desyncs and the resulting growth of the rollback queue. As an example, if one of the two emulators in 1) took, say, 2 seconds longer to load the game due to <a href="https://www.reddit.com/r/intel/comments/jnwgtk/intel_driver_support_assistant_causing_sudden_and/?rdt=37820">a random CPU spike caused by some bloatware on their system</a>, the two players would be out of sync by 2 seconds for the rest of the session, forcing the faster system to render 113 frames every time an input prediction turned out to be incorrect.<br>
+			Good places for synchronization points include the beginning of each round, the <i>WARNING!! You are forced to evade / Your life is in peril</i> popups that pause the game for a few frames anyway, and whenever the game is paused via the <kbd>ESC</kbd> key.</li>
+			<li>During such pauses, the game could then also block the resuming <kbd>ESC</kbd> key of the player who didn't pause the game.</li>
+		</ul>
+	</p></li>
+	<li id="win9x-{{.Date}}"><p>
+		<i>Native PC-98 Windows 9x netcode</i>
+	</p><p>
+		Equivalent in features to 2), but pulls the netcode from the emulator down into the PC-98 system itself. Just like Ju.N.Owen or Adonis, it would run as a separate 32-bit or 16-bit Windows application that somehow communicates with the game running in a DOS window. This removes the need for emulator-specific integration code and provides real-hardware support for that handful of real-hardware owners who have actually equipped their PC-98 with a network card such as the <a href="https://simk98.github.io/np21w/docs/lgy98.html">LGY-98</a>.<br>
+		This specific card is also low-level-emulated by <a href="https://simk98.github.io/np21w/">the 21/W fork of Neko Project</a>, which would allow this type of netplay to be used with official builds of that specific emulator. DOSBox-X currently emulates the apparently hardware-compatible <a href="https://dosbox-x.com/wiki/Guide%3ASetting-up-networking-in-DOSBox%E2%80%90X">NE2000 card</a>, but <a href="https://github.com/joncampbell123/dosbox-x/blob/1652704994a74ac93582676a5c33248bad0c956f/src/hardware/ne2000.cpp#L1714">disables its emulation in PC-98 mode</a>, most likely because its I/O ports clash with the typical peripherals of a PC-98 system.<br>
+		As this is <i>just</i> low-level emulation of a network device though, setting up this kind of networking in Neko Project 21/W requires you to install and configure both a TAP driver on the host system, and the whole Windows 9x network stack on the emulated PC-98. Thankfully, <a href="https://simk98.github.io/np21w/lan.html">the setup is well-documented</a>, and I did manage to get a working Internet connection inside an emulated Windows 95, but it's <a href="https://www.reddit.com/r/pc98/comments/1572sni/help_with_connecting_windows_95_to_the_internet/">definitely not foolproof</a>. A more specific guide or setup program would greatly help here.
+	</p><p>
+		And that's not the end of the drawbacks:
+	</p><ul>
+		<li>Netplay would depend on the PC-98 versions of Windows 9x, requiring players to acquire and install another OS on the emulated system.</li>
+		<li>Porting libdatachannel (and <i>especially</i> the required transport encryption) to Windows 95 will probably involve a bit of effort as well.</li>
+		<li>As would actually finding a way to access <a href="https://en.wikipedia.org/wiki/Virtual_8086_mode">V86 mode</a> memory from a 32-bit or 16-bit Windows process.</li>
+		<li>Correctly setting up TH03 to run within Windows 95 to begin with can be rather tricky. The GDC clock speed check needs to be either patched out or overridden using <a href="https://www.vector.co.jp/soft/dl/dos/hardware/se062761.html">mode-setting tools</a>, Windows needs to be blocked from accessing the FM chip, and even then, <code>MAIN.EXE</code> might still immediately crash during the first frame and leave all of VRAM corrupted:
+		<figure class="fullres pixelated">
+			<img src="{{$th03_win95}}" alt="Screenshot of the TH03 crash on a Windows 95 system emulated in Neko Project 21/W ver0.86 rev92β3">
+			<figcaption>This is probably a bug in the latest ver0.86 rev92β3 version of Neko Project 21/W; I got it to work fine on real hardware. {{Blog_PostLink "2019-11-06" "StormySpace"}} did run on the same emulated Windows 95 system without any issues, though. Regardless, it's still worth mentioning as a symbol of everything that can go wrong.</figcaption>
+		</figure></li>
+		<li>A matchmaking server would be much more of a requirement than in any of the emulator variants. Players are unlikely to run their favorite chat client on the same PC-98 system, and the signaling codes are way too unwieldy to type them in manually. (Then again, <a href="https://xkcd.com/1782/">IRC is always an option</a>, and the people who would fund this variant are probably the exact same people who are already running IRC clients on their PC-98.)</li>
+	</ul></p></li>
+	<li id="dos-{{.Date}}"><p>
+		<i>Native PC-98 DOS netcode</i>
+	</p><p>
+		Conceptually the same as 3), but going yet another level deeper, replacing the Windows 9x network stack with <a href="https://www.qsl.net/ja0rug/teene.html">a DOS-based one</a>. This might look even more intimidating and error-prone, but after I got <code>ping</code> <i>and even Telnet</i> working, I was pleasantly surprised at it's much simpler it is when compared to the Windows variant. The whole stack consists of just one LGY-98 hardware information tool, a LGY-98 packet driver TSR, and a TSR that implements TCP/IP/UDP/DNS/ICMP and is configured with a plaintext file. I don't have any deep experience with these protocols, so I was quite surprised that you can implement all of them in a single 40&nbsp;KiB binary. Installed as TSRs, the entire stack takes up an acceptable 82&nbsp;KiB of conventional memory, leaving more than enough space for the game itself. And since both of the TSRs are open-source, we can even legally bundle them with the future modified game binaries.<br>
+		However, all the emulation and matchmaking issues from the Windows 9x approach remain, along with the following issues:
+	</p><ul>
+		<li>Porting libdatachannel and the required transport encryption to the TEEN stack seems even more time-consuming than a Windows 95 port.</li>
+		<li>The TEEN stack has no UI for specifying the system's or gateway's IP addresses outside of its plaintext configuration file. This provides a nice opportunity for adding a new <i>Internet settings</i> menu with great error feedback to the game itself. Great for UX, but it's another thing I'd have to write.</li>
+		<li>Due to the memory requirements of rollback, the netcode should better run as a TSR in Protected Mode, adding yet another technology I'd have to learn about.</li>
+		<li>The LGY-98 is not the only network card for the PC-98. Others might have more complicated DOS drivers that might not work as seamlessly with the TEEN stack, or have no preserved DOS drivers at all. Heck, the most time-consuming part of the DOS setup was <a href="https://www.buffalo.jp/support/download/detail/?dl_contents_id=60432">finding the correct download link for the LGY-98 packet driver</a>, as <a href="http://product.buffalo.jp/download/driver/lan/lgy-98.html">the one link that appears in a lot of places</a> only throws an <i>access denied</i> error these days. If you're interested in funding this variant and <i>are</i> using a non-LGY-98 card on real hardware, make sure you get general Internet working on DOS first.</li>
+	</ul></li>
+	<li id="port-{{.Date}}"><p>
+		<i>Porting the game first</i>
+	</p><p>
+		As always, this is the premium option. If the entire game already runs as a standalone executable on a modern system, we can just put all the netcode into the same binary and have the most seamless integration possible.
+	</p></li>
+</ol><p>
+	That leaves us with these prerequisites:
+</p><ul>
+	<li>1), by definition, needs nothing from ReC98, and I could theoretically start implementing it right now. If you're interested in funding it, just tell me via the usual Twitter or Discord channels.</li>
+	<li>2), 3), and 4) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
+	100% PI won't be a requirement either, as I expect the <code>MAIN.EXE</code> part of the interfacing netcode layer to be thin enough that it can easily fit within the original game's code layout.</li>
+	<li>5), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
+		<li>Although TH03 already has more needlessly micro-optimized ASM code than TH02 and there's even more to come, it still appears to have way less than TH04 or TH05.</li>
+		<li>Its game logic and rendering code seem to be somewhat neatly separated from each other, unlike TH01 which deeply intertwines them.</li>
+		<li>Its graphics seem free of obvious bugs, unlike – again — the flicker-fest that is TH01.</li>
+	</ul>But still, it's the game with the least amount of RE%. Decompilation <i>might</i> get easier once I've worked myself up to the higher levels of game code, and even more so if we're lucky and all of the 9 characters are coded in a similar way, but I can't promise anything at this point.</li>
+</ul><p>
+	Once we've reached any of these prerequisites, I'll set up a separate <i>campaign</i> funding method that runs parallel to the cap. As netplay is one of those big features where incremental progress makes little sense <i>and</i> we can expect wide community support for the idea, I'll go for a more classic crowdfunding model with a fixed goal for the minimum feature set and stretch goals for optional quality-of-life features. Since I've still got two other big projects waiting to be finished, I'd like to at least complete the Shuusou Gyoku Linux port before I start working on TH03 netplay, even if we manage to hit any of the funding goals before that.
+</p><hr><p>
+	For the first time in a long while, the actual content of this push can be listed fairly quickly. I've now RE'd:
+</p><ul>
+	<li>conversions from playfield-relative coordinates to screen coordinates and back (a first in PC-98 Touhou; even TH02 uses screen space for every coordinate I've seen so far),</li>
+	<li>the low-level code that moves the player entity across the screen,</li>
+	<li>a copy of the per-round frame counter that, for some reason, resets to 0 at the start of the <i>Win/Lose</i> animation, resetting a bunch of animations with it,</li>
+	<li>a global hitbox with one variable that sometimes stores the center of an entity, and sometimes its top-left corner, </li>
+	<li>and the 48×48 hit circles from <code>EN2.PI</code>.</li>
+</ul><p>
+	It's also the third TH03 {{HTML_TagInline "gameplay"}} push in a row that features inappropriate ASM code in places that really, really didn't need any. As usual, the code is worse than what Turbo C++ 4.0J would generate for idiomatic C code, and the surrounding code remains full of untapped and quick optimization opportunities anyway. This time, the biggest joke is the sprite offset calculation in the hit circle rendering code:
+	<figure><pre>_BX = (circle->age - 1);
+_BX >>= 2;
+_BX *= 2;
+uint16_t sprite_offset_in_sprite16_area = (0x1910 + _BX + _BX + _BX);</pre>
+	<figcaption>
+		A multiplication with 6 would have compiled into a single <code>IMUL</code> instruction. This compiles into 4 <code>MOVs</code>, one <code>IMUL</code> (with 2), and two <code>ADD</code>s. {{HTML_Emoji "zunpet"}} This surely must have been left in on purpose for us to laugh about it one day?
+	</figcaption></figure>
+</p><p>
+	But while we've all come to expect the usual share of ZUN bloat by now, this is also the first push <i>without</i> either a ZUN bug or a landmine since I started using these terms! 🎉 It does contain a single ZUN <i>quirk</i> though, which can also be found in the hit circles. This animation comes in two types with different caps: 12 animation slots across both playfields for the <i>enemy</i> circles shown in alternating bright/dark yellow colors, whereas the white animation for the player characters has a cap of… 1? P2 takes precedence over P1 because its update code always runs last, which explains what happens when both players get hit within the 16 frames of the animation:
+</p><figure {{$vid_same.FigureAttrs}}>
+	<figcaption class="dynamic"><div>
+		If they both get hit on the exact same frame, the animation for P1 never plays, as P2 takes precedence.
+	</div><div>
+		If the other player gets hit within 16 frames of an active white circle animation, the animation is reinitialized for the other player as there's only a single slot to hold it. Is this supposed to telegraph that the other player got hit without them having to look over to the other playfield? After all, they're drawn on top of most other entities, but below the player. {{HTML_Emoji "onricdennat"}}
+	</div></figcaption>
+	{{call .VideoPlayer $vid_same.SetActive $vid_displaced}}
+</figure>
+	SPRITE16 uses the PC-98's EGC to draw these single-color sprites. If the EGC is already set up, it can be set into a GRCG-equivalent RMW mode using the pattern/read plane register (<code>0x4A2</code>) and foreground color register (<code>0x4A6</code>), together with setting the mode register (<code>0x4A4</code>) to <code>0x0CAC</code>. Unlike the typical blitting operations that involve its 16-dot pattern register, the EGC even supports 8- or 32-bit writes in this mode, just like the GRCG. {{Blog_PostLink "2023-03-05" "As expected"}} for EGC features beyond the most ordinary ones though, T98-Next simply sets every written pixel to black on a 32-bit write. {{HTML_Emoji "tannedcirno"}} Comparing the actual performance of such writes to the GRCG would be {{Blog_PostLink "2024-02-03" "yet another"}} interesting question to benchmark.
+</p><p>
+	Next up: I think it's time for ReC98's build system to reach its final form.
+	For almost 5 years, I've been using <a href="https://twitter.com/ReC98Project/status/1162488931365113859">an unreleased sane build system</a> on a parallel private branch that was <i>just</i> missing some final polish and bugfixes. Meanwhile, the public repo is still using the project's initial Makefile that, {{Blog_PostLink "2020-09-03" "as typical for Makefiles"}}, is so unreliable that <code>BUILD16B.BAT</code> force-rebuilds everything by default anyway. While my build system has scaled decently over the years, something even better happened in the meantime: <a href="http://takeda-toshiya.my.coocan.jp/msdos/index.html">MS-DOS Player</a>, a DOS emulator exclusively meant for seamless integration of CLI programs into the Windows console, has been <a href="https://github.com/cracyc/msdos-player">forked</a> and enhanced enough to finally run Turbo C++ 4.0J at an acceptable speed. So let's remove DOSBox from the equation, merge the 32-bit and 16-bit build steps into a single 32-bit one, set all of this up in a user-friendly way, and maybe squeeze even more performance out of MS-DOS Player specifically for this use case.
+</p>

@@ -1,3 +1,4 @@
+{{$np21w_compipes := (call .PostFileURL "NP21W-COM-ports-over-named-pipes.png") -}}
 {{$th03_win95 := (call .PostFileURL "TH03-Windows-95-ingame-crash.png") -}}
 {{$vid_same := (call .Video "TH03-player-hit-circles-same" "Video of TH03's white player hit circle animation, showing off how P2 takes precedence when both players get hit on the same frame") -}}
 {{$vid_displaced := (call .Video "TH03-player-hit-circles-displaced" "Video of TH03's white player hit circle animation, showing off how the single animation slot causes this animation to get canceled if the other player gets hit within its 16 frames") -}}
@@ -18,6 +19,7 @@
 		<li>You'd want UDP rather than TCP for both its low latency and its NAT hole-punching ability</li>
 		<li>However, raw UDP does not guarantee that the packets arrive in order, or that they even arrive at all</li>
 		<li>WebRTC implements these reliability guarantees on top of UDP in a modern package, providing the best of both worlds</li>
+		<li>NAT traversal via public or self-hosted STUN/TURN servers is built into the connection establishment protocol and <a href="https://webrtc.org/getting-started/turn-server">APIs</a>, so you don't even have to understand the underlying issue</li>
 	</ul><p>
 		I'm not too deep into networking to argue here, and it clearly works for Ju.N.Owen. If we do explore other options, it would mainly be because I can't easily get something as modern as WebRTC to natively run on Windows 9x or DOS, if we decide to go for that route.
 	</p></li><li>
@@ -35,7 +37,7 @@
 		</ul><p>
 		So we'd ideally want to put TH03 into an update-only mode that skips all rendering calls during re-simulation of rolled-back frames. Ironically, this means that netplay-focused RE would actually focus on the game's <i>rendering</i> code and ensure that it doesn't mutate any statically allocated data, allowing it to be freely skipped without affecting the game. Imagine palette-based flashing animations that are implemented by gradually mutating statically allocated values – these would cause wrong colors for the rest of the game if the animation doesn't run on every frame.</p></li>
 </ul><p>
-	Implementing all of this into TH03 can be done in one, a few, or all of the following five ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
+	Implementing all of this into TH03 can be done in one, a few, or all of the following 7 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
 </p><ol>
 	<li id="emu-{{.Date}}"><p>
 		<i>Generic PC-98 netcode for one or more emulators</i>
@@ -58,18 +60,44 @@
 			<li>During such pauses, the game could then also block the resuming <kbd>ESC</kbd> key of the player who didn't pause the game.</li>
 		</ul>
 	</p></li>
-	<li id="win9x-{{.Date}}"><p>
-		<i>Native PC-98 Windows 9x netcode</i>
+	<li id="compipes-{{.Date}}"><p>
+		<i><strong>Edit (2024-04-30):</strong> Emulated serial port communicating over named pipes with a standalone netplay tool</i>
 	</p><p>
-		Equivalent in features to 2), but pulls the netcode from the emulator down into the PC-98 system itself. Just like Ju.N.Owen or Adonis, it would run as a separate 32-bit or 16-bit Windows application that somehow communicates with the game running in a DOS window. This removes the need for emulator-specific integration code and provides real-hardware support for that handful of real-hardware owners who have actually equipped their PC-98 with a network card such as the <a href="https://simk98.github.io/np21w/docs/lgy98.html">LGY-98</a>.<br>
-		This specific card is also low-level-emulated by <a href="https://simk98.github.io/np21w/">the 21/W fork of Neko Project</a>, which would allow this type of netplay to be used with official builds of that specific emulator. DOSBox-X currently emulates the apparently hardware-compatible <a href="https://dosbox-x.com/wiki/Guide%3ASetting-up-networking-in-DOSBox%E2%80%90X">NE2000 card</a>, but <a href="https://github.com/joncampbell123/dosbox-x/blob/1652704994a74ac93582676a5c33248bad0c956f/src/hardware/ne2000.cpp#L1714">disables its emulation in PC-98 mode</a>, most likely because its I/O ports clash with the typical peripherals of a PC-98 system.<br>
-		As this is <i>just</i> low-level emulation of a network device though, setting up this kind of networking in Neko Project 21/W requires you to install and configure both a TAP driver on the host system, and the whole Windows 9x network stack on the emulated PC-98. Thankfully, <a href="https://simk98.github.io/np21w/lan.html">the setup is well-documented</a>, and I did manage to get a working Internet connection inside an emulated Windows 95, but it's <a href="https://www.reddit.com/r/pc98/comments/1572sni/help_with_connecting_windows_95_to_the_internet/">definitely not foolproof</a>. A more specific guide or setup program would greatly help here.
+		This approach would take the netcode developed in 2) out of the emulator and into a separate application running on the (modern) host OS, just like Ju.N.Owen or Adonis. Netplay data would then move through these stages:
+	</p><figure><div>
+		🖥️ PC-98 game logic ⇄ Serial port ⇄ <span style="color: green">Emulator ⇄ Named pipe ⇄ Netcode logic ⇄ WebRTC Data Channel ⇄</span> Internet 🛜
+	</div><figcaption>
+		All <span style="color: green">green steps</span> run natively on the host OS.
+	</figcaption></figure><p>
+		Sending serial port data over named pipes is only a semi-common feature in PC-98 emulators, and would currently restrict netplay to Neko Project 21/W and <a href="https://github.com/AZO234/NP2kai/blob/c2ca4046860264cb307e768f529f180caee5e224/windows/resources/932/np2.rc#L1595">NP2kai on Windows</a>. This is a pretty clean and generally useful feature to have in an emulator though, and emulator maintainers will be much more likely to include this than the custom netplay code I proposed in 1) and 2). <a href="https://github.com/joncampbell123/dosbox-x/issues/4601">DOSBox-X has an open issue that we could help implement</a>, and the NP2kai Linux port would probably also appreciate a <code>mkfifo(3)</code> implementation.<br>
+		This could even work with emulators that only implement PC-98 serial ports in terms of, well, native Windows serial ports. This group currently includes Neko Project II fmgen, SL9821, and T98-Next. These would require separately installed and configured virtual serial port software in place of the named pipe connection, as well as support for actual serial ports in the netplay tool itself.<br>
+	</p><p>
+		<i>If</i> it works though, it's the optimal solution for the emulated use case if we don't want to fork the emulator. From the point of view of the PC-98, the serial port is the cheapest way to send a couple of bytes to some external <i>thing</i>, and named pipes are one of many native ways for two Windows/Linux applications to efficiently communicate with each other. All you'd need to do is run the separate netplay tool, pick the same pipe name in both the tool and the emulator, and you're good to go.
+	</p><figure class="pixelated">
+		<img src="{{$np21w_compipes}}" alt="Screenshot of Neko Project 21/W's Serial option menu, with COM1 being configured to send over a named pipe">
+	</figure>
+		It could even work for real hardware, but would require the PC-98 to be linked to the separately running modern system via a null modem cable.
+	</p></li>
+	<li id="anex86-{{.Date}}"><p>
+		<i>Hacking serial port emulation and named pipe communication into Anex86 via code injection</i> {{HTML_Emoji "onricdennat"}}
+	</p><p>
+		Just in case you're a die-hard fan of this particular ancient emulator and missed it in the list above, here's the galaxy-brained meme option for you! This would be the only way this emulator could ever have TH03 netplay as it does not emulate serial ports at all. Not really meant seriously, but it would be <i>possible</i> 😆 Moving right along…
+	</p></li>
+	<li id="win9x-{{.Date}}"><p>
+		<i>Native PC-98 Windows 9x netcode <strong>(only for real PC-98 hardware equipped with an Ethernet card)</strong></i>
+	</p><p>
+		Equivalent in features to 2), but pulls the netcode into the PC-98 system itself. The tool developed in 3) would then as a separate 32-bit or 16-bit Windows application that somehow communicates with the game running in a DOS window. The handful of real-hardware owners who have actually equipped their PC-98 with a network card such as the <a href="https://simk98.github.io/np21w/docs/lgy98.html">LGY-98</a> would then no longer require the modern PC from 3) as a bridge in the middle.<br>
+		This specific card also happens to be low-level-emulated by <a href="https://simk98.github.io/np21w/">the 21/W fork of Neko Project</a>. However, it makes little sense to use this technique in an emulator when compared to 3), as NP21/W requires a separately installed and configured TAP driver to actually be able to access your native Windows Internet connection. While <a href="https://simk98.github.io/np21w/lan.html">the setup is well-documented</a> and I did manage to get a working Internet connection inside an emulated Windows 95, it's <a href="https://www.reddit.com/r/pc98/comments/1572sni/help_with_connecting_windows_95_to_the_internet/">definitely not foolproof</a>. Not to mention DOSBox-X, which currently emulates the apparently hardware-compatible <a href="https://dosbox-x.com/wiki/Guide%3ASetting-up-networking-in-DOSBox%E2%80%90X">NE2000 card</a>, but <a href="https://github.com/joncampbell123/dosbox-x/blob/1652704994a74ac93582676a5c33248bad0c956f/src/hardware/ne2000.cpp#L1714">disables its emulation in PC-98 mode</a>, most likely because its I/O ports clash with the typical peripherals of a PC-98 system.
 	</p><p>
 		And that's not the end of the drawbacks:
 	</p><ul>
-		<li>Netplay would depend on the PC-98 versions of Windows 9x, requiring players to acquire and install another OS on the emulated system.</li>
+		<li>Netplay would depend on the PC-98 versions of Windows 9x and its full network stack, nothing of which is required for the game itself.</li>
 		<li>Porting libdatachannel (and <i>especially</i> the required transport encryption) to Windows 95 will probably involve a bit of effort as well.</li>
-		<li>As would actually finding a way to access <a href="https://en.wikipedia.org/wiki/Virtual_8086_mode">V86 mode</a> memory from a 32-bit or 16-bit Windows process.</li>
+		<li>As would actually finding a way to access <a href="https://en.wikipedia.org/wiki/Virtual_8086_mode">V86 mode</a> memory from a 32-bit or 16-bit Windows process, particularly due to how isolated DOS processes are from the rest of the system and even each other. A quick investigation revealed three potential approaches:<ul>
+			<li>A 32-bit process could read the memory out of the address space of the console host process (<code>WINOA32.MOD</code>). There seems to be no way of locating the specific base address of a DOS process, but you could always do a brute-force search through the memory map.</li>
+			<li>If started before Windows, TSRs will share their resident memory with both DOS and Win16 processes. The segment pointer would then be retrieved through a typical interrupt API.</li>
+			<li>Writing a VxD driver 😩</li>
+		</ul></li>
 		<li>Correctly setting up TH03 to run within Windows 95 to begin with can be rather tricky. The GDC clock speed check needs to be either patched out or overridden using <a href="https://www.vector.co.jp/soft/dl/dos/hardware/se062761.html">mode-setting tools</a>, Windows needs to be blocked from accessing the FM chip, and even then, <code>MAIN.EXE</code> might still immediately crash during the first frame and leave all of VRAM corrupted:
 		<figure class="fullres pixelated">
 			<img src="{{$th03_win95}}" alt="Screenshot of the TH03 crash on a Windows 95 system emulated in Neko Project 21/W ver0.86 rev92β3">
@@ -78,15 +106,16 @@
 		<li>A matchmaking server would be much more of a requirement than in any of the emulator variants. Players are unlikely to run their favorite chat client on the same PC-98 system, and the signaling codes are way too unwieldy to type them in manually. (Then again, <a href="https://xkcd.com/1782/">IRC is always an option</a>, and the people who would fund this variant are probably the exact same people who are already running IRC clients on their PC-98.)</li>
 	</ul></p></li>
 	<li id="dos-{{.Date}}"><p>
-		<i>Native PC-98 DOS netcode</i>
+		<i>Native PC-98 DOS netcode <strong>(only for real PC-98 hardware equipped with an Ethernet card)</strong></i>
 	</p><p>
-		Conceptually the same as 3), but going yet another level deeper, replacing the Windows 9x network stack with <a href="https://www.qsl.net/ja0rug/teene.html">a DOS-based one</a>. This might look even more intimidating and error-prone, but after I got <code>ping</code> <i>and even Telnet</i> working, I was pleasantly surprised at it's much simpler it is when compared to the Windows variant. The whole stack consists of just one LGY-98 hardware information tool, a LGY-98 packet driver TSR, and a TSR that implements TCP/IP/UDP/DNS/ICMP and is configured with a plaintext file. I don't have any deep experience with these protocols, so I was quite surprised that you can implement all of them in a single 40&nbsp;KiB binary. Installed as TSRs, the entire stack takes up an acceptable 82&nbsp;KiB of conventional memory, leaving more than enough space for the game itself. And since both of the TSRs are open-source, we can even legally bundle them with the future modified game binaries.<br>
-		However, all the emulation and matchmaking issues from the Windows 9x approach remain, along with the following issues:
+		Conceptually the same as 4), but going yet another level deeper, replacing the Windows 9x network stack with <a href="https://www.qsl.net/ja0rug/teene.html">a DOS-based one</a>. This might look even more intimidating and error-prone, but after I got <code>ping</code> <i>and even Telnet</i> working, I was pleasantly surprised at how much simpler it is when compared to the Windows variant. The whole stack consists of just one LGY-98 hardware information tool, a LGY-98 packet driver TSR, and a TSR that implements TCP/IP/UDP/DNS/ICMP and is configured with a plaintext file. I don't have any deep experience with these protocols, so I was quite surprised that you can implement all of them in a single 40&nbsp;KiB binary. Installed as TSRs, the entire stack takes up an acceptable 82&nbsp;KiB of conventional memory, leaving more than enough space for the game itself. And since both of the TSRs are open-source, we can even legally bundle them with the future modified game binaries.<br>
+		The matchmaking issue from the Windows 9x approach remains though, along with the following issues:
 	</p><ul>
 		<li>Porting libdatachannel and the required transport encryption to the TEEN stack seems even more time-consuming than a Windows 95 port.</li>
 		<li>The TEEN stack has no UI for specifying the system's or gateway's IP addresses outside of its plaintext configuration file. This provides a nice opportunity for adding a new <i>Internet settings</i> menu with great error feedback to the game itself. Great for UX, but it's another thing I'd have to write.</li>
 		<li>Due to the memory requirements of rollback, the netcode should better run as a TSR in Protected Mode, adding yet another technology I'd have to learn about.</li>
-		<li>The LGY-98 is not the only network card for the PC-98. Others might have more complicated DOS drivers that might not work as seamlessly with the TEEN stack, or have no preserved DOS drivers at all. Heck, the most time-consuming part of the DOS setup was <a href="https://www.buffalo.jp/support/download/detail/?dl_contents_id=60432">finding the correct download link for the LGY-98 packet driver</a>, as <a href="http://product.buffalo.jp/download/driver/lan/lgy-98.html">the one link that appears in a lot of places</a> only throws an <i>access denied</i> error these days. If you're interested in funding this variant and <i>are</i> using a non-LGY-98 card on real hardware, make sure you get general Internet working on DOS first.</li>
+		<li>The LGY-98 is not the only network card for the PC-98. Others might have more complicated DOS drivers that might not work as seamlessly with the TEEN stack, or have no preserved DOS drivers at all. Heck, the most time-consuming part of the DOS setup was <a href="https://www.buffalo.jp/support/download/detail/?dl_contents_id=60432">finding the correct download link for the LGY-98 packet driver</a>, as <a href="http://product.buffalo.jp/download/driver/lan/lgy-98.html">the one link that appears in a lot of places</a> only throws an <i>access denied</i> error these days. <strong>Edit (2024-04-30):</strong> <a href="https://lainnet.arcesia.net/repo/LGYTEEN.ZIP">spaztron64 is now hosting both the LGY-98 packet driver and the entire TEEN bundle on his homepage.</a><br>
+		If you're interested in funding this variant and <i>are</i> using a non-LGY-98 card on real hardware, make sure you get general Internet working on DOS first.</li>
 	</ul></li>
 	<li id="port-{{.Date}}"><p>
 		<i>Porting the game first</i>
@@ -97,9 +126,9 @@
 	That leaves us with these prerequisites:
 </p><ul>
 	<li>1), by definition, needs nothing from ReC98, and I could theoretically start implementing it right now. If you're interested in funding it, just tell me via the usual Twitter or Discord channels.</li>
-	<li>2), 3), and 4) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
+	<li>2) through 6) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
 	100% PI won't be a requirement either, as I expect the <code>MAIN.EXE</code> part of the interfacing netcode layer to be thin enough that it can easily fit within the original game's code layout.</li>
-	<li>5), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
+	<li>7), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
 		<li>Although TH03 already has more needlessly micro-optimized ASM code than TH02 and there's even more to come, it still appears to have way less than TH04 or TH05.</li>
 		<li>Its game logic and rendering code seem to be somewhat neatly separated from each other, unlike TH01 which deeply intertwines them.</li>
 		<li>Its graphics seem free of obvious bugs, unlike – again — the flicker-fest that is TH01.</li>

@@ -37,7 +37,7 @@
 		</ul><p>
 		So we'd ideally want to put TH03 into an update-only mode that skips all rendering calls during re-simulation of rolled-back frames. Ironically, this means that netplay-focused RE would actually focus on the game's <i>rendering</i> code and ensure that it doesn't mutate any statically allocated data, allowing it to be freely skipped without affecting the game. Imagine palette-based flashing animations that are implemented by gradually mutating statically allocated values – these would cause wrong colors for the rest of the game if the animation doesn't run on every frame.</p></li>
 </ul><p>
-	Implementing all of this into TH03 can be done in one, a few, or all of the following 7 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
+	Implementing all of this into TH03 can be done in one, a few, or all of the following 6 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
 </p><ol>
 	<li id="emu-{{.Date}}"><p>
 		<i>Generic PC-98 netcode for one or more emulators</i>
@@ -63,25 +63,22 @@
 	<li id="compipes-{{.Date}}"><p>
 		<i><strong>Edit (2024-04-30):</strong> Emulated serial port communicating over named pipes with a standalone netplay tool</i>
 	</p><p>
-		This approach would take the netcode developed in 2) out of the emulator and into a separate application running on the (modern) host OS, just like Ju.N.Owen or Adonis. Netplay data would then move through these stages:
+		This approach would take the netcode developed in 2) out of the emulator and into a separate application running on the (modern) host OS, just like Ju.N.Owen or Adonis. The previous interrupt API would then be turned into binary protocol communicated over the PC-98's serial port, while the rollback snapshots would be stored inside the emulated PC-98 in <a href="https://en.wikipedia.org/wiki/Expanded_memory">EMS</a> or <a
+		href="https://en.wikipedia.org/wiki/Extended_memory">XMS/Protected Mode</a> memory. Netplay data would then move through these stages:
 	</p><figure><div>
 		🖥️ PC-98 game logic ⇄ Serial port ⇄ <span style="color: green">Emulator ⇄ Named pipe ⇄ Netcode logic ⇄ WebRTC Data Channel ⇄</span> Internet 🛜
 	</div><figcaption>
 		All <span style="color: green">green steps</span> run natively on the host OS.
 	</figcaption></figure><p>
 		Sending serial port data over named pipes is only a semi-common feature in PC-98 emulators, and would currently restrict netplay to Neko Project 21/W and <a href="https://github.com/AZO234/NP2kai/blob/c2ca4046860264cb307e768f529f180caee5e224/windows/resources/932/np2.rc#L1595">NP2kai on Windows</a>. This is a pretty clean and generally useful feature to have in an emulator though, and emulator maintainers will be much more likely to include this than the custom netplay code I proposed in 1) and 2). <a href="https://github.com/joncampbell123/dosbox-x/issues/4601">DOSBox-X has an open issue that we could help implement</a>, and the NP2kai Linux port would probably also appreciate a <code>mkfifo(3)</code> implementation.<br>
-		This could even work with emulators that only implement PC-98 serial ports in terms of, well, native Windows serial ports. This group currently includes Neko Project II fmgen, SL9821, and T98-Next. These would require separately installed and configured virtual serial port software in place of the named pipe connection, as well as support for actual serial ports in the netplay tool itself.<br>
+		This could even work with emulators that only implement PC-98 serial ports in terms of, well, native Windows serial ports. This group currently includes Neko Project II fmgen, SL9821, T98-Next, and <a href="https://lainnet.arcesia.net/repo/anex86ex_com.7z">rare bundles of Anex86 that replace MIDI support with COM port emulation</a>. These would require separately installed and configured virtual serial port software in place of the named pipe connection, as well as support for actual serial ports in the netplay tool itself. In fact, this is the only way that die-hard Anex86 and T98-Next fans could enjoy <i>any</i> kind of netplay on these two ancient emulators.
 	</p><p>
-		<i>If</i> it works though, it's the optimal solution for the emulated use case if we don't want to fork the emulator. From the point of view of the PC-98, the serial port is the cheapest way to send a couple of bytes to some external <i>thing</i>, and named pipes are one of many native ways for two Windows/Linux applications to efficiently communicate with each other. All you'd need to do is run the separate netplay tool, pick the same pipe name in both the tool and the emulator, and you're good to go.
-	</p><figure class="pixelated">
+		<i>If</i> it works though, it's the optimal solution for the emulated use case if we don't want to fork the emulator. From the point of view of the PC-98, the serial port is the cheapest way to send a couple of bytes to some external <i>thing</i>, and named pipes are one of many native ways for two Windows/Linux applications to efficiently communicate.<br>
+		The only slight drawback of this approach is the expected high DOS memory requirement for rollback. Unless we find a way to <i>really</i> compress game state snapshots to just a few KB, this approach will require a more modern DOS setup with EMS/XMS support instead of the pre-installed MS-DOS 3.30C on a certain widely circulated .HDI copy. But apart from that, all you'd need to do is run the separate netplay tool, pick the same pipe name in both the tool and the emulator, and you're good to go.
+	</p><figure class="large">
 		<img src="{{$np21w_compipes}}" alt="Screenshot of Neko Project 21/W's Serial option menu, with COM1 being configured to send over a named pipe">
 	</figure>
 		It could even work for real hardware, but would require the PC-98 to be linked to the separately running modern system via a null modem cable.
-	</p></li>
-	<li id="anex86-{{.Date}}"><p>
-		<i>Hacking serial port emulation and named pipe communication into Anex86 via code injection</i> {{HTML_Emoji "onricdennat"}}
-	</p><p>
-		Just in case you're a die-hard fan of this particular ancient emulator and missed it in the list above, here's the galaxy-brained meme option for you! This would be the only way this emulator could ever have TH03 netplay as it does not emulate serial ports at all. Not really meant seriously, but it would be <i>possible</i> 😆 Moving right along…
 	</p></li>
 	<li id="win9x-{{.Date}}"><p>
 		<i>Native PC-98 Windows 9x netcode <strong>(only for real PC-98 hardware equipped with an Ethernet card)</strong></i>
@@ -113,7 +110,6 @@
 	</p><ul>
 		<li>Porting libdatachannel and the required transport encryption to the TEEN stack seems even more time-consuming than a Windows 95 port.</li>
 		<li>The TEEN stack has no UI for specifying the system's or gateway's IP addresses outside of its plaintext configuration file. This provides a nice opportunity for adding a new <i>Internet settings</i> menu with great error feedback to the game itself. Great for UX, but it's another thing I'd have to write.</li>
-		<li>Due to the memory requirements of rollback, the netcode should better run as a TSR in Protected Mode, adding yet another technology I'd have to learn about.</li>
 		<li>The LGY-98 is not the only network card for the PC-98. Others might have more complicated DOS drivers that might not work as seamlessly with the TEEN stack, or have no preserved DOS drivers at all. Heck, the most time-consuming part of the DOS setup was <a href="https://www.buffalo.jp/support/download/detail/?dl_contents_id=60432">finding the correct download link for the LGY-98 packet driver</a>, as <a href="http://product.buffalo.jp/download/driver/lan/lgy-98.html">the one link that appears in a lot of places</a> only throws an <i>access denied</i> error these days. <strong>Edit (2024-04-30):</strong> <a href="https://lainnet.arcesia.net/repo/LGYTEEN.ZIP">spaztron64 is now hosting both the LGY-98 packet driver and the entire TEEN bundle on his homepage.</a><br>
 		If you're interested in funding this variant and <i>are</i> using a non-LGY-98 card on real hardware, make sure you get general Internet working on DOS first.</li>
 	</ul></li>
@@ -126,9 +122,9 @@
 	That leaves us with these prerequisites:
 </p><ul>
 	<li>1), by definition, needs nothing from ReC98, and I could theoretically start implementing it right now. If you're interested in funding it, just tell me via the usual Twitter or Discord channels.</li>
-	<li>2) through 6) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
+	<li>2) through 5) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
 	100% PI won't be a requirement either, as I expect the <code>MAIN.EXE</code> part of the interfacing netcode layer to be thin enough that it can easily fit within the original game's code layout.</li>
-	<li>7), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
+	<li>6), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
 		<li>Although TH03 already has more needlessly micro-optimized ASM code than TH02 and there's even more to come, it still appears to have way less than TH04 or TH05.</li>
 		<li>Its game logic and rendering code seem to be somewhat neatly separated from each other, unlike TH01 which deeply intertwines them.</li>
 		<li>Its graphics seem free of obvious bugs, unlike – again — the flicker-fest that is TH01.</li>

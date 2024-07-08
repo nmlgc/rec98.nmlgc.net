@@ -22,7 +22,7 @@ debloating	Cleaning up ZUN's original code into something you can actually read 
 debug	Debug features that ZUN left in the shipped game.
 dialog	The in-game dialog system.
 dosbox-x	A DOSBox fork with support for PC-98 emulation.
-emulation	Features and bugs in various PC-98 enmulators.
+emulation	Features and bugs in various PC-98 and DOS emulators.
 enemy	Common stage enemies with simple scripts, in contrast to midbosses or bosses.
 file-format	Structure of an on-disk file format.
 gaiji	Custom 16×16 glyphs that can be used on the PC-98's 8-color text layer.

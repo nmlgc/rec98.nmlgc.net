@@ -1,0 +1,420 @@
+{{$vid_omftup_2019 := (call .Video "omftup-2019" "Screencast of my internal 16-bit build system compiling a 2019 checkout of the ReC98 repo, demonstrating how the dependency checks performed back then") -}}
+{{$vid_omftup_2024 := (call .Video "omftup-2024" "Screencast of my internal 16-bit build system compiling a 2024 checkout of the ReC98 repo at P0280, demonstrating the additional support for batched compilation, but also significantly decreased dependency check times") -}}
+{{$vid_dumb_98 := (call .Video "dumb-98" "Screencast of ReC98's new dumb 32-bit build batch script running natively under Windows 98 SE, finishing in 11.15 seconds") -}}
+{{$vid_dumb_XP := (call .Video "dumb-XP" "Screencast of ReC98's new dumb 32-bit build batch script running natively under 32-bit Windows XP, finishing in 13.4 seconds") -}}
+{{$vid_dumb_10 := (call .Video "dumb-10" "Screencast of ReC98's new dumb 32-bit build batch script running natively under 32-bit Windows 10, finishing in 29.5 seconds") -}}
+{{$omftup_halfbaked := (call .PostFileURL "omftup-halfbaked-serialization.png") -}}
+{{$dl := printf "%v%v" .DatePrefix "Win9x-batch-tokenizer-tests.bat" -}}
+
+{{$score_main  := (call .PostFileURL "TH02-High-Score-MAIN.png") -}}
+{{$score_maine := (call .PostFileURL "TH02-High-Score-MAINE.png") -}}
+
+{{$vid_omftup_2019.SetTitle "2019" -}}
+{{$vid_omftup_2024.SetTitle "2024" -}}
+{{$vid_dumb_98.SetTitle "Windows 98 SE" -}}
+{{$vid_dumb_XP.SetTitle "Windows XP" -}}
+{{$vid_dumb_10.SetTitle "Windows 10" -}}
+
+{{$vid_dumb_98.AddMarker 35 "Tool check done" "left" -}}
+{{$vid_dumb_XP.AddMarker  7 "Tool check done" "left" -}}
+{{$vid_dumb_10.AddMarker 15 "Tool check done" "left" -}}
+
+{{$vid_dumb_98.AddMarker 258 "Build done" "left" -}}
+{{$vid_dumb_XP.AddMarker 275 "Build done" "left" -}}
+{{$vid_dumb_10.AddMarker 605 "Build done" "left" -}}
+
+<style>
+	#trials-{{.Date}} thead {
+		vertical-align: bottom;
+		border-bottom: 2px solid black;
+	}
+	#trials-{{.Date}} .packaged {
+		font-weight: bold;
+	}
+	#trials-{{.Date}} thead th:not(:first-child),
+	#trials-{{.Date}} thead td {
+		text-align: center;
+	}
+	#trials-{{.Date}} th:not(:last-child),
+	#trials-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+	#trials-{{.Date}} tr:not(:last-child) {
+		border-bottom: var(--table-border);
+	}
+	#trials-{{.Date}} tbody td:not(:first-child) {
+		font-family: monospace;
+	}
+	#trials-{{.Date}} thead td:nth-child(2n + 1),
+	#trials-{{.Date}} tbody td:nth-child(2n + 2) {
+		background-color: rgb(256, 220, 220);
+	}
+	#trials-{{.Date}} thead td:nth-child(2n + 2),
+	#trials-{{.Date}} tbody td:nth-child(2n + 3) {
+		background-color: rgb(220, 256, 220);
+	}
+
+	#argv-{{.Date}} td {
+		font-family: monospace;
+	}
+	#argv-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+</style>
+
+<p>
+	I'm 13 days late, but 🎉 ReC98 is now 10 years old! 🎉 <a href="https://github.com/nmlgc/ReC98/commit/9e07c54aeeb4fcfa6381505990602c333c83ca6e">On June 26, 2014</a>, I first tried exporting IDA's disassembly of TH05's <code>OP.EXE</code> and reassembling and linking the resulting file back into a binary, and was amazed that it actually yielded an identical binary. Now, this doesn't <i>actually</i> mean that I've spent 10 years working on this project; priorities have been shifting and continue to shift, and time-consuming mistakes were certainly made. Still, it's a good occasion to finally fully realize the good future for ReC98 that {{DB_CustomerByID 1}} invested in with the very first financial contribution back in 2018, deliver the last three of the first four reserved pushes, cross another piece of time-consuming maintenance off the list, and prepare the build process for hopefully the next 10 years.<br>
+	But why did it take 8 pushes and over two months to restore feature parity with the old system? 🥲
+</p><ol>
+	<li><a href="#prev-{{.Date}}">The previous build system(s)</a></li>
+	<li><a href="#tupfile-{{.Date}}">Migrating the 16-bit build part to Tup</a></li>
+	<li><a href="#msdos-{{.Date}}">Optimizing MS-DOS Player</a></li>
+	<li><a href="#win32-{{.Date}}">Continued support for building on 32-bit Windows</a></li>
+	<li><a href="#tiers-{{.Date}}">The new tier list of supported build platforms</a></li>
+	<li><a href="#includes-{{.Date}}">Cleaning up <code>#include</code> lists</a></li>
+	<li><a href="#th02_regist-{{.Date}}">TH02's High Score menu</a></li>
+</ol><hr id="prev-{{.Date}}"><p>
+	The original plan for ReC98's good future was quite different from what I ended up shipping here. Before I started writing the code for this website in August 2019, I focused on feature-completing the <a href="https://twitter.com/ReC98Project/status/1162488931365113859">experimental 16-bit DOS build system for Borland compilers</a> that I'd been developing since 2018, and which would form the foundation of my internal development work in the following years. Eventually, I wanted to polish and publicly release this system as soon as people stopped throwing money at me. But as of November 2019, just one month after launch, the store kept selling out with everyone investing into all the flashier goals, so that release never happened.
+</p><figure {{$vid_omftup_2019.FigureAttrs}}>
+	{{call .VideoPlayer $vid_omftup_2019.SetActive $vid_omftup_2024}}
+	<figcaption>In theory, this build system remains the optimal way of developing with old Borland compilers on a real PC-98 (or any other 32-bit single-core system) and outside of Borland's IDE, even after the changes introduced by this delivery. In practice though, you're soon going to realize that there are <i>lots</i> of issues I'd have to revisit in case any PC-98 homebrew developers are interested in funding me to finish and release this tool…</figcaption>
+</figure><p>
+	The main idea behind the system still has its charm: Your build script is a regular C++ program that <code>#include</code>s the build system as a static library and passes fixed structures with names of source files and build flags. By employing static constructors, even a 1994 Turbo C++ would let you define the whole build at compile time, although this certainly requires some dank preprocessor magic to remain anywhere near readable at ReC98 scale. 🪄 While this system does require a bootstrapping process, the resulting binary can then use the same dependency-checking mechanisms to recompile and overwrite <i>itself</i> if you change the C++ build code later. Since DOS just simply loads an entire binary into RAM before executing it, there is no lock to worry about, and overwriting the originating binary is something you can just <i>do</i>.<br>
+	Later on, the system also made use of <i>batched compilation</i>: By passing more than one source file to <code>TCC.EXE</code>, you get to avoid TCC's quite noticeable startup times, thus speeding up the build proportional to the number of translation units in each batch. Of course, this requires that every passed source file is supposed to be compiled with the same set of command-line flags, but that's a generally good complexity-reducing guideline to follow in a build script. I went even further and <i>enforced</i> this guideline in the system itself, thus truly making per-file compiler command line switches considered harmful. Thanks to Turbo C++'s <code>#pragma option</code>, changing the command line isn't even necessary for the few unfortunate cases where parts of ZUN's code <i>were</i> compiled with inconsistent flags.<br>
+	I combined all these ideas with a general approach of "targeting DOSBox": By maximizing DOS syscalls and minimizing algorithms and data structures, we spend as much time as possible in DOSBox's native-code DOS implementation, which <i>should</i> give us a performance advantage over DOS-native implementations of MAKE that typically follow the opposite approach.
+</p><p>
+	Of course, all this only matters if the system is correct and reliable at its core. Tup teaches us that it's fundamentally impossible to have a reliable generic build system without
+</p><ol>
+	<li>augmenting the build graph with all actual files read and written by each invoked build tool, which involves tracing all file-related syscalls, and</li>
+	<li>persistently serializing the full build graph every time the system runs, allowing later runs to detect <i>every possible</i> kind of change in the build script and rebuild or clean up accordingly.</li>
+</ol><p>
+	Unfortunately, the design limitations of my system only allowed half-baked attempts at solving both of these prerequisites:
+</p><ol>
+	<li>If your build system is not supposed to be generic and only intended to work with specific tools that emit reliable dependency information, you can replace syscall tracing with a parser for those specific formats. This is what my build system was doing, reading dependency information out of each .OBJ file's <a href="https://en.wikipedia.org/wiki/Object_Module_Format_(Intel)">OMF COMENT record</a>.</li>
+	<li>Since DOS command lines are limited to 127 bytes, DOS compilers support reading additional arguments from <i>response files</i>, typically indicated with an <code>@</code> next to their path on the command line. If we now put <i>every</i> parameter passed to TCC or TLINK into a response file <i>and</i> leave these files on disk afterward, we've effectively serialized all command-line arguments of the entire build into a makeshift database. In later builds, the system can then detect changed command-line arguments by comparing the existing response files from the previous run with the new contents it would write based on the current build structures. This way, we still only recompile the parts of the codebase that are affected by the changed arguments, which is <span class="hovertext" title="Adding the Makefile itself onto every single rule line always rebuilds everything, and is quite honestly a silly thing to do.">fundamentally impossible with Makefiles</span>.</li>
+</ol><p>
+	But this strategy only covers changes within each binary's compile or link arguments, and ignores the required deletions in "the database" when removing binaries between build runs. This is a non-issue as long as we keep decompiling on <code>master</code>, but as soon as we switch between <code>master</code> and similarly old commits on the <code>debloated</code>/<code>anniversary</code> branches, we can get very confusing errors:
+</p><figure style="width: 960px;">
+	<img src="{{$omftup_halfbaked}}" alt="Screenshot of a seemingly weird error in my 16-bit build system that complains about TH01's vector functions being undefined when linking REIIDEN.EXE, shown when switching between the `anniversary` and `master` branches." style="max-height: unset;">
+	<figcaption>The symptom is a calling convention mismatch: The two vector functions use <code>__cdecl</code> on <code>master</code> and <code>pascal</code> on <code>debloated</code>/<code>anniversary</code>. We've switched from <code>anniversary</code> (which compiles to <code>ANNIV.EXE</code>) back to <code>master</code> (which compiles to <code>REIIDEN.EXE</code>) here, so the .obj file on disk still uses the <code>pascal</code> calling convention. The build system, however, only checks the response files associated with the current target binary (<code>REIIDEN.EXE</code>) and therefore assumes that the .obj files still reflect the (unchanged) command-line flags in the TCC response file associated with this binary. And if none of the inputs of these .obj files changed between the two branches, they aren't rebuilt after switching, even though they would need to be.</figcaption>
+</figure><p>
+	Apparently, there's also such a thing as "too much batching", because TCC would suddenly stop applying certain compiler optimizations at very specific places if too many files were compiled within a single process? At least you quickly remember which source files you then need to manually touch and recompile to make the binaries match ZUN's original ones again…
+</p><p>
+	But the final nail in the coffin was something I'd notice on every single build: 5 years down the line, even the performance argument wasn't convincing anymore. The strategy of minimizing emulated code still left me with an 𝑂(𝑛) algorithm, and with <i>this entire thing still being single-threaded</i>, there was no force to counteract the dependency check times as they grew linearly with the number of source files.<br>
+	At P0280, each build run would perform a total of 28,130 file-related DOS syscalls to figure out which source files have changed and need to be rebuilt. At some point, this was bound to become noticeable even despite these syscalls being native, not to mention that they're still surrounded by emulator code that must convert their parameters and results to and from the DOS ABI. And with the increasing delays before TCC would do its actual work, the entire thing started feeling increasingly jankier.
+</p><p>
+	While this system was waiting to be eventually finished, the public <code>master</code> branch kept using the Makefile that dates back to early 2015. Back then, it didn't <a href="https://github.com/nmlgc/ReC98/commit/ff94dce594cdd66931fde2221a367785ac4a5e22">take</a> <a href="https://github.com/nmlgc/ReC98/commit/7836363019bc0f17253be0f794c40ec21965ad68">long</a> for me to abandon raw dumb batch files because Make was simply the most straightforward way of ensuring that the build process would abort on the first compile error.<br>
+	The following years also proved that Makefile syntax is quite well-suited for expressing the build rules of a codebase at this scale. The built-in support for automatically turning long commands into response files was especially helpful because of how naturally it works together with batched compilation. Both of these advantages culminate in this wonderfully arcane incantation of ASCII special characters and syntactically significant linebreaks:
+	<figure><pre>tcc … @&&|
+$**
+|</pre></figure>
+	Which translates to "take the filenames of all dependents of this explicit rule, write them into a temporary file with an autogenerated name, insert this filename into the <code>tcc&nbsp;…&nbsp;@</code> command line, and delete the file after the command finished executing". The <code>@</code> is part of TCC's command-line interface, the rest is all MAKE syntax.
+</p><p>
+	But {{Blog_PostLink "2020-09-03" "as we all know by now"}}, these surface-level niceties change nothing about Makefiles inherently being unreliable trash due to implementing none of the aforementioned two essential properties of a generic build system. Borland got <a href="https://github.com/nmlgc/ReCBMake"><i>so</i> close to a correct and reliable implementation of autodependencies</a>, but that would have just covered one of the two properties. Due to this unreliability, the old <code>build16b.bat</code> called Borland's <code>MAKER.EXE</code> with the <code>-B</code> flag, recompiling everything all the time. Not only did this leave modders with a much worse build process than I was using internally, but it also eventually got old for me to merge my internal branch onto <code>master</code> before every delivery. Let's finally rectify that and work towards a single good build process for everyone.
+</p><hr><p id="tupfile-{{.Date}}">
+	As you would expect by now, I've once again migrated to Tup's Lua syntax. Rewriting it all makes you realize once again how complex the PC-98 Touhou build process is: It has to cover 2 programming languages, 2 pipeline steps, and 3 third-party libraries, and currently generates a total of 39 executables, including the small programs I wrote for research. The final Lua code comprises over 1,300 lines – but then again, if I had written it in {{Blog_PostLink "2023-09-30#zig" "Zig"}}, it would certainly be as long or even longer due to manual memory management. The <a href="https://github.com/nmlgc/tupblocks">Tup building blocks I constructed for Shuusou Gyoku</a> quickly turned out to be the wrong abstraction for a project that has no debug builds, but their {{Blog_PostLink "2023-09-30#tup" "basic idea of a branching tree of command-line options"}} remained at the foundation of this script as well.<br>
+	This rewrite also provided an excellent opportunity for finally dumping all the intermediate compilation outputs into a separate dedicated <code>obj/</code> subdirectory, finally leaving <code>bin/</code> nice and clean with only the final executables. I've also merged this new system into most of the public branches of the GitHub repo.
+</p><p>
+	As soon as I first tried to build it all though, I was greeted with <a href="https://github.com/gittup/tup/pull/500">a particularly nasty Tup bug</a>. Due to how DOS specified file metadata mutation, MS-DOS Player has to open every file in a way that current Tup treats as a write access… but since unannotated file writes introduce the risk of a malformed build graph if these files are read by another build command later on, Tup providently deletes these files after the command finished executing. And by <i>these files</i>, I mean <code>TCC.EXE</code> as well as every one of its C library header files opened during compilation. {{HTML_Emoji "tannedcirno"}}<br>
+	Due to a minor unsolved question about a failing test case, my fix has not been merged yet. But even if it was, we're now faced with a problem: If you previously chose to set up Tup for ReC98 or {{Blog_PostLink "2022-09-04" "Shuusou Gyoku"}} and are maybe still running {{Blog_PostLink "2020-09-03" "my 32-bit build from September 2020"}}, running the new <code>build.bat</code> would in fact delete the most important files of your Turbo C++ 4.0J installation, forcing you to reinstall it or restore it from a backup. So what do we do?
+</p><ul>
+	<li>Should my custom build get a special version number so that the surrounding batch file can fail if the version number of your installed Tup is lower?</li>
+	<li>Or do I just put a message somewhere, which some people invariably won't read?</li>
+</ul><p>
+	The easiest solution, however, is to just put a fixed Tup binary directly into the ReC98 repo. This not only allows me to make Tup mandatory for 64-bit builds, but also cuts out one step in the build environment setup that at least one person previously complained about. {{HTML_Emoji "onricdennat"}} *nix users might not like this idea all too much (<a href="https://blog.hiler.eu/win32-the-only-stable-abi/">or do they?</a>), but then again, TASM32 and the Windows-exclusive MS-DOS Player require Wine anyway. Running Tup through Wine as well means that there's only one <code>PATH</code> to worry about, and you get to take advantage of the tool checks in the surrounding batch file.<br>
+	If you're one of those people who doesn't trust binaries in Git repos, the repo also links to <a href="https://github.com/nmlgc/tup/releases/tag/P0003">instructions for building this binary yourself</a>. Replicating this specific optimized binary is slightly more involved than the classic <kbd>./configure && make && make install</kbd> trinity, so having these instructions is a good idea regardless of the fact that Tup's GPL license requires it.
+</p><p>
+	One particularly interesting aspect of the Lua code is the way it handles sprite dependencies:
+</p><figure><pre>th04:branch(MODEL_LARGE):link("main", {
+	{ "th04_main.asm", extra_inputs = {
+		th02_sprites["pellet"],
+		th02_sprites["sparks"],
+		th04_sprites["pelletbt"],
+		th04_sprites["pointnum"],
+	} },
+	-- …
+}</pre></figure><p>
+	If build commands read from files that were created by other build commands, Tup requires these input dependencies to be spelled out so that it can arrange the build graph and <span class="hovertext" title="Otherwise, running the build for the first time would require Tup to predict the future in order to determine the files each build command will be accessing – which gets even harder if the set of accessed files is determined by the contents of files written by other build commands. 😵">parallelize the build correctly</span>. We could simply put <i>every</i> sprite into a single array and automatically pass that as an extra input to every source file, but that would effectively split the build into a "sprite convert" and "code compile" phase. Spelling out every individual dependency allows such source files to be compiled as soon as possible, before (and in parallel to) the rest of the sprites they don't depend on. Similarly, code files without sprite dependencies can compile before the first sprite got  converted, or even before the sprite converter itself got compiled and linked, maximizing the throughput of the overall build process.
+</p><p>
+	Running a 30-year-old DOS toolchain in a parallel build system also introduces new issues, though. The easiest and recommended way of compiling and linking a program in Turbo C++ is a single <code>tcc</code> invocation:
+</p><figure><pre>tcc … main.cpp utils.cpp master.lib</figure><p>
+	This performs a batched compilation of <code>main.cpp</code> and <code>utils.cpp</code> within a single TCC process, and then launches TLINK to link the resulting <code>.obj</code> files into <code>main.exe</code>, together with the C++ runtime library and any needed objects from <code>master.lib</code>. The linking step works by TCC generating a TLINK command line and writing it into a response file with the fixed name <code>turboc.$ln</code>… which obviously can't work in a parallel build where multiple TCC processes will want to link different executables via the same response file.<br>
+	Therefore, we have to launch TLINK with a custom response file ourselves. This file is <code>echo</code>'d as a separate parallel build rule, and the Lua code that constructs its contents has to replicate TCC's logic for picking the correct C++ runtime <code>.lib</code> file for the selected memory model.
+</p><figure><pre style="white-space: unset;">
+	-c -s -t c0t.obj obj\th02\zun_res1.obj obj\th02\zun_res2.obj, bin\th02\zun_res.com, obj\th02\zun_res.map, bin\masters.lib emu.lib maths.lib ct.lib
+</pre><figcaption>The response file for TH02's <code>ZUN_RES.COM</code>, consisting of the C++ standard library, two files of ZUN code, and master.lib.</figcaption>
+</figure><p>
+	While this does add more string formatting logic, not relying on TCC to launch TLINK actually removes the one possible <code>PATH</code>-related error case I previously documented in the README. Back in 2021 when I first stumbled over the issue, it took a few hours of RE to figure this out. I don't like these hours to go to waste, so <a href="https://gist.github.com/nmlgc/6229345c74d1a7d3c6c1b3e988beb0e9">here's a Gist</a>, and here's the text replicated for SEO reasons:
+</p><blockquote style="white-space: unset;">
+	<p><strong>Issue:</strong> TCC compiles, but fails to link, with <samp>Unable to execute command 'tlink.exe'</samp></p>
+
+	<p><strong>Cause:</strong> This happens when invoking TCC as a compiler+linker, without the <code>-c</code> flag. To locate TLINK, TCC needlessly copies the <code>PATH</code> environment variable into a statically allocated 128-byte buffer. It then constructs absolute <code>tlink.exe</code> filenames for each of the semicolon- or <code>\0</code>-terminated paths, writing these into a buffer that immediately follows the 128-byte <code>PATH</code> buffer in memory. The search is finished as soon as TCC finds an existing file, which gives precedence to earlier paths in the <code>PATH</code>. If the search didn't complete until a potential "final" path that runs past the 128 bytes, the final attempted filename will consist of the part that still managed to fit into the buffer, followed by the previously attempted path.</p>
+
+	<p><strong>Workaround:</strong> Make sure that the <code>BIN\</code> path to Turbo C++ is fully contained within the first 127 bytes of the <code>PATH</code> inside your DOS system. (The 128<sup>th</sup> byte must either be a separating <code>;</code> or the terminating <code>\0</code> of the <code>PATH</code> string.)</p>
+</blockquote><p>
+	Now that DOS emulation is an integral component of the single-part build process, it even makes sense to <i>compile our pipeline tools as 16-bit DOS executables and then emulate them as part of the build</i>. Sure, it's technically slower, but realistically it doesn't matter: Our only current pipeline tools are {{Blog_PostLink "2020-07-09" "the converter for hardcoded sprites"}} and the {{Blog_PostLink "2020-09-16" "<code>ZUN.COM</code> generators"}}, both of which involve very little code and are rarely run during regular development after the initial full build. In return, we get to drop that awkward dependency on the separate Borland C++ 5.5 compiler for Windows and <a href="https://github.com/nmlgc/ReC98/blob/87eed57ade4e2abd0f12272e568fe65a3643aeb3/README.md#how-to-build">yet another additional manual setup step</a>. 🗑️ Once PC-98 Touhou becomes portable, we're probably going to require a modern compiler anyway, so you can now delete that one as well.
+</p><p>
+	That gives us perfect dependency tracking and minimal parallel rebuilds across the whole codebase! While MS-DOS Player is noticeably slower than DOSBox-X, it's not going to matter all too much; unless you change one of the more central header files, you're rarely if ever going to cause a full rebuild. Then again, given that I'm going to use this setup for at least a couple of years, it's worth taking a closer look at why exactly the compilation performance is so underwhelming …
+</p><hr id="msdos-{{.Date}}"><p>
+	On the surface, MS-DOS Player seems like the right tool for our job, with a lot of advantages over DOSBox:
+</p><ul>
+	<li>It doesn't spawn a window that boots an entire emulated PC, but is instead</li>
+	<li>perfectly integrated into the Windows console. Using it in a modern developer console would allow you to click on a compile error and have your editor immediately open the relevant file and jump to that specific line! With DOSBox, this basic comfort feature was previously unthinkable.</li>
+	<li>Heck, Takeda Toshiya originally developed it to run the equally vintage LSI C-86 compiler on 64-bit Windows. Fixing any potential issues we'd run into would be well within the scope of the project.</li>
+	<li>It consists of just a single comparatively small binary that we could just drop into the ReC98 repo. No manual setup steps required.</li>
+</ul><p>
+	But once I began integrating it, I quickly noticed two glaring flaws:
+</p><ul>
+	<li><p>Back in 2009, Takeda Toshiya chose to start the project by writing a custom DOS implementation from scratch. He was aware of DOSBox, but only adapted small tricky parts of its source code rather than <i>starting</i> with the DOSBox codebase and ripping out everything he didn't need. This matches the more research-oriented nature that <a href="http://takeda-toshiya.my.coocan.jp/">all of his projects appear to follow</a>, where the primary goal of writing the code is a personal understanding of the problem domain rather than a widely usable piece of software. MS-DOS Player is even the outlier in this regard, with Takeda Toshiya describing it as <span class="hovertext" lang="ja" title='"might be unusually practical"'><q>珍しく実用的かもしれません</q></span>. I am definitely sympathetic to this mindset; heck, my old internal build system falls under this category too, being <i>so</i> specialized and narrow that it made little sense to use it outside of ReC98. But when you apply it to emulators for niche systems, you end up with exactly the current PC-98 emulation scene, where there's no single universally good emulator because all of them have <i>some</i> inaccuracy <i>somewhere</i>. This scene is too small for you not to eventually become part of someone else's supply chain… 🥲<br>
+	Emulating DOS is a particularly poor fit for a research/<a href="https://en.wikipedia.org/wiki/Not_invented_here">NIH</a> project because it's <a href="https://www.hyrumslaw.com/">Hyrum's Law</a> incarnate. With the lack of memory protection in Real Mode, programs could freely access internal DOS (and even BIOS) data structures if they only knew where to look, and <a href="https://github.com/joncampbell123/dosbox-x/issues/769">frequently did</a>. It might <i>look</i> as if "DOS command-line tools" just equals x86 plus <a href="https://www.stanislavs.org/helppc/int_21.html"><code>INT 21h</code></a>, but soon you'll also be emulating the BIOS, PIC, PIT, EMS, XMS, and probably a few more things, all with their individual quirks that <i>some</i> application out there relies on. DOSBox simply had much more time to grow and mature and figure out all of these details by trial and error. If you start a DOS emulator from scratch, you're bound to duplicate all this research as people want to use your emulator to run more and more programs, until you've ended up with what's effectively a clone of DOSBox's exact logic. Unless, of course, if you draw a line somewhere and limit the scope of the DOS and BIOS emulation. But given how many people have wanted to use MS-DOS Player for running DOS TUIs in arbitrarily sized terminal windows with arbitrary fonts, that's not what happened. I guess it made sense for this use case before <a href="https://github.com/joncampbell123/dosbox-x/releases/tag/dosbox-x-v0.83.8">DOSBox-X gained a TTF output mode in late 2020</a>? {{HTML_Emoji "thonk"}}<br>
+	As usual, I wouldn't mention this if I didn't run into <a href="https://github.com/nmlgc/msdos-player/commit/4b260a18774bce2131e7ff72316cecaf3b98079b">two</a> <a href="https://github.com/nmlgc/msdos-player/commit/9079b83a638c448d093da8f7a3b3d3788201b84e">bugs</a> when combining MS-DOS Player with Turbo C++ and Tup. Both of these originated from workarounds for inaccuracies in the DOS emulation that date back to MS-DOS Player's initial release and were thankfully no longer necessary with the accuracy improvements implemented in the years since.</p></li>
+	<li><p>For CPU emulation, MS-DOS Player can use either MAME's or Neko Project 21/W's x86 core, both of which are interpreters and won't win any performance contests. The NP21/W core is significantly better optimized and runs ≈41% faster, but still pales in comparison to DOSBox-X's dynamic recompiler. Running the same sequential commands that the P0280 Makefile would execute, the upstream 2024-03-02 NP21/W core build of MS-DOS Player would take <time>128.509s</time> to compile the entire ReC98 codebase on my system, whereas DOSBox-X's dynamic core manages the same in <time>66.202s</time>, or 94% faster.</p></li>
+</ul><p>
+	Granted, even the DOSBox-X performance is much slower than we would like it to be. Most of it can be blamed on the awkward time in the early-to-mid-90s when Turbo C++ 4.0J came out. This was the time when DOS applications had long grown past the limitations of the x86 Real Mode and required <a href="https://en.wikipedia.org/wiki/DOS_extender">DOS extenders</a> or <a href="https://www.os2museum.com/wp/a-brief-history-of-unreal-mode/">even sillier hacks</a> to actually use all the RAM in a typical system of that period, but Win32 didn't exist yet to put developers out of this misery. As such, this compiler not only requires at least a 386 CPU, but also brings its own DOS extender (<code>DPMI16BI.OVL</code>) plus a loader for said extender (<code>RTM.EXE</code>), both of which need to be emulated alongside the compiler, to the great annoyance of emulator maintainers 30 years later. Even <a href="https://github.com/nmlgc/msdos-player#readme">MS-DOS Player's README file</a> notes how Protected Mode adds a lot of complexity and slowdown:
+</p><blockquote>8086 binaries are much faster than 80286/80386/80486/Pentium4/IA32 binaries.
+If you don't need the protected mode or new mnemonics added after 80286,
+I recommend i86_x86 or i86_x64 binary.</blockquote><p>
+	The immediate reaction to these performance numbers is obvious: <q>Let's just put DOSBox-X's dynamic recompiler into MS-DOS Player, right?!</q> 🙌 Except that once you look at DOSBox-X, you immediately get why Takeda Toshiya might have preferred to start from scratch. Its codebase is a historically grown tangled mess, requiring intimate familiarity <i>and</i> a significant engineering effort to isolate the dynamic core in the first place. I did spend a few days trying to untangle and copy it all over into MS-DOS Player… only to be greeted with an infinite loop as soon as everything compiled for the first time. 😶 Yeah, no, that's bound to turn into a budget-exceeding maintenance nightmare.
+</p><p>
+	Instead, let's look at squeezing at least some additional performance out of what we already have. A generic emulator for the entire CISCy instruction set of the 80386, with complete support for Protected Mode, but it's only supposed to run the subset of instructions and features used by a specific compiler and linker as fast as possible… wait a moment, that sounds like a use case for <a href="https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations">profile-guided optimization</a>! This is the first time I've encountered a situation that would justify the required 2-phase build process and lengthy profile collection – after all, writing into some sort of database for every function call does slow down MS-DOS Player by roughly 15×. However, profiling just the compilation of our most complex translation unit ({{Blog_PostLink "2022-08-08" "TH01 YuugenMagan"}}) and the linking of our largest executable (TH01's <code>REIIDEN.EXE</code>) should be representative enough.<br>
+	I'll get to the performance numbers later, but even the build output is quite intriguing. Based on this profile, Visual Studio chooses to optimize only 104 out of MS-DOS Player's 1976 functions for speed and the rest for size, shaving off a nice 109&nbsp;KiB from the binary. Presumably, keeping rare code small is also considered kind of fast these days because it takes up less space in your CPU's instruction cache once it <i>does</i> get executed?
+</p><p>
+	With PGO as our foundation, let's run a performance profile and see if there are any further code-level optimizations worth trying out:
+</p><ul>
+	<li><i>Removing redundant <code>memset()</code> calls</i>: MS-DOS Player is written in a very C-like style of C++, and initializes a bunch of its statically allocated data by <code>memset()</code>ing it with <code>00</code> bytes at startup. This is strictly redundant even in C; Section 6.7.9/10 of the C standard mandates that all static data is zero-initialized by default. In turn, the program loaders of modern operating systems employ all sorts of paging tricks to reduce the CPU cost (and actual RAM usage!) of this initialization as much as possible. If you manually <code>memset()</code> afterward, you throw all these advantages out of the window.<br>
+	Of course, these calls would only ever show up among the top CPU consumers in a performance profile if a program uses a large amount of static data, but the hardcoded 32&nbsp;MiB of emulated RAM in ≥i386-supporting builds definitely qualifies. Zeroing 32.8&nbsp;MiB of memory makes up a significant chunk of the runtime of some of the shorter build steps and quickly adds up; a full rebuild of the ReC98 codebase currently spawns a total of 361 MS-DOS Player instances, totaling 11.5&nbsp;GiB of needless memory writes.</li>
+	<li><i>Limiting the emulated instruction set</i>: NP21/W's x86 core emulates everything up to the SSE3 extension from 2004, but Turbo C++ 4.0J's x86 instruction set usage doesn't stretch past the 386. It doesn't even need the x87 FPU for compiling code that involves floating-point constants. Disabling all these unneeded extensions speeds up x86's infamously annoying instruction decoding, and also reduces the size of the MS-DOS Player binary by another 149.5&nbsp;KiB. The source code already had macros for this purpose, and only needed <a href="https://github.com/nmlgc/msdos-player/commit/37031ebda2f90ea3ebe75e0c03b17f79e24ac0f4">a slight fix for the code to compile with these macros disabled</a>.</li>
+	<li><i>Removing x86 paging</i>: Borland's DOS extender uses segmented memory addressing even in Protected Mode. This allows us to remove the MMU emulation and the corresponding <i>"are we paging"</i> check for every memory access.</li>
+	<li><i>Removing cycle counting</i>: When emulating a whole system, counting the cycles of each instruction is important for accurately synchronizing the CPU with other pieces of hardware. As hinted above, MS-DOS Player does emulate and periodically update a few pieces of hardware outside the CPU, but we need none of them for a build tool.</li>
+	<li><i>Testing Takeda Toshiya's optimizations</i>: In a nice turn of events, Takeda Toshiya merged every single one of my bugfixes and optimization flags into his upstream codebase. He even agreed with my <code>memset()</code> and cycle counting removal optimizations, which are now part of all upstream builds as of 2024-06-24. For the 2024-06-27 build, he claims to have gone even further than my more minimal optimization, so let's see how these additional changes affect our build process.</li>
+	<li><i>Further risky optimizations</i>: A lot of the remaining slowness of x86 emulation comes from the segmentation and protection fault checks required for every memory access. If we assume that the emulator only ever executes correct code, we can remove these checks and implement further shortcuts based on their absence.<br>
+	The <a href="https://www.scs.stanford.edu/05au-cs240c/lab/i386/LGS.htm"><code>L[DEFGS]S</code> group of instructions that load a segment and offset register from a 32-bit <code>far</code> pointer</a>, for example, are both frequently used in Turbo C++ 4.0J code and particularly expensive to emulate. Intel specified their Real Mode operation as loading the segment and offset part in two separate 16-bit reads. But if we assume that neither of those reads can fault, we can compress them into a single 32-bit read and thus only perform the costly address translation once rather than twice. Emulator authors are probably rolling their eyes at this gross violation of Intel documentation now, but it's at least worth a try to see just how much performance we could get out of it.</li>
+</ul><p>
+	So, what do we get?
+</p><figure><table id="trials-{{.Date}}" class="numbers"><thead>
+	<tr>
+		<th rowspan="2">MS-DOS Player build</th>
+		<th colspan="2">Full build <small>(Pipeline + 5 games + research code)</small></th>
+		<th colspan="2">Median translation unit + median link</th>
+		<th colspan="2">{{Blog_PostLink "2022-08-08" "YuugenMagan"}} compile + link</th>
+	</tr><tr>
+		<td>Generic</td><td>PGO</td><td>Generic</td><td>PGO</td><td>Generic</td><td>PGO</td>
+	</tr>
+</thead><tbody>
+	<tr style="border-bottom: 2px solid black;">
+		<td>MAME x86 core</td>
+		<td>46.522s / 50.854s</td><td>32.162s / 34.885s</td><td>1.346s / 1.429s</td><td>0.966s / 0.963s</td><td>6.975s / 7.155s</td><td>4.024s / 3.981s</td>
+	</tr><tr>
+		<td>NP21/W core,<br>before optimizations</td>
+		<td>34.620s / 36.151s</td><td>30.218s / 31.318s</td><td>1.031s / 1.065s</td><td>0.885s / 0.916s</td><td>5.294s / 5.330s</td><td>4.260s / 4.299s</td>
+	</tr><tr>
+		<td>No initial <code>memset()</code></td>
+		<td>31.886s / 34.398s</td><td>27.151s / 29.184s</td><td>0.945s / 1.009s</td><td>0.802s / 0.852s</td><td>5.094s / 5.266s</td><td>4.104s / 4.190s</td>
+	</tr><tr>
+		<td>Limited instructions</td>
+		<td>32.404s / 34.276s</td><td>26.602s / 27.833s</td><td>0.963s / 1.001s</td><td>0.783s / 0.819s</td><td>5.086s / 5.182s</td><td>3.886s / 3.987s</td>
+	</tr><tr>
+		<td>No paging</td>
+		<td>29.836s / 31.646s</td><td>25.124s / 26.356s</td><td>0.865s / 0.918s</td><td>0.748s / 0.769s</td><td>4.611s / 4.717s</td><td>3.500s / 3.572s</td>
+	</tr><tr style="border-bottom: 2px solid black;">
+		<td>No cycle counting</td>
+		<td>25.407s / 26.691s</td><td>21.461s / <span class="packaged">22.599s</span></td><td>0.735s / 0.752s</td><td>0.617s / <span class="packaged">0.625s</span></td><td>3.747s / 3.868s</td><td>2.873s / <span class="packaged">2.979s</span></td>
+	</tr><tr style="border-bottom: 2px solid black;">
+		<td>2024-06-27 build</td>
+		<td>26.297s / 27.629s</td><td>21.014s / 22.143s</td><td>0.771s / 0.779s</td><td>0.612s / 0.632s</td><td>4.372s / 4.506s</td><td>3.253s / 3.272s</td>
+	</tr><tr>
+		<td>Risky optimizations</td>
+		<td>23.168s / 24.193s</td><td>20.711s / 21.782s</td><td>0.658s / 0.663s</td><td>0.582s / 0.603s</td><td>3.269s / 3.414s</td><td>2.823s / 2.805s</td>
+	</tr>
+</tbody></table><figcaption>
+	Measured on a 6-year-old 6-core Intel Core i5 8400T on Windows 11. The first number in each column represents the codebase before the <a href="#includes-{{.Date}}"><code>#include</code> cleanup explained below</a>, and the second one corresponds to <a href="https://github.com/nmlgc/ReC98/commit/1e41fa06177bc101a8631f1a47d5936ec87f8cd1">this commit</a>. All builds are 64-bit, 32-bit builds were ≈5% slower across the board. I kept the fastest run within three attempts; as Tup parallelizes the build process across all CPU cores, it's common for the long-running full build to take up to a few seconds longer depending on what else is running on your system. Tup's standard output is also redirected to a file here; its regular terminal output and nice progress bar will add more slowdown on top.
+</figcaption></figure><p>
+	The key takeaways:
+</p><ul>
+	<li>By merely disabling certain x86 features from MS-DOS Player and retaining the accuracy of the remaining emulation, we get speedups of ≈60% (full build), ≈70% (median TU), and ≈80% (largest TU).</li>
+	<li>≈25% (full build), ≈29% (median TU), and ≈41% (largest TU) of this speedup came from Visual Studio's profile-guided optimization, with no changes to the MS-DOS Player codebase.</li>
+	<li>The effects of removing cycle counting are the biggest surprise. Between ≈17% and ≈23%, just for removing one subtraction per emulated instruction? Turns out that in the absence of a "target cycle amount" setting, the x86 emulation loop previously ran for <a href="https://github.com/nmlgc/msdos-player/blob/34e9106d2f9b0462c9478b44a7e6a4d4a76728f9/np21_i386.cpp#L368">only a single cycle</a>. This caused <a href="https://github.com/nmlgc/msdos-player/blob/34e9106d2f9b0462c9478b44a7e6a4d4a76728f9/np21_i386.cpp#L374-L378">the PIC check to run after every instruction</a>, followed by <a href="https://github.com/nmlgc/msdos-player/blob/34e9106d2f9b0462c9478b44a7e6a4d4a76728f9/msdos.cpp#L19963-L19965">PIT, serial I/O, keyboard, mouse, and CRTC update code every millisecond</a>. Without cycle counting, the x86 loop actually keeps running until a CPU exception is raised or the emulated process terminates, skipping the hardware code during the vast majority of the program's execution time.</li>
+	<li>While Takeda Toshiya's changes in the 2024-06-27 build completely throw out the cycle counter and clean up process termination, they also reintroduce the hardware updates that made up the majority of the cycle removal speedup. This explains the results we're getting: The small speedup for full rebuilds is too insignificant to bother with and might even fall within a statistical margin of error, but the build slows down more and more the longer the emulated process runs. Compiling and linking YuugenMagan takes a whole 14% longer on generic builds, and ≈9-12% longer on PGO builds. I did another in-between test that just removed the x86 loop from the cycle removal version, and got exactly the same numbers. This just goes to show how much removing <span class="hovertext" title="One to subtract from the remaining cycles, one to set them back to 1 before the loop">two writes to a fixed memory address per emulated instruction</span> actually matters. Let's not merge back this one, and stay on top of 2024-06-24 for the time being.</li>
+	<li>The risky optimizations of ignoring segment limits and speeding up 32-bit segment+offset pointer load instructions <i>could</i> yield a further speedup. However, most of these changes boil down to removing branches that would never be taken when emulating correct x86 code. Consequently, these branches get recorded as unlikely during PGO training, which then causes <a href="https://devblogs.microsoft.com/cppblog/profile-guided-optimization-pgo-under-the-hood/">the profile-guided rebuild to rearrange the instructions on these branches in a way that favors the common case</a>, leaving the rest of their effective removal to your CPU's branch predictor. As such, the 10%-15% speedup we can observe in generic builds collapses down to 2%-6% in PGO builds. At this rate and with these absolute durations, it's not worth it to maintain what's strictly a more inaccurate fork of Neko Project 21/W's x86 core.</li>
+	<li>The redundant header inclusions afforded by <code>#include</code> guards do in fact have a measurable performance cost on Turbo C++ 4.0J, slowing down compile times by 5%.</li>
+</ul><p>
+	But how does this compare to DOSBox-X's dynamic core? Dynamic recompilers need some kind of cache to ensure that every block of original ASM gets recompiled only once, which gives them an advantage in long-running processes after the initial warmup. As a result, DOSBox-X compiles and links YuugenMagan in <time>1.548s</time>, ≈92% faster than even our optimized MS-DOS Player build. That percentage resembles the slowdown we were initially getting when comparing full rebuilds between DOSBox-X and MS-DOS Player, as if we hadn't optimized anything.<br>
+	On paper, this would mean that DOSBox-X barely lost any of its huge advantage when it comes to single-threaded compile+link performance. In practice, though, this metric is supposed to measure a typical decompilation or modding workflow that focuses on repeatedly editing a single file. Thus, a more appropriate comparison would also have to add the aforementioned constant 28,130 syscalls that my old build system required to detect that <i>this</i> is the one file/binary that needs to be recompiled/relinked. The video at the top of this blog post happens to capture the best time (<time>1.313s</time>) I got for the detection process on DOSBox-X. This is almost as slow as the compilation and linking itself, and would have only gotten slower as we continue decompiling the rest of the games. Tup, on the other hand, performs its filesystem scan in a near-constant <time>0.08s</time>, <a href="https://gittup.org/tup/build_system_rules_and_algorithms.pdf">matching the claim in Section 4.7 of its paper</a>, and thus shrinking the performance difference to ≈14% after all. Sure, merging the dynamic core would have been even better <span style="white-space: nowrap;">(</span>{{HTML_TagInline "contribution-ideas"}}, anyone?), but this is good enough for now.<br>
+	Just like with Tup, I've also placed this optimized binary directly into the ReC98 repo and added the specific build instructions to the <a href="https://github.com/nmlgc/msdos-player/releases/tag/P0281">GitHub release page</a>.
+</p><p>
+	I do have more far-reaching ideas for further optimizing Neko Project 21/W's x86 core for this specific case of repeated switches between Real Mode and Protected Mode while still retaining the interpreted nature of this core, but these already strained the budget enough.<br>
+	The perhaps more important remaining bottleneck, however, is hiding in the actual DOS emulation. Right now, a Tup-driven full rebuild spawns a total of 361 MS-DOS Player processes, which means that we're booting an emulated DOS 361 times. This isn't as bad as it sounds, as "booting DOS" basically just involves initializing a bunch of internal DOS structures in <a href="https://en.wikipedia.org/wiki/Conventional_memory">conventional memory</a> to meaningful values. However, these structures also include a few environment variables like <code>PATH</code>, <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/append"><code>APPEND</code></a>, or <code>TEMP</code>/<code>TMP</code>, which MS-DOS Player seamlessly integrates by translating them from their value on the Windows host system to the DOS 8.3 format. This could be one of the main reasons why MS-DOS Player is a native Windows program rather than being cross-platform:
+</p><ul>
+	<li>On Windows, this path translation is as simple as calling <a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getshortpathnamea"><code>GetShortPathNameA()</code></a>, which returns a unique 8.3 name for every component along the path.<br></li>
+	<li>Also, drive letters are an <a href="https://www.ctyme.com/intr/rb-2570.htm">integral</a> <a href="https://www.ctyme.com/intr/rb-2588.htm">part</a> of the DOS <code>INT 21h</code> API, and Windows still uses them as well.</li>
+</ul><p>
+	However, the NT kernel doesn't actually <i>use</i> drive letters either, and views them as just a legacy abstraction over its reality of volume GUIDs. Converting paths back and forth between these two views therefore requires it to communicate with a
+	<a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/supporting-mount-manager-requests-in-a-storage-class-driver">mount point manager service</a>, which can coincidentally also be observed in debug builds of Tup.<br>
+	As a result, calling any path-retrieving API is a surprisingly expensive operation on modern Windows. When running a small sprite through our {{Blog_PostLink "2020-07-09" "sprite converter"}}, MS-DOS Player's boot process makes up 56% of the runtime, with 64% of that boot time (or 36% of the entire runtime) being spent on path translation. The actual x86 emulation to run the program only takes up 6.5% of the runtime, with the remaining 37.5% spent on initializing the multithreaded C++ runtime.
+</p><p>
+	But then again, the truly <i>optimal</i> solution would not involve MS-DOS Player at all. If you followed general video game hacking news in May, you'll probably remember the N64 community putting the concept of <i>statically recompiled game ports</i> on the map. In case you're wondering where this seemingly sudden innovation came from and whether a reverse-engineered decompilation project like ReC98 is obsolete now, I wrote <a href="/faq#recomp">a new FAQ entry</a> about why this hype, although justified, is at least in part misguided. tl;dr: None of this can be meaningfully applied to PC-98 games at the moment.<br>
+	On the other hand, recompiling our <i>compiler</i> would not only be a reasonable thing to attempt, but <i>exactly the kind of problem that recompilation solves best</i>. A 16-bit command-line tool has none of the pesky hardware factors that drag down the usefulness of recompilations when it comes to game ports, and a recompiled port could run even faster than it would on 32-bit Windows. Sure, it's not as flashy as a recompiled game, but if we got a few generous backers, it would still be a great investment into improving <a href="https://github.com/M-HT/SR">the state of static x86 recompilation</a> by simply having another open-source project in that space. Not to mention that it would be a great foundation for improving Turbo C++ 4.0J's code generation and optimizations, which would allow us to simplify lots of awkward pieces of ZUN code… 🤩
+</ul><hr id="win32-{{.Date}}"><p>
+	That takes care of building ReC98 on 64-bit platforms, but what about the 32-bit ones we used to support? The previous split of the build process into a Tup-driven 32-bit part and a Makefile-driven 16-bit part sure was awkward and I'm glad it's gone, but it did give you the choice between 1) emulating the 16-bit part or 2) running both parts natively on 32-bit Windows. While <a href="https://gittup.org/tup/win32/">Tup's upstream Windows builds are 64-bit-only</a>, it made sense to {{Blog_PostLink "2020-09-03" "compile a custom 32-bit version"}} and thus turn any 32-bit Windows ≥Vista into the perfect build platform for ReC98. Older Windows versions that can't run Tup had to build the 32-bit part using a separately maintained dumb batch script created by <code>tup generate</code>, but again, due to Make being trash, they were fully rebuilding the entire codebase every time anyway.<br>
+	Driving the entire build via Tup changes all of that. Now, it makes little sense to continue using 32-bit Tup:
+</p><ul>
+	<li>We need to DLL-inject into a 64-bit MS-DOS Player. Sure, we <i>could</i> compile a 32-bit build of MS-DOS Player, but why would we? If we look at current <a href="https://web.archive.org/web/20240527074521/https://www.pcbenchmarks.net/os-marketshare.html">market</a> <a href="https://web.archive.org/web/20240628155943/https://store.steampowered.com/hwsurvey/Steam-Hardware-Software-Survey-Welcome-to-Steam?platform=pc">shares</a>, nobody runs 32-bit Windows anymore, not even by accident. If you run 32-bit Windows in 2024, it's because you know what you're doing and made a conscious choice for the niche use case of natively running DOS programs. Emulating them defeats the whole point of setting up this environment to begin with.</li>
+	<li>It <i>would</i> make sense if Tup could inject into DOS programs, but it can't.</li>
+	<li>Also, as we're going to see later, requiring Windows ≥Vista goes in the opposite direction of what we want for a 32-bit build. The earlier the Windows version, the better it is at running native DOS tools.</li>
+</ul><p>
+	This means that we could now only support 32-bit Windows via an even larger <code>tup generate</code>d batch file. We'd have to move the MS-DOS Player prefix of the respective command lines into an environment variable to make Tup use the same rules for both itself and the batch file, but the result seems to work…
+</p><p>
+	…but it's <i>really</i> slow, especially on Windows 9x. 🐌 If we look back at the theory behind my previous custom build system, we can already tell why: <i>Efficiently building ReC98 requires a completely different approach depending on whether you're running a typical modern multi-core 64-bit system or a vintage single-core 32-bit system.</i> On the former, you'd want to parallelize the slow emulation as much as you can, so you maximize the amount of TCC processes to keep all CPU cores as busy as possible. But on the latter, you'd want the exact opposite – there, the biggest annoyance is the repeated startup and shutdown of the <a href="https://en.wikipedia.org/wiki/Virtual_DOS_machine">VDM</a>, TCC, and its DOS extender, so you want to continue batching translation units into as few TCC processes as possible.
+</p><p>
+	CMake fans will probably feel vindicated now, thinking <i>"that sounds exactly like you need a meta build system 🤪"</i>. Leaving aside the fact that the output vomited by all of CMake's Makefile generators is a disgusting monstrosity that's far removed from addressing <i>any</i> performance concerns, we sure <i>could</i> solve this problem by adding another layer of abstraction. But then, I'd have to rewrite my working Lua script into either C++ or (heaven forbid) Batch, which are the only options we'd have for bootstrapping without adding any further dependencies, and I <i>really</i> wouldn't want to do that. Alternatively, we could fork Tup and modify <code>tup generate</code> to rewrite the low-level build rules that end up in Tup's database.<br>
+	But why should we go for any of these if the Lua script already describes the build in a high-level declarative way? The most appropriate place for transforming the build rules is the Lua script itself…
+</p><p>
+	… if there wasn't the slight problem of Tup forbidding file writes from Lua. 🥲 Presumably, this limitation exists because there is no way of replicating these writes in a <code>tup generate</code>d dumb shell script, and it does make sense from that point of view.<br>
+	But wait, printing to <code>stdout</code> or <code>stderr</code> works, and we always invoke Tup from a batch file anyway. You can now tell where this is going. {{HTML_Emoji "tannedcirno"}} Hey, exfiltrating commands from a build script to the build system via standard I/O streams <a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html#outputs-of-the-build-script">works for Rust's Cargo too</a>!
+</p><p>
+	Just like Cargo, we want to add a sufficiently unique prefix to every line of the generated batch script to distinguish it from Tup's other output. Since Tup only reruns the Lua script – and would therefore print the batch file – if the script changed between the previous and current build run, we only want to overwrite the batch file if we got one or more lines. Getting all of this to work wasn't all too easy; we're once again entering the more awful parts of Batch syntax here, which apparently are so terrible that <a href="https://bugs.winehq.org/show_bug.cgi?id=21227">Wine doesn't even bother to correctly implement parts of it.</a> 😩<br>
+	Most importantly, we don't really want to redirect <i>any</i> of Tup's standard I/O streams. Redirecting <code>stdout</code> disables console output coloring and the pretty progress bar at the bottom, and looping over <code>stderr</code> instead of <code>stdout</code> in Batch is <a href="https://stackoverflow.com/a/34488461">incredibly awkward</a>. Ideally, we'd run a second Tup process with a sub-command that would <i>just</i> evaluate the Lua script if it changed - and fortunately, <code>tup parse</code> does exactly that. 😌<br>
+	In the end, the optimally fast and <code>ERRORLEVEL</code>-preserving solution involves two temporary files. But since creating files between two Tup runs causes it to reparse the Lua code, which would print the batch file to the unfiltered <code>stdout</code>, we have to hide these temporary files from Tup by placing them into its <code>.tup/</code> database directory. 🤪
+</p><p>
+	On a more positive note, programmatically generating batches from single-file TCC rules turned out to be a great idea. Since the Lua code maps command-line flags to arrays of input files, it can also batch <i>across</i> binaries, surpassing my old system in this regard. This works especially well on the <code>debloated</code> and <code>anniversary</code> branches, which replace ZUN's little command-line flag inconsistencies with a single set of good optimization flags that every translation unit is compiled with.
+</p><p>
+	Time to fire up some VMs then… only to see the build failing on Windows 9x with multiple unhelpful <samp>Bad command or file name</samp> errors. Clearly, the long <code>echo</code> lines that write our response files run up against some length limit in <code>command.com</code> and need to be split into multiple ones. Windows 9x's limit is larger than the 127 characters of DOS, that's for sure, and the exact number should just be one search away…<br>
+	…except that it's <i>not</i> the <a href="https://groups.google.com/g/alt.msdos.batch/c/z_H4JWPih-A/m/C499Mq4eJpAJ">1024 characters recounted in a surviving newsgroup post</a>. Sure, lines <i>are</i> truncated to 1023 bytes and that off-by-one error is no big deal in this context, but that's not the whole story:
+</p><figure><pre>: This not unrealistic command line is 137 bytes long and fails on Windows 9x?!
+> echo -DA=1 2 3 a/b/c/d/1 a/b/c/d/2 a/b/c/d/3 a/b/c/d/4 a/b/c/d/5 a/b/c/d/6 a/b/c/d/7 a/b/c/d/8 a/b/c/d/9 a/b/c/d/10 a/b/c/d/11 a/b/c/d/12
+Bad command or file name
+</pre></figure><p>
+	Wait, what, something about <code>/</code> being the <a href="https://en.wikipedia.org/wiki/Command-line_interface#SwitChar"><code>SWITCHAR</code></a>? And not even just that…
+</p><figure><pre>: Down to 132 bytes… and 32 "assignments"?
+> echo a=0 b=1 c=2 d=3 e=4 f=5 g=6 h=7 i=8 j=9 k=0 l=1 m=2 n=3 o=4 p=5 q=6 r=7 s=8 t=9 u=0 v=1 w=2 x=3 y=4 z=5 a=0 b=1 c=2 d=3 e=4 f=5
+Bad command or file name
+</pre></figure><p>
+	And what's perhaps the worst example:
+</p><figure><pre>: 64 slashes. Works on DOS, works on `cmd.exe`, fails on 9x.
+> echo ////////////////////////////////////////////////////////////////
+Bad command or file name
+</pre></figure><p>
+	My complete set of test cases: {{HTML_Download .HostedPath $dl}}
+	So, time to load <code>command.com</code> into DOSBox-X's debugger and step through some code. 🤷 The earliest NT-based Windows versions were ported to a variety of CPUs and therefore received the then-all-new <code>cmd.exe</code> shell written in C, whereas Windows 9x's <code>command.com</code> was still built on top of the dense hand-written ASM code that originated in the very first DOS versions. Fortunately though, <a href="https://github.com/microsoft/MS-DOS/tree/main/v4.0/src/CMD/COMMAND">Microsoft open-sourced one of the later DOS versions in April</a>. This made it somewhat easier to cross-reference the disassembly even though the Windows 9x version significantly diverged in the parts we're interested in.<br>
+	And indeed: After truncating to 1023 bytes and parsing out any redirectors, each line is split into tokens <i>around</i> whitespace and <code>=</code> signs and <i>before</i> every occurrence of the <code>SWITCHAR</code>. These tokens are written into a statically allocated 64-element array, and once the code tries to write the 65<sup>th</sup> element, we get the <samp>Bad command or file name</samp> error instead.
+</ul><figure><table class="numbers" id="argv-{{.Date}}">
+	<thead>
+		<tr>
+			<th>#</th>
+			<td>0</td>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+			<td>7</td>
+			<td>8</td>
+			<td>9</td>
+			<td>10</td>
+			<td>11</td>
+			<td>12</td>
+			<td>13</td>
+			<td>14</td>
+		</tr>
+	</thead><tbody>
+		<tr>
+			<th>String</th>
+			<td>echo</td>
+			<td>-DA</td>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>a</td>
+			<td>/B</td>
+			<td>/C</td>
+			<td>/D</td>
+			<td>/1</td>
+			<td>a</td>
+			<td>/B</td>
+			<td>/C</td>
+			<td>/D</td>
+			<td>/2</td>
+		</tr><tr>
+			<th>Switch flag</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>🚩</td>
+			<td>🚩</td>
+			<td>🚩</td>
+			<td>🚩</td>
+			<td></td>
+			<td>🚩</td>
+			<td>🚩</td>
+			<td>🚩</td>
+			<td>🚩</td>
+		</tr>
+	</tbody>
+</table><figcaption>
+	The first few elements of <code>command.com</code>'s internal argument array after calling the Windows 9x equivalent of <code>parseline</code> with my initial example string. Note how all the "switches" got capitalized and annotated with a flag, whereas the <code>=</code> sign no longer appears in either string or flag form.
+</figcaption></figure><p>
+	Needless to say, this makes no sense. Both <a href="https://stanislavs.org/helppc/int_21-4b.html">DOS</a> and <a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa">Windows</a> pass command lines as a single string to newly created processes, and since this tokenization is lossy, <code>command.com</code> will just have to pass the original string anyway. <i>If</i> your shell wants to handle tokenization at a central place, it should happen <i>after</i> it decided that the command matches a builtin that can actually make use of a pointer to the resulting token array – or better yet, as the first call of each builtin's code. Doing it <i>before</i> is patently ridiculous.<br>
+	I don't know what's worse – the fact that Windows 9x blindly grinds each batch line through this tokenizer, or the fact that <i>no documentation of this behavior has survived on today's Internet, if any even ever existed</i>. The closest thing I found was <a href="https://web.archive.org/web/20081226032557/http://www.allenware.com/icsw/icsw200.htm">this page that doesn't exist anymore</a>, and it also just contains a mere hint rather than a clear description of the issue. Even <a href="https://www.robvanderwoude.com/batchcommands.php">the usual Batch experts who document everything else</a> seem to have a blind spot when it comes to this specific issue. As do emulators: DOSBox and FreeDOS only reimplement the sane DOS versions of <code>command.com</code>, and Wine only reimplements <code>cmd.exe</code>.
+</p><p>
+	Oh well. 71 lines of Lua later, the resulting batch file does in fact work everywhere:
+</p><figure {{$vid_dumb_XP.FigureAttrs}}>
+	<figcaption class="dynamic"><div>
+		The clear performance winner at 11.15 seconds after the initial tool check, though sadly bottlenecked by strangely long TASM32 startup times. As for TCC though, even this performance is the <i>slowest</i> a recompiled port would be. Modern compiler optimizations are probably going to shave off another second or two, and implementing support for <code>#pragma once</code> into the recompiled code will get us the aforementioned 5% on top.<br>
+		If you run this on VirtualBox on modern Windows, make sure to disable Hyper-V to avoid the slower <i>snail execution mode</i>. 🐢
+	</div><div>
+		Building in Windows XP under Hyper-V exchanges Windows 98's slow TASM32 startup times for slightly slower DOS performance, resulting in a still decent 13.4 seconds.
+	</div><div>
+		29.5 seconds?! Surely <i>something</i> is getting emulated here. And this is the <i>best</i> time I randomly got; <a href="https://twitter.com/ReC98Project/status/1802932319520469347">my initial preview recording took 55 seconds</a> which is closer to DOSBox-X's dynamic core than it is to Windows 9x. Given how poorly 32-bit Windows 10 performs, Microsoft should have probably discontinued 32-bit Windows after 8 already. If any 16-bit program you could possibly want to run is either too slow or likely to exhibit other compatibility issues ({{Blog_PostLink "2022-12-31" "Shuusou Gyoku, anyone?"}}), the existence of 32-bit Windows 10 is nothing but a maintenance burden. <i>Especially</i> because Windows 10 simultaneously overhauled the console subsystem, which is bound to cause compatibility issues <i>anyway</i>. <a href="https://twitter.com/Nmlgc/status/1155892492954492930">It sure did for me back in 2019 when I tried to get my build system to work…</a>
+	</div></figcaption>
+	{{call .VideoPlayer $vid_dumb_98.SetActive $vid_dumb_XP $vid_dumb_10}}
+</figure><p>
+	But wait, there's more! The codebase now compiles on all 32-bit Windows systems I've tested, and yields binaries that are equivalent to ZUN's… <i>except</i> on 32-bit Windows 10. 🙄 Suddenly, we're facing the exact same batched compilation bug from my custom build system again, with <code>REIIDEN.EXE</code> being 16 bytes larger than it's supposed to be.<br>
+	Looks like I have to look into that issue after all, but figuring out the exact cause by debugging TCC would take ages again. Thankfully, trial and error quickly revealed a functioning workaround: <i>Separating translation unit filenames in the response file with two spaces rather than one.</i> Really, I couldn't make this up. This is the most ridiculous workaround for a bug I've encountered in a long time.
+</p><figure>
+	<pre>echo -c  -I.  -O  -b-  -3  -Z  -d  -DGAME=4  -ml  -nobj/th04/  th04/op_main.cpp  th04/input_w.cpp  th04/vector.cpp  th04/snd_pmdr.c  th04/snd_mmdr.c  th04/snd_kaja.cpp  th04/snd_mode.cpp  th04/snd_dlym.cpp  th04/snd_load.cpp  th04/exit.cpp  th04/initop.cpp  th04/cdg_p_na.cpp  th04/snd_se.cpp  th04/egcrect.cpp  th04/bgimage.cpp  th04/op_setup.cpp  th04/zunsoft.cpp  th04/op_music.cpp  th04/m_char.cpp  th04/slowdown.cpp  th04/demo.cpp  th04/ems.cpp  th04/tile_set.cpp  th04/std.cpp  th04/tile.cpp>obj\batch014.@c
+echo th04/playfld.cpp  th04/midboss4.cpp  th04/f_dialog.cpp  th04/dialog.cpp  th04/boss_exp.cpp  th04/stages.cpp  th04/player_m.cpp  th04/player_p.cpp  th04/hud_ovrl.cpp  th04/cfg_lres.cpp  th04/checkerb.cpp  th04/mb_inv.cpp  th04/boss_bd.cpp  th04/mpn_free.cpp  th04/mpn_l_i.cpp  th04/initmain.cpp  th04/gather.cpp  th04/scrolly3.cpp  th04/midboss.cpp  th04/hud_hp.cpp  th04/mb_dft.cpp  th04/grcg_3.cpp  th04/it_spl_u.cpp  th04/boss_4m.cpp  th04/bullet_u.cpp  th04/bullet_a.cpp  th04/boss.cpp  th04/boss_4r.cpp  th04/boss_x2.cpp  th04/maine_e.cpp  th04/cutscene.cpp>>obj\batch014.@c
+echo th04/staff.cpp>>obj\batch014.@c</pre>
+	<figcaption>The TCC response file generation code for all current decompiled TH04 code, split into multiple <code>echo</code> calls based on the Windows 9x batch tokenizer rules and with double spaces between each parameter for added <q>"safety"</q>. Would this also have been the solution for the batched compilation bugs I was experiencing with my old build system in DOSBox? I suddenly was unable to reproduce these bugs, so we won't know for the time being…</figcaption>
+</figure><hr id="tiers-{{.Date}}"><p>
+	Hopefully, you've now got the impression that supporting any kind of 32-bit Windows build is way more of a liability than an asset these days, at least for this specific project. <i>"Real hardware"</i>, <i>"motivating a TCC recompilation"</i>, and <i>"not dropping previous features"</i> really were the only reasons for putting up with the sheer jank and testing effort I had to go through. And I wouldn't even be surprised if real-hardware developers told me that the first reason doesn't actually hold up because compiling ReC98 on actual PC-98 hardware is slow enough that they'd rather compile it on their main machine and then transfer the binaries over some kind of network connection. {{HTML_Emoji "onricdennat"}}<br>
+	I guess it also made for some mildly interesting blog content, but this was definitely the last time I bothered with such a wide variety of Windows versions without being explicitly funded to do so. If I ever get to recompile TCC, it will be 64-bit only by default as well.
+</p><p>
+	Instead, let's have <a href="https://github.com/nmlgc/ReC98/blob/master/README.md#supported-build-platforms">a tier list of supported build platforms that clearly defines what I am maintaining</a>, with just the most convincing 32-bit Windows version in Tier 1. <a href="https://twitter.com/ReC98Project/status/1804512907041910993">Initially, that was supposed to be Windows 98 SE</a> due to its superior performance, but that's just unreasonable if key parts of the OS remain undocumented and make no sense. So, XP it is.<br>
+	*nix fans will probably once again be disappointed to see their preferred OS in Tier 2. But at least, all we'd need for <i>that</i> to move up to Tier 1 is a CI configuration, contributed either via funding me or sending a PR. (Look, even more {{HTML_TagInline "contribution-ideas"}}<span style="white-space: nowrap;">!)</span><br>
+	Getting rid of the Wine requirement for a fully cross-platform build process wouldn't be <i>too</i> unrealistic either, but would require us to make a few quality decisions, as usual:
+</p><ul>
+	<li>Do we run the DOS tools by creating a cross-platform MS-DOS Player fork, or do we statically recompile them?</li>
+	<li>Do we replace 32-bit Windows TASM with the 16-bit DOS <code>TASM.EXE</code> or <code>TASMX.EXE</code>, which we then either run through our forked MS-DOS Player or recompile? This would further slow down the build and require us to get rid of these nice long non-8.3 filenames… 😕 I'd only recommend this after the looming librarization of ZUN's master.lib fork is completed.</li>
+	<li>Or do we try migrating to <a href="https://github.com/JWasm/JWasm">JWasm</a> again? As an open-source assembler that aims for MASM compatibility, it's the closest we can get to TASM, but it's not a drop-in replacement by any means. I already <a href="https://github.com/nmlgc/ReC98/compare/f54b85577d69585ae85893c7811f0b7e0f011728...5ad97a08ea10eaec9ab46e673d879443e2ac0712">tried in late 2014</a>, but encountered too many issues and quickly abandoned the idea. Maybe it works better now that we have less ASM? In any case, this migration would only get easier the less ASM code we have remaining in the codebase as we get closer to the 100% finalization mark.</li>
+</ul><p>
+	Y'know what I think would be the best idea for <i>right now</i>, though? Savoring this new build system and spending an extended amount of time doing <i>actual decompilation or modding</i> for a change. {{HTML_Emoji "tannedcirno"}}
+</p><hr id="includes-{{.Date}}"><p>
+	Now that even full rebuilds are decently fast, let's make use of that productivity boost by doing some urgent and far-reaching code cleanup that touches almost every single C++ source file. The most immediately annoying quirk of this codebase was the silly way each translation unit #included the headers it needed. Many years ago, I measured that repeatedly including the same header did significantly impact Turbo C++ 4.0J's compilation times, regardless of any include guards inside. As a consequence of this discovery, I slightly overreacted and decided to just not use <i>any</i> include guards, ever. After all, this emulated build process is slow enough, and we don't want it to needlessly slow down even more! {{HTML_Emoji "onricdennat"}} This way, redundantly including any file that adds more than just a few <code>#define</code> macros won't even compile, throwing lots of <samp>Multiple definition</samp> errors.<br>
+	Consequently, the headers themselves #included almost nothing. Starting a new translation unit therefore always involved figuring and spelling out the transitive dependencies of the headers the new unit <i>actually</i> wants to use, in a short trial-and-error process. While not too bad by itself, this was bound to become quite counterproductive once we get closer to porting these games: If some inlined function in a header needed access to, let's say, PC-98-specific I/O ports as an implementation detail, the header would have externalized this dependency to the top-level translation unit, which in turn made that that unit appear to contain PC-98-native code <i>even if the unit's code itself was perfectly portable</i>.
+</p><p>
+	But once we start making some of these implicit transitive dependencies optional, it all stops being justifiable. Sometimes, <code>a.hpp</code> declared things that required declarations from <code>b.hpp</code> but these things are used so rarely that it didn't justify adding <code>#include "b.hpp"</code> to all translation units that <code>#include "a.hpp"</code>. So how about conditionally declaring these things based on previously #included headers? {{HTML_Emoji "tannedcirno"}}
+</p><figure>
+	<pre>#if (defined(SUBPIXEL_HPP) && defined(PLANAR_H))
+	// Sets the [tile_ring] tile at (x, y) to the given VRAM offset.
+	void tile_ring_set_vo(subpixel_t x, subpixel_t y, vram_offset_t image_vo);
+#endif</pre>
+	<figcaption>You can <i>maybe</i> do this in a project that consistently sorts the <code>#include</code> lists in every translation unit… err, no, don't do this, ever, it's awful. Just separate that declaration out into another header.</figcaption>
+</figure><p>
+	Now that we've measured that the sane alternative of include guards comes with a performance cost of just 5% and we've further reduced its effective impact by parallelizing the build, it's worth it to take that cost in exchange for a tidy codebase without such surprises. From now on, every header file will <code>#include</code> its own dependencies and be a valid translation unit that must compile on its own without errors. In turn, this allows us to remove <i>at least</i> 1,000 <code>#include</code> of transitive dependencies from <code>.cpp</code> files. 🗑️<br>
+	However, that 5% number was only measured after I reduced these redundant <code>#include</code>s to their absolute minimum. So it still makes sense to only add include guards where they are absolutely necessary – i.e., transitively dependent headers included from more than one other file – and continue to (ab)use the <samp>Multiple definition</samp> compiler errors as a way of communicating <i>"you're probably #including too many headers, try removing a few"</i>. Certainly a less annoying error than <samp>Undefined symbol</samp>.
+</p><hr id="th02_regist-{{.Date}}"><p>
+	Since all of this went way over the 7-push mark, we've got some small bits of RE and PI work to round it all out. The <code>.REC</code> loader in TH04 and TH05 is completely unremarkable, but I've got at least a bit to say about TH02's High Score menu. I already decompiled <code>MAINE.EXE</code>'s post-Staff Roll variant in 2015, so we were only missing the almost identical <code>MAIN.EXE</code> variant shown after a Game Over or when quitting out of the game. The two variants are similar enough that it mostly needed just a small bit of work to bring my old 2015 code up to current standards, and allowed me to quickly push TH02 over the 40% RE mark.<br>
+	Functionally, the two variants only differ in two assignments, but ZUN once again chose to copy-paste the entire code to handle them. {{HTML_Emoji "zunpet"}} This was one of ZUN's better copy-pasting jobs though – and honestly, I can't even imagine how you <i>would</i> mess up a menu that's entirely rendered on the PC-98's text RAM. It almost makes you wonder whether ZUN actually used the same <code>#if ENDING</code> preprocessor branching that my decompilation uses… until the visual inconsistencies in the alignment of the place numbers and the <img src="data:image/gif;base64,R0lGODlhUAAQAIABAAAAAP///yH5BAEKAAEALAAAAABQABAAAAKWjA+pcG3LnERxVnkfTHgv52VToIykWXEa1LCt2JkrqoJRTT05meHaK/uNSjGerXg6ApW0IcOH64lq04tP2LQ8paBlF6trOYNXoxmsJVO/6SzSCvM6iUE5kp08o+rxcFvWN0ZWNygIaBFTRoiHYbgodqQIeehmh3hHEYigxsn4Z8nTd6MpufKhFldGZ3NaOVc64wiaOVEAADs=" alt="POINT"> and <img src="data:image/gif;base64,R0lGODlhIAAQAIABAAAAAP///yH5BAEKAAEALAAAAAAgABAAAAJAjB+gi70P2oEMqUmdnFjeZG3b142RqFmnSaJr8noZWtJwRbf2bcc73Ps5fD8iJyhz7Yg6Q/P4dFKMN5zsUXwWAAA7" alt="ST"> labels clearly give it away as copy-pasted:
+</p><figure>
+	<rec98-child-switcher><img
+		src="{{$score_main}}" data-title="<code>MAIN.EXE</code>" class="active" alt="Screenshot of TH02's High Score screen as seen in MAIN.EXE when quitting out of the game, with scores initialized to show off the maximum number of digits and the incorrect alignment of the POINT and ST headers"
+	/><img
+		src="{{$score_maine}}" data-title="<code>MAINE.EXE</code>" alt="Screenshot of TH02's High Score screen as seen in MAINE.EXE when entering a new high score after the Staff Roll, with scores initialized to show off the maximum number of digits and the incorrect alignment of the POINT header"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	Next up: Starting the big Seihou summer! Fortunately, waiting two more months was worth it: In mid-June, Microsoft released a preview version of Visual Studio that, <a href="https://developercommunity.visualstudio.com/t/Module-compilation-with-analyze-ignores/10627451">in response to my bug report</a>, finally, <i>finally</i> makes C++ standard library modules fully usable. Let's clean up that codebase for real, and put this game into a window.
+</p>

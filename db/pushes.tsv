@@ -1,5 +1,8 @@
 ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
 P0001	[1]	Build system improvements, part 1 (Using Tup for the 32-bit build)	2020-09-03T23:26:18Z	nmlgc/ReC98/compare/e447a2d...150d2c6	0
+P0002	[1]	Build system improvements, part 2 (Preparations / Codebase cleanup)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/87eed57...f131878	0
+P0003	[1]	Build system improvements, part 3 (Lua rewrite of the Tupfile / Tup bugfixes for MS-DOS Player)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/f131878...d60fb3e	0
+P0004	[1]	Build system improvements, part 4 (Merging the 16-bit build part into the Tupfile)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/b86a2b1...62bd5b1	0
 P0005	[2]	TH02/TH03/TH04/TH05 RE (RNG, .MAP loading)	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d7...4b8baf1	1
 P0006	[2]	TH04/TH05 RE (ZUN Soft logo explosions)	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d...843905e	1
 P0007	[3]	TH03/TH04/TH05 RE (Joypad functions, frame counts)	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f...47e5601	1
@@ -278,3 +281,8 @@ P0277	[239]	Website (Audio player, part 2/2 + Front page progress bar redesign +
 P0278	[262, 270, 274, 277]	TH02 decompilation (Endings)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/b6a7285...f0fbaf6	1
 P0279	[277, 280, 286, 289]	TH02 decompilation (Staff Roll + Verdict screen + Stage bonus tables)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/f0fbaf6...20bac82	1
 P0280	[279, 282, 287, 289, 290]	TH03 RE (Coordinate transformations / Player entity movement / Global shared hitbox / Hit circles)	2024-04-24T13:14:41Z	nmlgc/ReC98/compare/20bac82...87eed57	1
+P0281	[284]	Build system improvements, part 5 (MS-DOS Player bugfixes and performance tuning for Turbo C++ 4.0J)	2024-07-09T11:30:16Z	nmlgc/msdos-player/compare/07d1088...P0281	0
+P0282	[300, 283]	Build system improvements, part 6 (Generating an ideal dumb batch script for 32-bit platforms)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/d60fb3e...056085b	0
+P0283	[283]	Build system improvements, part 7 (Researching and working around Windows 9x batch file limits)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/056085b...b86a2b1	0
+P0284	[290, 296, 295]	#include cleanup, part 1/2 / Decompilation (TH04/TH05 .REC loading)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/62bd5b1...18b9cd7	0
+P0285	[283, 250]	#include cleanup, part 2/2 / Decompilation (TH02 MAIN.EXE High Score entry)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/18b9cd7...23fc9e7	0

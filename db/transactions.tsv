@@ -313,3 +313,5 @@ Time	Customer	Cents	Goal	ID	Delayed
 2024-08-11T10:00:56Z	10	3500	TH02 RE	T0309	0
 2024-09-01T12:02:42Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>	T0310	0
 2024-09-02T10:15:40Z	15	1000	Reverse-engineering	T0311	0
+2024-09-09T11:36:49Z	0	7000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	T0312	1
+2024-09-09T11:36:49Z	0	5500	Anything (including tooling)	T0313	0

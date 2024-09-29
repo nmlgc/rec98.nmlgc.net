@@ -21,6 +21,12 @@
 					{{- end -}}
 				)</small>
 			</li>{{end}}
+			{{- if and (not $goal.Delayed) (gt $goal.MissingForFullPush 0.0)}}
+			<li class="delayed"><small>
+				(<strong>{{HTML_Currency $goal.MissingForFullPush}}</strong> needed to secure
+				{{if gt $goal.TotalPushFraction 1.0}}another{{else}}a full{{end}} push)
+			</small></li>
+			{{- end -}}
 		</ul>
 	</dd>{{end}}
 </dl>

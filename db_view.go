@@ -37,9 +37,11 @@ type ContribPerCustomer struct {
 
 // TransactionsPerGoal lists all contributions towards a specific goal.
 type TransactionsPerGoal struct {
-	Goal        template.HTML
-	Delayed     bool
-	PerCustomer []ContribPerCustomer
+	Goal               template.HTML
+	Delayed            bool
+	PerCustomer        []ContribPerCustomer
+	TotalPushFraction  float64
+	MissingForFullPush float64
 }
 
 func (t *TransactionsPerGoal) forCustomer(c CustomerID) *ContribPerCustomer {
@@ -78,6 +80,17 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 			}
 			fpc.Breakdown = append(fpc.Breakdown, opf)
 			fpc.PushFraction += opf.Fraction
+			if t.ID.Scope == STransaction {
+				tfg.TotalPushFraction += opf.Fraction
+			}
+		}
+	}
+
+	pushPrice := prices.Current().Push
+	for i := range ret {
+		_, frac := math.Modf(ret[i].TotalPushFraction)
+		if frac > 0.0 {
+			ret[i].MissingForFullPush = ((1.0 - frac) * pushPrice)
 		}
 	}
 	return ret

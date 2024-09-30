@@ -23,7 +23,7 @@
 			</li>{{end}}
 			{{- if and (not $goal.Delayed) (gt $goal.MissingForFullPush 0.0)}}
 			<li class="delayed"><small>
-				(<strong>{{HTML_Currency $goal.MissingForFullPush}}</strong> needed to secure
+				(<strong>{{HTML_Currency $goal.MissingForFullPush}}</strong> needed to <span class="hovertext" title="Until then, this goal will get combined with the partially funded pushes of other goals to form the remaining full push.">secure</span>
 				{{if gt $goal.TotalPushFraction 1.0}}another{{else}}a full{{end}} push)
 			</small></li>
 			{{- end -}}

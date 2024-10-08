@@ -32,17 +32,6 @@ function timelineFractionAt(frame: number, frameCount: number) {
 	return (frame / (frameCount - 1));
 }
 
-let runningOnEdge = false;
-if(navigator?.["userAgentData"]?.brands) {
-	for(const brand of navigator?.["userAgentData"].brands) {
-		if(brand.brand === "Microsoft Edge") {
-			runningOnEdge = true;
-			break;
-		}
-	}
-}
-let edgeAV1PopupShown = false;
-
 class ReC98VideoMarker extends HTMLElement {
 	button = document.createElement("button");
 	videoIndex = -1;
@@ -817,24 +806,9 @@ class ReC98Video extends ReC98Player {
 	}
 
 	preload() {
-		let av1Removed = false;
 		for(const video of this.videos) {
-			// Nuke AV1 sources on Edge…
-			// https://vaihe.com/quick-seo-tips/using-av1-video-format-as-source-in-video/
-			if(runningOnEdge) {
-				for(const source of video.querySelectorAll(
-					"source[src *= '/av1/']"
-				)) {
-					source.remove();
-					av1Removed = true;
-				}
-			}
 			video.load();
 			video.preload = "auto";
-		}
-		if(av1Removed && !edgeAV1PopupShown) {
-			this.showPopup("⚠️ <a href='/blog/2023-11-30'>Edge does not support AV1</a>, falling back on low-quality video…");
-			edgeAV1PopupShown = true;
 		}
 	}
 

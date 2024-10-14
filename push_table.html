@@ -2,7 +2,6 @@
 	<thead>
 		<tr>
 			<th>Push ID</th>
-			<th>Date purchased</th>
 			<th>Funded by</th>
 			<th>Goal</th>
 			<th>Date delivered</th>
@@ -13,7 +12,6 @@
 	<tbody>
 		{{range .}}<tr id="{{.ID}}">
 			<th>{{.ID}}</th>
-			<td>💰 {{HTML_Date .FundedAt}}</td>
 			<td>{{range $i, $customer := .FundedBy -}}
 				{{- if $i}}, {{end}}{{DB_CustomerByID $customer}}
 			{{- end}}</td>

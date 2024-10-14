@@ -295,17 +295,6 @@ func (p Push) FundedBy() (ret []CustomerID) {
 	return
 }
 
-// FundedAt returns the timestamp of the last transaction that was part of
-// this push.
-func (p Push) FundedAt() (ret time.Time) {
-	for _, t := range p.Transactions {
-		if t.Time.After(ret) {
-			ret = t.Time
-		}
-	}
-	return
-}
-
 type Price[T constraints.Integer | constraints.Float] struct {
 	Push  T
 	Micro T

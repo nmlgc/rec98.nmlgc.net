@@ -7,7 +7,7 @@
 		<dd>{{range $i, $push := .PushIDs -}}
 			{{- if $i}}, {{end}}<a href="/fundlog#{{$push}}">{{$push}}</a>
 		{{- end}}</dd>
-		<dt><span class="emoji">⌨</span> Commits:</dt>
+		<dt><span class="emoji">⌨️</span> Commits:</dt>
 		<dd>{{range $i, $diff := .Diffs -}}
 			{{- if $i}}, {{end -}}
 			<a href="https://github.com/{{$diff.URL}}">
@@ -21,7 +21,7 @@
 {{else}}
 		<dd><a href="/blog/{{.Date}}">{{HTML_Date .Time}}</a></dd>
 {{end}}
-		<dt><span class="emoji">🏷</span> Tags:</dt>
+		<dt><span class="emoji">🏷️</span> Tags:</dt>
 		<dd>{{range .Tags}}{{HTML_TagBlock . $.Filters}} {{end}}</dd>
 	</dl>
 {{.Body}}

@@ -53,7 +53,14 @@
 	goal of porting this game to Linux. This would take much longer, but fix all
 	these issues at once while bringing us significantly closer to Shuusou Gyoku
 	being cross-platform. Which is exactly what {{DB_CustomerByID 13}} did.
-</p><hr /><p>
+</p><ol>
+	<li><a href="#strategy-{{.Date}}">The migration strategy</a></li>
+	<li><a href="#ddraw-{{.Date}}">Learning DirectDraw and its surface management</a></li>
+	<li><a href="#palettes-{{.Date}}">Reverse-engineering the palette logic in 8-bit mode</li>
+	<li><a href="#text-{{.Date}}">Portable, offscreen text rendering</a></li>
+	<li><a href="#config-{{.Date}}">The new, forward-compatible configuration file format</a></li>
+	<li><a href="#sdl-{{.Date}}">SDL_Renderer as the perfect abstraction?</a></li>
+</ol><hr id="strategy-{{.Date}}"><p>
 	Shuusou Gyoku is a <i>very</i> Windows-native codebase. Its usage of types
 	declared in <code>&lt;windows.h&gt;</code> even extends to core gameplay
 	code, the rendering code is completely architected around DirectDraw's
@@ -86,7 +93,7 @@
 	can compile into a 64-bit binary (which will obviously be required for a
 	native Linux build), the i586 build will remain the only 32-bit Windows
 	build I'll include in my releases.
-</p><hr /><p>
+</p><hr id="ddraw-{{.Date}}"><p>
 	So, what was DirectDraw? In the shortest way that still describes it
 	accurately from the point of view of a developer: "A hardware acceleration
 	layer over Ye Olde Win32 GDI, providing double-buffering and fast blitting
@@ -173,7 +180,7 @@
 	switching already takes longer on modern flat-panel displays than any
 	surface restoration method we could come up with.
 	{{HTML_Emoji "tannedcirno"}}
-</p><hr /><p>
+</p><hr id="palettes-{{.Date}}"><p>
 	So that was all pretty annoying. But once we start rendering in 8-bit mode,
 	it gets even worse as we suddenly have to bother with palette management.
 	Similar to <a href="/blog/tag/th01/palette">PC-98 Touhou</a>, Shuusou Gyoku
@@ -310,7 +317,7 @@
 	wonder how fast that would be…<br />
 	Or you go straight back to DOS, and bring your own font renderer and
 	MIDI/PCM sound driver. {{HTML_Emoji "thonk"}}
-</p><hr /><p>
+</p><hr id="text-{{.Date}}"><p>
 	So why did we have to learn about all this? Well, if GDI functions can
 	directly render onto any kind of DirectDraw surface, this also includes text
 	rendering functions like <code>TextOut()</code> and <code>DrawText()</code>.
@@ -536,7 +543,7 @@
 	VirtualBox on the same system though, so it's not worth looking into a mode
 	that the system reports as unsupported to begin with. Let's leave this as
 	somewhat of a visual reminder for players to select 32-bit mode instead.
-</p><hr /><p>
+</p><hr id="config-{{.Date}}"><p>
 	Alright, enough about the annoying parts of GDI and DirectDraw for now.
 	Let's stop looking back and start looking forward, to a time within this
 	Seihou revolution when we're going to have lots of new options in the main
@@ -651,7 +658,7 @@
 		These videos also show off how DxWnd's DC palette bug affected the
 		original game, and how it doesn't affect the P0251 build.
 	</figcaption></figure></li>
-</ul><p>
+</ul><hr id="sdl-{{.Date}}"><p>
 	These 6 pushes still left several of Shuusou Gyoku's DirectDraw portability
 	issues unsolved, but I'd better look at them once I've set up a basic OpenGL
 	skeleton to avoid any more premature abstraction. Since the ultimate goal is
@@ -674,8 +681,7 @@
 	system.
 </p><p>
 	Sadly, the one thing SDL_Renderer is missing is something equivalent to
-	pixel shaders, which we would need to replicate the <span lang="ja">西方
-	Ｐｒｏｊｅｃｔ</span> lens ball effect shown at startup. Looks like we have
+	pixel shaders, which we would need to replicate the <span lang="ja">西方Ｐｒｏｊｅｃｔ</span> lens ball effect shown at startup. Looks like we have
 	to drop into <a href="https://wiki.libsdl.org/SDL2/SDL_GetWindowSurface">a
 	completely separate, unaccelerated rendering mode</a> and continue to
 	software-render this one effect before switching to hardware-accelerated

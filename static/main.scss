@@ -15,7 +15,12 @@
 	--c-link: blue;
 	--c-link-hover: red;
 
+	--c-trial-bad: rgb(256, 220, 220);
+	--c-trial-mid: rgb(256, 256, 220);
+	--c-trial-good: rgb(220, 256, 220);
+
 	--table-border: 1px solid gray;
+	--table-border-thick: 2px solid black;
 
 	--header-height: 2.5em;
 	--header-border: 1px solid silver;
@@ -1023,6 +1028,29 @@ article figure {
 	background-color: #fff8f8;
 	border-color: var(--c-link-hover);
 }
+
+.trials {
+	tr:not(:last-child) {
+		border-bottom: var(--table-border);
+	}
+
+	thead {
+		border-bottom: var(--table-border-thick);
+		vertical-align: bottom;
+
+		th:not(:first-child),
+		td {
+			text-align: center;
+		}
+	}
+
+	tbody {
+		td:not(:first-child) {
+			font-family: monospace;
+		}
+	}
+}
+
 /* ---- */
 
 /* Syntax highlighting

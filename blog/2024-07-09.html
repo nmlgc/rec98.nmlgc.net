@@ -24,34 +24,20 @@
 {{$vid_dumb_10.AddMarker 605 "Build done" "left" -}}
 
 <style>
-	#trials-{{.Date}} thead {
-		vertical-align: bottom;
-		border-bottom: 2px solid black;
-	}
 	#trials-{{.Date}} .packaged {
 		font-weight: bold;
-	}
-	#trials-{{.Date}} thead th:not(:first-child),
-	#trials-{{.Date}} thead td {
-		text-align: center;
 	}
 	#trials-{{.Date}} th:not(:last-child),
 	#trials-{{.Date}} td:not(:last-child) {
 		border-right: var(--table-border);
 	}
-	#trials-{{.Date}} tr:not(:last-child) {
-		border-bottom: var(--table-border);
-	}
-	#trials-{{.Date}} tbody td:not(:first-child) {
-		font-family: monospace;
-	}
 	#trials-{{.Date}} thead td:nth-child(2n + 1),
 	#trials-{{.Date}} tbody td:nth-child(2n + 2) {
-		background-color: rgb(256, 220, 220);
+		background-color: var(--c-trial-bad);
 	}
 	#trials-{{.Date}} thead td:nth-child(2n + 2),
 	#trials-{{.Date}} tbody td:nth-child(2n + 3) {
-		background-color: rgb(220, 256, 220);
+		background-color: var(--c-trial-good);
 	}
 
 	#argv-{{.Date}} td {
@@ -191,7 +177,7 @@ I recommend i86_x86 or i86_x64 binary.</blockquote><p>
 	The <a href="https://www.scs.stanford.edu/05au-cs240c/lab/i386/LGS.htm"><code>L[DEFGS]S</code> group of instructions that load a segment and offset register from a 32-bit <code>far</code> pointer</a>, for example, are both frequently used in Turbo C++ 4.0J code and particularly expensive to emulate. Intel specified their Real Mode operation as loading the segment and offset part in two separate 16-bit reads. But if we assume that neither of those reads can fault, we can compress them into a single 32-bit read and thus only perform the costly address translation once rather than twice. Emulator authors are probably rolling their eyes at this gross violation of Intel documentation now, but it's at least worth a try to see just how much performance we could get out of it.</li>
 </ul><p>
 	So, what do we get?
-</p><figure><table id="trials-{{.Date}}" class="numbers"><thead>
+</p><figure><table id="trials-{{.Date}}" class="numbers trials"><thead>
 	<tr>
 		<th rowspan="2">MS-DOS Player build</th>
 		<th colspan="2">Full build <small>(Pipeline + 5 games + research code)</small></th>

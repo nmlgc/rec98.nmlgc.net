@@ -148,6 +148,16 @@ func HTML200Y(v int) template.HTML {
 	return HTMLPC98Y("vram200", "Y coordinate in 640×200 VRAM space", v)
 }
 
+// HTMLPerfBar creates a performance bar showing a minimum and maximum value with a relative length.
+func HTMLPerfBar(min, max, rel float64) template.HTML {
+	minFrac := (rel * (min / max))
+	return template.HTML(fmt.Sprintf(`<span
+	class="perfbar" style="%v width: max(%v%%, 2ch);">%v</span><span
+	class="perfbar" style="%v width: %v%%;">%v</span>`,
+		CSSMeter(rel), minFrac, min, CSSMeter(rel), (rel - minFrac), max,
+	))
+}
+
 type eNoDescription struct {
 	Tag string
 }
@@ -297,6 +307,7 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_TagInline":    HTMLTagInline,
 	"HTML_Screen_Y":     HTMLScreenY,
 	"HTML_200_Y":        HTML200Y,
+	"HTML_PerfBar":      HTMLPerfBar,
 	"CSS_Meter":         CSSMeter,
 
 	// ReC98, safe

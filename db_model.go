@@ -41,6 +41,7 @@ var projectMap = map[string]*ProjectInfo{
 	"ReC98":           {"", []string{"rec98"}},
 	"rec98.nmlgc.net": {"Website", []string{"website"}},
 	"ssg":             {"Seihou", []string{"seihou", "sh01"}},
+	"tupblocks":       {"tupblocks", []string{"build-process"}},
 	"mly":             {"mly", []string{"midi-projects"}},
 	"BGMPacks":        {"BGM packs", []string{"bgm"}},
 	"msdos-player":    {"MS-DOS Player", []string{"build-process"}},

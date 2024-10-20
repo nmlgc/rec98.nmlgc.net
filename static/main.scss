@@ -308,6 +308,16 @@ img.checkerboard {
 	content:"2×"
 }
 
+.perfbar {
+	box-sizing: border-box;
+	color: black!important;
+	display: inline-block;
+	padding-right: 0.25ch;
+	margin-right: 0;
+	text-align: right;
+	border-right: 1px solid black;
+}
+
 .release {
 	font-weight: bold;
 }

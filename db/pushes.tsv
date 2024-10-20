@@ -247,9 +247,9 @@ P0243	[233, 240, 243]	TH02 RE (Items)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/d
 P0244	[214, 220, 224, 228, 245]	TH04 PI/RE (Stage 4 carpet lighting effect + 100% PI)	2023-06-13T11:07:44Z	nmlgc/ReC98/compare/ac33bd2...97f0c3b	1
 P0245	[236, 244, 227, 245, 246, 247]	TH04/TH05 finalization (Sprite clipping + gather circles + boss explosions) + TH01 Anniversary Edition (Lines, part 1/?)	2023-06-30T23:52:16Z	nmlgc/ReC98/compare/97f0c3b...5876755	1
 P0246	[232, 234]	Seihou / Shuusou Gyoku (Cleanup and deduplication)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/P0226...152ad74	0
-P0247	[234, 235]	Seihou / Shuusou Gyoku (DirectDraw surface refactoring, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/152ad74...54c3c4e	0
+P0247	[234, 235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 1/5)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/152ad74...54c3c4e	0
 P0248	[231, 215, 235]	Seihou / Shuusou Gyoku (秋霜CFG.DAT versioning)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/54c3c4e...62ff407	0
-P0249	[235]	Seihou / Shuusou Gyoku (DirectDraw surface refactoring, part 2/? + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/62ff407...a1f80a3	0
+P0249	[235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 2/5 + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/62ff407...a1f80a3	0
 P0250	[235, 237]	Seihou / Shuusou Gyoku (Text pre-rendering, part 1/2: Implementation + Migrating the in-game music title)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/a1f80a3...629ddd8	0
 P0251	[237, 248]	Seihou / Shuusou Gyoku (Text pre-rendering, part 2/2: Migrating the rest of the game + Replacing Win32 memory management)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/629ddd8...P0251	0
 P0252	[253, 248]	Seihou / Shuusou Gyoku (Building SDL from source within Tup)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/P0251...e98feef	0
@@ -286,3 +286,13 @@ P0282	[300, 283]	Build system improvements, part 6 (Generating an ideal dumb bat
 P0283	[283]	Build system improvements, part 7 (Researching and working around Windows 9x batch file limits)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/056085b...b86a2b1	0
 P0284	[290, 296, 295]	#include cleanup, part 1/2 / Decompilation (TH04/TH05 .REC loading)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/62bd5b1...18b9cd7	0
 P0285	[283, 250]	#include cleanup, part 2/2 / Decompilation (TH02 MAIN.EXE High Score entry)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/18b9cd7...23fc9e7	0
+P0286	[275, 278]	tupblocks (<code>import std;</code> support)	2024-10-22T05:18:43Z	nmlgc/tupblocks/compare/acb2572...fae347c	0
+P0287	[278]	Seihou / Shuusou Gyoku (Code cleanup + Game logic portability, part 2/? + Fixes for bugs and landmines)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/P0275...47f365a	0
+P0288	[278, 281]	Seihou / Shuusou Gyoku (Getting pbg's code through static analysis)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/47f365a...fedaf5e	0
+P0289	[281, 288]	Seihou / Shuusou Gyoku (Game logic portability, part 3/? + Graphics refactoring, part 3/5: Preparations and colors)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/fedaf5e...82b1b2c	0
+P0290	[288]	Seihou / Shuusou Gyoku (Graphics refactoring, part 4/5: Geometry, enumeration, and software rendering)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/82b1b2c...7d64c62	0
+P0291	[288, 294]	Seihou / Shuusou Gyoku (Graphics refactoring, part 5/5: Clipping, sprites, and initialization)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/7d64c62...d16c023	0
+P0292	[294, 306]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Main loop + Main menu refactoring)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/d16c023...fe01bd0	0
+P0293	[306, 310]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 4/?: SDL_Renderer backend)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/fe01bd0...2d6ae51	0
+P0294	[310, 315]	Seihou / Shuusou Gyoku (Window and scaling modes, part 1/2)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/2d6ae51...37cc78b	0
+P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Hotkeys) + Website (Adding missing money amounts to the log)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/37cc78b...P0275	0

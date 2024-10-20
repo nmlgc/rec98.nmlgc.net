@@ -1,0 +1,894 @@
+{{$feathercast_correct := (call .PostFileURL "SH01-feathercast-correct.png") -}}
+{{$feathercast_missing := (call .PostFileURL "SH01-feathercast-missing.png") -}}
+{{$circles_8 := (call .PostFileURL "SH01-circles-8-bit.png") -}}
+{{$circles_16 := (call .PostFileURL "SH01-circles-16-bit.png") -}}
+{{$ob1_vp_8 := (call .PostFileURL "SH01-OB1-viewport-8-bit.png") -}}
+{{$ob1_vp_16 := (call .PostFileURL "SH01-OB1-viewport-16-bit.png") -}}
+{{$ob1_box_8 := (call .PostFileURL "SH01-OB1-boxes-8-bit.png") -}}
+{{$ob1_box_16 := (call .PostFileURL "SH01-OB1-boxes-16-bit.png") -}}
+{{$ob1_circles_8 := (call .PostFileURL "SH01-OB1-circles-8-bit.png") -}}
+{{$ob1_circles_16 := (call .PostFileURL "SH01-OB1-circles-16-bit-fixed.png") -}}
+{{$spect := (call .PostFileURL "SH01-Spectrum-analyzer.png") -}}
+{{$replays := printf "%v%v" .DatePrefix "SH01-Stage-6-and-Extra-replays.zip" -}}
+{{$vid_logo := (call .Video "SH01-Logo" "Video of Shuusou Gyoku's 西方Ｐｒｏｊｅｃｔ opening animation") -}}
+{{$vid_logo_lens := (call .Video "SH01-Logo-lens" "Video tracking the 140×140-pixel lens region during Shuusou Gyoku's 西方Ｐｒｏｊｅｃｔ opening animation") -}}
+{{$spect_wf := (call .PostFileURL "SH01-Spectrum-analyzer-SDL-wireframe.png") -}}
+{{$api := (call .PostFileURL "SH01-API-menu.png") -}}
+{{$720p_integer := (call .PostFileURL "SH01-720p-borderless-integer.png") -}}
+{{$720p_aspect := (call .PostFileURL "SH01-720p-borderless-aspect.png") -}}
+{{$720p_stretch := (call .PostFileURL "SH01-720p-borderless-stretch.png") -}}
+{{$menu_geometry := (call .PostFileURL "SH01-menu-Geometry.png") -}}
+{{$menu_framebuf := (call .PostFileURL "SH01-menu-FrameBuf.png") -}}
+{{$c125_framebuf := (call .PostFileURL "SH01-circles-1.25x-FrameBuf.png") -}}
+{{$c125_geometry := (call .PostFileURL "SH01-circles-1.25x-Geometry.png") -}}
+{{$llaser_geometry := (call .PostFileURL "SH01-LLaser-Geometry.png") -}}
+{{$llaser_framebuf := (call .PostFileURL "SH01-LLaser-FrameBuf.png") -}}
+{{$s3_15_geometry := (call .PostFileURL "SH01-Stage-3-1.5x-Geometry.png") -}}
+{{$s3_15_framebuf := (call .PostFileURL "SH01-Stage-3-1.5x-FrameBuf.png") -}}
+{{$vo_orig := (call .PostFileURL "SH01-vertex-offset-original.png") -}}
+{{$vo_sdl := (call .PostFileURL "SH01-vertex-offset-SDL.png") -}}
+{{$l_circ_8 := (call .PostFileURL "SH01-weapon-circle-8-bit.png") -}}
+{{$l_circ_16 := (call .PostFileURL "SH01-weapon-circle-Direct3D.png") -}}
+{{$l_circ_gl_p := (call .PostFileURL "SH01-weapon-circle-OpenGL.png") -}}
+{{$l_circ_sdl_p := (call .PostFileURL "SH01-weapon-circle-SDL-points.png") -}}
+{{$l_circ_sdl_t_1 := (call .PostFileURL "SH01-weapon-circle-SDL-triangles-1x.png") -}}
+{{$l_circ_sdl_t_5 := (call .PostFileURL "SH01-weapon-circle-SDL-triangles-5x.png") -}}
+{{$l_warn_8 := (call .PostFileURL "SH01-warning-lines-8-bit.png") -}}
+{{$l_warn_16 := (call .PostFileURL "SH01-warning-lines-Direct3D.png") -}}
+{{$l_warn_gl_p := (call .PostFileURL "SH01-warning-lines-OpenGL.png") -}}
+{{$l_warn_sdl_p := (call .PostFileURL "SH01-warning-lines-SDL-points.png") -}}
+{{$l_warn_sdl_t_1 := (call .PostFileURL "SH01-warning-lines-SDL-triangles-1x.png") -}}
+{{$l_warn_sdl_t_2 := (call .PostFileURL "SH01-warning-lines-SDL-triangles-2x.png") -}}
+{{$domino_02_orig := (call .PostFileURL "Domino-o02-original.png") -}}
+{{$domino_02_fixed := (call .PostFileURL "Domino-o02-fixed.png") -}}
+{{$aud_o20_ne := (call .Audio "SH01-o02-no-echo" "The piano solo of Shuusou Gyoku's Stage 1 theme (フォルスストロベリー), in its OST no-echo version as shipped in the P0294 BGM packs") -}}
+{{$aud_o20_e := (call .Audio "SH01-o02-echo" "The piano solo of Shuusou Gyoku's Stage 1 theme (フォルスストロベリー), in its OST echo version as shipped in the P0294 BGM packs") -}}
+{{$aud_o20_diff_flac := (call .Audio "SH01-o02-diff-FLAC" "The phase-cancelled difference between the FLAC no-echo and echo OST versions of the piano solo of Shuusou Gyoku's Stage 1 theme (フォルスストロベリー), as shipped in the P0294 BGM packs") -}}
+{{$aud_o20_diff_vorbis := (call .Audio "SH01-o02-diff-Vorbis" "The phase-cancelled difference between the Vorbis no-echo and echo OST versions of the piano solo of Shuusou Gyoku's Stage 1 theme (フォルスストロベリー), as shipped in the P0294 BGM packs") -}}
+{{$vid_compat_on := (call .Video "SH01-SysEx-compat-enabled" "Video demonstration of the SC-88Pro effect compatibility option in the Shuusou Gyoku P0295 build with an overlaid Sound Canvas VA window, showing off the reverb rendering and UI response with the option enabled") -}}
+{{$vid_compat_off := (call .Video "SH01-SysEx-compat-disabled" "Video demonstration of the SC-88Pro effect compatibility option in the Shuusou Gyoku P0295 build with an overlaid Sound Canvas VA window, showing off the reverb rendering and UI response with the option disabled") -}}
+
+{{$vid_logo.SetTitle "Animation" -}}
+{{$vid_logo_lens.SetTitle "Lens region" -}}
+
+{{$vid_logo.AddMarker 63 "Lens effect starts" "right" -}}
+{{$vid_logo.AddMarker 192 "Lens effect done" "left" -}}
+{{$vid_logo_lens.LinkMarkers $vid_logo -}}
+
+{{$aud_o20_ne.SetTitle "No echo" -}}
+{{$aud_o20_e.SetTitle "Echo" -}}
+{{$aud_o20_diff_flac.SetTitle "Difference (FLAC)" -}}
+{{$aud_o20_diff_vorbis.SetTitle "Difference (Vorbis)" -}}
+
+{{$vid_compat_on.SetTitle "SC-88Pro effect compatibility" -}}
+{{$vid_compat_off.SetTitle "Unpatched, original MIDI file" -}}
+
+<style>
+	#trials-{{.Date}} thead tr th:not(:last-child),
+	#trials-{{.Date}} thead tr td:nth-child(5),
+	#trials-{{.Date}} tbody tr:nth-child(3n + 1) td:nth-child(7),
+	#trials-{{.Date}} tbody tr:not(:nth-child(3n + 1)) td:nth-child(6) {
+		border-right: var(--table-border-thick);
+	}
+
+	#trials-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+
+	#trials-{{.Date}} tbody tr {
+		background-color: unset;
+	}
+
+	#trials-{{.Date}} tbody td {
+		text-align: right;
+	}
+
+	#trials-{{.Date}} tbody tr .build {
+		border-right: var(--table-border-thick);
+		font-family: unset;
+	}
+
+	#perf-{{.Date}} {
+		font-size: 82.5%;
+		color: white;
+	}
+
+	#perf-{{.Date}} tr {
+		background-color: unset;
+	}
+
+	#perf-{{.Date}} thead th:nth-child(1) {
+		text-align: right;
+	}
+	#perf-{{.Date}} thead th:nth-child(2),
+	#perf-{{.Date}} tbody td {
+		text-align: left;
+		width: 1024px;
+	}
+
+	#perf-{{.Date}} tbody th {
+		font-weight: normal;
+	}
+
+	#perf-{{.Date}} tbody tr:not(:last-child) {
+		border-bottom: var(--table-border);
+	}
+
+	#perf-{{.Date}} tbody tr div {
+		width: calc(100% - 11.25ch);
+		white-space: nowrap;
+		justify-self: left;
+	}
+
+	#perf-{{.Date}} tbody tr div .perfbar {
+		border-right: 1px solid white;
+	}
+
+	#perf-{{.Date}} tbody tr div span:last-child {
+		padding-left: 0.25em;
+	}
+</style>
+
+<p>
+	And then, the Shuusou Gyoku renderer rewrite escalated to another 10-push monster that delayed the planned Seihou Summer™ straight into mid-fall. Guess that's just how things go these days at my current level of quality. Testing and polish made up half of the development time of this new build, which probably doesn't surprise anyone who has ever dealt with GPUs and drivers…
+</p><ol>
+	<li><a href="#cleanup-{{.Date}}">Codebase cleanup and portability</a></li>
+	<li><a href="#modules-{{.Date}}">Rolling out C++ Standard Library Modules</a></li>
+	<li><a href="#issues-{{.Date}}">Pearls uncovered by static analysis</a> (← start here if you don't particularly care about C++)</li>
+	<li><a href="#arch-{{.Date}}">Finishing the new graphics architecture (and discovering every remaining 8-bit/16-bit inconsistency)</a></li>
+	<li><a href="#sdl-{{.Date}}">Starting the SDL port with the simple things</a><ul>
+		<li><a href="#benchmark-{{.Date}}">Benchmarking SDL_Renderer's driver APIs</a></li>
+	</ul></li>
+	<li><a href="#lens-{{.Date}}">Porting the lens ball effect</a></li>
+	<li><a href="#window-{{.Date}}">Adding scaled window and borderless fullscreen modes</a><ul>
+		<li><a href="#hotkeys-{{.Date}}">Adding hotkeys for the above</a></li>
+	</ul></li>
+	<li><a href="#scalemodes-{{.Date}}">Screenshots, and how they force us to rethink scaling</a></li>
+	<li><a href="#subpixels-{{.Date}}">Achieving subpixel accuracy</a><ul>
+		<li><a href="#subpixels-{{.Date}}">Displaced triangles</a></li>
+		<li><a href="#lines-{{.Date}}">Line rendering</a></li>
+	</ul></li>
+	<li><a href="#future-{{.Date}}">Future work</a><ul>
+		<li><a href="#kog-{{.Date}}">Kioh Gyoku hype 🙌</a></li>
+		<li><a href="#palettized-{{.Date}}">Preserving the palettized 8-bit render path</a></li>
+		<li><a href="#sdl3-{{.Date}}">Updating to SDL 3</a></li>
+	</ul></li>
+	<li><a href="#echo-{{.Date}}">Recreating the Sound Canvas VA BGM packs (now with panning delay)</a></li>
+</ol><hr id="cleanup-{{.Date}}"><p>
+	But first, let's finally deploy <a href="https://wg21.link/P2465R3">C++23 Standard Library Modules</a>! I've been waiting for the promised compile-time improvements of modules for 4 years now, so I was bound to jump at the very first possible opportunity to use them in a project. Unfortunately, MSVC further complicates such a migration by adding one particularly annoying proprietary requirement:
+</p><ul>
+	<li>Our own code wants to use both static analysis and modules.</li>
+	<li>MSVC therefore insists that the modules are also compiled with static analysis enabled.</li>
+	<li>But this in turn forces every other translation unit that consumes these modules, including pbg's code, to be built with static analysis enabled as well, …</li>
+</ul><p>
+	… which means we're now faced with hundreds of little warnings and C++ Core Guideline violations from pbg's code. Sure, we could just disable all warnings when compiling pbg's source files and get on with rolling out modules, because they would still count as "statically analyzed" in this case. {{HTML_Emoji "tannedcirno"}} But that's silly. As development continues and we write more of our own modern code, more and more of it will invariably end up within pbg's files, merging and intertwining with original game code. Therefore, not analyzing these files is bound to leave more and more potential issues undetected. Heck, I've <i>already</i> committed a <a href="https://isocpp.org/wiki/faq/ctors#static-init-order">static initialization order fiasco</a> by accident that only turned into an actual crash halfway through the development of these 10 pushes. Static analysis would have caught that issue.<br>
+	So let's meet in the middle. Focus on a sensible subset of warnings that we would appreciate in our own code or that could reveal bugs or portability issues in pbg's code, but disable anything that would lead to giant and dangerous refactors or that won't apply to our own code. For example, it would sure be nice to rewrite certain instances of <code>goto</code> spaghetti into something more structured, but since we <i>ourselves</i> won't use <code>goto</code>, it's not worth worrying about within a porting project.
+</p><p>
+	After deduplicating lots of code to reduce the sheer <i>number</i> of warnings, the single biggest remaining group of issues were the C-style casts littered throughout the code. These combine the unconstrained unsafety of C with the fact that most of them use the classic uppercase integer types from <code>&lt;windows.h&gt;</code>, adding a further portability aspect to this class of issues.<br>
+	The perhaps biggest problem about them, however, is that casts are a <i>unary operator</i> with its own place in the precedence hierarchy. If you don't surround them with even more brackets to indicate the exact order of operations, you can confuse and mislead the hell out of anyone trying to read your code. This is how we end up with the single most devious piece of arithmetic I've found in this game so far:
+</p><figure><pre>BYTE d = (BYTE)(t->d+4)/8;	// 修正 8 ごとで 32 分割だからズラシは 4</pre><figcaption>
+		<code>t->d</code> is a <code>BYTE</code> as well.
+	</figcaption>
+</figure><p>
+	If you don't look at vintage C code all day, this cast looks redundant at first glance. Why would you separately cast the result of this expression to the type of the receiving variable? However, casting has higher precedence than division, so the code actually downcasts the <i>dividend</i>, <code>(t->d+4)</code>, <i>not</i> the result of the division. And why would pbg do <i>that</i>? Because the regular, untyped <code>4</code> is implicitly an <code>int</code>, C promotes <code>t->d</code> to <code>int</code> as well, thus avoiding the intended 8-bit overflow. If <code>t->d</code> is 252, removing the cast would therefore result in <code>
+		((int{&nbsp;252&nbsp;}&nbsp;+&nbsp;int{&nbsp;4&nbsp;})&nbsp;/&nbsp;8)&nbsp;=
+		256&nbsp;/&nbsp;8&nbsp;=</code>
+	32, not the 0 we wanted to have. And since this line is part of the <a href="https://github.com/nmlgc/ssg/blob/pbg/GIAN07/TAMA.CPP#L402-L424">sprite selection for VIVIT-captured-'s feather bullets</a>, omitting the cast has a visible effect on the game:
+</p><figure class="pixelated" style="width: 768px;">
+	<rec98-child-switcher><img
+		src="{{$feathercast_missing}}" data-title="Removed cast" class="active" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, but with one feather bullet turned into a &quot;YZ&quot; sprite due to a removed downcast of the dividend in the angle calculation"
+	/><img
+		src="{{$feathercast_correct}}" data-title="Original game" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, rendered correctly"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		The first file in <code>GRAPH.DAT</code> explains what we're seeing here.
+	</figcaption>
+</figure><p>
+	So let's add brackets and replace the C-style cast with a C++ <code>static_cast</code> to make this more readable:
+</p><figure><pre class="chroma">const auto d = (static_cast&lt;uint8_t&gt;(t->d + 4) / 8);</pre>
+</figure><p>
+	But that only addresses the precedence pitfall and doesn't tell us <i>why</i> we need that cast in the first place. Can we be more explicit?
+</p><figure><pre class="chroma">const auto d = (((t->d + 4) & 0xFF) / 8);</pre>
+</figure><p>
+	That might be better, but still assumes familiarity with integer promotion for that mask to not appear redundant. What's the strongest way we could scream <i>integer promotion</i> to anyone trying to touch this code?
+</p><figure><pre class="chroma">const auto d = (Cast::down_sign&lt;uint8_t&gt;(t->d + 4) / 8);</pre>
+	<figcaption>Of course, I also added a lengthy comment above this line.</figcaption>
+</figure><p>
+	Now we're talking! <code>Cast::down_sign()</code> uses <code>static_assert</code>s to enforce that its argument must be both larger and differently signed than the target type inside the angle brackets. This unmistakably clarifies that we want to truncate a promoted integer addition because the code wouldn't even compile if the argument was already a <code>uint8_t</code>. As such, <a href="https://github.com/nmlgc/ssg/blob/P0295/game/cast.h">this new set of casts I came up with</a> goes even further in terms of clarifying intent than the <a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Res-narrowing"><code>gsl::narrow_cast()</code></a> proposed by the C++ Core Guidelines, which is <a href="https://github.com/microsoft/GSL/blob/3275f9ccb93a559a34baeb52f86c192a30e914b0/include/gsl/util#L102-L110">purely informational</a>.
+</p><p>
+	OK, so replacing C-style casts is better for readability, but why care about it during a porting project? Wouldn't it be more efficient to just <code>typedef</code> the <code>&lt;windows.h&gt;</code> types for the Linux code and be done with it? Well, the ECL and SCL interpreters provide another good reason not to do that:
+</p><figure>
+	<pre>case(ECL_SETUP): // 敵の初期化
+	e->hp    = *(DWORD *)(&cmd[1]);
+	e->score = *(DWORD *)(&cmd[1+4]);</pre>
+</figure><p>
+	In these instances, the <code>DWORD</code> type communicates that this codebase originally targeted Windows, and implies that the <code>cmd</code> buffer stores these 32-bit values in little-endian format. Therefore, replacing <code>DWORD</code> with the seemingly more portable <code>uint32_t</code> would actually be <i>worse</i> as it no longer communicates the endianness assumption. Instead, let's make the endianness explicit:
+</p><figure>
+	<pre class="chroma">case(ECL_SETUP): // 敵の初期化
+<span class="gi">+	e->hp    = U32LEAt(&cmd[1 + 0]);</span>
+<span class="gi">+	e->score = U32LEAt(&cmd[1 + 4]);</span></pre><figcaption>
+	No surprises once we port this game to a big-endian system – and much fewer characters than a pedantic <code>reinterpret_cast</code>, too.
+</figcaption>
+</figure><hr id="modules-{{.Date}}"><p>
+	With that and <a href="https://github.com/nmlgc/tupblocks/compare/acb2572...fae347c">another pile of improvements for my Tup building blocks</a>, we finally get to deploy <code>import std;</code> across the codebase, and improve our build times by…<br>
+	…not exactly the mid-three-digit percentages I was hoping for. Previously, a full parallel compilation of the Debug build took roughly 23.9s on my 6-year-old 6-core Intel Core i5-8400T. With modules, we now need to compile the C++ standard library a single time on every from-scratch rebuild or after a compiler version update, which adds an unparallelizable ~5.8s to the build time. After that though, all C++ code compiles within ~12.4s, yielding a still decent 92% speedup for regular development. 🎉 Let's look more closely into these numbers and the resulting state of the codebase:
+</p><ul>
+	<li>Expecting three-digit speedups was definitely a bit premature as there were still several game-code translation units that <code>#include &lt;windows.h&gt;</code>. The subsequent graphics work removed a few more of these instances, which did bring the speedup into the three-digit range with a compilation time of ~11.6s by the end of P0295.</li>
+	<li>Supporting <code>import</code>-then-<code>#include</code> is crucial for supporting gradual migrations from headers to modules, but this is one of the most challenging features for compilers to implement, with both <a href="https://www.reddit.com/r/cpp/comments/1b0zem7/comment/ksc6xws">MSVC</a> and <a href="https://github.com/llvm/llvm-project/issues/61465">Clang</a> struggling. By now, MSVC admirably seems to handle all of the cases I ran into, <a href="https://github.com/nmlgc/ssg/commit/4e57a0e1489a20deaa5df51a023def9c343a0800">except for this one</a>:<figure>
+		<pre>// ENEMY.H
+import std.compat;
+
+inline bool LaserHITCHK(/* … */)
+{
+	// […]
+
+	// Causes the compiler to instantiate the overloaded C++ version of
+	// std::abs() via the global namespace re-export in `std.compat`,
+	// not the C version.
+	w = abs(-sinl(d,tx) + cosl(d,ty));
+
+	// […]
+}
+
+// Later, in another header file included via &lt;windows.h&gt;…
+// This header defines the C version of abs(), thus causing a duplicate
+// definition error.
+#include &lt;stdlib.h&gt;</pre>
+	</figure>The best solution here is to simply not define functions in headers. We could also blame this one on the <code>std.compat</code> module which re-exports the C standard library into the global namespace and thus creates these duplicated definitions in the first place, but come on, <code>std::uint32_t</code> is 13 characters. That is way too much typing and screen space for referring to basic fixed-size integer types.</li>
+	<li>{{Blog_PostLink "2024-07-09#win32" "As we've thoroughly explored last time"}}, Tup still ain't batching. Could it be that Tup's paradigm of spawning one <code>cl.exe</code> process per translation unit prevents us from using modules to their full throughput potential? The <a href="https://learn.microsoft.com/en-us/cpp/build/reference/cgthreads-code-generation-threads"><code>/cgthreads1</code></a> flag seems to help in this regard. Let's do some profiling using <code>cl.exe</code>'s <a href="https://www.geoffchappell.com/studies/msvc/cl/cl/options/b$t.htm">undocumented <code>/Bt</code> flag</a> to find out how the compilation times are distributed between the parsing and semantic analysis frontend (<code>c1*.dll</code>) and the code generation backend (<code>c2.dll</code>):
+	<figure><table id="trials-{{.Date}}" class="numbers trials"><thead>
+		<tr>
+			<th colspan="2" rowspan="3"></th>
+			<th colspan="5">Game code <small>(60 TUs around migration, 58 TUs at end of P0295)</small></th>
+			<th colspan="5">Library code  <small>(211 TUs)</small></th>
+		</tr>
+		<tr>
+			<td>Σ <code>c1xx.dll</code></td>
+			<td>Σ <code>c2.dll</code></td>
+			<td>Σ Total</td>
+			<td>% Frontend</td>
+			<td>Real time</td>
+			<td>Σ <code>c1.dll</code></td>
+			<td>Σ <code>c2.dll</code></td>
+			<td>Σ Total</td>
+			<td>% Frontend</td>
+			<td>Real time</td>
+		</tr>
+	</thead><tbody>
+		<tr>
+			<th rowspan="3" style="border-bottom: var(--table-border-thick);">Tup</th>
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/b1852be752a8069ae0d248396ca3a2adcb0c9c79">Before modules</a></td>
+			<td>127.4s</td>
+			<td>3.2s</td>
+			<td>130.6s</td>
+			<td>97.5%</td>
+			<td>23.9s</td>
+			<td rowspan="3">53.3s</td>
+			<td rowspan="3">7.9s</td>
+			<td rowspan="3">61.2s</td>
+			<td rowspan="3">87.1%</td>
+			<td rowspan="3">14.2s</td>
+		</tr><tr>
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/a2eb8fa6dbb86c5ffa3b654bed427be8630dc0bc">After modules</a></td>
+			<td>59.1s</td>
+			<td>3.1s</td>
+			<td>62.2s</td>
+			<td>95.1%</td>
+			<td>12.4s</td>
+		</tr><tr style="border-bottom: var(--table-border-thick);">
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/P0295">At end of P0295</a></td>
+			<td>55.1s</td>
+			<td>3.1s</td>
+			<td>58.2s</td>
+			<td>94.6%</td>
+			<td>11.6s</td>
+		</tr><tr>
+			<th rowspan="3">Batched</th>
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/b1852be752a8069ae0d248396ca3a2adcb0c9c79">Before modules</a></td>
+			<td>117.8s</td>
+			<td>1.5s</td>
+			<td>119.35s</td>
+			<td>98.7%</td>
+			<td>21.9s</td>
+			<td rowspan="3">42.3s</td>
+			<td rowspan="3">2.5s</td>
+			<td rowspan="3">44.8s</td>
+			<td rowspan="3">94.5%</td>
+			<td rowspan="3">8.9s</td>
+		</tr><tr>
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/a2eb8fa6dbb86c5ffa3b654bed427be8630dc0bc">After modules</a></td>
+			<td>51.8s</td>
+			<td>1.3s</td>
+			<td>53.1s</td>
+			<td>97.6%</td>
+			<td>9.7s</td>
+		</tr><tr>
+			<td class="build"><a href="https://github.com/nmlgc/ssg/commit/P0295">At end of P0295</a></td>
+			<td>48.5s</td>
+			<td>1.3s</td>
+			<td>49.8s</td>
+			<td>97.4%</td>
+			<td>9.3s</td>
+		</tr>
+	</tbody></table><figcaption>
+		Cumulative frontend and backend compilation times of a Debug build on my system, as reported by <code>/Bt</code>, together with the total real time. Since the library code is all C and therefore unaffected by modules, the numbers are the average of the builds at all three tested commits.
+	</figcaption></figure>
+	So yes, the Tup tax is real and adds somewhere between 30 and 40&nbsp;ms per translation unit to the compilation time. <code>cl.exe</code> is simply better at parallelizing itself than any attempt to parallelize it from the outside. It feels inevitable that I'll eventually just fork Tup and add this batching functionality myself; the entire trajectory of my development career has been pointing towards that goal, and it would be the logical conclusion of my C++ build frustrations. But certainly not any time soon; the cost is not <i>too</i> high all things considered, I update libraries maybe once every second push, and I'll have done enough build system work for the foreseeable future after the Linux port is done.<br>
+	These numbers also explain why <code>/cgthreads1</code> has no measurable performance benefit for this codebase. You might <i>think</i> it's a good idea because Tup spawns one parallel <code>cl.exe</code> process per CPU core and we can't get any more real parallelism in such a situation. However, that's not what this option does – it only limits the number of <b>c</b>ode <b>g</b>eneration threads, and as the numbers show, code generation is the opposite of our bottleneck.</li>
+	<li>However, these compile time improvements come at the cost of modules completely breaking any of the major LSPs at this point in time:<ul>
+		<li>The C++ extension for Visual Studio Code crashes with this error in any file that includes several headers in addition to modules:
+		<blockquote>IntelliSense process crash detected: handle_initialize
+Quick info operation failed: FE: 'Compiler exited with error - No IL available'</blockquote>
+		Consequently, it no longer provides any IntelliSense for either header or standard library code.</li>
+		<li>The big Visual Studio IDE politely remarks that <i><q>C++ IntelliSense support for C++20 Modules is currently experimental</q></i> and then silently doesn't provide IntelliSense for anything either.</li>
+		<li>When given a <code>compile_commands.json</code> from Tup via <code>tup compiledb</code>, clangd does continue to provide IntelliSense for both header code and the C++ standard library, but its actual lack of module support puts so many false-positive squiggly lines all over the code that it's not worth using either.</li>
+	</ul></li>
+</ul><p>
+	But in the end, the halved compile times during regular development are well worth sacrificing IntelliSense for the time being… especially given that I am the only one who has to live in this codebase. 🧠 And besides, modules bring their own set of productivity boosts to further offset this loss: We can now freely use modern C++ standard library features at a minuscule fraction of their usual compile time cost, and get to cut down the number of necessary <code>#include</code> directives. Once you've experienced the simplicity of <code>import std;</code>, headers and their associated micro-optimization of <code>#include</code> costs immediately feels archaic. Try the equally undocumented <a href="https://aras-p.info/blog/2019/01/21/Another-cool-MSVC-flag-d1reportTime/"><code>/d1reportTime</code></a> flag to get an idea of the compile time impact of function definitions and template instantiations inside headers… I've definitely been moving quite a few of those to <code>.cpp</code> files within these 10 pushes.
+</p><p>
+	However, it still felt like the earliest possible point in time where doing this was feasible at all. Without LSP support, modules still feel way too bleeding-edge for a feature that was added to the C++ standard 4 years ago. This is why I only chose to use them for covering the C++ standard library for now, as we have yet to see how well GCC or Clang handle it all for the Linux port. If we run into any issues, it makes sense to polyfill any workarounds as part of the Tup building blocks instead of bloating the code with all the standard library header inclusions I'm so glad to have gotten rid of.<br>
+	Well, <i>almost all of them</i>, because we <i>still</i> have to <code>#include &lt;assert.h&gt;</code> and <code>&lt;stdlib.h&gt;</code> because modules can't expose preprocessor macros and C++23 has no macro-less alternative for <code>assert()</code> and <code>offsetof()</code>. 🤦 <a href="https://en.cppreference.com/w/cpp/language/attributes/assume"><code>[[assume()]]</code> exists</a>, but it's the exact opposite of <code>assert()</code>. How disappointing.
+</p><hr id="issues-{{.Date}}"><p>
+	As expected, static analysis also brought a small number of pbg code pearls into focus. This list would have fit better into the static analysis section, but I figured that my audience might not necessarily care about C++ all that much, so here it is:
+</p><ul>
+	<li>Shuusou Gyoku only ever seeds its RNG in three places:<ul>
+		<li>At program startup (with 0),</li>
+		<li>immediately before the game picks a random attract replay after 10 seconds of no input in the top level of the menu (with the current system time in milliseconds), and, obviously,</li>
+		<li>when starting a replay (with the replay's recorded seed), which ironically counteracts the above seed immediately after the game selected the replay.</li>
+	</ul>
+	Since neither the main menu nor any of the three weapon previews utilize the RNG, any new <i>unrecorded</i> round started immediately after launching the <code>.exe</code> will always start with a seed of 0. Similarly, recorded rounds <a href="https://github.com/nmlgc/ssg/blob/ba93920997d70e0f47cdb18c61056246cc79a784/GIAN07/DEMOPLAY.CPP#L52-L54">calculate their seed from the next two RNG numbers</a>, and will always start with a seed of 347 in the same situation. RNG manipulation is therefore as simple as crafting a replay file with the intended seed, starting its playback, and immediately quitting back to the main menu. The stage of the crafted replay only matters insofar as Stage 6 starts out by reading 320 numbers from the RNG to initialize its wavy clock and shooting star animations, so you'd preferably use any other stage as all of them take a while until they read their first random number.<br>
+	Of course, even a shmup with a fixed seed is only as deterministic as the input it receives from the player, and typical human input deviations will quickly add more randomness back into the game.</li>
+	<li>The effective cap of stage enemies, player shots, enemy bullets, lasers, and items is 1 entity smaller than their static array sizes would suggest. pbg did this to work around a potential out-of-bounds write in a generic management function.</li>
+	<li>The in-game score display no longer overflows into negative numbers once the score exceeds (2<sup>31</sup>&nbsp;-&nbsp;1) points. Shuusou Gyoku did track the score using a signed 64-bit integer, but pbg accidentally used a 32-bit specifier for <code>sprintf()</code>.</li>
+</ul><hr id="arch-{{.Date}}"><p>
+	Alright, on to graphics! With font rendering and surface management mostly taken care of last year, the main focus for this final stretch was on all the geometric shapes and color gradients. pbg placed a bunch of rather game-specific code in the platform layer directly next to the Direct3D API calls, including point generation for circles and even the colors of <a href="https://github.com/nmlgc/ssg/blob/pbg/DirectXUTYs/DD_GRP3D.CPP#268">gradient rectangles</a>, <a href="https://github.com/nmlgc/ssg/blob/pbg/DirectXUTYs/DD_GRP3D.CPP#L294">gradient polygons</a>, and <a href="https://github.com/nmlgc/ssg/blob/pbg/DirectXUTYs/DD_GRP3D.CPP#L315-L316">the Music Room's spectrum analyzer</a>. We don't want to duplicate any of this as part of the new SDL graphics layer, so I moved it all into a new game-level geometry system. By placing both the 8-bit and 16-bit approaches next to each other, this new system also draws more attention to the different approaches used at each bit depth.<br>
+	So far, so boring. Said differences themselves <i>are</i> rather interesting though, as this refactor uncovered all of the remaining inconsistencies between the two modes:
+</p><ol>
+	<li>In 8-bit mode, the game draws circles by writing pixels along the accurate outline into the framebuffer. The hardware-accelerated equivalent for the 16-bit mode would be a large unwieldy point list, so the game instead approximates circles by drawing straight lines along a regular 32-sided polygon:
+	<figure class="pixelated" style="width: 512px;">
+		<rec98-child-switcher><img
+			src="{{$circles_8}}" data-title="8-bit" class="active" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
+		/><img
+			src="{{$circles_16}}" data-title="16-bit" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+			It's not like the APIs prevent the 16-bit mode from taking the same approach as the 8-bit mode, so I suppose that pbg profiled this and concluded that lines offloaded to the GPU performed better than locking the framebuffer and writing pixels? Then again, given Shuusou Gyoku's comparatively high system requirements…
+		</figcaption>
+	</figure><p>For preservation and consistency reasons, the SDL backend will also go with the approximation, although <a class="goal" href="https://github.com/nmlgc/ssg/issues/63">we could provide the accurate rendering of 8-bit mode via point lists if there's interest</a>.</p></li>
+	<li>There's an off-by-one error in the playfield clipping region for Direct3D-rendered shapes, which ends at (﻿511,&nbsp;479﻿) instead of (﻿512,&nbsp;480﻿):
+	<figure class="pixelated" style="width: 640px;">
+		<rec98-child-switcher><img
+			src="{{$ob1_vp_8}}" data-title="8-bit" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
+		/><img
+			src="{{$ob1_vp_16}}" data-title="16-bit" class="active" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+			The fix is obvious.
+		</figcaption>
+	</figure></li>
+	<li>There's an off-by-one error in the 8-bit rendering code for opaque rectangles that causes them to appear 1 pixel wider than in 16-bit mode. The red backgrounds behind the currently entered score are the only such boxes in the entire game; the transparent rectangles used everywhere else are drawn with the same width in both modes.
+	<figure class="pixelated" style="width: 912px;">
+		<rec98-child-switcher><img
+			src="{{$ob1_box_8}}" data-title="8-bit" width="912" class="active" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 8-bit mode, highlighting 1st place with red backgrounds that are 1 pixel wider than in 16-bit mode"
+		/><img
+			src="{{$ob1_box_16}}" data-title="16-bit" width="912" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 16-bit mode, highlighting 1st place with red backgrounds at the correct size passed by game code"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+			The game code also clearly asks for 400 and 14 pixels, respectively.
+		</figcaption>
+	</figure></li>
+	<li>If we move the nice and accurate 8-bit circle outlines closer to the edge of the playfield, we discover, you guessed it, yet another off-by-one error:
+	<figure class="pixelated" style="width: 640px;">
+		<rec98-child-switcher><img
+			src="{{$ob1_circles_8}}" data-title="8-bit" width="640" class="active" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight, this time with the circles closer to the right edge of the playfield to highlight the off-by-one error in their clipping condition"
+		/><img
+			src="{{$ob1_circles_16}}" data-title="Line approximation (with fixed clipping)" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight and with a fixed playfield clipping region for Direct3D shapes, this time with the circles closer to the right edge of the playfield to compare their correct clipping against the off-by-one error in 8-bit mode"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+			No circle pixels at the right edge of the playfield. Obviously, I had to fix bug #2 in order for the line approximation to not also get clipped at the same coordinate.
+		</figcaption>
+	</figure></li>
+	<li>The final off-by-one clipping error can be found in the filled circle part of homing lasers in 8-bit mode, but it's so minor that it doesn't deserve its own screenshot.</li>
+	<li>Also, how about 16-bit circles being off by <i>one full rotation</i>? <a href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/DirectXUTYs/DD_GRP3D.CPP#L129-L133">pbg's code originally generated and rendered 720° worth of points</a>, thus unnecessarily duplicating the number of lines rendered.</li>
+</ol><p>
+	Now that all of the more complex geometry is generated as part of game code, I could simplify most of the engine's graphics layer down to the classic immediate primitives of early 3D rendering: Line strips, <a href="https://en.wikipedia.org/wiki/Triangle_strip">triangle strips</a>, and <a href="https://en.wikipedia.org/wiki/Triangle_fan">triangle fans</a>, although I'm retaining pbg's dedicated functions for filled boxes and single gradient lines in case a backend can or needs to use special abstractions for these. (Hint, hint…)
+</p><hr id="sdl-{{.Date}}"><p>
+	So, let's add an SDL graphics backend! With all the earlier preparation work, most of the SDL-specific sprite and geometry code turned out as a very thin wrapper around the, for once, truly simple function calls of the DirectMedia layer. Texture loading from the original color-keyed BMP files, for example, turned into a sequence of 7 straight-line function calls, with most of the work done by <a href="https://wiki.libsdl.org/SDL2/SDL_LoadBMP_RW"><code>SDL_LoadBMP_RW()</code></a>, <a href="https://wiki.libsdl.org/SDL2/SDL_SetColorKey"><code>SDL_SetColorKey()</code></a>, and <a href="https://wiki.libsdl.org/SDL2/SDL_CreateTextureFromSurface"><code>SDL_CreateTextureFromSurface()</code></a>. And although <code>SDL_LoadBMP_RW()</code> definitely has its fair share of unnecessary allocations and copies, the whole sequence still loads textures ~300&nbsp;µs faster than the old GDI and DirectDraw backend.
+</p><p>
+	Being more modern than our immediate geometry primitives, <a href="https://wiki.libsdl.org/SDL2/SDL_RenderGeometry">SDL's triangle renderer</a> only either renders vertex buffers as triangle lists or requires a corresponding index buffer to realize triangle strips and fans. On paper, this would require an additional memory allocation for each rendered shape. But since we know that Shuusou Gyoku never passes more than 66 vertices at once to the backend, we can be fancy and <a href="https://github.com/nmlgc/ssg/blob/ba93920997d70e0f47cdb18c61056246cc79a784/platform/sdl/graphics_sdl.cpp#L78-L100">compute two constant index buffers at compile time</a>. 🧠 <a href="https://wiki.libsdl.org/SDL2/SDL_RenderGeometryRaw"><code>SDL_RenderGeometryRaw()</code></a> is the true star of the show here: Not only does it allow us to decouple position and color data compared to <a href="https://wiki.libsdl.org/SDL2/SDL_Vertex">SDL's default packed vertex structure</a>, but it even allows the neat size optimization of 8-bit index buffers instead of enforcing 32-bit ones.
+</p><p>
+	By far the funniest porting solution can be found in the Music Room's spectrum analyzer, which calls for 144 1-pixel gradient lines of varying heights. SDL_Renderer has no API for rendering lines with multiple colors… which means that we have to render them as 144 quads with a width of 1 pixel. {{HTML_Emoji "onricdennat"}}
+</p><figure class="pixelated" style="width: 960px;">
+	<rec98-child-switcher><img
+		src="{{$spect}}" data-title="Solid" width="960" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, at 6× magnification"
+	/><img
+		src="{{$spect_wf}}" data-title="Wireframe" width="960" class="active" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, with a wireframe render of the spectrum overlaid to demonstrate how the new SDL backend renders these gradient lines, at 6× magnification"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		The wireframe was generated via a raw <code>glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);</code>
+	</figcaption>
+</figure><p>
+	But all these simple abstractions have to be implemented somehow, and this is where we get to perhaps the biggest technical advantage of SDL_Renderer over pbg's old graphics backend. We're no longer locked into just a single underlying graphics API like Direct3D 2, but can choose any of the APIs that the team implemented the high-level renderer abstraction for. We can even switch between them at runtime!<br>
+	On Windows, we have the choice between 3 Direct3D versions, 2 OpenGL versions, and the software renderer. And as we're going to see, all we should do here is define a sensible default and then allow players to override it in a dedicated menu:
+</p><figure class="fullres pixelated">
+	<img src="{{$api}}" width="640" alt="Screenshot of the new API configuration submenu in the P0295 build of Shuusou Gyoku, highlighting the default OpenGL API">
+	<figcaption>Huh, we default to OpenGL 2.1? Aren't we still on Windows? {{HTML_Emoji "thonk"}}</figcaption>
+</figure><p>
+	Since such a menu is pretty much asking for people to try every GPU ever with every one of these APIs, <a href="https://github.com/nmlgc/ssg/issues/65">there are bound to be bugs with certain combinations</a>. To prevent the potentially infinite workload, these bugs are exempt from <a href="/faq#mod-bugs">my usual free bugfix policy</a> as long as we can get the game working on at least one API without issues. The new initialization code should be resilient enough to automatically fall back on one of SDL's other driver APIs in case the default OpenGL 2.1 fails to initialize for whatever reason, and we can still fight about the best default API.
+</p><p id="benchmark-{{.Date}}"><p>
+	But let's assume the hopefully usual case of a functional GPU with at least decently written drivers where most of the APIs will work without visible issues. Which of them is the most performant/power-saving one on any given system? With every API having a slightly different idea about 3D rendering, there are bound to be <i>some</i> performance differences, and maybe these even differ between GPUs. But just how large would they be?<br>
+	The answer is yes:
+</p><figure><rec98-child-switcher>
+	<table data-title="Stage 6, Laser" class="numbers active" id="perf-{{.Date}}">
+		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
+		<tbody><tr>
+			<th>
+				<strong>Intel Core i5-2520M</strong> (2011)<br>
+				<strong>Intel HD Graphics 3000</strong> (2011)<br>
+				1120×840
+			</th><td>
+			<div>{{HTML_PerfBar	66	190	65.9722222}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	150	288	100}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	3	29	10.0694444}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel Core i5-8400T</strong> (2018)<br>
+				<strong>Intel UHD Graphics 630</strong> (2018)<br>
+				1280×960
+			</th><td>
+			<div>{{HTML_PerfBar	217 485 85.2372583}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	104 331 58.172232}}<span>Direct3D 11</span></div>
+			<div>{{HTML_PerfBar	59 143 25.1318102}}<span>Direct3D 12</span></div>
+			<div>{{HTML_PerfBar	438 569 100}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	5	27	4.745167}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel Core i7-7700HQ</strong> (2017)<br>
+				<strong>NVIDIA GeForce GTX 1070 Max Q</strong>, thermal-throttled (2017)<br>
+				1280×960
+			</th><td>
+			<div>{{HTML_PerfBar	141	445	61.6932686}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	155	468	64.8854962}}<span>Direct3D 11</span></div>
+			<div>{{HTML_PerfBar	218	520	72.1027065}}<span>Direct3D 12</span></div>
+			<div>{{HTML_PerfBar	528	682	94.6564885}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	652	721	100}}<span>OpenGL ES 2.0</span></div>
+			<div>{{HTML_PerfBar	4	44	6.1068702}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel i7-4790</strong> (2017)<br>
+				<strong>NVIDIA GeForce GTX 1660 SUPER</strong> (2019)<br>
+				640×480, scaled to 1760×1320
+			</th><td>
+			<div>{{HTML_PerfBar	2004	2172	100}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	1142	1249	57.504604}}<span>OpenGL 2.1</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>AMD Ryzen 5800X</strong> (2020)<br>
+				<strong>Radeon RX 7900XTX</strong> (2022)<br>
+				2560x1920
+			</th><td>
+			<div>{{HTML_PerfBar	555	1219	52.083333}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	750	1440	100}}<span>OpenGL 2.1</span></div>
+		</td></tr>
+	</tbody></table>
+	<table data-title="Extra Stage, Homing" class="numbers" id="perf-{{.Date}}">
+		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
+		<tbody><tr>
+			<th>
+				<strong>Intel Core i5-2520M</strong> (2011)<br>
+				<strong>Intel HD Graphics 3000</strong> (2011)<br>
+				1120×840
+			</th><td>
+			<div>{{HTML_PerfBar	33	90	51.1363636}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	63	176	100}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	4	53	30.1136364}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel Core i5-8400T</strong> (2018)<br>
+				<strong>Intel UHD Graphics 630</strong> (2018)<br>
+				1280×960
+			</th><td>
+			<div>{{HTML_PerfBar	133	379	75.2485089}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	58	72	14.3141153}}<span>Direct3D 11</span></div>
+			<div>{{HTML_PerfBar	33	105	20.8747515}}<span>Direct3D 12</span></div>
+			<div>{{HTML_PerfBar	367	503	100}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	7	83	16.500994}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel Core i7-7700HQ</strong> (2017)<br>
+				<strong>NVIDIA GeForce GTX 1070 Max Q</strong>, thermal-throttled (2017)<br>
+				1280×960
+			</th><td>
+			<div>{{HTML_PerfBar	19	202	29.9481097}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	134	330	48.9251297}}<span>Direct3D 11</span></div>
+			<div>{{HTML_PerfBar	218	390	57.8206079}}<span>Direct3D 12</span></div>
+			<div>{{HTML_PerfBar	510	618	91.6234248}}<span>OpenGL 2.1</span></div>
+			<div>{{HTML_PerfBar	339	675	100}}<span>OpenGL ES 2.0</span></div>
+			<div>{{HTML_PerfBar	8	84	12.4536694}}<span>Software</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>Intel i7-4790</strong> (2017)<br>
+				<strong>NVIDIA GeForce GTX 1660 SUPER</strong> (2019)<br>
+				640×480, scaled to 1760×1320
+			</th><td>
+			<div>{{HTML_PerfBar	1636	1990	100}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	675	1047	52.6130653}}<span>OpenGL 2.1</span></div>
+		</td></tr><tr>
+			<th>
+				<strong>AMD Ryzen 5800X</strong> (2020)<br>
+				<strong>Radeon RX 7900XTX</strong> (2022)<br>
+				2560x1920
+			</th><td>
+			<div>{{HTML_PerfBar	276	487	48.1206726}}<span>Direct3D 9</span></div>
+			<div>{{HTML_PerfBar	681	1011	100}}<span>OpenGL 2.1</span></div>
+		</td></tr>
+	</tbody></table>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	Computed using <a href="https://github.com/nmlgc/ssg/blob/pbg/GIAN07/GIAN.CPP#L157-L163">pbg's original per-second debugging algorithm</a>. Except for the Intel i7-4790 test, all of these use SDL's default geometry scaling mode as explained further below. The GeForce GTX 1070 could probably be twice as fast if it weren't inside a laptop that thermal-throttles after about 10 seconds of unlimited rendering.<br>
+	The two tested replays decently represent the entire game: In Stage 6, the software renderer frequently drops into low 1-digit FPS numbers as it struggles with the blending effects used by the Laser shot type's bomb, whereas GPUs enjoy the absence of background tiles. In the Extra Stage, it's the other way round: The tiled background <a href="https://github.com/nmlgc/ssg/issues/35">and a certain large bullet cancel</a> emphasize the inefficiency of unbatched rendering on GPUs, but the software renderer has a comparatively much easier time.
+</figcaption></figure><p>
+	And that's why I picked OpenGL as the default. It's either <i>the</i> best or close to the best choice everywhere, and in the one case where it isn't, it doesn't matter because the GPU is powerful enough for the game anyway.
+</p><p>
+	If those numbers still look way too low for what Shuusou Gyoku is (because they kind of do), you can try enabling SDL's draw call batching by setting the environment variable <code>SDL_RENDER_BATCHING</code> to <code>1</code>. This at least doubles the FPS for all hardware-accelerated APIs on the Intel UHD&nbsp;630 in the Extra Stage, and astonishingly turns Direct3D&nbsp;11 from the slowest API into by far the fastest one, speeding it up by 22× for a median FPS of <i>1617</i>. I only didn't activate batching by default because it causes stability issues with OpenGL ES 2.0 on the same system. But honestly, if even a mid-range laptop from 13 years ago manages a stable 60&nbsp;FPS on the default OpenGL driver <i>while still scaling the game</i>, there's no real need to spend budget on performance improvements.<br>
+	If anything, these numbers justify my choice of not focusing on a specific one of these APIs when coding retro games. There are only very few fields that target a wider range of systems with their software than retrogaming, and as we've seen, each of SDL's supported APIs could be the optimal choice on <i>some</i> system out there.
+</p><p>
+	The replays we used for testing: {{HTML_Download .HostedPath $replays}}
+</p><hr id="lens-{{.Date}}"><p>
+	{{Blog_PostLink "2023-08-01" "Last year"}}, it seemed as if the <span lang="ja" style="word-break: keep-all;">西方Ｐｒｏｊｅｃｔ</span> logo screen's lens ball effect would be one of the more tricky things to port to SDL_Renderer, and that impression was definitely accurate.
+</p><figure {{$vid_logo.FigureAttrs}}>
+	{{call .VideoPlayer $vid_logo.SetActive $vid_logo_lens}}
+</figure><p>
+	The effect works by capturing the original 140×140 pixels under the moving lens ball from the framebuffer into a temporary buffer and then overwriting the framebuffer pixels by shifting and stretching the captured ones according to a pre-calculated table. With DirectDraw, this is no big deal because you can simply lock the framebuffer for read and write access. If it weren't for the fact that you need to either generate or hand-write different code for every support bit depth, this would be one of the most natural effects you could implement with such an API. Modern graphics APIs, however, don't offer this luxury because it didn't take long for this feature to become a liability. Even 20 years ago, you'd rather write this sort of effect as a pixel shader that would directly run on the GPU in a much more accelerated way. Which is a non-starter for us – we sure ain't breaking SDL's abstractions to write a separate shader for every one of SDL_Renderer's supported APIs just for a single effect in the logo screen.<br>
+	As such, SDL_Renderer doesn't even begin to provide framebuffer locking. We can only get close by splitting the two operations:
+</p><ul>
+	<li>Reading can only be done via <code><a href="https://wiki.libsdl.org/SDL2/SDL_RenderReadPixels">SDL_RenderReadPixels()</a></code>, which is a one-time <code>memcpy()</code> from GPU to main memory. Doing that is <a href="https://narkive.com/lPJfIGhu.6">said to be extremely slow</a>, and we'd have to do it once per frame.</li>
+	<li>Writing can only be done by getting the new pixels onto a texture first. Which in turn can either be done by <a href="https://wiki.libsdl.org/SDL2/SDL_UpdateTexture">updating a rectangular area with prepared pixel data from system memory</a>, or <a href="https://wiki.libsdl.org/SDL2/SDL_LockTexture">locking a rectangular area and writing the pixels into a buffer</a>. However, even <code>SDL_LockTexture()</code> is explicitly labeled as write-only. By returning an effectively uninitialized texture, you're forced to software-render your entire scene onto this texture <i>anyway</i> after locking.<br>
+	This little detail in the API contract makes locking entirely unusable for this lens effect. Its code does not write to <i>every</i> pixel within the 140×140 area and relies on the unwritten pixels retaining their rendered color, just as you would expect regular memory to behave. If we are forced to prepare the full 140×140 pixels on the CPU, we might as well just go for the simpler <a href="https://forums.libsdl.org/viewtopic.php?p=40565#40565">and faster</a> <code>SDL_UpdateTexture()</code>.<ul>
+		<li>Also, if SDL says <i>"write-only access"</i>, does this mean we can't even be sure that the locked buffer is readable <i>after</i> we wrote some pixels and <i>before</i> we unlock the texture again? We'd only have to look at the PC-98's GRCG for an example of memory-mapped I/O where reading and writing can work fundamentally differently depending on the mode register. The OpenGL driver implements texture locking by allocating a separate buffer in main memory and then uploading this modified buffer to the GPU via <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml"><code>glTexSubImage2D()</code></a> upon unlocking, but the docs do leave open the possibility for a driver to return a pointer to GPU memory we can't or shouldn't read from.</li>
+		<li>In fact, the <i>only</i> sanctioned way of reading pixels back from a texture involves turning the texture into a render target and calling <code>SDL_RenderReadPixels()</code>.</li>
+	</ul></li>
+</ul><p>
+	Within these API limitations, we can now cobble together a first solution:
+</p><ol style="list-style: decimal;">
+	<li>Rely on <a href="https://wiki.libsdl.org/SDL2/SDL_RenderTargetSupported">render-to-texture being supported</a>. This is the case for all APIs that are currently implemented for SDL 2's renderer and <a href="https://github.com/libsdl-org/SDL/commit/dcd17f547324a143d66d79e3b586577a7da558ed">SDL 3 even made support mandatory</a>, but who knows if we ever get our hands on one of the elusive SDL 2 console ports under NDA and encounter one of them that doesn't support it… {{HTML_Emoji "thonk"}}</li>
+	<li>Create a 640×480 texture that serves as our editable framebuffer.</li>
+	<li>Create a 140×140 buffer in main memory, serving as the input and output buffer for the effect. We don't need the full 640×480 here because the effect only modifies the pixels below the magnified 140×140 area and doesn't push them further outside.</li>
+	<li>Retain the original main-memory 140×140 buffer from the DirectDraw implementation that captures the current frame's pixels under the lens ball before we modify the pixels.</li>
+	<li>Each frame, we then<ol style="list-style: lower-alpha;">
+		<li>render the scene onto 2),</li>
+		<li>capture the magnified area using <code>SDL_RenderReadPixels()</code>, reading from 2) and writing to 3),</li>
+		<li>copy 3) to 4) using a regular <code>memcpy()</code>,</li>
+		<li>apply the lens effect by shifting around pixels, reading from 4) and writing to 3),</li>
+		<li>write 3) back to 2), and finally</li>
+		<li>use 2) as the texture for a quad that scales the texture to the size of the window.</li>
+	</ol>
+</ol><p>
+	Compared to the DirectDraw approach, this adds the technical insecurity of render-to-texture support, one additional texture, one additional fullscreen blit, at least one additional buffer, and two additional copies that comprise a round-trip from GPU to CPU and back. It surely would have worked, but the documentation suggestions and <a href="https://discourse.libsdl.org/t/27581">horror stories</a> surrounding <code>SDL_RenderReadPixels()</code> put me off even trying that approach. Also, it would turn out to clash with an implementation detail we're going to look at later.<br>
+	However, our <q>scene</q> merely consists of a 320×42 image on top of a black background. If we need the resulting pixels in CPU-accessible memory anyway, there's little point in hardware-rendering such a simple scene to begin with, especially if SDL lets you <a href="https://wiki.libsdl.org/SDL2/SDL_CreateSoftwareRenderer">create independent software renderers that support the same draw calls but explicitly write pixels to buffers in regular system memory under your full control</a>.<br>
+	This simplifies our solution to the following:
+</p><ol style="list-style: decimal;">
+	<li>Create a 640×480 surface in main memory, acting as the target surface for <code>SDL_CreateSoftwareRenderer()</code>. But since the potentially hardware-accelerated renderer drivers can't render pixels from such surfaces, we still have to</li>
+	<li>create an additional 640×480 texture in write-only GPU memory.</li>
+	<li>Retain the original main-memory 140×140 buffer from the DirectDraw implementation that captures the current frame's pixels under the lens ball before we modify the pixels.</li>
+	<li>Each frame, we then<ol style="list-style: lower-alpha;">
+		<li>software-render the scene onto 1),</li>
+		<li>capture the magnified area using a regular <code>memcpy()</code>, reading from 1) and writing to 3),</li>
+		<li>apply the lens effect by shifting around pixels, reading from 3) and writing to 1),</li>
+		<li>upload all of 1) onto 2), and finally</li>
+		<li>use 2) as the texture for a quad that scales the texture to the size of the window.</li>
+	</ol></li>
+</ol><p>
+	This cuts out the GPU→CPU pixel transfer and replaces the second lens pixel buffer with a software-rendered surface that we can freely manipulate. This seems to require more memory at first, but this memory would actually come in handy for screenshots later on. It also requires the game to enter and leave the new dedicated software rendering mode to ensure that the <span lang="ja" style="word-break: keep-all;">西方Ｐｒｏｊｅｃｔ</span> image gets loaded as a system-memory "texture" instead of a GPU-memory one, but that's just two additional calls in the logo and title loading functions.<br>
+	Also, we would now software-render <i>all</i> of these 256 frames, including the fades. Since software rendering requires the <span lang="ja" style="word-break: keep-all;">西方Ｐｒｏｊｅｃｔ</span> image to reside in main memory, it's hard to justify an additional GPU upload just to render the 127 frames surrounding the animation.<br>
+</p><p>
+	Still, we've only eliminated a single copy, and <code>SDL_UpdateTexture()</code> can <a href="https://github.com/libsdl-org/SDL/blob/378234437fa2a99224391d5578f46971e190c0b7/src/render/direct3d12/SDL_render_d3d12.c#L1700-L1841">and will</a> do even more under the hood. Suddenly, SDL having its own shader language seems like the lesser evil, doesn't it?
+	When writing it out like this, it sure looks as if hardware rendering adds nothing but overhead here. So how about full-on dropping into software rendering and handling the scaling from 640×480 to the window resolution in software as well? This would allow us to cut out steps 2) and d), leaving 1) as our one and only framebuffer.<br>
+	It sure <i>sounds</i> a lot more efficient. But actually <i>trying</i> this solution revealed that I had a completely wrong idea of the inefficiencies here:
+</p><ol>
+	<li>We do want to hardware-render the rest of the game, so we'd need to switch from software to hardware at the end of the logo animation. As it turns out, this switch is a rather expensive operation that would add an awkward ~500&nbsp;ms pause between logo and title screen.</li>
+	<li>Most importantly, though: Hardware-accelerating the final scaling step is <i>kind of</i> important these days. SDL's CPU scaling implementation can get <i>really</i> slow if a bilinear filter is involved; on my system, software-scaling 62.5 frames per second by 1.75× to 1120×840 pixels increases CPU usage by ~10%-20% in Release mode, and even drops FPS to 50 in Debug mode.</li>
+</ol><p>
+	This was perhaps the biggest lesson in this sudden 25-year jump from optimizing for a PC-98 and suffering under slow DirectDraw and Direct3D wrappers into the present of GPU rendering. Even though some drivers <i>technically</i> don't need these redundant CPU copies, a slight bit of added CPU time is still more than worth it if it means that we get to offload the <i>actually</i> expensive stuff onto the GPU.
+</p><hr id="window-{{.Date}}"><p>
+	But we all know that 4-digit frame rates aren't the main draw of rendering graphics through SDL. Besides cross-platform compatibility, the most useful aspect for Shuusou Gyoku is how SDL greatly simplifies the addition of the scaled window and borderless fullscreen modes you'd expect for retro pixel graphics on modern displays. Of course, allowing all of these settings to be changed in-engine from inside the <code>Graphic</code> options menu is the minimum UX comfort level we would accept here – after all, something like a separate DPI-aware dialog window at startup would be harder to port anyway.<br>
+	For each setting, we can achieve this level of comfort in one of two ways:
+</p><ol>
+	<li>We could simply shut down SDL's underlying render driver, close the window, and reopen/reinitialize the window and driver, reloading any game graphics as necessary. This is the simplest way: We can just reuse our backend's full initialization code that runs at startup and don't need any code on top. However, it would feel rather janky and cheap.</li>
+	<li>Or we could use SDL's various setter functions to only apply the single change to the specific setting… and anything that setting depends on. This would feel really smooth to use, but would require additional code with a couple of branches.</li>
+</ol><p>
+	pbg's code already geared slightly towards 2) with its feature to seamlessly change the bit depth. And with the amount of budget I'm given these days, it should be obvious what I went with. This definitely wasn't trivial and involved lots of state juggling and careful ordering of these procedural, imperative operations, even at the level of "just" using high-level SDL API calls for everything. It must have undoubtedly been worse for the SDL developers; after all, every new option for a specific parameter multiplies the amount of potential window state transitions.<br>
+	In the end though, most of it ended up working at our preferred high level of quality, leaving only a few cases where either SDL or the driver API forces us to throw away and recreate the window after all:
+</p><ul>
+	<li>When changing rendering APIs, because certain API transitions would fail to initialize properly and only leave a black window,</li>
+	<li>when changing into exclusive fullscreen when using Direct3D 9, because that driver only supports exclusive fullscreen on the display the window was spawned on (<a href="https://github.com/libsdl-org/SDL/pull/7317#issuecomment-1430809640">this is a known issue, but Direct3D 9 is old and no one has cared enough to investigate it more deeply, and it might very well be an unfixable driver limitation)</a>, and</li>
+	<li>when changing from borderless fullscreen into exclusive fullscreen on any API. <a href="https://github.com/libsdl-org/SDL/issues/11047">This one is fixed in SDL 3</a>, and they may or may not backport a fix in response to my bug report.</li>
+</ul><p>
+	As for the actual settings, I decided on making the windowed-mode scale factor customizable at intervals of 0.25, or 160×120 pixels, up to the taskbar-excluding resolution of the current display the game window is placed on. Sure, <a href="https://tanalin.com/en/articles/integer-scaling/">restricting the factor to integer values is the idealistically correct thing to do</a>, but 640×480 is a rather large source resolution compared to the retro consoles where integer scaling is typically brought up. Hence, such a limitation would be suboptimal for a large number of displays, most notably any old 720p display or those laptop screens with 1366×768 resolutions.<br>
+	In the new borderless fullscreen mode, the configurable scaling factor breaks down into all three possible interpretations of "fitting the game window onto the whole screen":
+</p><ul>
+	<li>A <code>[Integer]</code> fit that applies the largest possible integer scaling factor and windowboxes the game accordingly,</li>
+	<li>a <code>[4:3]</code> fit that stretches the game as large as possible while maintaining the original aspect ratio and either pillarboxes the game on landscape displays or letterboxes it on portrait ones,</li>
+	<li>and the cursed, aspect ratio-ignoring <code>[Stretch]</code> fit that may or may not improve gameplay for someone out there, but definitely evokes nostalgia for stretching Game Boy (Color) games on a Game Boy Advance.</li>
+</ul><p>
+	What <a class="goal" href="https://github.com/nmlgc/ssg/issues/70">currently</a> <i>can't</i> be configured is the image filter used for scaling. The game always uses nearest-neighbor at integer scaling factors and bilinear filtering at fractional ones.
+</p><figure>
+	<rec98-child-switcher><img
+		src="{{$720p_integer}}"
+		data-title="Integer"
+		alt="Screenshot of the Integer fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
+		class="active"
+	/><img
+		src="{{$720p_aspect}}"
+		data-title="4:3"
+		alt="Screenshot of the 4:3 fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
+	/><img
+		src="{{$720p_stretch}}"
+		data-title="Stretch"
+		alt="Screenshot of the Stretch fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		The three scaling options available in borderless fullscreen mode as rendered on a 1280×720 display, which is one of the worst display resolutions you could play this game on.<br>
+		And yes – as the presence of the <code>FullScr[Borderless]</code> option implies, the new build also still supports exclusive, display mode-changing 640×480 boomer fullscreen. 🙌<br>
+		That <code>ScaleMode</code>, though… {{HTML_Emoji "thonk"}}
+	</figcaption>
+</figure><p id="hotkeys-{{.Date}}">
+	And then, I was looking for one more small optional feature to complete the 9<sup>th</sup> push and came up with the idea of hotkeys that would allow changing any of these settings at any point. {{DB_CustomerByID 13}} considered it the best one of my ideas, so I went ahead… but little did I know that moving these graphics settings out of the main menu would not only significantly reshape the architecture of my code, but also uncover more bugs in my code and even a replay-related one from the original game. Paraphrasing the release notes:
+	<blockquote style="white-space: unset;">
+		The original game had three bugs that affected the configured difficulty setting when playing the Extra Stage or watching an Extra Stage replay. When returning to the main menu from an Extra Stage replay, the configured difficulty would be overridden with either
+		<ol><li>
+			the difficulty selected before the last time the Extra Stage's Weapon Select screen was entered, or
+		</li><li>
+			Easy, when watching the replay before having been to the Extra Stage's Weapon Select screen during one run of the program.
+		</li><li>
+			Also, closing the game window during the Extra Stage (both self-played and replayed) would override the configured difficulty with Hard (the internal difficulty level of the Extra Stage).
+		</li></ol>
+	</blockquote>
+	This had always been slightly annoying during development as I'd been closing the game window quite a bit during the Extra Stage. But the true nature of this bug only became obvious once these hotkeys allowed graphics settings to be changed <i>during</i> the Extra Stage: pbg had been <a href="https://github.com/nmlgc/ssg/blob/pbg/GIAN07/DEMOPLAY.CPP#L101-L107">creating a copy of the full configuration structure just because lives, bombs, the difficulty level, and the input flags need to be overwritten with their values from the replay file</a>, only to then recover the user's values <a href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/GIAN07/DEMOPLAY.CPP#L291-L296">by restoring the full structure to its state from before the replay</a>.
+</p><p>
+	But the award for the greatest annoyance goes to <a href="https://github.com/libsdl-org/sdlwiki/pull/592">this SDL quirk that would reset a render target's clipping region when returning to raw framebuffer rendering</a>, which causes sprites to suddenly appear in the two black 128-pixel sidebars for the one frame after such a change. As long as graphics settings were only available from the unclipped main menu, this quirk only required a single silly workaround of manually backing up and restoring the clipping region. But once hotkeys allowed these settings to be changed while SDL_Renderer clips all draw calls to the 384×480 playfield region, I had to deploy the same exact workaround in three additional places…&nbsp;🥲 At least I wrote it in a way that allows it to be easily deleted if we ever update to SDL 3, where the team fixed the underlying issue.
+</p><p>
+	In the end, I'm not at all confident in the resulting jumbled mess of imperative code and conditional branches, but at least it proved itself during the 1½ months this feature has existed on my machine. If it's any indication, the testers in the Seihou development Discord group thought it was fine at the beginning of October when there were still 8 bugs left to be discovered. {{HTML_Emoji "onricdennat"}}<br>
+	As for the mappings themselves: F10 and F11 cycle the window scaling factor or borderless fullscreen fit, F9 toggles the <code>ScaleMode</code> described below, and F8 toggles the frame rate limiter. The latter in particular is very useful for not only benchmarking, but also as a makeshift fast-forward function for replays. <a class="goal" href="https://github.com/nmlgc/ssg/issues/62">Wouldn't rewinding also be cool?</a>
+</p><hr id="scalemodes-{{.Date}}"><p>
+	So we've ported everything the game draws, including its most tricky pixel-level effect, and added windowed modes and scaling on top. That only leaves screenshots and then the SDL backend work would be complete. Now <i>that's</i> where we just call <code><a href="https://wiki.libsdl.org/SDL2/SDL_RenderReadPixels">SDL_RenderReadPixels()</a></code> and write the returned pixels into a file, right? We've been scaling the game with the very convenient <code><a href="https://wiki.libsdl.org/SDL2/SDL_RenderSetLogicalSize">SDL_RenderSetLogicalSize()</a></code>, so I'd expect to get back the logical 640×480 image to match the original behavior of the screenshot key…<br>
+	…except that we don't? Why do we only get back the 640×480 pixels in the top-left corner of the game's scaled output, right before it hits the screen? How unfortunate – if SDL forces us to save screenshots at their scaled output resolution, we'd needlessly multiply the disk space that these <a href="https://github.com/nmlgc/ssg/issues/54">uncompressed .BMP files</a> take up. But even if we did compress them, there should be no technical reason to blow up the pixels of these screenshots past the logical size we specified…
+</p><p>
+	Taking <a href="https://github.com/libsdl-org/SDL/blob/378234437fa2a99224391d5578f46971e190c0b7/src/render/SDL_render.c#L2315-L2451">a closer look at <code>SDL_RenderSetLogicalSize()</code></a> explains what's going on there. This function merely calculates a scale factor by comparing the requested logical size with the renderer's output size, as well as a viewport within the game window if it has a different aspect ratio than the logical size. Then, it's up to the SDL_Renderer frontend to multiply and offset the coordinates of each incoming vertex using these values.<br>
+	Therefore, <code>SDL_RenderReadPixels()</code> can't possibly give us back a 640×480 screenshot because there simply is no 640×480 framebuffer that could be captured. As soon as the draw calls hit the render API and <i>could</i> be captured, their coordinates have already been transformed into the scaled viewport.
+</p><p>
+	The solution is obvious: Let's just create that 640×480 image ourselves. We'd first render every frame at that resolution into a texture, and then scale that texture to the window size by placing it on a single quad. From a preservation standpoint, this is also the academically correct thing to do, as it ensures that the entire game is still rendered at its original pixel grid. That's why this <i>framebuffer scaling</i> mode is the default, in contrast to the <i>geometry scaling</i> that SDL comes with.
+</p><p>
+	With integer scaling factors and nearest-neighbor filtering, we'd expect the two approaches to deliver exactly identical pixels as far as sprite rendering is concerned. At fractional resolutions though, we can observe the first difference right in the menu. While geometry scaling always renders boxes with sharp edges, it noticeably darkens the text inside the boxes because it separately scales and alpha-blends each shadowed line of text on top of the already scaled pixels below – remember, {{Blog_PostLink "2023-08-01" "the shadow for each line is baked into the same sprite"}}. Framebuffer scaling, on the other hand, doesn't work on layers and always blurs every edge, but consequently also blends together all pixels in a much more natural way:
+</p><figure style="width: 685px;">
+	<figcaption class="dynamic"><div>
+		Look closer, and you can even see texture coordinate glitches at the edges of the individual text line quads.
+	</div><div>
+	</div></figcaption>
+	<rec98-child-switcher><img
+		src="{{$menu_geometry}}"
+		data-title="Geometry scaling"
+		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using geometry scaling, showing off both the sharp edges on boxes and the darker, individually-blended lines of text"
+		class="active"
+	/><img
+		src="{{$menu_framebuf}}"
+		data-title="Framebuffer scaling"
+		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using framebuffer scaling, showing off the more natural bilinearly-filtered look that blends the entire screen together and results in brighter text"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	Surprisingly though, we don't see much of a difference with the circles in the Weapon Select screen. If geometry scaling only multiplies and offsets vertices, shouldn't the lines along the 32-sided polygons still be just one pixel thick? As it turns out, SDL puts in quite a bit of effort here: <a href="https://github.com/libsdl-org/SDL/blob/378234437fa2a99224391d5578f46971e190c0b7/src/render/SDL_render.c#L3201-L3202">It never actually uses the API's line primitive when scaling the output</a>, but instead takes the endpoints, rasterizes the line on the CPU, and turns each point on the resulting line into a quad the size of the scale factor. Of course, this completely nullifies pbg's original intent of approximating circles with lines for performance reasons. {{HTML_Emoji "onricdennat"}}<br>
+	The result looks better and better the larger the window is scaled. On low fractional scale factors like 1.25×, however, lines end up looking truly horrid as the complete lack of anti-aliasing causes the 1.25×1.25-pixel point quads to be rasterized as 2 pixels rather than a single one at regular intervals:
+	<figure class="pixelated" style="width: 320px;">
+		<rec98-child-switcher><img
+			src="{{$c125_geometry}}"
+			data-title="Geometry scaling"
+			width="320"
+			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using geometry scaling, showing off the inconsistent rasterization of point quads without anti-aliasing"
+			class="active"
+		/><img
+			src="{{$c125_framebuf}}"
+			data-title="Framebuffer scaling"
+			width="320"
+			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using framebuffer scaling"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+			Also note how you can either have bright circle colors or bright text colors, but not both.
+		</figcaption>
+	</figure>
+	But once we move in-game, we can even spot differences at integer resolutions if we look closely at all the shapes and gradients. In contrast to lines, software-rasterizing triangles with different vertex colors would be significantly more expensive as you'd suddenly have to cover a triangle's entire filled area with point quads. But thanks to that filled nature, SDL doesn't have to bother: It can merely scale the vertex coordinates as you'd expect and pass them onto the driver. Thus, the triangles get rasterized at the output resolution and end up as smooth and detailed as the output resolution allows:
+</p><figure style="width: 1152px;">
+	<rec98-child-switcher><img
+		src="{{$llaser_geometry}}"
+		data-title="Geometry scaling"
+		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at a scale factor of 3× and using geometry scaling for smooth edges at the scaled resolution"
+		width="1152"
+		class="active"
+	/><img
+		src="{{$llaser_framebuf}}"
+		data-title="Framebuffer scaling"
+		width="1152"
+		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at 640×480 and framebuffer-scaled to 3× of the original resolution"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		Note how the HP gauge, being a gradient, also looks smoother with geometry scaling, whereas the Evade gauge, being 9 additively-blended red boxes with decreasing widths, doesn't differ between the modes.<br>
+		For an even smoother rendering, enable anti-aliasing in your GPU's control panel; SDL unfortunately doesn't offer an API-independent way of enabling it.
+	</figcaption>
+</figure><p>
+	You might now either like geometry scaling for adding these high-res elements on top of the pixelated sprites, or you might hate it for blatantly disrespecting the original game's pixel grid. But the main reasons for implementing and offering both modes are technical: As we've learned earlier when porting the lens ball effect, render-to-texture support is <i>technically</i> not guaranteed in SDL 2, and creating an additional texture is technically a fallible operation. Geometry scaling, on the other hand, will always work, as it's <span class="hovertext" title="Technically, it also adds several dynamic allocations to store all those point quad lists, but if *those* fail, we have bigger problems.">just additional arithmetic</span>.<br>
+	If geometry scaling does find its fans though, we can use it as a foundation for <a class="goal" href="https://github.com/nmlgc/ssg/issues/73">further high-res improvements</a>. After all, this mode can't <i>ever</i> deliver a pixel-perfect rendition of the original Direct3D output, so we're free to add whatever enhancements we like while any accuracy concerns would remain exclusive to framebuffer scaling.
+</p><p>
+	Just don't use geometry scaling with fractional scaling factors. {{HTML_Emoji "tannedcirno"}} These look even worse in-game than they do in the menus: The glitching texture coordinates reveal both the boundaries of on-screen tiles as well as the edge pixels of adjacent tiles within the set, and the scaling can even discolor certain dithered transparency effects, what the…?!
+</p><figure>
+	<figcaption class="dynamic"><div>
+		That green color is supposed to be the color key of this sprite sheet… 🤨
+	</div><div>
+	</div></figcaption>
+	<rec98-child-switcher><img
+		src="{{$s3_15_geometry}}"
+		data-title="Geometry scaling"
+		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using geometry scaling, showing off tons of tilemap texture coordinate glitches and the usually half-transparent shadow of Gates' plane showing up in a strange green color"
+		class="active"
+	/><img
+		src="{{$s3_15_framebuf}}"
+		data-title="Framebuffer scaling"
+		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using framebuffer scaling, with no graphical glitches"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	With both scaling paradigms in place, we now have a screenshot strategy for every possible rendering mode:
+</p><ol><li><p>
+	<i>Software-rendering (i.e., <a href="#lens-{{.Date}}">showing the <span lang="ja">西方Ｐｒｏｊｅｃｔ</span> logo</a>)?</i><br/>
+	This is the optimal case. We've already rendered everything into a system-memory framebuffer anyway, so we can just take that buffer and write it to a file.
+</p></li><li><p>
+	<i>Hardware-rendering at unscaled 640×480?</i><br/>
+	Requires a transfer of the GPU framebuffer to the system-memory buffer we initially allocate for software rendering, but no big deal otherwise.
+</p></li><li><p>
+	<i>Hardware-rendering with framebuffer scaling?</i><br/>
+	As we've seen with the initial solution for the lens ball effect, flagging a texture as a render target thankfully always allows us to read pixels back from the texture, so this is identical to the case above.
+</p></li><li><p>
+	<i>Hardware-rendering with geometry scaling?</i><br/>
+	This is the initial case where we must indeed bite the bullet and save the screenshot at the scaled resolution because that's all we can get back from the GPU. Sure, we could software-scale the resulting image back to 640×480, but:<ul>
+		<li>That would defeat the entire point of geometry scaling as it would throw away all the increased detail displayed in the screenshots above. Maybe that <i>is</i> something you'd like to capture if you deliberately selected this scale mode.</li>
+		<li>If we scaled back an image rendered at a fractional scaling factor, we'd lose every last trace of sharpness.</li>
+	</ul><p>The only sort of reasonable alternative: We could respond to the keypress by setting up a parallel 640×480 software renderer, rendering the next frame in both hardware and software in parallel, and delivering the requested screenshot with a 1-frame lag. This might be closer to what players expect, but it would make quite a mess of this already way too stateful graphics backend. And maybe, the lag is even longer than 1 frame because we simultaneously have to recreate all active textures in CPU-accessible memory…</p></li>
+</ol><hr id="subpixels-{{.Date}}"><p>
+	Now that we can take screenshots, let's take a few and compare our 640×480 output to pbg's original Direct3D backend to see how close we got. Certain small details might vary across all the APIs we can use with SDL_Renderer, but at least for Direct3D 9, we'd expect nothing less than a pixel-perfect match if we pass the exact same vertices to the exact same APIs. But something seems to be wrong with the SDL backend at the subpixel level with any triangle-based geometry, regardless of which rendering API we choose…
+</p><figure class="pixelated" style="width: 384px;">
+	<rec98-child-switcher><img
+		src="{{$vo_orig}}" data-title="pbg's Direct3D backend" class="active" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by pbg's original Direct3D backend"
+	/><img
+		src="{{$vo_sdl}}" data-title="SDL" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by the initial state of the SDL graphics backend, showing slightly displaced vertices compared to pbg's original Direct3D backend"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		As if each polygon was shifted slightly up and to the left…
+	</figcaption>
+</figure><p>
+	The culprit is found quickly: <a href="https://github.com/libsdl-org/SDL/blob/b6fa4dc794d24a2b534b7336b4660791ddb3730d/src/render/direct3d/SDL_render_d3d.c#L872-L873">SDL's Direct3D 9 driver displaces each vertex by (﻿-0.5,&nbsp;-0.5﻿) after scaling</a>, which is necessary for Direct3D to perfectly match the output of what <a href="https://github.com/libsdl-org/SDL/blob/b6fa4dc794d24a2b534b7336b4660791ddb3730d/src/render/opengl/SDL_render_gl.c#L1013-L1014">OpenGL</a>, <a href="https://github.com/libsdl-org/SDL/blob/b6fa4dc794d24a2b534b7336b4660791ddb3730d/src/render/direct3d11/SDL_render_d3d11.c#L1646-L1647">Direct3D 11</a>, <a href="https://github.com/libsdl-org/SDL/blob/b6fa4dc794d24a2b534b7336b4660791ddb3730d/src/render/direct3d12/SDL_render_d3d12.c#L2242-L2243">Direct3D 12</a>, and <a href="https://github.com/libsdl-org/SDL/blob/b6fa4dc794d24a2b534b7336b4660791ddb3730d/src/render/software/SDL_render_sw.c#L576-L577">the software renderer</a> would display without this offset. SDL is probably right here, but still, pbg's code doesn't do this. So it's up to us to counteract this displacement by adding <code>(1.0&nbsp;/(2.0&nbsp;*&nbsp;scale))</code> to every vertex. 🤷
+</p><p id="lines-{{.Date}}">
+	The other, much trickier accuracy issue is the line rendering. We saw earlier that SDL software-rasterizes any lines if we geometry-scale, but we do expect it to use the driver's line primitive if we framebuffer-scale or regularly render at 640×480. And at one point, it did, until <a href="https://github.com/libsdl-org/SDL/issues/5061">the SDL team discovered accuracy bugs in various OpenGL implementations</a> and <a href="https://github.com/libsdl-org/SDL/commit/09ece861d1f8015f4960ab5fcfc6cb599e979f3e">decided to just <i>always</i> software-rasterize lines by default</a> to achieve identical rendered images regardless of the chosen API. Just like with the half-pixel offset above, this <i>is</i> the correct choice for new code, but the wrong one for accurately porting an existing Direct3D game.<br>
+	Thankfully, you can opt into the API's native line primitive <a href="https://github.com/libsdl-org/SDL/blob/4ca7a193484eaaf98d99f6d68aa0313dad16b72c/include/SDL_hints.h#L1859-L1874">via SDL's hint system</a>, but the emphasis here is on <i>API</i>. This hint can still only ensure a pixel-perfect match if SDL renders via any version of Direct3D and you either use framebuffer scaling or no scaling at all. OpenGL will draw lines differently, and the software renderer just uses the same point rasterizing algorithm that SDL uses when scaling.
+</p><figure class="pixelated" style="width: 795px;">
+	<figcaption class="dynamic"><div>
+		Pixels written into the framebuffer along the accurate outline, as we've covered above. Also note the slightly brighter color compared to the 3D-rendered variants.
+	</div><div>
+		The original Direct3D line rendering used in pbg's original code, touching a total of 568 pixels.
+	</div><div>
+		OpenGL's line rendering gets close, but still puts 16 pixels into different positions. Still, 97.2% of points are accurate to the original game.
+	</div><div>
+		The result of SDL's software line rasterizer, which you'd still see in the P0295 build when using either the software renderer or geometry scaling with any API. Slightly more accurate than OpenGL in this particular case with only 14 diverging pixels, matching 97.5% of the original circle.
+	</div><div>
+		As another alternative, SDL also offers a mode that renders each line as two triangles. This method naturally scales to any scale factor, but ends up drawing slightly thicker diagonals. You can opt into this mode via <a href="https://wiki.libsdl.org/SDL2/CategoryHints">SDL's hint system</a> by setting the environment variable <code>SDL_RENDER_LINE_METHOD</code> to <code>3</code>.
+	</div><div>
+		The triangle method would also fit great with the spirit of geometry scaling, rendering smooth high-res circles analogous to the laser examples we saw earlier. This is how it would look like with the game scaled to 3200×2400… yeah, maybe we do want the point list after all, you can clearly see the 32 corners at this scale.
+	</div></figcaption>
+	<rec98-child-switcher>
+		{{- define "l_circ_alt"}}Screenshot of Shuusou Gyoku's Homing Missile weapon option with the circular selection cursor{{end -}}
+		<img src="{{$l_circ_8}}" data-title="8-bit" width="795" alt="{{template "l_circ_alt"}} as rendered by pbg's original 8-bit drawing code">
+		<img src="{{$l_circ_16}}" data-title="Direct3D" width="795" class="active" alt="{{template "l_circ_alt"}} as rendered by Direct3D's line drawing algorithm">
+		<img src="{{$l_circ_gl_p}}" data-title="OpenGL" width="795" alt="{{template "l_circ_alt"}} as rendered by OpenGL's line drawing algorithm">
+		<img src="{{$l_circ_sdl_p}}" data-title="SDL points" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's point-based line drawing algorithm">
+		<img src="{{$l_circ_sdl_t_1}}" data-title="SDL triangles (1×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
+		<img src="{{$l_circ_sdl_t_5}}" data-title="SDL triangles (5×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
+		<rec98-parent-init></rec98-parent-init>
+	</rec98-child-switcher>
+</figure><p>
+	Replacing circles with point lists, as mentioned earlier, won't solve everything though, because Shuusou Gyoku also has plenty of non-circle lines:
+</p><figure class="pixelated" style="width: 768px;">
+	<rec98-child-switcher>
+		{{- define "l_warn_alt"}}The final 5-instance frame of Shuusou Gyoku's pre-boss WARNING wireframe animation against a black background{{end -}}
+		<img src="{{$l_warn_8}}" data-title="8-bit" width="768" alt="{{template "l_warn_alt"}}, as rendered by pbg's original 8-bit drawing code">
+		<img src="{{$l_warn_16}}" data-title="Direct3D" width="768" alt="{{template "l_warn_alt"}}, as rendered by Direct3D's line drawing algorithm">
+		<img src="{{$l_warn_gl_p}}" data-title="OpenGL" width="768" alt="{{template "l_warn_alt"}}, as rendered by OpenGL's line drawing algorithm">
+		<img src="{{$l_warn_sdl_p}}" data-title="SDL points" width="768" class="active" alt="{{template "l_warn_alt"}}, as rendered by SDL's point-based line drawing algorithm">
+		<img src="{{$l_warn_sdl_t_1}}" data-title="SDL triangles 1×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
+		<img src="{{$l_warn_sdl_t_2}}" data-title="SDL triangles 2×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
+		<rec98-parent-init></rec98-parent-init>
+	</rec98-child-switcher>
+	<figcaption>6884 pixels touched by the Direct3D line renderer, a 98.3% match by the OpenGL rasterizer with 119 diverging pixels, and a 97.9% match by the SDL rasterizer with 147 diverging pixels. Looks like OpenGL gets better the longer the lines get, making line render method #2 the better choice even on non-Direct3D drivers.</figcaption>
+</figure><p>
+	So yeah, this one's kind of unfortunate, but also very minor as both OpenGL's and SDL's algorithms are at least 97% accurate to the original game. For now, this does mean that you'll manually have to change SDL_Renderer's driver from the OpenGL default to any of the Direct3D ones to get those last 3% of accuracy. However, I strongly believe that everyone who does care at this level will eventually read this sentence. And if we ever actually want 100% accuracy across every driver, we can always <a class="goal" href="https://github.com/nmlgc/ssg/issues/74">reverse-engineer and reimplement the exact algorithm used by Direct3D as part of our game code</a>.
+</p><hr id="future-{{.Date}}"><p>
+	That completes the SDL renderer port for now! As all the GitHub issue links throughout this post have already indicated, I could have gone even further, but this is a convincing enough state for a first release. And once I've added a Linux-native font rendering backend, removed the few remaining <code>&lt;windows.h&gt;</code> types, and compiled the whole thing with GCC or Clang as a 64-bit binary, this will be up and running on Linux as well.
+</p><p id="kog-{{.Date}}">
+	If we take a step back and look at what I've actually ended up writing during these SDL porting endeavors, we see a piece of almost generic retro game input, audio, window, rendering, and scaling middleware code, on top of SDL 2. After a slight bit of additional decoupling, most of this work should be reusable for not only Kioh Gyoku, but even the eventual cross-platform ports of PC-98 Touhou.<br>
+	Perhaps surprisingly, I'm actually looking <i>forward</i> to Kioh Gyoku now. That game <i>seems</i> to require raw access to the underlying 3D API due to a few effects that <i>seem</i> to involve a Z coordinate, but all of these are transformed in software just like the few 3D effects in Shuusou Gyoku. Coming from a time when <a href="https://en.wikipedia.org/wiki/Transform,_clipping,_and_lighting">hardware T&L</a> wasn't a ubiquitous standard feature on GPUs yet, both games don't even bother and only ever pass Z coordinates of 0 to the graphics API, thus staying within the scope of SDL_Renderer. The only true additional high-level features that Kioh Gyoku requires from a renderer are sprite rotation and scaling, <a href="https://wiki.libsdl.org/SDL2/SDL_RenderCopyEx">which SDL_Renderer conveniently supports as well</a>. I remember some of my backers thinking that Kioh Gyoku was going to be a huge mess, but looking at its code and <i>not</i> seeing a separate 8-bit render path makes me rather excited to be facing a fraction of Shuusou Gyoku's complexity. The 3D engine sure <i>seems</i> featureful at the surface, and the hundreds of source files sure <i>feel</i> intimidating, but a lot of the harder-to-port parts remained unused in the final game. Kind of ironic that pbg wrote a largely new engine for this game, but we're closer to porting it back to our own enhanced, now almost fully cross-platform version of the Shuusou Gyoku engine.
+</p><p id="palettized-{{.Date}}">
+	Speaking of 8-bit render paths though, you might have noticed that I didn't even bother to port that one to SDL. This is certainly suboptimal from a preservation point of view; after all, pbg specifically highlights in the source code's <a href="https://github.com/nmlgc/ssg/tree/pbg?tab=readme-ov-file#%E5%8F%82%E8%80%83%E3%81%BE%E3%81%A7%E3%81%AB">README</a> how the split between palettized 8-bit and direct-color 16-bit modes was a particularly noteworthy aspect of the period in time when this game was written:
+</p><blockquote><strong>8bit/16bitカラーの混在</strong>、MIDI再生関連、浮動小数点数演算を避ける、あたりが懐かしポイントになるかと思います。</blockquote><p>
+	Times have changed though, and SDL_Renderer doesn't even expose the concept of <i>rendering bit depth</i> at the API level. {{Blog_PostLink "2022-12-31" "If we remember the initial motivation for these Shuusou Gyoku mods"}}, Windows ≥8 doesn't even support anything below 32-bit anymore, and neither do most of SDL_Renderer's hardware-accelerated drivers as far as texture formats are concerned. While support for 24-bit textures without an alpha channel is still relatively common, only the <a href="https://github.com/libsdl-org/SDL/blob/bcf1397e330f38f6fe4cf1fec980acea4d37d8d1/src/video/directfb/SDL_DirectFB_video.c#L303-L376">Linux DirectFB driver</a> <i>might</i> support 16-bit and 8-bit textures, and you'd have to go back to the <a href="https://github.com/libsdl-org/SDL/blob/bcf1397e330f38f6fe4cf1fec980acea4d37d8d1/src/render/vitagxm/SDL_render_vita_gxm.c#L112-L113">PlayStation Vita</a>, <a href="https://github.com/libsdl-org/SDL/blob/bcf1397e330f38f6fe4cf1fec980acea4d37d8d1/src/render/ps2/SDL_render_ps2.c#L692">PlayStation 2</a>, or the software renderer to find guaranteed 16-bit support.
+</p><p>
+	Therefore, full software rendering would be the our only option. And sure enough, SDL_Renderer does have the necessary palette mapping code required for software-rendering onto a palettized 8-bit surface in system memory. That would take care of accurately constraining this render path to its intended 256 colors, but we'd still have to upconvert the resulting image to 32-bit every frame and upload it to GPU for hardware-accelerated scaling. This raises the question of whether it's even worth it to have 8-bit rendering in the SDL port to begin with if it will be undeniably slower than the GPU-accelerated direct-color port. If you think it's still a worthwhile thing to have, <a class="goal" href="https://github.com/nmlgc/ssg/issues/67">here is the issue to invest in</a>.
+</p><p>
+	In the meantime though, there is a much simpler way of continuing to preserve the 8-bit mode. As usual, I've kept pbg's old DirectX graphics code working all the way through the architectural cleanup work, which makes it almost trivial to compile that old backend into a separate binary and continue preserving the 8-bit mode in that way.<br>
+	This binary is also going to evolve into the upcoming Windows 98 backport, and will be accompanied by its own SDL DLL that throws out the Direct3D 11, 12, OpenGL&nbsp;2, and WASAPI backends as they don't exist on Windows 98. I've already thrown out the SSE2 and AVX implementations of the BLAKE3 hash function in preparation, which explains the smaller binary size. These Windows 98-compatible binaries will obviously have to remain 32-bit, but I'm undecided on whether I should update the regular Windows build to a 64-bit binary or keep it 32-bit:
+</p><ul>
+	<li>Going 64-bit would give Windows users easy access to both builds and could help with testing and debugging rare issues that only occur in <i>either</i> the 64-bit <i>or</i> the 32-bit build, whereas</li>
+	<li>staying 32-bit would make it less likely for us to <i>actually</i> break the 32-bit Windows build because all Windows users (and developers) would continue using it.</li>
+</ul><p>
+	I'm open to strong opinions that sway me in one or the other direction, but I'm not going to do both – unless, of course, someone subscribes for the continued maintenance of three Windows builds. 😛
+</p><p id="sdl3-{{.Date}}">
+	Speaking about SDL, we'll probably want to <a class="goal" href="https://github.com/nmlgc/ssg/issues/68">update from SDL 2 to SDL 3</a> somewhere down the line. It's going to be the future, cleans up the API in a few particularly annoying places, and adds a Vulkan driver to SDL_Renderer. Too bad that <a href="https://wiki.libsdl.org/SDL3/SDL_MixAudio">the documentation still deters me from using the audio subsystem</a> despite the significant improvements it made in other regards…<br>
+	For now, I'm still staying on SDL 2 for two main reasons:
+</p><ul>
+	<li>While SDL 3 is bound to be more available on Linux distributions in the future, that's not the case <i>right now</i>. Everyone is still waiting for its first stable release, and so it currently isn't packaged in any distribution repo outside the AUR from what I can tell. Wide Linux compatibility is the whole point of this port.</li>
+	<li>The funding for a Windows 98 port of SDL 2 was obviously intended to help with other existing SDL 2 games and not just Shuusou Gyoku.</li>
+</ul><p>
+	Finally, I decided against a Japanese translation of the new menu options for now because the help text communicates too much important information. That will have to wait until we make the whole game translatable into other languages.
+</p><hr id="echo-{{.Date}}"><p>
+	{{Blog_PostLink "2024-04-11" "I promised to recreate the Sound Canvas VA packs"}} once I know about the exact way real hardware handles the {{Blog_PostLink "2024-03-09#sysex" "invalid Reverb Macro messages in ZUN's MIDI files"}}, and what better time to keep that promise than to tack it onto the end of an already long overdue delivery. For some reason, Sound Canvas VA exhibited several weird glitches during the re-rendering processes, which prompted some rather extensive research and validation work to ensure that all tracks generally sound like they did in the previous version of the packages. Figuring out <a href="https://github.com/nmlgc/BGMPacks/blob/d7166c11c21b7034bd1a4e22c4eb178524ac70e1/sh01/MIDI%20recording%20fixes.sed#L5-L10">why this patch was necessary</a> could have certainly taken a push on its own…
+</p><p>
+	Interestingly enough, all these comparisons of renderings against each other revealed that the fix only makes a difference in a lot fewer than the expected 34 out of 39 MIDIs. <a href="https://github.com/nmlgc/BGMPacks/blob/2024-10-05/sh01/README%20Sound%20Canvas%20VA%20echo%20header.md">Only 19 tracks – 11 in the OST and 8 in the AST – actually sound different depending on the Reverb Macro</a>, because the remaining 15 set the reverb effect's main level to 0 and are therefore unaffected by the fix.<br>
+	And then, there is the Stage 1 theme, which only activates reverb during a brief portion of its loop:
+</p><figure>
+	<rec98-child-switcher><img
+		src="{{$domino_02_orig}}"
+		data-title="Original"
+		alt="Screenshot of the all SysEx messages appearing in the original MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
+		class="active"
+	/><img
+		src="{{$domino_02_fixed}}"
+		data-title="Fixed"
+		alt="Screenshot of the all SysEx messages appearing in the a SysEx-fixed MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>As visualized by {{Blog_PostLink "2024-03-09#sysex" "Domino"}}.</figcaption>
+</figure><p>
+	Thus, this track definitely counts toward the 11 with a distinct echo version, but comparing that version against the no-echo one reveals something truly mind-blowing: The Sound Canvas VA rendering only differs within exactly the 8 bars of the loop, and is bit-by-bit identical anywhere else. 🤯 This is why you use softsynths.
+</p><figure class="fullres">
+	<figcaption class="dynamic"><div>
+		{{- define "st_head" -}}
+			This is the OST version, but it works just as well with the AST.
+		{{- end -}}
+		{{template "st_head"}}
+	</div><div>
+		{{template "st_head"}}
+	</div><div>
+		{{- define "diff_head" -}}
+			Since the no-echo and echo BGM packs are aligned in both time and volume, you can reproduce this result – and explore the differences for any other track across both soundtracks – by simply phase-inverting a no-echo variant file and mixing it into the corresponding echo file. Obviously, this works best with the FLAC files.
+		{{- end -}}
+		{{template "diff_head"}}
+	</div><div>
+		{{template "diff_head"}} Trying it with the lossy versions gets surprisingly close though, and simultaneously reveals the infamous Vorbis pre-echo on the drums.
+	</div></figcaption>
+	{{call .AudioPlayer $aud_o20_ne $aud_o20_e.SetActive $aud_o20_diff_flac $aud_o20_diff_vorbis}}
+</figure><p>
+	So yeah, the fact that ZUN enabled reverb by suddenly increasing the level for just this 8-bar piano solo erases any doubt about the panning delay having been a quirk or accident. There is no way this wasn't done intentionally; whether the SC-88Pro's default reverb is at 0 or 40 barely makes an audible difference with all the notes played in this section, and wouldn't have been worth the unfortunate chore of inserting another GS SysEx message into the sequence. That's enough evidence to relegate the previous no-echo Sound Canvas VA packs to a strictly unofficial status, and only preserve them for reference purposes. If you downloaded the earlier ones, you might want to update… or maybe not if you don't like the echo, it's all about personal preference at the end of the day.
+</p><p>
+	While we're that deep into reproducibility, it makes sense to address another slight issue with the March release. Back then, I rendered {{Blog_PostLink "2024-03-09#bgmpacks" "our favorite three MIDI files, the AST versions of the three Extra Stage themes"}}, with their original long setup area and then trimmed the respective samples at the <i>audio</i> level. But since the MIDI-only BGM pack features a shortened setup area at the <i>MIDI</i> level, rendering these modified MIDI files yourself wouldn't give you back the exact waveforms. {{Blog_PostLink "2023-09-30#resampling" "As PCM behaves like a lollipop graph"}}, any change to the position on a note at a tempo that isn't an integer factor of the sampling rate will most likely result in completely different samples and thus be uncomparable via simple phase-cancelling.<br>
+	In our case though, all three of the tracks in question render with a slightly higher maximum peak amplitude when shortening their MIDI setup area. Normally, I wouldn't bother with such a fluctuation, but remember that <span lang="ja" class="hovertext" title="Extra Stage theme">シルクロードアリス</span> is by far the loudest piece across both soundtracks, and thus defines the peak volume that every other track gets normalized to.<br>
+	But wait a moment, doesn't this mean that there's maybe a setup area length that could yield a lower or even <i>much</i> lower peak amplitude? {{HTML_Emoji "thonk"}}
+</p><p>
+	And so I <a href="https://docs.google.com/spreadsheets/d/1j8wy9SLrjCiD9C3SXRU9dr7p22k0S6cg1hhHUAQ8TYA/edit?gid=440063624#gid=440063624">tested all setup area lengths at regular intervals between our target 2-beat length and ZUN's original lengths</a>, and indeed found a great solution: When manipulating the setup area of the Extra Stage theme to an exact length of 2850&nbsp;MIDI pulses, the conversion process renders it with a peak amplitude of 1.900, compared to its previous peak amplitude of 2.130 from the March release. That translates to an extra +0.56&nbsp;dB of volume tricked out of all other tracks in the AST! {{HTML_Emoji "onricdennat"}} Yeah, it's not much, but hey, at least it's not worse than what it used to be. The shipped MIDI still doesn't correspond to the rendered file, but now it's at least documented <a href="https://github.com/nmlgc/BGMPacks/blob/d7166c11c21b7034bd1a4e22c4eb178524ac70e1/sh01/MIDI%20recording%20fixes.sed#L12-L26">together with the MIDI-level patch to reproduce the exact optimal length of the setup area</a>.<br>
+	Still, all that testing effort for tracks that, in my subjective opinion, don't even <i>sound</i> all that good… The resulting shrill resonant effects stick out like a sore thumb compared to the more basic General MIDI sound of every other track across both soundtrack variants. Once again, unofficial remixes <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.msg1280873#msg1280873">such as Romantique Tp's one edit to <span lang="ja" class="hovertext" title="Reimu's theme">二色蓮花蝶　～ Ancients</span></a> can be the only solution here.<br>
+	As far as preservation is concerned, this is as good as it gets, and my job here is done.
+</p><p>
+	Then again, now that I've further refined (and actually scripted) the loop construction logic, I'd love to also apply it to Kioh Gyoku's MIDI soundtrack once its codebase is operational. Obviously, there's much less of an incentive for putting SC-88Pro recordings back into that game given that Kioh Gyoku already comes with an official (and, dare I say, significantly more polished) waveform soundtrack. And even if there <i>was</i> an incentive, it might not extend to a separate Sound Canvas VA version: As frustrating as ZUN's sequencing techniques in the final three Shuusou Gyoku Extra Stage arrangements are when dealing with rendered output, the fact that he reserved a lot more setup space to fit the more detailed sound design of each Kioh Gyoku track is a <i>good thing</i> as far as real-hardware playback is concerned. Consequently, <a href="https://www.youtube.com/playlist?list=PLzdQcm51guT--RXwVI9hv9wmRz8Ws5Zg_">the Romantique Tp recordings</a> suffer far less from {{Blog_PostLink "2024-03-09#controversy" "the SC-88Pro's processing lag issues"}}, and thus might already constitute all the preservation anyone would ever want.<br>
+	Once again though, generous MIDI setup space also means that Kioh Gyoku's MIDI soundtrack has <a href="https://www.youtube.com/watch?v=WUU1fy_JLH4">lots of long and awkward pauses at the beginning of stages before the music starts</a>. The two worst offenders here are
+	<span lang="ja" class="hovertext" title="VIVIT's theme">天鵞絨少女戦　～ Velvet Battle</span> and <span lang="ja" class="hovertext" title="Yuuka's theme">桜花之恋塚　～ Flower of Japan</span>, with a 3:429s pause each. So, preserving the MIDI soundtrack in its originally intended sound might still be a worthwhile thing to fund if only to get rid of those pauses. After all, <a class="goal" href="https://github.com/nmlgc/ssg/issues/10#issuecomment-1938245315">we can't ever safely remove these pauses at the MIDI level unless users promise that they use a GS-supporting device</a>.
+</p><p>
+	What we <i>can</i> do as part of the game, however, is hotpatch the original MIDI files from Shuusou Gyoku's <code>MUSIC.DAT</code> with the Reverb Macro fix. This way, the fix is also available for people who want to listen to the OST through their own copy of Sound Canvas VA or a SC-8850 and don't want to download recordings. This isn't necessary for the AST because we can simply bake the fix into the MIDI-only BGM packs, but we can't do this for the OST due to copyright reasons. This hotpatch should be an option just because hotpatching MIDIs is rather insidious in principle, but it's enabled by default due to the evidence we found earlier.<br>
+	The game <a class="goal" href="https://github.com/nmlgc/ssg/issues/64">currently pauses when it loses focus</a>, which also <span class="hovertext" title="Not 'stops' – since we don't send Note Off commands, we can simply turn up the volume again once focus returns to the game window and all previously playing notes will be playing again.">silences</span> any currently playing MIDI notes. Thus, we can verify the active reverb type by switching between the game and VST windows:
+</p><figure><figcaption class="dynamic"><div>
+	Maximum volume recommended.
+	</div><div>
+		Still saying <i>Panning Delay</i>, even though we obviously hear the default reverb. A clear bug in the Sound Canvas VA UI.
+	</div></figcaption>{{call .VideoPlayer $vid_compat_on.SetActive $vid_compat_off}}
+</figure><hr /><p>
+	Anything I forgot? Oh, right, download links:
+</p><ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0295">
+	{{HTML_Emoji "sh01"}} Shuusou Gyoku P0295</a></li>
+	<li><a class="release" href="https://github.com/nmlgc/BGMPacks/releases/tag/2024-10-05">
+	{{HTML_Emoji "sh01"}} Updated Sound Canvas BGM packs</a></li>
+</ul><p>
+	Next up: You decide! This delivery has opened up quite a bit of budget, so this would be a good occasion to take a look at something else while we wait for a few more funded pushes to complete the Shuusou Gyoku Linux port. With the previous price increases effectively increasing the monetary value of earlier contributions, it might not always be exactly obvious how much money is needed <i>right now</i> to secure another push. So I took a slight bit out of the <i>Anything</i> funds to add the exact € amount to the <a href="/fundlog">crowdfunding log</a>.<br>
+	In the meantime, I'll see how far I can get with porting all of the previous SDL work back to Windows 98 within one push-equivalent microtransaction, and do some internal website work to address some long-standing pain points.
+</p>

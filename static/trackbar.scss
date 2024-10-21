@@ -33,6 +33,7 @@ rec98-trackbar.horizontal .border .pos {
 	border-top: var(--header-border);
 	height: 100%;
 	width: 0;
+	justify-self: left; /* Needed by Chromium as of mid-October 2024?! */
 }
 
 rec98-trackbar.vertical .border {

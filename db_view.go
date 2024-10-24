@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"math"
 	"math/big"
 	"sort"
@@ -38,7 +39,7 @@ type ContribPerCustomer struct {
 // TransactionsPerGoal lists all contributions towards a specific goal.
 type TransactionsPerGoal struct {
 	Goal               template.HTML
-	Delayed            bool
+	DelayReason        template.HTML
 	PerCustomer        []ContribPerCustomer
 	TotalPushFraction  float64
 	MissingForFullPush float64
@@ -71,7 +72,18 @@ func TransactionBacklog() (ret []TransactionsPerGoal) {
 		t := transactions.All[i]
 		if t.Outstanding.Cmp(&big.Rat{}) > 0 {
 			tfg := transactionsForGoal(t.Goal)
-			tfg.Delayed = tfg.Delayed || t.Delayed
+			if t.DelayReason != "" {
+				if tfg.DelayReason != "" {
+					if t.DelayReason != tfg.DelayReason {
+						log.Fatalf(`delay reason mismatch at %s:
+"%s" (%s) vs.
+"%s" (previous)`,
+							t.ID, t.DelayReason, t.ID, tfg.DelayReason)
+					}
+				} else {
+					tfg.DelayReason = t.DelayReason
+				}
+			}
 			fpc := tfg.forCustomer(t.Customer)
 			fraction, _ := t.Outstanding.Float64()
 			opf := OutstandingPushFraction{
@@ -183,7 +195,7 @@ func CapCurrent(ctx interface{}) (ret Cap) {
 
 	backlog := TransactionBacklog()
 	for _, tpg := range backlog {
-		if tpg.Delayed {
+		if tpg.DelayReason != "" {
 			continue
 		}
 		for _, fpc := range tpg.PerCustomer {

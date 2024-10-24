@@ -232,12 +232,12 @@ type Customer struct {
 // Transaction represents a single money transfer that may or may not be large
 // enough to result in one or more pushes.
 type Transaction struct {
-	ID       *ScopedID
-	Time     time.Time
-	Customer CustomerID
-	Cents    int
-	Goal     template.HTML
-	Delayed  bool
+	ID          *ScopedID
+	Time        time.Time
+	Customer    CustomerID
+	Cents       int
+	Goal        template.HTML
+	DelayReason template.HTML
 
 	// Calculated after the push table has loaded
 	Outstanding big.Rat

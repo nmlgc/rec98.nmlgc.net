@@ -280,7 +280,7 @@ func (t *Transaction) consume(p *pushTSV, fractionNeeded *big.Rat) *big.Rat {
 type Push struct {
 	ID                ScopedID
 	Transactions      []*Transaction
-	Goal              string
+	Goal              template.HTML
 	Delivered         time.Time
 	Diff              DiffInfo
 	IncludeInEstimate bool
@@ -489,7 +489,7 @@ var stripeSubs = tStripeSubs{data: make(map[string]string)}
 type pushTSV struct {
 	ID                *ScopedID
 	Transactions      []int
-	Goal              string
+	Goal              template.HTML
 	Delivered         time.Time
 	Diff              string
 	IncludeInEstimate bool

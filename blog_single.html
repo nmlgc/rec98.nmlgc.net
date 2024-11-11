@@ -1,5 +1,5 @@
 {{$date := .Vars.date}}
 {{$post := Blog_GetPost $date -}}
 
-<h2><a href="/blog#{{$date}}">⮜ Blog</a></h2>
+{{template "blog_header.html" .}}
 {{template "blog_post.html" $post}}

@@ -282,6 +282,16 @@ img.checkerboard {
 	background-position: 0 0, 4px 0, 4px -4px, 0px 4px;
 }
 
+.captioned {
+	margin-bottom: 0;
+
+	+ small {
+		display: block;
+		margin-bottom: 1.75em;
+		color: dimgray;
+	}
+}
+
 .wait {
 	cursor: wait;
 }
@@ -530,16 +540,6 @@ span.reserved { color: orange; }
    --------- */
 #index {
 	text-align: center;
-}
-
-#index h2 {
-	margin-bottom: 0;
-}
-
-#index h2 + small {
-	display: block;
-	margin-bottom: 1.75em;
-	color: dimgray;
 }
 
 section.overall, section.game, section.binary {
@@ -978,6 +978,26 @@ figure.progress {
 
 /* Blog
    ---- */
+
+nav.blog {
+	font-size: smaller;
+	ul {
+		margin-block-start: 0;
+		margin-block-end: 1.75em;
+		padding-inline-start: 0;
+		li {
+			display: inline;
+			&:not(:first-child) {
+				padding-left: 0.25em;
+			}
+			&:not(:last-child) {
+				border-right: var(--table-border);
+				padding-right: 0.25em;
+			}
+		}
+	}
+}
+
 article {
 	margin-bottom: 3em;
 	border-bottom: var(--header-border);

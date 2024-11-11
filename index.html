@@ -7,15 +7,15 @@
 
 <h1 id="status">Completion status, as of <a href="/progress/{{$ci.Hash.String}}">{{HTML_Date $ci.Time}}</a>:</h1>
 
-<h2>Reverse-engineered</h2>
+<h2 class="captioned">Reverse-engineered</h2>
 <small>Code with clarified purpose and named identifiers. Mostly also decompiled to C++, but not necessarily.</small>
 {{template "estimate_metrics.html" $pe.ForCodeNotREd}}
 
-<h2>Finalized</h2>
+<h2 class="captioned">Finalized</h2>
 <small>Code that is either decompiled or proven to be undecompilable. Difference between these and the reverse-engineered numbers above = technical debt.</small>
 {{template "estimate_metrics.html" $pe.ForCodeNotFinal}}
 
-<h2><a href="/faq#pi-what">Position independence</a></h2>
+<h2 class="captioned"><a href="/faq#pi-what">Position independence</a></h2>
 <small>Probability that adding or removing data anywhere in the binary doesn't cause issues. Click the link for more info.</small>
 {{template "estimate_metrics.html" $pe.ForAbsoluteRefs}}
 <hr />

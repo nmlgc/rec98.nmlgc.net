@@ -1,5 +1,4 @@
-<h2><a href="/blog">⮜ Blog</a></h2>
-<h3>List of tags</h3>
+{{template "blog_header.html" .}}
 <table>{{range Blog_TagDescriptions -}}
 	<tr>
 		<td>{{HTML_TagBlock .Tag nil}}</td>

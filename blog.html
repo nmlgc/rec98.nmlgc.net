@@ -1,3 +1,2 @@
-<h2>Blog</h2>
-<h3><a href="/blog/tag">⮞ List of tags</a></h3>
+{{template "blog_header.html" .}}
 {{range Blog_Posts nil}}{{template "blog_post.html" .}}{{end}}

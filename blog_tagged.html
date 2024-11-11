@@ -1,8 +1,7 @@
 {{$filters := Blog_ParseTags .Vars.tags -}}
 
-<h2><a href="/blog">⮜ Blog</a></h2>
-<h3><a href="/blog/tag">⮜ List of tags</a></h3>
-<h4>Showing all posts tagged {{range $i, $filter := $filters -}}
+{{template "blog_header.html" .}}
+<h4 style="margin-block-start: 0;">Showing all posts tagged {{range $i, $filter := $filters -}}
 	{{- if $i}}{{if eq (inc $i) (len $filters)}} and {{else}}, {{end}}{{end -}}
 	{{- HTML_TagBlock $filter $filters -}}
 {{- end}}</h4>

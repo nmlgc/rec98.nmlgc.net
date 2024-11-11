@@ -349,10 +349,30 @@ func (b *Blog) VideoURL(stem string, vd *VideoDir) *string {
 	return &ret
 }
 
+// PostHeader gathers all header info for e, leaving the post body empty.
+func (b *Blog) PostHeader(e *BlogEntry, filters []string) Post {
+	ret := Post{
+		Date:    e.Date,
+		Time:    e.GetTime(),
+		Tags:    e.Tags,
+		Filters: filters,
+	}
+	for i := len(e.Pushes) - 1; i >= 0; i-- {
+		push := &e.Pushes[i]
+		ret.PushIDs = append(ret.PushIDs, push.ID)
+		ret.Diffs = append(ret.Diffs, push.Diff)
+		ret.FundedBy = append(ret.FundedBy, push.FundedBy()...)
+	}
+	RemoveDuplicates(&ret.Diffs)
+	RemoveDuplicates(&ret.FundedBy)
+	return ret
+}
+
 // Render builds a new Post instance from e.
 func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 	var builder strings.Builder
 	datePrefix := e.Date + "-"
+	post := b.PostHeader(e, filters)
 	ctx := PostDot{
 		Date:       e.Date,
 		HostedPath: blogHP,
@@ -387,23 +407,7 @@ func (b *Blog) Render(e *BlogEntry, filters []string) Post {
 		},
 	}
 	pagesExecute(&builder, e.templateName, &ctx)
-
-	post := Post{
-		Date:    e.Date,
-		Time:    e.GetTime(),
-		Tags:    e.Tags,
-		Filters: filters,
-		Body:    template.HTML(builder.String()),
-	}
-
-	for i := len(e.Pushes) - 1; i >= 0; i-- {
-		push := &e.Pushes[i]
-		post.PushIDs = append(post.PushIDs, push.ID)
-		post.Diffs = append(post.Diffs, push.Diff)
-		post.FundedBy = append(post.FundedBy, push.FundedBy()...)
-	}
-	RemoveDuplicates(&post.Diffs)
-	RemoveDuplicates(&post.FundedBy)
+	post.Body = template.HTML(builder.String())
 	return post
 }
 

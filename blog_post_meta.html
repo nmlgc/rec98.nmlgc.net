@@ -1,18 +1,18 @@
 <dl>
 	<dt><span class="emoji">📝</span> Posted:</dt>
-{{if .PushIDs}}
+{{if .Pushes}}
 	<dd><a href="/blog/{{.Date}}">{{HTML_Time .Time}}</a></dd>
-	<dt><span class="emoji">🚚</span> Summary of:</dt>
-	<dd>{{range $i, $push := .PushIDs -}}
-		{{- if $i}}, {{end}}<a href="/fundlog#{{$push}}">{{$push}}</a>
-	{{- end}}</dd>
-	<dt><span class="emoji">⌨️</span> Commits:</dt>
-	<dd>{{range $i, $diff := .Diffs -}}
-		{{- if $i}}, {{end -}}
-		<a href="https://github.com/{{$diff.URL}}">
-		{{- if $diff.Project.Name}}({{$diff.Project.Name}}) {{end -}}
-		<code>{{$diff.Rev}}</code></a>
-	{{- end}}</dd>
+
+	<div class="post_meta">
+		<dt><span class="emoji">🚚</span> Summary of:</dt>
+		<dd>{{range $i, $push := .Pushes -}}
+			{{- if $i}}<br>{{end}}
+			<a href="/fundlog#{{$push.ID}}">{{$push.ID}}</a>
+			{{$push.Goal}}
+			<a href="https://github.com/{{$push.Diff.URL}}"></a>
+		{{- end}}</dd>
+	</div>
+
 	<dt><span class="emoji">💰</span> Funded by:</dt>
 	<dd>{{range $i, $customer := .FundedBy -}}
 		{{- if $i}}, {{end}}{{DB_CustomerByID $customer -}}

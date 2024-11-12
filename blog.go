@@ -322,9 +322,8 @@ type PostDot struct {
 type Post struct {
 	Date     string
 	Time     time.Time // Full post time
-	PushIDs  []ScopedID
+	Pushes   []*Push
 	FundedBy []CustomerID
-	Diffs    []DiffInfo
 	Tags     []string
 	Filters  []string
 	Body     template.HTML
@@ -359,11 +358,9 @@ func (b *Blog) PostHeader(e *BlogEntry, filters []string) Post {
 	}
 	for i := len(e.Pushes) - 1; i >= 0; i-- {
 		push := &e.Pushes[i]
-		ret.PushIDs = append(ret.PushIDs, push.ID)
-		ret.Diffs = append(ret.Diffs, push.Diff)
+		ret.Pushes = append(ret.Pushes, push)
 		ret.FundedBy = append(ret.FundedBy, push.FundedBy()...)
 	}
-	RemoveDuplicates(&ret.Diffs)
 	RemoveDuplicates(&ret.FundedBy)
 	return ret
 }

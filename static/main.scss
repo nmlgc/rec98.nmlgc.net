@@ -699,16 +699,20 @@ dl {
 	border-bottom: var(--header-border);
 	padding-bottom: 0.5em;
 	margin: 0;
+
+	.post_meta {
+		display: flex;
+		align-items: baseline;
+
+		dt {
+			white-space: nowrap;
+			padding-right: 0.25em;
+		}
+	}
 }
 
 dt, dd {
 	display: inline;
-}
-
-dt .emoji {
-	display: inline-block;
-	width: 1.5em;
-	text-align: right;
 }
 
 dd:after {

@@ -539,17 +539,7 @@ func tsvPath(table string) string {
 }
 
 func loadTSV(slice interface{}, table string, unmarshaler func(gocsv.CSVReader, interface{}) error) {
-	f, err := os.Open(tsvPath(table))
-	// TODO: Unfortunately, this has to compile with Go 1.12 for the time
-	// being, so we can't use `errors.Is(err, os.ErrNotExist)` 🙁
-	if _, ok := err.(*os.PathError); ok {
-		return
-	}
-	FatalIf(err)
-	reader := csv.NewReader(f)
-	reader.Comma = '\t'
-	reader.LazyQuotes = true
-	FatalIf(unmarshaler(reader, slice))
+	LoadTSV(slice, tsvPath(table), unmarshaler)
 }
 
 func saveTSV(slice interface{}, table string) error {

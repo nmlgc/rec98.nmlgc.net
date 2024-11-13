@@ -2,9 +2,12 @@ package main
 
 import (
 	"crypto/sha512"
+	"encoding/csv"
+	"errors"
 	"fmt"
 	"os"
 
+	"github.com/gocarina/gocsv"
 	"golang.org/x/exp/constraints"
 )
 
@@ -69,4 +72,18 @@ func CryptHashOfFile(fn string) CryptHash {
 	f, err := os.ReadFile(fn)
 	FatalIf(err)
 	return CryptHashOfSlice(f)
+}
+
+// LoadTSV loads a TSV file using the given gocsv unmarshaler.
+func LoadTSV(slice any, fn string, unmarshaler func(gocsv.CSVReader, interface{}) error) bool {
+	f, err := os.Open(fn)
+	if errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+	FatalIf(err)
+	reader := csv.NewReader(f)
+	reader.Comma = '\t'
+	reader.LazyQuotes = true
+	FatalIf(unmarshaler(reader, slice))
+	return true
 }

@@ -1,13 +1,18 @@
-{{$not_tags := ne .TemplateName "blog_taglist"}}
-{{$not_all := ne .TemplateName "blog"}}
+{{$not_toc := ne .TemplateName "blog_toc" -}}
+{{$not_tags := ne .TemplateName "blog_taglist" -}}
+{{$not_all := ne .TemplateName "blog_all" -}}
 
 <h2 class="captioned">Blog</h2>
 <nav class="blog"><ul><li>
+	{{- if $not_toc}}<a href="/blog{{if .Vars.date}}#{{.Vars.date}}{{end}}">{{end -}}
+	List of posts
+	{{- if $not_toc}}</a>{{end -}}
+</li><li>
 	{{- if $not_tags}}<a href="/blog/tag">{{end -}}
 	List of tags
 	{{- if $not_tags}}</a>{{end -}}
 </li><li>
-	{{- if $not_all}}<a href="/blog{{if .Vars.date}}#{{.Vars.date}}{{end}}">{{end -}}
-	All posts (single-page)
+	{{- if $not_all}}<a href="/blog/all{{if .Vars.date}}#{{.Vars.date}}{{end}}">{{end -}}
+	All posts on one page
 	{{- if $not_all}}</a>{{end -}}
 </li></ul></nav>

@@ -1,0 +1,15 @@
+{{template "blog_header.html" .}}
+<style>
+	article {
+		margin-bottom: 1em;
+	}
+	dl {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+</style>
+{{range Blog_TOC -}}
+	<article id="{{.Date}}">
+		{{template "blog_post_meta.html" .}}
+	</article>
+{{- end}}

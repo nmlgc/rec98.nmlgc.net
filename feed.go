@@ -39,7 +39,7 @@ func (h *FeedHandler) getFeed() *feeds.Feed {
 		Description: "The Touhou PC-98 Restoration Project",
 		Updated:     h.getModTime(),
 	}
-	for post := range h.Blog.Posts(nil) {
+	for post := range h.Blog.Posts(h.Blog.Render, nil) {
 		var b strings.Builder
 		pagesExecute(&b, "blog_post.html", &post)
 		content := b.String()

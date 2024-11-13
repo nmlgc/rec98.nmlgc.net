@@ -470,7 +470,12 @@ func main() {
 	// ----
 	blog := NewBlog(pages, pushes, blogTags, <-videoRoot, func(blog *Blog) map[string]interface{} {
 		return map[string]interface{}{
-			"Blog_Posts":            blog.Posts,
+			"Blog_Posts": func(filters []string) chan *Post {
+				return blog.Posts(blog.Render, filters)
+			},
+			"Blog_TOC": func() chan *Post {
+				return blog.Posts(blog.PostHeader, nil)
+			},
 			"Blog_PostLink":         blog.PostLink,
 			"Blog_FindEntryForPush": blog.FindEntryForPush,
 			"Blog_GetPost":          blog.GetPost,
@@ -540,7 +545,8 @@ func main() {
 	r.Handle("/", pagesHandler("index.html"))
 	r.Handle("/faq", pagesHandler("faq.html"))
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
-	r.Handle(blogURLPrefix, pagesHandler("blog.html"))
+	r.Handle(blogURLPrefix, pagesHandler("blog_toc.html"))
+	r.Handle(blogURLPrefix+"/all", pagesHandler("blog_all.html"))
 	r.Handle(blogURLPrefix+"/feed.xml", http.HandlerFunc(feedHandler.HandleRSS))
 	r.Handle(blogURLPrefix+"/feed.atom", http.HandlerFunc(feedHandler.HandleAtom))
 	r.Handle(blogURLPrefix+"/feed.json", http.HandlerFunc(feedHandler.HandleJSON))

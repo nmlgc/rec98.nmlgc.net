@@ -230,6 +230,20 @@ func (e *BlogEntry) GetTime() time.Time {
 	}
 }
 
+func (e *BlogEntry) FragmentFromAnchor(anchor string) string {
+	if anchor == "" {
+		return ""
+	}
+	return ("#" + anchor + "-" + e.Date)
+}
+
+// URL returns the absolute URL to a blog post with an optional anchor
+// fragment.
+func (e *BlogEntry) URL(anchor string) string {
+	fragment := e.FragmentFromAnchor(anchor)
+	return fmt.Sprintf("%s/%s%s", blogURLPrefix, e.Date, fragment)
+}
+
 // Blog bundles all blog entries, sorted from newest to oldest.
 type Blog struct {
 	Entries []*BlogEntry
@@ -448,11 +462,11 @@ func (b *Blog) PostLink(dateAndAnchor string, text string) template.HTML {
 	anchor := ""
 	if index := strings.LastIndexByte(dateAndAnchor, '#'); index != -1 {
 		date = dateAndAnchor[:index]
-		anchor = (dateAndAnchor[index:] + "-" + date)
+		anchor = dateAndAnchor[index+1:]
 	}
-	_, err := b.FindEntryByString(date)
+	entry, err := b.FindEntryByString(date)
 	FatalIf(err)
 	return template.HTML(fmt.Sprintf(
-		`<a href="%s/%s%s">📝 %s</a>`, blogURLPrefix, date, anchor, text,
+		`<a href="%s">📝 %s</a>`, entry.URL(anchor), text,
 	))
 }

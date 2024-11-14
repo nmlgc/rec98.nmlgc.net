@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -46,7 +45,7 @@ func (h *FeedHandler) getFeed() *feeds.Feed {
 		// NOTE(handlerug): Yes, I *will* use regular expressions to
 		// parse HTML :zunpet:
 		content = stripArticleRegexp.ReplaceAllString(content, "")
-		link := fmt.Sprintf("%s%s/%s", h.SiteURL, h.BlogPath, post.Date)
+		link := (h.SiteURL + post.URL(""))
 		feed.Add(&feeds.Item{
 			Id:      link,
 			Link:    &feeds.Link{Href: link},

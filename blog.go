@@ -349,7 +349,7 @@ func (b *Blog) VideoURL(stem string, vd *VideoDir) *string {
 }
 
 // PostHeader gathers all header info for e, leaving the post body empty.
-func (b *Blog) PostHeader(e *BlogEntry, filters []string) Post {
+func (b *Blog) PostHeader(e *BlogEntry, filters []string) *Post {
 	ret := Post{
 		Date:    e.Date,
 		Time:    e.GetTime(),
@@ -362,11 +362,11 @@ func (b *Blog) PostHeader(e *BlogEntry, filters []string) Post {
 		ret.FundedBy = append(ret.FundedBy, push.FundedBy()...)
 	}
 	RemoveDuplicates(&ret.FundedBy)
-	return ret
+	return &ret
 }
 
 // Render builds a new Post instance from e.
-func (b *Blog) Render(e *BlogEntry, filters []string) Post {
+func (b *Blog) Render(e *BlogEntry, filters []string) *Post {
 	var builder strings.Builder
 	datePrefix := e.Date + "-"
 	post := b.PostHeader(e, filters)
@@ -415,13 +415,13 @@ func (b *Blog) GetPost(date string) (*Post, error) {
 		return nil, err
 	}
 	post := b.Render(entry, []string{})
-	return &post, nil
+	return post, nil
 }
 
 // Posts renders all blog posts that match the given slice of filters. Pass an
 // empty slice to get all posts.
-func (b *Blog) Posts(filters []string) chan Post {
-	ret := make(chan Post)
+func (b *Blog) Posts(filters []string) chan *Post {
+	ret := make(chan *Post)
 	go func() {
 		for _, entry := range b.Entries {
 			filtersSeen := 0

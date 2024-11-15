@@ -227,6 +227,8 @@ type BlogEntry struct {
 	Pushes       []Push
 	Chapters     []BlogChapter
 	Tags         []string
+	Prev         *BlogEntry
+	Next         *BlogEntry
 	templateName string
 }
 
@@ -270,7 +272,7 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 	templates, err := filepath.Glob(filepath.Join(blogHP.LocalPath, "*.html"))
 	FatalIf(err)
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
-	for _, tmpl := range templates {
+	for i, tmpl := range templates {
 		var chapters []BlogChapter
 		basename := filepath.Base(tmpl)
 		ext := path.Ext(basename)
@@ -299,6 +301,12 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 			Chapters:     chapters,
 			templateName: tmpl,
 		})
+		if i >= 1 {
+			ret.Entries[i-1].Prev = ret.Entries[i]
+			if i < len(templates) {
+				ret.Entries[i].Next = ret.Entries[i-1]
+			}
+		}
 	}
 	t.Funcs(funcs(ret))
 	for _, tmpl := range templates {
@@ -511,6 +519,20 @@ func (b *Blog) Posts(f func(*BlogEntry, []string) *Post, filters []string) chan 
 				}
 				return false
 			})
+			for i, entry := range filtered {
+				copy := *entry
+				if i == 0 {
+					copy.Next = nil
+				} else {
+					copy.Next = filtered[i-1]
+				}
+				if i == (len(filtered) - 1) {
+					copy.Prev = nil
+				} else {
+					copy.Prev = filtered[i+1]
+				}
+				filtered[i] = &copy
+			}
 		}
 		for _, entry := range filtered {
 			ret <- f(entry, filters)

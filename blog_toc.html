@@ -11,5 +11,6 @@
 {{range Blog_TOC -}}
 	<article id="{{.Date}}">
 		{{template "blog_post_meta.html" .}}
+		{{.TOC}}
 	</article>
 {{- end}}

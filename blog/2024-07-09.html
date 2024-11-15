@@ -51,15 +51,7 @@
 <p>
 	I'm 13 days late, but 🎉 ReC98 is now 10 years old! 🎉 <a href="https://github.com/nmlgc/ReC98/commit/9e07c54aeeb4fcfa6381505990602c333c83ca6e">On June 26, 2014</a>, I first tried exporting IDA's disassembly of TH05's <code>OP.EXE</code> and reassembling and linking the resulting file back into a binary, and was amazed that it actually yielded an identical binary. Now, this doesn't <i>actually</i> mean that I've spent 10 years working on this project; priorities have been shifting and continue to shift, and time-consuming mistakes were certainly made. Still, it's a good occasion to finally fully realize the good future for ReC98 that {{DB_CustomerByID 1}} invested in with the very first financial contribution back in 2018, deliver the last three of the first four reserved pushes, cross another piece of time-consuming maintenance off the list, and prepare the build process for hopefully the next 10 years.<br>
 	But why did it take 8 pushes and over two months to restore feature parity with the old system? 🥲
-</p><ol>
-	<li><a href="#prev-{{.Date}}">The previous build system(s)</a></li>
-	<li><a href="#tupfile-{{.Date}}">Migrating the 16-bit build part to Tup</a></li>
-	<li><a href="#msdos-{{.Date}}">Optimizing MS-DOS Player</a></li>
-	<li><a href="#win32-{{.Date}}">Continued support for building on 32-bit Windows</a></li>
-	<li><a href="#tiers-{{.Date}}">The new tier list of supported build platforms</a></li>
-	<li><a href="#includes-{{.Date}}">Cleaning up <code>#include</code> lists</a></li>
-	<li><a href="#th02_regist-{{.Date}}">TH02's High Score menu</a></li>
-</ol><hr id="prev-{{.Date}}"><p>
+</p>{{call .TOC}}<hr id="prev-{{.Date}}"><p>
 	The original plan for ReC98's good future was quite different from what I ended up shipping here. Before I started writing the code for this website in August 2019, I focused on feature-completing the <a href="https://twitter.com/ReC98Project/status/1162488931365113859">experimental 16-bit DOS build system for Borland compilers</a> that I'd been developing since 2018, and which would form the foundation of my internal development work in the following years. Eventually, I wanted to polish and publicly release this system as soon as people stopped throwing money at me. But as of November 2019, just one month after launch, the store kept selling out with everyone investing into all the flashier goals, so that release never happened.
 </p><figure {{$vid_omftup_2019.FigureAttrs}}>
 	{{call .VideoPlayer $vid_omftup_2019.SetActive $vid_omftup_2024}}

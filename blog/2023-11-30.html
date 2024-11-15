@@ -18,12 +18,7 @@
 	<li>video playback didn't work on Microsoft Edge at all?</li>
 </ol><p>
 	Those are definitely some high-priority bugs that demand immediate attention.
-</p><ol>
-	<li><a href="#edge-{{.Date}}">Microsoft Edge's anti-support of AV1</a></li>
-	<li><a href="#main-{{.Date}}">TH04/TH05's main/option menu</a></li>
-	<li><a href="#setup-{{.Date}}">TH04/TH05's first-launch sound setup menu</a></li>
-	<li><a href="#title5-{{.Date}}">TH05's title animation ☯️</a></li>
-</ol><hr/><p id="edge-{{.Date}}">
+</p>{{call .TOC}}<hr/><p id="edge-{{.Date}}">
 	The tab switcher issue was easily fixed by replacing the previous <code>z-index</code> trickery with a more robust solution involving the <code>hidden</code> attribute. The second one, however, is much more aggravating, because video playback on Edge has been broken ever since I {{Blog_PostLink "2022-10-31" "switched the preferred video codec to AV1"}}.<br />
 	This goes so far beyond not supporting a specific codec. Usually, unsupported codecs aren't <i>supposed</i> to be an issue: As soon as you start using the HTML <code>&lt;video&gt;</code> tag, you'll learn that not every browser supports all codecs. And so you set up an encoding pipeline to serve each video in a mix of new and ancient formats, put the <code>&lt;source&gt;</code> tag of the most preferred codec first, and rest assured that browsers will fall back on the best-supported option as necessary. Except that Edge doesn't even <i>try</i>, and insists on staying on a non-playing AV1 video. 🙄
 </p><p>

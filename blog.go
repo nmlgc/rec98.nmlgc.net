@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gocarina/gocsv"
 	"github.com/gorilla/mux"
 )
 
@@ -211,11 +212,20 @@ func (b *Blog) NewBlogAudio(stem, date, alt string) *BlogAudio {
 	}
 }
 
+// BlogChapter describes a single chapter of a blog post.
+type BlogChapter struct {
+	Depth    uint
+	Anchor   string
+	Name     string
+	Trailing string
+}
+
 // BlogEntry describes an existing blog entry, together with information about
 // its associated pushes parsed from the database.
 type BlogEntry struct {
 	Date         string
 	Pushes       []Push
+	Chapters     []BlogChapter
 	Tags         []string
 	templateName string
 }
@@ -261,12 +271,32 @@ func NewBlog(t *template.Template, pushes tPushes, tags tBlogTags, videoRoot *Vi
 	FatalIf(err)
 	sort.Slice(templates, func(i, j int) bool { return templates[i] > templates[j] })
 	for _, tmpl := range templates {
+		var chapters []BlogChapter
 		basename := filepath.Base(tmpl)
-		date := strings.TrimSuffix(basename, path.Ext(basename))
+		ext := path.Ext(basename)
+		date := strings.TrimSuffix(basename, ext)
+
+		tocFN := strings.TrimSuffix(tmpl, ext) + ".toc.tsv"
+		LoadTSV(&chapters, tocFN, gocsv.UnmarshalCSV)
+		for i := range chapters {
+			chapter := &chapters[i]
+			for strings.HasPrefix(chapter.Name, "-") {
+				chapter.Depth++
+				chapter.Name = chapter.Name[1:]
+			}
+			trailPos := strings.IndexByte(chapter.Name, '|')
+			if trailPos != -1 {
+				chapter.Trailing = strings.TrimSpace(chapter.Name[trailPos+1:])
+				chapter.Name = chapter.Name[:trailPos]
+			}
+			chapter.Name = strings.TrimSpace(chapter.Name)
+		}
+
 		ret.Entries = append(ret.Entries, &BlogEntry{
 			Date:         date,
 			Pushes:       pushes.DeliveredAt(date),
 			Tags:         tags[date],
+			Chapters:     chapters,
 			templateName: tmpl,
 		})
 	}
@@ -330,6 +360,7 @@ type PostDot struct {
 	Audio       func(fn string, alt string) *BlogAudio
 	VideoPlayer func(videos ...*BlogVideo) template.HTML
 	AudioPlayer func(videos ...*BlogAudio) template.HTML
+	TOC         func() template.HTML
 }
 
 // Post bundles the rendered HTML body of a post with all necessary header
@@ -341,6 +372,36 @@ type Post struct {
 	FundedBy []CustomerID
 	Filters  []string
 	Body     template.HTML
+}
+
+func (p *Post) tocWithFunc(urlFunc func(anchor string) string) template.HTML {
+	if len(p.Chapters) == 0 {
+		return ""
+	}
+	ret := template.HTML("<ol>")
+	prevDepth := uint(0)
+	for i := range p.Chapters {
+		cur := p.Chapters[i]
+		for ; prevDepth > cur.Depth; prevDepth-- {
+			ret += "</ul>"
+		}
+		for ; prevDepth < cur.Depth; prevDepth++ {
+			ret += "<ul>"
+		}
+		if i != 0 {
+			ret += "</li>"
+		}
+		ret += template.HTML(fmt.Sprintf(
+			`<li><a href="%s">%s</a> %s`,
+			urlFunc(cur.Anchor), cur.Name, cur.Trailing,
+		))
+	}
+	ret += "</li></ol>"
+	return ret
+}
+
+func (p *Post) TOC() template.HTML {
+	return p.tocWithFunc(p.URL)
 }
 
 type eNoPost struct {
@@ -414,6 +475,9 @@ func (b *Blog) Render(e *BlogEntry, filters []string) *Post {
 			ret += blogPlayerBody(videos)
 			ret += `</rec98-audio>`
 			return ret
+		},
+		TOC: func() template.HTML {
+			return post.tocWithFunc(post.FragmentFromAnchor)
 		},
 	}
 	pagesExecute(&builder, e.templateName, &ctx)

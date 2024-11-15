@@ -7,14 +7,7 @@
 </p><p>
 	But first, we got another <a href="/faq#mod-bugs">free bugfix according to my policy</a>! {{Blog_PostLink "2022-04-18#marisa" "Back in April 2022 when I researched the <code>Divide Error</code> crash that can occur in TH04's Stage 4 Marisa fight"}}, I proposed and implemented four possible workarounds and let the community pick one of them for the generally recommended small bugfix mod. I still pushed the others onto individual branches in case the {{HTML_TagInline "gameplay"}} community ever wants to look more closely into them and maybe pick a different one… except that I accidentally pushed the wrong code for the warp workaround, probably because I got confused with the second warp variant I developed later on.<br />
 	Fortunately, I still had the intended code for both variants lying around, and used the occasion to merge the current <code>master</code> branch into all of these mod branches. Thanks to wyatt8740 for <a href="https://github.com/nmlgc/ReC98/issues/11">spotting and reporting this oversight</a>!
-</p><ol>
-	<li><a href="#b-{{.Date}}">The Music Room background masking effect</a></li>
-	<li><a href="#grcg-{{.Date}}">The GRCG's plane disabling flags</a></li>
-	<li><a href="#colors-{{.Date}}">Text color restrictions</a></li>
-	<li><a href="#mess-{{.Date}}">The entire messy rest of the Music Room code</a></li>
-	<li><a href="#cong-{{.Date}}">TH04's partially consistent congratulation picture on Easy Mode</a></li>
-	<li><a href="#th02-pi-{{.Date}}">TH02's boss position and damage variables</a></li>
-</ol><hr id="b-{{.Date}}" /><p>
+</p>{{call .TOC}}<hr id="b-{{.Date}}" /><p>
 	As the final piece of code shared in largely identical form between 4 of the 5 games, the Music Rooms were the biggest remaining piece of low-hanging fruit that guaranteed big finalization% gains for comparatively little effort. They seemed to be especially easy because I already decompiled TH02's Music Room together with the rest of that game's <code>OP.EXE</code> back in early 2015, when this project focused on just raw decompilation with little to no research. 9 years of increased standards later though, it turns out that I missed <i>a lot</i> of details, and ended up renaming most variables and functions. Combined with larger-than-expected changes in later games and the usual quality level of ZUN's menu code, this ended up taking noticeably longer than the single push I expected.
 </p><p>
 	The undoubtedly most interesting part about this screen is the animation in the background, with the spinning and falling polygons cutting into a single-color background to reveal a spacey image below. However, the only background image loaded in the Music Room is <code>OP3.PI</code> (TH02/TH03) or <code>MUSIC3.PI</code> (TH04/TH05), which looks like this in a .PI viewer or when converted into another image format with the usual tools:

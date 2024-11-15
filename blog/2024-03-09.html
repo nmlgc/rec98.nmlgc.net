@@ -173,19 +173,7 @@
 
 <p>
 	{{Blog_PostLink "2022-01-31" "Over two years since the previous largest delivery"}}, we've now got a new record in every regard: 12 pushes across 5 repos, 215 commits, and a blog post with over 14,000 words and 48 pieces of media. 😱 Who would have thought that the superficially simple task of putting SC-88Pro recordings into Shuusou Gyoku would actually mainly focus on deep research into the underlying MIDI files? I don't typically cover much music-related content because it's a non-issue as far as PC-98 Touhou code is concerned, so it's quite fitting how extensive this one turned out. So here we go, the result of virtually unlimited funding and patience:
-</p><ol>
-	<li><a href="#controversy-{{.Date}}">The SC-88Pro recording controversy</a></li>
-	<li><a href="#sysex-{{.Date}}">Undefined SysEx behavior</a></li>
-	<li><a href="#choice-{{.Date}}">Resolving the controversy, and making a choice (contains personal opinion)</a></li>
-	<li><a href="#mly-{{.Date}}">A Unix-style command-line MIDI filter (in Rust BTW)</a></li>
-	<li><a href="#midiviz-{{.Date}}">Visualizing MIDI files (for science, and not for playing them on a keyboard)</a></li>
-	<li><a href="#loopquirks-{{.Date}}">Shuusou Gyoku's individual loop quirks 🎺</a></li>
-	<li><a href="#pbgmidi-{{.Date}}">Rewriting pbg's MIDI code</a></li>
-	<li><a href="#bgmpacks-{{.Date}}">Putting together the BGM packs</a></li>
-	<li><a href="#libs-{{.Date}}">Outgrowing miniaudio (and raging about single-file C libraries for a while)</a></li>
-	<li><a href="#impl-{{.Date}}">Remaining implementation details</a></li>
-	<li><a href="#pricing-{{.Date}}">Pricing changes (and no, not everything's getting more expensive)</a></li>
-</ol><hr id="controversy-{{.Date}}" /><p>
+</p>{{call .TOC}}<hr id="controversy-{{.Date}}" /><p>
 	So where's the controversy? Romantique Tp obviously made <a href="https://www.shrinemaiden.org/forum/index.php?topic=18989.0">the best and most careful real-hardware SC-88Pro recordings of all of ZUN's old MIDIs</a>, including the original (<dfn>OST</dfn>) and <a href="https://www16.big.or.jp/~zun/html/music_old.html">arranged</a> (<dfn>AST</dfn>) soundtrack of Shuusou Gyoku, right? Surely all I have to do now is to cut them into seamless loops to save a bit of disk space, and then put them into the game? Let's start at the end of the track list with the name registration theme, since it's light on instruments and has an obvious loop point that will be easy to spot in the waveform. But, um… wait a moment, that very first drum note comes a bit late, doesn't it?
 </p><figure class="waveform-{{.Date}}" >
 	<figcaption class="dynamic"><div>

@@ -131,30 +131,7 @@
 
 <p>
 	And then, the Shuusou Gyoku renderer rewrite escalated to another 10-push monster that delayed the planned Seihou Summer™ straight into mid-fall. Guess that's just how things go these days at my current level of quality. Testing and polish made up half of the development time of this new build, which probably doesn't surprise anyone who has ever dealt with GPUs and drivers…
-</p><ol>
-	<li><a href="#cleanup-{{.Date}}">Codebase cleanup and portability</a></li>
-	<li><a href="#modules-{{.Date}}">Rolling out C++ Standard Library Modules</a></li>
-	<li><a href="#issues-{{.Date}}">Pearls uncovered by static analysis</a> (← start here if you don't particularly care about C++)</li>
-	<li><a href="#arch-{{.Date}}">Finishing the new graphics architecture (and discovering every remaining 8-bit/16-bit inconsistency)</a></li>
-	<li><a href="#sdl-{{.Date}}">Starting the SDL port with the simple things</a><ul>
-		<li><a href="#benchmark-{{.Date}}">Benchmarking SDL_Renderer's driver APIs</a></li>
-	</ul></li>
-	<li><a href="#lens-{{.Date}}">Porting the lens ball effect</a></li>
-	<li><a href="#window-{{.Date}}">Adding scaled window and borderless fullscreen modes</a><ul>
-		<li><a href="#hotkeys-{{.Date}}">Adding hotkeys for the above</a></li>
-	</ul></li>
-	<li><a href="#scalemodes-{{.Date}}">Screenshots, and how they force us to rethink scaling</a></li>
-	<li><a href="#subpixels-{{.Date}}">Achieving subpixel accuracy</a><ul>
-		<li><a href="#subpixels-{{.Date}}">Displaced triangles</a></li>
-		<li><a href="#lines-{{.Date}}">Line rendering</a></li>
-	</ul></li>
-	<li><a href="#future-{{.Date}}">Future work</a><ul>
-		<li><a href="#kog-{{.Date}}">Kioh Gyoku hype 🙌</a></li>
-		<li><a href="#palettized-{{.Date}}">Preserving the palettized 8-bit render path</a></li>
-		<li><a href="#sdl3-{{.Date}}">Updating to SDL 3</a></li>
-	</ul></li>
-	<li><a href="#echo-{{.Date}}">Recreating the Sound Canvas VA BGM packs (now with panning delay)</a></li>
-</ol><hr id="cleanup-{{.Date}}"><p>
+</p>{{call .TOC}}<hr id="cleanup-{{.Date}}"><p>
 	But first, let's finally deploy <a href="https://wg21.link/P2465R3">C++23 Standard Library Modules</a>! I've been waiting for the promised compile-time improvements of modules for 4 years now, so I was bound to jump at the very first possible opportunity to use them in a project. Unfortunately, MSVC further complicates such a migration by adding one particularly annoying proprietary requirement:
 </p><ul>
 	<li>Our own code wants to use both static analysis and modules.</li>

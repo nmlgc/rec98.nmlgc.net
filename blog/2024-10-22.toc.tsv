@@ -1,0 +1,19 @@
+Anchor	Name
+cleanup	Codebase cleanup and portability
+modules	Rolling out C++ Standard Library Modules
+issues	Pearls uncovered by static analysis | (← start here if you don't particularly care about C++)
+arch	Finishing the new graphics architecture (and discovering every remaining 8-bit/16-bit inconsistency)
+sdl	Starting the SDL port with the simple things
+benchmark	- Benchmarking SDL_Renderer's driver APIs
+lens	Porting the lens ball effect
+window	Adding scaled window and borderless fullscreen modes
+hotkeys	- Adding hotkeys for the above
+scalemodes	Screenshots, and how they force us to rethink scaling
+subpixels	Achieving subpixel accuracy
+subpixels	- Displaced triangles
+lines	- Line rendering
+future	Future work
+kog	- Kioh Gyoku hype 🙌
+palettized	- Preserving the palettized 8-bit render path
+sdl3	- Updating to SDL 3
+echo	Recreating the Sound Canvas VA BGM packs (now with panning delay)

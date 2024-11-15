@@ -100,23 +100,7 @@
 	margin. These pushes ended up covering so many aspects that could be
 	interesting to a general and non-Seihou-adjacent audience, so I think we
 	need a table of contents for this one:
-</p><ol>
-	<li><a href="#zig-{{.Date}}">Evaluating Zig</a></li>
-	<li><a href="#concepts-{{.Date}}">Visual Studio doesn't implement concepts
-	correctly?</a></li>
-	<li><a href="#tup-{{.Date}}">Reusable building blocks for Tup</a></li>
-	<li><a href="#sdl-{{.Date}}">Compiling SDL&nbsp;2</a></li>
-	<li><a href="#fps-{{.Date}}">The new frame rate limiter</a></li>
-	<li><a href="#sdlaudio-{{.Date}}">Audio via SDL or SDL_mixer? (Nope,
-	neither)</a></li>
-	<li><a href="#miniaudio-{{.Date}}">miniaudio</a></li>
-	<li><a href="#resampling-{{.Date}}">Resampling defective sound effects
-	(including FLAC not always being lossless)</a></li>
-	<li><a href="#sdlinput-{{.Date}}">Joypad input with SDL</a></li>
-	<li><a href="#screenshots-{{.Date}}">Restoring the original screenshot
-	feature</a></li>
-	<li><a href="#utmath-{{.Date}}">Integer math in hand-written ASM</a></li>
-</ol><hr /><p id="zig-{{.Date}}">
+</p>{{call .TOC}}<hr /><p id="zig-{{.Date}}">
 	Before we can start migrating to SDL, we of course have to integrate it into
 	the build somehow. On Linux, we'd ideally like to just dynamically link to a
 	distribution's SDL development package, but since there's no such thing on

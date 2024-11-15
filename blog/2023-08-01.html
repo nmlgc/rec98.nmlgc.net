@@ -53,14 +53,7 @@
 	goal of porting this game to Linux. This would take much longer, but fix all
 	these issues at once while bringing us significantly closer to Shuusou Gyoku
 	being cross-platform. Which is exactly what {{DB_CustomerByID 13}} did.
-</p><ol>
-	<li><a href="#strategy-{{.Date}}">The migration strategy</a></li>
-	<li><a href="#ddraw-{{.Date}}">Learning DirectDraw and its surface management</a></li>
-	<li><a href="#palettes-{{.Date}}">Reverse-engineering the palette logic in 8-bit mode</li>
-	<li><a href="#text-{{.Date}}">Portable, offscreen text rendering</a></li>
-	<li><a href="#config-{{.Date}}">The new, forward-compatible configuration file format</a></li>
-	<li><a href="#sdl-{{.Date}}">SDL_Renderer as the perfect abstraction?</a></li>
-</ol><hr id="strategy-{{.Date}}"><p>
+</p>{{call .TOC}}<hr id="strategy-{{.Date}}"><p>
 	Shuusou Gyoku is a <i>very</i> Windows-native codebase. Its usage of types
 	declared in <code>&lt;windows.h&gt;</code> even extends to core gameplay
 	code, the rendering code is completely architected around DirectDraw's

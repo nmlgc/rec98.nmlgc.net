@@ -1,0 +1,12 @@
+Anchor	Name
+controversy	The SC-88Pro recording controversy
+sysex	Undefined SysEx behavior
+choice	Resolving the controversy, and making a choice (contains personal opinion)
+mly	A Unix-style command-line MIDI filter (in Rust BTW)
+midiviz	Visualizing MIDI files (for science, and not for playing them on a keyboard)
+loopquirks	Shuusou Gyoku's individual loop quirks 🎺
+pbgmidi	Rewriting pbg's MIDI code
+bgmpacks	Putting together the BGM packs
+libs	Outgrowing miniaudio (and raging about single-file C libraries for a while)
+impl	Remaining implementation details
+pricing	Pricing changes (and no, not everything's getting more expensive)

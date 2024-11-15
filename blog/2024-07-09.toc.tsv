@@ -1,0 +1,8 @@
+Anchor	Name
+prev	The previous build system(s)
+tupfile	Migrating the 16-bit build part to Tup
+msdos	Optimizing MS-DOS Player
+win32	Continued support for building on 32-bit Windows
+tiers	The new tier list of supported build platforms
+includes	Cleaning up <code>#include</code> lists
+th02_regist	TH02's High Score menu

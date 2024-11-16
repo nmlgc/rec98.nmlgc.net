@@ -380,6 +380,7 @@ type Post struct {
 	FundedBy []CustomerID
 	Filters  []string
 	Body     template.HTML
+	Single   bool // Rendered from a single-post endpoint?
 }
 
 func (p *Post) tocWithFunc(urlFunc func(anchor string) string) template.HTML {
@@ -410,6 +411,31 @@ func (p *Post) tocWithFunc(urlFunc func(anchor string) string) template.HTML {
 
 func (p *Post) TOC() template.HTML {
 	return p.tocWithFunc(p.URL)
+}
+
+func (p *Post) entryLink(entry *BlogEntry, titleIfLink, titleIfEmpty, inner string) template.HTML {
+	if entry == nil {
+		return template.HTML(
+			fmt.Sprintf(`<div title="%s">%s</div>`, titleIfEmpty, inner),
+		)
+	}
+	var url string
+	if p.Single {
+		url = entry.URL("")
+	} else {
+		url = ("#" + entry.Date)
+	}
+	return template.HTML(
+		fmt.Sprintf(`<a href="%s" title="%s">%s</a>`, url, titleIfLink, inner),
+	)
+}
+
+func (p *Post) EntryNav() template.HTML {
+	return template.HTML(`<div class="nav">` +
+		p.entryLink(p.Next, "Next post", "Already at the latest blog post.", "🔼") +
+		p.entryLink(p.Prev, "Previous post", "This is the first blog post.", "🔽") +
+		`</div>`,
+	)
 }
 
 type eNoPost struct {
@@ -500,6 +526,7 @@ func (b *Blog) GetPost(date string) (*Post, error) {
 		return nil, err
 	}
 	post := b.Render(entry, []string{})
+	post.Single = true
 	return post, nil
 }
 

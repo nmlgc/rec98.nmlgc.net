@@ -1003,11 +1003,29 @@ nav.blog {
 }
 
 article {
+	position: relative;
 	margin-bottom: 3em;
 	border-bottom: var(--header-border);
 	box-shadow: var(--blog-shadow);
 	background: var(--c-bg);
 	padding: 1em;
+
+	div.nav {
+		float: right;
+		display: grid;
+		font-size: larger;
+		grid-template-columns: 1fr 1fr;
+		margin: -0.5em;
+
+		&:last-child {
+			margin-top: -0.75em;
+		}
+
+		div {
+			filter: saturate(0) brightness(1.25);
+			user-select: none;
+		}
+	}
 }
 
 article h5 {

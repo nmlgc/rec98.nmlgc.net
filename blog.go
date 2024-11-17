@@ -321,11 +321,10 @@ type PostDot struct {
 // Post bundles the rendered HTML body of a post with all necessary header
 // data.
 type Post struct {
-	Date     string
+	*BlogEntry
 	Time     time.Time // Full post time
 	Pushes   []*Push
 	FundedBy []CustomerID
-	Tags     []string
 	Filters  []string
 	Body     template.HTML
 }
@@ -352,10 +351,9 @@ func (b *Blog) VideoURL(stem string, vd *VideoDir) *string {
 // PostHeader gathers all header info for e, leaving the post body empty.
 func (b *Blog) PostHeader(e *BlogEntry, filters []string) *Post {
 	ret := Post{
-		Date:    e.Date,
-		Time:    e.GetTime(),
-		Tags:    e.Tags,
-		Filters: filters,
+		BlogEntry: e,
+		Time:      e.GetTime(),
+		Filters:   filters,
 	}
 	for i := len(e.Pushes) - 1; i >= 0; i-- {
 		push := &e.Pushes[i]

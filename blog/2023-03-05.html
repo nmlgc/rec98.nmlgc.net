@@ -60,7 +60,7 @@
 	<q>anything</q> goal will repay this debt. Luckily, this doesn't affect any
 	immediate plans, as I'll be spending March with tasks that are already fully
 	funded.
-</p><p>
+</p>{{call .TOC}}<hr id="single-{{.Date}}"><p>
 	So, how did this end up so massive? The list of things I originally set out
 	to do was pretty short:
 </p><ol>
@@ -162,7 +162,7 @@
 </p><p>
 	If only we now could start MDRV98 from this new combined binary, we wouldn't
 	need a second batch file either…
-</p><hr /><p>
+</p><hr id="mdrv98-{{.Date}}"><p>
 	Which brings us to the first big research question of this delivery. Using
 	the C <code>spawn()</code> function works fine on this compiler, so
 	<code>spawn("MDRV98.COM")</code> would be all we need to do, right? Except
@@ -377,7 +377,7 @@
 	<code>ANNIV.EXE</code> still involves a batch file, and I would say that
 	expecting people to remove <code>ZUNSOFT.COM</code> from that file is worse
 	than not playing the animation. It's certainly a debate we can have, though.
-</p><hr /><p>
+</p><hr id="landmines-{{.Date}}"><p>
 	This deep dive into memory allocation revealed another previously
 	undocumented bug in the original game. The RLE decompression code for the
 	<code>東方靈異.伝</code> packfile contains two heap overflows, which are
@@ -410,7 +410,7 @@
 	comments in these numbers – if the interactions of the code are complex
 	enough to require multi-paragraph comments, these <i>are</i> a necessary and
 	valid part of the code.
-</p><hr /><p>
+</p><hr id="glitch-{{.Date}}"><p>
 	While we're on the topic of weird code and its visible or invisible effects,
 	there's one thing you might be concerned about. With all the rearchitecting
 	and data shifting we're doing on the <code>debloated</code> branch, what
@@ -438,7 +438,7 @@
 	since this has been going on for far too long already. Let's first see <span
 	class="hovertext" title="I'm aware that me mentioning it will make this much more likely!">if
 	anyone ever actually complains</span> about details like this…
-</p><hr /><p>
+</p><hr id="blitperf-{{.Date}}"><p>
 	Alright, time to start the <code>anniversary</code> branch by rendering
 	everything at its correct internal unaligned X position? Eh… maybe not quite
 	yet. If we just hacked all the necessary bit-shifting code into all the
@@ -765,7 +765,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	simply hooking <code>INT 18h</code> and unconditionally reenabling the VSync
 	interrupt trigger after the original handler returns, and so does our
 	platform layer.
-</p><hr /><p>
+</p><hr id="egc-{{.Date}}"><p>
 	So, with the pellet draw calls batched and routed through the new renderer,
 	we should have gained enough free CPU cycles to disable
 	{{Blog_PostLink "2020-07-12" "interlaced pellet rendering"}} without any
@@ -866,7 +866,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	That only leaves
 	{{Blog_PostLink "2019-11-06" "my old offer of documenting the EGC raster ops"}},
 	and we've got the EGC figured out completely!
-</p><hr /><p>
+</p><hr id="summary-{{.Date}}"><p>
 	And that did in fact remove tearing from the pellet rendering function! For
 	the first time, we can now fight Elis, Kikuri, Sariel, and Konngara with a
 	doubled pellet frame rate:

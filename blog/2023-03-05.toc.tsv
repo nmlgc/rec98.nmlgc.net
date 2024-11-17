@@ -1,0 +1,8 @@
+Anchor	Name
+single	Combining TH01's three executables into a single one
+mdrv98	Starting MDRV98 from within the game binary
+landmines	Buffer overflows in packfile decompression (and an entire new distinction of weird code)
+glitch	Preserving the negative glitch stages with a different binary layout
+blitperf	Benchmarking and optimizing unaligned blitting of small sprites
+egc	Optimizing EGC-powered unblitting
+summary	Summary and future work

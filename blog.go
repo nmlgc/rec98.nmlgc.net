@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -423,18 +424,20 @@ func (b *Blog) GetPost(date string) (*Post, error) {
 func (b *Blog) Posts(f func(*BlogEntry, []string) *Post, filters []string) chan *Post {
 	ret := make(chan *Post)
 	go func() {
-		for _, entry := range b.Entries {
-			filtersSeen := 0
-			for _, tag := range entry.Tags {
+		filtered := b.Entries
+		if len(filters) != 0 {
+			filtered = append([]*BlogEntry{}, b.Entries...)
+			filtered = slices.DeleteFunc(filtered, func(entry *BlogEntry) bool {
 				for _, filter := range filters {
-					if filter == tag {
-						filtersSeen++
+					if !slices.Contains(entry.Tags, filter) {
+						return true
 					}
 				}
-			}
-			if filtersSeen == len(filters) {
-				ret <- f(entry, filters)
-			}
+				return false
+			})
+		}
+		for _, entry := range filtered {
+			ret <- f(entry, filters)
 		}
 		close(ret)
 	}()

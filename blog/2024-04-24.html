@@ -11,7 +11,9 @@
 {{$vid_displaced.AddMarker 87 "P2 gets hit" "left"  -}}
 
 <p>
-	TH03 gameplay! {{Blog_PostLink "2022-02-18" "It's been over two years."}} People have been investing some decent money with the intention of eventually getting netplay, so let's cover some more foundations around player movement… and quickly notice that there's almost no overlap between gameplay RE and netplay preparations? That makes for a fitting opportunity to think about what TH03 netplay would look like:
+	TH03 gameplay! {{Blog_PostLink "2022-02-18" "It's been over two years."}} People have been investing some decent money with the intention of eventually getting netplay, so let's cover some more foundations around player movement… and quickly notice that there's almost no overlap between gameplay RE and netplay preparations?
+</p>{{call .TOC}}<hr id="netplay-{{.Date}}"><p>
+	That makes for a fitting opportunity to think about what TH03 netplay would look like. Regardless of how we implement them into TH03 in particular, these features should <i>always</i> be part of the netcode:
 </p><ul>
 	<li>
 		<p><i>Data exchange protocol:</i> <a href="https://github.com/progre/junowen">The unofficial TH19 battle tool</a> considered a few possibilities and ultimately chose WebRTC Data Channels. <a href="https://www.youtube.com/watch?v=YRDMGuSNF70&t=211s">The argument goes like this:</a>
@@ -36,8 +38,8 @@
 			<li>Any higher ping, however, could occasionally lead to a rollback queue that's too large for my system to process within a single frame at the intended 56.4 FPS rate. As a result, me playing anyone in the western US is highly likely to involve at least occasional slowdowns. Delaying inputs on purpose is the usual workaround, but isn't Touhou that kind of game series where people use vpatch to get rid of even the default input delay in the Windows games? {{HTML_Emoji "thonk"}}</li>
 		</ul><p>
 		So we'd ideally want to put TH03 into an update-only mode that skips all rendering calls during re-simulation of rolled-back frames. Ironically, this means that netplay-focused RE would actually focus on the game's <i>rendering</i> code and ensure that it doesn't mutate any statically allocated data, allowing it to be freely skipped without affecting the game. Imagine palette-based flashing animations that are implemented by gradually mutating statically allocated values – these would cause wrong colors for the rest of the game if the animation doesn't run on every frame.</p></li>
-</ul><p>
-	Implementing all of this into TH03 can be done in one, a few, or all of the following 6 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
+</ul><p id="integration-{{.Date}}"></p>
+	Integrating all of this into TH03 can be done in one, a few, or all of the following 6 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
 </p><ol>
 	<li id="emu-{{.Date}}"><p>
 		<i>Generic PC-98 netcode for one or more emulators</i>
@@ -122,8 +124,8 @@
 	That leaves us with these prerequisites:
 </p><ul>
 	<li>1), by definition, needs nothing from ReC98, and I could theoretically start implementing it right now. If you're interested in funding it, just tell me via the usual Twitter or Discord channels.</li>
-	<li>2) through 5) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes.<br>
-	100% PI won't be a requirement either, as I expect the <code>MAIN.EXE</code> part of the interfacing netcode layer to be thin enough that it can easily fit within the original game's code layout.</li>
+	<li>2) through 5) require at least 100% RE of TH03's <code>OP.EXE</code> to facilitate the new menu code. Reverse-engineering all rendering-related code in <code>MAIN.EXE</code> would be nice for performance, but we don't strictly need <i>all</i> of it before we start. Re-simulated frames can just skip over the few pieces of rendering code we <i>do</i> know, and we can gradually increase the skipped area of code in future pushes. 100% PI won't be a requirement either, as I expect the <code>MAIN.EXE</code> part of the interfacing netcode layer to be thin enough that it can easily fit within the original game's code layout.<br>
+	Therefore, funding TH03 <code>OP.EXE</code> RE is the clearest way you can signal to me that you want netplay with nice UX.</li>
 	<li>6), obviously, requires all of TH03 to be RE'd, decompiled, cleaned up, and ported to modern systems. Currently, TH03 appears to be the second-easiest game to port behind TH02:<ul>
 		<li>Although TH03 already has more needlessly micro-optimized ASM code than TH02 and there's even more to come, it still appears to have way less than TH04 or TH05.</li>
 		<li>Its game logic and rendering code seem to be somewhat neatly separated from each other, unlike TH01 which deeply intertwines them.</li>
@@ -131,7 +133,7 @@
 	</ul>But still, it's the game with the least amount of RE%. Decompilation <i>might</i> get easier once I've worked myself up to the higher levels of game code, and even more so if we're lucky and all of the 9 characters are coded in a similar way, but I can't promise anything at this point.</li>
 </ul><p>
 	Once we've reached any of these prerequisites, I'll set up a separate <i>campaign</i> funding method that runs parallel to the cap. As netplay is one of those big features where incremental progress makes little sense <i>and</i> we can expect wide community support for the idea, I'll go for a more classic crowdfunding model with a fixed goal for the minimum feature set and stretch goals for optional quality-of-life features. Since I've still got two other big projects waiting to be finished, I'd like to at least complete the Shuusou Gyoku Linux port before I start working on TH03 netplay, even if we manage to hit any of the funding goals before that.
-</p><hr><p>
+</p><hr id="hitcirc-{{.Date}}"><p>
 	For the first time in a long while, the actual content of this push can be listed fairly quickly. I've now RE'd:
 </p><ul>
 	<li>conversions from playfield-relative coordinates to screen coordinates and back (a first in PC-98 Touhou; even TH02 uses screen space for every coordinate I've seen so far),</li>

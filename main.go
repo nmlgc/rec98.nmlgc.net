@@ -494,6 +494,10 @@ func main() {
 		SiteURL:  domain.String(),
 		BlogPath: "/blog",
 	}
+	feedFormats := feedHandler.Formats()
+	pages.Funcs((map[string]interface{}{
+		"Blog_FeedFormats": func() []*FeedFormat { return feedFormats },
+	}))
 	// ----
 
 	// Payment providers
@@ -547,9 +551,9 @@ func main() {
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(blogURLPrefix, pagesHandler("blog_toc.html"))
 	r.Handle(blogURLPrefix+"/all", pagesHandler("blog_all.html"))
-	r.Handle(blogURLPrefix+"/feed.xml", http.HandlerFunc(feedHandler.HandleRSS))
-	r.Handle(blogURLPrefix+"/feed.atom", http.HandlerFunc(feedHandler.HandleAtom))
-	r.Handle(blogURLPrefix+"/feed.json", http.HandlerFunc(feedHandler.HandleJSON))
+	for _, feedFormat := range feedFormats {
+		r.Handle(feedFormat.Path, feedFormat.Handler)
+	}
 	r.Handle(blogURLPrefix+"/tag", pagesHandler("blog_taglist.html"))
 	r.Handle(blogURLPrefix+"/{date}", pagesHandler("blog_single.html"))
 	r.Handle(

@@ -7,9 +7,9 @@
 	<meta name="robots" content="noindex, noarchive" />
 	{{- end}}
 	{{if hasprefix .TemplateName "blog" -}}
-	<link rel="alternate" href="/blog/feed.xml" type="application/rss+xml" />
-	<link rel="alternate" href="/blog/feed.atom" type="application/atom+xml" />
-	<link rel="alternate" href="/blog/feed.json" type="application/json" />
+	{{- range Blog_FeedFormats -}}
+	<link rel="alternate" href="{{.Path}}" {{.ContentType}} />
+	{{- end}}
 	<link rel="stylesheet" href="{{call $.StaticFileURL "tab-switcher.css"}}" />
 	<link rel="stylesheet" href="{{call $.StaticFileURL "player.css"}}" />
 	<link rel="stylesheet" href="{{call $.StaticFileURL "trackbar.css"}}" />

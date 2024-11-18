@@ -1,6 +1,8 @@
 package main
 
 import (
+	"html/template"
+	"io"
 	"net/http"
 	"regexp"
 	"strings"
@@ -88,31 +90,41 @@ func (h *FeedHandler) processRequest(wr http.ResponseWriter, req *http.Request) 
 	return true
 }
 
-// HandleRSS responds with an RSS 2.0 feed of the blog.
-func (h *FeedHandler) HandleRSS(wr http.ResponseWriter, req *http.Request) {
-	if !h.processRequest(wr, req) {
-		return
-	}
-	wr.Header().Set("Content-Type", "application/rss+xml")
-	h.getFeed().WriteRss(wr)
+// FeedFormat specifies a feed format for both users and internally.
+type FeedFormat struct {
+	Name        string
+	ContentType template.HTMLAttr
+	Path        string // On the server, starting with a slash
+	Handler     http.Handler
 }
 
-// HandleAtom responds with an Atom feed of the blog.
-func (h *FeedHandler) HandleAtom(wr http.ResponseWriter, req *http.Request) {
-	if !h.processRequest(wr, req) {
-		return
+// newFormat instantiates an HTTP handler for a specific feed format and
+// returns a FeedFormat instance to fully describe it.
+func (h *FeedHandler) newFormat(name string, contentType string, basename string, writer func(f *feeds.Feed, wr io.Writer) error) *FeedFormat {
+	return &FeedFormat{
+		// HTMLAttr needs both key and value to fully prevent escaping.
+		ContentType: template.HTMLAttr(`type="` + contentType + `"`),
+
+		Name: name,
+		Path: (h.BlogPath + "/" + basename),
+		Handler: http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+			if !h.processRequest(wr, req) {
+				return
+			}
+			wr.Header().Set("Content-Type", contentType)
+			writer(h.getFeed(), wr)
+		}),
 	}
-	wr.Header().Set("Content-Type", "application/atom+xml")
-	h.getFeed().WriteAtom(wr)
 }
 
-// HandleJSON responds with a JSON Feed (version 1) of the blog.
-func (h *FeedHandler) HandleJSON(wr http.ResponseWriter, req *http.Request) {
-	if !h.processRequest(wr, req) {
-		return
+// Formats returns feed handlers for all supported formats.
+func (h *FeedHandler) Formats() []*FeedFormat {
+	return []*FeedFormat{
+		h.newFormat("RSS", "application/rss+xml", "feed.xml", (*feeds.Feed).WriteRss),
+		h.newFormat("Atom", "application/atom+xml", "feed.atom", (*feeds.Feed).WriteAtom),
+
+		// The content type for the version 1.1 of JSON feeds is
+		// application/feed+json, by the way.
+		h.newFormat("JSON", "application/json", "feed.json", (*feeds.Feed).WriteJSON),
 	}
-	// The content type for the version 1.1 of JSON feeds is
-	// application/feed+json, by the way.
-	wr.Header().Set("Content-Type", "application/json")
-	h.getFeed().WriteJSON(wr)
 }

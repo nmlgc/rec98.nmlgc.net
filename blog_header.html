@@ -15,4 +15,15 @@
 	{{- if $not_all}}<a href="/blog/all{{if .Vars.date}}#{{.Vars.date}}{{end}}">{{end -}}
 	All posts on one page
 	{{- if $not_all}}</a>{{end -}}
+</li><li>
+	{{- range $i, $format := Blog_FeedFormats -}}
+		{{if $i}},{{else}}<img
+			src="{{call $.StaticFileURL "feed.svg"}}"
+			alt="Feeds:"
+			width="16"
+			height="16"
+			style="vertical-align: sub;"
+		>{{end}}
+		<a href="{{$format.Path}}">{{$format.Name}}</a>
+	{{- end -}}
 </li></ul></nav>

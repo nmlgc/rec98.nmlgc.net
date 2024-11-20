@@ -55,7 +55,7 @@
 	<li>Quitting out of the Music Room moves the cursor to the <i>Start</i> option. In TH05, it stays on <i>Music Room</i>.</li>
 	<li>Changing the <i>S.E.</i> mode seems to do nothing within TH04's menus, and would only take effect if you also change the <i>Music</i> mode afterward, or launch into the game.</li>
 </ul><figure {{$vid_4.FigureAttrs}}>
-	{{call .VideoPlayer $vid_4.SetActive $vid_5}}
+	{{call .VideoPlayer $vid_4.FlipActive $vid_5}}
 	<figcaption>And yes, these videos do have a frame rate of 2 FPS.</figcaption>
 </figure><p>
 	Now that 100% finalization of their <code>OP.EXE</code> binaries is within reach, all this bloat made me think about the viability of a {{Blog_PostLink "2022-03-05" "single-executable build"}} for TH04's and TH05's <code>debloated</code> and <code>anniversary</code> versions. It would be really nice to have such a build ready before I start working on the non-ASCII translations – not just because they will be based on the <code>anniversary</code> branch by default, but also because it would significantly help their development if there are 4 fewer executables to worry about.<br />

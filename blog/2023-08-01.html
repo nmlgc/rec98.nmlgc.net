@@ -642,7 +642,7 @@
 		<figcaption>Whoops! That one was fully my fault.</figcaption>
 	</figure></li>
 	<li>The render time for the in-game music title is now roughly cut in half: <figure {{$mtitle_orig.FigureAttrs}}>
-		{{call .VideoPlayer $mtitle_orig.SetActive.SetNoLoop $mtitle_P0251.SetNoLoop}}
+		{{call .VideoPlayer $mtitle_orig.FlipActive.SetNoLoop $mtitle_P0251.SetNoLoop}}
 	<figcaption>
 		Achieved by simply trimming trailing whitespace and using slightly more
 		efficient GDI functions to draw the gradient. Spending 4 frames on

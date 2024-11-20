@@ -158,7 +158,7 @@ uint16_t sprite_offset_in_sprite16_area = (0x1910 + _BX + _BX + _BX);</pre>
 	</div><div>
 		If the other player gets hit within 16 frames of an active white circle animation, the animation is reinitialized for the other player as there's only a single slot to hold it. Is this supposed to telegraph that the other player got hit without them having to look over to the other playfield? After all, they're drawn on top of most other entities, but below the player. {{HTML_Emoji "onricdennat"}}
 	</div></figcaption>
-	{{call .VideoPlayer $vid_same.SetActive $vid_displaced}}
+	{{call .VideoPlayer $vid_same.FlipActive $vid_displaced}}
 </figure>
 	SPRITE16 uses the PC-98's EGC to draw these single-color sprites. If the EGC is already set up, it can be set into a GRCG-equivalent RMW mode using the pattern/read plane register (<code>0x4A2</code>) and foreground color register (<code>0x4A6</code>), together with setting the mode register (<code>0x4A4</code>) to <code>0x0CAC</code>. Unlike the typical blitting operations that involve its 16-dot pattern register, the EGC even supports 8- or 32-bit writes in this mode, just like the GRCG. {{Blog_PostLink "2023-03-05#egc" "As expected"}} for EGC features beyond the most ordinary ones though, T98-Next simply sets every written pixel to black on a 32-bit write. {{HTML_Emoji "tannedcirno"}} Comparing the actual performance of such writes to the GRCG would be {{Blog_PostLink "2024-02-03" "yet another"}} interesting question to benchmark.
 </p><p>

@@ -507,7 +507,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><hr id="lens-{{.Date}}"><p>
 	{{Blog_PostLink "2023-08-01#sdl" "Last year"}}, it seemed as if the <span lang="ja" style="word-break: keep-all;">西方Ｐｒｏｊｅｃｔ</span> logo screen's lens ball effect would be one of the more tricky things to port to SDL_Renderer, and that impression was definitely accurate.
 </p><figure {{$vid_logo.FigureAttrs}}>
-	{{call .VideoPlayer $vid_logo.SetActive $vid_logo_lens}}
+	{{call .VideoPlayer $vid_logo.FlipActive $vid_logo_lens}}
 </figure><p>
 	The effect works by capturing the original 140×140 pixels under the moving lens ball from the framebuffer into a temporary buffer and then overwriting the framebuffer pixels by shifting and stretching the captured ones according to a pre-calculated table. With DirectDraw, this is no big deal because you can simply lock the framebuffer for read and write access. If it weren't for the fact that you need to either generate or hand-write different code for every support bit depth, this would be one of the most natural effects you could implement with such an API. Modern graphics APIs, however, don't offer this luxury because it didn't take long for this feature to become a liability. Even 20 years ago, you'd rather write this sort of effect as a pixel shader that would directly run on the GPU in a much more accelerated way. Which is a non-starter for us – we sure ain't breaking SDL's abstractions to write a separate shader for every one of SDL_Renderer's supported APIs just for a single effect in the logo screen.<br>
 	As such, SDL_Renderer doesn't even begin to provide framebuffer locking. We can only get close by splitting the two operations:
@@ -835,7 +835,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</div><div>
 		{{template "diff_head"}} Trying it with the lossy versions gets surprisingly close though, and simultaneously reveals the infamous Vorbis pre-echo on the drums.
 	</div></figcaption>
-	{{call .AudioPlayer $aud_o20_ne $aud_o20_e.SetActive $aud_o20_diff_flac $aud_o20_diff_vorbis}}
+	{{call .AudioPlayer $aud_o20_ne $aud_o20_e.FlipActive $aud_o20_diff_flac $aud_o20_diff_vorbis}}
 </figure><p>
 	So yeah, the fact that ZUN enabled reverb by suddenly increasing the level for just this 8-bar piano solo erases any doubt about the panning delay having been a quirk or accident. There is no way this wasn't done intentionally; whether the SC-88Pro's default reverb is at 0 or 40 barely makes an audible difference with all the notes played in this section, and wouldn't have been worth the unfortunate chore of inserting another GS SysEx message into the sequence. That's enough evidence to relegate the previous no-echo Sound Canvas VA packs to a strictly unofficial status, and only preserve them for reference purposes. If you downloaded the earlier ones, you might want to update… or maybe not if you don't like the echo, it's all about personal preference at the end of the day.
 </p><p>
@@ -857,7 +857,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	Maximum volume recommended.
 	</div><div>
 		Still saying <i>Panning Delay</i>, even though we obviously hear the default reverb. A clear bug in the Sound Canvas VA UI.
-	</div></figcaption>{{call .VideoPlayer $vid_compat_on.SetActive $vid_compat_off}}
+	</div></figcaption>{{call .VideoPlayer $vid_compat_on.FlipActive $vid_compat_off}}
 </figure><hr /><p>
 	Anything I forgot? Oh, right, download links:
 </p><ul>

@@ -205,7 +205,7 @@
 		only adds the aforementioned one frame of delay to each face change, and
 		has fewer two-byte chunks of text to display overall.
 	</div></figcaption>
-	{{call .VideoPlayer $vid_op_5.SetActive $vid_op_4}}
+	{{call .VideoPlayer $vid_op_5.FlipActive $vid_op_4}}
 </figure><p>
 	For modding these files, you probably want to use <code>TXDEF</code> from
 	{{DB_CustomerByID 2}}'s <a
@@ -694,7 +694,7 @@
 	name, which causes the full-width colon to be printed as the first delayed
 	character in each of her boxes:
 </p><figure>
-	{{call .VideoPlayer $vid_prefix_1.SetActive $vid_prefix_2 $vid_prefix_3}}
+	{{call .VideoPlayer $vid_prefix_1.FlipActive $vid_prefix_2 $vid_prefix_3}}
 </figure><hr /><p id="th02-mima-{{.Date}}">
 	That's all the issues and quirks in the system itself. The scripts
 	themselves don't leave much room for bugs as they basically just loop over
@@ -722,7 +722,7 @@
 	boxes?! You only don't see it in the original game because it's rendered to
 	the other VRAM page that remains invisible during the dialog sequence:
 </p><figure>
-	{{call .VideoPlayer $vid_mima_back.SetActive $vid_mima_front}}
+	{{call .VideoPlayer $vid_mima_back.FlipActive $vid_mima_front}}
 	<figcaption>Caution, flashing lights.</figcaption>
 </figure><p>
 	Here's how I interpret the situation:

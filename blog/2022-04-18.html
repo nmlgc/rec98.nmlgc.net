@@ -141,7 +141,7 @@
 	bullets…</li>
 	<li>Boom, division by zero.</li>
 </ul><figure {{$k_4.FigureAttrs}}>
-	{{call .VideoPlayer ($k_4.SetActive).SetNoLoop $k_16}}
+	{{call .VideoPlayer ($k_4.FlipActive).SetNoLoop $k_16}}
 	<figcaption>
 		The pattern that causes the crash in Kurumi's fight. Also
 		demonstrates how the number of bullets in a ring is always halved on
@@ -172,7 +172,7 @@
 	closest to the behavior of the original games, and perhaps the only one to
 	be accepted in Serious, High-Level Play™.</li>
 </ol><figure>
-	{{call .VideoPlayer $k_wa_0.SetActive $k_wa_1 $k_wa_2 $k_wa_3}}
+	{{call .VideoPlayer $k_wa_0.FlipActive $k_wa_1 $k_wa_2 $k_wa_3}}
 </figure><p>
 	As I was writing this post, it felt increasingly wrong for me to make this
 	decision. So I once again went to Twitter, where <a
@@ -252,7 +252,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	<i>away</i> from the intended point, as the divisor becomes negative.
 	{{HTML_Emoji "zunpet"}}</li>
 </ul><figure {{$m_68.FigureAttrs}}>
-	{{call .VideoPlayer $m_68 $m_112 $m_144 $m_148 ($m_152.SetActive).SetNoLoop $m_156 $m_160}}
+	{{call .VideoPlayer $m_68 $m_112 $m_144 $m_148 ($m_152.FlipActive).SetNoLoop $m_156 $m_160}}
 	<figcaption>
 		One of the two patterns in TH04's Stage 4 Marisa boss fight that feature
 		frame number-dependent point-reflected movement. The bits were hacked to
@@ -284,7 +284,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	have no idea… {{HTML_Emoji "tannedcirno"}}</li>
 	<li>Triggering an immediate Game O– hell no, this is the Stage 4 boss,
 	people <i>already</i> hate losing runs to this bug!</li>
-</ol><figure>{{call .VideoPlayer $m_wa_0.SetActive $m_wa_1 $m_wa_2}}</figure><p>
+</ol><figure>{{call .VideoPlayer $m_wa_0.FlipActive $m_wa_1 $m_wa_2}}</figure><p>
 	Asking Twitter worked great for the Kurumi workaround, so let's do it again!
 	Gotta attach a screenshot of an earlier draft of this blog post though,
 	since this stuff is impossible to explain in tweets…

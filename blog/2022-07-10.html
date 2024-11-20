@@ -102,7 +102,7 @@ if(delta_y_between_orb_and_bumper <= 0) {
 		from its Y velocity and the force applied to it, and gravity wins out
 		in the end. {{template "b2_caption_trail"}}
 	</div></figcaption>
-	{{call .VideoPlayer $vid_b2_0.SetActive $vid_b2_1}}
+	{{call .VideoPlayer $vid_b2_0.FlipActive $vid_b2_1}}
 </figure><p>
 	Now, you might be thinking that these Y assignments were just an attempt to
 	prevent the Orb from colliding with the same bumper again on the next frame.
@@ -147,7 +147,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 		truly matter. The final force sends the Orb on a significant downward
 		trajectory beyond the next bumper's hitbox, breaking the original loop.
 	</div></figcaption>
-	{{call .VideoPlayer $vid_b3_0.SetActive $vid_b3_1}}
+	{{call .VideoPlayer $vid_b3_0.FlipActive $vid_b3_1}}
 	</div>
 </figure><p>
 	Forgetting to handle ⅖ of your discrete X velocity cases is simply not

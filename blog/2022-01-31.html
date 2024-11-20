@@ -123,7 +123,7 @@
 	thus never rendered again.<br />
 	The intended animation is easily restored though:
 </p><figure {{$vid1.FigureAttrs}}>
-	{{call .VideoPlayer $vid1.SetActive $vid2}}
+	{{call .VideoPlayer $vid1.FlipActive $vid2}}
 	<figcaption>
 		Sariel's third pattern, and the first to spawn birds, in its original
 		and fixed versions. Note that I somewhat fixed the bird hatch animation
@@ -242,7 +242,7 @@
 	hiding an entire animation" category, causing all of
 	<code>BOSS6GR4.GRC</code> to effectively become {{HTML_TagInline "unused"}}:
 </p><figure {{$vid3.FigureAttrs}}>
-	{{call .VideoPlayer $vid3.SetActive $vid4}}
+	{{call .VideoPlayer $vid3.FlipActive $vid4}}
 	<figcaption>
 		The "swaying leaves" pattern. ZUN intended a splash animation to be
 		shown once each leaf "spark" reaches the top of the playfield, which is

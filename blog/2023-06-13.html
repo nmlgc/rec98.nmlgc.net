@@ -171,7 +171,7 @@
 	fall apart. Let's try, say, 4 pixels per frame rather than the original
 	0.25:
 </p><figure {{$vid_hide.FigureAttrs}}>
-	{{call .VideoPlayer $vid_hide.SetActive $vid_show}}
+	{{call .VideoPlayer $vid_hide.FlipActive $vid_show}}
 	<figcaption>
 		By hiding the text RAM layer and revealing what's below the usually
 		opaque black cells above and below the playfield, we can observe all

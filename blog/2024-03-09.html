@@ -181,7 +181,7 @@
 	</div><div>
 		At a notated tempo of 96 BPM, these first four beats should take exactly 2.5 seconds, which they do in this seamlessly looping softsynth rendering.
 	</div></figcaption>
-	{{call .AudioPlayer $aud_o20_rtp.SetActive $aud_o20_scva}}
+	{{call .AudioPlayer $aud_o20_rtp.FlipActive $aud_o20_scva}}
 </figure><p>
 	That's… not quite the accuracy and perfection I was expecting. {{HTML_Emoji "thonk"}} But I think I know what we're seeing and hearing there. Let's look at the first few MIDI events across all channels:
 </p><figure class="side_by_side">
@@ -233,14 +233,14 @@
 	</div><div>
 		By the way, this seamless audio player is what consumed most of the two website pushes this time. The rest went to the slightly redesigned main page, whose progress bars now use the cap bar style and the GitHub badge colors.
 	</div></figcaption>
-	{{call .AudioPlayer $aud_o18_rtp.SetActive $aud_o18_scva}}
+	{{call .AudioPlayer $aud_o18_rtp.FlipActive $aud_o18_scva}}
 </figure><p>
 	This one is even worse. Here, the delay is so long relative to the tempo of the piece that the intended five drum hits pretty much turn into four.
 </p><p>
 	This type of issue doesn't even have to be isolated to the very beginning of a piece. A few of the tracks in both the OST and AST start with an <a href="https://en.wikipedia.org/wiki/Anacrusis#Music">anacrusis</a> on just one or two channels and leave the Program Change event barrage at the beginning of the first full measure. In {{template "ssg_14"}} for example, this creates a flam-like glitch where the bass on channel 2 is pretty much on time, but the crash hit on channel 10 only follows 50&nbsp;ms later, after the SC-88Pro took its sweet time to process all the Program Change events on the channels between:
 </p><figure class="waveform-{{.Date}}">
 	<figcaption>This is from the arranged soundtrack for a change. In that one, ZUN at least fixed the issue in the final three MIDIs ({{template "ssg_16"}}, {{template "ssg_17"}}, and {{template "ssg_18"}}) that closed out this rearranging project in May 2001, which spread out their per-channel setup events over at least a single measure before playing any note.</figcaption>
-	{{call .AudioPlayer $aud_a14_rtp.SetActive $aud_a14_scva}}
+	{{call .AudioPlayer $aud_a14_rtp.FlipActive $aud_a14_scva}}
 </figure><p id="halfspeed-{{.Date}}">
 	Let's listen to that at half speed:
 </p><figure class="waveform-{{.Date}}">
@@ -249,7 +249,7 @@
 	</div><div>
 		Still on point.
 	</div></figcaption>
-	{{call .AudioPlayer $aud_a14_half_rtp.SetActive $aud_a14_half_scva}}
+	{{call .AudioPlayer $aud_a14_half_rtp.FlipActive $aud_a14_half_scva}}
 </figure><p>
 	Sure, all of this is barely noticeable in casual listening, but <i>very</i> noticeable if you're the one who now has to cut these recordings into seamless loops. And these are just the most obvious timing issues that can be easily pinpointed and documented – the <i>actual</i> worst aspects are all the minor tempo and timing fluctuations <i>throughout</i> most of the pieces. With recordings that deviate ever so slightly from the tempo defined in the MIDI files, you can no longer rely on mathematically exact sample positions when cutting loops. Even if those positions do work out from time to time, there'd pretty much always be a discontinuity in the waveform at both ends of the loop, manifesting as a clearly audible click. In the end, the only way of finding good loop points in existing recordings involves straining your ears and listening very, <i>very</i> closely to avoid any audible glitches. 😩
 </p><p>
@@ -272,7 +272,7 @@
 </p><hr id="sysex-{{.Date}}" /><p>
 	But wait, we've already heard one obvious difference between the real SC-88Pro and Sound Canvas VA. Let's listen to the very first clip again:
 </p><figure class="waveform-{{.Date}}">
-	{{call .AudioPlayer $aud_o20_rtp.SetActive $aud_o20_scva}}
+	{{call .AudioPlayer $aud_o20_rtp.FlipActive $aud_o20_scva}}
 </figure><p>
 	Ha! You can clearly hear a panning echo in the real-hardware recording that is missing from the Sound Canvas VA rendering. That's an obvious case of a core system effect not being reproduced correctly. If even <i>that's</i> undeniably broken, who knows which other subtle bugs SCVA suffers from, right? Case closed, Romantique Tp was right all along, SCVA is trash, real hardware reigns supreme {{HTML_Emoji "godzun"}}
 </p><p>
@@ -527,7 +527,7 @@ Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873
 			<dt>Actual loop:</dt><dd>1:04m – 2:34m</dd>
 		</dl>
 		<figure class="viz-{{.Date}}">
-			{{call .VideoPlayer $lq_o02.SetActive $lq_a02}}
+			{{call .VideoPlayer $lq_o02.FlipActive $lq_a02}}
 		</figure>
 	</li><li>
 		<i>Mei and Mai's theme (<span lang="ja">ディザストラスジェミニ</span>), arranged version</i>: The one and only quirk that's caused by different notes – the first loop has an E♭ on the slap bass channel in measure 32, but the second loop has a G♭ in the corresponding measure 72.
@@ -546,7 +546,7 @@ Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873
 			<dt>Actual loop:</dt><dd>1:04m – 2:32m</dd>
 		</dl>
 		<figure class="viz-{{.Date}}">
-			{{call .VideoPlayer $lq_o06.SetActive $lq_a06}}
+			{{call .VideoPlayer $lq_o06.FlipActive $lq_a06}}
 			<figcaption>
 				I didn't come up with a good way of visualizing panning in a 2D plane, so you have to trust your ears with this one.
 			</figcaption>
@@ -567,7 +567,7 @@ Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873
 			<figcaption class="dynamic"><div>
 				The loop start and end points are in the respective next measure past this range.
 			</div><div></div></figcaption>
-			{{call .VideoPlayer $lq_o10.SetActive $lq_a10}}
+			{{call .VideoPlayer $lq_o10.FlipActive $lq_a10}}
 		</figure>
 	</li><li>
 		<i>Stage 6 theme (<span lang="ja">アンティークテラー</span>), arranged version</i>: The string channel starts out with the maximum expression of 127, but then only goes up to 120 after some fading notes later in the piece, where it stays for the beginning of the second loop.
@@ -591,7 +591,7 @@ Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873
 			<dt>Actual loop:</dt><dd>1:03m – 2:34m</dd>
 		</dl>
 		<figure class="viz-{{.Date}}">
-			{{call .VideoPlayer $lq_o14.SetActive $lq_a14}}
+			{{call .VideoPlayer $lq_o14.FlipActive $lq_a14}}
 		</figure>
 	</li><li>
 		<i>VIVIT-captured-'s third theme (<span lang="ja">少女神性　～ Pandora's Box</span>), original and arranged version</i>: Another tempo inconsistency: A slightly differently shaped ritardando before the bell tree hit in the supposed first loop.
@@ -604,7 +604,7 @@ Loop start: event  5709 / pulse  77280 / beat 161:000 / 1:05:163m / sample  2873
 				1:18m&nbsp;–&nbsp;2:37m&nbsp;(arranged)</dd>
 		</dl>
 		<figure class="viz-{{.Date}}">
-			{{call .VideoPlayer $lq_o15.SetActive $lq_a15}}
+			{{call .VideoPlayer $lq_o15.FlipActive $lq_a15}}
 		</figure>
 	</li><li id="lq-a17-{{.Date}}">
 		<i>Marisa's theme (<span lang="ja">魔女達の舞踏会</span>), arranged version</i>: Has a unique 8-bar ending section that is first played in Cm and then loops in C♯m while fading out.
@@ -839,7 +839,7 @@ for(int i = 0; i &lt; length_of_tempo_message; i++) {
 #11 |・魔法少女十字軍・・・
 #16 |・・シルクロードアリス</pre></figure>
 	Right-aligned text matches the one certain intention I can read out of the code, and allows us to consistently trim whitespace from both the original MIDI Sequence Names and the <code>TITLE</code> tags in the BGM packs… at the cost of significantly changing the animation. 🤔 <figure {{$mtitle_orig.FigureAttrs}}>
-		{{call .VideoPlayer $mtitle_orig.SetActive $mtitle_P0275}}
+		{{call .VideoPlayer $mtitle_orig.FlipActive $mtitle_P0275}}
 		<figcaption>
 			Maybe, all this whitespace had the explicit purpose of making the animation look the way it did originally? But hard-padding the title tags in the BGM packs would be <i>so dumb…</i> 😩 Let's keep it like this for now and <a class="goal" href="https://github.com/nmlgc/ssg/issues/55">fix the animation later</a>.
 		</figcaption>

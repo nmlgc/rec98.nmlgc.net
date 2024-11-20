@@ -88,8 +88,8 @@ func (b *BlogVideo) SetTitle(title template.HTML) string {
 	return ""
 }
 
-func (b *BlogVideo) SetActive() *BlogVideo {
-	b.Active = true
+func (b *BlogVideo) FlipActive() *BlogVideo {
+	b.Active = !b.Active
 	return b
 }
 
@@ -182,8 +182,8 @@ func (b *BlogAudio) SetTitle(title template.HTML) string {
 	return ""
 }
 
-func (b *BlogAudio) SetActive() *BlogAudio {
-	b.Active = true
+func (b *BlogAudio) FlipActive() *BlogAudio {
+	b.Active = !b.Active
 	return b
 }
 

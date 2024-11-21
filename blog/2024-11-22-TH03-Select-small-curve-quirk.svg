@@ -1,0 +1,48 @@
+<svg viewBox="-0.5 10 257 80" xmlns="http://www.w3.org/2000/svg">
+	<style type="text/css">
+		<![CDATA[
+		text {
+			font-family: monospace;
+			font-size: 0.5em;
+		}
+
+		path {
+			stroke-linecap: round;
+			fill: none;
+		}
+
+		path.border {
+			stroke: #888;
+			stroke-dasharray: 1;
+			stroke-width: 0.5;
+		}
+
+		path.wave {
+			stroke: #2b3;
+			stroke-width: 2;
+		}
+		]]>
+	</style>
+	<clipPath id="positive-wave-section">
+		<rect x="0" y="0" width="120" height="100" />
+	</clipPath>
+	<clipPath id="negative-wave-section">
+		<rect x="248" y="0" width="8" height="100" />
+	</clipPath>
+	<path d="m0 50h256" stroke="#000" />
+	<path d="M  0 47.5v5" stroke="#000" />
+	<path d="M128 47.5v5" stroke="#000" />
+	<path d="M256 47.5v5" stroke="#000" />
+
+	<path class="border" d="M120 42.5v7.5" />
+	<path class="border" d="M248 50.0v7.5" />
+
+	<path class="wave" d="M  0 50 C  59.8154   0,  68.1846   0, 128 50" opacity="0.125" />
+	<path class="wave" d="M128 50 C 187.8154 100, 196.1846 100, 256 50" opacity="0.125" />
+	<path class="wave" style="clip-path:url(#positive-wave-section)" d="M  0 50 C  59.8154   0,  68.1846   0, 128 50" />
+	<path class="wave" style="clip-path:url(#negative-wave-section)" d="M128 50 C 187.8154 100, 196.1846 100, 256 50" />
+
+	<text x="  0" y="45" style="text-anchor: start;">0x00</text>
+	<text x="128" y="45" style="text-anchor: middle;">0x80</text>
+	<text x="256" y="45" style="text-anchor: end;">0xFF</text>
+</svg>

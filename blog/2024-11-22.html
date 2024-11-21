@@ -1,0 +1,157 @@
+{{$slwin := (call .PostFileURL "TH03-SLWIN.CDG.png") -}}
+{{$orig := (call .Video "TH03-Select-curves-original" "Video of one cycle of TH03's Select screen curve animation") -}}
+{{$no_trail := (call .Video "TH03-Select-curves-no-trails" "Video of one cycle of TH03's Select screen animation, without trailing curves") -}}
+{{$fixed := (call .Video "TH03-Select-curves-fixed" "Video of one cycle of TH03's Select screen curve animation, with all bugs and quirks fixed") -}}
+{{$auto := (call .Video "TH03-Select-holding-Shot" "Video demonstrating how holding the Z key when entering TH03's Story Mode character select screen auto-selects Reimu after a 30-frame delay") -}}
+{{$palette := (call .PostFileURL "TH03-Select-exaggerated-mid-frame-palette-change.png") -}}
+
+{{$auto.AddMarker  2 "Delay starts" "right" -}}
+{{$auto.AddMarker 32 "Confirmation flash" "left" -}}
+{{$auto.AddMarker 97 "?!" "left" -}}
+
+{{$orig.SetTitle "Full animation" -}}
+{{$no_trail.SetTitle "No trailing curves" -}}
+{{$fixed.SetTitle "Fixed quirks and bugs" -}}
+
+<style>
+	.point-formula-{{.Date}} {
+		display: inline-grid;
+		grid-template-rows: 1fr 1fr;
+		vertical-align: middle;
+	}
+</style>
+
+<p>
+	Remember when ReC98 was about researching the PC-98 Touhou games? After over half a year, we're finally back with some actual RE and decompilation work. The {{Blog_PostLink "2024-07-09" "build system improvement break"}} was definitely worth it though, the new system is a pure joy to use and injected some newfound excitement into day-to-day development.<br>
+	And what game would be better suited for this occasion than TH03, which currently has the highest number of individual backers interested in it. Funding the full decompilation of TH03's <code>OP.EXE</code> is the clearest signal you can send me that {{Blog_PostLink "2024-04-24#integration" "you want your future TH03 netplay to be as seamlessly integrated and user-friendly as possible"}}. We're just two menu screens away from reaching that goal anyway, and the character selection screen fits nicely into a single push.
+</p>{{call .TOC}}<hr id="select-{{.Date}}"><p>
+	The code of a menu typically starts with loading all its graphics, and TH03's character selection already stands out in that regard due to the sheer <i>amount</i> of image data it involves. Each of the game's 9 selectable characters comes with
+</p><ol>
+	<li>a 192×192-pixel portrait (<code>??SL.CD2</code>),</li>
+	<li>a 32×44-pixel pictogram describing her Extra Attack (in <code>SLEX.CD2</code>), and</li>
+	<li>a 128×16-pixel image of her name (in <code>CHNAME.BFT</code>). While this image <i>just</i> consists of regular boldfaced versions of font ROM glyphs that the game could just render procedurally, pre-rendering these names and keeping them around in memory does make sense for performance reasons, as we're soon going to see. What <i>doesn't</i> make sense, though, is the fact that this is a 16-color BFNT image instead of a monochrome one, wasting both memory and rendering time.</li>
+</ol><p>
+	Luckily, ZUN was sane enough to draw each character's stats programmatically. If you've ever looked through this game's data, you might have wondered where the game stores the <img
+	class="inline_sprite"
+	src="data:image/gif;base64,R0lGODlhCQAJAPEDAPHxUeGxoYEBAQGB/yH5BAUAAAMALAAAAAAJAAkAAAIZnBenIXnBREsRWEmFBe3paURSF0El4qBDAQA7"
+	width="9"
+	height="9"
+	alt=""
+/> sprite for an individual stat star. There's <code>SLWIN.CDG</code>, but that file just contains a full stat window with five stars in all three rows. And sure enough, ZUN renders each character's stats not by blitting sprites, but by painting <code>(5 - value)</code> yellow rectangles over the existing stars in that image. {{HTML_Emoji "tannedcirno"}}
+</p><figure class="pixelated" style="width: 256px;">
+	<img src="{{$slwin}}" width="256" alt="TH03's SLWIN.CDG, showing off how ZUN baked all 15 possible stat stars into the image" />
+	<figcaption>The only stat-related image you will find as part of the game files. The number of stat stars per character is hardcoded and not based on any other internal constant we know about.</figcaption>
+</figure>
+	Together with the <span style="color: #800">EXTRA🎔</span> window and the question mark portrait for Story Mode, all of this sums up to 255,216&nbsp;bytes of image data across 14 files. You could remove the unnecessary alpha plane from <code>SLEX.CD2</code> (-1,584 bytes) or store <code>CHNAME.BFT</code> in a 1-bit format (-6,912 bytes), but using 3.3% less memory barely makes a difference in the grand scheme of things.<br>
+	From the code, we can assume that loading such an amount of data all at once would have led to a noticeable pause on the game's target PC-98 models. The obvious alternative would be to just start out with the initially visible images and lazy-load the data for other characters as the cursors move through the menu, but the resulting mini-latencies would have been bound to cause minor frame drops as well. Instead, ZUN opted for a rather creative solution: By segmenting the loading process into four parts and moving three of these parts ahead into the main menu, we instead get four smaller latencies in places where they don't stick out as much, if at all:
+</p><ol>
+	<li>The loading process starts at the logo animation, with Ellen's, Kotohime's, and Kana's portraits getting loaded after the <span lang="ja"><span style="color: #909;">東方</span><span style="color: #f44;">夢</span><span style="color: #909;">時空</span> </span> letters finished sliding in. Why ZUN chose to start with characters #3, #4, and #5 is anyone's guess. {{HTML_Emoji "zunpet"}}</li>
+	<li>Reimu's, Mima's, and Marisa's portraits as well as all 9 <span style="color: #800">EXTRA🎔</span> attack pictograms are loaded at the end of the flash animation once the full title image is shown on screen and before the game is waiting for the player to press a key.</li>
+	<li>The stat and <span style="color: #800">EXTRA🎔</span> windows are loaded at the end of the main menu's slide-in animation… together with the question mark portrait for Story Mode, even though the player might not actually want to play Story Mode.</li>
+	<li>Finally, the game loads Rikako's, Chiyuri's, and Yumemi's portraits after it cleared VRAM upon entering the Select screen, regardless of whether the latter two are even unlocked.</li>
+</ol><p>
+	I don't like how ZUN implemented this split by using three separately named standalone functions with their own copy-pasted character loop, and the load calls for specific files could have also been arranged in a more optimal order. But otherwise, this has all the ingredients of {{HTML_TagInline "good-code"}}. As usual, though, ZUN then definitively ruins it all by counteracting the intended latency hiding with… deliberately added latency frames:
+</p><ul>
+	<li>The entire initialization process of the character selection screen, including Step #4 of image loading, is enforced to take at least 30 frames, with the count starting before the switch to the <span lang="ja">Selection</span> theme. Presumably, this is meant to give the player enough time to release the Z key that entered this menu, because holding it would immediately select Reimu (in Story mode) or the previously selected 1P character (in VS modes) on the very first frame. But this is a workaround at best – and a completely unnecessary one at that, given that regular navigation in this menu <i>already</i> needs to lock keys until they're released. In the end, you can still auto-select the default choice by just not releasing the Z key.</li>
+	<li>And if that wasn't enough, the 1P vs. 2P variant of the menu adds 16 more frames of startup delay on top.</li>
+</ul><p>
+	Sure, <i>maybe</i> loading the fourth part's 69,120&nbsp;bytes from a highly fragmented hard drive <i>might</i> have even taken longer than 30 frames on a period-correct PC-98, but the point still stands that these delays don't solve the problem they are supposed to solve.
+</p><hr id="curves-{{.Date}}"><p>
+	But the unquestionable main attraction of this menu is its fancy background animation. Mathematically, it consists of <a href="https://en.wikipedia.org/wiki/Lissajous_curve">Lissajous curves</a> with a twist: Instead of calculating each point as
+	<span class="point-formula-{{.Date}}">
+		<code>x = sin((f<sub>x</sub>·t)+ẟ<sub>x</sub>)</code>
+		<code>y = sin((f<sub>y</sub>·t)+ẟ<sub>y</sub>)</code>
+	</span>, TH03 effectively calculates its points as
+	<span class="point-formula-{{.Date}}">
+		<code>x = cos(f<sub>x</sub>·((t+ẟ<sub>x</sub>)&nbsp;%&nbsp;0xFF))</code>
+		<code>y = sin(f<sub>y</sub>·((t+ẟ<sub>y</sub>)&nbsp;%&nbsp;0xFF))</code>
+	</span>, due to <code class="hovertext" title="constant base angle of the point on the circle">t</code> and <code class="hovertext" title="variable and animated angle offset">ẟ</code> being {{Blog_PostLink "2022-03-05" "8-bit angles"}}. Since the result of the addition remains 8-bit as well, it can and will regularly overflow before the frequency scaling factors <code>f<sub>x</sub></code> and <code>f<sub>y</sub></code> are applied, thus leading to sudden jumps between both ends of the 8-bit value range. The combination of this overflow and the gradual changes to <code>f<sub>x</sub></code> and <code>f<sub>y</sub></code> create all these interesting splits along the 360° of the curve:
+</p><p><figure {{$orig.FigureAttrs}}>
+	{{call .VideoPlayer $orig.FlipActive $no_trail}}
+	<figcaption>At a high level, there really is just one big curve and one small curve, plus an array of trailing curves that approximate motion blur by subtracting from ẟ<sub>x</sub> and ẟ<sub>y</sub>.</figcaption>
+</figure><p id="perf-{{.Date}}">
+	In a rather unusual display of mathematical purity, ZUN fully re-calculates all variables and every point on every frame from just the single byte of state that indicates the current time within the animation's 128-frame cycle. However, that beauty is quickly tarnished by the actual <i>cost</i> of fully recalculating these curves every frame:
+</p><ul>
+	<li>In total, the effect calculates, clips, and plots 16 curves: 2 main ones, with up to 7×2&nbsp;=&nbsp;14 darker trailing curves.</li>
+	<li>Each of these curves is made up of the 256 maximum possible points you can get with 8-bit angles, giving us 4,096 points in total.</li>
+	<li>Each of these points takes <i>at least</i> 333 cycles on a 486 if it passes all clipping checks, not including VRAM latencies or the performance impact of the {{Blog_PostLink "2020-12-18" "GRCG's RMW mode"}}.</li>
+	<li>Due to the larger curve's diameter of 440 pixels, a few of the points at its edges are needlessly calculated only to then be discarded by the clipping checks as they don't fit within the 400 VRAM rows. Still, >1.3 million cycles for a single frame remains a reasonable ballpark assumption.</li>
+</ul><p>
+	This is decidedly more than the 1.17 million cycles we have between each VSync on the game's target 66&nbsp;MHz CPUs. So it's not surprising that this effect is not rendered at 56.4&nbsp;FPS, but instead drops the frame rate of the entire menu by targeting a hardcoded 1 frame per 3 VSync interrupts, or 18.8&nbsp;FPS. Accordingly, I reduced the frame rate of the video above to represent the actual animation cycle as cleanly as possible.<br>
+	Apparently, ZUN also tested the game on the 33&nbsp;MHz PC-98 model that he targeted with TH01 and TH02, and realized that 4,096 points were way too much even at 18.8&nbsp;FPS. So he also added a mechanism that decrements the number of trailing curves if the last frame took ≥5 VSync interrupts, down to a minimum of only a single extra curve. You can see this in action by underclocking the CPU in your Neko Project fork of choice.
+</p><p>
+	But were any of these measures really necessary? Couldn't ZUN just have allocated a <span class="hovertext" title="2 bytes for the VRAM offset, 1 byte for the dot pattern written using the GRCG">12&nbsp;KiB</span> ring buffer to keep the coordinates of previous curves, thus reducing per-frame calculations to just 512 points? Well, <i>he</i> could have, but <i>we</i> now can't use such a buffer to optimize the original animation. The 8-bit main angle offset/animation cycle variable advances by <code>0x02</code> every frame, but some of the trailing curves subtract odd numbers from this variable and thus fall between two frames of the main curves.<br>
+	So let's shelve the idea of high-level algorithmic optimizations. In this particular case though, even micro-optimizations can have massive benefits. The sheer number of points magnifies the performance impact of every suboptimal code generation decision within the inner point loop:
+</p><ul>
+	<li>Inlining <code>grcg_pset()</code> would save 42 cycles by cutting out one <code>far</code> function call and the required stack and register shuffling for passing two parameters. (Remember how {{Blog_PostLink "2023-03-05#egc" "TH01's EGC-powered unblitter suffered from the same function call performance issue"}}?)</li>
+	<li>Frequency scaling works by multiplying the 8-bit angles with a fixed-point Q8.8 factor. The result is then scaled back to regular integers via… two divisions by 256 rather than two bitshifts? That's another ≥46 cycles where ≥4 would have sufficed.</li>
+	<li>The biggest gains, however, would come from inlining the two <code>far</code> calls to the 5-instruction function that calculates one dimension of a polar coordinate, saving another ≥100 cycles.</li>
+</ul><p>
+	Multiplied by the number of points, even these low-hanging fruit already save a whopping ≥753,664 cycles <i>per frame</i> on an i486, without writing a single line of ASM! On Pentium CPUs such as the one in the PC-9821Xa7 that ZUN supposedly developed this game on, the savings are slightly smaller because <code>far</code> calls are much faster, but still come in at a hefty ≥491,520 cycles. Thus, this animation easily beats {{Blog_PostLink "2023-03-05#egc" "TH01's sprite blitting and unblitting code"}}, which just barely hit the 6-digit mark of wasted cycles, and snatches the crown of being the single most unoptimized code in all of PC-98 Touhou.<br>
+	The incredible irony here is that TH03 is the point where ZUN {{Blog_PostLink "2019-11-29" "really"}} {{Blog_PostLink "2020-11-16" "started"}} {{Blog_PostLink "2022-02-18" "going"}} {{Blog_PostLink "2024-04-24#hitcirc" "overboard"}} with useless ASM micro-optimizations, yet he didn't even begin to optimize <i>the one thing</i> that would have actually benefitted from it. Maybe he {{Blog_PostLink "2022-08-11" "once again"}} went for the 📽️ <i>cinematic look</i> 📽️ on purpose?
+</p><p>
+	Unlike TH01's sprites though, all this wasted performance doesn't really matter much in the end. Sure, optimizing the animation would give us more trailing curves on slower PC-98 models, but any attempt to increase the frame rate by interpolating angles would send us straight into fanfiction territory. Due to the <code>0x02</code>/2.8125° increment per cycle, tripling the frame rate of this animation would require a change to a very awkward (log<sub>2</sub>384)&nbsp;= 8.58-bit angle format, complete with a new 384-entry sine/cosine lookup table. And honestly, the effect does look quite impressive even at 18.8&nbsp;FPS.
+</p><hr id="issues-{{.Date}}"><p>
+	There are three more bugs and quirks in this animation that are unrelated to performance:
+</p><ul>
+	<li><p>If you've tried counting the number of trailing dots in the video above, you might have noticed that the very first frame actually renders <i>8</i>×2 trailing curves instead of <i>7</i>×2, thus rendering an even higher 4,608 points. What's going on there is that ZUN actually requested 8 trailing curves, but then forgot to reset the VSync counter after the initial 30-frame delay. {{HTML_Emoji "onricdennat"}} As a result, the game always thinks that the first frame of the menu took ≥30 VSync interrupts to render, thus causing the decrement mechanism to kick in and deterministically reduce the trailing curve count to 7.<br>
+	This is a textbook example of my definition of a ZUN bug: The code unmistakably says 8, and we only don't get 8 because ZUN forgot to mutate a piece of global state.</p></li>
+	<li>The small trailing curves have a noticeable discontinuity where they suddenly get rotated by ±90° between the last and first frame of the animation cycle.<br>
+	This quirk comes down to the small curve's <code>ẟ<sub>y</sub></code> angle offset being calculated as <code>((c/2)-i)</code>, with <code>i</code> being the number of the trailing curve. Halving the main cycle variable effectively restricts this smaller curve to only the first half of the sine oscillation, between [<code>0x00</code>,&nbsp;<code>0x80</code>[. For the main curve, this is fine as <code>i</code> is always zero. But once the trailing curves leave us with a negative value after the subtraction, the resulting angle suddenly flips over into the second half of the sine oscillation that the regular curve never touches. And if you recall how a sine wave looks, the resulting visual rotation immediately makes sense:
+	<figure>
+		<embed src="{{call .PostFileURL "TH03-Select-small-curve-quirk.svg"}}" />
+		<figcaption>Negated input, negated output.</figcaption>
+	</figure>
+	Removing the division would be the most obvious fix, but that would double the speed of the sine oscillation and change the shape of the curve way beyond ZUN's intentions. The second-most obvious fix involves matching the trailing curves to the movement of the main one by restricting the subtraction to the first half of the oscillation, i.e., calculating <code>ẟ<sub>y</sub></code> as <code>(((c/2)-i)&nbsp;%&nbsp;0x80)</code> instead. With <code>c</code> increasing by <code>0x02</code> on each frame of the animation, this fix would only affect the first 8 frames.</li>
+	<li>ZUN decided to plot the darker trailing curves on top of the lighter main ones. Maybe it should have been the other way round?</li>
+</ul>
+{{- $orig.SetTitle "Original game" -}}
+{{- $orig.AddMarker 8 "Back in sync after discontinuity fix" "left" -}}
+{{- $fixed.LinkMarkers $orig -}}
+<figure {{$orig.FigureAttrs}}>
+	{{call .VideoPlayer $orig.FlipActive $fixed.FlipActive}}
+	<figcaption>Now with the full 18 curves, a direction change of the smaller trailing curves at the end of the loop that only looks <i>slightly</i> odd, and a reversed and more natural plotting order.</figcaption>
+</figure><p>
+	If you want to play with the math in a more user-friendly and high-res way, <a href="https://www.desmos.com/calculator/sstcw9ru5x?invertedColors=true">here's a Desmos graph of the full animation, converted to 360° angles and with toggles for the discontinuity and trail count fixes.</a>
+</p><hr id="tearing-{{.Date}}"><p>
+	Now that we fully understand how the curve animation works, there's one more issue left to investigate. Let's actually try holding the Z key to auto-select Reimu on the very first frame of the Story Mode Select screen:
+</p><figure {{$auto.FigureAttrs}}>
+	{{call .VideoPlayer $auto.SetNoLoop}}
+	<figcaption>The confirmation flash even happens before the menu's first page flip.</figcaption>
+</figure><p>
+	Stepping through the individual frames of the video above reveals quite a bit of tearing, particularly when VRAM is cleared in frame 1 and during the menu's first page flip in frame 49. This might remind you of {{Blog_PostLink "2024-02-03#mess" "the tearing issues in the Music Rooms"}} – and indeed, this tearing is once again the expected result of ZUN landmines in the code, not an emulation bug. In fact, quite the contrary: Scanline-based rendering is a mark of quality in an emulator, as it always requires more coding effort and processing power than not doing it. Everyone's favorite two PC-98 emulators from 20 years ago might look nicer on a per-frame basis, but only because they effectively hide ZUN's frequent confusion around VRAM page flips.<br>
+	To understand these tearing issues, we need to consider two more code details:
+</p><ol>
+	<li>If a frame took longer than 3 VSync interrupts to render, ZUN flips the VRAM pages immediately without waiting for the next VSync interrupt.</li>
+	<li>The hardware palette fade-out is the last thing done at the end of the per-frame rendering loop, but <i>before</i> busy-waiting for the VSync interrupt.</li>
+</ol><p>
+	The combination of 1) and the aforementioned 30-frame delay quirk explains Frame 49. There, the page flip happens within the second frame of the three-frame chunk while the electron beam is drawing row #156. DOSBox-X doesn't try to be cycle-accurate to specific CPUs, but 1 menu frame taking <span class="hovertext" title="Or 31.39 frames, as far as the game is concerned">1.39 real-time frames</span> at 56.4&nbsp;FPS is roughly in line with the cycle counting we did earlier.<br>
+	Frame 97 is the much more intriguing one, though. While it's mildly amusing to see the palette actually go <i>brighter</i> for a single frame before it fades out, the interesting aspect here is that 2) practically guarantees its palette changes to happen mid-frame. And since the CRT's electron beam might be anywhere at that point… yup, that's how you'd get more than 16 colors out of the PC-98's 16-color graphics mode. 🎨<br>
+	Let's exaggerate the brightness difference a bit in case the original difference doesn't come across too clearly on your display:
+</p><figure class="pixelated fullres">
+	<img src="{{$palette}}" width="640" alt="Frame 97 of the video above, with a brighter initial palette to highlight the mid-frame palette change" />
+	<figcaption>
+		Probably not too much of a reason for demosceners to get excited; generic PC-98 code that doesn't try to target specific CPUs would still need a way of reliably timing such mid-frame palette changes. Bit 6 (<code>0x40</code>) of I/O port <code>0xA0</code> indicates HBlank, and the usual documentation suggests that you could just busy-wait for that bit to flip, but an HBlank interrupt would be much nicer.
+	</figcaption>
+</figure><p>
+	This reproduces on both DOSBox-X and Neko Project 21/W, although the latter needs the <i>Screen&nbsp;→ Real palettes</i> option enabled to actually emulate a CRT electron beam. Unfortunately, I couldn't confirm it on real hardware because my PC-9821Nw133's screen <a href="https://en.wikipedia.org/wiki/Vinegar_syndrome">vinegar'd</a> at the beginning of the year. But just as with the image loading times, TH03's remaining code sorts of indicate that mid-frame palette changes were noticeable on real hardware, by means of <a href="https://github.com/nmlgc/ReC98/commit/1cb2c0acbc532b959feba63de540c474f9840e19">this little flag I RE'd way back in March 2019</a>. Sure, <code>palette_show()</code> takes >2,850 cycles on a 486 to downconvert master.lib's 8-bit palette to the GDC's 4-bit format and send it over, and that might add up with more than one palette-changing effect per frame. But tearing is a way more likely explanation for deferring all palette updates until after VSync and to the next frame.
+</p><p>
+	And that completes another menu, placing us a very likely 2 pushes away from completing TH03's <code>OP.EXE</code>! Not many of those left now…
+</p><hr id="website-{{.Date}}"><p>
+	To balance out this heavy research into a comparatively small amount of code, I slotted in 2024's Part 2 of my usual bi-annual website improvements. This time, they went toward future-proofing the blog and making it a lot more navigable. You've probably already noticed the changes, but here's the full changelog:
+</p><ul>
+	<li><p>
+		The <i>Progress blog</i> link in the main navigation bar now points to a new list page with just the post headers and each post's table of contents, instead of directly overwhelming your browser with a view of every blog post ever on a single page.<br>
+		If you've been reading this blog regularly, you've probably been starting to dread clicking this link just as much as I've been. 14&nbsp;MB of initially loaded content isn't <i>too</i> bad for 136 posts with an increasing amount of media content, but laying out the now 2&nbsp;MB of HTML sure takes a while, leaving you with a sluggish and unresponsive browser in the meantime. The old one-page view is still available <a href="/blog/all">at a dedicated URL</a> in case you want to <code>Ctrl-F</code> over the entire history from time to time, but it's no longer the default.
+	</p></li><li><p>
+		The new 🔼 and 🔽 buttons now allow quick jumps between blog posts without going through the table of contents or the old one-page view. These work as expected on all views of the blog: On single-post pages, the buttons link to the adjacent single-post pages, whereas they jump up and down within the same page on the <a href="/blog">list of posts</a> or the tag-filtered and one-page views.
+	</p></li><li><p>
+		The header section of each post now shows the individual goals of each push that the post documents, providing a sort of title. This is much more useful than wasting space with meaningless commit hashes; just like in the <a href="/fundlog">log</a>, links to the commit diffs don't need to be longer than a GitHub icon.
+	</p></li><li><p>
+		The web feeds that {{Blog_PostLink "2022-09-04" "handlerug implemented two years ago"}} are now prominently displayed in the new blog navigation sub-header. Listing them using <code>&lt;link rel="alternate"&gt;</code> tags in the HTML <code>&lt;head&gt;</code> is usually enough for integrated feed reader extensions to automatically discover their presence, but it can't hurt to draw more attention to them. Especially now that Twitter has been locking out unregistered users for quite some time…
+	</p></li>
+</ul><p>
+	Speaking of microblogging platforms, I've now also followed a good chunk of the Touhou community to <a href="https://bsky.app/profile/rec98project.bsky.social">Bluesky</a>! The algorithms there seem to treat my posts <a href="https://bsky.app/profile/rec98project.bsky.social/post/3lbe4ddeqa222">much more favorably</a> than <a href="https://twitter.com/ReC98Project/status/1859091230224736273">Twitter has been doing lately</a>, despite me having less than <sup>1</sup>/<sub>10</sub> of mostly automatically migrated followers there. For now, I'm going to cross-post new stuff to both platforms, but I might eventually spend a push to migrate my entire tweet history over to a self-hosted PDS to own the primary source of this data.
+</p><p>
+	Next up: Staying with main menus, but jumping forward to TH04 and TH05 and finalizing some code there. Should be a quick one.
+</p>

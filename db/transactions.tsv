@@ -314,11 +314,11 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-09-01T12:02:42Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0310
 2024-09-02T10:15:40Z	15	1000	Reverse-engineering		T0311
 2024-09-09T11:36:49Z	0	7000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0312
-2024-09-09T11:36:49Z	0	5400	Anything (including tooling) (1 push reserved for website work)		T0313
+2024-09-09T11:36:49Z	0	5400	Anything (including tooling)		T0313
 2024-09-11T10:08:35Z	10	4000	TH02 RE		T0314
 2024-10-01T10:16:26Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0315
 2024-10-02T10:49:33Z	15	1000	Reverse-engineering		T0316
-2024-10-09T11:34:05Z	0	12500	Anything (including tooling) (1 push reserved for website work)		T0317
+2024-10-09T11:34:05Z	0	12500	Anything (including tooling)		T0317
 2024-10-11T10:36:04Z	10	4000	TH02 RE		T0318
 2024-10-22T07:59:00Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0319
 2024-10-25T13:27:07Z	18	4350	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0320
@@ -327,5 +327,5 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-11-01T09:07:38Z	6	915	TH05 OP.EXE		T0323
 2024-11-01T10:56:51Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0324
 2024-11-02T11:44:10Z	15	1000	Reverse-engineering		T0325
-2024-11-09T10:07:24Z	0	12500	Anything (including tooling) (1 push reserved for website work)		T0326
+2024-11-09T10:07:24Z	0	12500	Anything (including tooling)		T0326
 2024-11-11T11:40:31Z	10	3500	TH02 RE		T0327

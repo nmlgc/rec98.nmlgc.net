@@ -296,3 +296,5 @@ P0292	[294, 306]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Main loo
 P0293	[306, 310]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 4/?: SDL_Renderer backend)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/fe01bd0...2d6ae51	0
 P0294	[310, 315]	Seihou / Shuusou Gyoku (Window and scaling modes, part 1/2)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/2d6ae51...37cc78b	0
 P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Hotkeys) + Website (Adding missing money amounts to the log)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/37cc78b...P0275	0
+P0296	[313, 317]	Website / Blog (Post list page + Navigation and post header redesign)	2024-11-22T04:00:03Z	nmlgc/rec98.nmlgc.net/compare/3658763...32d8f54	0
+P0297	[285]	TH03 decompilation (Character selection screen)	2024-11-22T04:00:03Z	nmlgc/ReC98/compare/23fc9e7...c879dfc	1

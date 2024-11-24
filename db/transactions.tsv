@@ -286,7 +286,6 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-03-09T16:41:02Z	0	25000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>		T0283
 2024-03-09T16:41:02Z	0	12500	Anything (including tooling)		T0284
 2024-03-09T23:26:04Z	23	12500	TH03 OP.EXE (preparing for netplay menus)		T0285
-2024-03-11T01:54:46Z	25	6250	Shuusou Gyoku: SDL2 port to Windows 98		M0003
 2024-03-11T11:36:37Z	10	3500	TH02 RE		T0286
 2024-03-11T12:21:44Z	21	1250	TH03 OP.EXE (preparing for netplay menus)		T0287
 2024-04-01T14:14:24Z	13	17000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0288
@@ -331,3 +330,5 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-11-11T11:40:31Z	10	3500	TH02 RE		T0327
 2024-11-22T10:26:38Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0328
 2024-11-23T19:01:25Z	26	450	Portability to non-PC-98 systems (TH03 and TH05)	Waiting for 100% PI of at least one of TH03's binaries	T0329
+2024-03-11T01:54:46Z	25	6250	Shuusou Gyoku: SDL2 port to Windows 98	Code completed, waiting for blog post funding	T0330
+2024-11-24T08:32:15Z	25	2000	Shuusou Gyoku: SDL2 port to Windows 98	Code completed, waiting for blog post funding	T0331

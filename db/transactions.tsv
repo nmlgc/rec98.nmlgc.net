@@ -332,3 +332,4 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-11-23T19:01:25Z	26	450	Portability to non-PC-98 systems (TH03 and TH05)	Waiting for 100% PI of at least one of TH03's binaries	T0329
 2024-03-11T01:54:46Z	25	6250	Shuusou Gyoku: SDL2 port to Windows 98	Code completed, waiting for blog post funding	T0330
 2024-11-24T08:32:15Z	25	2000	Shuusou Gyoku: SDL2 port to Windows 98	Code completed, waiting for blog post funding	T0331
+2024-12-01T10:29:57Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/42">Linux port</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0332

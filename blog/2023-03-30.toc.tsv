@@ -1,0 +1,7 @@
+Anchor	Name
+tiles	The stage tile system in TH02, TH04, and TH05
+diffs	- Game-specific differences
+unused	TH02's unused Stage 5 tile sections
+scroll	TH02's implementation of vertical scrolling
+mistakes	Mistakes in hand-written ASM, and how to fix them
+pos	TH02's unique sprite position system

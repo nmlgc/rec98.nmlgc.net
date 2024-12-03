@@ -13,7 +13,7 @@
 	master.lib code in TH02, and would need to be separated out into its own
 	translation unit before we can do the same with all the master.lib
 	functions.
-</p><p>
+</p>{{call .TOC}}<hr id="tiles-{{.Date}}"><p>
 	In late 2018, I already RE'd
 	{{Blog_PostLink "2018-12-30" "TH04's and TH05's stage tile 	implementation"}}, but haven't properly documented it on this
 	blog yet, so this post is also going to include the details that are unique
@@ -82,7 +82,7 @@
 			bug.
 		</figcaption>
 	</figure></li>
-</ul><p>
+</ul><p id="diffs-{{.Date}}">
 	The differences between the three games can best be summarized in a table:
 </p><figure><table class="comparison"><thead>
 	<th></th>
@@ -148,7 +148,7 @@
 	<td>143 sections <small>(Stage 4)</small></td>
 	<td>95 sections <small>(Stage 4)</small></td>
 	<td>40 sections <small>(Stage 1 / 4 / Extra)</small></td>
-</tr></tbody></table></figure><hr /><p>
+</tr></tbody></table></figure><hr id="unused-{{.Date}}"><p>
 	The most interesting part about stage tiles is probably the fact that some
 	of the .MAP files contain {{HTML_TagInline "unused"}} tile sections. 👀 Many
 	of these are empty, duplicates, or don't really make sense, but a few
@@ -170,7 +170,7 @@
 	code would be quite an effective investment of your money in general, as
 	most of it is identical across both games. Or how about going for a full-on
 	PC-98 Touhou map viewer and editor GUI?
-</p><hr /><p>
+</p><hr id="scroll-{{.Date}}"><p>
 	Compared to TH04 and TH05, TH02's stage tile code definitely feels like ZUN
 	was just starting to understand how to pull off smooth vertical scrolling on
 	a PC-98. As such, it comes with a few inefficiencies and suboptimal
@@ -234,7 +234,7 @@
 	maintainability. Apart from the aforementioned issues, the algorithms
 	themselves are mostly fine – especially since most EGC and GRCG operations
 	are decently batched this time around, in contrast to TH01.
-</p><hr /><p>
+</p><hr id="mistakes-{{.Date}}"><p>
 	Luckily, the tile functions merely use <i>inline</i> assembly within a
 	typical C function and can therefore be at least part of a C++ source file,
 	even if the result is pretty ugly. This time, we can actually be sure that
@@ -326,7 +326,7 @@ SUB 	SP, ?? ; if the function needs the stack for local variables</pre>
 	Guess I'll need to update
 	{{Blog_PostLink "2022-08-15" "the assessment of which PC-98 Touhou game is the easiest to port"}},
 	because it sure isn't TH01, as we've seen with all the work required for the first Anniversary Edition build.
-</p><hr /><p>
+</p><hr id="pos-{{.Date}}"><p>
 	Until then, there are still enough parts of the game that don't use any of
 	the remaining few functions in the <code>_TEXT</code> segment. Previously, I
 	mentioned in the {{Blog_PostLink "2021-05-13" "status overview blog post"}}

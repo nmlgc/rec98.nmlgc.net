@@ -97,17 +97,11 @@ func metricOp(a, b REMetric, op func(a, b float64) float64) (ret REMetric) {
 	return *ret.Sum()
 }
 
-// MulBy returns the result of a multiplication of m by v as a new metric
-// structure.
-func (m REMetric) MulBy(v float64) (ret REMetric) {
-	return metricOp(m, m, func(a, b float64) float64 { return a * v })
-}
-
-// DivByCeil returns the result of a division of m by v, followed by ceiling
-// the result, as a new metric structure.
-func (m REMetric) DivByCeil(v float64) (ret REMetric) {
+// Estimate calculates a price estimate for the metric from a per-push speed
+// and price.
+func (m REMetric) Estimate(speed float64, price float64) (ret REMetric) {
 	return metricOp(m, m, func(a, b float64) float64 {
-		return math.Ceil(a / v)
+		return ((math.Ceil((a*20)/speed) * price) / 20)
 	})
 }
 
@@ -406,9 +400,9 @@ func reProgressEstimateAtTree(tree *object.Tree, spp RESpeed, baseline REProgres
 	return REProgressEstimate{
 		Done: done.Pct(baseline),
 		Money: REProgress{
-			done.CodeNotREd.DivByCeil(spp.CodeNotREd).MulBy(price),
-			done.CodeNotFinal.DivByCeil(spp.CodeNotFinal).MulBy(price),
-			done.AbsoluteRefs.DivByCeil(spp.AbsoluteRefs).MulBy(price),
+			done.CodeNotREd.Estimate(spp.CodeNotREd, price),
+			done.CodeNotFinal.Estimate(spp.CodeNotFinal, price),
+			done.AbsoluteRefs.Estimate(spp.AbsoluteRefs, price),
 		},
 	}
 }

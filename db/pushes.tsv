@@ -61,7 +61,7 @@ P0059	[18, 19]	TH04/TH05 PI (Motion structures + EGC calls + vector calls)	2019-
 P0060	[20]	TH03 decompilation (The stolen sprite driver, part 2) / PI 	2019-11-29T00:15:36Z	nmlgc/ReC98/compare/29385dd...73f5ae7	1
 P0061	[21]	TH03 RE (Character data, part 1 + Player shots, part 1)	2019-12-05T21:18:16Z	nmlgc/ReC98/compare/96684f4...5f4f5d8	1
 P0062	[21]	TH05 decompilation (Reimu's shot functions) / PI	2019-12-22T15:09:53Z	nmlgc/ReC98/compare/1d6fbb8...f275e04	1
-P0063	[26]	TH05 RE (GENSOU.SCR, part 1)	2019-12-28T11:37:29Z	nmlgc/ReC98/compare/034ae4b...8dbb450	1
+P0063	[26]	TH05 RE (GENSOU.SCR, part 1/?)	2019-12-28T11:37:29Z	nmlgc/ReC98/compare/034ae4b...8dbb450	1
 P0064	[21, 20]	TH04/TH05 PI (Completing OP.EXE)	2019-12-29T20:23:06Z	nmlgc/ReC98/compare/80cec5b...9faa29a	1
 P0065	[20]	TH04/TH05 RE (Resident structures)	2020-01-03T20:45:46Z	nmlgc/ReC98/compare/9faa29a...042b780	1
 P0066	[25, 22]	TH01 RE (Palettes) / decompilation (Graphics functions, part 1)	2020-01-05T20:04:19Z	nmlgc/ReC98/compare/042b780...e55a48b	1
@@ -298,3 +298,4 @@ P0294	[310, 315]	Seihou / Shuusou Gyoku (Window and scaling modes, part 1/2)	202
 P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Hotkeys) + Website (Adding missing money amounts to the log)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/37cc78b...P0275	0
 P0296	[313, 317]	Website / Blog (Post list page + Navigation and post header redesign)	2024-11-22T04:00:03Z	nmlgc/rec98.nmlgc.net/compare/3658763...32d8f54	0
 P0297	[285]	TH03 decompilation (Character selection screen)	2024-11-22T04:00:03Z	nmlgc/ReC98/compare/23fc9e7...c879dfc	1
+P0298	[289, 299, 303, 307, 311, 316, 317, 323, 325, 322]	TH04/TH05 finalization (GENSOU.SCR, part 2/?) + Decompilation (High Score view screen)	2024-12-04T14:29:20Z	nmlgc/ReC98/compare/c879dfc...71f4810	1

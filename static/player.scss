@@ -17,6 +17,7 @@
 	background-color: var(--c-dark);
 	display: grid;
 	grid-template-rows: 1fr min-content;
+	justify-items: center;
 
 	/* Necessary for .popup. */
 	position: relative;
@@ -87,7 +88,6 @@
 		font-size: small;
 		grid-row: 2;
 		grid-template-columns: 2.5em 1.5em 1.5ch 1.5ch 6ch 1.5ch 1.5ch 1fr 2.5em 2.5em;
-		justify-items: left !important;
 		width: 100%;
 
 		&>button,
@@ -158,7 +158,7 @@
 	}
 
 	.timeline {
-		align-self: center;
+		place-self: center;
 		grid-column: 8;
 		height: 50%;
 		width: calc(100% - 1em);

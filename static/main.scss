@@ -131,10 +131,12 @@ figure:-webkit-full-screen {
 	grid-template-rows: 1fr min-content;
 }
 
-/* Applying this to .multilayer would reduce them to a width of 0 pixels, for
- * some reason? */
-figure :not(.multilayer) {
-	justify-self: center;
+/* Applying this to .multilayer would reduce them to a width of 0 pixels,
+ * applying it to .side_by_side would override the intended gap. */
+figure:not(.side_by_side)>:not(.multilayer) {
+	/* `justify-self` clips wider content?! */
+	margin-left: auto;
+	margin-right: auto;
 }
 
 figure.side_by_side {

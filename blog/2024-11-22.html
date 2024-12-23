@@ -70,7 +70,7 @@
 	{{call .VideoPlayer $orig.FlipActive $no_trail}}
 	<figcaption>At a high level, there really is just one big curve and one small curve, plus an array of trailing curves that approximate motion blur by subtracting from ẟ<sub>x</sub> and ẟ<sub>y</sub>.</figcaption>
 </figure><p id="perf-{{.Date}}">
-	In a rather unusual display of mathematical purity, ZUN fully re-calculates all variables and every point on every frame from just the single byte of state that indicates the current time within the animation's 128-frame cycle. However, that beauty is quickly tarnished by the actual <i>cost</i> of fully recalculating these curves every frame:
+	In a rather unusual display of mathematical purity, ZUN fully re-calculates all variables and every point on every frame from just the single byte of state that indicates the current time within the animation's 128-frame cycle. However, that beauty is quickly tarnished by the sheer <i>cost</i> of fully recalculating these curves every frame:
 </p><ul>
 	<li>In total, the effect calculates, clips, and plots 16 curves: 2 main ones, with up to 7×2&nbsp;=&nbsp;14 darker trailing curves.</li>
 	<li>Each of these curves is made up of the 256 maximum possible points you can get with 8-bit angles, giving us 4,096 points in total.</li>

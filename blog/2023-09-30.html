@@ -394,8 +394,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	them? Let's see how this plays out. If it ends up causing issues after all,
 	I'll just switch to a Zig-like model of downloading and unzipping a source
 	archive. Since Windows comes with <code>curl</code> and <code>tar</code>
-	these days, this can even work without any further dependencies, and will
-	also remove all the test code bloat.
+	these days, this can even work without any further dependencies.
 </p><p>
 	Compiling SDL from a non-standard build system requires <a
 	href="https://github.com/nmlgc/ssg/blob/f5858791fb08af3e295d88f1ebe3b2041ec88c9b/Tupfile.lua#L28-L79">a
@@ -1062,7 +1061,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		The result of converting 1️⃣ into FLAC. The necessary bit depth
 		conversion from 32-bit float to 16-bit integers clamps any data above
 		0&nbsp;dBFS or <code>±1.0f</code> to the discrete
-		<code>-32,678</code>&nbsp;<code>32,767</code>, the maximum value of such
+		[-32,678;&nbsp;32,767] range, the maximum value of such
 		an integer. The resulting straight lines at maximum amplitude in the
 		time domain then turn into distortion across the entire 24,000&nbsp;Hz
 		frequency domain, which then remains a part of the waveform even at

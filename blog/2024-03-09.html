@@ -272,7 +272,7 @@
 </p><hr id="sysex-{{.Date}}" /><p>
 	But wait, we've already heard one obvious difference between the real SC-88Pro and Sound Canvas VA. Let's listen to the very first clip again:
 </p><figure class="waveform-{{.Date}}">
-	{{call .AudioPlayer $aud_o20_rtp.FlipActive $aud_o20_scva}}
+	{{call .AudioPlayer $aud_o20_rtp $aud_o20_scva}}
 </figure><p>
 	Ha! You can clearly hear a panning echo in the real-hardware recording that is missing from the Sound Canvas VA rendering. That's an obvious case of a core system effect not being reproduced correctly. If even <i>that's</i> undeniably broken, who knows which other subtle bugs SCVA suffers from, right? Case closed, Romantique Tp was right all along, SCVA is trash, real hardware reigns supreme {{HTML_Emoji "godzun"}}
 </p><p>

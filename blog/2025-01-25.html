@@ -1,0 +1,621 @@
+{{$bg := (call .PostFileURL "SH01-Main-menu-Background.png") -}}
+{{$g_msg_win := (call .PostFileURL "SH01-Main-menu-Game-Start-MS-Gothic-Windows.png") -}}
+{{$g_ipa_win := (call .PostFileURL "SH01-Main-menu-Game-Start-IPAMonaGothic-Windows.png") -}}
+{{$g_msg_wine := (call .PostFileURL "SH01-Main-menu-Game-Start-MS-Gothic-Wine.png") -}}
+{{$e_msg_win := (call .PostFileURL "SH01-Main-menu-Extra-Start-MS-Gothic-Windows.png") -}}
+{{$e_msg_pc := (call .PostFileURL "SH01-Main-menu-Extra-Start-MS-Gothic-Pango.png") -}}
+{{$e_ipa_win := (call .PostFileURL "SH01-Main-menu-Extra-Start-IPAMonaGothic-Windows.png") -}}
+{{$e_ipa_pc := (call .PostFileURL "SH01-Main-menu-Extra-Start-IPAMonaGothic-Pango.png") -}}
+{{$sclbug_ipa := (call .PostFileURL "SH01-SCL-bug-IPAMonaGothic.png") -}}
+{{$sclbug_msg := (call .PostFileURL "SH01-SCL-bug-MS-Gothic.png") -}}
+{{$sclbug_ipa := (call .PostFileURL "SH01-SCL-bug-IPAMonaGothic.png") -}}
+{{$pc := (call .PostFileURL "Pango-Cairo.png") -}}
+{{$pf := (call .PostFileURL "Pango-ft2.png") -}}
+{{$ff_msg := (call .PostFileURL "FontForge-MS-Gothic-Latin1-14px.png") -}}
+{{$ff_ipa := (call .PostFileURL "FontForge-IPAMonaGothic-Latin1-14px.png") -}}
+{{$tm_016 := (call .PostFileURL "TremoloMeasure-016.png") -}}
+{{$tm_032 := (call .PostFileURL "TremoloMeasure-032.png") -}}
+{{$tm_048 := (call .PostFileURL "TremoloMeasure-048.png") -}}
+{{$tm_128 := (call .PostFileURL "TremoloMeasure-128.png") -}}
+{{$tm_e_ico := (call .PostFileURL "TremoloMeasure-Explorer-ICO.png") -}}
+{{$tm_e_exe := (call .PostFileURL "TremoloMeasure-Explorer-EXE.png") -}}
+
+<style>
+	figure.main-menu-{{.Date}} img {
+		background-image: url('{{$bg}}');
+		background-size: cover;
+	}
+
+	figure#tm-{{.Date}} img {
+		background-color: var(--c-bg);
+	}
+
+	table#icons-{{.Date}} {
+		font-size: 75%;
+	}
+	table#icons-{{.Date}} tr:not(:first-child) {
+		border-top: var(--table-border);
+		border-top-color: var(--c-lightgray);
+	}
+	table#icons-{{.Date}} tr>:not(:last-child) {
+		border-right: var(--table-border);
+	}
+	table#icons-{{.Date}} tr :last-child {
+		text-align: left;
+	}
+	table#icons-{{.Date}} tr :first-child {
+		text-align: right;
+	}
+	table#icons-{{.Date}} .good {
+		background-color: var(--c-trial-good);
+	}
+	table#icons-{{.Date}} .mid {
+		background-color: var(--c-trial-mid);
+	}
+	table#icons-{{.Date}} .bad {
+		background-color: var(--c-trial-bad);
+	}
+</style>
+
+<p>
+	Here we go, the finale of the Shuusou Gyoku Linux port, culminating in packages for the Arch Linux AUR and Flathub! No intro, <a href="https://bsky.app/profile/32th.bsky.social/post/3lei7ovwuvk2f">this is huge enough as it is</a>.
+</p>{{call .TOC}}<hr id="modules-{{.Date}}"><p>
+	Before we could compile anything for Linux, I still needed to add GCC/Clang support to my Tup building blocks, in what's hopefully the last piece of build system-related work for a while. Of course, the decision to use one compiler over the other for the Linux build hinges entirely on their respective support for C++ standard library modules. I {{Blog_PostLink "2024-10-22#modules" "rolled out <code>import std;</code> for the Windows build last time"}} and absolutely do not want to code without it anymore. <a href="https://en.cppreference.com/mwiki/index.php?title=Template:cpp/compiler_support/23&oldid=178113#C.2B.2B23_library_features">According to the cppreference compiler support table at the time I started development</a>, we had the choice between
+</p><ol>
+	<li>experimental support in the not-yet-released GCC 15, and</li>
+	<li>partial support as of Clang 17, two versions ago.</li>
+</ol><p>
+	<a href="https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=7db55c0ba1baaf0e323ef7f9ef8c9cda077d40e9">GCC's current implementation</a> does compile <a href="https://aur.archlinux.org/packages/gcc-snapshot">in current snapshot builds</a>, but still throws lots of errors when used within the Shuusou Gyoku codebase. Clang's allegedly partial support, on the other hand, turned out just fine for our purposes. So for now, Clang it is, despite not being the preferred C/C++ compiler on most Linux distributions. In the meantime, please forgive the additional run-time dependency on <code>libc++</code>, its C++ standard library implementation. 🙇 Let's hope that it all <i>will</i> actually work in GCC 15 once that version comes out sometime in 2025.
+</p><p>
+	At a high level, my Tup building blocks only have to do a single thing to support standard library modules with a given compiler: Finding the <code>std</code> and <code>std.compat</code> module interface units at the compiler's standard locations, and compiling them with the same compiler flags used for the rest of the project. Visual Studio got the right idea about this: If you compile on its command prompts, you're already using a custom shell with environment variables that define the necessary paths and parameters for your target platform. Therefore, it makes sense to store these module units at such an easily reachable path – and sure enough, you can reliably find the <code>std</code> module unit at <code>%VCToolsInstallDir%\modules\std.ixx</code>. While this is hands down the optimal way of locating this file, I can understand why GCC and Clang would want module lookup to work in generic shells without polluting environment variables. In this case, asking some compiler binary for that path is a decent second-best option.<br>
+	Unfortunately, that would have been way too simple. Instead, these two compilers approached the problem from the angle of general module usage within the common build systems out there:
+</p><ul>
+	<li>Using modules within a project introduces a new kind of dependency relation between C++ source files, forcing all such code to be compiled in an implicitly defined order. For Tup, this isn't much of a problem because it has always required {{Blog_PostLink "2024-07-09#tupfile" "order-relevant dependencies to be explicitly specified"}}. So it's been quite amusing for me to hear all these CMake-entrenched CppCon speakers in recent years comment on how this aspect of modules places such a burden on build systems… 🤭</li>
+	<li>Then again, their goal is a world where devs just write <code>import name_of_module;</code> and the build system figures out a project's dependency graph on its own by <a href="https://cmake.org/cmake/help/latest/manual/cmake-cxxmodules.7.html">scanning all source files prior to compilation</a>. Or rather, asking the compiler to parse the source files and dump out this information, using the <code>fdeps-*</code> options on GCC, the separate <code>clang-scan-deps</code> tool for Clang, or the <code>cl /scanDependencies</code> option for MSVC.</li>
+	<li>Because each of the three major compilers has its own implementation of modules, it's understandable why the options and tools are different. Obviously though, CMake is interested in at least getting all three to output the dependency information in the same format. So they got onto the C++ committee's SG15 working group and <a href="http://wg21.link/P1689R5">proposed a JSON format</a>, which GCC and Clang subsequently implemented.</li>
+	<li>But wait! The source files for the <code>std</code> and <code>std.compat</code> modules</a> don't lie inside the source tree and couldn't be found by such a scan over the declared project files. So SG15 later <a href="https://wg21.link/P3286R0">simply proposed using the same JSON format for this purpose</a> and installing such a JSON file together with the standard library implementation.</li>
+	<li>But wait! That only shifted the problem, because now we need to find that JSON file. What does the paper have to say on that issue?<blockquote style="white-space: unset;"><ul>
+		<li>For the Standard Library:<ul>
+			<li>The build system should be able to query the toolchain (either the compiler or relevant packaging tools) for the location of that metadata file.</li>
+		</ul></li>
+	</ul></blockquote>
+</ul><p>
+	Wonderful. Just what we wanted to do all along, only with an additional layer of indirection that now forces every build system to include a JSON parser somewhere in its architecture. 🤦<br>
+	In CMake's defense, <a href="https://www.reddit.com/r/cpp/comments/17a4t6l/comment/k5cfxw9/">they did try to get other build systems, including Tup, involved in these proposals</a>. Can't really complain now if that was the consensus of everybody who wanted to engage in this discussion at the time. Still, what a sad irony that they <a href="https://groups.google.com/g/tup-users/c/FhJTA6KAzWU">reached out to Tup users</a> on the exact day in 2019 at which I retired from thcrap and shelved all my plans of using Tup for modern C++ code…
+</p><p>
+	So, to locate the interface units of standard library modules on Clang and GCC, a build system must do the following:
+</p><ol><li><p>
+	Ask the compiler for the path to the <code>modules.json</code> file, using the <a href="https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;h=6a9e290eecf0f54caf6e13374428db318cb6f0cd">30-year-old</a> <code>-print-file-name</code> option.<br>
+	GCC and Clang implement this option in the worst possible way by basically conditionally prepending a path to the argument and then printing it back out again. If the compiler can't find the given file within its inscrutable list of paths or you made a typo, you can only detect this by string-comparing its output with your parameter. I can't imagine any use case that wouldn't prefer an error instead.<br>
+	Clang was supposed to offer the conceptually saner <a href="https://github.com/llvm/llvm-project/issues/97025"><code>-print-library-module-manifest-path</code></a> option, but of course, this is modern C++, and every single good idea must be accompanied by at least one other half-baked design or implementation decision.</p>
+</li><li>
+	<p>Load the JSON file with the returned file name.</p>
+</li><li>
+	<p>Parse the JSON file.</p>
+</li><li>
+	<p>Scan the <code>"modules"</code> array for an entry whose <code>"logical-name"</code> matches the name of the standard module you're looking for.</p>
+</li><li>
+	<p>Discover that the <code>"source-path"</code> is actually relative and will need to be turned into an absolute one for your compilation command line. Thankfully, it's just relative to the path of the JSON file we just parsed.
+</p></li></ol><p>
+	Sure, you can turn everything into a one-liner on Linux shells, but at what cost?
+</p><figure>
+	<pre>clang++ -stdlib=libc++ -c -Wno-reserved-module-identifier -std=c++2c --precompile $(dirname $(clang -print-file-name=libc++.modules.json))/$(jq -r '.["modules"][] | select(."logical-name"=="std")."source-path"' $(clang -print-file-name=libc++.modules.json))</pre>
+	<figcaption>
+		You might argue that Tup rules are a rather contrived case. Tup by itself can't store the output of processes in variables because rule generation and rule execution are two separate phases, so we need to call <code>clang -print-file-name</code> at both of the places in the command line where we need the file name. But, uh, <a href="https://gitlab.kitware.com/cmake/cmake/-/blob/3c4b9cd979b9b870b151a67713f0e91f08c04b49/Modules/Compiler/Clang-CXX-CXXImportStd.cmake">CMake's implementation is 170 lines long</a>…
+	</figcaption>
+</figure><p>
+	At least it's pretty straightforward to then <i>use</i> these compiled modules. As far as our Tup building blocks are concerned, it's just another explicit input and a set of command-line flags, indistinguishable from a library. For Clang, the <code>-fmodule-file=<i>module_name</i>=<i>path</i></code> option is all that's required for mapping the logical module names to the respective compiled debug or release version.<br>
+	GCC, however, decided to tragically over-engineer this mapping by <a href="https://wg21.link/p1184">devising a <span class="hovertext" title="Hey, at least it isn't JSON! Even though GCC does have a custom-written JSON parser in its codebase…">plaintext</span> protocol for a microservice</a> like it's 2014. <a href="https://gcc.gnu.org/onlinedocs/gcc/C_002b_002b-Module-Mapper.html">Reading the usage documentation is truly soul-crushing</a> as GCC tries everything in its power to not be like Clang and <i>just have simple parameters</i>. Fortunately, this mapper does support files as the closest alternative to parameters, which we can just <code>echo</code> from Tup for some {{Blog_PostLink "2024-07-09#prev" "90's response file"}} nostalgia. At least I won't have to entertain this folly for a moment longer after the Lua code is written and working…
+</p><hr id="porting-{{.Date}}"><p>
+	So modules are justifiably hard and we should cut compiler writers some slack for having to come up with <a href="https://www.reddit.com/r/cpp/comments/1b0zem7/comment/ksc91po/">an entirely new way of serializing C++ code that still works with headers</a>. But surely, there won't be any problems with the smaller new C++ features I've started using. If they've been working in MSVC, they surely do in Clang as well, right? Right…?<br>
+	Once again, C++ standard versions are proven to be utterly meaningless to anyone outside the committee and the CppCon presenters who try to convince you they matter. Here's the list of features that still don't work in Clang in early 2025:
+</p><ul>
+	<li>C++20's <a href="https://en.cppreference.com/w/cpp/thread/jthread"><code>std::jthread</code></a>, which fixes an important design flaw of C++'s regular thread class. This would have been very unfortunate if I hadn't coincidentally already rewritten my threading code to use SDL's more portable thread API as part of the Windows 98 backport. Thus, I could adopt that work into this delivery, gifting a much-needed extra 0.3 pushes of content to the Windows 98 backport. 🙌</li>
+	<li>C++17's <a><code>std::from_chars()</code></a> for floating-point values, which we use to parse {{Blog_PostLink "2024-03-09#peaks" "gain factors for waveform BGM out of Vorbis comment tags"}}. This one is a medium-sized tragedy: Since it's not worth it to polyfill this function with a third-party library for just a single call, the best thing we can do is to fall back on <code>strtof()</code> from the C standard library. Why wasn't I using this function all along, you may ask? Well, as we all know by now, the C standard library is complete and utter trash, and <code>strtof()</code> is no exception by suffering from <a href="https://github.com/mpv-player/mpv/commit/1e70e82baa9193f6f027338b0fab0f5078971fbe">locale braindeath</a>.</li>
+	<li>A good <code>chunk()</code> (ha) of the C++23 <a href="https://en.cppreference.com/w/cpp/ranges#Range_adaptors">range adaptors</a>. As a rather new addition to the language, I've only made sporadic use of them so far to get a feel for their optimal usage. But as it turns out, sporadic use of range adaptors makes very little sense <a href="https://github.com/nmlgc/ssg/commit/1724a999464175d4e6692d5f2c25994c16e03144">because the code is much simpler and easier to read without them</a>. And this is what the C++ committee has been demanding our respect for all this time? They have played us for absolute fools.<br>
+	The <code>-2</code> might look slightly cryptic at first, but since this code is part of a <code>constinit</code> block, we'd get a compiler error if we either wrote too few elements (and left parts of the array uninitialized) or wrote too many (and thus out of the array's bounds). Therefore, the number can't be anything else.</li>
+</ul><p>
+	It almost looked like it'd finally be time for my long-drafted rant about the state of modern C++, but the language just barely redeemed itself with the last two sentences there. Some other time, then…<br>
+	On the bright side, all my portability work on game logic code had exactly the effect I was hoping for: Everything just worked after the first successful compilation, with zero weird run-time bugs resulting from the move from a 32-bit MSVC build to 64-bit Clang. 🎉
+</p><hr id="font-{{.Date}}"><p>
+	Before we can tackle text rendering as the last subsystem that still needs to be ported away from Windows, we need to take a quick look at the font situation. Even if we don't care about pixel-perfectly matching the game's text rendering on Windows, MS Gothic seems to be the only font that fits the game's design at all:
+</p><ul>
+	<li>All text areas are dimensioned around the exact metrics of MS Gothic's embedded bitmaps. In menus, each half-width character is expected to be exactly 7×14 pixels large because most of the submenu items are aligned with spaces. In text boxes and the Music Room, glyphs can be smaller than the intended 8×16 pixels per half-width character, but they can't be larger without cutting off something somewhere.</li>
+	<li>Only bitmap fonts can deliver the sharp and pixelated look the game goes for. Subpixel rendering techniques are crucial for making vector fonts look good, but quickly get ugly when applied to drop-shadowed text rendered at these small sizes:
+	<figure class="fullres main-menu-{{.Date}}">
+		<rec98-child-switcher><img
+			src="{{$g_msg_win}}"
+			data-title="Windows"
+			width="640"
+			alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with MS Gothic, demonstrating that font's bitmaps for 14- and 16-pixel text heights"
+		/><img
+			src="{{$g_msg_wine}}"
+			data-title="Wine"
+			width="640"
+			alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Wine with MS Gothic, demonstrating Wine's lack of support for TTF bitmaps"
+			class="active"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		<figcaption>
+			That's MS Gothic in both pictures. The smoothed rendering on the help text might arguably look nicer, but it clashes very badly with the drop shadow in the menus.
+		</figcaption>
+	</figure></li>
+</ul><p>
+	However, MS Gothic is non-free and any use of the font outside of a Windows system violates Microsoft's EULA. In spite of that, the AUR offers three ways of installing this font regardless:
+</p><ol>
+	<li>The <a href="https://aur.archlinux.org/packages?O=0&SeB=nd&K=ttf+win+auto&outdated=&SB=p&SO=d&PP=50&submit=Go"><code>ttf-ms-*auto-*</code> packages</a> download a Windows 10 or 11 ISO from a somewhat official download link on Microsoft's CDN and extract the font files from there. Probably good enough if downloading 5&nbsp;GB only to scrape a single 9&nbsp;MB font file out of that image doesn't somehow feel wrong to you.</li>
+	<li>The <a href="https://aur.archlinux.org/packages?O=0&SeB=nd&K=ttf+win+cdn&outdated=&SB=p&SO=d&PP=50&submit=Go"><code>ttf-ms-win10-cdn-*</code> packages</a> download just the font files from… somewhere on IPFS. {{HTML_Emoji "thonk"}}</li>
+	<li>The regular, non-<code>auto</code> or <code>-cdn</code> <a href="https://aur.archlinux.org/packages/ttf-ms-win11"><code>ttf-ms-win*</code> packages</a> leave it up to you where exactly you get the files from. While these are the <q>clearest</q> options in how they let you manually perform the EULA infringement, this manual nature breaks automated AUR helpers. And honestly, requiring you to copy over all 141 font files shipped with modern Windows is massively overkill when we only need a single one of them. At that point, you might as well just copy <code>msgothic.ttc</code> to <code>~/.local/share/fonts</code> and don't bother with any package. Which, by the way, works for every distro as well as Flatpaks, which can freely access fonts on the host system.</li>
+</ol><p>
+	You might <i>want</i> to go the extra mile and use any of these methods for perfectly accurate text rendering on Linux, and supporting MS Gothic should definitely be part of the intended scope of this port. But we can't expect this from everyone, and we need to find <i>something</i> that we can bundle as part of the Flatpak.
+</p><p>
+	So, we need an alternative free Japanese font that fits the metric constraints of MS Gothic, has embedded bitmaps at the exact sizes we need, and ideally looks somewhat close. Checking all these boxes is not too easy; Japanese fonts with a full set of all Kanji in Shift-JIS are a niche to begin with, and nobody within this niche advertises embedded bitmaps. As the DPI resolutions of all our screens only get higher, well-designed modern fonts are increasingly unlikely to have them, thus further limiting the pool to old fonts that have long been abandoned and probably only survived on websites that barely function anymore.<br>
+	Ultimately, the ideal alternative turned out to be a font named IPAMonaGothic, which I found while digging through <a href="https://github.com/Winetricks/winetricks/blob/b7cf27d70af3dc5ddbd6cd604206d1f932a7f702/src/winetricks#L14182-L14207">the Winetricks source code</a>. While its embedded bitmaps only cover MS Gothic's first half for font heights between 10 and 16 pixels rather than going all the way to 22 pixels, it happens to be exactly the range we need for this game.
+</p><figure class="fullres main-menu-{{.Date}}">
+	<rec98-child-switcher><img
+		src="{{$g_msg_win}}"
+		data-title="MS Gothic"
+		width="640"
+		alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with the default MS Gothic font"
+	/><img
+		src="{{$g_ipa_win}}"
+		data-title="IPAMonaGothic"
+		width="640"
+		alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with IPAMonaGothic, demonstrating its matching metrics and roughly similar look"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		If you're a PC-98 hardware fan, the difference between these two fonts is probably already reminding you of the stylistic difference between NEC's and Epson's versions of the ROM font.<br>
+		Both of these screenshots were made on Windows. Obviously, the Linux port shouldn't settle for anything less than pixel-perfectly matching these reference renderings with both fonts.
+	</figcaption>
+</figure><hr id="stack-{{.Date}}"><p>
+	Alright then, how are we going to get these fonts onto the screen with something that isn't GDI? With all the emphasis on embedded bitmaps, you might come to the conclusion that all we want to do is to place these bitmap glyphs next to each other on a monospaced grid. Thus, all we'd need is a TTF/OTF library that gives us the bitmap for a given Unicode code point. Why should we use <i>any</i> potentially system-specific API then?<br>
+	But if we instead approach this from the point of view of GDI's feature set, it does seem better to match a standard Windows text rendering API with the equivalent stack of text rendering libraries that are typically used by Linux desktop environments. And indeed, there are also solid reasons why this is a better idea for now:
+</p><ul>
+	<li>There actually is a single instance where this game uses MS Gothic at a height of 24 pixels, which is too large to be covered by its embedded bitmaps and thus requires rasterization of vector outlines. Whenever the SCL parser encounters an unknown opcode, it shows this error message:
+</p><figure class="singleplayer_playfield">
+	<rec98-child-switcher><img
+		src="{{$sclbug_msg}}"
+		data-title="MS Gothic"
+		width="384"
+		alt="Screenshot of Shuusou Gyoku's SCL bug message window, reading 「バグ発生だにょ」, rendered using MS Gothic at 24px with Bézier curve rasterization rather than bitmaps."
+		class="active"
+	/><img
+		src="{{$sclbug_ipa}}"
+		data-title="IPAMonaGothic"
+		width="384"
+		alt="Screenshot of Shuusou Gyoku's SCL bug message window, reading 「バグ発生だにょ」, rendered using IPAMonaGothic at 24px with Bézier curve rasterization rather than bitmaps."
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		Modders may very well end up seeing this one as a result of bugs in SCL compilers.
+	</figcaption>
+</figure></li>
+	<li>You might see debug text as not worth bothering with, but then there's Kioh Gyoku. Not only does that game display its text at much bigger sizes throughout, but it also renders every string at 3× the size it is ultimately downscaled to, similar to the 2× scale factor used by the 640×480 Windows Touhou games. Going for a full-featured solution that works with both embedded bitmaps and outlines saves us time later.</li>
+	<li>We'd be ready for translations into even the most complex-to-render non-ASCII scripts.</li>
+	<li>Since our fonts might not support these scripts, having the API fall back on other fonts installed in the system as necessary would allow us to add these translations independently of figuring out the font situation for them.</li>
+	<li>In fact, text rendering must technically already support glyph fallback because {{Blog_PostLink "2024-03-09#impl" "the BGM pack selection just displays path names"}}, which  count as user input. If people use code points in their BGM pack folder names that aren't covered by either of our two fonts, they probably have <i>some</i> font installed on their  system that can display them. Also, the missing .DAT file screen further below in that post shows that GDI already does glyph fallback with emoji, so wouldn't it be lame if the Linux version didn't have at least feature parity in this regard? Instead, the Linux stack would actually outperform GDI thanks to the former's natural support for color emoji. 🎨</li>
+	<li>Since we're explicitly porting to desktop Linux here, using the standard Linux text rendering stack is the least bloated option because Linux users will have it installed anyway. We can still reach for more minimalistic alternatives later once we do port this game to something other than Linux.</li>
+</ul><p id="libs-{{.Date}}">
+	Let's look at what this stack consists of and how the libraries interact with each other:
+</p><ul><li>
+	<p>FreeType provides access to everything related to the rendering of TTF and OTF fonts, including their embedded bitmaps, as well as a rasterizer for regular vector glyphs. It's completely obvious why we need this library.</p>
+</li><li>
+	<p>GLib2 is a collection of various general utility functions that modern non-C languages would have in their standard libraries. Most notably, it provides the tables and APIs for Unicode character data, but its <code>iconv</code> wrapper also comes in quite handy for converting the Shift-JIS text from the original .DAT files to UTF-8 without additional dependencies.</p>
+</li><li>
+	<p>FriBidi implements the Unicode Bidirectional Algorithm, just in case you've thrown some Arabic or Hebrew into your string.</p>
+</li><li>
+	<p>HarfBuzz implements shaping, i.e., the translation of raw Unicode into a sequence of glyph indices and positions depending on what's supported by the font. We might not <i>strictly</i> need this library right now, but it's completely obvious why we will eventually need it for translations.</p>
+</li><li>
+	<li>The regular, non-<code>auto</code> or <code>-cdn</code> <a href="https://aur.archlinux.org/packages/ttf-ms-win11"><code>ttf-ms-win*</code> packages</a> leave it up to you where exactly you get the files from. While these are the <q>clearest</q> options in how they let you manually perform the EULA infringement, this manual nature breaks automated AUR helpers. And honestly, requiring you to copy over all 141 font files shipped with modern Windows is massively overkill when we only need a single one of them. At that point, you might as well just copy <code>msgothic.ttc</code> to <code>~/.local/share/fonts</code> and don't bother with any package. Which, by the way, works for every distro as well as Flatpaks.</li>
+	<p>Fontconfig manages all fonts installed on the system, maps user-friendly font names to file names, tracks their Unicode coverage, and offers a central place for storing <a href="https://wiki.archlinux.org/title/Font_configuration/Examples">various font tweaking options</a>.<br>
+	Normally, games wouldn't need this library because they just bundle all the fonts they need and hardcode any required tweaking settings to make them look as intended. Looking back at our font situation though, installing MS Gothic in a system-wide way through a package that puts the font into a standard location will be the simplest method of meeting that optional dependency. This is a reasonable assumption in a neatly packaged Linux system where the font is just another item on the game's dependency list, but also within a Flatpak, where "system-wide" includes any fonts shipped with the image. If we now assume that IPAMonaGothic is installed in the same way, we can let Fontconfig handle the actual selection. All we need to do is to specify a preference for MS Gothic over IPAMonaGothic, and Fontconfig will take care of the rest, without us a single line of TTF-loading code.</p>
+</li><li>
+	<p>Pango combines the three libraries above into an API that somewhat matches GDI's simplicity, laying out text in one or multiple lines based on the shaped output of HarfBuzz and substituting glyphs as necessary based on Fontconfig information. The actual rendering, however, is delegated to…</p>
+</li><li>
+	<p>Cairo, a… "2D graphics library"? Now why would we need one of those if all we want is a buffer filled with pixels? <a href="https://en.wikipedia.org/wiki/Cairo_(graphics)">Wikipedia's description emphasizes its vector graphics capabilities</a>, which <i>seems</i> to describe the library better than the <a href="https://www.cairographics.org/">nondescript blurb on its official website</a>, but doesn't FreeType already do this for text? After looking at it for way too long, the best summary I can come up with is "a collection of font rasterization code that should have maybe been part of FreeType, plus the aforementioned general 2D vector graphics code we don't need". Just like Pango wraps HarfBuzz and Fontconfig to lay out the individual glyphs, Cairo wraps FreeType and raw pixel buffers to actually place these glyphs on its surface abstraction. (And also Fontconfig because of all its configuration settings that can influence the rendering.) Ultimately, this means that each font is represented by a HarfBuzz+FreeType handle, a Pango+Cairo handle, and a Cairo+FreeType handle, which I'm sure won't be relevant later on. 👀<br>
+	Pango does have a raw FreeType backend that could render text entirely without Cairo, but it's not really maintained and supports neither embedded bitmaps nor color emoji. So we don't have much of a choice in the matter.</p><figure style="width: 100%;">
+		<figcaption class="dynamic"><div>
+			Created using <code>pango-view -t 'effective. Power لُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ🌈冗' --font='MS Gothic 16px' --backend=cairo</code>.
+		</div><div>
+			Created using <code>pango-view -t 'effective. Power لُلُصّبُلُلصّبُررً ॣ ॣh ॣ ॣ🌈冗' --font='MS Gothic 16px' --backend=ft2</code>.
+		</div></figcaption>
+		<rec98-child-switcher><img
+			src="{{$pc}}"
+			data-title="Pango/Cairo"
+			width="275"
+			alt="The infamous iOS Effective Power crash string with an additional rainbow emoji as rendered by Pango with the pango-view tool using MS Gothic at a height of 16 pixels and Pango's Cairo backend, which renders the string as expected with MS Gothic's embedded bitmaps and a colored emoji"
+			class="active"
+		/><img
+			src="{{$pf}}"
+			data-title="Pango/FreeType"
+			width="275"
+			alt="The infamous iOS Effective Power crash string with an additional rainbow emoji as rendered by Pango with the pango-view tool using MS Gothic at a height of 16 pixels and Pango's FreeType2 backend, demonstrating a lack of support for embedded bitmaps and color emoji as well as completely broken emoji placement"
+		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	</figure>
+	<p>Fun fact: Since Cairo also manages the temporary CPU image buffer we draw on and then hand to SDL, our backend for Shuusou Gyoku ends up with 3× the amount of Cairo function calls than Pango function calls.</p>
+</li><li>
+	<p>Pixman is the library that actually performs all the management of and operations on pixel buffers that you would have thought to be Cairo's job. The combination of it also being a core dependency of the X server and <a href="https://www.pixman.org/">not having any documentation</a> gives off much stronger <a href="https://www.xkcd.com/2347/">Nebraska</a> vibes than <a href="https://github.com/harfbuzz/harfbuzz/blob/3a7ebc320d0038ebf61c60531979a6f9bca7c26b/README.md">the ones HarfBuzz advertises itself with</a>. Initially, the dependency on this library comes off as completely useless because Pango's FreeType backend doesn't need anything like it, but judging by the presence of <a href="https://gitlab.freedesktop.org/pixman/pixman/-/tree/master/pixman?ref_type=heads">optimized blitting and scaling implementations for various CPU instruction set extensions</a>, it seems to do a pretty good job at what it does. Unlike Cairo, whose abstraction reduces <a href="https://gitlab.freedesktop.org/pixman/pixman/-/blob/707d7e34ca3d435b23ac3e7c05417fc0d39f4263/pixman/pixman.h#L884-896">Pixman's support for a variety of 32-bit color formats</a> to <a href="https://www.cairographics.org/manual/cairo-Image-Surfaces.html#cairo-format-t">the single ARGB one</a>. We're very lucky that this format is also supported for textures by all SDL backends on all operating systems…</p>
+</li></ul><p>
+	In the end, a typical desktop Linux program requires every single one of these 8 libraries to end up with a combined API that resembles Ye Olde Win32 GDI in terms of functionality and abstraction level. Sure, the combination of these eight is more powerful than GDI, offering e.g. <a href="https://www.cairographics.org/manual/cairo-Transformations.html">affine transformations</a> and <a href="https://gitlab.gnome.org/GNOME/pango/-/blob/74cebf36892dc4267ae45f88cae5dc0b16cdae38/examples/cairotwisted.c">text rendering along a curved path</a>. But you can't <i>remove</i> any of these libraries without falling behind GDI.
+</p><p>
+	Even then, my Linux implementation of text rendering for Shuusou Gyoku still ended up slightly longer than the GDI one due to all the Pango and Cairo contexts we have to manually manage. But I did come up with a nice trick to reduce at least our usage of Cairo: Since GDI needs to be used together with DirectDraw, the GDI implementation must keep a system-memory copy of the entire {{Blog_PostLink "2023-08-01#text" "text surface"}} due to {{Blog_PostLink "2023-08-01#ddraw" "DirectDraw's possibility of surface loss"}}. But since we only use Cairo with SDL, the Cairo surface in system memory does not actually need to match the SDL-managed GPU texture. Thus, we can reduce the Cairo surface to the role of a merely temporary system-memory buffer that only is as large as the single largest text rectangle, and then copy this single rectangle to the intended packed place within the texture. I probably wouldn't have realized this if the seemingly most simple way to limit rendering to a fixed rectangle within a Cairo surface didn't involve <a href="https://www.cairographics.org/manual/cairo-cairo-surface-t.html#cairo-surface-create-for-rectangle">creating another Cairo surface</a>, which turned out to be quite cumbersome.
+</p><hr id="shifts-{{.Date}}"><p>
+	But can this stack deliver the pixel-perfect rendering we'd like to have? Well, <i>almost</i>:
+</p><figure class="side_by_side main-menu-{{.Date}}"><figure class="fullres">
+	{{- define "e_alt"}}Screenshot of Shuusou Gyoku's main menu with the Extra Start option selected{{end -}}
+	<rec98-child-switcher><img
+		src="{{$e_msg_win}}"
+		data-title="MS Gothic, Windows"
+		width="640"
+		alt="{{template "e_alt"}}, rendered on Windows with the default MS Gothic font."
+	/><img
+		src="{{$e_msg_pc}}"
+		data-title="MS Gothic, Pango 1.56.0 / Cairo"
+		width="640"
+		alt="{{template "e_alt"}}, rendered on Linux using Cairo and version 1.56.0 of Pango with MS Gothic, demonstrating how all 14-pixel text is shifted down by one pixel and how all Japanese characters in 16-pixel text are pushed down by 2 pixels if there are Latin characters on the same line"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><figure class="fullres">
+	<rec98-child-switcher><img
+		src="{{$e_ipa_win}}"
+		data-title="IPAMonaGothic, Windows"
+		width="640"
+		alt="{{template "e_alt"}}, rendered on Windows with IPAMonaGothic."
+	/><img
+		src="{{$e_ipa_pc}}"
+		data-title="IPAMonaGothic, Pango 1.56.0 / Cairo"
+		width="640"
+		alt="{{template "e_alt"}}, rendered on Linux using Cairo and version 1.56.0 of Pango with IPAMonaGothic, demonstrating how all text is shifted down by one pixel"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure></figure><p>
+	Cue hours of debugging to find the cause behind these vertical shifts. The overview above already suggested it, but this bug hunt really drove home how this entire stack of libraries is a huge pile of redundantly implemented functionality that interacts with and overrides each other in undocumented and mostly unconfigurable ways. Normally, I don't have much of a problem with that as long as I can step through the code, but stepping through Cairo and especially Pango is a special kind of awful. Both libraries implement dynamic typing and object-oriented paradigms in C, thus hiding their actually interesting algorithms under layers and layers of "clean" management functions. But the worst part is a particularly unexpected piece of recursion: To layout a paragraph of text, Pango requires a few font metrics, which it calculates by laying out a language-specific paragraph of example text. No, I do not like stepping through functions <i>that</i> much, please don't put a call to the text layout function into the text layout function to make me debug while I debug, dawg…<br>
+	It'll probably take many more years until <a href="https://behdad.org/text2024/">most of this stack has been displaced with the planned Rust rewrites</a>. But honestly, I don't have great hopes as long as they stay with this pile-of-libraries approach. This pile doesn't even deserve to be called a stack given <a href="https://github.com/harfbuzz/harfbuzz/issues/2524">the circular dependency between FreeType and HarfBuzz</a>…
+</p><p>
+	Ultimately, these are the bugs we're seeing here:
+</p><ol><li>
+	<p>When rendering strings that contain both Japanese and Latin characters with MS Gothic, the Japanese characters are pushed down by about <sup>1</sup>/<sub>8</sub>th of the font height. This one <a href="https://discourse.gnome.org/t/16010">was already reported in June 2023</a> and is <a href="https://github.com/harfbuzz/harfbuzz/issues/4311">a bug in either HarfBuzz, Pango, or MS Gothic</a>. With the main HarfBuzz developer confused and without an idea for a clean solution, the bug has remained unfixed for 1½ years.<br>
+	For now, the best workaround would be to <a href="https://gitlab.gnome.org/GNOME/pango/-/commit/539ca68c7725f9d7bfb6ba8ad3c94f354a6c1142">revert the commit that introduced the baseline shift</a>. Since the Flatpak release can bundle whatever special version of whatever library it needs, I can patch this bug away there, but distro-specific packages or self-compiled builds would have to <a href="https://github.com/flathub/net.nmlgc.rec98.sh01/blob/be7a5a249bcf72e1dc0bfa24895610b0ef5cbc8e/pango-workaround-harfbuzz-issue-4311.patch">patch</a> Pango themselves. <code>LD_LIBRARY_PATH</code> is a clean way of opting into the patched library without interfering with the regular updates of your distro, but there's still a definite hurdle to setting it up.</p>
+</li><li>
+	<p>The remaining 1-pixel vertical shift is, weirdly enough, caused by <a href="https://en.wikipedia.org/wiki/Font_hinting">hinting</a>. Now why would a technique intended for improving the sharpness of outline fonts even apply to bitmap fonts to begin with? As you might have guessed, the pile-of-libraries approach strikes once more:</p><ul><li>
+		<p>Hinting is <a href="https://wiki.archlinux.org/title/Font_configuration/Examples#Hinted_fonts">meant to be controlled by Fontconfig settings</a>, but the setting that takes precedence here is <a href="https://www.cairographics.org/manual/cairo-cairo-font-options-t.html#cairo-hint-metrics-t">Cairo's slightly different <i>metric</i> hint setting</a>, which is enabled by default.</p>
+	</li><li>
+		<p>Pango then responds to Cairo's hinting request by <a href="https://gitlab.gnome.org/GNOME/pango/-/blob/c5899494f57b83d54712917cc00ccb4841bd8981/pango/pangocairo-fcfont.c#L84">rounding the font's ascent and descent metrics up to the nearest integer</a>, causing the exact downward shift we see above.</p>
+	</li><li>
+		<p>We can override Cairo's metric hinting defaults with the API documented in the page I linked above. But we must only do so conditionally because 16-pixel MS Gothic <i>does</i> require metric hinting for its glyph placement to match GDI. <a href="https://github.com/nmlgc/ssg/blob/c117cc186fca0804a49df51321f825d84243f2e9/platform/pangocairo/text_pangocairo.cpp#L38-L84">The resulting hack is very much not pretty</a>.</p>
+	</li><li>
+		<p>Cairo's font options can only be really changed at the level of a Cairo context. Any Pango font handle created from a Pango layout mapped to a Cairo context will get a copy of that context's font options at creation time. And <i>of course</i>, the Pango level treats these options as an implementation detail that cannot be modified from the outside. So, we need to figure out the font using raw Fontconfig calls instead of <a href="https://docs.gtk.org/Pango/class.FontMap.html">Pango's abstraction</a>. Oh, and this copy also forces us to recreate the Pango layout if we change between 14- and 16-pixel MS Gothic, which is not necessary with IPAMonaGothic.</p>
+	</li><li>
+		<p>Actually overwriting this setting involves creating a new font option object, filling it with the Cairo context's existing font options, modifying the setting, copying the new font option object back to the Cairo context, and then deleting the temporary font option object. This is real C, done by real C programmers. Reminds me of <a href="https://github.com/nmlgc/ReC98/blob/71f481094259fb42b47e75267c2e89774b268a51/th01/main/boss/entity_a.hpp#L53-L84">the one place in TH01 where ZUN tried C++ copy constructors</a> for <a href="https://github.com/nmlgc/ReC98/commit/af25fa19910956ccf1c2a385923af9363a71a63e">a class that didn't need them at all, which only added 1,056 bytes of bloat to <code>REIIDEN.EXE</code></a>.</p>
+	</li></ul>
+</li></ol><p>
+	Don't you love it when the concerns are so separated that they end up overlapping again? I'm <i>so</i> looking forward to writing my own bitmap font renderer for the multilingual PC-98 translations, where the memory constraints of conventional DOS RAM make it infeasible to use any libraries of this pile to begin with 😛
+</p><hr id="icon-{{.Date}}"><p>
+	Before we can package this port for Flathub, there's one more obstacle we have to deal with. <a href="https://discourse.flathub.org/t/386">Flathub mandates that any published and publicly listed app must come with an icon that's at least 128×128 pixels in size.</a> pbg did not include the game's original 32×32 icon in the MIT-licensed source code release, but even if he did, just taking that icon and upscaling it by 4× would simultaneously look lame <i>and</i> more official than it perhaps should.<br>
+	So, the backers decided to commission a new one, depicting VIVIT in her title screen pose but drawn in a different style as to not look too official. Mr. Tremolo Measure quickly responded to our search and {{DB_CustomerByID 13}} liked his PC-98-esque pixel art style, so that's what we went for:
+</p><figure id="tm-{{.Date}}" class="pixelated" style="width: 384px;">
+	<rec98-child-switcher><img
+		src="{{$tm_016}}"
+		data-title="16×16"
+		width="384"
+		alt="The 16×16 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
+	/><img
+		src="{{$tm_032}}"
+		data-title="32×32"
+		width="384"
+		alt="The 32×32 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
+	/><img
+		src="{{$tm_048}}"
+		data-title="48×48"
+		width="384"
+		alt="The 48×48 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
+	/><img
+		src="{{$tm_128}}"
+		data-title="128×128"
+		width="384"
+		alt="The 128×128 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		Mr. Tremolo Measure on <a href="https://x.com/TremoloMeasure">Twitter</a> and <a href="https://bsky.app/profile/tremolomeasure.bsky.social">Bluesky</a>.<br>
+		<a href="https://github.com/nmlgc/ssg/tree/master/art">The repo also contains textless and boxless variants.</a>
+	</figcaption>
+</figure><p id="pixelart-{{.Date}}">
+	However, the problem with pixel art icons is that they're strongly tied to specific resolutions. This clashes with modern operating system UIs that want to almost arbitrarily scale icons depending on the context they appear in. You can still <i>go</i> for pixel art, and it sure looks gorgeous if their resolution exactly matches the size a GUI wants to display them at. But that's a big <i>if</i> – if the size <i>doesn't</i> match and the icon gets scaled, the resulting blurry mess lacks all the definition you typically expect from pixel art. Even nearest-neighbor integer upscaling looks more cheap rather than stylized as the coarse pixel grid of the icon clashes with the finer pixel grid of everything surrounding it.
+</p><p id="icon-win-{{.Date}}">
+	So you'd want multiple versions of your icon that cover all the exact sizes it will appear at, which is definitely more expensive than a single smooth piece of scalable vector artwork. On a cursory look through Windows 11, I found no fewer than 7 different sizes that icons are displayed at:
+</p><ul>
+	<li>16×16 in the title bar and all of Explorer's list views</li>
+	<li>24×24 in the taskbar</li>
+	<li>28×28 in the small icon next to the file name in Explorer's detail pane (which is never sharp for some reason, even if you provide a 28×28 variant?!)</li>
+	<li>32×32 in the old-style <i>Properties</i> window</li>
+	<li>48×48 in Explorer's <i>Medium icons</i> view</li>
+	<li>96×96 in Explorer's <i>Large icons</i> view, and the large icon its detail pane</li>
+	<li>256×256 in Explorer's <i>Extra large icons</i> view</li>
+</ul><p>
+	And that's just at 1× display scaling and the default zooming factors in Explorer.
+</p><p>
+	But it gets worse. Adding our commissioned multi-resolution icon to an .exe seems simple enough:
+</p><ol>
+	<li>Bundle the individual images into a single .ico file using <code>magick in1.png in2.png … out.ico</code></li>
+	<li>Write <a href="https://github.com/nmlgc/ssg/blob/9e255e822b9cdc2ace2039f698f0b631cc72600c/GIAN07/GIAN07.rc">a small resource script</a>, call <code>rc</code>, and add the resulting .res file to the link command line</li>
+	<li>Be amazed as that icon appears in the title and task bars without you writing a single line of code, thanks to SDL's window creation code automatically setting the first icon it finds inside the executable</li>
+</ol><p>
+	But what's going on in Explorer?
+</p><figure style="width: 271px;">
+	<rec98-child-switcher><img
+		src="{{$tm_e_ico}}"
+		data-title="<code>.ico</code>"
+		width="271"
+		alt="An .ico file of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure. Explorer's extra large icon mode shows the highest-resolution 128×128-pixel variant in a 128×128-pixel box, as expected."
+		/><img
+		src="{{$tm_e_exe}}"
+		data-title="<code>.exe</code>"
+		width="271"
+		alt="An .exe binary with the same .ico file embedded. Strangely, Explorer's extra large icon mode shows the 48×48-pixel variant in the center of a 256×256-pixel box."
+		class="active"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		Same <i>Extra large icons</i> setting for both.
+	</figcaption>
+</figure><p>
+	That's the 48×48 variant sitting all tiny in the center of a 256×256 box, in a context where we expect exactly what we get for the .ico file. Did I just stumble right into the next underdocumented detail? What was the point of having a different set of rules for icons in .exe files? Make that {{Blog_PostLink "2023-09-30#fps" "another"}} Raymond Chen explanation I'm dying to hear…<br>
+	Until then, here's what the rules appear to be:
+</p><ul>
+	<li>256×256 is the one and only mandatory size for high-res program icons on Windows.</li>
+	<li>48×48 is the next smallest supported size, as unbelievable as that sounds. Windows will never use any other icon variant in between. <a href="https://www.axialis.com/tutorials/tutorial-vistaicons.html">Some sites claim that 64×64 is supported as well</a>, but I sure couldn't confirm that in my tests.</li>
+	<li>Those 96×96 use cases from the list above? Yup, Windows will never actually display an embedded 96×96 icon at its native resolution, and either scale up the 48×48 variant (in the <i>Large icons</i> view) or scale down the 256×256 variant (in the detail pane).</li>
+	<li>You only ever see an embedded icon with a size between 48×48 and 256×256 if it's the only icon available – and then it still gets scaled to 48×48. Or to 96×96, depending on how Explorer feels like.</li>
+	<li>Getting different results in your tests? Try <a href="https://www.elevenforum.com/t/rebuild-icon-cache-in-windows-11.2049/">rebuilding the icon cache</a>, because <i>of course</i> Windows still struggles with cache invalidation. This must have caused unspeakable amounts of miscommunication with artists over the decades.</li>
+</ul><p>
+	Oh well, let's nearest-neighbor-scale our 128×128 icon by 2× and move on to Linux, where we won't have such archaic restrictions…
+</p><p id="icon-linux-{{.Date}}">
+	…which is not to say that pixel art icons <i>don't</i> come with their own issues there. 🥲<br>
+	On Linux, this kind of metadata is not part of the ELF format, but is typically stored in separate <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">Desktop Entry files</a>, which are analogous to .lnk shortcuts on Windows. Their plaintext nature already suggests that icon assignment is refreshingly sane compared to the craziness we've seen above, and indeed, you simply refer to PNG or even SVG files in a <a href="https://specifications.freedesktop.org/icon-theme-spec/latest/">separate directory tree that supports arbitrary size variants and even different themes</a>. For non-SVG icons, menus and panels can then pick the best size variant depending on how many pixels they allot to an icon. The overwhelming majority of the ones I've seen do a good job at picking exactly the icon you'd expect, and bugs are rare.
+</p><p>
+	But how would this work for title and task bars once you started the app? If you launched it through a Desktop Entry, a smart window manager might remember that you did and automatically use the entry's icon for every window spawned by the app's process. Apparently though, this feature is rather rare, maybe because it only covers this single use case. What about just directly starting an app's binary from a shell-like environment without going through a Desktop Entry? You wouldn't expect window managers to <span class="hovertext" title="Also, this mapping isn't guaranteed to be unique.">maintain a reverse mapping from binaries to Desktop Entries</span> just to also support icons in this other case.
+</p><p>
+	So, there must be some way for a program to tell the window manager which icon it's supposed to use. Let's see what SDL has to offer… and the documentation only lists <a href="https://wiki.libsdl.org/SDL2/SDL_SetWindowIcon">a single function that takes a single image buffer</a> and transfers its pixels to the X11 or Wayland server, overriding any previous icon. 😶<br>
+	Well great, another piece of modern technology that works against pixel art icons. How can we know which size variant we should pick if icon sizing is the job of the window manager? For the same reason, this function used to be unimplemented in the Wayland backend <a href="https://github.com/libsdl-org/SDL/pull/11111/commits/75ab5eb8d9d6cd3fce312d7ab9244acd4fe8639e">until the committee of Wayland stakeholders agreed on the <code>xdg-toplevel-icon</code> protocol last year</a>.<br>
+	Now, we could <a href="https://wiki.libsdl.org/SDL2/SDL_GetWindowBordersSize">query the size of the window decorations at all four edges</a> to at least get an approximation, but that approach creates even more problems:
+</p><ul>
+	<li>Which edge do we pick? The top one? The largest one? How can we possibly be sure that the one we pick is the one that will show the icon?</li>
+	<li>Even if we picked the correct edge, the icon will likely be smaller and not cover the full area. Again, anything less than an exact match isn't good enough for pixel art.</li>
+	<li>This function is not implemented on Wayland because client windows aren't supposed to care about how the server is decorating them.</li>
+	<li>But even among X11 window managers, there's at least one that doesn't report back the border sizes immediately after window creation. 🙄</li>
+</ul><p>
+	Most importantly though: What if that icon is also used in a taskbar whose icons have a different size than the ones in title bars? Both X11's <code>_NET_WM_ICON</code> property and Wayland's <code>xdg-toplevel-icon-v1</code> protocol support multiple size variants, but SDL's function does not expose this possibility. It might look as if SDL 3 supports this use case via its <a href="https://wiki.libsdl.org/SDL3/SDL_AddSurfaceAlternateImage">new support for alternate images in surfaces</a>, but this feature is currently only used for mouse cursors. That sounds like a pull request waiting to happen though, I can't think of a reason not to do the same for icons. {{HTML_TagInline "contribution-ideas"}}?
+</p><p>
+	But if SDL 2's single window icon function used to be unsupported on Wayland, did SDL 2 apps just not have icons on Wayland before October 2024?<br>
+	Digging deeper reveals the tragically undocumented <code>SDL_VIDEO_X11_WMCLASS</code> environment variable, which does what we were hoping to find all along. If you set it to the name of your program's Desktop Entry file, the window manager is supposed to locate the file, parse it, read out the <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html#key-icon"><code>Icon</code> value</a>, and perform the usual icon and size lookup. Window class names are a standard property in both X11 and Wayland, and since <a href="https://github.com/libsdl-org/SDL/blob/3f02118264e0b2d028e6eb9a8aad67725a7c335e/src/video/wayland/SDL_waylandvideo.c#L98-L108">SDL helpfully falls back on this variable even on Wayland</a>, it will work on both of them.
+</p><p>
+	Or at least it <i>should</i>. Ultimately, it's up to the window manager to actually implement class-derived icons, and sadly, correct support is not as widespread as you would expect.<br>
+	How would I know this? Because I've tested them all. 🥲 That is, all non-AUR options listed on the Arch Wiki's <cite><a href="https://wiki.archlinux.org/index.php?title=Desktop_environment&oldid=820122">Desktop environment</a></cite> and <cite><a href="https://wiki.archlinux.org/index.php?title=Window_manager&oldid=823802">Window manager</a></cite> pages that provide something vaguely resembling a desktop you can launch arbitrary programs from:
+</p><figure>
+	<table id="icons-{{.Date}}">
+		<thead>
+			<th>WM / DE</th>
+			<th>Manually transferred pixels</th>
+			<th>Class-derived icons</th>
+			<th>Notes</th>
+		</thead>
+		<tbody>
+			<tr class="mid">
+				<th>awesome</th><td>✔️</td><td></td><td>Does not report border sizes back to SDL immediately after window creation</td>
+			</tr><tr class="bad">
+				<th>Blackbox</th><td></td><td></td><td></td>
+			</tr><tr class="bad">
+				<th>bspwm</th><td></td><td></td><td>No title bars</td>
+			</tr><tr class="good">
+				<th>Budgie</th><td>✔️</td><td>✔️</td><td>Title bars have no icons. Taskbar falls back on the icon from the Desktop Entry file the app was launched with.</td>
+			</tr><tr class="good">
+				<th>Cinnamon</th><td>✔️</td><td>✔️</td><td>Title bars have no icons, but they work fine in the taskbar. Points out the difference between native and Flatpak apps!</td>
+			</tr><tr class="good">
+				<th>COSMIC</th><td>✔️</td><td>✔️</td><td>Title bars have no icons, but they work fine in the taskbar. Points out the difference between native and Flatpak apps!</td>
+			</tr><tr class="mid">
+				<th>Cutefish</th><td>➖</td><td></td><td>Title bars have no icons. The status bar only seems to support the X11 <code>_NET_WM_ICON</code> property, and not the older <code>XWMHints</code> mechanism used by e.g. xterm.</td>
+			</tr><tr class="bad">
+				<th>Deepin</th><td></td><td></td><td>Did not start</td>
+			</tr><tr class="mid">
+				<th>Enlightenment</th><td>✔️</td><td>➖</td><td>Taskbar falls back on the icon from the Desktop Entry file the app was launched with. Only picks the correctly scaled icon variant in about half of the places, and just scales the largest one in the other half.</td>
+			</tr><tr class="mid">
+				<th>Fluxbox</th><td>✔️</td><td></td><td></td>
+			</tr><tr class="mid">
+				<th>GNOME Flashback / Metacity</th><td>✔️</td><td></td><td>Title bars have no icons</td>
+			</tr><tr class="good">
+				<th>GNOME</th><td>✔️</td><td>✔️</td><td>Title bars have no icons</td>
+			</tr><tr class="bad">
+				<th>GNOME Classic</th><td></td><td></td><td>How do you get this running? <a href="https://wiki.archlinux.org/index.php?title=GNOME&oldid=824605#Manually">The variables</a> just start regular GNOME.</td>
+			</tr><tr class="bad">
+				<th>herbstluftwm</th><td></td><td></td><td>No title bars</td>
+			</tr><tr class="mid">
+				<th>i3</th><td>✔️</td><td></td><td></td>
+			</tr><tr class="mid">
+				<th>IceWM</th><td>✔️</td><td>➖</td><td>Only doesn't work for Flatpaks because <a href="https://github.com/ice-wm/icewm/blob/b843f88f4baada71ac3c7073b61288e69933f7c8/src/yprefs.h#L37-L42">it uses a hardcoded list of icon paths rather than <code>$XDG_DATA_DIRS</code></a></td>
+			</tr><tr class="good">
+				<th>KDE (Plasma)</th><td>✔️</td><td>✔️</td><td>Taskbar (but not window) falls back on the icon from the Desktop Entry file the app was launched with</td>
+			</tr><tr class="mid">
+				<th>LXDE</th><td>✔️</td><td></td><td></td>
+			</tr><tr class="mid">
+				<th>LXQt</th><td>✔️</td><td></td><td></td>
+			</tr><tr class="mid">
+				<th>MATE</th><td>✔️</td><td></td><td>Title bars have no icons</td>
+			</tr><tr class="bad">
+				<th>MWM</th><td></td><td></td><td></td>
+			</tr><tr class="bad">
+				<th>Notion</th><td></td><td></td><td>No title bars</td>
+			</tr><tr class="mid">
+				<th>Openbox</th><td>✔️</td><td></td><td></td>
+			</tr><tr class="good">
+				<th>Pantheon</th><td>✔️</td><td>✔️</td><td></td>
+			</tr><tr class="bad">
+				<th>PekWM</th><td></td><td></td><td></td>
+			</tr><tr class="bad">
+				<th>Qtile</th><td></td><td></td><td>No title bars</td>
+			</tr><tr class="bad">
+				<th>Stumpwm</th><td></td><td></td><td>Did not start</td>
+			</tr><tr class="bad">
+				<th>Sway</th><td></td><td></td><td><a href="https://github.com/swaywm/sway/issues/4882">Architected in a way that made icons too complex to bother with.</a> Might get easier once they take a look at the <code>xdg-toplevel-icon</code> protocol.</td>
+			</tr><tr class="bad">
+				<th>twm</th><td></td><td></td><td></td>
+			</tr><tr class="bad">
+				<th>UKUI</th><td></td><td></td><td>Window decorations and taskbar didn't work</td>
+			</tr><tr class="bad">
+				<th>Weston</th><td></td><td></td><td>Only supports client-side decorations</td>
+			</tr><tr class="mid">
+				<th>Xfce</th><td>✔️</td><td>➖</td><td>Taskbar only supports manually transferred icons. Scaling of class-derived icons in title bars is broken.</td>
+			</tr><tr class="bad">
+				<th>xmonad</th><td></td><td></td><td>No title bars</td>
+			</tr>
+		</tbody>
+	</table>
+	<figcaption>
+		I tested all window managers, compositors, and/or desktop environments at their latest version as of January 2025 in their default configuration. There were no differences between the X11 and Wayland versions for the ones that offer both.<br>
+		Yes, you can probably rice title bars and icons onto WMs that don't have them by default. I don't have the time.
+	</figcaption>
+</figure><p>
+	That's only 6 out of 33 window managers with a bug-free implementation of class-derived icons, and still 6 out of 28 if we disregard all the tiling window managers where icons are not in scope. If you actually want icons in the title bar, the number drops to just 2, KDE and Pantheon. I'm really impressed by IceWM there though, beating all other similarly old and minimal window managers by shipping with an <i>almost</i> correct implementation.<br>
+	For now, we'll stay with class-derived icons for budget reasons, but <a class="goal" href="https://github.com/nmlgc/ssg/issues/77">we could add a pixel transfer solution in the future</a>. And that was the 2,000-word story behind <a href="https://github.com/nmlgc/ssg/blob/f50ada7370622a5912e24386e931b906cc307ca5/MAIN/main_sdl.cpp#L51">this single line of code</a>… 📕
+</p><hr id="arch-{{.Date}}"><p>
+	On to packaging then, starting with Arch! Writing my first PKGBUILD was a breeze; as you'd expect from the Arch Wiki, the format and process are very well documented, and the AUR provides tons of examples in case you still need any.<br>
+	The PKGBUILD guidelines have <a href="https://wiki.archlinux.org/title/VCS_package_guidelines#Git_submodules">some opinions about how to handle submodules</a>, but applying them would complicate the PKGBUILD quite a bit while bringing us nowhere close to the {{Blog_PostLink "2024-03-09#libs" "nirvana of shallow and sparse submodules"}} I've scripted earlier. But since PKGBUILDs are just shell scripts that can naturally call other shell scripts, we can just ignore these guidelines, run <code>build.sh</code>, and end up with a simpler PKGBUILD and the intended shorter and less bloated package creation process.
+</p><p>
+	Sadly, PKGBUILDs don't easily support specifying a dependency on either one of two packages, which we would need to codify the font situation. Due to the way the AUR packages both IPAMonaGothic and MS Gothic together with their <a href="https://blog.btrax.com/japanese-type-classifications/">Mincho</a> and proportional variants, either of them would be Shuusou Gyoku's largest individual dependency. So you'd only want to install one or the other, but probably not both. We could resolve this by editing the PKGBUILDs of both font packages and adding a <code>provides</code> entry for a new and potentially controversial virtual package like <code>ttf-japanese-14-and-16-pixel-bitmap</code> that Shuusou Gyoku could then depend on. But with both of the packages being exclusive to the AUR, this dependency would still be annoying to resolve <i>and</i> you'd have no context about the difference.<br>
+	Thus, the best we can do is to turn both MS Gothic and IPAMonaGothic into optional dependencies with a short one-line description of the difference, and elaborating on this difference in a comment at the top of the PKGBUILD. Thankfully, the culture around Arch makes this a non-issue because you can reasonably expect people to read your PKGBUILD if they build something from the AUR to begin with. <a href="https://www.reddit.com/r/archlinux/comments/8x0p5z/">You do always read the PKGBUILD, right?</a> {{HTML_Emoji "tannedcirno"}}
+</p><hr id="flatpak-{{.Date}}"><p>
+	Flatpak, on the other hand… I'm not at all opposed to the fundamental idea of installing another distro on top of an already existing distro for wider ABI compatibility; heck, Flatpak is basically no different from Wine or WSL in this regard. It's just that this particular ABI-widening distro works in a rather… unnatural way that crosses the border into utter cringe at times.<br>
+	There are enough rants about Flatpak from a user's perspective out there, criticizing the bloat relative to native packages, the security implications of bundling libraries, and the questionable utility of its sandbox. But something I rarely see people talk about is just how awful Flatpak is from a developer's point of view:
+</p><ul><li><p>
+	The documentation is written in this weird way that presents Flatpak and its concepts in complete isolation. Without drawing any connections to previous packaging and dependency management systems you might have worked with, it left a lot of my seemingly basic questions unanswered. While it is important to explain your concepts with example code, the lack of a simple and complete reference of the manifest format doesn't exactly inspire confidence in what you're doing. Eventually, I just resorted to cross-checking features in the <a href="https://github.com/flatpak/flatpak-builder/blob/main/data/flatpak-manifest.schema.json">JSON Schema</a> to get a better idea of what's actually possible.</p>
+</li><li>
+	<p>The ABI-expanding distro part of Flatpak is actually called the <cite>Freedesktop platform</cite>, a currently 680&nbsp;MB large stack of typical GUI application libraries updated once a year. It's accompanied by the <cite>Freedesktop SDK</cite> containing the matching development libraries and tools in another 1.7&nbsp;GB. As the name implies, this distro is maintained by a separate entity <a href="https://freedesktop-sdk.io/">with a homepage that makes the entire thing look deeply self-important and unprofessional</a>. A blurry 25 FPS logo video, a front page full of spelling mistakes, a big focus on sponsors and events… come on, you have <i>one job</i>, and it's compiling and packaging a bunch of open-source libraries. Was this a result of the usual corporate move of creating more departments in order to shift blame and responsibility?<br>
+	Optics aside, their documentation is even more bizarrely useless. The single bit of actual useful information I was looking for – i.e., <a href="https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/blob/master/elements/components.bst?ref_type=heads">the concrete list of packages bundled as part of their runtimes</a> and <a href="https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/tree/master/elements/components?ref_type=heads">their versions</a>, is best found by going straight to their code repo.</p>
+</li><li>
+	<p>The manifest of a Flatpak app can be written in your preferred lesser evil of the two most popular markup languages: JSON (slightly ugly for humans and machines alike), or YAML, the underspecified mess that uses syntactically significant whitespace while <a href="https://stackoverflow.com/a/19976827/5035474">outlawing the closest thing we have to a semantic indentation character</a>. Oh well, YAML at least supports comments, and we sure sorely need them to justify our bleeding-edge C++ module setup to the Flathub maintainers.</p>
+</li><li>
+	<p>Adding more dependencies on top of the basic runtime can be done by either using <i>runtime extensions</i> or <i>BaseApps</i>. That's two entirely separate concepts that appear to do the same thing on the surface, <a href="https://github.com/flatpak/flatpak/issues/4797">except that you can only have one BaseApp</a>. The <a href="https://docs.flatpak.org/en/latest/dependencies.html#baseapps">documentation</a> then waffles on and tries to explain both concepts with words that have meaning in isolation but once again answer exactly zero of my questions. Must a BaseApp contain a collection of at least two dependencies or why would anyone ever write the sentence that raises this question? Why do they judge BaseApps to be a "specialized concept" without elaborating, as if to suggest that their audience is too dumb to understand them? Why does a page named <cite>Dependencies</cite> document extensions as if I wanted to prepare my own package for extension by others? Why be all weird and require "extension points" to be defined when it all just comes down to overlaying another filesystem? Who cares about the special significance of the <code>.Debug</code>, <code>.Locale</code>, and <code>.Sources</code> conventions <i>in the context of dependencies</i>?<br>
+	In the end, you once again get a clearer idea by simply looking at how existing code uses these concepts. Basically, SDK extensions = build-time dependencies, BaseApps = run-time dependencies, and extension points don't matter at all for our purposes because you can just arbitrarily extend the <code>org.freedesktop.Sdk</code> anyway. 🤷</p>
+</li><li>
+	<p>Speaking of extensions: This exact architectural split between build-time and run-time dependencies is why the <code>org.freedesktop.Sdk.Extension.llvm19</code> extension packages Clang, but <i>not</i> libc++. When questioned about this omission, one of the maintainers <a href="https://github.com/flathub/org.freedesktop.Sdk.Extension.llvm17/issues/6#issuecomment-2080091503">responded with the lamest of excuses</a>: Copying the library would be <q>inconvenient</q> (for them), and <q>something we can't even imagine a use case for</q>. Um, guys? <a href="https://en.cppreference.com/w/cpp/compiler_support">Here's a table. Compare the color of each cell between GCC and Clang. There's your use case.</a><br>
+	Thankfully, you can <a href="https://stackoverflow.com/questions/79055137">build libc++ without building LLVM as a whole</a>. Seeing how building libc++ takes basically no time at all compared to the rest of LLVM just raises even more questions about not simply providing some kind of script to copy it over.</p>
+</li><li>
+	<p>Flatpak stores all data of an app in an app-specific subdirectory under <code>~/.var/app</code>, inverting and blatantly violating the <a href="https://specifications.freedesktop.org/basedir-spec/latest/">XDG Base Directory Specification</a>. <a href="https://github.com/flatpak/flatpak.github.io/issues/191">Everybody</a> <a href="https://github.com/flatpak/flatpak/issues/1651">hates</a> <a href="https://github.com/flatpak/flatpak/issues/3997">this</a>, and it's indefensible no matter how you look at it. The <a href="https://web.archive.org/web/20190925004614/https://bugzilla.mindrot.org/show_bug.cgi?id=2050">OpenSSH excuse of being old and having a well-known standard path that long predates the XDG spec</a> does not apply to Flatpak at all, and neither does any sandboxing argument. Oh, and if your application ships both a Flatpak and XDG-conforming native packages, it must now add <a href="https://github.com/nmlgc/ssg/blob/c117cc186fca0804a49df51321f825d84243f2e9/platform/sdl/path_sdl.cpp#L26-L30">a special case for Flatpak if it wants to prevent its own XDG directory names from becoming even uglier</a>. Still, the Flatpak developers remain stubborn about this choice.</p><ul><li><p>
+		But wait, what's that? Couldn't you theoretically add
+		<pre>- --filesystem=xdg-data/myapp
+- --env=XDG_DATA_HOME=~/.local/share/myapp</pre>
+	to your manifest's <code>finish-args</code>? Too bad that <a href="https://github.com/flatpak/flatpak/issues/2413">Flatpak deliberately prevents this from working</a>. Not to mention that the resulting package would fail the <a href="https://docs.flathub.org/docs/for-app-authors/linter/#finish-args-unnecessary-xdg-data-subdir-mode-access"><code>finish-args-unnecessary-xdg-data-subdir-mode-access</code></a> lint, which would prevent it from being published on Flathub without <a href="https://docs.flathub.org/docs/for-app-authors/linter#exceptions">applying for an exception</a>.
+	</p></li></ul>
+</li><li>
+	<p>Speaking of XDG directories, why do they create the <code>.flatpak-builder</code> cache directory in the current working directory and not under <code>$XDG_CACHE_HOME</code> where it belongs?</p>
+</li><li>
+	<p>The <code>modules</code> in a Flatpak work in a similarly layered way as the commands in a Dockerfile, causing edits to a lower layer to evict previous builds of all successive layers from the cache. Any tweaking work in the lower layers therefore suffers from the same disruptive workflow you might already know from Docker, where you constantly shift the layers around to minimize unnecessary rebuilds because there's never an optimal order. Will we ever see container bros move on from layers to a proper build graph of the entire system? The stagnation in this space is saddening.</p>
+</li><li>
+	<p>The <code>--ccache</code> option sort of mitigates the layering by at least caching object files in <code>.flatpak-builder/ccache</code>, which reduces repeated C compilation to a mere file copy from the cache to the package. But not only is this option <a href="https://github.com/flatpak/flatpak-builder/issues/582">not enabled by default</a>, it also doesn't appear in any of the <code>flatpak-builder</code> example command lines in the documentation.<br>
+	Also, it only appears to work with GCC, and <a href="https://ccache.dev/manual/4.2.html#config_compiler_type">setting <code>CCACHE_COMPILERTYPE=clang</code></a> seems to have no effect. Fortunately, my investment into C++ modules pays off here as well and keeps compile times decently short.</p>
+</li><li>
+	<p><code>flatpak-builder</code> doesn't validate the manifest schema? Misspelled or misplaced properties just silently do nothing?</p>
+</li><li>
+	<p>Speaking of validation, why does <code>flatpak-builder-lint</code> take 8 seconds to validate a manifest, even if it just consists of a single line? Sure, it's written in Python, but that's an order of magnitude too slow for even that language.</p>
+</li><li>
+	<p>No tab completion for any of the <code>org.flatpak.Builder</code> tools. Sandbox working as designed, I guess 🤷</p>
+</li><li>
+	<p>Git submodule handling. Oh my goodness.</p><ul><li>
+		<p>Flatpak recursively clones and checks out all of a repository's submodules. <a href="https://github.com/flatpak/flatpak/issues/59">This might be necessary for some codebases</a>, but not for this one: The Linux build doesn't need the SDL submodule, and nothing needs the second miniaudio submodule that the <a href="https://github.com/mackron/dr_libs">dr_libs</a> use for its testing code. And if these recursive submodules <a href="https://github.com/mackron/dr_libs/pull/271">didn't opt into shallow clones</a>, you end up with lots of disk space wasted for no reason; 166.1&nbsp;MiB in our case.</p>
+	</li><li>
+		<p>Except that it's actually twice that amount. There's the download cache that persists across multiple <code>flatpak-builder</code> runs, and then there's the temporary directory the build runs in, which gets a full second clone of the entire tree of submodules. This isn't Windows 8, there are no excuses for not using read-only symlinks.</p>
+	</li><li>
+		<p>None of this would be too bad if we could just do the same thing we did with Arch, ignore the default or recommended submodule processing, and let our shell script run the show and selectively download and check out the submodules required for the Linux build. But no – the build process of a Flatpak is strictly separated into a download stage and a build stage, and the build stage <i>cannot access the network</i>. Once again, <a href="https://www.reddit.com/r/flatpak/comments/rz36im/">Flat<i>pak</i> would have the option to allow build-time network access</a>, but enabling it would mean <a href="https://docs.flathub.org/docs/for-app-authors/requirements#no-network-access-during-build">no hosting and discoverability on Flat<i>hub</i> for you</a>.<br>
+		I <i>guess</i> it makes sense from a security point of view, as reviewers would only have to audit a fixed set of declaratively specified sources rather than all code run by the build commands? But even this can only ever apply to the initial review. Allowing app developers to push updates independently from the Flathub maintainers is one of Flathub's biggest selling points. Once you're in, you or your supply chain can just simply hide the malware in an updated version of a module source. 🤷</p>
+	</li></ul>
+</li><li>
+	<p>Getting Tup to work within the Flatpak build environment is slightly tricky. The build sandbox doesn't provide access to the kernel's FUSE module, which Tup uses to track syscalls by default. Thankfully, Tup also supports syscall tracking via <code>LD_PRELOAD</code>, which allows us to still build Shuusou Gyoku in a parallelized way with a regular Tup binary. Imagine compiling FUSE from source only to make Tup compile, but then having to build the game via a <code>tup generate</code>d single-threaded shell script…</p>
+</li><li>
+	<p>One common user complaint about Flatpak is that it allows Windows app developers to stick to their <q>beloved</q> and un-Linux-y way of bundling all dependencies, as if they actually ever enjoyed doing that. In reality, it's not the app authors, but the Flathub maintainers and submission reviewers who do everything in their power to prevent Flathub from turning into a typical package manager. Since they ended up with a system where every new extension to the Freedesktop SDK somehow places a burden on the maintainers, they're quick to <a href="https://github.com/flathub/flathub/pull/5989">shut down everything they consider a bad idea</a>, <a href="https://github.com/flathub/flathub/pull/6000">including a Tup package I submitted</a>. What a great job for people who always wanted to be gatekeepers and arbiters of good ideas. If your system treats CMake as one of two blessed build systems that get first-class support, we already fundamentally disagree on basic questions of good taste.</p>
+</li><li>
+	<p>Because even the build stages of individual modules are sandboxed from each other, the only way to persist a module's build outputs for further modules is by installing them into the same <code>/app/</code> path that the final application is supposed to live in. Since most of these foundational modules will be libraries, <code>/app/</code> will be full of C header files, static library files, and library-related tooling that you don't want to bloat your shipped package. Docker solves this with <i>multi-stage builds</i>: After building your app into an image full of all build-time dependencies and other artifacts vomited out by your build system, you can start from a fresh, minimal base image and selectively copy over only the files your app actually needs to run. Flatpak solves this in the opposite way, merely letting you <a href="https://docs.flatpak.org/en/latest/manifests.html#cleanup">manually clean up after your dependencies in the end</a>. At least they support wildcards…</p>
+</li><li>
+	<p>So you've built your Flatpak, but it has an issue that your native build doesn't have and it's time for some debugging. You <a href="https://docs.flatpak.org/en/latest/debugging.html#debug-shell">open up a shell into the image</a>, fire up gdb… and don't get debug symbols despite your build definitely emitting them. The documentation mentions that debug symbols are placed into a separate package, just like Arch Linux's <code>makepkg</code> does it, <a href="https://docs.flatpak.org/en/latest/debugging.html#debug-packages">but the suggested command line to install them doesn't work</a>:
+</p><blockquote style="color: unset"><code><span style="color:red">error:</span> No remote refs found for ‘$FLATPAK_ID’</code></blockquote><p>
+	The apparently correct command line can only be found in <a href="https://blog.vmsplice.net/2022/04/debugging-flatpak-applications.html">third-party blog posts</a>. Pulling the package directly out of the builder cache is as random as it gets for someone not deeply familiar with the system.</p>
+</li><li>
+	<p>Before you publish your package, you might want to inspect the bundle to make sure that your <code>--cleanup</code> entries actually covered all the library bloat you suddenly have to care about. Flatpak also adds a few slight annoyances there:</p><ul><li>
+		You could look into the build directory (not the repo directory! Very important difference! 🤪) you pass to <code>flatpak-builder</code>, but it also contains all the debug files and source code.
+	</li><li>
+		You could open the <a href="https://docs.flatpak.org/en/latest/debugging.html#debug-shell"><code>--devel</code> shell</a> and inspect the contents of <code>/app/</code>. This shell environment is rather minimal and misses both a lot of typical Linux userland tools and (of course) a package manager, but <code>ls</code> and <code>find</code> work and can do the job.
+	</li><li>
+		The ideal solution would read explicitly and only from the bundle file. But Flatpak provides no help in this regard, leaving you to resort to <a href="https://github.com/flatpak/flatpak/issues/126#issuecomment-227068860">low-level hacks that work on the physical container format</a>. Where's the <a href="https://github.com/wagoodman/dive">Dive</a> counterpart?
+	</li></ul>
+</li><li>
+	<p>So if all of Flatpak feels like Docker anyway, why isn't it built on top of Docker to begin with? Instead, we got what amounts to a worse copy that doesn't innovate in any way I can notice. Why throw away compatibility with all of Docker's existing tooling just to gain <a href="https://blogs.gnome.org/alexl/2017/10/02/on-application-sizes-and-bloat-in-flatpak/">hash-based deduplication at the file level for a couple of images</a>? How can they seriously use a tagline like <a href="https://docs.flatpak.org/en/latest/under-the-hood.html#git-for-apps">"Git for apps"</a>, which only makes sense for very, <i>very</i> loose definitions of "Git"?<br>
+	Or maybe all the innovation went into the portals that make this thing work at all, and have at least this little game work indistinguishably from a native build past the initial load time…</p>
+</li><li>
+	<p>… except when parts of it don't! 🤣 Audio is only supported through PulseAudio, which you might not have installed on Arch Linux. Thus, Flatpak ironically enforces another dependency on the host system that the app itself might not have needed.</p>
+</li><li>
+	<p>Alright, you've submitted your app, incorporated the changes requested by the reviewers, waited a while, and now your app is live and has its own page on Flathub. You'd think I'd be done ranting at this point, but no:</p><ul><li>
+		<p>You give them nice lossless PNG screenshots and icons, and they convert both of them to lossy WebP with clearly visible compression artifacts. How about some trust in the fact that people who give you small PNG files know what they're doing? Verified by a programmatic check whether such a lossy recompression even noticeably improves the file size, instead of blindly blowing up our icon to 4.58× the size of the original PNG. {{HTML_Emoji "onricdennat"}} Source-quality images are way more important to me than <a href="https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/quality-guidelines/#brand-colors">brand colors</a>.</p>
+	</li><li>
+		<p>The screenshot area on the app pages has a fixed height of 468 pixels. Is this some kind of a sick joke? How could anyone look at that height and not go <i>"nah, that looks wrong, 12 more pixels and we'd be VGA-compatible, barely makes a difference anyway"</i>?<br>
+		That leaves us with two choices:</p><ul><li>
+			Crop those 12 pixels out of the raw game screenshots I originally wanted to have there, or
+		</li><li>
+			follow <a href="https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/quality-guidelines/#include-window-shadow-and-rounded-corners">their preferred approach of screenshotting the entire window with its native decorations, rounded corners, and shadows</a>, and hope the contents still look somewhat presentable when scaled down.
+		</li></ul>
+		<p>The latter probably isn't the worst idea as it also gives us a chance to show off the <img
+			class="inline_sprite" src="{{$tm_016}}" width="16" height="16" alt=""
+		/> 16×16 variant of the icon at its intended size. But I sure didn't immediately find a KDE theme that both has 16-pixel window icons (unlike Breeze's 15 pixels at the <i>Small</i> size) and doesn't have obscenely large and asymmetric shadows (unlike Materia or Klassy). Shoutout to the <a href="https://github.com/PapirusDevelopmentTeam/arc-kde?tab=readme-ov-file">Arc theme</a> for matching all these constraints!</p>
+	</li><li>
+		<p>Might as well try converting these images to lossless WebP while I'm at it, in the hope that they then leave them alone… but nope, they still get lossily recompressed! 🤪 You know what, I'm not gonna bother with the rest of their guidelines, this is an embarrassment.</p>
+	</li><li>
+		<p>Why does Flathub claim that the game can access the microphone? I don't remember opting into that. Once again, PulseAudio is to blame, as its security model isn't fine-grained enough. If your app wants to play sound, it has to request access to the PulseAudio socket, which always covers both output and input. <a href="https://github.com/widelands/widelands/issues/6477">Everybody</a> <a href="https://github.com/flatpak/flatpak/issues/6082">hates</a> <a href="https://github.com/flatpak/flatpak/issues/3425">this</a>, but <a href="https://github.com/flatpak/xdg-desktop-portal/discussions/1142">it's only going to be fixed with PipeWire <i>and</i> once the XDG developers have agreed on an audio portal</a>.</p>
+	</li><li>
+		<p>Finally, game controller support comes with a very similar asterisk. By default, it's disabled just like any other piece of hardware, and <a href="https://docs.flatpak.org/en/latest/sandbox-permissions.html#device-access">the documentation</a> tells you to specify <code>--device=input</code> to activate it. However, this specific permission is <a href="https://github.com/flatpak/flatpak/pull/5481">a fairly recent development in Flatpak terms</a> and thus isn't widely available yet? Therefore, <a href="https://github.com/flathub/flathub/pull/6052#discussion_r1922945616">the reviewers don't yet allow it in manifests</a>, and your only alternative is a blanket permission for all devices in the user's system. But then, Flathub lists your app as having <q>potentially unsafe user device (and even webcam!) access</q>, even though you had no alternative except for disabling game controller support. What a nice sandbox they have there… 🙄</p>
+	</li></ul>
+</li></ul><p>
+	If that's the supposed future of shipping programs on Linux, they've sure made this dev look back into the past with newfound fondness. I'm now more motivated than ever to separately package Shuusou Gyoku for every distribution, if only to see whether there's just a <i>single</i> distro out there whose packaging system is worse than Flatpak. But then again, packaging this game for other distros is one of the most obvious {{HTML_TagInline "contribution-ideas"}} there is.<br>
+	In the end though, the fact that we need to patch Pango to correctly render MS Gothic means that there is a point to shipping Shuusou Gyoku as a Flatpak, beyond just having a single package that works on every distro. And with a download size of 3.4&nbsp;MiB and an installed size of 6.4&nbsp;MiB, Shuusou Gyoku almost exemplifies the ideal use case of Flatpak: Apart from miniaudio, BLAKE3, the IPAMonaGothic font, the temporary libc++, and the patched Pango, all other dependencies of the Linux port happen to be part of the Freedesktop runtime and don't add more bloat to the system.
+</p><hr id="future-{{.Date}}"><p>
+	And so, we finally have a 100% native Linux port of Shuusou Gyoku, working and packaged, after 36 pushes! 🎉 But as usual, there's always that last bit of optional work left. The three biggest remaining portability gaps are
+</p><ul>
+	<li>the 8-bit render path, {{Blog_PostLink "2024-10-22#palettized" "as I've explained when I ported the graphics"}},</li>
+	<li><a class="goal" href="https://github.com/nmlgc/ssg/issues/76">guaranteed support for ARM CPUs</a>, which currently fail to build the project on Flathub due to a Tup issue, and who knows what other issues there might be,</li>
+	<li>the aforementioned proper icon support, and</li>
+	<li><a class="goal" href="https://github.com/nmlgc/ssg/issues/75">MIDI playback</a>.</li>
+</ul><p id="midi-{{.Date}}">
+	Despite {{Blog_PostLink "2024-03-09" "spending 10 pushes on accurate waveform BGM"}}, MIDI support seems to be the most worthwhile feature out of the three. The whole point of the BGM work was that Linux doesn't have a native MIDI synth, so why should packagers or even the users themselves jump through the hoops of setting up <i>some</i> kind of softsynth if it most likely won't sound remotely close to a SC-88Pro? But <a href="https://twitter.com/Koto_Sumire/status/1874932509424881866">if you already did</a>, the lack of support might indeed seem unexpected.<br>
+	But as described in the issue, <q>MIDI support</q> can also mean "a Windows-like plug-and-play" experience, without downloading a BGM pack. Despite the resulting <q>unauthentic</q> sound, this might also be a worthwhile thing to fund if we consider that 14 of the 17 YouTube channels that have uploaded Shuusou Gyoku videos since P0275 still had MIDI playing through the Microsoft GS Wavetable Synth and didn't bother to set up a BGM pack.
+</p><p id="ipapatch-{{.Date}}">
+	Finally, we might want to patch IPAMonaGothic at some point down the line. While a fix for the ascent and descent values that achieves perfect glyph placement without relying on hinting hacks would merely be nice to have, matching the Unicode coverage of its embedded bitmaps with MS Gothic will be crucial for non-ASCII Latin script translations. IPAMonaGothic's outlines do cover <a href="https://en.wikipedia.org/w/index.php?title=Latin-1_Supplement&oldid=1254154661#Compact_table">the entire Latin-1 Supplement block</a>, but the font is missing embedded bitmaps for all of this block's small letters. Since the existing outlines prevent any glyph fallback in both Fontconfig and GDI, letters like ä, ö, ü, and ñ currently render as spaces.
+</p><figure style="width: 929px;">
+	<rec98-child-switcher><img
+		src="{{$ff_msg}}"
+		data-title="MS Gothic"
+		width="929"
+		style="max-height: unset;"
+		alt="FontForge screenshot of MS Gothic's embedded 7×14px glyphs in the Basic Latin and Latin-1 Supplement blocks, showing full coverage of both blocks"
+	/><img
+		src="{{$ff_ipa}}"
+		data-title="IPAMonaGothic"
+		class="active"
+		width="929"
+		style="max-height: unset;"
+		alt="FontForge screenshot of IPAMonaGothic's embedded 7×14px glyphs in the Basic Latin and Latin-1 Supplement blocks, showing missing small letters in the latter block"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		Like most Japanese fonts from the Shift-JIS era, IPAMonaGothic also suffers from Greek and Cyrillic glyphs being full-width. But we'd probably just hunt for a different font to use with translations into those scripts. But it's not worth doing that for Latin scripts that are only missing a few special characters.
+	</figcaption>
+</figure><p>
+	Ideally, I'd like to apply these edits by modifying the embedded bitmaps in a more controlled, documented, and diffable way and then recompiling the font using a pipeline of some sort. The whole field of fonts often feels impenetrable because the usual editing workflow involves throwing a binary file into a bulky GUI tool and writing out a new binary file, and it doesn't have to be this way. But it looks like I'd have to write key parts of that pipeline myself:
+</p><ul>
+	<li>The venerable <a href="https://github.com/fonttools/fonttools"><code>ttx</code></a> provides no comfort features for embedded bitmaps and simply dumps their binary representation as hex strings.</li>
+	<li>The more modern <a href="https://unifiedfontobject.org/">UFO format</a> does specify embedded images, but both of the biggest implementations (<a href="https://github.com/robotools/defcon">defcon</a> and <a href="https://github.com/fonttools/ufoLib2">ufoLib2</a>) just throw away any embedded bitmaps, and thus, the whole selling point of such tools.</li>
+</ul><p>
+	That would increase the price of translations by about one extra push if you all agree that this is a good idea. If not, then we just go for the usual way of patching the .ttf file after all. In any case, we then get to host the edited font at a much nicer place than <a href="https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=ttf-ipa-mona">the Wayback Machine</a>.
+</p><p>
+	But for now, here's the new build:
+<ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0303">
+	{{HTML_Emoji "sh01n"}} Shuusou Gyoku P0303 Windows build</a> (now with the new icon)</li>
+	<li><a class="release" href="https://aur.archlinux.org/packages/seihou-shuusou-gyoku">Shuusou Gyoku on the AUR</a></li>
+	<li><a class="release" href="https://flathub.org/apps/net.nmlgc.rec98.sh01">Shuusou Gyoku on Flathub</a></li>
+</ul><p>
+	Next up: TH02 bullets! Here's to 2025 bringing less build system and maintenance work and more actual progress.
+</p>

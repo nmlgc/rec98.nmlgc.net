@@ -1,0 +1,17 @@
+Anchor	Name
+modules	Compiling with C++ Standard Library Modules for Linux
+porting	Porting the remaining logic code to Clang
+font	Picking a free MS Gothic replacement
+stack	Reasons for using the standard Linux text library stack
+libs	The individual Linux text rendering libraries
+shifts	Debugging vertical placement issues
+icon	The new icon
+pixelart	- Challenges with pixel art icons in modern OS UIs
+icon-win	- Windows icon jank
+icon-linux	- Linux icon jank
+arch	Packaging
+arch	- Arch Linux
+flatpak	- Flatpak
+future	Future work
+midi	- Porting the MIDI backend
+ipapatch	- Patching IPAMonaGothic

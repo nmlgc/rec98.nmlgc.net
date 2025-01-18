@@ -55,15 +55,28 @@ func HTMLDate(t time.Time) template.HTML {
 	return htmlFormattedTime(t, "2006-01-02")
 }
 
+func emojiURL(fn string) string {
+	return staticHP.VersionURLFor("emoji-" + fn)
+}
+
 // HTMLEmoji returns HTML markup for the given custom emoji.
 func HTMLEmoji(emoji string) template.HTML {
 	fn := emoji
-	style := ""
+	extra := template.HTMLAttr("")
 	ext := ".png"
 	switch emoji {
 	case "onricdennat":
 		fn = "tannedcirno"
-		style = `transform: scaleX(-1);`
+		extra = `style="transform: scaleX(-1);"`
+	case "sh01n":
+		fn = "sh01n-032"
+		extra = template.HTMLAttr(fmt.Sprintf(`
+			srcset="%s 0.66x, %s 1.33x, %s 2x, %s 5.33x"`,
+			emojiURL("sh01n-016.png"),
+			emojiURL("sh01n-032.png"),
+			emojiURL("sh01n-048.png"),
+			emojiURL("sh01n-128.png"),
+		))
 
 	// SVG icons
 	case "opencollective":
@@ -74,15 +87,11 @@ func HTMLEmoji(emoji string) template.HTML {
 		ext = ".svg"
 	}
 
-	if len(style) > 0 {
-		style = `style="` + style + `" `
-	}
-	url := staticHP.VersionURLFor("emoji-" + fn + ext)
 	return template.HTML(fmt.Sprintf(
 		// Calculated from the default `font-size` times `--icon-width` or
 		// `--icon-height`.
 		`<img src="%s" alt=":%s:" width="24" height="24" align="top" %s/>`,
-		url, emoji, style,
+		emojiURL(fn+ext), emoji, extra,
 	))
 }
 

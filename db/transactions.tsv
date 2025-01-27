@@ -340,9 +340,10 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-12-22T11:18:02Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0337
 2024-12-24T09:32:47Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98	Code almost done, waiting for blog post funding	T0338
 2025-01-01T10:09:59Z	13	2500	Shuusou Gyoku: New icons at four scaled sizes		M0003
-2025-01-01T10:09:59Z	13	17500	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0339
+2025-01-01T10:09:59Z	13	17500	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a> > TH02 RE		T0339
 2025-01-02T10:02:47Z	15	1000	Reverse-engineering		T0340
 2025-01-09T10:40:03Z	0	12500	Anything (including tooling)		T0341
 2025-01-11T10:21:32Z	10	3500	TH02 RE		T0342
 2025-01-22T11:25:28Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0343
 2025-01-24T09:32:42Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98	Code almost done, waiting for blog post funding	T0344
+2025-01-27T01:31:16Z	13	22500	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a> > TH02 RE		T0345

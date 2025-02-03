@@ -109,7 +109,7 @@ function updatePushAmount(
 ) {
 	const price = scope_prices[Number(micro.checked)]
 	target_amount.innerHTML = (
-		(Math.round((money / price) * 100) / 100).toString()
+		(Math.round((money / price) * 1000) / 1000).toString()
 	);
 	target_noun.innerHTML = ((money == price) ? " push" : " pushes");
 }

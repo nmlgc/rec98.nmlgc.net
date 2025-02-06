@@ -299,7 +299,7 @@ P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Ho
 P0296	[313, 317]	Website / Blog (Post list page + Navigation and post header redesign)	2024-11-22T04:00:03Z	nmlgc/rec98.nmlgc.net/compare/3658763...32d8f54	0
 P0297	[285]	TH03 decompilation (Character selection screen)	2024-11-22T04:00:03Z	nmlgc/ReC98/compare/23fc9e7...c879dfc	1
 P0298	[289, 299, 303, 307, 311, 316, 317, 323, 325, 322]	TH04/TH05 finalization (GENSOU.SCR, part 2/?) + Decompilation (High Score view screen)	2024-12-04T14:29:20Z	nmlgc/ReC98/compare/c879dfc...71f4810	1
-M0003	[3]	Seihou / Shuusou Gyoku (Icon commission from <a href="https://twitter.com/TremoloMeasure">Mr. Tremolo Measure)</a>	2025-01-25T23:56:48Z	nmlgc/ssg/commit/M0003	0
+M0003	[3]	Seihou / Shuusou Gyoku (Icon commission from <a href="https://bsky.app/profile/tremolomeasure.bsky.social">Mr. Tremolo Measure)</a>	2025-01-25T23:56:48Z	nmlgc/ssg/commit/M0003	0
 P0299	[332]	tupblocks (Clang and GCC support)	2025-01-25T23:56:48Z	nmlgc/tupblocks/compare/fae347c...49255da	0
 P0300	[320, 293, 298]	Seihou / Shuusou Gyoku (Build portability + Game logic portability, part 4/4 + SDL threads)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/M0003...dc235ca	0
 P0301	[298, 302]	Seihou / Shuusou Gyoku (Pango/Cairo text rendering, part 1/2)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/dc235ca...7712632	0

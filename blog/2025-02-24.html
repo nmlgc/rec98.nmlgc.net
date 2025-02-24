@@ -1,0 +1,363 @@
+{{$spreads_c := (call .Video "TH02-Bullet-spreads-count-order" "Video showcasing all predefined spread groups supported in TH02's bullet system, sorted in group-count-major and delta-angle-minor order") -}}
+{{$spreads_a := (call .Video "TH02-Bullet-spreads-delta-angle-order" "Video showcasing all predefined spread groups supported in TH02's bullet system, sorted in delta-angle-major and group-count-minor order") -}}
+{{$bounce := (call .Video "TH02-Bounce-margin" "Video of TH02's margin for bouncing bullets, 8 pixels away from every edge of the playfield, demonstrated with Meira's billiard balls") -}}
+{{$miko_bg := (call .PostFileURL "TH02-MIKO.BFT-Checkerboard.png") -}}
+{{$miko_0 := (call .PostFileURL "TH02-MIKO.BFT-0.png") -}}
+{{$miko_2 := (call .PostFileURL "TH02-MIKO.BFT-2.png") -}}
+{{$miko_3 := (call .PostFileURL "TH02-MIKO.BFT-3.png") -}}
+{{$hb := (call .PostFileURL "TH02-Hitbox-Reimu.png") -}}
+{{$hb_p := (call .PostFileURL "TH02-Hitbox-Bullet-Pellet.png") -}}
+{{$hb_ball := (call .PostFileURL "TH02-Hitbox-Bullet-Ball.png") -}}
+{{$hb_呪 := (call .PostFileURL "TH02-Hitbox-Bullet-呪.png") -}}
+{{$hb_bill := (call .PostFileURL "TH02-Hitbox-Bullet-Billiard.png") -}}
+{{$hb_star := (call .PostFileURL "TH02-Hitbox-Bullet-Star.png") -}}
+{{$mb := (call .Video "TH02-Extra-midboss" "Video of the TH02 Extra Stage midboss") -}}
+{{$asym := (call .PostFileURL "TH02-2-spread-asymmetry.png") -}}
+{{$asym_r := (call .PostFileURL "TH02-2-spread-asymmetry-right.svg") -}}
+{{$asym_l := (call .PostFileURL "TH02-2-spread-asymmetry-left.svg") -}}
+{{$shake := (call .Video "TH02-Player-shaking" "Video demonstrating TH02's shaking bug near the beginning of most stages, recorded here during the Extra Stage") -}}
+{{$shake_o := (call .Video "TH02-Player-shaking-overlay" "Video demonstrating TH02's shaking bug near the beginning of most stages, recorded here during the Extra Stage, and with the pellet hitbox overlaid to demonstrate that this is a rendering bug and nothing that impacts logical hitboxes") -}}
+{{$s_2 := (call .Video "TH02-Extra-midboss-spot-playperf-2" "Video of the popular safespot during TH02's Extra Stage midboss without having died before reaching that point of the stage") -}}
+{{$s_0 := (call .Video "TH02-Extra-midboss-spot-playperf-0" "Video demonstrating how the popular safespot during TH02's Extra Stage midboss breaks when having lost a life before reaching that point of the stage") -}}
+{{$s_o_2 := (call .Video "TH02-Extra-midboss-spot-overlay-playperf-2" "Video of the popular safespot during TH02's Extra Stage midboss at a playperf of +2, with an overlay tracking one of the bullets that fails to intersect with Reimu's hitbox") -}}
+{{$s_o_0 := (call .Video "TH02-Extra-midboss-spot-overlay-playperf-0" "Video of the popular safespot during TH02's Extra Stage midboss at a playperf of +0, with an overlay tracking the bullets that eventually hits Reimu") -}}
+{{$s_o_2_120 := (call .PostFileURL "TH02-Extra-midboss-spot-frame-120.png") -}}
+{{$s_o_2_121 := (call .PostFileURL "TH02-Extra-midboss-spot-frame-121.png") -}}
+{{$s_o_2_122 := (call .PostFileURL "TH02-Extra-midboss-spot-frame-122.png") -}}
+{{$s_o_2_123 := (call .PostFileURL "TH02-Extra-midboss-spot-frame-123.png") -}}
+{{$plg := (call .PostFileURL "TH02-Extra-midboss-spot-parallelogram-detection.png") -}}
+{{$s_o_m2 := (call .Video "TH02-Extra-midboss-spot-overlay-playperf-minus2" "Video of the popular safespot during TH02's Extra Stage midboss at a playperf of -2, with an overlay tracking one of the bullets that fails to intersect with Reimu's hitbox") -}}
+{{$miko_d := (call .PostFileURL "TH02-MIKO.BFT-death-animation.gif") -}}
+{{$falling := (call .Video "TH02-Falling-hitbox-overlay" "Video of TH02's falling player position in the 19 frames during the death animation where Reimu's sprite is not rendered. Also showcases the spark sprite wraparound")}}
+
+{{$spreads_c.SetTitle "Count order" -}}
+{{$spreads_a.SetTitle "Delta angle order" -}}
+{{$spreads_c.AddMarker   0 "2" "" -}}
+{{$spreads_c.AddMarker 160 "3" "" -}}
+{{$spreads_c.AddMarker 280 "4" "" -}}
+{{$spreads_c.AddMarker 400 "5" "" -}}
+{{$spreads_a.AddMarker   0 "Narrow" "" -}}
+{{$spreads_a.AddMarker 160 "Medium" "" -}}
+{{$spreads_a.AddMarker 320 "Wide" "left" -}}
+{{$spreads_a.AddMarker 480 "Ultrawide" "left" -}}
+
+{{$shake.SetTitle "Original game" -}}
+{{$shake_o.SetTitle "Pellet hitbox overlay" -}}
+
+{{$s_2.SetTitle "2 lives remaining" -}}
+{{$s_0.SetTitle "1 life remaining" -}}
+{{$s_o_2.SetTitle "<code>playperf = +2</code>" -}}
+{{$s_o_0.SetTitle "<code>playperf = 0</code>" -}}
+{{$s_o_m2.SetTitle "<code>playperf = -2</code>" -}}
+
+{{$s_o_2.AddMarker 120 "First contact with hitbox" "" -}}
+{{$s_o_2.AddMarker 123 "Last contact" "left" -}}
+{{$s_o_0.AddMarker 109 "Bullet hits" "" -}}
+{{$s_o_m2.AddMarker 125 "First contact with hitbox" "" -}}
+{{$s_o_m2.AddMarker 128 "Last contact" "left" -}}
+
+{{$falling.AddMarker 57 "Collision with second bullet" "" -}}
+{{$falling.AddMarker 70 "Sparks spawning near top of playfield?!" "left" -}}
+
+<style>
+	#miko-{{.Date}} img {
+		background-image: url('{{$miko_bg}}');
+		background-size: cover;
+	}
+
+	#hitbox-{{.Date}} img {
+		background-image: url('{{$hb}}');
+		background-size: cover;
+	}
+
+	#asymmetry-{{.Date}} img {
+		background-image: url('{{$asym}}');
+		background-size: cover;
+	}
+</style>
+
+<p>
+	Sometimes, the {{HTML_TagInline "gameplay"}} community will come up with the most outlandish theories before they even begin to consider the idea that certain safespots might not be intentional and only work by accident to begin with. Want more details? Read on…
+</p>{{call .TOC}}<hr id="overview-{{.Date}}"><p>
+</p><p>
+	So, TH02's bullet system! At a high level, it marks an interesting transitional point: It's still very much based on TH01's design with its predefined static or aimed spreads, but also introduces a few features that would later return in TH04 and TH05. By transplanting the TH01 system into a double-buffered environment, ZUN eliminated the {{Blog_PostLink "2020-07-12" "worst"}} {{Blog_PostLink "2023-03-05#egc" "unblitting-related parts"}} that plagued TH01, ending up with the simplest and cleanest implementation of bullets I've seen so far. That's not to say it's {{HTML_TagInline "good-code"}} – far from it – but it also hasn't reached the messy levels that TH04 and especially TH05 would bring later. Of course, there's still TH03's system left to be done until I can say for sure, but TH02's is a pretty strong contender.
+</p><p>
+	The more detailed overview of the system:
+</p><ul>
+	<li><p>TH02 introduces the distinction between the white 8×8 <i>pellets</i> and the 16×16 sprite bullets that TH04 and TH05 would later expand upon.</p></li>
+	<li><p>The game has a single cap of 150 that is shared among both 8×8 and 16×16 bullets, unlike TH04 and TH05 where the cap is split for optimization reasons.<br>
+	In <code>封魔録.TXT</code>, ZUN claims that TH02 could even compete with DoDonPachi in terms of bullet amounts:</p>
+	<blockquote>怒首領蜂もびっくりな判定の小ささ、<strong>弾の量</strong>。</blockquote>
+	Can it really, though? DoDonPachi spawns decidedly more bullets than TH02 throughout all of the game, and <a href="https://youtu.be/7A04cCcw3k0?t=3359">this pattern</a> definitely exceeds 150 bullets. Hence, we can immediately debunk this claim as marketing hyperbole rather than a factual statement about the game. It would be nice to have a specific bullet cap number for DoDonPachi as well, but I can't find a decompilation project or annotated disassembly. Nor for any other CAVE game either, for that matter… 👀</li>
+	<li><p>TH01's decay and delay cloud effects were removed for TH02. Slightly unfortunate as it leaves bullets completely without any sprite effect, but hey, less code surface to mess up!</p></li>
+	<li><p>All bullets lose 0.625 pixels of per-frame speed on Easy and gain an extra 0.75 pixels of per-frame speed on Lunatic. Each bullet is clamped to a minimum speed of at least 1 pixel per frame; on Easy, the game also filters every second bullet that would have been slower. This mechanism mainly kicks in with the blob enemies at minimum rank during Stage 4.</p></li>
+	<li><p>TH02 sticks with the fixed 2-, 3-, 4-, and 5-way spreads that TH01 introduced, but adds a third delta angle variant on top of TH01's two <i>"narrow"</i> and <i>"wide"</i> ones. 2-spreads even get a fourth "ultrawide" angle, which Evil Eye Σ uses in the pellet corridor pattern during its last phase.</p><figure {{$spreads_c.FigureAttrs}}>
+		{{call .VideoPlayer $spreads_c.FlipActive $spreads_a}}
+	</figure></li>
+	<li><p>TH02 also adds predefined 4-, 8-, 16-, and 32-ring groups, all of which are used by bosses.</p></li>
+	<li><p>The game does not yet offer predefined stack groups, but has an auto-stacking system that automatically turns <i>every</i> spawned group into a potential 2-stack on Hard and Lunatic. This system forms the main way in which these difficulties differ from the easier ones, and is exactly why going from Normal to Hard roughly doubles the number of bullets fired. On Hard, the second bullet in each stack moves at half the speed of the primary bullet, while Lunatic adds another 0.5 pixels per frame onto that halved speed.<br>
+	The game also has a function to apply a further multiplier on top of the difficulty-specific stack count, but only uses it to temporarily disable stacking during three patterns, one of them used by the Five Magic Stones and two of them used by Mima.</p></li>
+	<li><p>Just like all other games, TH02 offers a variety of special bullet motion types. For some reason, ZUN limited these to single 16×16 bullets in TH02; they are not supported for either 8×8 pellets or any of the multi-pellet groups. There is no <i>technical</i> reason for this, so ZUN likely did this as a deliberate game design choice. The upside is that you as a player can be certain that every 8×8 pellet moves in a straight line, which may or may not help reading patterns.
+	<ul>
+		<li><i>Chase</i> bullets adjust their X/Y velocity by a configurable amount on every frame relative to the player's location. These are exclusively used by the <span lang="ja">呪</span> bullets fired by the Stage 2 midboss.</li>
+		<li><i>Homing</i> bullets work in a very similar way, re-aiming at the player more properly for a customizable number of frames after a bullet was spawned. These are completely unused.</li>
+		<li><i>Decelerating</i> bullets reduce their speed to 0 by halving their velocity every 8 frames, and then turn and repeat this process a fixed number of times. In TH02, this movement type is only used in a symmetric green-ball pattern used by the eastern and western Magic Stones, but it would become really popular later on, showing up in 6 of TH04's midboss and/or boss patterns and 9 of TH05's.</li>
+		<li><i>Gravity</i> bullets add a customizable acceleration factor to their Y position on every frame. Another movement type exclusive to a single green-ball pattern by the northern Magic Stone, and interestingly special-cased to bypass any difficulty- or rank-based speed tuning.</li>
+		<li><i>Drift</i> bullets either add a remote-controlled angle and speed delta value to a bullet's angle and speed on every frame, or use that remote-controlled angle to chase toward the player using the same algorithm as the <span lang="ja">呪</span> bullets. These two types are criminally underutilized and could have created some widely inventive patterns that you wouldn't have expected out of the first PC-98 Touhou shmup. Instead, they're only used for two of Marisa's rotating star patterns.</li>
+		<li>And finally, of course, we have bullets that bounce and flip their direction near the edge of the playfield. In this game, the bounce edges actually lie 8 pixels inside the playfield:<figure {{$bounce.FigureAttrs}}>
+			{{call .VideoPlayer $bounce}}
+			<figcaption>The velocity flip only happens on the frame in which a bullet enters the red bounce margin zone. So, faster bullets might still travel a good deal toward the actual edge of the playfield before getting flipped.</figcaption>
+		</figure></li>
+		This type is not only used by Meira's and Evil Eye Σ's red and purple billiard ball bullets, but also by some star bullet patterns during the Mima fight.
+	</ul>
+	</p></li>
+	<li><p>Pellet rendering is batched! For the first time, ZUN preserves the GRCG state for successively blitted pellets, avoiding the extra >168 cycles per pellet that master.lib's <code>grcg_setcolor()</code> and <code>grcg_off()</code> would cost on a 486. The caveat, however, lies in the words <i>successively blitted</i>. Without an architectural split between pellets and sprite bullets, the rendering code ends up looking like this:</p>
+	<figure><pre>for(const auto& bullet : bullets) {
+	// (Update code…)
+
+	if(bullet.is_pellet) {
+		if(not_rendering_pellets) {
+			grcg_setcolor(GC_RMW, V_WHITE);
+			not_rendering_pellets = false;
+		}
+		blit_hardcoded_pellet_sprite_using_grcg(bullet);
+	} else {
+		grcg_off();
+		super_roll_put_tiny(bullet.left, bullet.top, bullet.patnum);
+		not_rendering_pellets = true;
+	}
+}</pre></figure>
+	<p>While this definitely is suboptimal once you start mixing the two size types, it's not too bad in context. The actual bullet scripts in TH02 mostly stick to one of the two sprite types, and once the script switches from one to the other, the old and new bullets will occupy mostly contiguous areas of the bullet array anyway. The game doesn't actually mix 8×8 and 16×16 bullets within the same pattern until literally the last pattern of Mima's second form.</p></li>
+	<li>The four other ZUN quirks in the system are all related to clipping and aim point calculations. ZUN tries very hard to use constants that are supposed to work for both 8×8 and 16×16 bullets, but they never perfectly fit either of the two. {{HTML_Emoji "tannedcirno"}}</li>
+</ul><hr id="order-{{.Date}}"><p>
+	To find out where all these bullet types are used, I of course had to label all the individual pattern functions and assign them to their (mid)boss owners. As a side effect, we now also know the preferred boss decompilation order for this game!<ol>
+		<li>Marisa</li>
+		<li>Mima</li>
+		<li>Evil Eye Σ</li>
+		<li>Meira</li>
+		<li>Rika</li>
+		<li>5 Magic Stones</li>
+	</ol>Quite a satisfying order, if I may say so myself – burning off the big fireworks right in the beginning, getting slightly more unexciting later on, but then ending on arguably the best Touhou character ever conceived. {{HTML_Emoji "onricdennat"}}<br id="midbossx-{{.Date}}">
+	Each of these decompilations will be preceded by the stage's respective midboss. This includes the Extra Stage – you might not <i>think</i> that this stage has a midboss, but it technically does, in the form of this combination of patterns:
+</p><figure {{$mb.FigureAttrs}}>
+	{{call .VideoPlayer $mb}}<figcaption>Lasting exactly these 420 frames.</figcaption>
+</figure><p>
+	There's nothing in TH02's code that mandates midbosses to have sprite-like entities or even something like an HP bar. Instead, the code-level definition of a <i>midboss</i> is all about these properties:
+</p><ul>
+	<li>It assigns control functions to the same function pointers that the other stages use for their midbosses.</li>
+	<li>These functions are activated at a fixed, specific point throughout the stage.</li>
+	<li>Regular stage enemy spawns are deactivated until these control functions signal completion.</li>
+	<li>If a pattern manipulates stage tiles, it can only be part of a boss or midboss with custom C code, as this is not supported for regular stage enemy scripts.</li>
+</ul><p>
+	Stage 5, on the other hand, indeed doesn't have anything that can be interpreted as a midboss.
+</p><hr id="hitbox-{{.Date}}"><p>
+	Finally, and probably most importantly, hitboxes! The raw decompilation of TH02's bullet collision detection code looks like this:
+</p><figure>
+	<pre>// 8×8 pellets
+(pellet_left &gt;= (player_left +  7)) &&
+(pellet_left &lt;  (player_left + 17)) &&
+(pellet_top  &gt;= (player_top  + 12)) &&
+(pellet_top  &lt;= (player_top  + 22))
+
+// 16×16 bullets
+(bullet_left &gt;= (player_left -  3)) &&
+(bullet_left &lt;  (player_left + 19)) &&
+(bullet_top  &gt;= (player_top  +  4)) &&
+(bullet_top  &lt;= (player_top  + 24))</pre>
+</figure><p>
+	However, if you aren't deeply familiar with the sizes of all involved sprites, these top-left positions slightly obscure the actual position of the hitbox. That top-left point might also not be where you think it is:
+</p><figure id="miko-{{.Date}}" class="pixelated">
+	<rec98-child-switcher><img
+		src="{{$miko_0}}"
+		data-title="Standing still"
+		alt="Sprite #0 of TH02's MIKO.BFT"
+		width="320"
+		class="active"
+	/><img
+		src="{{$miko_2}}" data-title="Moving left" alt="Sprite #2 of TH02's MIKO.BFT" width="320"
+	/><img
+		src="{{$miko_3}}" data-title="Moving right" alt="Sprite #3 of TH02's MIKO.BFT" width="320"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>It's the <span style="color: red;">red</span> point.</figcaption>
+</figure><p>
+	So let's transform these checks to a more useful comparison of the respective center points against each other, and also fix that inconsistency of the right coordinates being compared with <code>&lt;</code> instead of <code>&lt;=</code> like the other values:
+</p><figure>
+	<pre>// 8×8 pellets
+(pellet_center_x &gt;= (player_center_x - 5)) &&
+(pellet_center_x &lt;= (player_center_x + 4)) &&
+(pellet_center_y &gt;= (player_center_y - 8)) &&
+(pellet_center_y &lt;= (player_center_y + 2))
+
+// 16×16 bullets
+(bullet_center_x &gt;= (player_center_x - 11)) &&
+(bullet_center_x &lt;= (player_center_x + 10)) &&
+(bullet_center_y &gt;= (player_center_y - 12)) &&
+(bullet_center_y &lt;= (player_center_y +  8))</pre>
+	<figcaption>Now also revealing the horizontal asymmetry that ZUN's code was sneakily hiding.</figcaption>
+</figure><p>
+	TH02 has only 5 different bullet shapes and no directional or vector bullets, so we can exactly visualize all of them:
+</p><figure id="hitbox-{{.Date}}" class="pixelated" style="width: 384px;">
+	<rec98-child-switcher><img
+		src="{{$hb_p}}"
+		data-title="Pellet"
+		alt="Hitbox of TH02's 8×8 pellets"
+		class="active"
+		width="384"
+	/><img
+		src="{{$hb_ball}}" data-title="Ball" alt="Hitbox of TH02's 16×16 ball bullets" width="384"
+	/><img
+		src="{{$hb_呪}}" data-title="呪" alt="Hitbox of TH02's 呪 bullets" width="384"
+	/><img
+		src="{{$hb_bill}}" data-title="Billiard" alt="Hitbox of TH02's billiard bullets" width="384"
+	/><img
+		src="{{$hb_star}}" data-title="Star" alt="Hitbox of TH02's star bullets" width="384"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>{{Blog_PostLink "2022-06-17" "As"}} {{Blog_PostLink "2022-07-10" "usual"}}, a bullet sprite has to be fully surrounded by the blue box for a hit to be registered.</figcaption>
+</figure><p>
+	Yup. Quite asymmetric indeed, and probably surprising no one.
+</p><hr id="sar-{{.Date}}"><p>
+	While experimenting with the various hardcoded group types, I stumbled over a quite surprising quirk that you might have already noticed in the spread showcase video further above. For some reason, none of these spreads are perfectly symmetric, what the…?
+</p><figure id="asymmetry-{{.Date}}" class="pixelated" style="width: 768px;">
+	<rec98-child-switcher><img
+		src="{{$asym}}"
+		data-title="Pattern"
+		alt="A 2-spread pattern using a base angle of 0x40, TH02's hardcoded medium spread angle, and spawned at the center of the playfield to trap the player at its spawn point"
+		class="active"
+		width="768"
+	/><img
+		src="{{$asym_l}}"
+		data-title="Asymmetry (left)"
+		alt="Visualization of the asymmetry in this 2-spread pattern if the right lane moved at the correct angle; the cyan area shows the symmetric triangle the pattern is expected to form, and the red area shows the inaccurate extra amount of space covered by the left lane"
+		width="768"
+	/><img
+		src="{{$asym_r}}"
+		data-title="Asymmetry (right)"
+		alt="Visualization of the asymmetry in this 2-spread pattern if the left lane moved at the correct angle; the cyan area shows the asymmetric triangle being formed by the pattern as it is, and the red area shows the extra amount of space missing from the right lane to make the pattern actually symmetric"
+		width="768"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>By the time the bullets have reached the bottom of the playfield, the inaccuracy has compounded so much that the right lane ends up 6 pixels closer to the player's center position than the left lane. Depending on which of the two lanes actually gets the correct angle, this either means that the left lane is moving too far (2️⃣) or that the right lane is not moving far enough (3️⃣).</figcaption>
+</figure><p>
+	This is very weird because the angles that go into the velocity calculations are demonstrably correct. You'd therefore get this asymmetry for not only the hardcoded spreads, but also for code that does its own angle calculations and spawns each bullet manually. It's not something that can arise from the other known issue of {{Blog_PostLink "2022-03-05" "Q12.4 quantization"}} either, because that would affect all parts of a pattern equally.
+	<br>
+	Instead, the inaccuracy originates in the conversion from the polar coordinates of angles and speeds into the per-frame X/Y pixel velocities that the game uses for actual movement. The integer math algorithm that ZUN uses here is pretty much the single most fundamental piece of code shared by all 5 games:
+</p><figure><pre>// Using {{Blog_PostLink "2022-03-05" "typical 8-bit angles"}}.
+int16_t polar_x(int16_t center, int16_t radius, uint8_t angle)
+{
+	// Ensure that the multiplication below doesn't overflow
+	int32_t radius32 = radius;
+
+	// Get the cosine value from master.lib's lookup table, which scales the
+	// real-number range of [-1; +1] to the integer range of [-256; +256].
+	int16_t cosine = CosTable8[angle];
+
+	// The multiplication will include master.lib's 256× scaling factor, so
+	// divide the result to bring it within the intended radius.
+	return (((radius * cosine) &gt;&gt; 8) + center);
+}</pre><figcaption>
+	This exact algorithm is even recommended in the master.lib manual.
+</figcaption></figure><p>
+</p><p>
+	The pattern above uses TH02's medium delta angle for 2-spreads and moves at a Q12.4 subpixel speed of 2.5, which corresponds to a radius of 40 in the context of polar coordinate calculation. Let's step through it:
+</p><figure><table class="numbers">
+	<thead>
+		<tr>
+			<th>Angle</th>
+			<th>Cosine</th>
+			<th>Multiplied</th>
+			<th>In hex</th>
+			<th>Shift result</th>
+			<th>In decimal</th>
+			<th>In Q12.4</th>
+		</tr>
+	</thead><tbody style="font-family: monospace;">
+		<tr>
+			<th>(0x40 - 6)</th>
+			<td>38</td>
+			<td>1520</td>
+			<td>000005F0</td>
+			<td>00000005</td>
+			<td>5</td>
+			<td>0.3125</td>
+		</tr><tr>
+			<th>(0x40 + 6)</th>
+			<td>-38</td>
+			<td>-1520</td>
+			<td>FFFFFA10</td>
+			<td>FFFFFFFA</td>
+			<td><strong style="color: red">-6</strong></td>
+			<td><strong style="color: red">-0.3750</strong></td>
+		</tr>
+	</tbody>
+</table></figure><p>
+	Whoa, talk about getting a basic lesson about how computers work! PC-98 Touhou has just taught us that signedness-preserving arithmetic bitshifts are not equivalent to the apparently corresponding division by a power of two, because the typical two's complement representation of negative numbers causes the result to effectively get rounded away from zero rather than toward zero like the corresponding positive value. In our example, this means that the right lane is correct and moves at the angle we passed in, while the left lane moves <sup>1</sup>/<sub>16</sub> pixels per frame further to the left than intended. Since we're talking about the most basic piece of trigonometry code here, this inaccuracy also applies to <i>every other entity in PC-98 Touhou</i> that moves left relative to its origin point – and/or up, because Y coordinates are calculated analogously. Imagine that… it's been 10 years since I decompiled the first variant of this function, and I'm only now noticing how fundamentally broken it is.{{HTML_Emoji "godzun"}}<br>
+	It's understandable why master.lib's manual recommends bitshifts instead of the more correct division here. On a 486, a single 32-bit <code>IDIV</code> takes a whopping >33 cycles, and it would have been even slower on the 286 systems that master.lib is geared toward. But there's no need to go that far: By simply rounding up negative numbers, we can emulate the rounding behavior of regular division while still using a bitshift:
+</p><figure><pre class="chroma">int16_t polar_x(int16_t center, int16_t radius, uint8_t angle)
+{
+	int32_t ret = (static_cast&lt;int32_t&gt;(radius) * CosTable8[angle]);<span class="gi">
++	if(ret &lt; 0) {
++		// Round the multiplication result so that the shift below will yield a number
++		// that's 1 closer to 0, thus rounding toward zero rather than away from zero as
++		// bitshifts with negative numbers would usually do. This ensures that we return
++		// the same absolute value after the bitshift that we would return if [ret] were
++		// positive, thus repairing certain broken symmetries in PC-98 Touhou.
++		ret += 255;
++	}</span>
+	return ((ret >> 8) + center);
+}</pre><figcaption>
+	<a href="https://godbolt.org/z/dcvbcoT9z">You could also do this in a branchless way</a>, which is coincidentally very close to what current Clang would generate if you just wrote a regular division by 256. This branchless way does seem slightly slower on a 486 though, as it adds a constant >8 cycles worth of instructions. The branching implementation only adds >4 cycles for positive numbers and >3 for negative ones.
+</figcaption></figure><p>
+	But that would be deep quirk-fixing territory. uth05win just uses floating-point math for this transformation, exchanging master.lib's 8-bit lookup tables for the C library's regular <code>sin()</code> and <code>cos()</code> functions, but bypassing the issue like this also forms the single biggest source of porting inaccuracy. Can't really win here… 🤷<br>
+	Now it will be interesting to see whether ZUN worked around this inaccuracy in certain places by using slightly lower left- or up-pointing angles…
+</p><hr id="myth-{{.Date}}"><p>
+	Alright, but aren't we still missing the single biggest quirk about bullets in TH02? What's with Reimu's hitbox misaligning when dying? I can't release a blog post about TH02's bullet system without solving the single most infamous bullet-related mystery that this game has to offer. So, time to start a third push for looking at all the player movement, rendering, and death sequence code…
+</p><p>
+	If you remember the code above, there is no way that a hitbox defined using hardcoded numbers can ever shift in response to anything. Any so-called hitbox misalignment would therefore be a <i>player position</i> misalignment, which sounds even harder to believe. {{HTML_Emoji "thonk"}} And sure enough, after decompiling all of it, there's nothing of that sort to be found in the player code either.<br>
+	If we take <q>player position misalignment</q> literally, we're only left with one other place where it could possibly somehow come from: the strange vertical shaking you can observe right in the first few frames of most stages. So let's visualize the hitbox and… nope, the shaking is purely a scrolling bug, nothing about it changes the internal player position used for collision detection.
+</p><figure {{$shake.FigureAttrs}}>{{call .VideoPlayer $shake $shake_o.FlipActive}}</figure><p>
+	So, uh, what are people even talking about? It doesn't help that <a href="https://tcrf.net/index.php?title=Touhou_Fuumaroku:_The_Story_of_Eastern_Wonderland&oldid=1471340">no</a> <a href="https://web.archive.org/web/20190731055919/https://tvtropes.org/pmwiki/pmwiki.php/VideoGame/TouhouFuumarokuTheStoryOfEasternWonderland">one</a> cites any source for this claim and just presents it as a natural and seemingly self-evident fact, as if it was the most obvious and most easily verified property about the game.<br>
+	Thankfully though, there have been two <a href="https://youtu.be/nMv1kRd1NKA">relatively</a> <a href="https://youtu.be/BTmIWAo4qSY">recent</a> videos about the issue, but both of them only showcase the supposed hitbox shifting in relation to a specific safespot at the end of the Extra Stage midboss. So is <i>that</i> what's been going on here? The community taking the game's behavior in just a single instance of collision detection within a single stage, and extending it to a general claim about the game as a whole? {{HTML_Emoji "thonk"}}<br>
+	But indeed, the described behavior cleanly reproduces every time. Enter the spot with 2 remaining lives and you survive, but enter with 1 remaining life and you die:
+</p><figure {{$s_2.FigureAttrs}}>
+	{{call .VideoPlayer $s_2.FlipActive $s_0}}
+</figure><p>
+	Whatever this is about, it's not due to a difference in hitboxes because Reimu's position demonstrably stays identical. But if we switch between these two videos, we can easily spot that it's the <i>patterns</i> that are different! With 1 life left, the pattern moves at an ever so slightly slower speed, which apparently adds up to a life-or-death difference at that specific spot.<br>
+	And <i>that's</i> what the supposed hitbox shifting ultimately boils down to: The natural impact of rank on patterns, adjusting bullet speed with a factor of <code>((playperf&nbsp;+&nbsp;48)&nbsp;/&nbsp;48)</code> times <sup>1</sup>/<sub>16</sub> pixels. And nothing else.<br>
+	Let's visualize the hitbox and also track one of the bullets:
+</p><figure {{$s_o_2.FigureAttrs}}>
+	{{call .VideoPlayer $s_o_2.FlipActive $s_o_0}}
+</figure><p>
+	If we look at the respective frames in the <code>playperf = +2</code> case, we see that the bullet misses the hitbox by either one or two pixels on three successive frames:
+</p><figure class="pixelated" style="width: 384px;">
+	<rec98-child-switcher><img
+		src="{{$s_o_2_120}}" data-title="Frame 120" class="active" width="384" alt="Frame 120 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+	/><img
+		src="{{$s_o_2_121}}" data-title="Frame 121" width="384" alt="Frame 121 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+	/><img
+		src="{{$s_o_2_122}}" data-title="Frame 122" width="384" alt="Frame 122 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+	/><img
+		src="{{$s_o_2_123}}" data-title="Frame 123" width="384" alt="Frame 123 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>That's not a safespot, that's Reimu barely surviving only thanks to rounding.</figcaption>
+</figure><p>
+	So, for once, this is not a quirk, and doesn't even qualify as a "funny ZUN code moment" if you ask me. This is the game working exactly as designed, and it's the players who are instead making wild assumptions about safespots that only hold when the rank system plugs very specific numbers into the game's fixed-point math.<br>
+	If anything, you could make the stronger case that this safespot should not work under any circumstance. If the game tested the whole parallelogram covered by a bullet's trajectory between two successive frames instead of just looking at a bullet's current position, it would consistently detect this collision regardless of rank. But even the later games don't go to these lengths.
+</p><figure class="pixelated" style="width: 256px;">
+	<img src="{{$plg}}" alt="Visualization of potential collision detection with parallelograms" width="256" />
+	<figcaption>By testing with parallelograms, the game would not only look at the distinct bullet positions in green, but also detect that the bullet traveled through the position highlighted in cyan, which does lie fully within the hitbox.</figcaption>
+</figure><p>
+	Amusingly, if you die twice before this pattern and reach a rank of -2, bullet speed drops enough for the <q>safespot</q> to work again:
+</p><figure {{$s_o_2.FigureAttrs}}>
+	{{call .VideoPlayer $s_o_2.FlipActive $s_o_0 $s_o_m2.FlipActive}}
+	<figcaption>It's even the same bullet that fails to hit Reimu, although coming in 5 frames later.</figcaption>
+</figure><p>
+	If you're now sad because you liked the idea of ZUN deliberately putting hitbox-shifting code into the game, you don't have to be! You might have already noticed it in the 1-life videos above, but TH02 <i>does</i> have one funny but inconsequential instance of death-induced player position shifting. In the 19 frames between the end of the <img class="inline_sprite" src="{{$miko_d}}" alt="" /> animation and Reimu respawning at the bottom of the playfield, ZUN just adds 4 pixels to Reimu's Y position. You don't really notice it because the game doesn't render Reimu's sprite during these frames, but this modified position still partakes in collision detection, causing bullets to be removed accordingly.
+</p><figure {{$falling.FigureAttrs}}>
+	{{call .VideoPlayer $falling}}
+	<figcaption>Hilariously, ZUN was well aware that this shift could move the player's Y position beyond the bottom of the playfield, and thus cause sparks to be spawned at Y coordinates larger than 400. So he just… wrapped these spark spawn coordinates back into the visible range of VRAM, thus moving them to the top of the playfield… {{HTML_Emoji "zunpet"}}<br>
+	The off-center spawn point of these sparks was the only actual bug in this delivery, by the way.</figcaption>
+</figure><hr><p>
+	To round out the third push, I took some of the <i>Anything</i> budget towards finalizing random bits of previously RE'd TH04 and TH05 code that wouldn't add anything more to this blog post. These posts aren't really <i>meant</i> to be a reference – that's the job of the code, the actual primary source of the facts discussed here – but people have still started to use them as such. So it makes sense to try focusing them a bit more in the future, and not bundle all too many topics into a single one.<br>
+	This finalization work was mostly centered on some tile rendering and .STD file loading boilerplate, but it also covered some of TH05's unfortunately undecompilable HUD number display code. The irony is that it's <a href="https://github.com/nmlgc/ReC98/blob/165f0900e8a5bc4bc0e02b8cc655008a7946f40d/th05/main/hud/number_p.asm">actually quite good ASM code</a> that makes smart register choices and uses secondary side effects of certain instructions in a way that's clever but not overly incomprehensible. Too bad that these optimizations have no right to exist in logic code that is called way less than once per frame…
+</p><p>
+	Next up: An unexpected quick return to the Shuusou Gyoku Linux port, as Arch Linux is bullying us onto SDL 3 faster than I would have liked.
+</p>

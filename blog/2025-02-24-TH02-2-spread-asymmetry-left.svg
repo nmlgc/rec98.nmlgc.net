@@ -1,0 +1,8 @@
+<svg viewBox="0 0 384 192" xmlns="http://www.w3.org/2000/svg">
+	<path d="M 187, 8 165, 192 219, 192 195, 8 Z"
+		style="fill: #0ff; stroke: #0ff; stroke-linecap:round; opacity: 0.75" />
+	<path d="M 187, 8 159, 192 165, 192 Z"
+		style="fill: #f00; stroke: #f00; stroke-linecap:round; opacity: 0.75" />
+	<path d="M 192, 8 192, 192"
+		style="fill: #f00; stroke: #f00; stroke-linecap:round;" />
+</svg>

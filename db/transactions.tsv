@@ -358,4 +358,5 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-02-24T09:32:29Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0354
 2025-03-01T10:39:59Z	13	20000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/68">SDL 3 support</a> > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a> > TH02 RE		T0355
 2025-03-01T12:06:17Z	0	3500	TH03 RE		T0356
-2025-02-02T11:25:44Z	15	1000	Reverse-engineering		T0357
+2025-03-02T11:25:44Z	15	1000	Reverse-engineering		T0357
+2025-03-08T01:19:09Z	13	9000	Reverse-engineering (existing goals)		T0358

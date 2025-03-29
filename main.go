@@ -318,6 +318,7 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_200_Y":        HTML200Y,
 	"HTML_PerfBar":      HTMLPerfBar,
 	"CSS_Meter":         CSSMeter,
+	"StaticFileURL":     func(fn string) string { return staticHP.VersionURLFor(fn) },
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,
@@ -340,16 +341,13 @@ func respondWithError(wr http.ResponseWriter, err error) {
 // PageDot bundles all data handed to a page template via dot.
 type PageDot struct {
 	*http.Request
-	Vars          map[string]string // from gorilla/mux
-	TemplateName  string
-	StaticFileURL func(string) string
+	Vars         map[string]string // from gorilla/mux
+	TemplateName string
 }
 
 // NewPageDot builds a new PageDot structure.
 func NewPageDot(req *http.Request, templateName string) PageDot {
-	return PageDot{req, mux.Vars(req), templateName, func(fn string) string {
-		return staticHP.VersionURLFor(fn)
-	}}
+	return PageDot{req, mux.Vars(req), templateName}
 }
 
 // pagesHandler returns a handler that executes the given template of [pages],

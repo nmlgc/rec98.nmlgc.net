@@ -166,7 +166,7 @@
 					<button type="button" onclick='
 						activateProvider(this, [
 							"https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR",
-							"{{call $.StaticFileURL "paypal.js"}}"
+							"{{StaticFileURL "paypal.js"}}"
 						]);
 						document.getElementById("paypal_label").textContent = "Loading…"'
 					>
@@ -230,8 +230,8 @@
 		</form>
 		<span></span>
 	</aside>
-	<script src="{{call $.StaticFileURL "order.js"}}"></script>
-	<script src="{{call $.StaticFileURL "stripe.js"}}"></script>
+	<script src="{{StaticFileURL "order.js"}}"></script>
+	<script src="{{StaticFileURL "stripe.js"}}"></script>
 	<aside>
 		<span class="icon-cell">❓</span>
 		<div>

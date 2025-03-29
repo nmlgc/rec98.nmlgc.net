@@ -18,7 +18,7 @@
 </li><li>
 	{{- range $i, $format := Blog_FeedFormats -}}
 		{{if $i}},{{else}}<img
-			src="{{call $.StaticFileURL "feed.svg"}}"
+			src="{{StaticFileURL "feed.svg"}}"
 			alt="Feeds:"
 			width="16"
 			height="16"

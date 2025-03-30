@@ -1043,6 +1043,14 @@ article h5 {
  **/
 article figure {
 	background-color: var(--c-bg);
+
+	&.bglayer {
+		background-size: cover;
+
+		img {
+			max-height: unset;
+		}
+	}
 }
 
 .tag {

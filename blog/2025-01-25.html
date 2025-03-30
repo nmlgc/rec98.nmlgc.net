@@ -1,4 +1,3 @@
-{{$bg := (call .PostFileURL "SH01-Main-menu-Background.png") -}}
 {{$g_msg_win := (call .PostFileURL "SH01-Main-menu-Game-Start-MS-Gothic-Windows.png") -}}
 {{$g_ipa_win := (call .PostFileURL "SH01-Main-menu-Game-Start-IPAMonaGothic-Windows.png") -}}
 {{$g_msg_wine := (call .PostFileURL "SH01-Main-menu-Game-Start-MS-Gothic-Wine.png") -}}
@@ -22,8 +21,7 @@
 
 <style>
 	figure.main-menu-{{.Date}} img {
-		background-image: url('{{$bg}}');
-		background-size: cover;
+		background-image: url('{{StaticFileURL "sh01-main-menu-bg.png"}}');
 	}
 
 	figure#tm-{{.Date}} img {
@@ -122,7 +120,7 @@
 </p><ul>
 	<li>All text areas are dimensioned around the exact metrics of MS Gothic's embedded bitmaps. In menus, each half-width character is expected to be exactly 7×14 pixels large because most of the submenu items are aligned with spaces. In text boxes and the Music Room, glyphs can be smaller than the intended 8×16 pixels per half-width character, but they can't be larger without cutting off something somewhere.</li>
 	<li>Only bitmap fonts can deliver the sharp and pixelated look the game goes for. Subpixel rendering techniques are crucial for making vector fonts look good, but quickly get ugly when applied to drop-shadowed text rendered at these small sizes:
-	<figure class="fullres main-menu-{{.Date}}">
+	<figure class="fullres bglayer main-menu-{{.Date}}">
 		<rec98-child-switcher><img
 			src="{{$g_msg_win}}"
 			data-title="Windows"
@@ -150,7 +148,7 @@
 </p><p>
 	So, we need an alternative free Japanese font that fits the metric constraints of MS Gothic, has embedded bitmaps at the exact sizes we need, and ideally looks somewhat close. Checking all these boxes is not too easy; Japanese fonts with a full set of all Kanji in Shift-JIS are a niche to begin with, and nobody within this niche advertises embedded bitmaps. As the DPI resolutions of all our screens only get higher, well-designed modern fonts are increasingly unlikely to have them, thus further limiting the pool to old fonts that have long been abandoned and probably only survived on websites that barely function anymore.<br>
 	Ultimately, the ideal alternative turned out to be a font named IPAMonaGothic, which I found while digging through <a href="https://github.com/Winetricks/winetricks/blob/b7cf27d70af3dc5ddbd6cd604206d1f932a7f702/src/winetricks#L14182-L14207">the Winetricks source code</a>. While its embedded bitmaps only cover MS Gothic's first half for font heights between 10 and 16 pixels rather than going all the way to 22 pixels, it happens to be exactly the range we need for this game.
-</p><figure class="fullres main-menu-{{.Date}}">
+</p><figure class="fullres bglayer main-menu-{{.Date}}">
 	<rec98-child-switcher><img
 		src="{{$g_msg_win}}"
 		data-title="MS Gothic"

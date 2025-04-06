@@ -84,6 +84,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 	 * ReC98ParentInit. */
 	switchableChildren: Array<Element> = [];
 
+	tabSwitcher: ReC98TabSwitcher;
 	childShown: (Element | null) = null;
 
 	/**
@@ -102,11 +103,24 @@ class ReC98ChildSwitcher extends HTMLElement {
 	}
 
 	init() {
-		const tabSwitcher = new ReC98TabSwitcher((i) => {
+		// The linked element might not be part of the DOM yet, so we can only look up its ID for
+		// now.
+		const linkedID = this.getAttribute("data-link");
+
+		this.tabSwitcher = new ReC98TabSwitcher((i) => {
 			this.focus();
-			return this.showChild(i);
+			const ret = this.showChild(i);
+
+			// Prevent infinite recursion
+			if(linkedID && ret) {
+				const linkedElement = document.getElementById(linkedID);
+				if(linkedElement) {
+					(linkedElement as ReC98ChildSwitcher).tabSwitcher.switchTo(i);
+				}
+			}
+			return ret;
 		});
-		this.prepend(tabSwitcher);
+		this.prepend(this.tabSwitcher);
 
 		this.tabIndex = -1; // Receive `onkeydown` events from all children
 
@@ -122,7 +136,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 				activeSeen = true;
 				this.showChild(this.switchableChildren.length - 1);
 			}
-			tabSwitcher.add(attributeAsString(child, "data-title"), active);
+			this.tabSwitcher.add(attributeAsString(child, "data-title"), active);
 		}
 		if(!activeSeen) {
 			throw "No child marked as active.";
@@ -131,10 +145,10 @@ class ReC98ChildSwitcher extends HTMLElement {
 		this.onclick = (() => this.focus());
 		this.onkeydown = ((event) => {
 			switch(virtualKey(event)) {
-			case '←':	return tabSwitcher.keydownHandler(event, '↑');
-			case '→':	return tabSwitcher.keydownHandler(event, '↓');
+			case '←':	return this.tabSwitcher.keydownHandler(event, '↑');
+			case '→':	return this.tabSwitcher.keydownHandler(event, '↓');
 			}
-			return tabSwitcher.keydownHandler(event);
+			return this.tabSwitcher.keydownHandler(event);
 		});
 	}
 };

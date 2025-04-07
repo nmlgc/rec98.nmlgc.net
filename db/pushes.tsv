@@ -308,3 +308,6 @@ P0303	[324]	Seihou / Shuusou Gyoku (Icon integration + Flatpak package)	2025-01-
 P0304	[258, 277, 305, 309, 250]	TH02 RE (Stage / (mid)boss variables) + Decompilation (Bullets, part 1/2)	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/71f4810...96ada76	0
 P0305	[197, 301, 314, 327, 336, 250]	TH02 decompilation (Bullets, part 2/2 + Sparks, part 1/2)	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/96ada76...3c710f9	0
 P0306	[318, 342, 326]	TH02 decompilation (Player, part 1/2: Update/render functions + Miss animation) + Random TH04/TH05 finalization	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/3c710f9...165f090	0
+P0307	[339, 345]	Seihou / Shuusou Gyoku (SDL 3 platform layer)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/P0303-2...a4adcbb	0
+P0308	[345]	Seihou / Shuusou Gyoku (Render API unbricking / ReC98 build label on the title screen / Revamped pixel format handling)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/a4adcbb...c62f7ad	0
+P0309	[346]	Seihou / Shuusou Gyoku (WebP screenshot compression / Compression benchmark in the main menu)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/c62f7ad...P0309	0

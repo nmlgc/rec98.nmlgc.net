@@ -1,0 +1,11 @@
+Anchor	Name
+sdl2-compat	Forced onto an unstable SDL 2 compatibility layer
+sdl3	Updating to SDL 3
+format	Picking a screenshot format
+qoi	- QOI, the expected disappointment
+jxl	- JPEG XL, the unexpected disappointment
+bench	- Benchmark results
+webp	- Lossless WebP
+effort	Letting players pick an effort level
+perf	Future performance improvements
+tag	Rendering the build ID with some unused glyphs

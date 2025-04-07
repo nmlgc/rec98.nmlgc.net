@@ -1,0 +1,445 @@
+{{$bm_main_menu := (call .PostFileURL "Benchmark-main_menu.webp") -}}
+{{$bm_ingame := (call .PostFileURL "Benchmark-ingame.webp") -}}
+{{$bm_stage6 := (call .PostFileURL "Benchmark-stage6.webp") -}}
+{{$bm_laser := (call .PostFileURL "Benchmark-laser.webp") -}}
+{{$bm_laserbomb := (call .PostFileURL "Benchmark-laserbomb.webp") -}}
+{{$bm_gates := (call .PostFileURL "Benchmark-gates.webp") -}}
+{{$bm_seihou := (call .PostFileURL "Benchmark-seihou.webp") -}}
+{{$pixel := (call .PostFileURL "SH01-Main-menu-FJXL-collision-pixel.webp") -}}
+{{$times_8400T := (call .PostFileURL "SH01-Screenshot-times-8400T.webp") -}}
+{{$times_9950X3D := (call .PostFileURL "SH01-Screenshot-times-9950X3D.webp") -}}
+{{$tag := (call .PostFileURL "SH01-ReC98-build-tag.webp") -}}
+{{$font := (call .PostFileURL "SH01-GRAPH.DAT-5x5-A-to-Z.webp") -}}
+
+<style>
+	figure.main-menu-{{.Date}} img {
+		background-image: url('{{StaticFileURL "sh01-main-menu-bg.png"}}');
+	}
+
+	.benchmark-{{.Date}} table {
+		background-color: var(--c-bg);
+	}
+
+	.benchmark-{{.Date}} table thead:not(:first-child),
+	.benchmark-{{.Date}} table td:not(:first-child) {
+		font-family: monospace;
+	}
+
+	.benchmark-{{.Date}} table td:not(:first-child) {
+		text-align: right;
+		width: 7ch;
+	}
+
+	.benchmark-{{.Date}} table td:not(:last-child),
+	.benchmark-{{.Date}} table th:not(:last-child) {
+		border-right: var(--table-border);
+	}
+
+	.benchmark-{{.Date}} table td[colspan="10"] {
+		text-align: center;
+	}
+</style>
+
+<p>
+	Well, that fell apart surprisingly quickly. The release of Shuusou Gyoku's Linux port just happened to be surrounded by the unluckiest sequence of events in Arch Linux land:
+</p><ul>
+	<li>Jan. 21: The SDL team releases <a href="https://github.com/libsdl-org/SDL/releases/tag/release-3.2.0">the first stable version of SDL 3</a></li>
+	<li>Jan. 24: <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/sdl3/-/commit/588f458e053d1bbc056645f660ba68551d39eec3">Arch Linux packages SDL 3</a></li>
+	<li>Jan. 25: I release {{Blog_PostLink "2025-01-25" "the first version of Shuusou Gyoku's Linux port"}}, completing the SDL 2 porting work I started in 2023</li>
+	<li>Jan. 28: Arch Linux <a href="https://gitlab.archlinux.org/archlinux/packaging/state/-/commit/1b9097aa4fa40c9946d7555985bef140da82a61f">removes SDL 2</a> and replaces it with <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/sdl2-compat/-/commit/bf936adbb3e594f879bb300800bd6ef12fe1db30">the previously packaged sdl2-compat</a>, a compatibility layer that is meant to perfectly implement the SDL 2 API on top of SDL 3. In reality, though, it <a href="https://bbs.archlinux.org/viewtopic.php?id=302982">broke</a> <a href="https://bbs.archlinux.org/viewtopic.php?id=303005">lots</a> <a href="https://github.com/libsdl-org/sdl2-compat/issues/255">of</a> <a href="https://github.com/libsdl-org/sdl2-compat/issues/253">applications</a> including my Shuusou Gyoku port, and turned their users into <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/sdl2-compat/-/issues/1">quite disgruntled beta testers</a>.</li>
+</ul><p>
+	After I fixed <a href="https://github.com/nmlgc/ssg/commit/c11a93c6c7600d2a158a4739397ca634a8f7862a">a silly mistake on my part</a>, Shuusou Gyoku was still <i>playable</i> on sdl2-compat as it was only affected by rather minor bugs, but these bugs still undermined the effort I put into the port. That left us with three options:
+</p><ol>
+	<li>Let the more involved SDL community fix sdl2-compat out on their own. After all, why should <i>we</i> bother if rogue distros randomly mess with our dependencies?</li>
+	<li>Become part of that community and help fix the issues in either sdl2-compat or SDL 3.</li>
+	<li>Properly update Shuusou Gyoku to SDL 3 right now, while keeping SDL 2 support for the Flatpak, more conservative Linux distributions, and the upcoming Windows 98 backport.</li>
+</ol><p>
+	I really would have preferred to delay this migration for a few years until the dust has settled. For this project, I already picked C++ as the dependency I want to be on the bleeding edge of, and SDL 2 was supposed to balance this out by being the conservative and stable choice. Oh well, if we've got to update at <i>some</i> point, we might as well do it now. The ReC98 development schedule at least gave me another month of waiting for the community to sort out SDL 3's growing pains…
+</p>{{call .TOC}}<hr id="sdl2-compat-{{.Date}}"><p>
+	So, why does something like sdl2-compat even exist if it only causes problems? And why are distros rolling it out so soon after SDL 3 if SDL 2 has been working fine all the time? In a nutshell, sdl2-compat is the second pillar in SDL's forward compatibility strategy. While the {{Blog_PostLink "2023-09-30#sdl" "<i>dynamic API</i> mechanism"}} ensures compatibility with future <i>minor</i> versions by integrating dynamic linking so deeply that static linking is made entirely useless, sdl<var>N</var>-compat ensures compatibility with one future <i>major</i> version by implementing version <var>N</var>'s API in terms of SDL version <var>N+1</var>. This allows the SDL team to very quickly stop updating version <var>N</var> while still allowing programs linked against that version to run well on modern systems by using all the actively maintained backends of version <var>N+1</var>. This worked out well with <a href="https://github.com/libsdl-org/sdl12-compat">sdl12-compat</a>, which nowadays seems to do a great job at preserving abandoned SDL 1 games – especially if we consider that you'd be running sdl12-compat on top of sdl2-compat on top of SDL 3 from now on. {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	So it only makes sense why the SDL developers would want to repeat this success story with the transition from SDL 2 to 3. The problem is that <a href="https://github.com/libsdl-org/sdl2-compat/blob/fe43e143dd9c143bbbbc24a6daad6713f11af184/README.md">they're already selling sdl2-compat as a perfect drop-in replacement for proper SDL 2</a>, and wanted to push it onto people <a href="https://github.com/libsdl-org/SDL/issues/11047#issuecomment-2395565043">even before SDL 3 was officially released</a>. The sales pitch follows their usual "trust me bro" rhetoric:
+</p><blockquote>If you absolutely must have the real SDL2 ("SDL 2 Classic"), please use the SDL2 branch at <a href="https://github.com/libsdl-org/SDL">https://github.com/libsdl-org/SDL</a>, which occasionally gets bug fixes (and eventually, no new formal releases). But we strongly encourage you not to do that.</blockquote><p>
+	Followed by zero arguments to back up this audacious suggestion. So they not only imply that sdl2-compat is already perfectly compatible and works without bugs for every SDL 2 program ever, but also that the underlying SDL 3 implementation doesn't introduce any bugs on top – and it only takes a single look into either project's issue tracker to disprove that notion. There is no technical reason why a distro couldn't ship SDL 3 and 2 in parallel. The continued existence of the <a href="https://aur.archlinux.org/packages/sdl2">SDL 2 AUR package</a> is proof of that, and still received upset comments as of mid-<i>March</i> that justified its existence.<br>
+	There was absolutely no reason to push sdl2-compat on everyone by default other than forcefully turning users into beta testers. SDL 2 was still stable, maintained, and working well. People who needed SDL 3 before its release for whatever feature already used SDL 3. People who want to use the SDL 3 backends to solve some obscure backend-related issue in an SDL 2 program can use sdl2-compat without needing it to be the only option available. And with a package size of 1.2&nbsp;MiB, you can't convince me that SDL 2 is somehow a burden on the packaging front either – especially if your distro has separate packages for every commonly used fiddly <a href="https://archlinux.org/packages/?sort=&q=python-">Python</a> and <a href="https://archlinux.org/packages/?sort=&q=haskell-">Haskell</a> library.<br>
+	I can't help but imagine the reaction if Microsoft pushed an enforced update of this magnitude. They're already getting regularly lambasted by the press for much smaller and ultimately inconsequential offenses…
+</p><p>
+	For all the {{Blog_PostLink "2025-01-25#flatpak" "criticism I had about Flatpak and Flathub last time"}}, they made the right choice of not treating their base package as a rolling and bleeding-edge distribution. The Freedesktop platform will only ship SDL 3 in its next version releasing in August, which will probably leave enough time for the SDL developers to address all but the rarest remaining issues in sdl2-compat. Although I'm not sure how I should interpret <a href="https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/commit/50d191db666248abe6883bfe07927e12dfa3889f">this commit being made at that specific time</a>: This is either very considerate (because they've chosen to take up the job of early-adopting SDL 3 as part of developing the new SDK version, and thus will be helping out with reporting bugs), or very inconsiderate because they bought the whole sdl2-compat story just like Arch did. If Freedesktop SDK updates shipped in February rather than August and the release tag was on this branch, they would have screwed over their users just as much. Also, there's <i>still</i> not much point in force-updating everyone onto a compatibility layer <i>in freaking 2025</i>…
+</p><p>
+	Then again, I can empathize with the SDL developers to a degree. Lots of developers have been asking the <i>"when is SDL 3 ready and stable enough for regular use?"</i> question while picturing SDL as this highly important and central library that surely has a big team of testers who could ensure its stability at one point. But if there just isn't enough Valve money to form such a team, what else should you do as a developer other than turn your personal hype into a <i>"it's ready now, go use it and please leave feedback"</i> reply? Maybe, turning your users into beta testers is the only realistic way to ever approach stability in this economy. And sure, they <i>call</i> it <i><q>3.2.0</q></i> for… <a href="https://discourse.libsdl.org/t/how-soon-will-the-first-stable-version-of-sdl3-be-released/46024/3">reasons</a>, but <a href="https://www.phoronix.com/news/SDL3-Official-Release">they're not fooling anyone</a>.
+</p><p>
+	The big irony, however, is this: At one point in the future, sdl2-compat <i>will</i> be that perfect solution for running abandoned SDL 2 (and SDL 1) programs on top of SDL 3. But it's the exact opposite of what you'd want during active development: You <i>want</i> to update to SDL 3 and use the new APIs and function names to be ready for the future, but also retain the option to run on the stable SDL 2 foundation for at least a little longer until every distribution has caught up. Or, in other words, you want to run SDL 3 on top of SDL 2.<br>
+	You could totally have a library that implements this alternate kind of compatibility layer. It would still be prone to bugs just like sdl2-compat, but unlike that one, the <i>chance</i> for new bugs is halved since you'd be running on top of the proven and stable SDL 2. But of course, such a library would restrict your codebase to SDL 2's feature set, which is probably why something like this doesn't exist. So instead, our SDL platform layer now contains 64 conditional branches and <a href="https://github.com/nmlgc/ssg/blob/b159c604388a89d0d64efa2d49cbe0f34b0c09d4/platform/sdl/sdl2_wrap.h">a bunch of function renaming macros and generic helper code</a> to support compiling against both SDL 3 and SDL 2. At least I wrote it all in a way that allows us to quickly rip out SDL 2 support once we no longer need it…
+</p><hr id="sdl3-{{.Date}}"><p>
+	Oh well, enough ranting. Because once it works, there are plenty of things to like about SDL 3. Limited to, of course, everything notable that applies to Shuusou Gyoku:
+</p><ul>
+	<li>Requesting fullscreen from SDL 3's basic window creation API will now <a href="https://github.com/libsdl-org/SDL/blob/33f90f2e41a1567b2d40c00e8e8869e9573ca4e5/src/video/SDL_video.c#L2475-L2485">always give you a borderless window</a> as they went with the times and removed the option to directly create a window in exclusive fullscreen mode. In isolation, this might look bad enough to not even consider updating to SDL 3. However, this doesn't mean that boomer fullscreen is <i>gone</i> – it only has been relegated to <a href="https://wiki.libsdl.org/SDL3/SDL_SetWindowFullscreenMode">a separate and, in fact, much more comprehensive mode-changing API</a> that <a href="https://wiki.libsdl.org/SDL3/SDL_GetClosestFullscreenDisplayMode">also covers refresh rates</a>. Using it does require significantly more and different code compared to SDL 2, but being explicit about the refresh rate is crucial for games whose speed depends on the frame rate, like this one. If your display supports a 62.5&nbsp;Hz mode by any chance, we select it now.</li>
+	<li>SDL 3's software blitters come with optimized SSE2, SSE4.1, and AVX implementations, replacing SDL 2's aging <a href="https://github.com/libsdl-org/SDL/issues/5918">and nowadays actually suboptimal</a> MMX code paths. On the surface, this only seems to speed up the software renderer as far as we're concerned, but it will also be very welcome once we have to do pixel format conversions. (Which, spoiler, I managed to just barely avoid on the SDL level for this new code.)</li>
+	<li>The new <a href="https://wiki.libsdl.org/SDL3/SDL_SetRenderLogicalPresentation"><code>SDL_SetRenderLogicalPresentation()</code></a> function now implements all of the three borderless fullscreen layouts as part of SDL. Together with the now <a href="https://github.com/libsdl-org/sdlwiki/pull/592">cleaned-up handling of render target state</a>, this removes almost all of the complexity and state juggling that SDL 2 previously required for the combination of fullscreen and clipping. Too bad that I still have to retain all of that SDL 2 code for the time being…</li>
+	<li>The <a href="https://wiki.libsdl.org/SDL3/CategoryFilesystem">filesystem API</a> that originated in SDL 2 is finally joined by <a href="https://wiki.libsdl.org/SDL3/CategoryIOStream">a matching set of file access functions</a> that Do The Right Thing, explicitly take UTF-8 filenames, and use the Unicode APIs on Windows. If this had existed {{Blog_PostLink "2022-12-31" "at the end of 2022"}}, I wouldn't have felt the need to write my own abstractions. Sure, the lack of UTF-16 overloads means that this API is not <i>strictly</i>, <i>perfectly</i> optimal on Windows, but in turn, we get this API for free with the rest of SDL. It'll even be very welcome for the Windows 9x port, which could simply translate UTF-8 to the system codepage without requiring <a href="https://learn.microsoft.com/en-us/archive/msdn-magazine/2001/october/mslu-develop-unicode-applications-for-windows-9x-platforms-with-the-microsoft-layer-for-unicode">any other kind of Unicode layer</a>. Besides, I've found myself using these <q>strictly optimal</q> UTF-16 strings less and less: These have always been an implementation detail of the Windows version, and any path we save in a .CFG file should better be in UTF-8 to allow configuration sharing between Linux and Windows.</li>
+	<li><code>SDL_RenderReadPixels()</code>, the "screenshot" function that transfers pixel data from the GPU to system memory, now allocates a new pixel surface instead of writing pixel data in a specific format to pre-allocated memory. This is another change that looks bad on the surface because we sure love them freedoms to self-allocate our memory in C/C++ land. However:<ol>
+		<li>This single allocation is far from being the bottleneck in the screenshotting process. It doesn't even clearly stick out in execution timings because it gets completely masked by the variance of the actual GPU→CPU pixel transfer.</li>
+		<li>In SDL 2's version of the function, you decided the pixel format that SDL would write into your buffer, which might have incurred a conversion if your chosen format didn't match the pixels returned by the GPU. In Shuusou Gyoku, this could have easily happened with geometry scaling. By newly allocating the returned surface, SDL 3 can keep the original pixel format and thus needs to involve at most a single <code>memcpy()</code> – which is <i>always</i> measurably faster than converting pixels, even if that conversion is SIMD-optimized.</li>
+		<li>Not even having the option to overthink memory pre-allocation sure simplifies your code a lot.</li>
+	</ol></li>
+	<li>Graphics APIs are now addressed by their identifier string rather than their index within the platform-specific list of APIs. SDL 2 has always provided ways to map between both indices and strings, but the fact that every function now takes a string is a nice way of nudging developers to use strings in their configuration as well. They would allow a user's API selection to be retained independently of the SDL developers later changing the order of that list – once I adapt our config format from numbers to strings in a future release, that is. {{HTML_Emoji "onricdennat"}}</li>
+	<li><a href="https://github.com/libsdl-org/SDL/issues/7462">This unassuming change to the OpenGL defaults on Windows</a> removed <a href="https://github.com/libsdl-org/SDL/issues/11041">the seemingly unfixable mode change for borderless fullscreen</a> on some displays! 🙌</li>
+</ul><p>
+	A few changes have good and bad elements:
+</p><ul>
+	<li>SDL apps can now define <a href="https://wiki.libsdl.org/SDL3/SDL_SetAppMetadataProperty">metadata strings</a>. Most of these currently don't do anything, but the <i>identifier</i> now gets used as the Wayland and X11 window class name and thus represents a much cleaner way of having class-derived icons than {{Blog_PostLink "2025-01-25#icon-linux" "the previous undocumented <code>SDL_VIDEO_X11_WMCLASS</code> environment variable"}}. But if you read that post again, my main issue wasn't SDL's implementation, but the fact that support for class-derived icons is so rare among window managers to begin with. Not only does this change not help the situation, but it arguably makes it even worse due to a slightly different mapping decision: The app identifier is assigned to the <code>WM_CLASS</code> <i>class</i> name, but the additional <i>instance</i> name receives the binary's file name, which unfortunately breaks class-derived icons in IceWM where the instance name takes precedence.</li>
+	<li>Draw calls are now batched on all renderers, and batching can no longer be deactivated. {{Blog_PostLink "2024-10-22#benchmark" "During my previous experiments"}}, SDL's Direct3D 11 backend turned out to be by far the fastest batching renderer on Windows, and SDL 3 coincidentally also made it the new default. So it makes sense to follow suit and remove our previous OpenGL override, restoring {{Blog_PostLink "2024-10-22#lines" "pixel-perfect line rendering in framebuffer-scaled mode"}} by default.<br>
+	The massive downside, however, is that the combination of framebuffer rendering and OpenGL ES 2 is now completely broken on integrated Intel graphics, in the worst way: The game initializes fine and responds to input, but only shows a black screen. If we offer such a menu, we'd better also have a feature to unbrick your game in a non-graphical way if it only renders a black screen. That's why you now can<ul>
+		<li>press F7 to cycle through the list of APIs at any point, or</li>
+		<li>use the environment variable <code>SDL_RENDER_DRIVER</code> to override any previous manual API selection, which didn't work before.</li>
+	</ul></li>
+	<li>Draw call batching even extends to the software renderer now, for some reason. Doesn't software rendering boil down to nothing more than writing pixels into a system-memory buffer on a single thread? There's no penalty for just <i>doing</i> the thing, but there certainly is a small penalty for gathering all the things into a queue. I'd rather not pepper that procedural mess of a graphics backend with even more imperative function calls, but you can make just as much of an argument for the consistency of requiring a flush regardless of whether a renderer represents software or hardware.</li>
+	<li>The new Vulkan and GPU render backends are perhaps the most exciting change for a certain group of people. The GPU API in particular provides an abstraction for the common modern paradigm of command buffers and shaders, which is shared among Vulkan, Direct3D 12, and Metal. <a href="https://github.com/libsdl-org/SDL/issues?q=GPU">Given the amount of attention it received</a>, this feature is undoubtedly great for everyone developing modern games. However, not only couldn't we care less for a game of this vintage, but it's also just more of the same dilemma: While more backends <i>can</i> offer a higher chance of the game working well on some potato out there, they primarily mean more code surface, which means <a href="https://github.com/libsdl-org/SDL/issues/12646">more bugs</a>.<ul>
+		<li>Luckily, the GPU API was so much of a success that <a href="https://github.com/libsdl-org/SDL/issues/12554">the SDL team is thinking about removing SDL_Renderer's non-GPU Direct3D 12, Vulkan, and Metal backends</a>. All of these implement the immediate SDL_Renderer API in terms of command buffers and shaders, so it makes perfect sense to just replace these specific implementations with the single GPU abstraction that in turn uses any one of the three APIs under the hood. Ideally, <a class="goal" href="https://github.com/nmlgc/ssg/issues/83">the API menu should then also offer players to choose this second layer of backends</a> once SDL has taken that step.</li>
+	</ul></li>
+</ul><p>
+	Thankfully, the list of entirely bad changes is quite short:
+</p><ul>
+	<li>All API functions now return <code>true</code>/nonzero on success and <code>false</code>/zero on failure, rather than 0 on success and &lt;0 on failure as in SDL 2. Sure, <code>true</code>&nbsp;= success makes intuitive sense when you just start out programming, but then you realize that the overwhelming majority of functions can fail in multiple ways and success is just the absence of failure. SDL 2 got the right idea about this, but SDL 3 chose to regress to said beginner levels because <a href="https://github.com/libsdl-org/SDL/issues/10575">Sam Lantinga got increasingly convinced of this idea that he, and everyone else, initially considered horrible</a>.</li>
+	<li><code>#include</code> directives must now be prefixed with an explicit <code>SDL3/</code> path, unlike SDL 2 which didn't use a prefix. This was <a href="https://github.com/libsdl-org/SDL/issues/6575">apparently necessary to fulfill some macOS requirement</a>, but they've also removed the path from their <code>pkg-config --cflags</code>, turning the prefixed syntax into the only sanctioned cross-platform way of including SDL 3's headers. Being able to compile SDL3-using code without any additional <code>CFLAGS</code> might look pretty, but no sane build system is going to make an exception and <i>not</i> call <code>pkg-config --cflags</code> as it does for any other external library. And now I have to duplicate the <code>#include</code> section in every translation unit for the SDL 2 code path…</li>
+	<li>All SDL threads must now be <a href="https://wiki.libsdl.org/SDL3/SDL_WaitThread">manually awaited</a> before calling <code>SDL_Quit()</code>. If they aren't, SDL reports a "leaked thread" even if the underlying OS thread might have cleanly finished. I get it, <a href="https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">structured concurrency</a> is probably a good idea, but it only works naturally if the rest of your program is structured accordingly, which doesn't apply to this 25-year-old codebase. Enforcing this leak check just forces me to write cleanup code for the sole purpose of satisfying SDL's bookkeeping to avoid that error.</li>
+</ul><p>
+	Still, the constant stumbling over bugs and <a href="https://github.com/libsdl-org/SDL/issues/12432#issuecomment-2698313170">deliberate instabilities</a> made this take way longer than it had any right to. For three of these bugs, <a href="https://github.com/libsdl-org/SDL/issues?q=author%3Anmlgc">I was the first one to report them</a>, and I could have even reported a fourth one if I actually cared about Vulkan and didn't happen to find a workaround right before I pushed out the release.<br>
+	With the additional API unbricking feature, we've ended up well into a second push. Replays were too big of a feature for now, but screenshot compression sounded like a nice task for the rest of that push. Really, how hard can it be? Add reference C library of our encoder of choice, call API with pixel buffer we get from SDL, write compressed pixel buffer to file. Easy, right? Well…
+</p><hr id="format-{{.Date}}"><p>
+	For starters, which format do we choose? {{DB_CustomerByID 13}} had a clear preference, but it makes sense to compare it against other contenders first. There will be a complete benchmark further below, but let's get the seemingly most obvious candidate out of the way first:
+</p><h3 id="qoi-{{.Date}}">QOI</h3><p>
+	Because who doesn't want a fast encoder for a simple format with <a href="https://github.com/phoboslab/qoi/?tab=readme-ov-file#qoi-support-in-other-software">steadily growing adoption</a>? Sure, <a href="https://www.youtube.com/watch?v=EFUYNoFRHQI&t=1383s">part of the adoption might be hype-driven</a>, but as far as hype goes, there are definitely worse targets than a codec that fits in less than 300 lines of C. The low-color images we want to compress are rather simple from a modern point of view as well, so you'd expect QOI to be a perfect match…<br>
+	…until you actually try encoding a few representative images and are greeted with file sizes that are <i>way</i> further removed from PNG than you'd expect after seeing the <a href="https://qoiformat.org/benchmark/">official benchmarks</a>. Since the <a href="https://qoiformat.org/qoi-specification.pdf">specification</a> is short enough, we can easily explain these results:
+</p><ul>
+	<li>All of Shuusou Gyoku's sprites are intended to be rendered within a palettized 256-color framebuffer. 3D-rendered gradients and transparency will drive up the number of unique colors in screenshots into the low 4-digit range at times, but it still makes sense to assume uncompressed 8-bit BMPs as the baseline. At our native resolution of 640×480, these are 308,278 bytes large. This is what we expect our chosen codec to beat, by hopefully a quite significant margin.</li>
+	<li>The 32-bit <code>QOI_OP_RGB</code> chunk would already blow up each affected pixel to 4× the size it would have had in a palettized image. Let's hope that the QOI encoder largely uses this chunk to define palette colors, and that we don't get to see it that often otherwise.</li>
+	<li>The 16-bit <code>QOI_OP_LUMA</code> chunk can <i>maybe</i> help compress unknown pixels that haven't yet been put into the running palette, but would still not contribute any compression compared to our baseline size. Fortunately, we shouldn't see too many of those as the encoder is specified to prefer 8-bit chunks where possible…</li>
+	<li>…except that <code>QOI_OP_INDEX</code> spends 8 bits on encoding a 6-bit palette index. With only 64 colors in the palette rather than the 256 we want, we're bound to see a lot more of those bulky 32-bit <code>QOI_OP_RGB</code> chunks after all. Not to mention the fact that colors are mapped onto these 64 palette slots using a simple multiplicative hash that will cause collisions at regular color intervals.</li>
+	<li>Any compression gains over uncompressed 8-bit BMP would therefore come from <code>QOI_OP_RUN</code>. If run-length encoding is the best an image codec can do, that's rather basic instead of OK, I'd say.<ul><li>
+		Actually… wait a moment, <a href="https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-compression">doesn't BMP also have a run-length-encoded mode that was mostly forgotten after the 90s</a>? And indeed, the compression rates between vintage BMP/RLE and QOI are very similar, with any differences stemming from the way these two formats encode their run lengths. QOI typically does slightly better, but BMP/RLE still beats it in the <span lang="ja" style="word-break: keep-all;">西方Ｐｒｏｊｅｃｔ</span> logo and the main menu.
+	</li></ul>
+</ul><p>
+	So while reduced complexity and blazingly fast encoding speed are good arguments, they don't cut it if decent compression of our source images relies on all the complexity found in PNG. But shouldn't this deficiency have stuck out in the <a href="https://qoiformat.org/benchmark/">official benchmark</a> in some way? After all, 43% of the images in QOI's test suite have ≤256 colors, with most of them coming from <a href="https://www.philipk.net/index.html">Philip K's Ancient Collection</a> in the <code>textures_pk</code> directory, where they make up 80%. For this directory, the official numbers claim average compressed sizes of 80&nbsp;KiB for PNG and 75&nbsp;KiB for QOI, and running the benchmark myself confirms these numbers…<br>
+	…but wait, the input PNG files in the test suite package are actually half that size?! Yup – this benchmark merely tests the fixed, untunable QOI <i>format</i> against two specific PNG <i>encoders</i>, libpng and stb_image, at their default compression level and filter settings. It does <i>not</i> claim anything about QOI's relation to the known limits of PNG as a format, <a href="https://youtu.be/EFUYNoFRHQI?t=1702">despite what the hype drivers would lead you to conclude all too easily</a>. In any case, it paints a much different picture of QOI's 256-color capabilities:
+</p><figure class="benchmark-{{.Date}}">
+	<table class="numbers"><thead>
+		<tr><th></th><th>Average file size</th></tr>
+	</thead><tbody>
+		<tr><td>stb_image</td><td>110,337</td></tr>
+		<tr><td>libpng</td><td>82,136</td></tr>
+		<tr><td>QOI</td><td>77,404</td></tr>
+		<tr><td>PNG source files</td><td>43,437</td></tr>
+		<tr><td><code>oxipng -o max -Z</code></td><td>41,032</td></tr>
+	</tbody></table>
+	<figcaption>We will later see why comparing the slowest PNG encoders against the constantly fast QOI is, in fact, not unfair.</figcaption>
+</figure><p>
+	The final nail in QOI's coffin is this concession at the end of its release announcement:
+</p><blockquote>SIMD acceleration for QOI would also be cool but (from my very limited knowledge about some SIMD instructions on ARM), the format doesn't seem to be well suited for it. Maybe someone with a bit more experience can shed some light?</blockquote><p>
+	I'd rather take a new image format that's designed around modern SIMD instructions from the start. Then, it can invest these performance gains into more complex filters to end up with better compression at a roughly similar encoding performance. Heck, it can even be slightly slower for all I care. <a href="https://github.com/cmuratori/meow_hash">SIMD-first design worked great for non-cryptographic hashes</a>, and we'll see in a minute that it works just as well for image formats.<br>
+	But {{DB_CustomerByID 13}} had a different codec in mind anyway. Let's jump right to the polar opposite of the complexity spectrum:
+</p><h3 id="jxl-{{.Date}}">Lossless JPEG XL</h3><p>
+	Because why wouldn't you use the currently best and most popular image format according to actual professionals who know a couple of things about image compression? It's winning benchmarks left and right, and <a href="https://cloudinary.com/blog/jpeg-xl-and-the-pareto-front">blog posts like these</a> make it appear as if even version 0.10 of its reference encoder already beats out every other widely used codec. And after it <a href="https://issues.chromium.org/issues/40168998#comment85">unfairly got removed from Chromium in 2022</a>, you can't help but root for it. Time to do my small part in bringing its adoption to a level that Google can no longer deny!
+</p><p>
+	Too bad that the enthusiasm immediately drops after cloning the <a href="https://github.com/libjxl/libjxl/">libjxl repo</a> and running a CMake test build. What are all these library dependencies, and why can't I just reduce the build to the lossless encoder? The resulting binaries are way larger than what I'd consider appropriate in relation to game code. 😩<br>
+	Looking through the repo more thoroughly, however, reveals a very welcome little surprise: <a href="https://github.com/libjxl/libjxl/blob/c496c521f99c13b8205c4fc4ff3eb3d652a1d1c3/lib/jxl/encode.cc#L2235-L2296">If a few basic requirements are met</a>, the fastest lossless speed tier actually uses <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/lib/jxl/enc_fast_lossless.cc">an entirely separate encoder that's implemented in a single source file</a> and can be used independently from the rest of libjxl. Nice to see that someone thought about simple integration after all! That's exactly what I've hoped to find. Sadly, Linux distributions don't have a separate standalone package for this encoder, but it wouldn't be the only library we'd statically link on Linux.<br>
+	Having <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/lib/jxl/enc_fast_lossless.h#L51-L55">a single function as an easy entry point</a> is always a good sign, too. Those parameters, though… {{HTML_Emoji "thonk"}}
+</p><ul>
+	<li>Only accepting pixels in RGBA memory order sure is awkward in a 3D-accelerated world where everything else prefers BGRX, <i>including BMP files</i>. Sure, it doesn't matter for <i>us</i> because we live in SDL land where we have SIMD-optimized pixel format converters, but <a href="https://github.com/libjxl/libjxl/issues/3113#issuecomment-1894741917">I don't think you should assume that everyone has these kinds of batteries included</a>. <a href="https://github.com/libjxl/libjxl/issues/2519#issuecomment-1575389359">"Just roll your own"</a> isn't a good argument either because you'd <i>want</i> pixel format conversions to be SIMD-optimized. We'd all love it if compilers perfectly auto-vectorized such code, but we're not there yet; <a href="https://godbolt.org/z/Yx98qo1s3">Visual Studio in particular is pretty bad at optimizing naive byte-flipping code</a>. But writing SIMD code always comes with the same CPU feature detection and alignment boilerplate, and JPEG XL already has all of that in its codebase. Thus, it makes a lot more sense for it to include pixel format converters than forcing that onto every caller. It's API designs like this one that almost necessitate turning SDL into a hard dependency of the cross-platform frontend in the long run.</li>
+	<li>The not further documented <code>big_endian</code> parameter is the first indication that a lot of development effort went into aspects we don't care about. You'd think that passing <code>true</code> would cause the <code>rgba</code> buffer to be interpreted as ABGR, but it's only used to select the per-channel endianness of images with <i>16 bits</i> per color channel. For 8-bit-per-channel images like the ones we're exclusively dealing with, it silently does nothing.</li>
+</ul><p>
+	As the FJXL abbreviation implies, this encoder actually started as an independent project that, coincidentally, <a href="https://www.lucaversari.it/FJXL_and_FPNGE.pdf">was a direct response to the hype surrounding QOI</a>. By using AVX2 instructions within the confines of an existing format, it managed to beat QOI in both encoded file sizes <i>and</i> compression speed for every type of image its developer tested. But it's this competitive focus that brings us to its most questionable implementation decision.<br>
+	The good news is that FJXL acknowledges that low-color images exist, are a prime use case for lossless compression, and are best dealt with using JPEG XL's palette features. However, detecting and optimizing that palette takes up a lot of time relative to QOI. If the input image uses more colors than a palette would make sense for, you'd want to fail as early as possible. Slide 11 explains the solution FJXL came up with:
+</p><blockquote style="white-space: unset;">
+	<ul>
+		<li>Hash table with 65k possible entries</li>
+		<li>Any collision -> no palette</li>
+		<li>[…]</li>
+	</ul><p>
+		On non-palette-friendly images, this fails quickly (birthday paradox says after ~256 distinct pixels).
+	</p><p>
+		On palette images, encoding 1 channel rather than 4 more than compensates the
+		cost of detection.
+	</p>
+</blockquote><p>
+	With 10 additional bits and a widely renowned multiplier, the hash function looks leaps and bounds ahead of the one in QOI:
+</p><figure><pre>// has to map 0 to 0
+uint16_t pixel_hash(uint32_t p) {
+	return ((p * 2654435761) >> 16);
+}</pre><figcaption>
+	Adapted from <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/lib/jxl/enc_fast_lossless.cc#L3514-L3523">the original code</a>.
+</figcaption></figure><p>
+	But since we're still hashing 32-bit RGBA pixels to 16 bits, we're bound to run into a collision sooner or later. You can certainly think of this hash function as mapping color values to uniformly distributed random numbers and then reason about its efficacy using probability theory, as we saw in the slide above. However, the conclusion drawn in that slide is rather abbreviated and ultimately misleading: The <a href="https://en.wikipedia.org/wiki/Birthday_problem">birthday paradox</a> does <i>not</i> return a binary success/failure result, but a <i>probability</i>. In this case of 256 distinct colors:
+</p><figure style="display: block;">
+	(1&nbsp;-&nbsp;<sup>(
+		<sup>
+			65536!
+		</sup>&nbsp;/&nbsp;<sub>
+			(65536 - 256)!
+		</sub>
+	)</sup>&nbsp;/&nbsp;<sub>
+		65536<sup>256</sup>
+	</sub>)&nbsp;≈ 39.27%
+</figure><p>
+	Therefore, the slides should have better said something like:
+</p><blockquote>birthday paradox says that an image with exactly 256 distinct colors will have a 39% chance of being wrongly detected as not palette-friendly</blockquote><p>
+	Which is quite a significant failure rate for our use case. And sure enough, it actually happens in the main menu, where a single <span style="color: #583732;">#583732FF</span> pixel (or <code>0xFF323758</code> in its little-endian representation) collides with #FFFFFFFF:
+</p><figure class="fullres pixelated">
+	<rec98-child-switcher><img
+		src="{{$bm_main_menu}}"
+		data-title="The image"
+		width="640"
+		alt="The `main_menu` benchmark image."
+	/><img
+		src="{{$pixel}}"
+		class="active"
+		data-title="The pixel"
+		width="640"
+		alt="A 16× zoomed view of the `main_menu` benchmark image, highlighting the single #583732FF pixel that causes the hash collision in FJXL's palette detection code"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	The resulting 143&nbsp;KiB file immediately tells us how not palettizing such images completely ruins the compression ratio. If this one pixel had any other non-colliding color, FJXL would have compressed it into a still decent 52&nbsp;KiB.<br>
+	For our use case of screenshots without an alpha channel, we could work around this whole issue by having a separate non-alpha code path. Detecting the potential palette of an RGBA image within a worst-case time complexity of 𝑂(𝑛) without using hashes requires a (<sup>2<sup>32</sup></sup>/<sub>8</sub>)&nbsp;= 512&nbsp;MiB bit array to cover the entire RGBA color space, which is probably too steep of a memory requirement. Removing the alpha channel, however, would shrink this array to a definitely appropriate 2&nbsp;MiB.
+</p><p>
+	Ultimately though, we decided against doing any of that because FJXL by itself is as untunable from the outside as the codec it was inspired by. {{DB_CustomerByID 13}} preferred the opposite: an encoder with multiple effort levels that offer different trade-offs between encoding speed and file size, which would allow faster CPUs to produce the smallest files at still reasonable speeds. So let's look past the bloat, link in the complete libjxl reference encoder, and see how it performs on higher effort levels…
+</p><p>
+	…um, what is this API? Adapting the <a href="https://github.com/libjxl/libjxl/blob/c496c521f99c13b8205c4fc4ff3eb3d652a1d1c3/examples/encode_oneshot.cc">example code</a> gave me encoding times that are at least 1.5× slower than the <code>cjxl</code> command-line encoder, and already hit the 100&nbsp;ms mark at <code>-e 2</code>. Even <code>-e 1</code> is suddenly much slower than using FJXL in isolation while yielding the same compressed sizes. Also, <a href="https://github.com/libjxl/libjxl/blob/c496c521f99c13b8205c4fc4ff3eb3d652a1d1c3/examples/encode_oneshot.cc#L205-L217">pushing speculative allocation onto the caller</a>? 🤨 {{Blog_PostLink "2024-03-09#libs" "stb_vorbis is a bad joke, not a model to be emulated"}}.<br>
+	The compressed file sizes are pretty underwhelming as well. Most of the test cases don't even get close to oxipng at <code>-e ≤6</code> while still taking absurdly long to encode within the game. Even at peak effort, it's a mixed bag at best, with both oxipng and JPEG XL <code>-e 10</code> massively beating the other in 3 out of 7 cases. And if <i>that's</i> the best we can say about this format…
+</p><p>
+	All this is echoed by <a href="https://github.com/libjxl/libjxl/issues/4150">this recent issue</a> that points out JPEG XL's inadequacy with an even more retro 16-color example. In the end, the <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/doc/xl_overview.md#lossless">documentation</a> said it all along:
+</p><blockquote>They are about 60-75% of size of PNG, and smaller than WebP lossless <strong>for photos.</strong></blockquote><hr id="bench-{{.Date}}"><p>
+	But there is one widely-used image codec that both perfectly fits {{DB_CustomerByID 13}}'s priorities <i>and</i> compresses well on lower effort levels. Let's finally look at the complete benchmark numbers:
+</p><figure class="benchmark-{{.Date}}">
+	<rec98-child-switcher id="numbers-{{.Date}}" data-link="images-{{.Date}}">
+		<table class="numbers active" data-title="<code>main_menu</code>"><thead>
+			<tr><th><code>main_menu</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>146,352</td><td>51,851</td><td>59,453</td><td>45,329</td><td>37,864</td><td>37,276</td><td>36,130</td><td>35,222</td><td>33,793</td><td>31,724</td></tr>
+			<tr><td>WebP</td><td>54,116</td><td>32,194</td><td>28,112</td><td>27,860</td><td>27,712</td><td>28,272</td><td>28,178</td><td>28,120</td><td>28,684</td><td>27,816</td></tr>
+			<tr><td>AVIF</td><td>272,604</td><td>272,604</td><td>136,220</td><td>131,235</td><td>119,398</td><td>117,525</td><td>111,380</td><td>110,684</td><td>110,543</td><td>109,601</td></tr>
+			<tr><td>BMP (8 bpp)</td><td colspan="10">308,278</td></tr>
+			<tr><td>BMP/RLE</td><td colspan="10">&nbsp;92,034</td></tr>
+			<tr><td>QOI</td><td colspan="10">&nbsp;93,884</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;30,702</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+		</tbody></table><table class="numbers" data-title="<code>ingame</code>"><thead>
+			<tr><th><code>ingame</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>123,606</td><td>102,949</td><td>130,689</td><td>102,944</td><td>84,916</td><td>72,590</td><td>68,302</td><td>49,618</td><td>45,865</td><td>46,997</td></tr>
+			<tr><td>WebP</td><td>50,678</td><td>49,030</td><td>43,620</td><td>41,760</td><td>40,724</td><td>40,854</td><td>38,608</td><td>37,940</td><td>37,842</td><td>37,138</td></tr>
+			<tr><td>AVIF</td><td>462,703</td><td>462,703</td><td>197,818</td><td>156,007</td><td>141,043</td><td>139,689</td><td>133,399</td><td>132,573</td><td>126,270</td><td>125,379</td></tr>
+			<tr><td>BMP (8 bpp)</td><td colspan="10">308,278</td></tr>
+			<tr><td>BMP/RLE</td><td colspan="10">185,842</td></tr>
+			<tr><td>QOI</td><td colspan="10">175,949</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;38,409</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">185,398</td></tr>
+			<tr><td>BMP/RLE, cropped</td><td colspan="10">177,456</td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">165,620</td></tr>
+		</tbody></table><table class="numbers" data-title="<code>stage6</code>"><thead>
+			<tr><th><code>stage6</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>32,204</td><td>24,146</td><td>35,053</td><td>24,599</td><td>19,936</td><td>19,560</td><td>19,336</td><td>18,444</td><td>17,423</td><td>16,183</td></tr>
+			<tr><td>WebP</td><td>20,856</td><td>19,916</td><td>17,070</td><td>16,524</td><td>16,380</td><td>16,562</td><td>15,488</td><td>15,386</td><td>15,404</td><td>15,124</td></tr>
+			<tr><td>AVIF</td><td>185,676</td><td>185,676</td><td>84,437</td><td>62,354</td><td>57,791</td><td>56,524</td><td>52,956</td><td>52,611</td><td>51,969</td><td>51,795</td></tr>
+			<tr><td>BMP (8 bpp)</td><td colspan="10">308,278</td></tr>
+			<tr><td>BMP/RLE</td><td colspan="10">&nbsp;55,838</td></tr>
+			<tr><td>QOI</td><td colspan="10">&nbsp;52,302</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;18,741</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">185,398</td></tr>
+			<tr><td>BMP/RLE, cropped</td><td colspan="10">&nbsp;48,954</td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">&nbsp;45,874</td></tr>
+		</tbody></table><table class="numbers" data-title="<code>laser</code>"><thead>
+			<tr><th><code>laser</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>345,199</td><td>287,279</td><td>301,608</td><td>248,852</td><td>92,463</td><td>85,529</td><td>81,206</td><td>66,811</td><td>61,445</td><td>47,173</td></tr>
+			<tr><td>WebP</td><td>85,318</td><td>56,724</td><td>51,558</td><td>53,964</td><td>53,492</td><td>53,492</td><td>51,860</td><td>51,460</td><td>51,460</td><td>41,726</td></tr>
+			<tr><td>AVIF</td><td>218,858</td><td>218,858</td><td>122,100</td><td>88,490</td><td>82,675</td><td>81,245</td><td>75,866</td><td>75,395</td><td>75,462</td><td>75,138</td></tr>
+			<tr><td>BMP (24 bpp)</td><td colspan="10">921,654</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI</td><td colspan="10">290,088</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;61,595</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">280,462</td></tr>
+		</tbody></table><table class="numbers" data-title="<code>laserbomb</code>"><thead>
+			<tr><th><code>laserbomb</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>332,706</td><td>125,197</td><td>150,436</td><td>128,755</td><td>110,357</td><td>102,891</td><td>99,718</td><td>68,968</td><td>66,975</td><td>64,484</td></tr>
+			<tr><td>WebP</td><td>129,472</td><td>94,564</td><td>86,538</td><td>64,990</td><td>64,062</td><td>64,062</td><td>60,776</td><td>60,318</td><td>60,318</td><td>59,198</td></tr>
+			<tr><td>AVIF</td><td>313,731</td><td>313,731</td><td>168,388</td><td>114,111</td><td>109,239</td><td>107,121</td><td>104,109</td><td>102,054</td><td>99,106</td><td>99,103</td></tr>
+			<tr><td>BMP (24 bpp)</td><td colspan="10">921,654</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI</td><td colspan="10">210,496</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;87,286</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">200,002</td></tr>
+		</tbody></table><table class="numbers" data-title="<code>gates</code>"><thead>
+			<tr><th><code>gates</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>208,293</td><td>185,662</td><td>212,615</td><td>172,008</td><td>124,466</td><td>117,509</td><td>113,563</td><td>110,992</td><td>97,454</td><td>91,146</td></tr>
+			<tr><td>WebP</td><td>124,308</td><td>125,070</td><td>113,896</td><td>102,656</td><td>102,482</td><td>102,482</td><td>95,536</td><td>94,768</td><td>94,768</td><td>57,850</td></tr>
+			<tr><td>AVIF</td><td>306,742</td><td>306,742</td><td>293,874</td><td>293,276</td><td>254,073</td><td>243,953</td><td>243,947</td><td>242,188</td><td>241,943</td><td>241,359</td></tr>
+			<tr><td>BMP (24 bpp)</td><td colspan="10">921,654</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI</td><td colspan="10">157,705</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;90,545</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
+			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">147,670</td></tr>
+		</tbody></table><table class="numbers" data-title="<code>seihou</code>">
+		<thead>
+			<tr><th><code>seihou</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>
+		</thead><tbody>
+			<tr><td>JPEG XL</td><td>6,124</td><td>5,088</td><td>4,732</td><td>4,468</td><td>4,427</td><td>4,416</td><td>4,377</td><td>4,112</td><td>4,016</td><td>4,040</td></tr>
+			<tr><td>WebP</td><td>39,518</td><td>5,904</td><td>5,642</td><td>5,574</td><td>5,500</td><td>5,518</td><td>5,518</td><td>5,504</td><td>5,486</td><td>5,490</td></tr>
+			<tr><td>AVIF</td><td>26,984</td><td>26,984</td><td>25,085</td><td>24,927</td><td>22,582</td><td>21,698</td><td>21,697</td><td>21,627</td><td>21,631</td><td>21,505</td></tr>
+			<tr><td>BMP (8 bpp)</td><td colspan="10">308,278</td></tr>
+			<tr><td>BMP/RLE</td><td colspan="10">&nbsp;17,654</td></tr>
+			<tr><td>QOI</td><td colspan="10">&nbsp;18,047</td></tr>
+			<tr><td><code>oxipng -o max -Z</code></td><td colspan="10">&nbsp;&nbsp;5,383</td></tr>
+			<tr><td>BMP, cropped</td><td colspan="10">&nbsp;23,798</td></tr>
+			<tr><td>BMP/RLE, cropped</td><td colspan="10">&nbsp;14,144</td></tr>
+			<tr><td>QOI, cropped</td><td colspan="10">&nbsp;13,371</td></tr>
+		</tbody>
+	</table>
+	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		The effort value directly corresponds to <code>cwebp</code>'s <code>-z</code> parameter. Add 1 to get <code>cjxl</code>'s <code>-e</code> parameter, and subtract from 10 for <code>avifenc</code>'s <code>-s</code> parameter. <br>
+		I definitely could have surveyed the landscape of PNG encoders more thoroughly, but since {{DB_CustomerByID 13}} prioritized compression ratio over compression speed, there was no need to. oxipng is as good as it gets, but even its strongest and most sluggish setting is still outperformed by regular WebP at <i>some</i> level, and often as early as <code>-z&nbsp;2</code>.
+	</figcaption>
+</figure><figure class="fullres pixelated">
+	<figcaption class="dynamic"><div>
+		191 colors. The large areas in black and <span style="background-color: #dde4fa;">#DDE4FA</span> are a great test case for an encoder's RLE capabilities. The menu's half-transparent background is slightly nasty, but should still keep this image well within the range of potential palette-based compression. (Unless you're QOI, of course.)<br>
+		FJXL palette detection collision chance: 24.21%.
+	</div><div>
+		92 colors. Lots of repeated bullet sprites to appropriately represent gameplay, plus a small transparency effect in the Evade gauge that shouldn't complicate compression all too much.<br>
+		FJXL palette detection collision chance: 6.20%.
+	</div><div>
+		96 colors. The wavy clock animation makes Stage 6 <i>look</i> complex, but we expect encoders to actually have a much easier time on the last three stages due to their backgrounds being mostly black.<br>
+		FJXL palette detection collision chance: 6.72%.
+	</div><div>
+		1219 colors. A simple repeated tile in the background, with a big gradient that is likely to push the color count beyond palette-based algorithms.
+	</div><div>
+		831 colors. Similar to enemy-fired lasers, but with multiple smaller gradients rather than a single big one.
+	</div><div>
+		2326 colors. With a comparatively complex background, bullets, and a big laser, this is probably the most intense test case for lossless compression that this game has to offer.
+	</div><div>
+		40 colors. A small consolation prize for JPEG XL, as the smoothly feathered and blurred colors match the photo-like characteristics this codec was meant to target. Even oxipng gets to barely outperform WebP on this one. Then again, the difference between JPEG XL and WebP is still less than 1.5&nbsp;KiB at most, for an image that doesn't represent the rest of the game.<br>
+		FJXL palette detection collision chance: 1.18%.
+	</div></figcaption>
+	<rec98-child-switcher id="images-{{.Date}}" data-link="numbers-{{.Date}}"><img
+		src="{{$bm_main_menu}}"
+		class="active"
+		data-title="<code>main_menu</code>"
+		width="640"
+		alt="The `main_menu` benchmark image."
+	/><img
+		src="{{$bm_ingame}}"
+		data-title="<code>ingame</code>"
+		width="640"
+		alt="The `ingame` benchmark image."
+	/><img
+		src="{{$bm_stage6}}"
+		data-title="<code>stage6</code>"
+		width="640"
+		alt="The `stage6` benchmark image."
+	/><img
+		src="{{$bm_laser}}"
+		data-title="<code>laser</code>"
+		width="640"
+		alt="The `laser` benchmark image."
+	/><img
+		src="{{$bm_laserbomb}}"
+		data-title="<code>laserbomb</code>"
+		width="640"
+		alt="The `laserbomb` benchmark image."
+	/><img
+		src="{{$bm_gates}}"
+		data-title="<code>gates</code>"
+		width="640"
+		alt="The `gates` benchmark image."
+	/><img
+		src="{{$bm_seihou}}"
+		data-title="<code>seihou</code>"
+		width="640"
+		alt="The `seihou` benchmark image."
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><hr id="webp-{{.Date}}"><h3>Lossless WebP</h3><p>
+	Yup, it's {{Blog_PostLink "2022-10-31" "ZMBV beating AV1"}} all over again. For these kinds of retro game screenshots, JPEG XL is vastly outperformed by its counterpart from the previous generation of widely-used image formats. And not just in terms of compressed file sizes, but also in every single other aspect that matters to us:
+</p><ul>
+	<li>Faster compression times across every effort level? ✅ You bet. Imagine adapting <a href="https://github.com/webmproject/libwebp/blob/main/doc/api.md">its example code</a> and actually getting encoding speeds that match the <code>cwebp</code> command-line encoder! Which brings us to…</li>
+	<li>Better C API? ✅ Check – well-documented and significantly easier to use, and I'm not even using the easiest entry point due to its fixed effort level. libwebp does use a single 32-bit pixel format internally, just like JPEG XL, but what's that, importers for <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/src/webp/encode.h#L465-L486">other 32-bit pixel formats</a> and even <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/extras/extras.h#L46-L53">palettized 8-bit</a> images? Sure, the latter ones are part of the extra code that typically isn't part of Linux distribution packages and it just does <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/extras/extras.c#L124-L151">a simple unoptimized loop</a>. But <i>that's</i> how a library communicates that it's the right tool for the job.</li>
+	<li>Less bloat? ✅ Obviously. The unmodified reference library with all of its SSE and AVX optimizations adds an acceptable 274.5&nbsp;KiB to the statically linked and optimized release binary.</li>
+</ul><p>
+	That's not to say that libwebp is perfect. Its code makes it very obvious that lossless WebP was designed for 2010-era hardware as the encoder never got optimized for modern CPUs. There was an attempt at optimizing at least the lossy encoder for AVX2, but it was <a href="https://chromium-review.googlesource.com/c/webm/libwebp/+/1282969">ultimately abandoned because it never got fast enough</a>. Surprisingly, the codebase did <a href="https://chromium-review.googlesource.com/c/webm/libwebp/+/6405317">receive new AVX2 code</a> one week before I released this build, but it only covers the lossless <i>decoder</i> so far.<br>
+	As for concurrency, libwebp does come with support for multi-threaded encoding, and I did activate it for the Shuusou Gyoku integration, but it's only used at effort levels 8 and 9. Also, why is <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/src/webp/encode.h#L311-L324"><code>argb</code> in this structure</a> interpreted as native-endian and therefore BGRA memory order, but <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/src/webp/encode.h#L49-L80">these</a> are interpreted as big-endian?
+</p><p>
+	But the main criticism is the same that also applies to JPEG XL: The lossless and lossy modes are lumped into the same repository despite having virtually no code in common, and are <a href="https://github.com/webmproject/libwebp/blob/a1ad3f1e379539045dd1604fd91e7a270b8af9d1/src/webp/encode.h#L96">selected via a structure field</a> rather than having unrelated API entry points. This once again makes it very difficult for static linkers to remove all the code on the lossy branches that I never asked for in the first place.<br>
+	And I sure never want to run the lossy encoder under <i>any</i> circumstance. Lossy WebP deserves all its bad reputation for basically being VP8's intra-frame coding applied to still images. VP8, {{Blog_PostLink "2022-10-31" "if you remember"}}, is that bad video codec from two generations ago that I'm only serving on this website due to sheer inertia. Applying its enforced YCbCr 4:2:0 chroma subsampling to images does not only make it utterly unsuitable for pixel art, but also even worse than well-compressed JPEG which isn't limited to a single subsampling scheme. If anything in the <code>GIAN07</code> process accidentally flips the <i>"I want lossless"</i> flag, I'd rather want the WebP encoder to error out and have the screenshot frontend fall back on BMP than save an image with mutilated colors.
+</p><p>
+	But while JPEG XL is a lost cause as far as I'm concerned, I've grown to like lossless WebP too much to leave it trapped within the unfortunate organization of its codebase. Also, there seems to be a lot of untapped potential in the format – really, why does PNG get <a href="https://github.com/richgel999/fpng">all</a> <a href="https://github.com/lvandeve/lodepng">the</a> <a href="https://github.com/veluca93/fpnge">attention</a> of people writing alternative encoders when lossless WebP is the demonstrably much more capable format?<br>
+	So I've decided to <a href="https://github.com/nmlgc/libwebp_lossless">fork libwebp and surgically remove all code related to the lossless encoder</a>. The statically linked result now only takes up ~100&nbsp;KiB in the Windows build while still being API- and ABI-compatible. Of course, Linux users will still use their distribution's libwebp package with the lossy encoder included, but let's hope that the aforementioned possibility of accidents stays purely theoretical.
+</p><p>
+	Really though, why have people started to bundle lossless and lossy image codecs under the same format in the first place if their algorithms have nothing in common? It might make sense for Opus where SILK and CELT are different kinds of lossy, but <i>lossless</i> and lossy are two completely different paradigms. The bloat and usability confusion far outweigh any <a href="https://www.reddit.com/r/compression/comments/wc61wt/comment/iiaqvbi/">situational tricks this might offer</a>.
+</p><hr id="effort-{{.Date}}"><p>
+	Alright, we found a good format with configurable effort levels, and we're only missing a way for players to <i>pick</i> an effort level. Depending on how they want to use this rapid-fire screenshot feature, almost all of the options make sense in some context:
+</p><ol>
+	<li>You'd like to screenshot a whole section of a stage as fast as possible with the help of the disabled frame rate limiter, and you got plenty of free disk space? You probably want to stick with BMP and compress the screenshots outside of the game, just like how you would have done it without this feature.</li>
+	<li>A slight slowdown is OK or maybe even welcome for providing additional feedback that you're actually taking screenshots? Pick one of WebP's higher effort values that certainly take longer than 16&nbsp;ms to encode, but are still reasonably fast and won't turn the game into a &lt;2-FPS slideshow.</li>
+	<li>Want the lowest file size that your system can encode while staying at 62.5&nbsp;FPS? Well, how fast <i>is</i> your system? And not just the CPU – maybe your system is actually bottlenecked by I/O and writing a large uncompressed BMP file takes much longer than encoding it into WebP and writing the resulting smaller file.</li>
+</ol><p>
+	The latter two use cases would be covered by automatic detection of the maximum effort value that encodes within a given number of frames. The problem, however, is that encoding times are always relative to the complexity of the image. Once we're in-game and have lots of bullets and lasers, any choice that might have been appropriate for the main menu might suddenly start dropping frames after all. Thus, we can't solve this with an upfront benchmark, but have to dynamically adapt to the complexity of the current game scene. But then the whole idea falls apart as we can't possibly treat the configurable <var>allowed screenshot time</var> as a hard limit. To figure out whether it's safe to raise the effort level again, there's no way around  periodically exceeding that limit and thus dropping more frames after all.<br>
+	The ideal solution would involve deep hooks into the WebP encoder that could dynamically adjust the compression algorithms depending on the remaining time in the current frame. An image compressor with <a href="https://en.wikipedia.org/wiki/Real-time_computing">real-time guarantees</a>… sure sounds like an interesting research project.
+</p><p>
+	In the end, letting players choose a fixed format and effort level remains the best option. However, they can only make an informed choice if they know the performance of all options relative to each other. And that's how we arrive at this new submenu:
+</p><figure id="perf-{{.Date}}" class="fullres pixelated bglayer main-menu-{{.Date}}">
+	<img
+		src="{{$times_8400T}}"
+		width="640"
+		alt="32-bit Shuusou Gyoku screenshot encoding times on an Intel Core i5 8400T from 2018, which is just slightly too slow to guarantee real-time encoding at -z 0 without frame drops"
+	/><figcaption>These measurements start before retrieving the framebuffer's pixels, and end after the file writing syscalls. If you save to a reasonably fast and write-cached storage medium, these syscalls are unlikely to have a big impact. Thus, the BMP times almost purely represent the fixed cost of the <code>SDL_RenderReadPixels()</code> call.</figcaption>
+</figure><p>
+	These specific numbers I got on my now almost 7-year-old Intel Core i5 8400T are very peculiar. <code>-z&nbsp;0</code> gets quite close to the 16&nbsp;ms we have per frame, but would still be too slow to reliably compress every gameplay situation without dropping frames. <a class="goal" href="https://github.com/nmlgc/ssg/issues/84">A 64-bit build</a> would speed up <code>-z&nbsp;0</code> by 10%, <code>-z&nbsp;2</code> through <code>-z&nbsp;7</code> by 25%, <code>-z&nbsp;8</code> by 210% (!), and <code>-z&nbsp;9</code> by 60%. Linux users already enjoy these higher speeds, and the Windows build is just a few compiler settings away from matching them. {{Blog_PostLink "2024-10-22#palettized" "Last time, the bitness argument was a lot more balanced"}}, but WebP encoding performance presents the first compelling reason for going 64-bit.<br>
+	Or we could always <a href="https://github.com/nmlgc/ssg/issues/86">go multi-threaded</a>, which already is a much more popular idea within the <i>Seihou development</i> Discord group.<br>
+	Or I could investigate PNG after all to find out how exactly its encoding speed compares to WebP… {{HTML_Emoji "thonk"}}
+</p><p>
+	But then, {{DB_CustomerByID 13}} posted the encoding times he got on his new Ryzen 9 9950X3D:
+</p><figure class="fullres pixelated bglayer main-menu-{{.Date}}">
+	<img
+		src="{{$times_9950X3D}}"
+		width="640"
+		alt="Shuusou Gyoku screenshot encoding times on a Ryzen 9 9950X3D, showcasing how this CPU can compress at least main menu screenshots in real-time using WebP ≤z7, without dropping frames"
+	/>
+	<figcaption>…yeah, I probably won't get funding for performance tuning.</figcaption>
+</figure><hr id="tag-{{.Date}}"><p>
+	Finally, you probably already noticed another small change in this build: The ReC98 push ID is now shown in the bottom-right corner of the title screen image, just below the original game version number. This was the one part of replay preparations that I wanted to get in sooner rather than later. Since the game binary and the data files can be updated or modded independently from each other, I'm going to tag future replays with both of their respective versions to guarantee reproducibility. Of course, newer builds should never introduce bugs that affect gameplay and desynchronize existing replays. But if they ever do, the included push ID allows hosting sites to remove any replays recorded on such a broken build from the official competition tier associated with a specific data file version.<br>
+	As for rendering the push ID, it should obviously look similar to the <i><small>VERSION</small> 1.005</i> text above. We can find these glyphs in <code>GRAPH.DAT</code> file #0, but this particular text is actually baked into the main menu's background image, which explains why the decimal point glyph isn't part of that data file. The glyphs for 0-9 are also used in-game for the score popups, but the A-Z glyphs remain {{HTML_TagInline "unused"}} – so unused, in fact, that pbg didn't even leave any reference to them in the source code:
+</p><figure class="pixelated" style="width: 416px;">
+	<img src="{{$font}}" width="416" alt="The unused 5×5 uppercase gradient font in GRAPH.DAT file #0">
+</figure><p>
+	This means that the game provides us with all the glyphs we would need to display the ReC98 push ID. However:
+</p><ul>
+	<li>The 0-9 glyphs have a size of 5×7 and would stick out a bit too much against a capital P rendered as a smaller 5×5 glyph.</li>
+	<li>In WIP builds, the build ID should also include the Git commit, which traditionally uses small letters. Surrounding the commit info with (brackets) would also be nice.</li>
+</ul>
+	So, all the glyphs next to the <i><small>BUILD</small></i> label actually come from the TrueType text renderer. The non-slashed zeroes immediately give this away, but exactly emulating the color gradient of the 0-9 glyphs makes MS Gothic blend in very well regardless:
+</p><figure class="pixelated" style="width: 320px;">
+	<img
+		src="{{$tag}}"
+		width="320"
+		alt="Screenshot of the bottom-right corner of Shuusou Gyoku's title screen in the P0309 build, showing the new ReC98 build tag below the version number baked into the original title screen image"
+	/>
+</figure><p>
+	And that's all I've got for these very packed three pushes! In exchange, I'll reserve the next Shuusou Gyoku push for another round of maintenance and forward compatibility.<br>
+	The new builds:
+</p><ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0309">
+	{{HTML_Emoji "sh01n"}} Shuusou Gyoku P0309 Windows build</a></li>
+	<li><a class="release" href="https://aur.archlinux.org/packages/seihou-shuusou-gyoku">Shuusou Gyoku on the AUR</a></li>
+	<li><a class="release" href="https://flathub.org/apps/net.nmlgc.rec98.sh01">Shuusou Gyoku on Flathub</a></li>
+</ul><p>
+	Next up: The long-awaited Windows 98 backport of our Shuusou Gyoku build! This has been in development for quite a while, so this should now be a matter of days rather than weeks.
+</p>

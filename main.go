@@ -510,11 +510,14 @@ func main() {
 	// Payment providers
 	// -----------------
 	paypal := <-paypalClient
-	if paypal != nil {
-		pages.Funcs(map[string]interface{}{
-			"PayPal_ClientID": func() string { return paypal.ClientID },
-		})
-	}
+	pages.Funcs(map[string]any{
+		"PayPal_ClientID": func() string {
+			if paypal == nil {
+				return ""
+			}
+			return paypal.ClientID
+		},
+	})
 	stripe := NewStripeClient(domain, "/api/stripe", "/customer/stripe")
 	if stripe != nil {
 		pages.Funcs(map[string]interface{}{

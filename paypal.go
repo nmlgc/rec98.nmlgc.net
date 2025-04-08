@@ -19,7 +19,10 @@ func NewPaypalClient() *paypal.Client {
 	FatalIf(err)
 
 	_, err = client.GetAccessToken(context.Background())
-	FatalIf(err)
+	if err != nil {
+		log.Println("Error connecting to PayPal:", err)
+		return nil
+	}
 	log.Println("Using PayPal auth", auth)
 	return client
 }

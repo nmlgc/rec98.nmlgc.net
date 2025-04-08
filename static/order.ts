@@ -193,6 +193,7 @@ function validateForm() {
 async function activateProvider(
 	button: HTMLButtonElement, scripts: Array<string> = [],
 ) {
+	button.classList.add("loading");
 	button.disabled = true;
 	for(const script of scripts) {
 		await new Promise((resolve) => {

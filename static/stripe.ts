@@ -4,6 +4,7 @@ async function stripe(button: HTMLButtonElement, label_id: string) {
 		throw `#${label_id} not found.`
 	}
 	const label_html = label.innerHTML;
+	button.classList.add("loading");
 	button.disabled = true;
 	label.innerHTML = "Initiating…";
 	startTransaction();

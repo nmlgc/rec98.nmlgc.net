@@ -863,8 +863,8 @@ form #providers code {
 	font-size: 62.5%;
 }
 
-form #providers button:disabled,
-#customer_stripe form button:disabled {
+form #providers button.loading,
+#customer_stripe form button.loading {
 	border-color: transparent;
 	background-color: transparent;
 	color: green;

@@ -1,5 +1,6 @@
 {{$cap := DB_CapCurrent true}}
 {{$discounts := DB_DiscountOffers}}
+{{$paypalID := PayPal_ClientID}}
 
 {{- template "cap.html" $cap -}}
 {{- if not $cap.Reached -}}
@@ -163,16 +164,24 @@
 			</div>
 			<div id="providers">
 				<div id="paypal_container">
-					<button type="button" onclick='
-						activateProvider(this, [
-							"https://www.paypal.com/sdk/js?client-id={{PayPal_ClientID}}&vault=true&currency=EUR",
-							"{{StaticFileURL "paypal.js"}}"
-						]);
-						document.getElementById("paypal_label").textContent = "Loading…"'
+					<button
+						type="button"
+						{{if not $paypalID -}}disabled{{- end}}
+						onclick='
+							activateProvider(this, [
+								"https://www.paypal.com/sdk/js?client-id={{$paypalID}}&vault=true&currency=EUR",
+								"{{StaticFileURL "paypal.js"}}"
+							]);
+							document.getElementById("paypal_label").textContent = "Loading…"'
 					>
 						{{HTML_Emoji "paypal"}}
 						<span id="paypal_label">
-							PayPal <code>(paypal.com)</code>
+							PayPal
+							{{if $paypalID}}
+								<code>(paypal.com)</code>
+							{{else}}
+								(down)
+							{{end}}
 						</span>
 					</button>
 				</div>

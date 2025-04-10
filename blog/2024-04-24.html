@@ -10,6 +10,23 @@
 {{$vid_displaced.AddMarker 79 "P1 gets hit" "right" -}}
 {{$vid_displaced.AddMarker 87 "P2 gets hit" "left"  -}}
 
+<style>
+	#overview-{{.Date}} tr>:first-child {
+		text-align: right;
+		border-right: var(--table-border);
+	}
+
+	#overview-{{.Date}} tbody tr>:nth-child(2) {
+		text-align: left;
+	}
+
+	#overview-{{.Date}} .or {
+		display: block;
+		font-weight: bold;
+		font-style: italic;
+	}
+</style>
+
 <p>
 	TH03 gameplay! {{Blog_PostLink "2022-02-18" "It's been over two years."}} People have been investing some decent money with the intention of eventually getting netplay, so let's cover some more foundations around player movement… and quickly notice that there's almost no overlap between gameplay RE and netplay preparations?
 </p>{{call .TOC}}<hr id="netplay-{{.Date}}"><p>
@@ -38,9 +55,90 @@
 			<li>Any higher ping, however, could occasionally lead to a rollback queue that's too large for my system to process within a single frame at the intended 56.4 FPS rate. As a result, me playing anyone in the western US is highly likely to involve at least occasional slowdowns. Delaying inputs on purpose is the usual workaround, but isn't Touhou that kind of game series where people use vpatch to get rid of even the default input delay in the Windows games? {{HTML_Emoji "thonk"}}</li>
 		</ul><p>
 		So we'd ideally want to put TH03 into an update-only mode that skips all rendering calls during re-simulation of rolled-back frames. Ironically, this means that netplay-focused RE would actually focus on the game's <i>rendering</i> code and ensure that it doesn't mutate any statically allocated data, allowing it to be freely skipped without affecting the game. Imagine palette-based flashing animations that are implemented by gradually mutating statically allocated values – these would cause wrong colors for the rest of the game if the animation doesn't run on every frame.</p></li>
-</ul><p id="integration-{{.Date}}"></p>
-	Integrating all of this into TH03 can be done in one, a few, or all of the following 6 ways, depending on what the backers prefer. Sorted from the most generic to the most specialized solution (and, coincidentally, from least to most total effort required):
-</p><ol>
+</ul><p id="integration-{{.Date}}">
+	The integration of all of this into TH03 can be approached from several angles. Of course, as long as we don't port the game, netplay will still require a PC-98 emulator to run on modern systems. PC-98 emulation is typically regarded as difficult to set up and the additional configuration required for some of these methods would only make it harder. However, <a href="https://yksoft1.github.io/dosboxxem-demo/">yksoft1</a> demonstrates that it doesn't have to be: By compiling the (potentially modified) PC-98 emulator to WebAssembly, running any of these non-native methods becomes as simple as opening a website. To stay legally safe, I wouldn't host the game myself, so you'd still have to drag your <code>th03.hdi</code> onto that browser tab. But if you're happy with playing in a browser, this would be as user-friendly as it gets.
+</p><p>
+	Here's an overview of the various approaches with their most important pros and cons:
+</p><figure id="overview-{{.Date}}"><table>
+	<thead>
+		<tr>
+			<th></th>
+			<th>Requirements</th>
+			<th>Pretty in-game menus?</th>
+			<th>Supports non-Touhou PC-98 games?</th>
+			<th>Works on PC-98 hardware?</th>
+			<th>Netcode location</th>
+			<th>Timeframe</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th><a href="#emu-{{.Date}}">Generic PC-98 netcode for emulators</a></th>
+			<td>Modded emulator + good CPU/RAM</td>
+			<td>❌</td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>Emulator</td>
+			<td>Months</td>
+		</tr>
+		<tr>
+			<th><a href="#generic-{{.Date}}">Emulator-level netcode with game-specific hooks</a></th>
+			<td>Modded emulator</td>
+			<td>✔️</td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>Emulator</td>
+			<td>Months</td>
+		</tr>
+		<tr>
+			<th><a href="#compipes-{{.Date}}">Pipes + standalone netplay tool</a></th>
+			<td><ul class="differences">
+				<li>PC-98 DOS with EMS/XMS</li>
+				<li>Emulator with named pipe support + separate netplay tool running on host <span class="or">or</span> real PC-98 + null modem cable + separate PC with netplay tool</li>
+			</ul></td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>✔️</td>
+			<td>External bridge</td>
+			<td>Months</td>
+		</tr>
+		<tr>
+			<th><a href="#win9x-{{.Date}}">Native PC-98 Windows 9x netcode</a></th>
+			<td><ul class="differences">
+				<li>PC-98 Windows 9x</li>
+				<li>Emulator with network support + TAP driver running on host <span class="or">or</span> real PC-98 + network card</li>
+			</ul></td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>✔️</td>
+			<td>Windows 9x bridge</td>
+			<td>Months</td>
+		</tr>
+		<tr>
+			<th><a href="#dos-{{.Date}}">Native PC-98 DOS netcode</a></th>
+			<td><ul class="differences">
+				<li>PC-98 DOS with EMS/XMS</li>
+				<li>Emulator with network support + TAP driver running on host <span class="or">or</span> real PC-98 + network card</li>
+			</ul></td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>✔️</td>
+			<td>Game logic</td>
+			<td>Months</td>
+		</tr>
+		<tr>
+			<th><a href="#port-{{.Date}}">Porting the game first</a></th>
+			<td>Any halfway modern Windows or Linux system</td>
+			<td>✔️</td>
+			<td>❌</td>
+			<td>❌</td>
+			<td>Game logic</td>
+			<td>Years</td>
+		</tr>
+	</tbody>
+</table><figcaption>
+	Depending on what the backers prefer, we can go for one, a few, or all of these.
+</figcaption></figure><ol>
 	<li id="emu-{{.Date}}"><p>
 		<i>Generic PC-98 netcode for one or more emulators</i>
 	</p><p>
@@ -50,7 +148,7 @@
 		This generic nature means that we don't get to include any of the TH03-specific rollback optimizations mentioned above, leading to the highest CPU and memory requirements out of all the variants. It sure is the easiest to implement though, as we get to freely use <a href="https://github.com/paullouisageneau/libdatachannel">modern C++ WebRTC libraries</a> that are designed to work with the network stack of the underlying OS.<br>
 		I <i>can</i> try to build this netcode as a generic library that can work with any PC-98 emulator, but it would ultimately be up to the respective upstream developers to integrate it into official releases. Therefore, expect this variant to require separate funding and custom builds for each individual emulator codebase that we'd like to support.
 	</p></li><li id="integrated-{{.Date}}"><p>
-		<i>Emulator-level netcode with optional game integration</i>
+		<i>Emulator-level netcode with game-specific hooks</i>
 	</p><p>
 		Takes the generic netcode developed in 1) and adds the possibility for the game to control it via a special interrupt API. This enables several improvements:<ul>
 			<li>Online matches could be initiated through new options in TH03's main menu rather than the emulator's UI.</li>
@@ -63,9 +161,9 @@
 		</ul>
 	</p></li>
 	<li id="compipes-{{.Date}}"><p>
-		<i><strong>Edit (2024-04-30):</strong> Emulated serial port communicating over named pipes with a standalone netplay tool</i>
+		<i>Emulated serial port communicating over named pipes with a standalone netplay tool</i>
 	</p><p>
-		This approach would take the netcode developed in 2) out of the emulator and into a separate application running on the (modern) host OS, just like Ju.N.Owen or Adonis. The previous interrupt API would then be turned into binary protocol communicated over the PC-98's serial port, while the rollback snapshots would be stored inside the emulated PC-98 in <a href="https://en.wikipedia.org/wiki/Expanded_memory">EMS</a> or <a
+		This approach would take the netcode developed in 2) out of the emulator and into a separate application running on the (modern) host OS, just like Ju.N.Owen or Adonis. The previous interrupt API would then be turned into a binary protocol communicated over the PC-98's serial port, while the rollback snapshots would be stored inside the emulated PC-98 in <a href="https://en.wikipedia.org/wiki/Expanded_memory">EMS</a> or <a
 		href="https://en.wikipedia.org/wiki/Extended_memory">XMS/Protected Mode</a> memory. Netplay data would then move through these stages:
 	</p><figure><div>
 		🖥️ PC-98 game logic ⇄ Serial port ⇄ <span style="color: green">Emulator ⇄ Named pipe ⇄ Netcode logic ⇄ WebRTC Data Channel ⇄</span> Internet 🛜

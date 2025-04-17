@@ -181,9 +181,19 @@ uint16_t pixel_hash(uint32_t p) {
 		65536<sup>256</sup>
 	</sub>)&nbsp;≈ 39.27%
 </figure><p>
-	Therefore, the slides should have better said something like:
-</p><blockquote>birthday paradox says that an image with exactly 256 distinct colors will have a 39% chance of being wrongly detected as not palette-friendly</blockquote><p>
-	Which is quite a significant failure rate for our use case. And sure enough, it actually happens in the main menu, where a single <span style="color: #583732;">#583732FF</span> pixel (or <code>0xFF323758</code> in its little-endian representation) collides with #FFFFFFFF:
+	Let's plug in 191, for no reason whatsoever:
+</p><figure style="display: block;">
+	(1&nbsp;-&nbsp;<sup>(
+		<sup>
+			65536!
+		</sup>&nbsp;/&nbsp;<sub>
+			(65536 - 191)!
+		</sub>
+	)</sup>&nbsp;/&nbsp;<sub>
+		65536<sup>191</sup>
+	</sub>)&nbsp;≈ 24.21%
+</figure><p>
+	That's a smaller probability, but a <sup>1</sup>/<sub>4</sub> failure rate would still be way too high for our use case. And sure enough, it actually happens in the main menu, where a single <span style="color: #583732;">#583732FF</span> pixel (or <code>0xFF323758</code> in its little-endian representation) collides with #FFFFFFFF:
 </p><figure class="fullres pixelated">
 	<rec98-child-switcher><img
 		src="{{$bm_main_menu}}"
@@ -198,7 +208,8 @@ uint16_t pixel_hash(uint32_t p) {
 		alt="A 16× zoomed view of the `main_menu` benchmark image, highlighting the single #583732FF pixel that causes the hash collision in FJXL's palette detection code"
 	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
-	The resulting 143&nbsp;KiB file immediately tells us how not palettizing such images completely ruins the compression ratio. If this one pixel had any other non-colliding color, FJXL would have compressed it into a still decent 52&nbsp;KiB.<br>
+	The resulting 143&nbsp;KiB file immediately tells us how not palettizing such images completely ruins the compression ratio. If this one pixel had any other non-colliding color, FJXL would have compressed it into a still decent 52&nbsp;KiB. Therefore, the slides should have better added a graph of the failure probability, and said something like:
+</p><blockquote>Not perfect, and likely to misdetect even low-color images with &lt;256 distinct colors as not palette-friendly according to the birthday paradox.</blockquote><p>
 	For our use case of screenshots without an alpha channel, we could work around this whole issue by having a separate non-alpha code path. Detecting the potential palette of an RGBA image within a worst-case time complexity of 𝑂(𝑛) without using hashes requires a (<sup>2<sup>32</sup></sup>/<sub>8</sub>)&nbsp;= 512&nbsp;MiB bit array to cover the entire RGBA color space, which is probably too steep of a memory requirement. Removing the alpha channel, however, would shrink this array to a definitely appropriate 2&nbsp;MiB.
 </p><p>
 	Ultimately though, we decided against doing any of that because FJXL by itself is as untunable from the outside as the codec it was inspired by. {{DB_CustomerByID 13}} preferred the opposite: an encoder with multiple effort levels that offer different trade-offs between encoding speed and file size, which would allow faster CPUs to produce the smallest files at still reasonable speeds. So let's look past the bloat, link in the complete libjxl reference encoder, and see how it performs on higher effort levels…

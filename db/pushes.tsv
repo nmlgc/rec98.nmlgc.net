@@ -311,3 +311,4 @@ P0306	[318, 342, 326]	TH02 decompilation (Player, part 1/2: Update/render functi
 P0307	[339, 345]	Seihou / Shuusou Gyoku (SDL 3 platform layer)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/P0303-2...a4adcbb	0
 P0308	[345]	Seihou / Shuusou Gyoku (Render API unbricking / ReC98 build label on the title screen / Revamped pixel format handling)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/a4adcbb...c62f7ad	0
 P0309	[346]	Seihou / Shuusou Gyoku (WebP screenshot compression / Compression benchmark in the main menu)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/c62f7ad...P0309	0
+P0310	[330, 331, 338, 344, 349, 350, 354]	Seihou / Shuusou Gyoku (SDL Windows 98 backport, part 1 / D3DWindower support)	2025-04-25T23:37:38Z	nmlgc/ssg/compare/P0309...P0310	0

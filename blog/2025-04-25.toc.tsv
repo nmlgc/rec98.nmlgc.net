@@ -1,0 +1,10 @@
+Anchor	Name
+strategy	The backporting strategy
+9xcompat	A compatibility layer for Microsoft's C runtime
+zig	A brief look back at Zig
+sdl	Compiling SDL 2 for Windows 98
+d3dwindower	Restoring compatibility with D3DWindower
+sjis	Handling Shift-JIS and Unicode
+sjis-text	- Text rendering
+sjis-fns	- The original Japanese filenames
+sjis-unicows	- Leaving it all to <code>unicows.dll</code>?

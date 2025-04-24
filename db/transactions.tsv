@@ -363,7 +363,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-03-09T10:15:56Z	0	12500	Anything (including tooling)		T0359
 2025-03-11T10:21:30Z	10	3500	TH02 RE		T0360
 2025-03-22T11:11:16Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0361
-2025-03-24T09:32:14Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98 	Building another full push, or back to microtransactions? Please clarify	T0362
+2025-03-24T09:32:14Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0362
 2025-04-01T11:01:22Z	0	3500	TH03 RE		T0363
 2025-04-02T10:35:29Z	15	1000	Reverse-engineering		T0364
 2025-04-09T04:53:28Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; Anniversary Edition (one release) &gt; replays &gt; modern port &gt; netplay)		T0365
@@ -372,3 +372,4 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-04-09T13:31:53Z	28	5000	Shuusou Gyoku: (<a href="https://github.com/nmlgc/ssg/issues/6">Translation support</a> &gt; Anything)		T0368
 2025-04-11T10:11:32Z	10	3500	TH02 RE		T0369
 2025-04-22T11:36:58Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0370
+2025-04-24T09:32:15Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0371

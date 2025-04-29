@@ -215,8 +215,7 @@ video,
 .pixelated img,
 figure.singleplayer_playfield img {
 	max-height: unset;
-	image-rendering: pixelated; /* For Chrome */
-	image-rendering: crisp-edges; /* For Firefox */
+	image-rendering: pixelated;
 }
 
 .multilayer {

@@ -1043,12 +1043,9 @@ article h5 {
 article figure {
 	background-color: var(--c-bg);
 
-	&.bglayer {
+	&.bglayer img {
 		background-size: cover;
-
-		img {
-			max-height: unset;
-		}
+		max-height: unset;
 	}
 }
 

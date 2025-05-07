@@ -13,6 +13,7 @@ import (
 	"path"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
@@ -55,6 +56,10 @@ func HTMLDate(t time.Time) template.HTML {
 	return htmlFormattedTime(t, "2006-01-02")
 }
 
+// Calculated from the default `font-size` times `--icon-width` or
+// `--icon-height`.
+const EMOJI_ATTRS = `width="24" height="24" align="top"`
+
 func emojiURL(fn string) string {
 	return staticHP.VersionURLFor("emoji-" + fn)
 }
@@ -88,10 +93,8 @@ func HTMLEmoji(emoji string) template.HTML {
 	}
 
 	return template.HTML(fmt.Sprintf(
-		// Calculated from the default `font-size` times `--icon-width` or
-		// `--icon-height`.
-		`<img src="%s" alt=":%s:" width="24" height="24" align="top" %s/>`,
-		emojiURL(fn+ext), emoji, extra,
+		`<img src="%s" alt=":%s:" %s %s/>`,
+		emojiURL(fn+ext), emoji, EMOJI_ATTRS, extra,
 	))
 }
 
@@ -164,6 +167,28 @@ func HTMLPerfBar(min, max, rel float64) template.HTML {
 	class="perfbar" style="%v width: max(%v%%, 2ch);">%v</span><span
 	class="perfbar" style="%v width: %v%%;">%v</span>`,
 		CSSMeter(rel), minFrac, min, CSSMeter(rel), (rel - minFrac), max,
+	))
+}
+
+var TH03_PLAYCHARS = [9]template.HTML{
+	"Reimu",
+	"Mima",
+	"Marisa",
+	"Ellen",
+	"Kotohime",
+	"Kana",
+	"Rikako",
+	"Chiyuri",
+	"Yumemi",
+}
+
+// HTMLTH03Playchar formats the TH03 player character with the given ID as a
+// portrait with its name.
+func HTMLTH03Playchar(i int) template.HTML {
+	name := TH03_PLAYCHARS[i]
+	url := emojiURL("th03-pc" + strconv.Itoa(i) + ".webp")
+	return template.HTML(fmt.Sprintf(
+		`<img src="%s" alt="%s" %s/> %s`, url, name, EMOJI_ATTRS, name,
 	))
 }
 
@@ -319,6 +344,7 @@ var pages = template.New("").Funcs(map[string]interface{}{
 	"HTML_PerfBar":      HTMLPerfBar,
 	"CSS_Meter":         CSSMeter,
 	"StaticFileURL":     func(fn string) string { return staticHP.VersionURLFor(fn) },
+	"th03pc":            HTMLTH03Playchar,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,

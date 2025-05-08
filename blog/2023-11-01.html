@@ -57,10 +57,6 @@
 		width: 544px;
 	}
 
-	#facetiles-{{.Date}} .multilayer {
-		aspect-ratio: 1 / 1;
-	}
-
 	#bugs-{{.Date}},
 	#bugs-{{.Date}} img {
 		width: 480px;
@@ -550,7 +546,7 @@
 	pay in exchange for not having to write any new low-level blitting code,
 	especially since he must have already had an asset pipeline to generate
 	these files.</li>
-</ul><figure class="pixelated" id="facetiles-{{.Date}}">
+</ul><figure class="pixelated" id="facetiles-{{.Date}}" style="aspect-ratio: 1 / 1;">
 	<figcaption>
 		<form>
 			<input type="checkbox" id="grid-toggle-{{.Date}}" checked onchange="

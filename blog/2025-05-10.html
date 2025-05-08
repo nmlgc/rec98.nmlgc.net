@@ -1,0 +1,303 @@
+{{$mikoft := (call .PostFileURL "TH03-MIKOFT-proportional-text.webp") -}}
+{{$mikoft_grid := (call .PostFileURL "TH03-MIKOFT-proportional-text-with-grid.webp") -}}
+{{$mm_orig := (call .PostFileURL "TH03-Main-menu-original.webp") -}}
+{{$mm_bricks := (call .PostFileURL "TH03-Main-menu-original-bricks.webp") -}}
+{{$mm_centered := (call .PostFileURL "TH03-Main-menu-centered.webp") -}}
+{{$om_orig := (call .PostFileURL "TH03-Option-menu-original.webp") -}}
+{{$om_bricks := (call .PostFileURL "TH03-Option-menu-original-bricks.webp") -}}
+{{$om_centered := (call .PostFileURL "TH03-Option-menu-centered.webp") -}}
+{{$opwin := (call .PostFileURL "TH03-OPWIN.BFT.webp") -}}
+{{$type1 := (call .PostFileURL "TH03-Option-menu-KeyConfig-Type-1.webp") -}}
+{{$type2 := (call .PostFileURL "TH03-Option-menu-KeyConfig-Type-2.webp") -}}
+{{$type3 := (call .PostFileURL "TH03-Option-menu-KeyConfig-Type-3.webp") -}}
+{{$demo1 := (call .PostFileURL "TH03-Demo-1-final-frame.webp") -}}
+{{$demo2 := (call .PostFileURL "TH03-Demo-2-final-frame.webp") -}}
+{{$demo3 := (call .PostFileURL "TH03-Demo-3-final-frame.webp") -}}
+{{$demo4 := (call .PostFileURL "TH03-Demo-4-final-frame.webp") -}}
+{{$gpd := (call .PostFileURL "TH03-GAMEFT.BFT-proportional-digits.webp") -}}
+{{$bal_9 := (call .PostFileURL "TH03-Boss-Attack-level-9.webp") -}}
+{{$bal_16 := (call .PostFileURL "TH03-Boss-Attack-level-16.webp") -}}
+{{$midboss3 := (call .PostFileURL "TH02-Stage-3-midboss.webp") -}}
+
+<style>
+	figure.main-menu-{{.Date}} img {
+		background-image: url('{{StaticFileURL "th03-title.webp"}}');
+	}
+
+	.demo-{{.Date}} tbody th {
+		text-align: right;
+	}
+
+	.demo-{{.Date}} tbody td:last-child {
+		text-align: right;
+	}
+</style>
+
+<p>
+	Surprise! The last missing main menu in PC-98 Touhou was, in fact, not that hard. Finishing the rest of TH03's <code>OP.EXE</code> took slightly shorter than the expected 2 pushes, which left enough room to uncover an unexpected mystery and take important leaps in position independence…
+</p>{{call .TOC}}<hr id="menu-{{.Date}}"><p>
+	For TH03, ZUN stepped up the visual quality of the main menu items by exchanging TH02's monospaced font with fixed, pre-composited strings of proportional text. While TH04 would later place its menu text in VRAM, TH03 still wanted to stay with TH02's approach of using {{HTML_TagInline "gaiji"}} to display the menu items on the PC-98 text layer. Since gaiji have a fixed size of 16×16 pixels, this requires the pre-composited bitmaps to be cut into blocks of that size and padded with blank pixels as necessary:
+</p><figure class="pixelated" style="width: 544px;">
+	<figcaption>
+		<form>
+			<input type="checkbox" id="grid-toggle-{{.Date}}" checked onchange="
+				const gaiji = document.getElementById('mikoft-{{.Date}}');
+				const grid = document.getElementById('mikoft-grid-{{.Date}}');
+				if(this.checked) {
+					grid.hidden = false;
+					gaiji.hidden = true;
+				} else {
+					gaiji.hidden = false;
+					grid.hidden = true;
+				}
+			">
+			<label for="grid-toggle-{{.Date}}">Show gaiji ID grid</label>
+		</form>
+	</figcaption>
+	<div class="multilayer" style="aspect-ratio: 17 / 8;">
+		<img
+			id="mikoft-{{.Date}}"
+			src="{{$mikoft}}"
+			alt="The proportional text section from TH03's MIKOFT.BFT"
+			width="544"
+			hidden
+		/>
+		<img
+			id="mikoft-grid-{{.Date}}"
+			src="{{$mikoft_grid}}"
+			alt="The proportional text section from TH03's MIKOFT.BFT, with the 16×16 gaiji grid overlaid"
+			width="544"
+		/>
+	</div>
+</figure><p>
+	If your combined amount of text is short enough to fit into the PC-98's 256 gaiji slots, this is a nice way of using hardware features to replace the need for a proportional text renderer. It especially simplifies transitions between menus – simply wiping the entire TRAM is both cheap and certainly less error-prone than (un)blitting pixels in VRAM, which {{Blog_PostLink "2023-11-30#main" "ZUN was always kind of sloppy at"}}.<br>
+	However, all this text still needs to be composited and cut into gaiji <i>somewhere</i>. If you do that manually, it's easy to lose sight of how the text is supposed to appear on screen, especially if you decide to horizontally center it. Then, you're in for some awkward coordinate fiddling as you try to place these 16-pixel bricks into the 8-pixel text grid to somehow make it all appear centered:
+</p><figure class="side_by_side">
+	<figure class="pixelated" style="width: 272px;">
+		<rec98-child-switcher><img
+			src="{{$mm_orig}}"
+			class="active"
+			data-title="Original"
+			width="272"
+			alt="TH03's main menu box as it appears in the original game"
+		><img
+			src="{{$mm_bricks}}"
+			data-title="Bricks"
+			width="272"
+			alt="TH03's main menu box with opaque gaiji to highlight their exact locations in TRAM"
+		><img
+			src="{{$mm_centered}}"
+			data-title="Correct"
+			width="272"
+			alt="TH03's main menu box with correct centering"
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	</figure><figure class="pixelated" style="width: 480px;">
+		<rec98-child-switcher><img
+			src="{{$om_orig}}"
+			class="active"
+			data-title="Original"
+			width="480"
+			alt="TH03's Option menu box as it appears in the original game"
+		><img
+			src="{{$om_bricks}}"
+			data-title="Bricks"
+			width="480"
+			alt="TH03's Option menu box with opaque gaiji to highlight their exact locations in TRAM"
+		><img
+			src="{{$om_centered}}"
+			data-title="Correctly centered"
+			width="480"
+			alt="TH03's Option menu box with correct centering"
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	</figure>
+	<figcaption>
+		The VS Start menu actually is correctly centered.
+	</figcaption>
+</figure><p>
+	Then again, did ZUN <i>actually</i> want to center the Option menu like this? {{HTML_Emoji "thonk"}} Even the main menu looks kind of uncanny with perfect centering, probably because I'm so used to the original. Imperfect centering usually counts as a bug, but this case is quirky enough to leave it as is. We might want to perfectly center any future translations, but that would definitely cost a bit as I'd then actually need to write that proportional text renderer.<br>
+	Apart from that, we're left with only a very short list of actual bugs and landmines:
+</p><ul>
+	<li><i>The Cancel key is not handled inside the VS menu, arrgghh…</i>! 🤬</li>
+	<li>ZUN <i>almost</i> managed to write a title screen and menu without a {{Blog_PostLink "2024-02-03#mess" "screen"}} {{Blog_PostLink "2024-11-22#tearing" "tearing"}} landmine, but a single one still managed to sneak into the first frame of the title screen's short fade-in animation. This one will blow up when returning from the Music Room, and can be entirely blamed on that screen's choice to leave {{Blog_PostLink "2024-02-03#b" "a purple color in hardware palette slot 0"}}. Replacing that color with black before returning would have completely hidden the potential tearing.<br>
+	There might be another one in the long sliding animation, but I can only tell for sure once I've fully decompiled <code>MAINL.EXE</code>.</li>
+</ul><p>
+	While the rest of the code is not free of the usual nitpicks, those don't matter in the grand scheme of things. The code for the sliding <span
+	style="color: #909">東方</span><span
+	style="color: #f44">夢</span><span
+	style="color: #909">時空</span>
+	animation is even better: it makes decent use of the EGC and page flipping, and places the {{Blog_PostLink "2024-11-22#select" "loading calls for the character selection portraits"}} at sensible points where the animation naturally wants to have a delay anyway. We're definitely ending the main menus of PC-98 Touhou on a high note here.
+</p><hr id="unused-{{.Date}}"><p>
+	You might have already spotted some unfamiliar text in the gaiji above, and indeed, we've got three pieces of {{HTML_TagInline "unused"}} text in these two menus! Starting from the top, the <img src="data:image/webp;base64,UklGRnQAAABXRUJQVlA4TGcAAAAvNkADEA8QEfMfwnEAAGZzv3AErWC8klVS28aPA3UC99cdbNtuZ4jof2RKgAE6KLT+103X68pEN0P322mgvQo8MQ9M5Q6PT/WrdnzpelqlPnEK+s683LpCNIqkV2fw++Zke6c7S5MOAA==" alt="Watch"> label is entirely unused as none of its gaiji IDs are referenced anywhere in the final code. The label's placement within the gaiji IDs would imply that this option was once part of the main menu, but nothing in the game suggests that the main menu ever had a bigger box that could fit a 7<sup>th</sup> element. On the contrary, every piece of menu code assumes that the box sprites loaded from <code>OPWIN.BFT</code> are exactly 128 pixels high:
+</p><figure class="pixelated" style="width: 188px;">
+	<img src="{{$opwin}}" width="96" alt="TH03's OPWIN.BFT">
+	<figcaption>
+		Fun fact: The code doesn't even use the 16 pixels in the middle, and instead just assumes that the pixels between the X coordinates of [﻿8;&nbsp;16﻿[ and [﻿32;&nbsp;40﻿[ are identical.
+	</figcaption>
+</figure><p>
+	The unused MIDI music option has already been <a href="https://tcrf.net/Touhou_Yumejikuu:_The_Phantasmagoria_of_Dim.Dream">widely documented elsewhere</a>. Changing the first byte in <code>YUME.CFG</code> to <code>02</code> has no functional effect because ZUN removed most MIDI-related code before release. He did forget a few instances though, and <a href="https://github.com/nmlgc/ReC98/blob/f6d836b3a3142543830b519792f11938030863e4/th03/op_01.cpp#L611-L612">the surviving dedicated <code>switch</code> case in the Option menu</a> is now the entire reason why you can reveal this text without modifying the binary. Changing the option will always flip its value back to either <var>off</var> or <var>FM(86)</var>.<br>
+	Last but not least, we have the <img src="data:image/webp;base64,UklGRmIAAABXRUJQVlA4TFUAAAAvKsADEEDQtm3Mn/bb7T+CiPmfAMe8/ioq/wYtiuIZjBtHFbCOKCYAFRVAXZhAiYG4IHihbzz4AsUbzCcqwcMXjDKoh7pBSQQAKxsn08RYUblxVZWnAA==" alt="Type" style="vertical-align: middle;"> label and its associated numbers. These are the most interesting ones in my eyes; nobody talks about them, even though we have definite proof that they were used for the KeyConfig options at some earlier point in development:
+</p><figure class="fullres pixelated bglayer main-menu-{{.Date}}">
+	{{define "kc_head"}}Screenshot of TH03's Option menu, showing the initial 'Type {{.}}' label for the{{end -}}
+	<rec98-child-switcher><img
+		src="{{$type1}}"
+		class="active"
+		data-title="Type 1 (Key vs. Key)"
+		width="640"
+		alt="{{template "kc_head" 1}} Key vs. Key option"
+	><img
+		src="{{$type2}}"
+		data-title="Type 2 (Joy vs. Key)"
+		width="640"
+		alt="{{template "kc_head" 2}} Joy vs. Key option"
+	><img
+		src="{{$type3}}"
+		data-title="Type 3 (Key vs. Joy)"
+		width="640"
+		alt="{{template "kc_head" 3}} Key vs. Joy option"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	But how exactly can we prove this? The code does <a href="https://github.com/nmlgc/ReC98/blob/f6d836b3a3142543830b519792f11938030863e4/th03/op_01.cpp#L495-L498">string together the respective gaiji IDs and defines the resulting arrays right next to the final KeyConfig types</a>, but doesn't use these arrays anywhere. By itself, this only means that these labels were associated with <i>some</i> option that may have existed at one point in development. The proof must therefore come from outside the code – and in this case, it comes from both <a href="https://en.touhouwiki.net/wiki/Phantasmagoria_of_Dim.Dream/Translation/Manual"><code>夢時空.TXT</code></a> and <a href="https://en.touhouwiki.net/wiki/Phantasmagoria_of_Dim.Dream/Translation/Other#%E5%A4%A2%E6%99%82%E7%A9%BA_1.TXT_(Yumejikuu_1.TXT)"><code>時空_1.TXT</code></a>, which still refer to the KeyConfig options as numbered types:
+</p><blockquote lang="ja">　■６．操作方法
+[…]
+　　　ＦＭ音源のジョイスティックが無い場合は、ＴＹＰＥ１にしてください。
+
+　　　○ＴＹＰＥ１　Ｋｅｙ　ｖｓ　Ｋｅｙ
+[…]
+　　　○ＴＹＰＥ２　Ｊｏｙ　ｖｓ　Ｋｅｙ
+[…]
+　　　○ＴＹＰＥ３　Ｋｅｙ　ｖｓ　Ｊｏｙ</blockquote><hr id="story-{{.Date}}"><p>
+	That's all I've got about the menus, so let's talk characters and gameplay! When playing Story Mode, <code>OP.EXE</code> picks the opponents for all stages immediately after the {{Blog_PostLink "2024-11-22" "Select screen"}} has faded out. Each character fights a fixed and hardcoded opponent in Stage 7's Decisive Match:
+</p><figure><table style="text-align: left;">
+	<thead>
+		<tr><th>Player</th><th>Stage 7 opponent</th></tr>
+	</thead><tbody>
+		<tr><td>{{th03pc 0}}</td><td>{{th03pc 1}}</td></tr>
+		<tr><td>{{th03pc 1}}</td><td>{{th03pc 0}}</td></tr>
+		<tr><td>{{th03pc 2}}</td><td>{{th03pc 0}}</td></tr>
+		<tr><td>{{th03pc 3}}</td><td>{{th03pc 2}}</td></tr>
+		<tr><td>{{th03pc 4}}</td><td>{{th03pc 0}}</td></tr>
+		<tr><td>{{th03pc 5}}</td><td>{{th03pc 3}}</td></tr>
+		<tr><td>{{th03pc 6}}</td><td>{{th03pc 5}}</td></tr>
+		<tr><td>{{th03pc 7}}</td><td>{{th03pc 4}}</td></tr>
+		<tr><td>{{th03pc 8}}</td><td>{{th03pc 6}}</td></tr>
+	</tbody>
+</table></figure><p>
+	The opponents for the first 6 stages, however, are indeed completely random, and picked by master.lib's reimplementation of the Borland RNG. The game only needs to ensure that no character is picked twice, which it does like this:
+</p><figure><pre>const int stage_7_opponent = HARDCODED_STAGE_7_OPPONENT_FOR[playchar];
+bool opponent_seen[7] = { false };
+
+for(int stage = 0; stage &lt; 6; stage++) {
+	int candidate;
+	do {
+		// Pick a random character between Reimu and Rikako
+		candidate = (irand() % 7);
+	} while(opponent_seen[candidate] || (stage_7_opponent == candidate));
+	opponent_seen[candidate] = true;
+	story_opponent[stage] = candidate;
+}</pre><figcaption>
+	Characters are numbered from 0 ({{th03pc 0}}) to 8 ({{th03pc 8}}), following the order in the Stage 7 table above.
+</figcaption></figure><p>
+	Yup. For every stage, ZUN re-rolls until the RNG returns a character who hasn't yet been seen in a previous stage – even in Stage 6 where there's only one possible character left. {{HTML_Emoji "zunpet"}} Since each successive stage makes it harder for the inner loop to find a valid answer, you start to wonder if there is some unlucky combination of seed and player character that causes the game to just hang forever.<br>
+	So I tested all possible 2<sup>32</sup> seed values for all 9 player characters and… nope, <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use">Borland's RNG</a> is good enough to eventually always return the only possible answer. The inner loop for Stage 6 <i>does</i> occasionally run for a disproportionate number of iterations, with the worst case being 134 re-rolls when playing {{th03pc 6}}'s Story Mode with a seed value of <code>0x099BDA86</code>. But even that is many orders of magnitude away from manifesting as any kind of noticeable delay. And on average, it just takes 17.15 iterations to determine all 6 random opponents.
+</p><hr id="demo-{{.Date}}"><p>
+	The attract demos are another intriguing aspect that I initially didn't even have on my radar for the main menu. <a href="https://touhou-memories.com/post/779125694309564416">touhou-memories raises an interesting question</a>: The demos start at Gauge and Boss Attack level 9, which would imply Lunatic difficulty, but the enemy formations don't match what you'd normally get on Lunatic. So, which difficulty were they recorded on?<br>
+	Our already RE'd code clears up the first part of that question. TH03's demos are not recordings, but simply regular VS rounds in <i>CPU vs. CPU</i> mode that automatically quit back to the title screen after 7,000 frames. They can only possibly appear pre-recorded because the game cycles through a mere four hardcoded character pairings with fixed RNG seeds:
+</p><figure class="demo-{{.Date}}"><table style="text-align: left;">
+	<thead>
+		<tr><th>Demo #</th><th>P1</th><th>P2</th><th>Seed</th></tr>
+	</thead><tbody>
+		<tr><th>1</th><td>{{th03pc 1}}</td><td>{{th03pc 0}}</td><td>600</td></tr>
+		<tr><th>2</th><td>{{th03pc 2}}</td><td>{{th03pc 6}}</td><td>1000</td></tr>
+		<tr><th>3</th><td>{{th03pc 3}}</td><td>{{th03pc 5}}</td><td>3200</td></tr>
+		<tr><th>4</th><td>{{th03pc 4}}</td><td>{{th03pc 2}}</td><td>500</td></tr>
+	</tbody>
+</table><figcaption>
+	Certainly an odd choice if your game already had the feature to let arbitrary CPU-controlled characters fight each other. That would have even naturally worked for the trial version, which doesn't contain demos at all.
+</figcaption></figure><p>
+	Then again, even a "random" character selection would have appeared deterministic to an outside observer. As usual for PC-98 Touhou, the RNG seed is initialized to 0 at startup and then simply increments after every frame you spend on the title screen and inside the top-level main, Option, and character selection menus – and yes, it does stay constant inside the VS Start menu. But since these demos always start after waiting exactly 520 frames on the title screen <i>without</i> pressing any key to enter the main menu, there's no actual source of randomness anywhere. ZUN could have classically initialized the RNG with the current system time, which is what we used to do back in the day before operating systems had easily accessible APIs for true randomness, but he chose not to, for whatever reason.
+</p><p>
+	The difficulty question, however, is not so easy to answer. The <a href="https://github.com/nmlgc/ReC98/blob/f6d836b3a3142543830b519792f11938030863e4/th03/op_01.cpp#L393-L413">demo startup code in the main menu doesn't override the configured difficulty</a>, and neither does any other of the binaries depending on the demo ID. This <i>seems</i> to suggest that the demos simply run at the difficulty you last configured in the Option menu, just like regular VS matches. But then, you'd expect them to run differently depending on that difficulty, which they demonstrably don't. They <i>always</i> start on Gauge and Boss Attack level 9, and their last frame before the exit animation is always identical, right down to the score, reinforcing the pre-recorded impression:
+</p><figure class="pixelated" style="width: 640px;">
+	{{define "demo_head"}}Screenshot of the last frame (#7,000) of TH03's {{.}} demo{{end -}}
+	<rec98-child-switcher><img
+		src="{{$demo1}}"
+		class="active"
+		data-title="Mima vs. Reimu"
+		width="640"
+		alt="{{template "demo_head" "first"}} (Mima vs. Reimu)."
+	><img
+		src="{{$demo2}}"
+		data-title="Marisa vs. Rikako"
+		width="640"
+		alt="{{template "demo_head" "second"}} (Marisa vs. Rikako)."
+	><img
+		src="{{$demo3}}"
+		data-title="Ellen vs. Kana"
+		width="640"
+		alt="{{template "demo_head" "third"}} (Ellen vs. Kana)."
+	><img
+		src="{{$demo4}}"
+		data-title="Kotohime vs. Marisa"
+		width="640"
+		alt="{{template "demo_head" "fourth"}} (Kotohime vs. Marisa)."
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		Note that it takes much longer than the expected 2:04 minutes for the game to reach this end state. Each <i>WARNING!! You are forced to evade / Your life is in peril</i> popup freezes gameplay for 26 frames which don't count toward the demo frame counter. That's why these popups will provide such a great {{Blog_PostLink "2024-04-24#netplay" "resynchronization opportunity for netplay"}}. It's almost as if Versus Touhou was designed from the start with rollback netcode in mind! {{HTML_Emoji "godzun"}}
+	</figcaption>
+</figure><hr id="bal-{{.Date}}"><p>
+	With quite a bit of time left over in the second push, it made sense to look at a bit of code around the Gauge and Boss Attack levels to hopefully get a better idea of what's going on there. The Gauge Attack levels are very straightforward – they can range from 1 to 16 inclusive, which matches the range that the game can depict with its gaiji, and all parts of the game agree about how they're interpreted:
+</p><figure class="pixelated">
+	<img src="{{$gpd}}" width="512" alt="The 16 proportional digit gaiji from TH03's GAMEFT.BFT">
+	<figcaption>
+		Stored in <code>GAMEFT.BFT</code>.
+	</figcaption>
+</figure><p>
+	The same can't be said about the Boss Attack level though, as the gauge and the <i>WARNING!!</i> popup interpret the same internal variable as two different levels?
+</p><figure class="fullres pixelated">
+	<img
+		src="{{$bal_9}}"
+		width="640"
+		alt="Darkened screenshot of a TH03 Boss Attack fired off near the beginning of a match at Lunatic difficulty, highlighting the discrepancy between the Boss Attack level shown in the gauge at the bottom of each playfield (10) and the one shown in the WARNING!! popup (9)"
+	>
+</figure><p>
+	This apparent inconsistency raises quite a few questions. After all, these gaiji have to be addressed by adding an offset from 0 to 15 to the ID of the <strong>1</strong> gaiji, but the levels are supposed to range from 1 to 16. Does this mean that one of these two displays has an off-by-one error? You can't fire a Level 0 Boss Attack because the level always increments before every attack, but would 0 still be a technically valid Boss Attack level?<br>
+	Decompiling the static HUD code debunks at least the first question as ZUN resolves the apparent off-by-one error by explicitly capping the displayed level to 16. And indeed, if a round lasts until the maximum Boss Attack level, the two numbers end up matching:
+</p><figure class="fullres pixelated">
+	<img
+		src="{{$bal_16}}"
+		width="640"
+		alt="Darkened screenshot of a TH03 Boss Attack fired off near the end of a match, highlighting how both the gauge and the WARNING!! popup agree on the level once it reaches 16"
+	>
+</figure><p>
+	This suggests that the popup indicates the level of the <i>incoming</i> attack while the gauge indicates the level of the <i>next</i> one to be fired by any player. That said, this theory not only needs tons of comments to explain it within the code, but also contradicts <a href="https://en.touhouwiki.net/wiki/Phantasmagoria_of_Dim.Dream/Translation/Manual"><code>夢時空.TXT</code></a>, which explicitly describes the level next to the gauge as the <span lang="ja"><q class="hovertext" title="current boss attack level">現在のＢＯＳＳアタックのレベル</q></span>. Still, it remains our best bet until we've decompiled a few of the Boss Attacks and saw how they actually use this single variable.
+</p><hr id="tuning-{{.Date}}"><p>
+	So, what does this tell us about the demo difficulty? Now that we can search the code for these variables, we quickly come across <a href="https://github.com/nmlgc/ReC98/blob/f6d836b3a3142543830b519792f11938030863e4/th03_main.asm#L727-L731">the dedicated demo-specific branch that initializes these levels to the observable fixed values</a>, along with two other variables I haven't researched so far. This confirms that demos run at a custom difficulty, as the two other variables receive slightly different values in regular gameplay.
+</p><p>
+	However, it's still a good idea to check the code for any other potential effects of the difficulty setting. Maybe they're just hard to spot in demos? Doesn't difficulty typically affect a whole lot of other things in Touhou game code? Well, not in TH03 – <code>MAIN.EXE</code> only ever looks at the configured difficulty in three places, and all of them are part of the code that initializes a new round.<br>
+	This reveals the true nature of difficulty in TH03: It's <i>exclusively</i> specified in terms of these <span class="hovertext" title="Two for the per-player Gauge Attack level, one for the single shared Boss Attack level, and the two unknown ones.">five variables</span>, and the Easy/Normal/Hard/Lunatic/"Demo" settings can be thought of as simply being presets for them. Story Mode adds {{Blog_PostLink "2020-01-29" "the AI's number of safety frames"}} to the list of variables and factors the current stage number into their values, but the concept stays the same. In this regard, TH03's design is unusually clean, making it perhaps the only Touhou game with not even a single <i>"if difficulty is this, then do that"</i> branch in script code. It's certainly the only <i>PC-98</i> Touhou game with this property.
+</p><p>
+	But it gets even better if we consider what this means for netplay. We now know that the configured difficulty is part of the match-defining parameters that must be synced between both players, just like the selected characters and the RNG seed. But why stop there? How about letting players not just choose between the presets, but allowing them to customize each of the five variables independently? Boom, we've just skyrocketed the replay value of netplay. 🚀 It's discoveries like these that justify my decision to start the road toward netplay by decompiling all of <code>OP.EXE</code>: In-engine menus are the cleanest and most friendly way of allowing players to configure all these variables, and now they're also the easiest and most natural choice from a technical point of view.
+</p><hr id="th02-pi-{{.Date}}"><p>
+	But wait, there's still some time left in that second push! The remaining fraction of the <code>OP.EXE</code> reverse-engineering contribution had repeating decimals, so let's do some quick TH02 PI work to remove the matching instance of repeating decimals from the backlog. This was very much a continuation of {{Blog_PostLink "2024-02-03#th02-pi" "last year's light PI work"}}; while the regular TH02 decompilation progress has focused and will continue to focus on the big features, it still left plenty of low-hanging PI fruit in boss code.<br>
+	<span style="
+		display: grid;
+		grid-template-columns: max-content 1fr max-content;
+		align-items: center;
+		gap: 0.5em;
+	">
+		<img
+			src="{{$midboss3}}"
+			alt="The first animation frame of TH02's Stage 3 midboss, taken from STAGE2.BMT"
+		/>
+		<span>Back then, we left with the positions of the Five Magic Stones, where ZUN's choice of storing them in arrays was almost revolutionary compared to what we saw in TH01. The same now applies to the state flags and total damage amount of not just the boss of Stage 3, but also the two independently damageable entities of the stage's midboss. In total, all of the newly identified arrays made up 3.36% of all memory references in TH02, and we're not even <i>done</i> with Stage 3.</span>
+		<img
+			src="{{$midboss3}}"
+			alt="The first animation frame of TH02's Stage 3 midboss, taken from STAGE2.BMT"
+		/>
+	</span>
+</p><hr id="ports-{{.Date}}"><p>
+	Actually, you know what, let's round out that second push with even more low-hanging PI fruit and ensure {{Blog_PostLink "2019-12-28" "technical position independence"}} for TH03's <code>MAINL.EXE</code>. This was very helpful considering that I'm going to build netplay into the <code>anniversary</code> branch, whose <code>debloated</code> foundation {{Blog_PostLink "2023-03-05#single" "aims to merge every game into as few executables as possible"}}. Due to TH03's overall lower level of bloat and the dedicated SPRITE16-based rendering code in <code>MAIN.EXE</code>, it might not make <i>as</i> much sense to merge all three of TH03's .EXE binaries as it did for TH01, and <code>MAIN.EXE</code>'s lack of position independence currently prevents this anyway. However, merging just <code>OP.EXE</code> and <code>MAINL.EXE</code> makes tremendous sense not just for TH03, but for the other three games as well. These binaries have a much smaller ratio of ZUN code to library code, and use the same file formats and subsystems.<br>
+	But that's not even the best part! Once we've factored out all the invisible inconsistencies between the games, we get to share <i>all</i> of this code across <i>all</i> of the four games. Hence, technical position independence for TH03's <code>MAINL.EXE</code> also was the final obstacle in the way of a single consistent and ultimately portable version of all of this code. 🙌
+</p><p>
+	So, how do we go from here to {{Blog_PostLink "2024-04-24#compipes" "the short-term half-PC-98/half-modern netplay option"}} that {{DB_CustomerByID 13}} is now funding? Most of the netcode will be unrelated to TH03 in particular, but we'd obviously still want to reverse-engineer more of <code>MAIN.EXE</code> to ensure a high-quality integration. So how about alternating the upcoming deliveries between pure RE work and any new or modded code? Next up, therefore, I'll go for the latter and debloat <code>OP.EXE</code> so that I can later add the netplay features without pulling my hair out. At that point, it also makes sense to take the first steps into portability; I've got some initial ideas I'm excited to implement, and {{DB_CustomerByID 26}}'s tiny bit of funding just begs to be removed from the backlog. {{HTML_Emoji "tannedcirno"}}<br>
+	(And I'm definitely going to defuse all the tearing landmines because my goodness are they infuriating when slowing down the game or working with screen recordings.)
+</p>

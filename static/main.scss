@@ -145,6 +145,10 @@ figure.side_by_side {
 	justify-content: center;
 	gap: 5%;
 	width: 100%;
+
+	figcaption {
+		width: 100%; /* Force the caption into a new row */
+	}
 }
 
 figure.small {

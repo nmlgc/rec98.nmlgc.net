@@ -292,7 +292,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-04-02T10:13:03Z	15	525	Reverse-engineering		T0289
 2024-04-09T10:28:34Z	0	12250	Anything (including tooling)		T0290
 2024-04-11T10:06:22Z	10	5180	TH02 RE		T0291
-2024-04-24T13:58:44Z	26	100	Portability to non-PC-98 systems (TH03 and TH05)	Waiting for 100% PI of at least one of TH03's binaries	T0292
+2024-04-24T13:58:44Z	26	105	Portability to non-PC-98 systems (TH03 and TH05)		T0292
 2024-04-24T19:18:23Z	13	7900	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0293
 2024-05-01T20:44:36Z	13	17000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0294
 2024-05-02T11:30:05Z	15	1000	Reverse-engineering		T0295
@@ -329,7 +329,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-11-09T10:07:24Z	0	12500	Anything (including tooling)		T0326
 2024-11-11T11:40:31Z	10	3500	TH02 RE		T0327
 2024-11-22T10:26:38Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0328
-2024-11-23T19:01:25Z	26	450	Portability to non-PC-98 systems (TH03 and TH05)	Waiting for 100% PI of at least one of TH03's binaries	T0329
+2024-11-23T19:01:25Z	26	450	Portability to non-PC-98 systems (TH03 and TH05)		T0329
 2024-03-11T01:54:46Z	25	6250	Shuusou Gyoku: SDL2 port to Windows 98		T0330
 2024-11-24T08:32:15Z	25	2000	Shuusou Gyoku: SDL2 port to Windows 98		T0331
 2024-12-01T10:29:57Z	13	20000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0332
@@ -376,5 +376,5 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-04-29T18:43:04Z	29	500	Reconstructing the original installers		T0372
 2025-05-01T11:26:12Z	0	3500	TH03 RE		T0373
 2025-05-02T11:02:46Z	15	1000	Reverse-engineering		T0374
-2025-05-09T10:23:26Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; Anniversary Edition (one release) &gt; replays &gt; modern port &gt; netplay)		T0375
-2025-05-09T11:01:09Z	0	12500	Anything (including tooling)		T0376
+2025-05-10T10:23:26Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; Anniversary Edition (one release) &gt; replays &gt; modern port &gt; netplay)		T0375
+2025-05-10T11:01:09Z	0	12500	Anything (including tooling)		T0376

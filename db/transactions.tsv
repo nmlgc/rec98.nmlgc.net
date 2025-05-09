@@ -376,3 +376,4 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-04-29T18:43:04Z	29	500	Reconstructing the original installers		T0372
 2025-05-01T11:26:12Z	0	3500	TH03 RE		T0373
 2025-05-02T11:02:46Z	15	1000	Reverse-engineering		T0374
+2025-05-09T10:23:26Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; Anniversary Edition (one release) &gt; replays &gt; modern port &gt; netplay)		T0375

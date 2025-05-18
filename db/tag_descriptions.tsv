@@ -47,6 +47,7 @@ pc98	Details on PC-98 hardware and software.
 performance	Evidence-based observations about programming a PC-98 with performance in mind. Does not include ramblings that aren't substantiated with measurements.
 pipeline	Additional, helpful code generation steps, beyond regular compiler/assembler invocations.
 player	Player-controlled characters.
+policy-bugfix	Examples of bugfixes in mod releases that fell under my free bugfix policy.
 portability	Notes about future ports of the games away from x86 and the PC-98 platform.
 position-independence	Reducing the number of unlabeled memory references, to make life easier for modders. Also a requirement for using any other compiler on the reconstructed source code.
 resident	Data passed between the individual executables of each game.

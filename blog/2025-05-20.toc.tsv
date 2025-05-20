@@ -1,0 +1,5 @@
+Anchor	Name
+bug	The Extra Stage replay desync bug introduced in P0295
+how	How it happened
+fix-ideas	Thinking about the best way to fix it
+filesizes	Another filesize-related bug in replay saving

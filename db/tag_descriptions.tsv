@@ -50,6 +50,7 @@ player	Player-controlled characters.
 policy-bugfix	Examples of bugfixes in mod releases that fell under my free bugfix policy.
 portability	Notes about future ports of the games away from x86 and the PC-98 platform.
 position-independence	Reducing the number of unlabeled memory references, to make life easier for modders. Also a requirement for using any other compiler on the reconstructed source code.
+replay	Gameplay inputs stored in files that can be exchanged between players.
 resident	Data passed between the individual executables of each game.
 rng	Pseudo-randomness, in a gameplay sense. Emphasis on "pseudo".
 score	Points collected during gameplay, and stored in high score files.

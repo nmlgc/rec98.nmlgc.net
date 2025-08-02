@@ -1,0 +1,50 @@
+text {
+	font-family: sans-serif;
+	line-height: 125%;
+	text-anchor: middle;
+	font-size: 0.5em;
+}
+
+text.label {
+	alignment-baseline: middle;
+}
+
+.label.binary {
+	font-family: monospace;
+}
+
+text.number {
+	font-family: monospace;
+	font-size: 0.75em;
+}
+
+path {
+	stroke-linecap: round;
+	stroke-width: 3;
+}
+
+.heap {
+	stroke-linecap: round;
+	stroke-width: 2;
+}
+
+path.alloc {
+	stroke: black;
+	fill: #ccc;
+	stroke-width: .25;
+}
+
+path.alloc.game {
+	stroke: black;
+	fill: #f88;
+	stroke-width: .25;
+}
+
+line.alloc.free {
+	stroke-width: .25;
+	stroke-dasharray: 1;
+}
+
+path.alloc.fixed {
+	fill: #fcc;
+}

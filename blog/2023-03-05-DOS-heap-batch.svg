@@ -1,48 +1,6 @@
 <?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
-	<style type="text/css"><![CDATA[
-		text {
-			font-family: sans-serif;
-			line-height: 125%;
-			text-anchor: middle;
-			font-size: 0.5em;
-		}
-		text.label {
-			alignment-baseline: middle;
-		}
-		.label.binary {
-			font-family: monospace;
-		}
-		text.number {
-			font-family: monospace;
-			font-size: 0.75em;
-		}
-		path {
-			stroke-linecap: round;
-			stroke-width: 3;
-		}
-		.heap {
-			stroke-linecap: round;
-			stroke-width: 2;
-		}
-		path.alloc {
-			stroke: black;
-			fill: #ccc;
-			stroke-width: .25;
-		}
-		path.alloc.th01 {
-			stroke: black;
-			fill: #f88;
-			stroke-width: .25;
-		}
-		line.alloc.free {
-			stroke-width: .25;
-			stroke-dasharray: 1;
-		}
-		path.alloc.fixed {
-			fill: #fcc;
-		}
-	]]>	</style>
+	<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="/static/heap.css" type="text/css" />
 	<line class="alloc free" x1="0" y1="0" x2="640" y2="0" stroke="#000" />
 	<text class="label" x="475" y="22.5" style="font-size: 0.4em">(free)</text>
 	<text class="number" x="0.5" y="77.5" style="text-anchor: start;">0000h</text>
@@ -71,7 +29,7 @@
 		<tspan class="binary label">OP</tspan>
 		<tspan x="205" dy="12.5">(env.)</tspan>
 	</text>
-	<path class="alloc th01" d="M225 0h 125v 60H 225z"/>
+	<path class="alloc game" d="M225 0h 125v 60H 225z"/>
 	<text class="binary label" x="287.5" y="26">OP / REIIDEN / FUUIN</text>
 
 	<path class="heap" d="M345 45v10" stroke="#000"/>

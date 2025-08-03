@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stripe/stripe-go/v74"
-	"github.com/stripe/stripe-go/v74/checkout/session"
-	"github.com/stripe/stripe-go/v74/subscription"
+	"github.com/stripe/stripe-go/v82"
+	"github.com/stripe/stripe-go/v82/checkout/session"
+	"github.com/stripe/stripe-go/v82/subscription"
 )
 
 const STRIPE_SESSION_CACHE = "stripe_sessions.gob"
@@ -119,7 +119,6 @@ func (c *StripeClient) Session(sessionID string, salt string) (*stripeSessionVie
 }
 
 func (c *StripeClient) HandleIncoming(wr http.ResponseWriter, req *http.Request, in *Incoming) {
-	str := stripe.String
 	i64 := stripe.Int64
 
 	params := &stripe.CheckoutSessionParams{
@@ -127,22 +126,22 @@ func (c *StripeClient) HandleIncoming(wr http.ResponseWriter, req *http.Request,
 		CancelURL:  &c.URLCancel,
 		LineItems: []*stripe.CheckoutSessionLineItemParams{{
 			PriceData: &stripe.CheckoutSessionLineItemPriceDataParams{
-				Currency:    str(string(stripe.CurrencyEUR)),
-				Product:     str("prod_NiZac7KHxgcQul"),
+				Currency:    stripe.String(stripe.CurrencyEUR),
+				Product:     stripe.String("prod_NiZac7KHxgcQul"),
 				UnitAmount:  i64(int64(in.Cents)),
-				TaxBehavior: str(string(stripe.PriceTaxBehaviorInclusive)),
+				TaxBehavior: stripe.String(stripe.PriceTaxBehaviorInclusive),
 			},
 			Quantity: i64(1),
 		}},
 	}
 	if in.Cycle == "monthly" {
-		params.Mode = str(string(stripe.CheckoutSessionModeSubscription))
+		params.Mode = stripe.String(stripe.CheckoutSessionModeSubscription)
 		params.LineItems[0].PriceData.Recurring = &stripe.CheckoutSessionLineItemPriceDataRecurringParams{
-			Interval:      str("month"),
+			Interval:      stripe.String("month"),
 			IntervalCount: i64(1),
 		}
 	} else {
-		params.Mode = str(string(stripe.CheckoutSessionModePayment))
+		params.Mode = stripe.String(stripe.CheckoutSessionModePayment)
 	}
 
 	// Just in case the server crashes between here and the success handler…

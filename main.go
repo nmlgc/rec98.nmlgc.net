@@ -308,7 +308,7 @@ func CSSMeter(val float64) template.CSS {
 	))
 }
 
-var pages = template.New("").Funcs(map[string]interface{}{
+var pages = template.New("").Funcs(map[string]any{
 	// Arithmetic, safe
 	"pct": func(f float64) float64 { return (f * 100.0) },
 	"inc": func(i int) int { return i + 1 },
@@ -353,7 +353,7 @@ var pages = template.New("").Funcs(map[string]interface{}{
 
 // pagesExecute wraps template execution on [pages], logging any errors
 // using the facilities from package log.
-func pagesExecute(wr io.Writer, name string, data interface{}) {
+func pagesExecute(wr io.Writer, name string, data any) {
 	if err := pages.ExecuteTemplate(wr, name, data); err != nil {
 		log.Println(wr, err)
 	}
@@ -452,7 +452,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pages.Funcs(map[string]interface{}{
+	pages.Funcs(map[string]any{
 		// Can fail
 		"git_getCommit": repo.GetCommit,
 		"git_getLogAt":  repo.GetLogAt,
@@ -468,7 +468,7 @@ func main() {
 	// ----------------------------
 	pushes := NewPushes(transactions, tsvPushes, &repo)
 
-	pages.Funcs(map[string]interface{}{
+	pages.Funcs(map[string]any{
 		"DB_CustomerByID": func(id CustomerID) template.HTML {
 			return customers.HTMLByID(id)
 		},
@@ -492,7 +492,7 @@ func main() {
 	sppFunc := RESpeedPerPushFrom(pushes.DiffsForEstimate())
 	estimateFunc := REProgressEstimateAtTree(baselineFunc())
 
-	pages.Funcs(map[string]interface{}{
+	pages.Funcs(map[string]any{
 		"ReC98_REProgressBaseline":       baselineFunc,
 		"ReC98_RESpeedPerPush":           sppFunc,
 		"ReC98_REProgressEstimateAtTree": estimateFunc,
@@ -501,8 +501,8 @@ func main() {
 
 	// Blog
 	// ----
-	blog := NewBlog(pages, pushes, blogTags, <-videoRoot, func(blog *Blog) map[string]interface{} {
-		return map[string]interface{}{
+	blog := NewBlog(pages, pushes, blogTags, <-videoRoot, func(blog *Blog) map[string]any {
+		return map[string]any{
 			"Blog_Posts": func(filters []string) chan *Post {
 				return blog.Posts(blog.Render, filters)
 			},
@@ -528,7 +528,7 @@ func main() {
 		BlogPath: "/blog",
 	}
 	feedFormats := feedHandler.Formats()
-	pages.Funcs((map[string]interface{}{
+	pages.Funcs((map[string]any{
 		"Blog_FeedFormats": func() []*FeedFormat { return feedFormats },
 	}))
 	// ----
@@ -546,7 +546,7 @@ func main() {
 	})
 	stripe := NewStripeClient(domain, "/api/stripe", "/customer/stripe")
 	if stripe != nil {
-		pages.Funcs(map[string]interface{}{
+		pages.Funcs(map[string]any{
 			"Stripe_Session":   stripe.Session,
 			"Stripe_SubVerify": stripe.Sub,
 			"Stripe_RouteAPICancel": func() string {

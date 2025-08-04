@@ -538,11 +538,11 @@ func tsvPath(table string) string {
 	return filepath.Join(dbPath, table+".tsv")
 }
 
-func loadTSV(slice interface{}, table string, unmarshaler func(gocsv.CSVReader, interface{}) error) {
+func loadTSV(slice any, table string, unmarshaler func(gocsv.CSVReader, any) error) {
 	LoadTSV(slice, tsvPath(table), unmarshaler)
 }
 
-func saveTSV(slice interface{}, table string) error {
+func saveTSV(slice any, table string) error {
 	fnRegular := tsvPath(table)
 	fnNew := fmt.Sprintf("%s-%v.tsv", fnRegular, time.Now().UnixNano())
 

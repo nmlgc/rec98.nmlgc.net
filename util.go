@@ -75,7 +75,7 @@ func CryptHashOfFile(fn string) CryptHash {
 }
 
 // LoadTSV loads a TSV file using the given gocsv unmarshaler.
-func LoadTSV(slice any, fn string, unmarshaler func(gocsv.CSVReader, interface{}) error) bool {
+func LoadTSV(slice any, fn string, unmarshaler func(gocsv.CSVReader, any) error) bool {
 	f, err := os.Open(fn)
 	if errors.Is(err, os.ErrNotExist) {
 		return false

@@ -176,7 +176,7 @@ type Cap struct {
 	FracOutstanding float64
 	FracIncoming    float64
 	FracReserved    float64
-	Ctx             interface{}
+	Ctx             any
 }
 
 // Reached returns whether the cap has been reached.
@@ -185,7 +185,7 @@ func (c Cap) Reached() bool {
 }
 
 // CapCurrent calculates the cap from the current point in time.
-func CapCurrent(ctx interface{}) (ret Cap) {
+func CapCurrent(ctx any) (ret Cap) {
 	scopePrices := prices.Current()
 	ret.PushPrice = scopePrices.Push
 	ret.MicroPrice = scopePrices.Micro

@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/dgravesa/go-parallel/parallel"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gocarina/gocsv"
 	"golang.org/x/exp/constraints"
@@ -521,6 +522,14 @@ var tsvPushes []*pushTSV
 // and validating their assignment to the respective pushes. Commit references
 // are directly resolved using the given repo.
 func NewPushes(transactions tTransactions, tsv []*pushTSV, repo *Repository) (ret tPushes) {
+	// Warm up `repo`'s revision→commit cache in parallel. We don't even need
+	// to store the results here, as the lower loop will then quickly pull
+	// them out of the resulting cache. Runs 200% faster than if we just used
+	// the linear loop below!
+	parallel.For(len(tsv), func(i int, _ int) {
+		NewDiffInfo(tsv[i].Diff, repo)
+	})
+
 	for _, p := range tsvPushes {
 		ret = append(ret, p.toActualPush(repo))
 	}

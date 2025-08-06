@@ -17,7 +17,9 @@
 			{{- end}}</td>
 			<td>{{.Goal}}</td>
 			<td>🚚 {{HTML_Date .Delivered}}</td>
-			<td class="icon-cell"><a href="https://github.com/{{.Diff.URL}}"></a></td>
+			<td class="icon-cell">{{range $diff := .Diff -}}
+				<a href="https://github.com/{{$diff.URL}}"></a>
+			{{- end}}</td>
 			<td class="icon-cell">{{with Blog_FindEntryForPush . -}}
 				{{Blog_PostLink .Date ""}}
 			{{- end}}</td>

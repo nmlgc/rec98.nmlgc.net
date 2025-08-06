@@ -10,7 +10,9 @@
 			{{- if $i}}<br>{{end}}
 			<a href="/fundlog#{{$push.ID}}">{{$push.ID}}</a>
 			{{$push.Goal}}
-			<a href="https://github.com/{{$push.Diff.URL}}"></a>
+			{{range $diff := $push.Diff -}}
+				<a href="https://github.com/{{$diff.URL}}"></a>
+			{{- end}}
 		{{- end}}</dd>
 	</div>
 

@@ -142,10 +142,12 @@ func (t tPushes) DiffsForEstimate() (ret []DiffInfoWeighted) {
 		return selected[i].Delivered.After(selected[j].Delivered)
 	})
 	for _, p := range selected {
-		if len(ret) > 0 && ret[len(ret)-1].DiffInfo.Rev == p.Diff.Rev {
+		// Assuming that the first diff is the only one that ever touches
+		// `master`.
+		if len(ret) > 0 && ret[len(ret)-1].DiffInfo.Rev == p.Diff[0].Rev {
 			ret[len(ret)-1].Pushes += 1.0
 		} else {
-			ret = append(ret, DiffInfoWeighted{p.Diff, 1.0})
+			ret = append(ret, DiffInfoWeighted{p.Diff[0], 1.0})
 		}
 	}
 	return

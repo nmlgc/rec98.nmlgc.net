@@ -1,316 +1,316 @@
 ID	Transactions	Goal	Delivered	Diff	IncludeInEstimate
-P0001	[1]	Build system improvements, part 1 (Using Tup for the 32-bit build)	2020-09-03T23:26:18Z	nmlgc/ReC98/compare/e447a2d...150d2c6	0
-P0002	[1]	Build system improvements, part 2 (Preparations / Codebase cleanup)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/87eed57...f131878	0
-P0003	[1]	Build system improvements, part 3 (Lua rewrite of the Tupfile / Tup bugfixes for MS-DOS Player)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/f131878...d60fb3e	0
-P0004	[1]	Build system improvements, part 4 (Merging the 16-bit build part into the Tupfile)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/b86a2b1...62bd5b1	0
-P0005	[2]	TH02/TH03/TH04/TH05 RE (RNG, .MAP loading)	2018-03-16T17:45:00Z	nmlgc/ReC98/compare/1f752d7...4b8baf1	1
-P0006	[2]	TH04/TH05 RE (ZUN Soft logo explosions)	2018-03-22T00:23:00Z	nmlgc/ReC98/compare/134804d...843905e	1
-P0007	[3]	TH03/TH04/TH05 RE (Joypad functions, frame counts)	2018-04-16T12:05:00Z	nmlgc/ReC98/compare/8ec888f...47e5601	1
-P0008	[3]	TH02/TH04/TH05 RE (Shot variables and function pointers)	2018-04-21T13:52:00Z	nmlgc/ReC98/compare/47e5601...d62dd06	1
-P0009	[4]	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	nmlgc/ReC98/compare/79cc3ed...141baa4	0
-P0010	[4]	Website (Golang HTML templating)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb	0
-P0011	[5]	Website (Completion percentages)	2019-08-24T22:10:53Z	nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc	0
-P0012	[5]	Website (Memory reference counting)	2019-08-26T16:21:46Z	nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2	0
-P0013	[5]	Website (Design)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8	0
-P0014	[5]	Website (Crowdfunding log + Blog, part 1)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632	0
-P0015	[5]	Website (Blog, part 2)	2019-09-04T16:14:26Z	nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f	0
-P0016	[5]	Website (Price estimate, part 1)	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b	0
-P0017	[5]	Website (Price estimate, part 2)	2019-09-09T13:11:53Z	nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2	0
-P0018	[6]	TH04/TH05 RE (Player variables, part 1 + Motion structure) 	2018-09-02T19:33:00Z	nmlgc/ReC98/compare/746681d...178d589	1
-P0019	[6]	TH03/TH04/TH05 RE (Input, part 1)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/c592464	1
-P0020	[6]	TH03 RE (Input, part 3)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/cbe8a37	1
-P0021	[6]	TH03 RE (Input, part 4)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/8dfc2cd	1
-P0022	[6]	TH03/TH04/TH05 RE (Input, part 2)	2018-09-17T22:05:00Z	nmlgc/ReC98/commit/79cc3ed	1
-P0023	[6]	TH05 RE (Lasers, part 2)	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d...0cde4b7	1
-P0024	[6]	TH05 RE (Lasers, part 3)	2018-12-16T23:34:00Z	nmlgc/ReC98/compare/807df3d...0cde4b7	1
-P0025	[6]	TH04/TH05 RE (EGC calls)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
-P0026	[6]	TH04/TH05 RE (Boss backdrops)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
-P0027	[6]	TH04/TH05 RE (.STD loading)	2018-12-26T17:57:00Z	nmlgc/ReC98/compare/0cde4b7...261d503	1
-P0028	[7]	TH04/TH05 RE (Midboss and boss variables, part 3)	2019-09-11T21:25:04Z	nmlgc/ReC98/compare/6023f5c...6ff427a	1
-P0029	[7]	TH04/TH05 RE (Midboss and boss function names)	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/6ff427a...c7fc4ca	1
-P0030	[7]	TH05 decompilation (Stage setup)	2019-09-15T19:29:47Z	nmlgc/ReC98/compare/c7fc4ca...dea40ad	1
-P0031	[7]	TH05 decompilation (Stage .BB loading + Segment split research)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/dea40ad...9f764fa	1
-P0032	[7]	TH02/TH04/TH05 RE (Score update and rendering)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/9f764fa...e6294c2	1
-P0033	[7]	TH04/TH05 RE (HUD bars + Player movement)	2019-09-21T12:11:18Z	nmlgc/ReC98/compare/e6294c2...6cdd229	1
-P0034	[7]	TH04/TH05 RE (Player variables, part 2 + Deathbomb window)	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6cdd229...6f1f367	1
-P0035	[7]	TH04/TH05 RE (Player rendering)	2019-09-24T21:12:33Z	nmlgc/ReC98/compare/6f1f367...a533b5d	1
-P0036	[7]	TH04/TH05 RE (Generic player shot functions) 	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/a533b5d...82b0e1d	1
-P0037	[7]	TH05 decompilation (Yuuka's, Mima's, and Marisa's shot functions)	2019-10-14T23:13:21Z	nmlgc/ReC98/compare/82b0e1d...e7e1cbc	1
-P0038	[8]	Website (Basic Golang app server + looping over commit history)	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d	0
-P0039	[8]	Website (Inspecting files in a specific commit)	2019-08-16T22:29:03Z	nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977	0
-P0040	[9]	TH04/TH05 RE (GRCG calls + Circles)	2018-12-06T22:38:00Z	nmlgc/ReC98/compare/d7483c0...b03bc91	1
-P0041	[9]	TH04/TH05 RE (Midboss and boss variables, part 1)	2018-12-09T00:26:00Z	nmlgc/ReC98/compare/b03bc91...f3b6137	1
-P0042	[9]	TH04/TH05 RE (Rank + TH05 lasers, part 1)	2018-12-12T01:52:00Z	nmlgc/ReC98/compare/f3b6137...807df3d	1
-P0043	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 1)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
-P0044	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 2)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
-P0045	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 3)	2018-12-30T01:46:00Z	nmlgc/ReC98/compare/261d503...612beb8	1
-P0046	[10]	TH04/TH05 RE (16×16 sprite rendering + Player shots, part 1)	2019-01-01T01:38:00Z	nmlgc/ReC98/compare/612beb8...deb45ea	1
-P0047	[11]	TH04/TH05 RE (Player shots, part 2)	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f7...893bd46	1
-P0048	[11]	TH04/TH05 RE (8×8 sparks)	2019-02-28T16:58:00Z	nmlgc/ReC98/compare/9a2c6f7...893bd46	1
-P0049	[11]	TH04/TH05 RE (.BB loading)	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46...6ed8e60	1
-P0050	[11]	TH04/TH05 RE (Midboss and boss variables, part 2)	2019-03-01T22:25:00Z	nmlgc/ReC98/compare/893bd46...6ed8e60	1
-P0051	[11]	TH04/TH05 RE (Midboss and boss explosions)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
-P0052	[11]	TH04/TH05 RE (Score variables)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
-P0053	[12]	TH04/TH05 RE (Text popups)	2019-03-06T19:39:00Z	nmlgc/ReC98/compare/6ed8e60...3ba536a	1
-P0054	[13]	Website (ASM instruction counting, part 1)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e	0
-P0055	[13]	Website (ASM instruction counting, part 2)	2019-08-23T21:43:10Z	nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98	0
-P0056	[14, 15]	TH03 RE (The stolen sprite driver, part 1)	2019-11-06T22:36:47Z	nmlgc/ReC98/compare/b28cefc...c09446a	1
-P0057	[16, 17]	TH04/TH05 PI (Items, part 1)	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/1cb9731...ac7540d	1
-P0058	[17]	TH04/TH05 RE (Items, part 2 + Midboss and boss variables, part 4)	2019-11-13T23:49:07Z	nmlgc/ReC98/compare/ac7540d...fef0299	1
-P0059	[18, 19]	TH04/TH05 PI (Motion structures + EGC calls + vector calls)	2019-11-18T21:28:01Z	nmlgc/ReC98/compare/01de290...8b62780	1
-P0060	[20]	TH03 decompilation (The stolen sprite driver, part 2) / PI 	2019-11-29T00:15:36Z	nmlgc/ReC98/compare/29385dd...73f5ae7	1
-P0061	[21]	TH03 RE (Character data, part 1 + Player shots, part 1)	2019-12-05T21:18:16Z	nmlgc/ReC98/compare/96684f4...5f4f5d8	1
-P0062	[21]	TH05 decompilation (Reimu's shot functions) / PI	2019-12-22T15:09:53Z	nmlgc/ReC98/compare/1d6fbb8...f275e04	1
-P0063	[26]	TH05 RE (GENSOU.SCR, part 1/?)	2019-12-28T11:37:29Z	nmlgc/ReC98/compare/034ae4b...8dbb450	1
-P0064	[21, 20]	TH04/TH05 PI (Completing OP.EXE)	2019-12-29T20:23:06Z	nmlgc/ReC98/compare/80cec5b...9faa29a	1
-P0065	[20]	TH04/TH05 RE (Resident structures)	2020-01-03T20:45:46Z	nmlgc/ReC98/compare/9faa29a...042b780	1
-P0066	[25, 22]	TH01 RE (Palettes) / decompilation (Graphics functions, part 1)	2020-01-05T20:04:19Z	nmlgc/ReC98/compare/042b780...e55a48b	1
-P0067	[22]	TH01 decompilation (Graphics functions, part 2)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e55a48b...ebb30ce	1
-P0068	[30]	TH01 decompilation (Graphics functions, part 3)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/ebb30ce...2ac00d4	1
-P0069	[30, 24]	TH01 decompilation (Graphics functions, part 4)	2020-01-14T21:15:19Z	nmlgc/ReC98/compare/e0d0dcd...0f18dbc	1
-P0070	[27]	TH03 RE (Score and combo variables)	2020-01-20T21:51:25Z	nmlgc/ReC98/compare/a931758...327021b	1
-P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	nmlgc/ReC98/compare/327021b...4bb04ab	1
-P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/4bb04ab...cea3ea6	1
-P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/cea3ea6...5286417	1
-P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/5286417...1807906	1
-P0075	[34, 41]	TH04/TH05 RE (Bullet group types, spawn types, and templates)	2020-02-16T20:51:42Z	nmlgc/ReC98/compare/1807906...222fc99	1
-P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	nmlgc/ReC98/compare/222fc99...9ae9754	1
-P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	nmlgc/ReC98/compare/9ae9754...f4eb7a8	1
-P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	nmlgc/ReC98/compare/f4eb7a8...9e52cb1	1
-P0079	[28]	TH05 PI/RE (Mai's, Yuki's, and Shinki's 32×32 balls, Yumeko's swords)	2020-02-29T15:05:39Z	nmlgc/ReC98/compare/9e52cb1...cd48aa3	1
-P0080	[38, 36]	TH01 decompilation (Graphics functions, part 5)	2020-03-03T12:17:54Z	nmlgc/ReC98/compare/cd48aa3...0252da2	1
-P0081	[36]	TH01 decompilation (.GRZ format)	2020-03-07T20:45:20Z	nmlgc/ReC98/compare/0252da2...5ac9b30	1
-P0082	[46]	TH01 decompilation (.GRP format)	2020-03-13T18:56:50Z	nmlgc/ReC98/compare/5ac9b30...f6cbff0	1
-P0083	[47]	TH01 decompilation (.PTN format, part 1)	2020-03-18T19:39:32Z	nmlgc/ReC98/compare/f6cbff0...dfac2f2	1
-P0084	[47]	TH01 decompilation (REYHI*.DAT loading and creation)	2020-03-22T09:18:27Z	nmlgc/ReC98/compare/dfac2f2...110d6dd	1
-P0085	[49]	TH02/TH04/TH05 RE (Pellet rendering + TH04/TH05 gather circles)	2020-04-03T15:46:03Z	nmlgc/ReC98/compare/110d6dd...54ee99b	1
-P0086	[48, 45]	TH04/TH05 RE (Random PI blockers)	2020-04-16T13:09:16Z	nmlgc/ReC98/compare/54ee99b...24b96cd	1
-P0087	[49]	TH04/TH05 RE (Score popup numbers)	2020-04-16T13:09:16Z	nmlgc/ReC98/compare/24b96cd...97ce7b7	1
-P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	nmlgc/ReC98/compare/97ce7b7...da6b856	1
-P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	nmlgc/ReC98/compare/da6b856...90252cc	1
-P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	nmlgc/ReC98/compare/90252cc...07dab29	1
-P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	nmlgc/ReC98/compare/07dab29...29c5a73	1
-P0092	[56]	TH01 decompilation (Score menu, part 2)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/29c5a73...4403308	1
-P0093	[57]	TH01 decompilation (Score menu, part 3)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/4403308...0e73029	1
-P0094	[56]	TH01 decompilation (Score menu, part 4 + Endings, part 1)	2020-05-25T14:05:11Z	nmlgc/ReC98/compare/0e73029...57a8487	1
-P0095	[42]	TH01 PI (Completing OP and FUUIN, .BOS pointers, scrolling)	2020-05-31T15:47:00Z	nmlgc/ReC98/compare/57a8487...8ddb778	1
-P0096	[46, 52]	TH01 decompilation (.PTN format, part 2)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/8ddb778...8283c5e	1
-P0097	[52, 57]	TH01 decompilation (Orb physics)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/8283c5e...600f036	1
-P0098	[51]	TH01 decompilation (Player shots)	2020-06-13T19:25:59Z	nmlgc/ReC98/compare/600f036...ad06748	1
-P0099	[61]	TH01 decompilation (Pellets, part 1)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/1799d67...1b25830	1
-P0100	[60]	TH01 decompilation (Pellets, part 2)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/1b25830...ceb81db	1
-P0101	[42, 61]	TH01 decompilation (Pellets, part 3)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/ceb81db...c11a956	1
-P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	nmlgc/ReC98/compare/c11a956...b60f38d	1
-P0103	[61, 65]	TH01 decompilation (HUD, part 1)	2020-07-27T15:27:03Z	nmlgc/ReC98/compare/b60f38d...05c0028	1
-P0104	[65]	TH01 decompilation (HUD, part 2)	2020-07-27T15:27:03Z	nmlgc/ReC98/compare/05c0028...3622eb6	1
-P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/3622eb6...11b776b	1
-P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/11b776b...1f1829d	1
-P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/1f1829d...1650241	1
-P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	nmlgc/ReC98/compare/1650241...dcf4e2c	1
-P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet group tuning)	2020-08-16T19:48:44Z	nmlgc/ReC98/compare/dcf4e2c...2c7d86b	1
-P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	nmlgc/ReC98/compare/2c7d86b...8b5c146	1
-P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	nmlgc/ReC98/compare/8b5c146...4ef4c9e	1
-P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	nmlgc/ReC98/compare/4ef4c9e...e447a2d	1
-P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	nmlgc/ReC98/compare/150d2c6...6204fdd	1
-P0114	[72]	Separating translation units, part 1/10 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	nmlgc/ReC98/compare/6204fdd...967bb8b	1
-P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	nmlgc/ReC98/compare/967bb8b...e5328a3	1
-P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	nmlgc/ReC98/compare/e5328a3...03048c3	1
-P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	nmlgc/ReC98/compare/03048c3...0bb5bc3	1
-P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	nmlgc/ReC98/compare/0bb5bc3...cbf14eb	1
-P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	nmlgc/ReC98/compare/cbf14eb...453dd3c	1
-P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-28T11:52:57Z	nmlgc/ReC98/compare/453dd3c...3c008b6	1
-P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	nmlgc/ReC98/compare/3c008b6...5c42fcd	1
-P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	nmlgc/ReC98/compare/164591f...4406c3d	1
-P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	nmlgc/ReC98/compare/4406c3d...72dfa09	1
-P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/72dfa09...056b1c7	1
-P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	nmlgc/ReC98/compare/056b1c7...f6a3246	1
-P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/6c22af7...8b01657	1
-P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2/10 	2020-11-16T20:39:05Z	nmlgc/ReC98/compare/8b01657...dc65b59	1
-P0128	[84]	TH01 decompilation (Card-flipping stages, part 1/4)	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dc65b59...dde36f7	1
-P0129	[84]	TH01 decompilation (Card-flipping stages, part 2/4)	2020-11-30T23:48:26Z	nmlgc/ReC98/compare/dde36f7...f4c2e45	1
-P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/6d69ea8...576def5	1
-P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	nmlgc/ReC98/compare/576def5...dc9e3ee	1
-P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	nmlgc/ReC98/compare/dc9e3ee...045450c	1
-P0133	[90]	Separating translation units, part 4/10 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	nmlgc/ReC98/compare/045450c...1d5db71	1
-P0134	[92]	Separating translation units, part 5/10 (TH05 .PI functions)	2021-02-21T13:36:38Z	nmlgc/ReC98/compare/1d5db71...a6eed55	1
-P0135	[88, 90]	Separating translation units, part 6/10 (TH05 PMD loading / Music Room piano)	2021-03-20T20:19:56Z	nmlgc/ReC98/compare/a6eed55...252c13d	1
-P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up with TH04)	2021-03-20T20:19:56Z	nmlgc/ReC98/compare/252c13d...07bfcf2	1
-P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	nmlgc/ReC98/compare/07bfcf2...8d953dc	1
-P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	nmlgc/ReC98/compare/8d953dc...864e864	1
-P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initialization / TH04 PMD loading)	2021-05-12T18:01:20Z	nmlgc/ReC98/compare/864e864...d985811	1
-P0140	[98]	Research (PC-98 DOS graph mode, with implementation into DOSBox-X) 	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d985811...d856f7d	0
-P0141	[98, 102]	TH01 decompilation (Konngara, part 1/5.5: Entrance animation)	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/d856f7d...5afee78	1
-P0142	[99]	TH01 decompilation (Konngara, part 2/5.5: Rendering, pattern 1)	2021-05-27T19:25:15Z	nmlgc/ReC98/compare/5afee78...08bc188	1
-P0143	[109]	Website (Progress number caching) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/9069fb7...c8ac7e5	0
-P0144	[100, 109]	Website (Blog tag system, part 1: Manual and automatic tag assignment, blog filtering, design) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/c8ac7e5...69dd597	0
-P0145	[103, 109]	Website (Blog tag system, part 2: Combining tags, per-tag descriptions) 	2021-06-06T00:53:22Z	nmlgc/rec98.nmlgc.net/compare/69dd597...71417b6	0
-P0146	[106, 107]	TH05 decompilation (Shinki's background animations) 	2021-06-10T20:56:05Z	nmlgc/ReC98/compare/08bc188...456b621	1
-P0147	[110, 111]	TH04/TH05 RE (.BB 16×16 tile animations) / TH05 decompilation (Shinki + EX-Alice backgrounds)	2021-06-21T13:49:31Z	nmlgc/ReC98/compare/456b621...c940059	1
-P0148	[117]	TH04/TH05 decompilation (Text popups, gather circle rendering, player position clamping)	2021-07-20T22:35:20Z	nmlgc/ReC98/compare/c940059...e1a26bb	1
-P0149	[89, 113, 115]	TH04/TH05 RE (Incompletely or wrongly RE'd bullet mechanics)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/e1a26bb...05e4c4a	1
-P0150	[91, 93, 95]	TH04 decompilation (Bullet spawning)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/05e4c4a...768251d	1
-P0151	[97, 108, 115]	TH04/TH05 decompilation (Bullet updates)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/768251d...4d24ca5	1
-P0152	[101, 104]	TH05 RE (Undecompilable bullet spawning code)	2021-07-31T19:19:27Z	nmlgc/ReC98/compare/4d24ca5...81fc861	1
-P0153	[105]	TH01 decompilation (Konngara, part 3/5.5: Patterns 2-4)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/624e0cb...d05c9ba	1
-P0154	[105]	TH01 decompilation (Konngara, part 4/5.5: Patterns 5-8)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/d05c9ba...031b526	1
-P0155	[114]	TH01 decompilation (Konngara, part 5/5.5: Patterns 9-12)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/031b526...9ad578e	1
-P0156	[114]	TH01 decompilation (Konngara, part 5.5/5.5: Main function + Sariel entrance animation + HARRY UP pellets)	2021-08-23T23:43:07Z	nmlgc/ReC98/compare/9ad578e...4bc6405	1
-P0157	[112]	TH01 decompilation (16× TRAM letters: 東方★靈異伝, STAGE #, and HARRY UP)	2021-09-12T18:33:09Z	nmlgc/ReC98/compare/4bc6405...bf7bb7e	1
-P0158	[118]	TH01 decompilation (Items, part 1/2)	2021-09-28T16:05:58Z	nmlgc/ReC98/compare/bf7bb7e...c0c0ebc	1
-P0159	[122]	TH01 decompilation (Items, part 2/2 + Cards)	2021-09-28T16:05:58Z	nmlgc/ReC98/compare/c0c0ebc...e491cd7	1
-P0160	[126]	TH01 decompilation (Pellet speed modification + HUD, part 3 (Stage timer) + Particle system)	2021-10-09T21:29:12Z	nmlgc/ReC98/compare/e491cd7...42ba4a5	1
-P0161	[121]	Research (Turbo C++ 4.0J's jump optimization bug after SCOPY@)	2021-10-09T21:29:21Z	nmlgc/ReC98/compare/42ba4a5...81dd96e	1
-P0162	[119]	TH01 decompilation (Player control, part 1/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/81dd96e...24b3a0d	1
-P0163	[119]	TH01 decompilation (Player control, part 2/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/24b3a0d...6d572b3	1
-P0164	[130]	TH01 decompilation (Player control, part 3/3)	2021-10-20T09:58:26Z	nmlgc/ReC98/compare/6d572b3...7a0e5d8	1
-P0165	[123]	TH01 decompilation (Missiles, part 1/2 + large boss sprites, part 1/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/7a0e5d8...f2bca01	1
-P0166	[123]	TH01 decompilation (Large boss sprites, part 2/3)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/f2bca01...e697907	1
-P0167	[127]	TH01 decompilation (Large boss sprites, part 3/3 + Stage initialization + Defeat animation + Route selection)	2021-11-08T10:59:48Z	nmlgc/ReC98/compare/e697907...c2de6ab	1
-P0168 	[102, 116, 120]	TH04/TH05 decompilation (EMS swap area, part 1/2)	2021-11-29T01:56:18Z	nmlgc/ReC98/compare/c2de6ab...8b046da	1
-P0169 	[124, 128, 132]	TH04/TH05 decompilation (EMS swap area, part 2/2) + Research (TH04 No-EMS Reimu Stage 5 crash)	2021-11-29T01:56:18Z	nmlgc/ReC98/compare/8b046da...479b766	1
-P0170	[125]	Website (Technical debt visualization)	2021-12-15T23:21:58Z	nmlgc/rec98.nmlgc.net/compare/0c4ab41...4f04091	0
-P0171	[125, 129]	Website (Resource caching + new funding goals)	2021-12-15T23:21:58Z	nmlgc/rec98.nmlgc.net/compare/4f04091...e12cf26	0
-P0172 	[136, 137]	TH03 decompilation (YUME.NEM)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/49e6789...2d5491e	1
-P0173 	[129]	TH03 decompilation (High score menu, part 1/2)	2021-12-27T18:19:52Z	nmlgc/ReC98/compare/2d5491e...27f901c	1
-P0174	[127]	TH01 decompilation (Sariel, part 2/9: Preparation + birds)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/27f901c...a0fe812	1
-P0175	[131]	TH01 decompilation (Sariel, part 3/9: Shield/wand/dress animation + patterns 1-3)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/a0fe812...40ac9a7	1
-P0176	[131]	TH01 decompilation (Sariel, part 4/9: Background transition animation + vertical 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/40ac9a7...c5dc45b	1
-P0177	[134]	TH01 decompilation (Sariel, part 5/9: Patterns 4-9 + wavy 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/c5dc45b...5f0cabc	1
-P0178	[135]	TH01 decompilation (Sariel, part 6/9: Patterns 10-11)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/5f0cabc...60621f8	1
-P0179	[135]	TH01 decompilation (Sariel, part 7/9: Patterns 12-13 + horizontal 2×2 particles)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/60621f8...9e5b344	1
-P0180	[138, 143]	TH01 decompilation (Sariel, part 8/9: Patterns 14-16)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/9e5b344...091f19f	1
-P0181	[140]	TH01 decompilation (Sariel, part 9/9: Main function)	2022-01-31T09:17:43Z	nmlgc/ReC98/compare/091f19f...313450f	1
-P0182	[139, 133]	TH03 RE (Collision bitmap)	2022-02-18T19:40:52Z	nmlgc/ReC98/compare/313450f...1e2c7ad	1
-P0183	[145, 133]	TH03 decompilation (Player collision detection)	2022-02-18T19:40:52Z	nmlgc/ReC98/compare/1e2c7ad...f9d983e	1
-P0184	[148]	TH04/TH05 decompilation (Bullets: Special motion and sprite selection + item spawn splash circle)	2022-03-05T22:55:32Z	nmlgc/ReC98/compare/f9d983e...f918298	1
-P0185	[148, 141, 142]	TH04/TH05 decompilation (Curve bullet motion + laser control + playfield shaking)	2022-03-05T22:55:32Z	nmlgc/ReC98/compare/f918298...a21ab3d	1
-P0186	[149, 150]	TH04/TH05 decompilation (Stage transition animation + smaller boss blockers)	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/a21ab3d...bab5634	1
-P0187	[153, 154]	TH04 RE (Shared boss state bytes)	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/bab5634...426a531	1
-P0188	[133, 142, 147]	TH04/TH05 decompilation (Boss defeat sequence / collision + Shinki's 32×32 balls (logic))	2022-03-27T16:13:51Z	nmlgc/ReC98/compare/426a531...e881f95	1
-P0189	[156, 159]	TH04 RE (Kurumi + Stage 4 Marisa crashes) / TH05 decompilation (Stage 1-5 boss backgrounds)	2022-04-18T20:41:01Z	nmlgc/ReC98/compare/22abdd1...b4876b6	1
-P0190	[147]	TH05 decompilation (Shinki, part 1/2: Patterns 1-10)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/5734815...293e16a	1
-P0191	[147]	TH05 decompilation (Shinki, part 2/2: Pattern 11, main function)	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/293e16a...71cb7b5	1
-P0192	[147, 160, 163]	TH05 decompilation (Stage 1 midboss + Replay file format) + Separating translation units, part 11	2022-04-30T22:58:07Z	nmlgc/ReC98/compare/71cb7b5...e1f3f9f	1
-P0193	[144]	TH01 decompilation (Elis, part 1/4: Preparations + patterns 1-3)	2022-05-31T22:58:07Z	nmlgc/ReC98/compare/e1f3f9f...183d7a2	1
-P0194	[152]	TH01 decompilation (Elis, part 2/4: Patterns 4-6 + transformations)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/183d7a2...5d93a50	1
-P0195	[151, 155]	TH01 decompilation (Elis, part 3/4: Patterns 7-13)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/5d93a50...e18c53d	1
-P0196	[164, 169]	TH01 decompilation (Elis, part 4/4: Entrance animation + main function)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/e18c53d...57c9ac5	1
-P0197	[161, 167]	TH01 research (HP bar heap corruption + boss defeat crashes) + decompilation (Verdict screen)	2022-05-31T23:43:30Z	nmlgc/ReC98/compare/57c9ac5...48db0b7	1
-P0198	[170, 173]	TH01 decompilation (Kikuri, part 1/3: Preparation + soul, tear, and ripple animations)	2022-06-17T17:03:14Z	nmlgc/ReC98/compare/48db0b7...440637e	1
-P0199	[173]	TH01 decompilation (Kikuri, part 2/3: Patterns)	2022-06-17T17:03:14Z	nmlgc/ReC98/compare/440637e...5af2048	1
-P0200	[171, 176]	TH01 decompilation (Kikuri, part 3/3: Main function + Ending boss slideshow + Good/Bad endings)	2022-06-17T17:03:14Z	nmlgc/ReC98/compare/5af2048...67e46b5	1
-P0201	[175, 167]	TH01 decompilation (SinGyoku, part 1/2: Preparation + sphere movement + patterns 1-2)	2022-06-25T16:39:14Z	nmlgc/ReC98/compare/9342665...ff49e9e	1
-P0202	[177, 168]	TH01 decompilation (SinGyoku, part 2/2: Patterns 3-6 + main function + Missiles, part 2/2 + YuugenMagan setup)	2022-06-25T16:39:14Z	nmlgc/ReC98/compare/ff49e9e...4568bf7	1
-P0203	[178, 129, 163]	TH01 decompilation (Card-flipping stages, part 3/4: Bumpers and turrets)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/4568bf7...86cdf5f	1
-P0204	[174, 180]	TH01 decompilation (Card-flipping stages, part 4/4: Portals + Bomb animation)	2022-07-10T11:48:22Z	nmlgc/ReC98/compare/86cdf5f...0c682b5	1
-P0205	[181, 180]	TH01 decompilation (Mima, part 1/2: Patterns 1-4)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/3259190...327730f	1
-P0206	[180, 183, 168]	TH01 decompilation (Mima, part 2/2: Patterns 5-8 + main function) + Research (TH01's unexpected palette changes)	2022-07-17T19:20:47Z	nmlgc/ReC98/compare/327730f...454c105	1
-P0207	[182]	TH01 decompilation (YuugenMagan, part 1/5: Preparation)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/454c105...c26ef4b	1
-P0208	[182, 146]	TH01 decompilation (YuugenMagan, part 2/5: Helper functions)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/c26ef4b...239a3ec	1
-P0209	[185]	TH01 decompilation (YuugenMagan, part 3/5: Main function)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/239a3ec...5030867	1
-P0210	[146, 184]	TH01 decompilation (YuugenMagan, part 4/5: Eye opening/closing + 邪 colors)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/5030867...149fbca	1
-P0211	[184, 186]	TH01 decompilation (YuugenMagan, part 5/5: Quirk research + Data finalization, part 1/2 + Common part of endings)	2022-08-08T18:23:19Z	nmlgc/ReC98/compare/149fbca...d398a94	1
-P0212	[192, 186, 188]	TH01 decompilation (Stage bonus and TOTLE screens, part 1/2)	2022-08-11T21:27:53Z	nmlgc/ReC98/compare/d398a94...363fd54	1
-P0213	[188, 187]	TH01 decompilation (Stage bonus and TOTLE screens, part 2/2 + Data finalization, part 2/2 + FUUIN.EXE 100%)	2022-08-11T21:27:53Z	nmlgc/ReC98/compare/363fd54...158a91e	1
-P0214	[187]	TH01 decompilation (Orb and Game Over animations + Pause, continue, and debug menus)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/158a91e...414770c	1
-P0215	[187, 196]	TH01 decompilation (REIIDEN.EXE main() function / 100%)	2022-08-14T23:17:23Z	nmlgc/ReC98/compare/414770c...3123c9d	1
-P0216	[195]	TH01 decompilation (100%)	2022-08-15T23:57:46Z	nmlgc/ReC98/compare/3123c9d...a0ff3f1	1
-P0217	[165]	Seihou / Shuusou Gyoku (Clean-room packfile implementation / Building a drop-in replacement binary)	2022-09-04T15:13:44Z	nmlgc/ssg/compare/pbg...P0217	0
-M0001	[1]	Seihou / Shuusou Gyoku (Minor code quality / portability issues)	2022-09-10T21:32:07Z	nmlgc/ssg/compare/P0217...M0001	0
-P0218	[191, 193]	Website (Video pipeline, part 1/2: Preparations / Source file gathering)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/21f0a4d...8ebf201	0
-P0219	[194, 201]	Website (Video pipeline, part 2/2: Encoding / Tweaking settings / Caching)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/8ebf201...52375e2	0
-P0220	[201, 204]	Website (Video player, part 1/3: Basic controls and frame-accurate seeking)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/52375e2...ba6359b	0
-P0221	[204, 96]	Website (Video player, part 2/3: Tabs and markers)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/ba6359b...94e48e9	0
-P0222	[96, 117]	Website (Video player, part 3/3: Dynamic captions and useful fullscreen mode)	2022-10-31T23:58:39Z	nmlgc/rec98.nmlgc.net/compare/94e48e9...358e16f	0
-M0002	[2]	Seihou / Shuusou Gyoku (File loading cleanup + Packfile caching)	2022-11-01T21:08:01Z	nmlgc/ssg/compare/M0001...M0002	0
-P0223	[198, 162, 166, 172, 179, 199, 203]	TH03/TH04/TH05 decompilation (Cutscenes, part 1/3: State + Box and picture rendering)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/139746c...371292d	1
-P0224	[157, 158]	TH03/TH04/TH05 decompilation (Cutscenes, part 2/3: Script commpands)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/371292d...8118e61	1
-P0225	[190, 206, 210, 200, 207]	TH03/TH04/TH05 decompilation (Cutscenes, part 3/3: Interpreter loop + TH05 rendering boilerplate, part 1/?)	2022-11-30T22:20:03Z	nmlgc/ReC98/compare/8118e61...4f85326	1
-P0226	[212, 215]	Seihou / Shuusou Gyoku (Running at full speed on modern systems / Basic locale independence)	2022-12-31T23:57:00Z	nmlgc/ssg/compare/M0002...P0226	0
-P0227	[197]	TH05 decompilation (Sara) / Research (Relativity of near references)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/4f85326...bfd24c6	1
-P0228	[217, 197]	TH05 finalization (Lasers)	2023-01-17T17:52:09Z	nmlgc/ReC98/compare/bfd24c6...739e1d8	1
-P0229	[211, 219]	TH01 debloating (Single-executable build, part 1/2)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/6370f96...d535d87	0
-P0230	[221]	TH01 debloating (Single-executable build, part 2/2)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/d535d87...ca523b4	0
-P0231	[121, 216]	Research (Spawning TSRs from C)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/ca523b4...05a49b9	0
-P0232	[225]	Portability (PC-98 platform layer, part 1)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/f7ef7f8...abeaf85	0
-P0233	[208]	Research (Performance of various PC-98 blitting approaches)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/abeaf85...dbc5b51	0
-P0234	[219, 223, 227]	TH01 Anniversary Edition (Removing interlaced pellet rendering + Merging previous fixes)	2023-03-05T12:56:15Z	nmlgc/ReC98/compare/dd2265c...12f29c6	0
-P0235	[189]	TH02 RE (Stage tiles, part 1/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/e7a9262...62c4b7f	1
-P0236	[202, 205, 209]	TH02 RE (Stage tiles, part 2/2)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/62c4b7f...7fa9038	1
-P0237	[209, 218, 222]	TH02 RE (Spark structure + Point number popups + Bomb animation effects)	2023-03-30T13:23:29Z	nmlgc/ReC98/compare/7fa9038...c5e51e6	1
-P0238	[229]	Website (TypeScript migration + Stripe integration, part 1/2: Basic support)	2023-05-01T23:56:59Z	nmlgc/rec98.nmlgc.net/compare/4698397...edf2926	0
-P0239	[238]	Website (Stripe integration, part 2/2: Subscription support) + TH01 Anniversary Edition (Minor bugfixes)	2023-05-01T23:56:59Z	nmlgc/ReC98/compare/c5e51e6...P0239	0
-P0240	[195]	TH04 PI/RE (Stage 5 star rendering + Stage 6 Yuuka checkerboard + Custom entity structures, part 1/2)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/be69ab6...40c900f	1
-P0241	[241, 242]	TH04 PI/RE (Custom entity structures, part 2/2 + Thick laser structure + PI false positives + .STD loading)	2023-05-29T23:39:52Z	nmlgc/ReC98/compare/40c900f...08352a5	1
-P0242	[222, 226, 233]	TH02 RE (Score tracking + HUD rendering)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/08352a5...dfa758d	1
-P0243	[243, 247, 252]	TH02 RE (Items)	2023-06-07T23:17:58Z	nmlgc/ReC98/compare/dfa758d...ac33bd2	1
-P0244	[214, 220, 224, 228, 236, 245]	TH04 PI/RE (Stage 4 carpet lighting effect + 100% PI)	2023-06-13T11:07:44Z	nmlgc/ReC98/compare/ac33bd2...97f0c3b	1
-P0245	[244, 227, 245, 246]	TH04/TH05 finalization (Sprite clipping + gather circles + boss explosions) + TH01 Anniversary Edition (Lines, part 1/?)	2023-06-30T23:52:16Z	nmlgc/ReC98/compare/97f0c3b...5876755	1
-P0246	[232, 234]	Seihou / Shuusou Gyoku (Cleanup and deduplication)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/P0226...152ad74	0
-P0247	[234, 235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 1/5)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/152ad74...54c3c4e	0
-P0248	[231, 215, 235]	Seihou / Shuusou Gyoku (秋霜CFG.DAT versioning)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/54c3c4e...62ff407	0
-P0249	[235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 2/5 + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/62ff407...a1f80a3	0
-P0250	[235, 237]	Seihou / Shuusou Gyoku (Text pre-rendering, part 1/2: Implementation + Migrating the in-game music title)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/a1f80a3...629ddd8	0
-P0251	[237, 248]	Seihou / Shuusou Gyoku (Text pre-rendering, part 2/2: Migrating the rest of the game + Replacing Win32 memory management)	2023-08-01T23:57:43Z	nmlgc/ssg/compare/629ddd8...P0251	0
-P0252	[253, 248]	Seihou / Shuusou Gyoku (Building SDL from source within Tup)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/P0251...e98feef	0
-P0253	[248]	Seihou / Shuusou Gyoku (Game logic portability, part 1/? + Cross-platform APIs, part 1/?: Window creation via SDL)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/e98feef...24df71c	0
-P0254	[248]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 2/?: Sound via miniaudio)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/24df71c...b7b863b	0
-P0255	[255]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Input via SDL)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/b7b863b...2b8218e	0
-P0256	[255]	Seihou / Shuusou Gyoku (Restoring the screenshot feature + Translating inline ASM code to C++)	2023-09-30T21:01:36Z	nmlgc/ssg/compare/2b8218e...P0256	0
-P0257	[261]	Website (Video player code cleanup + audio support)	2023-09-30T21:01:36Z	nmlgc/rec98.nmlgc.net/compare/b79c667...e2ba49b	0
-P0258	[249, 251]	Decompilation (TH04/TH05 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/5876755...e8a0b3e	1
-P0259	[266, 213]	Decompilation (TH04/TH05 stage dialogs, part 2/2) + TH02 RE (Stage dialog preparations)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/e8a0b3e...dfaa3c6	1
-P0260	[233, 240, 262]	Decompilation (TH02 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/dfaa3c6...ed9ee93	1
-P0261	[257, 252]	Decompilation (TH02 stage dialogs, part 2/2 + TH03 win messages + TH04/TH05 MIKO.CFG + TH04 game startup)	2023-11-01T23:58:05Z	nmlgc/ReC98/compare/ed9ee93...ae2fc28	1
-P0262	[260, 264, 268, 265]	Decompilation (TH04/TH05 main/option menu)	2023-11-30T23:56:14Z	nmlgc/ReC98/compare/ae2fc28...741d889	1
-P0263	[265, 269]	Decompilation (TH04/TH05 first-launch sound setup menu + TH05 title screen animation)	2023-11-30T23:56:14Z	nmlgc/ReC98/compare/741d889...46cd6e7	1
-P0264	[272, 276, 269, 273]	TH03/TH04/TH05 decompilation (Music Rooms, part 1/2)	2024-02-03T08:03:19Z	nmlgc/ReC98/compare/46cd6e7...78728f6	1
-P0265	[203, 254, 273, 250]	TH03/TH04/TH05 decompilation (Music Rooms, part 2/2 + MAINE.EXE main()) + TH02 PI/RE (Boss damage and position)	2024-02-03T08:03:19Z	nmlgc/ReC98/compare/78728f6...ff19bed	1
-P0266	[256]	mly (CLI preparation + MIDI event dumping + Basic loop detection algorithm)	2024-03-09T15:23:29Z	nmlgc/mly/compare/eb2b0c8...b356884	0
-P0267	[256]	mly (Refined loop detection algorithm + SMF Type 0 conversion + Cut/unfold operations)	2024-03-09T15:23:29Z	nmlgc/mly/compare/b356884...1c70db0	0
-P0268	[259]	mly (Recording-space loops + Rendering helpers) + Seihou / Shuusou Gyoku (BGM packs, part 1/?: Sound Canvas VA versions)	2024-03-09T15:23:29Z	nmlgc/mly/compare/1c70db0...db0c195	0
-P0269	[259, 263]	Seihou / Shuusou Gyoku (BGM packs, part 2/6: Loop-cutting Romantique Tp recordings + Arranged MIDI pipeline + Packaging)	2024-03-09T15:23:29Z	nmlgc/BGMPacks/compare/2f9bce5...45087c2	0
-P0270	[263]	Seihou / Shuusou Gyoku (BGM packs, part 3/6: Dependency setup + UTF-8 paths)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/P0256...a9ca081	0
-P0271	[263, 267]	Seihou / Shuusou Gyoku (MIDI refactoring and bugfixes)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/a9ca081...8db918f	0
-P0272	[267]	Seihou / Shuusou Gyoku (MIDI looping + BGM packs, part 4/6: MIDI/waveform BGM subsystem)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/8db918f...3de48ab	0
-P0273	[267, 271]	Seihou / Shuusou Gyoku (BGM packs, part 5/6: Modding logic + FLAC/Vorbis waveform streaming)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/3de48ab...9467705	0
-P0274	[271, 275]	Seihou / Shuusou Gyoku (BGM packs, part 6/6: Configuration UI + Music Room adjustments)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/9467705...241a6c9	0
-P0275	[275]	Seihou / Shuusou Gyoku (BGM/sound effect volume controls + Missing .DAT file screen)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/241a6c9...P0275	0
-P0276	[230]	Website (CSS compilation via esbuild + Audio player, part 1/2)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/dbc369f...883ac40	0
-P0277	[239]	Website (Audio player, part 2/2 + Front page progress bar redesign + Goal grouping)	2024-03-09T15:23:29Z	nmlgc/ssg/compare/883ac40...6ac72f3	0
-P0278	[270, 274, 277]	TH02 decompilation (Endings)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/b6a7285...f0fbaf6	1
-P0279	[280, 286, 291]	TH02 decompilation (Staff Roll + Verdict screen + Stage bonus tables)	2024-04-11T22:45:29Z	nmlgc/ReC98/compare/f0fbaf6...20bac82	1
-P0280	[279, 282, 287, 290]	TH03 RE (Coordinate transformations / Player entity movement / Global shared hitbox / Hit circles)	2024-04-24T13:14:41Z	nmlgc/ReC98/compare/20bac82...87eed57	1
-P0281	[284]	Build system improvements, part 5 (MS-DOS Player bugfixes and performance tuning for Turbo C++ 4.0J)	2024-07-09T11:30:16Z	nmlgc/msdos-player/compare/07d1088...P0281	0
-P0282	[300, 283]	Build system improvements, part 6 (Generating an ideal dumb batch script for 32-bit platforms)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/d60fb3e...056085b	0
-P0283	[283]	Build system improvements, part 7 (Researching and working around Windows 9x batch file limits)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/056085b...b86a2b1	0
-P0284	[290, 295, 296]	#include cleanup, part 1/2 / Decompilation (TH04/TH05 .REC loading)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/62bd5b1...18b9cd7	0
-P0285	[283, 297]	#include cleanup, part 2/2 / Decompilation (TH02 MAIN.EXE High Score entry)	2024-07-09T11:30:16Z	nmlgc/ReC98/compare/18b9cd7...23fc9e7	0
-P0286	[275, 278]	tupblocks (<code>import std;</code> support)	2024-10-22T05:18:43Z	nmlgc/tupblocks/compare/acb2572...fae347c	0
-P0287	[278]	Seihou / Shuusou Gyoku (Code cleanup + Game logic portability, part 2/? + Fixes for bugs and landmines)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/P0275...47f365a	0
-P0288	[278, 281]	Seihou / Shuusou Gyoku (Getting pbg's code through static analysis)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/47f365a...fedaf5e	0
-P0289	[281, 288]	Seihou / Shuusou Gyoku (Game logic portability, part 3/? + Graphics refactoring, part 3/5: Preparations and colors)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/fedaf5e...82b1b2c	0
-P0290	[288]	Seihou / Shuusou Gyoku (Graphics refactoring, part 4/5: Geometry, enumeration, and software rendering)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/82b1b2c...7d64c62	0
-P0291	[288, 294]	Seihou / Shuusou Gyoku (Graphics refactoring, part 5/5: Clipping, sprites, and initialization)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/7d64c62...d16c023	0
-P0292	[294, 306]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Main loop + Main menu refactoring)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/d16c023...fe01bd0	0
-P0293	[306, 310]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 4/?: SDL_Renderer backend)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/fe01bd0...2d6ae51	0
-P0294	[310, 315]	Seihou / Shuusou Gyoku (Window and scaling modes, part 1/2)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/2d6ae51...37cc78b	0
-P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Hotkeys) + Website (Adding missing money amounts to the log)	2024-10-22T05:18:43Z	nmlgc/ssg/compare/37cc78b...P0275	0
-P0296	[313, 317]	Website / Blog (Post list page + Navigation and post header redesign)	2024-11-22T04:00:03Z	nmlgc/rec98.nmlgc.net/compare/3658763...32d8f54	0
-P0297	[285]	TH03 decompilation (Character selection screen)	2024-11-22T04:00:03Z	nmlgc/ReC98/compare/23fc9e7...c879dfc	1
-P0298	[289, 299, 303, 307, 311, 316, 317, 323, 325, 322]	TH04/TH05 finalization (GENSOU.SCR, part 2/?) + Decompilation (High Score view screen)	2024-12-04T14:29:20Z	nmlgc/ReC98/compare/c879dfc...71f4810	1
-M0003	[3]	Seihou / Shuusou Gyoku (Icon commission from <a href="https://bsky.app/profile/tremolomeasure.bsky.social">Mr. Tremolo Measure)</a>	2025-01-25T23:56:48Z	nmlgc/ssg/commit/M0003	0
-P0299	[332]	tupblocks (Clang and GCC support)	2025-01-25T23:56:48Z	nmlgc/tupblocks/compare/fae347c...49255da	0
-P0300	[320, 293, 298]	Seihou / Shuusou Gyoku (Build portability + Game logic portability, part 4/4 + SDL threads)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/M0003...dc235ca	0
-P0301	[298, 302]	Seihou / Shuusou Gyoku (Pango/Cairo text rendering, part 1/2)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/dc235ca...7712632	0
-P0302	[302]	Seihou / Shuusou Gyoku (Pango/Cairo text rendering, part 2/2 + Linux build script + Arch Linux package)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/7712632...aec7839	0
-P0303	[324]	Seihou / Shuusou Gyoku (Icon integration + Flatpak package)	2025-01-25T23:56:48Z	nmlgc/ssg/compare/aec7839...P0303	0
-P0304	[258, 277, 305, 309, 250]	TH02 RE (Stage / (mid)boss variables) + Decompilation (Bullets, part 1/2)	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/71f4810...96ada76	0
-P0305	[197, 301, 314, 327, 336, 250]	TH02 decompilation (Bullets, part 2/2 + Sparks, part 1/2)	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/96ada76...3c710f9	0
-P0306	[318, 342, 326]	TH02 decompilation (Player, part 1/2: Update/render functions + Miss animation) + Random TH04/TH05 finalization	2025-02-24T23:48:53Z	nmlgc/ReC98/compare/3c710f9...165f090	0
-P0307	[339, 345]	Seihou / Shuusou Gyoku (SDL 3 platform layer)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/P0303-2...a4adcbb	0
-P0308	[345]	Seihou / Shuusou Gyoku (Render API unbricking / ReC98 build label on the title screen / Revamped pixel format handling)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/a4adcbb...c62f7ad	0
-P0309	[346]	Seihou / Shuusou Gyoku (WebP screenshot compression / Compression benchmark in the main menu)	2025-04-09T03:03:14Z	nmlgc/ssg/compare/c62f7ad...P0309	0
-P0310	[330, 331, 338, 344, 349, 350, 354]	Seihou / Shuusou Gyoku (SDL Windows 98 backport, part 1 / D3DWindower support)	2025-04-25T23:37:38Z	nmlgc/ssg/compare/P0309...P0310	0
-P0311	[207, 347, 356, 363]	TH03 decompilation (Main menu, part 1/2)	2025-05-10T20:41:57Z	nmlgc/ReC98/compare/165f090...9b2d7eb	1
-P0312	[363, 373, 250, 333, 340, 348, 357, 364, 374, 326, 366, 334]	TH03 decompilation (Main menu, part 2/2 + Static HUD parts) + TH02 PI (Stage 3 midboss/boss state) + TH03 PI (Technical 100% for MAINL.EXE)	2025-05-10T20:41:57Z	nmlgc/ReC98/compare/9b2d7eb...f6d836b	1
+P0001	[1]	Build system improvements, part 1 (Using Tup for the 32-bit build)	2020-09-03T23:26:18Z	["nmlgc/ReC98/compare/e447a2d...150d2c6"]	0
+P0002	[1]	Build system improvements, part 2 (Preparations / Codebase cleanup)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/87eed57...f131878"]	0
+P0003	[1]	Build system improvements, part 3 (Lua rewrite of the Tupfile / Tup bugfixes for MS-DOS Player)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/f131878...d60fb3e"]	0
+P0004	[1]	Build system improvements, part 4 (Merging the 16-bit build part into the Tupfile)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/b86a2b1...62bd5b1"]	0
+P0005	[2]	TH02/TH03/TH04/TH05 RE (RNG, .MAP loading)	2018-03-16T17:45:00Z	["nmlgc/ReC98/compare/1f752d7...4b8baf1"]	1
+P0006	[2]	TH04/TH05 RE (ZUN Soft logo explosions)	2018-03-22T00:23:00Z	["nmlgc/ReC98/compare/134804d...843905e"]	1
+P0007	[3]	TH03/TH04/TH05 RE (Joypad functions, frame counts)	2018-04-16T12:05:00Z	["nmlgc/ReC98/compare/8ec888f...47e5601"]	1
+P0008	[3]	TH02/TH04/TH05 RE (Shot variables and function pointers)	2018-04-21T13:52:00Z	["nmlgc/ReC98/compare/47e5601...d62dd06"]	1
+P0009	[4]	Finishing CDG/CD2 support (special offer)	2018-10-15T11:21:00Z	["nmlgc/ReC98/compare/79cc3ed...141baa4"]	0
+P0010	[4]	Website (Golang HTML templating)	2019-08-23T21:43:10Z	["nmlgc/rec98.nmlgc.net/compare/cbda977...94127fb"]	0
+P0011	[5]	Website (Completion percentages)	2019-08-24T22:10:53Z	["nmlgc/rec98.nmlgc.net/compare/40c1e98...b9918cc"]	0
+P0012	[5]	Website (Memory reference counting)	2019-08-26T16:21:46Z	["nmlgc/rec98.nmlgc.net/compare/b9918cc...b9805d2"]	0
+P0013	[5]	Website (Design)	2019-09-04T16:14:26Z	["nmlgc/rec98.nmlgc.net/compare/b9805d2...efeddd8"]	0
+P0014	[5]	Website (Crowdfunding log + Blog, part 1)	2019-09-04T16:14:26Z	["nmlgc/rec98.nmlgc.net/compare/31474a0...9dc9632"]	0
+P0015	[5]	Website (Blog, part 2)	2019-09-04T16:14:26Z	["nmlgc/rec98.nmlgc.net/compare/9dc9632...8d3652f"]	0
+P0016	[5]	Website (Price estimate, part 1)	2019-09-09T13:11:53Z	["nmlgc/rec98.nmlgc.net/compare/98b5090...bca833b"]	0
+P0017	[5]	Website (Price estimate, part 2)	2019-09-09T13:11:53Z	["nmlgc/rec98.nmlgc.net/compare/3f81d1f...d5b9ea2"]	0
+P0018	[6]	TH04/TH05 RE (Player variables, part 1 + Motion structure) 	2018-09-02T19:33:00Z	["nmlgc/ReC98/compare/746681d...178d589"]	1
+P0019	[6]	TH03/TH04/TH05 RE (Input, part 1)	2018-09-17T22:05:00Z	["nmlgc/ReC98/commit/c592464"]	1
+P0020	[6]	TH03 RE (Input, part 3)	2018-09-17T22:05:00Z	["nmlgc/ReC98/commit/cbe8a37"]	1
+P0021	[6]	TH03 RE (Input, part 4)	2018-09-17T22:05:00Z	["nmlgc/ReC98/commit/8dfc2cd"]	1
+P0022	[6]	TH03/TH04/TH05 RE (Input, part 2)	2018-09-17T22:05:00Z	["nmlgc/ReC98/commit/79cc3ed"]	1
+P0023	[6]	TH05 RE (Lasers, part 2)	2018-12-16T23:34:00Z	["nmlgc/ReC98/compare/807df3d...0cde4b7"]	1
+P0024	[6]	TH05 RE (Lasers, part 3)	2018-12-16T23:34:00Z	["nmlgc/ReC98/compare/807df3d...0cde4b7"]	1
+P0025	[6]	TH04/TH05 RE (EGC calls)	2018-12-26T17:57:00Z	["nmlgc/ReC98/compare/0cde4b7...261d503"]	1
+P0026	[6]	TH04/TH05 RE (Boss backdrops)	2018-12-26T17:57:00Z	["nmlgc/ReC98/compare/0cde4b7...261d503"]	1
+P0027	[6]	TH04/TH05 RE (.STD loading)	2018-12-26T17:57:00Z	["nmlgc/ReC98/compare/0cde4b7...261d503"]	1
+P0028	[7]	TH04/TH05 RE (Midboss and boss variables, part 3)	2019-09-11T21:25:04Z	["nmlgc/ReC98/compare/6023f5c...6ff427a"]	1
+P0029	[7]	TH04/TH05 RE (Midboss and boss function names)	2019-09-15T19:29:47Z	["nmlgc/ReC98/compare/6ff427a...c7fc4ca"]	1
+P0030	[7]	TH05 decompilation (Stage setup)	2019-09-15T19:29:47Z	["nmlgc/ReC98/compare/c7fc4ca...dea40ad"]	1
+P0031	[7]	TH05 decompilation (Stage .BB loading + Segment split research)	2019-09-21T12:11:18Z	["nmlgc/ReC98/compare/dea40ad...9f764fa"]	1
+P0032	[7]	TH02/TH04/TH05 RE (Score update and rendering)	2019-09-21T12:11:18Z	["nmlgc/ReC98/compare/9f764fa...e6294c2"]	1
+P0033	[7]	TH04/TH05 RE (HUD bars + Player movement)	2019-09-21T12:11:18Z	["nmlgc/ReC98/compare/e6294c2...6cdd229"]	1
+P0034	[7]	TH04/TH05 RE (Player variables, part 2 + Deathbomb window)	2019-09-24T21:12:33Z	["nmlgc/ReC98/compare/6cdd229...6f1f367"]	1
+P0035	[7]	TH04/TH05 RE (Player rendering)	2019-09-24T21:12:33Z	["nmlgc/ReC98/compare/6f1f367...a533b5d"]	1
+P0036	[7]	TH04/TH05 RE (Generic player shot functions) 	2019-10-14T23:13:21Z	["nmlgc/ReC98/compare/a533b5d...82b0e1d"]	1
+P0037	[7]	TH05 decompilation (Yuuka's, Mima's, and Marisa's shot functions)	2019-10-14T23:13:21Z	["nmlgc/ReC98/compare/82b0e1d...e7e1cbc"]	1
+P0038	[8]	Website (Basic Golang app server + looping over commit history)	2019-08-16T22:29:03Z	["nmlgc/rec98.nmlgc.net/compare/a2ad6bc..bbe4c4d"]	0
+P0039	[8]	Website (Inspecting files in a specific commit)	2019-08-16T22:29:03Z	["nmlgc/rec98.nmlgc.net/compare/bbe4c4d...cbda977"]	0
+P0040	[9]	TH04/TH05 RE (GRCG calls + Circles)	2018-12-06T22:38:00Z	["nmlgc/ReC98/compare/d7483c0...b03bc91"]	1
+P0041	[9]	TH04/TH05 RE (Midboss and boss variables, part 1)	2018-12-09T00:26:00Z	["nmlgc/ReC98/compare/b03bc91...f3b6137"]	1
+P0042	[9]	TH04/TH05 RE (Rank + TH05 lasers, part 1)	2018-12-12T01:52:00Z	["nmlgc/ReC98/compare/f3b6137...807df3d"]	1
+P0043	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 1)	2018-12-30T01:46:00Z	["nmlgc/ReC98/compare/261d503...612beb8"]	1
+P0044	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 2)	2018-12-30T01:46:00Z	["nmlgc/ReC98/compare/261d503...612beb8"]	1
+P0045	[10]	TH04/TH05 RE (Scrolling stage backgrounds, part 3)	2018-12-30T01:46:00Z	["nmlgc/ReC98/compare/261d503...612beb8"]	1
+P0046	[10]	TH04/TH05 RE (16×16 sprite rendering + Player shots, part 1)	2019-01-01T01:38:00Z	["nmlgc/ReC98/compare/612beb8...deb45ea"]	1
+P0047	[11]	TH04/TH05 RE (Player shots, part 2)	2019-02-28T16:58:00Z	["nmlgc/ReC98/compare/9a2c6f7...893bd46"]	1
+P0048	[11]	TH04/TH05 RE (8×8 sparks)	2019-02-28T16:58:00Z	["nmlgc/ReC98/compare/9a2c6f7...893bd46"]	1
+P0049	[11]	TH04/TH05 RE (.BB loading)	2019-03-01T22:25:00Z	["nmlgc/ReC98/compare/893bd46...6ed8e60"]	1
+P0050	[11]	TH04/TH05 RE (Midboss and boss variables, part 2)	2019-03-01T22:25:00Z	["nmlgc/ReC98/compare/893bd46...6ed8e60"]	1
+P0051	[11]	TH04/TH05 RE (Midboss and boss explosions)	2019-03-06T19:39:00Z	["nmlgc/ReC98/compare/6ed8e60...3ba536a"]	1
+P0052	[11]	TH04/TH05 RE (Score variables)	2019-03-06T19:39:00Z	["nmlgc/ReC98/compare/6ed8e60...3ba536a"]	1
+P0053	[12]	TH04/TH05 RE (Text popups)	2019-03-06T19:39:00Z	["nmlgc/ReC98/compare/6ed8e60...3ba536a"]	1
+P0054	[13]	Website (ASM instruction counting, part 1)	2019-08-23T21:43:10Z	["nmlgc/rec98.nmlgc.net/compare/94127fb...3161d7e"]	0
+P0055	[13]	Website (ASM instruction counting, part 2)	2019-08-23T21:43:10Z	["nmlgc/rec98.nmlgc.net/compare/3161d7e...40c1e98"]	0
+P0056	[14, 15]	TH03 RE (The stolen sprite driver, part 1)	2019-11-06T22:36:47Z	["nmlgc/ReC98/compare/b28cefc...c09446a"]	1
+P0057	[16, 17]	TH04/TH05 PI (Items, part 1)	2019-11-13T23:49:07Z	["nmlgc/ReC98/compare/1cb9731...ac7540d"]	1
+P0058	[17]	TH04/TH05 RE (Items, part 2 + Midboss and boss variables, part 4)	2019-11-13T23:49:07Z	["nmlgc/ReC98/compare/ac7540d...fef0299"]	1
+P0059	[18, 19]	TH04/TH05 PI (Motion structures + EGC calls + vector calls)	2019-11-18T21:28:01Z	["nmlgc/ReC98/compare/01de290...8b62780"]	1
+P0060	[20]	TH03 decompilation (The stolen sprite driver, part 2) / PI 	2019-11-29T00:15:36Z	["nmlgc/ReC98/compare/29385dd...73f5ae7"]	1
+P0061	[21]	TH03 RE (Character data, part 1 + Player shots, part 1)	2019-12-05T21:18:16Z	["nmlgc/ReC98/compare/96684f4...5f4f5d8"]	1
+P0062	[21]	TH05 decompilation (Reimu's shot functions) / PI	2019-12-22T15:09:53Z	["nmlgc/ReC98/compare/1d6fbb8...f275e04"]	1
+P0063	[26]	TH05 RE (GENSOU.SCR, part 1/?)	2019-12-28T11:37:29Z	["nmlgc/ReC98/compare/034ae4b...8dbb450"]	1
+P0064	[21, 20]	TH04/TH05 PI (Completing OP.EXE)	2019-12-29T20:23:06Z	["nmlgc/ReC98/compare/80cec5b...9faa29a"]	1
+P0065	[20]	TH04/TH05 RE (Resident structures)	2020-01-03T20:45:46Z	["nmlgc/ReC98/compare/9faa29a...042b780"]	1
+P0066	[25, 22]	TH01 RE (Palettes) / decompilation (Graphics functions, part 1)	2020-01-05T20:04:19Z	["nmlgc/ReC98/compare/042b780...e55a48b"]	1
+P0067	[22]	TH01 decompilation (Graphics functions, part 2)	2020-01-14T21:15:19Z	["nmlgc/ReC98/compare/e55a48b...ebb30ce"]	1
+P0068	[30]	TH01 decompilation (Graphics functions, part 3)	2020-01-14T21:15:19Z	["nmlgc/ReC98/compare/ebb30ce...2ac00d4"]	1
+P0069	[30, 24]	TH01 decompilation (Graphics functions, part 4)	2020-01-14T21:15:19Z	["nmlgc/ReC98/compare/e0d0dcd...0f18dbc"]	1
+P0070	[27]	TH03 RE (Score and combo variables)	2020-01-20T21:51:25Z	["nmlgc/ReC98/compare/a931758...327021b"]	1
+P0071	[27, 33]	TH03 RE (Player structure)	2020-01-29T08:17:30Z	["nmlgc/ReC98/compare/327021b...4bb04ab"]	1
+P0072	[23, 32]	TH04/TH05 PI (Bullet structure)	2020-02-16T20:51:42Z	["nmlgc/ReC98/compare/4bb04ab...cea3ea6"]	1
+P0073	[37, 40]	TH04/TH05 RE (32×32 + monochrome 16×16 sprite rendering)	2020-02-16T20:51:42Z	["nmlgc/ReC98/compare/cea3ea6...5286417"]	1
+P0074	[34]	TH04/TH05 RE (Bullet sprites)	2020-02-16T20:51:42Z	["nmlgc/ReC98/compare/5286417...1807906"]	1
+P0075	[34, 41]	TH04/TH05 RE (Bullet group types, spawn types, and templates)	2020-02-16T20:51:42Z	["nmlgc/ReC98/compare/1807906...222fc99"]	1
+P0076	[29, 31]	TH03 RE (Resident structure) / decompilation (ZUN.COM)	2020-02-23T16:56:09Z	["nmlgc/ReC98/compare/222fc99...9ae9754"]	1
+P0077	[39, 35]	TH03/TH04/TH05 decompilation (ZUN.COM resident structure setup) 	2020-02-23T16:56:09Z	["nmlgc/ReC98/compare/9ae9754...f4eb7a8"]	1
+P0078	[43, 44]	TH05 PI/RE (Stage 2 stars, Alice's puppets, Curve bullets)	2020-02-29T15:05:39Z	["nmlgc/ReC98/compare/f4eb7a8...9e52cb1"]	1
+P0079	[28]	TH05 PI/RE (Mai's, Yuki's, and Shinki's 32×32 balls, Yumeko's swords)	2020-02-29T15:05:39Z	["nmlgc/ReC98/compare/9e52cb1...cd48aa3"]	1
+P0080	[38, 36]	TH01 decompilation (Graphics functions, part 5)	2020-03-03T12:17:54Z	["nmlgc/ReC98/compare/cd48aa3...0252da2"]	1
+P0081	[36]	TH01 decompilation (.GRZ format)	2020-03-07T20:45:20Z	["nmlgc/ReC98/compare/0252da2...5ac9b30"]	1
+P0082	[46]	TH01 decompilation (.GRP format)	2020-03-13T18:56:50Z	["nmlgc/ReC98/compare/5ac9b30...f6cbff0"]	1
+P0083	[47]	TH01 decompilation (.PTN format, part 1)	2020-03-18T19:39:32Z	["nmlgc/ReC98/compare/f6cbff0...dfac2f2"]	1
+P0084	[47]	TH01 decompilation (REYHI*.DAT loading and creation)	2020-03-22T09:18:27Z	["nmlgc/ReC98/compare/dfac2f2...110d6dd"]	1
+P0085	[49]	TH02/TH04/TH05 RE (Pellet rendering + TH04/TH05 gather circles)	2020-04-03T15:46:03Z	["nmlgc/ReC98/compare/110d6dd...54ee99b"]	1
+P0086	[48, 45]	TH04/TH05 RE (Random PI blockers)	2020-04-16T13:09:16Z	["nmlgc/ReC98/compare/54ee99b...24b96cd"]	1
+P0087	[49]	TH04/TH05 RE (Score popup numbers)	2020-04-16T13:09:16Z	["nmlgc/ReC98/compare/24b96cd...97ce7b7"]	1
+P0088	[54]	TH04/TH05 PI (Stage enemy structure)	2020-05-04T14:16:57Z	["nmlgc/ReC98/compare/97ce7b7...da6b856"]	1
+P0089	[53, 50]	TH04/TH05 decompilation (Stage and BGM title popups)	2020-05-04T14:16:57Z	["nmlgc/ReC98/compare/da6b856...90252cc"]	1
+P0090	[51]	TH01 decompilation (Input blockers + Input, part 1)	2020-05-12T14:07:25Z	["nmlgc/ReC98/compare/90252cc...07dab29"]	1
+P0091	[52]	TH01 decompilation (Input, part 2 + Score menu, part 1)	2020-05-12T14:07:25Z	["nmlgc/ReC98/compare/07dab29...29c5a73"]	1
+P0092	[56]	TH01 decompilation (Score menu, part 2)	2020-05-25T14:05:11Z	["nmlgc/ReC98/compare/29c5a73...4403308"]	1
+P0093	[57]	TH01 decompilation (Score menu, part 3)	2020-05-25T14:05:11Z	["nmlgc/ReC98/compare/4403308...0e73029"]	1
+P0094	[56]	TH01 decompilation (Score menu, part 4 + Endings, part 1)	2020-05-25T14:05:11Z	["nmlgc/ReC98/compare/0e73029...57a8487"]	1
+P0095	[42]	TH01 PI (Completing OP and FUUIN, .BOS pointers, scrolling)	2020-05-31T15:47:00Z	["nmlgc/ReC98/compare/57a8487...8ddb778"]	1
+P0096	[46, 52]	TH01 decompilation (.PTN format, part 2)	2020-06-13T19:25:59Z	["nmlgc/ReC98/compare/8ddb778...8283c5e"]	1
+P0097	[52, 57]	TH01 decompilation (Orb physics)	2020-06-13T19:25:59Z	["nmlgc/ReC98/compare/8283c5e...600f036"]	1
+P0098	[51]	TH01 decompilation (Player shots)	2020-06-13T19:25:59Z	["nmlgc/ReC98/compare/600f036...ad06748"]	1
+P0099	[61]	TH01 decompilation (Pellets, part 1)	2020-07-12T14:51:14Z	["nmlgc/ReC98/compare/1799d67...1b25830"]	1
+P0100	[60]	TH01 decompilation (Pellets, part 2)	2020-07-12T14:51:14Z	["nmlgc/ReC98/compare/1b25830...ceb81db"]	1
+P0101	[42, 61]	TH01 decompilation (Pellets, part 3)	2020-07-12T14:51:14Z	["nmlgc/ReC98/compare/ceb81db...c11a956"]	1
+P0102	[60]	TH01 decompilation (Pellets, part 4)	2020-07-12T14:51:14Z	["nmlgc/ReC98/compare/c11a956...b60f38d"]	1
+P0103	[61, 65]	TH01 decompilation (HUD, part 1)	2020-07-27T15:27:03Z	["nmlgc/ReC98/compare/b60f38d...05c0028"]	1
+P0104	[65]	TH01 decompilation (HUD, part 2)	2020-07-27T15:27:03Z	["nmlgc/ReC98/compare/05c0028...3622eb6"]	1
+P0105	[64]	TH01 decompilation (.GRC format / Hardcoded sprites, part 1)	2020-08-12T16:09:35Z	["nmlgc/ReC98/compare/3622eb6...11b776b"]	1
+P0106	[64]	TH01 decompilation (Boss entity classes / .BOS format, part 1/5)	2020-08-12T16:09:35Z	["nmlgc/ReC98/compare/11b776b...1f1829d"]	1
+P0107	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 2/5)	2020-08-12T16:09:35Z	["nmlgc/ReC98/compare/1f1829d...1650241"]	1
+P0108	[68]	TH01 decompilation (Boss entity classes / .BOS format, part 3/5)	2020-08-12T16:09:35Z	["nmlgc/ReC98/compare/1650241...dcf4e2c"]	1
+P0109	[58, 55]	TH04/TH05 decompilation (Boss movement / Bullet group tuning)	2020-08-16T19:48:44Z	["nmlgc/ReC98/compare/dcf4e2c...2c7d86b"]	1
+P0110	[62, 59]	TH05 RE (Shinki and EX-Alice background animation structures)	2020-08-19T18:14:28Z	["nmlgc/ReC98/compare/2c7d86b...8b5c146"]	1
+P0111	[66, 63]	TH05 RE (Code around the final MAIN.EXE data references, part 1/2)	2020-08-28T13:51:18Z	["nmlgc/ReC98/compare/8b5c146...4ef4c9e"]	1
+P0112	[69, 67]	TH05 RE (Code around the final MAIN.EXE data references, part 2/2)	2020-08-28T13:51:18Z	["nmlgc/ReC98/compare/4ef4c9e...e447a2d"]	1
+P0113	[72]	Tooling (Sprite converter ergonomics)	2020-09-07T19:19:14Z	["nmlgc/ReC98/compare/150d2c6...6204fdd"]	1
+P0114	[72]	Separating translation units, part 1/10 (focused around TH02 / TH03)	2020-09-07T19:19:14Z	["nmlgc/ReC98/compare/6204fdd...967bb8b"]	1
+P0115	[77, 73]	TH05 RE (Staff roll animation structures)	2020-09-12T10:09:54Z	["nmlgc/ReC98/compare/967bb8b...e5328a3"]	1
+P0116	[76, 75]	TH04/TH05 RE (Floating glyph ball structure + ending data)	2020-09-12T10:09:54Z	["nmlgc/ReC98/compare/e5328a3...03048c3"]	1
+P0117	[75]	Rebuilding ZUN.COM + overall position independence 	2020-09-16T21:00:58Z	["nmlgc/ReC98/compare/03048c3...0bb5bc3"]	1
+P0118	[71, 70]	TH05 PI (100%) 	2020-09-17T20:58:19Z	["nmlgc/ReC98/compare/0bb5bc3...cbf14eb"]	1
+P0119	[78, 79]	TH05 decompilation (Character selection, starting the game)	2020-09-21T13:01:20Z	["nmlgc/ReC98/compare/cbf14eb...453dd3c"]	1
+P0120	[74]	TH01 decompilation (.BOS format, part 4/5 + Shape blitting)	2020-09-28T11:52:57Z	["nmlgc/ReC98/compare/453dd3c...3c008b6"]	1
+P0121	[74]	TH01 decompilation (Invincibility sprites, VRAM effects)	2020-09-28T11:52:57Z	["nmlgc/ReC98/compare/3c008b6...5c42fcd"]	1
+P0122	[81]	TH01 decompilation (Shootout lasers)	2020-10-06T14:30:34Z	["nmlgc/ReC98/compare/164591f...4406c3d"]	1
+P0123	[81]	TH01 decompilation (.BOS format, part 5/5)	2020-10-13T21:46:07Z	["nmlgc/ReC98/compare/4406c3d...72dfa09"]	1
+P0124	[80, 82]	TH04 decompilation (Character selection, part 1/2)	2020-11-03T01:44:47Z	["nmlgc/ReC98/compare/72dfa09...056b1c7"]	1
+P0125	[82]	TH04 decompilation (Character selection, part 2/2)	2020-11-03T01:44:47Z	["nmlgc/ReC98/compare/056b1c7...f6a3246"]	1
+P0126	[83, 85]	TH03/TH04/TH05 decompilation (EGC-powered blitting + .MRS format, part 1/2)	2020-11-16T20:39:05Z	["nmlgc/ReC98/compare/6c22af7...8b01657"]	1
+P0127	[85]	TH03 decompilation (.MRS format, part 2/2) + separating translation units, part 2/10 	2020-11-16T20:39:05Z	["nmlgc/ReC98/compare/8b01657...dc65b59"]	1
+P0128	[84]	TH01 decompilation (Card-flipping stages, part 1/4)	2020-11-30T23:48:26Z	["nmlgc/ReC98/compare/dc65b59...dde36f7"]	1
+P0129	[84]	TH01 decompilation (Card-flipping stages, part 2/4)	2020-11-30T23:48:26Z	["nmlgc/ReC98/compare/dde36f7...f4c2e45"]	1
+P0130	[87]	TH01 decompilation (Boss HP and collision handling, part 1/2) 	2020-12-18T17:43:32Z	["nmlgc/ReC98/compare/6d69ea8...576def5"]	1
+P0131	[87]	TH01 decompilation (Boss HP and collision handling, part 2/2) 	2020-12-18T17:43:32Z	["nmlgc/ReC98/compare/576def5...dc9e3ee"]	1
+P0132	[88]	Separating translation units, part 3/10 (focused around TH02 / TH03)	2021-01-06T17:29:14Z	["nmlgc/ReC98/compare/dc9e3ee...045450c"]	1
+P0133	[90]	Separating translation units, part 4/10 (focused around TH02 / TH05)	2021-01-31T15:54:43Z	["nmlgc/ReC98/compare/045450c...1d5db71"]	1
+P0134	[92]	Separating translation units, part 5/10 (TH05 .PI functions)	2021-02-21T13:36:38Z	["nmlgc/ReC98/compare/1d5db71...a6eed55"]	1
+P0135	[88, 90]	Separating translation units, part 6/10 (TH05 PMD loading / Music Room piano)	2021-03-20T20:19:56Z	["nmlgc/ReC98/compare/a6eed55...252c13d"]	1
+P0136	[90, 92]	Separating translation units, part 7/10 (starting to catch up with TH04)	2021-03-20T20:19:56Z	["nmlgc/ReC98/compare/252c13d...07bfcf2"]	1
+P0137	[94]	Separating translation units, part 8/10 (focused around TH03) + Segment alignment research	2021-04-04T18:46:29Z	["nmlgc/ReC98/compare/07bfcf2...8d953dc"]	1
+P0138	[94, 86]	Separating translation units, part 9/10 (focused around TH03 / TH04) + TH04 RE (.MPN format)	2021-04-23T00:46:42Z	["nmlgc/ReC98/compare/8d953dc...864e864"]	1
+P0139	[96]	Separating translation units, part 10/10 (TH04/TH05 sound initialization / TH04 PMD loading)	2021-05-12T18:01:20Z	["nmlgc/ReC98/compare/864e864...d985811"]	1
+P0140	[98]	Research (PC-98 DOS graph mode, with implementation into DOSBox-X) 	2021-05-27T19:25:15Z	["nmlgc/ReC98/compare/d985811...d856f7d"]	0
+P0141	[98, 102]	TH01 decompilation (Konngara, part 1/5.5: Entrance animation)	2021-05-27T19:25:15Z	["nmlgc/ReC98/compare/d856f7d...5afee78"]	1
+P0142	[99]	TH01 decompilation (Konngara, part 2/5.5: Rendering, pattern 1)	2021-05-27T19:25:15Z	["nmlgc/ReC98/compare/5afee78...08bc188"]	1
+P0143	[109]	Website (Progress number caching) 	2021-06-06T00:53:22Z	["nmlgc/rec98.nmlgc.net/compare/9069fb7...c8ac7e5"]	0
+P0144	[100, 109]	Website (Blog tag system, part 1: Manual and automatic tag assignment, blog filtering, design) 	2021-06-06T00:53:22Z	["nmlgc/rec98.nmlgc.net/compare/c8ac7e5...69dd597"]	0
+P0145	[103, 109]	Website (Blog tag system, part 2: Combining tags, per-tag descriptions) 	2021-06-06T00:53:22Z	["nmlgc/rec98.nmlgc.net/compare/69dd597...71417b6"]	0
+P0146	[106, 107]	TH05 decompilation (Shinki's background animations) 	2021-06-10T20:56:05Z	["nmlgc/ReC98/compare/08bc188...456b621"]	1
+P0147	[110, 111]	TH04/TH05 RE (.BB 16×16 tile animations) / TH05 decompilation (Shinki + EX-Alice backgrounds)	2021-06-21T13:49:31Z	["nmlgc/ReC98/compare/456b621...c940059"]	1
+P0148	[117]	TH04/TH05 decompilation (Text popups, gather circle rendering, player position clamping)	2021-07-20T22:35:20Z	["nmlgc/ReC98/compare/c940059...e1a26bb"]	1
+P0149	[89, 113, 115]	TH04/TH05 RE (Incompletely or wrongly RE'd bullet mechanics)	2021-07-31T19:19:27Z	["nmlgc/ReC98/compare/e1a26bb...05e4c4a"]	1
+P0150	[91, 93, 95]	TH04 decompilation (Bullet spawning)	2021-07-31T19:19:27Z	["nmlgc/ReC98/compare/05e4c4a...768251d"]	1
+P0151	[97, 108, 115]	TH04/TH05 decompilation (Bullet updates)	2021-07-31T19:19:27Z	["nmlgc/ReC98/compare/768251d...4d24ca5"]	1
+P0152	[101, 104]	TH05 RE (Undecompilable bullet spawning code)	2021-07-31T19:19:27Z	["nmlgc/ReC98/compare/4d24ca5...81fc861"]	1
+P0153	[105]	TH01 decompilation (Konngara, part 3/5.5: Patterns 2-4)	2021-08-23T23:43:07Z	["nmlgc/ReC98/compare/624e0cb...d05c9ba"]	1
+P0154	[105]	TH01 decompilation (Konngara, part 4/5.5: Patterns 5-8)	2021-08-23T23:43:07Z	["nmlgc/ReC98/compare/d05c9ba...031b526"]	1
+P0155	[114]	TH01 decompilation (Konngara, part 5/5.5: Patterns 9-12)	2021-08-23T23:43:07Z	["nmlgc/ReC98/compare/031b526...9ad578e"]	1
+P0156	[114]	TH01 decompilation (Konngara, part 5.5/5.5: Main function + Sariel entrance animation + HARRY UP pellets)	2021-08-23T23:43:07Z	["nmlgc/ReC98/compare/9ad578e...4bc6405"]	1
+P0157	[112]	TH01 decompilation (16× TRAM letters: 東方★靈異伝, STAGE #, and HARRY UP)	2021-09-12T18:33:09Z	["nmlgc/ReC98/compare/4bc6405...bf7bb7e"]	1
+P0158	[118]	TH01 decompilation (Items, part 1/2)	2021-09-28T16:05:58Z	["nmlgc/ReC98/compare/bf7bb7e...c0c0ebc"]	1
+P0159	[122]	TH01 decompilation (Items, part 2/2 + Cards)	2021-09-28T16:05:58Z	["nmlgc/ReC98/compare/c0c0ebc...e491cd7"]	1
+P0160	[126]	TH01 decompilation (Pellet speed modification + HUD, part 3 (Stage timer) + Particle system)	2021-10-09T21:29:12Z	["nmlgc/ReC98/compare/e491cd7...42ba4a5"]	1
+P0161	[121]	Research (Turbo C++ 4.0J's jump optimization bug after SCOPY@)	2021-10-09T21:29:21Z	["nmlgc/ReC98/compare/42ba4a5...81dd96e"]	1
+P0162	[119]	TH01 decompilation (Player control, part 1/3)	2021-10-20T09:58:26Z	["nmlgc/ReC98/compare/81dd96e...24b3a0d"]	1
+P0163	[119]	TH01 decompilation (Player control, part 2/3)	2021-10-20T09:58:26Z	["nmlgc/ReC98/compare/24b3a0d...6d572b3"]	1
+P0164	[130]	TH01 decompilation (Player control, part 3/3)	2021-10-20T09:58:26Z	["nmlgc/ReC98/compare/6d572b3...7a0e5d8"]	1
+P0165	[123]	TH01 decompilation (Missiles, part 1/2 + large boss sprites, part 1/3)	2021-11-08T10:59:48Z	["nmlgc/ReC98/compare/7a0e5d8...f2bca01"]	1
+P0166	[123]	TH01 decompilation (Large boss sprites, part 2/3)	2021-11-08T10:59:48Z	["nmlgc/ReC98/compare/f2bca01...e697907"]	1
+P0167	[127]	TH01 decompilation (Large boss sprites, part 3/3 + Stage initialization + Defeat animation + Route selection)	2021-11-08T10:59:48Z	["nmlgc/ReC98/compare/e697907...c2de6ab"]	1
+P0168 	[102, 116, 120]	TH04/TH05 decompilation (EMS swap area, part 1/2)	2021-11-29T01:56:18Z	["nmlgc/ReC98/compare/c2de6ab...8b046da"]	1
+P0169 	[124, 128, 132]	TH04/TH05 decompilation (EMS swap area, part 2/2) + Research (TH04 No-EMS Reimu Stage 5 crash)	2021-11-29T01:56:18Z	["nmlgc/ReC98/compare/8b046da...479b766"]	1
+P0170	[125]	Website (Technical debt visualization)	2021-12-15T23:21:58Z	["nmlgc/rec98.nmlgc.net/compare/0c4ab41...4f04091"]	0
+P0171	[125, 129]	Website (Resource caching + new funding goals)	2021-12-15T23:21:58Z	["nmlgc/rec98.nmlgc.net/compare/4f04091...e12cf26"]	0
+P0172 	[136, 137]	TH03 decompilation (YUME.NEM)	2021-12-27T18:19:52Z	["nmlgc/ReC98/compare/49e6789...2d5491e"]	1
+P0173 	[129]	TH03 decompilation (High score menu, part 1/2)	2021-12-27T18:19:52Z	["nmlgc/ReC98/compare/2d5491e...27f901c"]	1
+P0174	[127]	TH01 decompilation (Sariel, part 2/9: Preparation + birds)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/27f901c...a0fe812"]	1
+P0175	[131]	TH01 decompilation (Sariel, part 3/9: Shield/wand/dress animation + patterns 1-3)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/a0fe812...40ac9a7"]	1
+P0176	[131]	TH01 decompilation (Sariel, part 4/9: Background transition animation + vertical 2×2 particles)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/40ac9a7...c5dc45b"]	1
+P0177	[134]	TH01 decompilation (Sariel, part 5/9: Patterns 4-9 + wavy 2×2 particles)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/c5dc45b...5f0cabc"]	1
+P0178	[135]	TH01 decompilation (Sariel, part 6/9: Patterns 10-11)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/5f0cabc...60621f8"]	1
+P0179	[135]	TH01 decompilation (Sariel, part 7/9: Patterns 12-13 + horizontal 2×2 particles)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/60621f8...9e5b344"]	1
+P0180	[138, 143]	TH01 decompilation (Sariel, part 8/9: Patterns 14-16)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/9e5b344...091f19f"]	1
+P0181	[140]	TH01 decompilation (Sariel, part 9/9: Main function)	2022-01-31T09:17:43Z	["nmlgc/ReC98/compare/091f19f...313450f"]	1
+P0182	[139, 133]	TH03 RE (Collision bitmap)	2022-02-18T19:40:52Z	["nmlgc/ReC98/compare/313450f...1e2c7ad"]	1
+P0183	[145, 133]	TH03 decompilation (Player collision detection)	2022-02-18T19:40:52Z	["nmlgc/ReC98/compare/1e2c7ad...f9d983e"]	1
+P0184	[148]	TH04/TH05 decompilation (Bullets: Special motion and sprite selection + item spawn splash circle)	2022-03-05T22:55:32Z	["nmlgc/ReC98/compare/f9d983e...f918298"]	1
+P0185	[148, 141, 142]	TH04/TH05 decompilation (Curve bullet motion + laser control + playfield shaking)	2022-03-05T22:55:32Z	["nmlgc/ReC98/compare/f918298...a21ab3d"]	1
+P0186	[149, 150]	TH04/TH05 decompilation (Stage transition animation + smaller boss blockers)	2022-03-27T16:13:51Z	["nmlgc/ReC98/compare/a21ab3d...bab5634"]	1
+P0187	[153, 154]	TH04 RE (Shared boss state bytes)	2022-03-27T16:13:51Z	["nmlgc/ReC98/compare/bab5634...426a531"]	1
+P0188	[133, 142, 147]	TH04/TH05 decompilation (Boss defeat sequence / collision + Shinki's 32×32 balls (logic))	2022-03-27T16:13:51Z	["nmlgc/ReC98/compare/426a531...e881f95"]	1
+P0189	[156, 159]	TH04 RE (Kurumi + Stage 4 Marisa crashes) / TH05 decompilation (Stage 1-5 boss backgrounds)	2022-04-18T20:41:01Z	["nmlgc/ReC98/compare/22abdd1...b4876b6"]	1
+P0190	[147]	TH05 decompilation (Shinki, part 1/2: Patterns 1-10)	2022-04-30T22:58:07Z	["nmlgc/ReC98/compare/5734815...293e16a"]	1
+P0191	[147]	TH05 decompilation (Shinki, part 2/2: Pattern 11, main function)	2022-04-30T22:58:07Z	["nmlgc/ReC98/compare/293e16a...71cb7b5"]	1
+P0192	[147, 160, 163]	TH05 decompilation (Stage 1 midboss + Replay file format) + Separating translation units, part 11	2022-04-30T22:58:07Z	["nmlgc/ReC98/compare/71cb7b5...e1f3f9f"]	1
+P0193	[144]	TH01 decompilation (Elis, part 1/4: Preparations + patterns 1-3)	2022-05-31T22:58:07Z	["nmlgc/ReC98/compare/e1f3f9f...183d7a2"]	1
+P0194	[152]	TH01 decompilation (Elis, part 2/4: Patterns 4-6 + transformations)	2022-05-31T23:43:30Z	["nmlgc/ReC98/compare/183d7a2...5d93a50"]	1
+P0195	[151, 155]	TH01 decompilation (Elis, part 3/4: Patterns 7-13)	2022-05-31T23:43:30Z	["nmlgc/ReC98/compare/5d93a50...e18c53d"]	1
+P0196	[164, 169]	TH01 decompilation (Elis, part 4/4: Entrance animation + main function)	2022-05-31T23:43:30Z	["nmlgc/ReC98/compare/e18c53d...57c9ac5"]	1
+P0197	[161, 167]	TH01 research (HP bar heap corruption + boss defeat crashes) + decompilation (Verdict screen)	2022-05-31T23:43:30Z	["nmlgc/ReC98/compare/57c9ac5...48db0b7"]	1
+P0198	[170, 173]	TH01 decompilation (Kikuri, part 1/3: Preparation + soul, tear, and ripple animations)	2022-06-17T17:03:14Z	["nmlgc/ReC98/compare/48db0b7...440637e"]	1
+P0199	[173]	TH01 decompilation (Kikuri, part 2/3: Patterns)	2022-06-17T17:03:14Z	["nmlgc/ReC98/compare/440637e...5af2048"]	1
+P0200	[171, 176]	TH01 decompilation (Kikuri, part 3/3: Main function + Ending boss slideshow + Good/Bad endings)	2022-06-17T17:03:14Z	["nmlgc/ReC98/compare/5af2048...67e46b5"]	1
+P0201	[175, 167]	TH01 decompilation (SinGyoku, part 1/2: Preparation + sphere movement + patterns 1-2)	2022-06-25T16:39:14Z	["nmlgc/ReC98/compare/9342665...ff49e9e"]	1
+P0202	[177, 168]	TH01 decompilation (SinGyoku, part 2/2: Patterns 3-6 + main function + Missiles, part 2/2 + YuugenMagan setup)	2022-06-25T16:39:14Z	["nmlgc/ReC98/compare/ff49e9e...4568bf7"]	1
+P0203	[178, 129, 163]	TH01 decompilation (Card-flipping stages, part 3/4: Bumpers and turrets)	2022-07-10T11:48:22Z	["nmlgc/ReC98/compare/4568bf7...86cdf5f"]	1
+P0204	[174, 180]	TH01 decompilation (Card-flipping stages, part 4/4: Portals + Bomb animation)	2022-07-10T11:48:22Z	["nmlgc/ReC98/compare/86cdf5f...0c682b5"]	1
+P0205	[181, 180]	TH01 decompilation (Mima, part 1/2: Patterns 1-4)	2022-07-17T19:20:47Z	["nmlgc/ReC98/compare/3259190...327730f"]	1
+P0206	[180, 183, 168]	TH01 decompilation (Mima, part 2/2: Patterns 5-8 + main function) + Research (TH01's unexpected palette changes)	2022-07-17T19:20:47Z	["nmlgc/ReC98/compare/327730f...454c105"]	1
+P0207	[182]	TH01 decompilation (YuugenMagan, part 1/5: Preparation)	2022-08-08T18:23:19Z	["nmlgc/ReC98/compare/454c105...c26ef4b"]	1
+P0208	[182, 146]	TH01 decompilation (YuugenMagan, part 2/5: Helper functions)	2022-08-08T18:23:19Z	["nmlgc/ReC98/compare/c26ef4b...239a3ec"]	1
+P0209	[185]	TH01 decompilation (YuugenMagan, part 3/5: Main function)	2022-08-08T18:23:19Z	["nmlgc/ReC98/compare/239a3ec...5030867"]	1
+P0210	[146, 184]	TH01 decompilation (YuugenMagan, part 4/5: Eye opening/closing + 邪 colors)	2022-08-08T18:23:19Z	["nmlgc/ReC98/compare/5030867...149fbca"]	1
+P0211	[184, 186]	TH01 decompilation (YuugenMagan, part 5/5: Quirk research + Data finalization, part 1/2 + Common part of endings)	2022-08-08T18:23:19Z	["nmlgc/ReC98/compare/149fbca...d398a94"]	1
+P0212	[192, 186, 188]	TH01 decompilation (Stage bonus and TOTLE screens, part 1/2)	2022-08-11T21:27:53Z	["nmlgc/ReC98/compare/d398a94...363fd54"]	1
+P0213	[188, 187]	TH01 decompilation (Stage bonus and TOTLE screens, part 2/2 + Data finalization, part 2/2 + FUUIN.EXE 100%)	2022-08-11T21:27:53Z	["nmlgc/ReC98/compare/363fd54...158a91e"]	1
+P0214	[187]	TH01 decompilation (Orb and Game Over animations + Pause, continue, and debug menus)	2022-08-14T23:17:23Z	["nmlgc/ReC98/compare/158a91e...414770c"]	1
+P0215	[187, 196]	TH01 decompilation (REIIDEN.EXE main() function / 100%)	2022-08-14T23:17:23Z	["nmlgc/ReC98/compare/414770c...3123c9d"]	1
+P0216	[195]	TH01 decompilation (100%)	2022-08-15T23:57:46Z	["nmlgc/ReC98/compare/3123c9d...a0ff3f1"]	1
+P0217	[165]	Seihou / Shuusou Gyoku (Clean-room packfile implementation / Building a drop-in replacement binary)	2022-09-04T15:13:44Z	["nmlgc/ssg/compare/pbg...P0217"]	0
+M0001	[1]	Seihou / Shuusou Gyoku (Minor code quality / portability issues)	2022-09-10T21:32:07Z	["nmlgc/ssg/compare/P0217...M0001"]	0
+P0218	[191, 193]	Website (Video pipeline, part 1/2: Preparations / Source file gathering)	2022-10-31T23:58:39Z	["nmlgc/rec98.nmlgc.net/compare/21f0a4d...8ebf201"]	0
+P0219	[194, 201]	Website (Video pipeline, part 2/2: Encoding / Tweaking settings / Caching)	2022-10-31T23:58:39Z	["nmlgc/rec98.nmlgc.net/compare/8ebf201...52375e2"]	0
+P0220	[201, 204]	Website (Video player, part 1/3: Basic controls and frame-accurate seeking)	2022-10-31T23:58:39Z	["nmlgc/rec98.nmlgc.net/compare/52375e2...ba6359b"]	0
+P0221	[204, 96]	Website (Video player, part 2/3: Tabs and markers)	2022-10-31T23:58:39Z	["nmlgc/rec98.nmlgc.net/compare/ba6359b...94e48e9"]	0
+P0222	[96, 117]	Website (Video player, part 3/3: Dynamic captions and useful fullscreen mode)	2022-10-31T23:58:39Z	["nmlgc/rec98.nmlgc.net/compare/94e48e9...358e16f"]	0
+M0002	[2]	Seihou / Shuusou Gyoku (File loading cleanup + Packfile caching)	2022-11-01T21:08:01Z	["nmlgc/ssg/compare/M0001...M0002"]	0
+P0223	[198, 162, 166, 172, 179, 199, 203]	TH03/TH04/TH05 decompilation (Cutscenes, part 1/3: State + Box and picture rendering)	2022-11-30T22:20:03Z	["nmlgc/ReC98/compare/139746c...371292d"]	1
+P0224	[157, 158]	TH03/TH04/TH05 decompilation (Cutscenes, part 2/3: Script commpands)	2022-11-30T22:20:03Z	["nmlgc/ReC98/compare/371292d...8118e61"]	1
+P0225	[190, 206, 210, 200, 207]	TH03/TH04/TH05 decompilation (Cutscenes, part 3/3: Interpreter loop + TH05 rendering boilerplate, part 1/?)	2022-11-30T22:20:03Z	["nmlgc/ReC98/compare/8118e61...4f85326"]	1
+P0226	[212, 215]	Seihou / Shuusou Gyoku (Running at full speed on modern systems / Basic locale independence)	2022-12-31T23:57:00Z	["nmlgc/ssg/compare/M0002...P0226"]	0
+P0227	[197]	TH05 decompilation (Sara) / Research (Relativity of near references)	2023-01-17T17:52:09Z	["nmlgc/ReC98/compare/4f85326...bfd24c6"]	1
+P0228	[217, 197]	TH05 finalization (Lasers)	2023-01-17T17:52:09Z	["nmlgc/ReC98/compare/bfd24c6...739e1d8"]	1
+P0229	[211, 219]	TH01 debloating (Single-executable build, part 1/2)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/6370f96...d535d87"]	0
+P0230	[221]	TH01 debloating (Single-executable build, part 2/2)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/d535d87...ca523b4"]	0
+P0231	[121, 216]	Research (Spawning TSRs from C)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/ca523b4...05a49b9"]	0
+P0232	[225]	Portability (PC-98 platform layer, part 1)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/f7ef7f8...abeaf85"]	0
+P0233	[208]	Research (Performance of various PC-98 blitting approaches)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/abeaf85...dbc5b51"]	0
+P0234	[219, 223, 227]	TH01 Anniversary Edition (Removing interlaced pellet rendering + Merging previous fixes)	2023-03-05T12:56:15Z	["nmlgc/ReC98/compare/dd2265c...12f29c6"]	0
+P0235	[189]	TH02 RE (Stage tiles, part 1/2)	2023-03-30T13:23:29Z	["nmlgc/ReC98/compare/e7a9262...62c4b7f"]	1
+P0236	[202, 205, 209]	TH02 RE (Stage tiles, part 2/2)	2023-03-30T13:23:29Z	["nmlgc/ReC98/compare/62c4b7f...7fa9038"]	1
+P0237	[209, 218, 222]	TH02 RE (Spark structure + Point number popups + Bomb animation effects)	2023-03-30T13:23:29Z	["nmlgc/ReC98/compare/7fa9038...c5e51e6"]	1
+P0238	[229]	Website (TypeScript migration + Stripe integration, part 1/2: Basic support)	2023-05-01T23:56:59Z	["nmlgc/rec98.nmlgc.net/compare/4698397...edf2926"]	0
+P0239	[238]	Website (Stripe integration, part 2/2: Subscription support) + TH01 Anniversary Edition (Minor bugfixes)	2023-05-01T23:56:59Z	["nmlgc/ReC98/compare/c5e51e6...P0239"]	0
+P0240	[195]	TH04 PI/RE (Stage 5 star rendering + Stage 6 Yuuka checkerboard + Custom entity structures, part 1/2)	2023-05-29T23:39:52Z	["nmlgc/ReC98/compare/be69ab6...40c900f"]	1
+P0241	[241, 242]	TH04 PI/RE (Custom entity structures, part 2/2 + Thick laser structure + PI false positives + .STD loading)	2023-05-29T23:39:52Z	["nmlgc/ReC98/compare/40c900f...08352a5"]	1
+P0242	[222, 226, 233]	TH02 RE (Score tracking + HUD rendering)	2023-06-07T23:17:58Z	["nmlgc/ReC98/compare/08352a5...dfa758d"]	1
+P0243	[243, 247, 252]	TH02 RE (Items)	2023-06-07T23:17:58Z	["nmlgc/ReC98/compare/dfa758d...ac33bd2"]	1
+P0244	[214, 220, 224, 228, 236, 245]	TH04 PI/RE (Stage 4 carpet lighting effect + 100% PI)	2023-06-13T11:07:44Z	["nmlgc/ReC98/compare/ac33bd2...97f0c3b"]	1
+P0245	[244, 227, 245, 246]	TH04/TH05 finalization (Sprite clipping + gather circles + boss explosions) + TH01 Anniversary Edition (Lines, part 1/?)	2023-06-30T23:52:16Z	["nmlgc/ReC98/compare/97f0c3b...5876755"]	1
+P0246	[232, 234]	Seihou / Shuusou Gyoku (Cleanup and deduplication)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/P0226...152ad74"]	0
+P0247	[234, 235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 1/5)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/152ad74...54c3c4e"]	0
+P0248	[231, 215, 235]	Seihou / Shuusou Gyoku (秋霜CFG.DAT versioning)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/54c3c4e...62ff407"]	0
+P0249	[235]	Seihou / Shuusou Gyoku (Graphics refactoring, part 2/5 + Coordinate systems, part 1/?)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/62ff407...a1f80a3"]	0
+P0250	[235, 237]	Seihou / Shuusou Gyoku (Text pre-rendering, part 1/2: Implementation + Migrating the in-game music title)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/a1f80a3...629ddd8"]	0
+P0251	[237, 248]	Seihou / Shuusou Gyoku (Text pre-rendering, part 2/2: Migrating the rest of the game + Replacing Win32 memory management)	2023-08-01T23:57:43Z	["nmlgc/ssg/compare/629ddd8...P0251"]	0
+P0252	[253, 248]	Seihou / Shuusou Gyoku (Building SDL from source within Tup)	2023-09-30T21:01:36Z	["nmlgc/ssg/compare/P0251...e98feef"]	0
+P0253	[248]	Seihou / Shuusou Gyoku (Game logic portability, part 1/? + Cross-platform APIs, part 1/?: Window creation via SDL)	2023-09-30T21:01:36Z	["nmlgc/ssg/compare/e98feef...24df71c"]	0
+P0254	[248]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 2/?: Sound via miniaudio)	2023-09-30T21:01:36Z	["nmlgc/ssg/compare/24df71c...b7b863b"]	0
+P0255	[255]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Input via SDL)	2023-09-30T21:01:36Z	["nmlgc/ssg/compare/b7b863b...2b8218e"]	0
+P0256	[255]	Seihou / Shuusou Gyoku (Restoring the screenshot feature + Translating inline ASM code to C++)	2023-09-30T21:01:36Z	["nmlgc/ssg/compare/2b8218e...P0256"]	0
+P0257	[261]	Website (Video player code cleanup + audio support)	2023-09-30T21:01:36Z	["nmlgc/rec98.nmlgc.net/compare/b79c667...e2ba49b"]	0
+P0258	[249, 251]	Decompilation (TH04/TH05 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	["nmlgc/ReC98/compare/5876755...e8a0b3e"]	1
+P0259	[266, 213]	Decompilation (TH04/TH05 stage dialogs, part 2/2) + TH02 RE (Stage dialog preparations)	2023-11-01T23:58:05Z	["nmlgc/ReC98/compare/e8a0b3e...dfaa3c6"]	1
+P0260	[233, 240, 262]	Decompilation (TH02 stage dialogs, part 1/2)	2023-11-01T23:58:05Z	["nmlgc/ReC98/compare/dfaa3c6...ed9ee93"]	1
+P0261	[257, 252]	Decompilation (TH02 stage dialogs, part 2/2 + TH03 win messages + TH04/TH05 MIKO.CFG + TH04 game startup)	2023-11-01T23:58:05Z	["nmlgc/ReC98/compare/ed9ee93...ae2fc28"]	1
+P0262	[260, 264, 268, 265]	Decompilation (TH04/TH05 main/option menu)	2023-11-30T23:56:14Z	["nmlgc/ReC98/compare/ae2fc28...741d889"]	1
+P0263	[265, 269]	Decompilation (TH04/TH05 first-launch sound setup menu + TH05 title screen animation)	2023-11-30T23:56:14Z	["nmlgc/ReC98/compare/741d889...46cd6e7"]	1
+P0264	[272, 276, 269, 273]	TH03/TH04/TH05 decompilation (Music Rooms, part 1/2)	2024-02-03T08:03:19Z	["nmlgc/ReC98/compare/46cd6e7...78728f6"]	1
+P0265	[203, 254, 273, 250]	TH03/TH04/TH05 decompilation (Music Rooms, part 2/2 + MAINE.EXE main()) + TH02 PI/RE (Boss damage and position)	2024-02-03T08:03:19Z	["nmlgc/ReC98/compare/78728f6...ff19bed"]	1
+P0266	[256]	mly (CLI preparation + MIDI event dumping + Basic loop detection algorithm)	2024-03-09T15:23:29Z	["nmlgc/mly/compare/eb2b0c8...b356884"]	0
+P0267	[256]	mly (Refined loop detection algorithm + SMF Type 0 conversion + Cut/unfold operations)	2024-03-09T15:23:29Z	["nmlgc/mly/compare/b356884...1c70db0"]	0
+P0268	[259]	mly (Recording-space loops + Rendering helpers) + Seihou / Shuusou Gyoku (BGM packs, part 1/?: Sound Canvas VA versions)	2024-03-09T15:23:29Z	["nmlgc/mly/compare/1c70db0...db0c195"]	0
+P0269	[259, 263]	Seihou / Shuusou Gyoku (BGM packs, part 2/6: Loop-cutting Romantique Tp recordings + Arranged MIDI pipeline + Packaging)	2024-03-09T15:23:29Z	["nmlgc/BGMPacks/compare/2f9bce5...45087c2"]	0
+P0270	[263]	Seihou / Shuusou Gyoku (BGM packs, part 3/6: Dependency setup + UTF-8 paths)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/P0256...a9ca081"]	0
+P0271	[263, 267]	Seihou / Shuusou Gyoku (MIDI refactoring and bugfixes)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/a9ca081...8db918f"]	0
+P0272	[267]	Seihou / Shuusou Gyoku (MIDI looping + BGM packs, part 4/6: MIDI/waveform BGM subsystem)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/8db918f...3de48ab"]	0
+P0273	[267, 271]	Seihou / Shuusou Gyoku (BGM packs, part 5/6: Modding logic + FLAC/Vorbis waveform streaming)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/3de48ab...9467705"]	0
+P0274	[271, 275]	Seihou / Shuusou Gyoku (BGM packs, part 6/6: Configuration UI + Music Room adjustments)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/9467705...241a6c9"]	0
+P0275	[275]	Seihou / Shuusou Gyoku (BGM/sound effect volume controls + Missing .DAT file screen)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/241a6c9...P0275"]	0
+P0276	[230]	Website (CSS compilation via esbuild + Audio player, part 1/2)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/dbc369f...883ac40"]	0
+P0277	[239]	Website (Audio player, part 2/2 + Front page progress bar redesign + Goal grouping)	2024-03-09T15:23:29Z	["nmlgc/ssg/compare/883ac40...6ac72f3"]	0
+P0278	[270, 274, 277]	TH02 decompilation (Endings)	2024-04-11T22:45:29Z	["nmlgc/ReC98/compare/b6a7285...f0fbaf6"]	1
+P0279	[280, 286, 291]	TH02 decompilation (Staff Roll + Verdict screen + Stage bonus tables)	2024-04-11T22:45:29Z	["nmlgc/ReC98/compare/f0fbaf6...20bac82"]	1
+P0280	[279, 282, 287, 290]	TH03 RE (Coordinate transformations / Player entity movement / Global shared hitbox / Hit circles)	2024-04-24T13:14:41Z	["nmlgc/ReC98/compare/20bac82...87eed57"]	1
+P0281	[284]	Build system improvements, part 5 (MS-DOS Player bugfixes and performance tuning for Turbo C++ 4.0J)	2024-07-09T11:30:16Z	["nmlgc/msdos-player/compare/07d1088...P0281"]	0
+P0282	[300, 283]	Build system improvements, part 6 (Generating an ideal dumb batch script for 32-bit platforms)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/d60fb3e...056085b"]	0
+P0283	[283]	Build system improvements, part 7 (Researching and working around Windows 9x batch file limits)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/056085b...b86a2b1"]	0
+P0284	[290, 295, 296]	#include cleanup, part 1/2 / Decompilation (TH04/TH05 .REC loading)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/62bd5b1...18b9cd7"]	0
+P0285	[283, 297]	#include cleanup, part 2/2 / Decompilation (TH02 MAIN.EXE High Score entry)	2024-07-09T11:30:16Z	["nmlgc/ReC98/compare/18b9cd7...23fc9e7"]	0
+P0286	[275, 278]	tupblocks (<code>import std;</code> support)	2024-10-22T05:18:43Z	["nmlgc/tupblocks/compare/acb2572...fae347c"]	0
+P0287	[278]	Seihou / Shuusou Gyoku (Code cleanup + Game logic portability, part 2/? + Fixes for bugs and landmines)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/P0275...47f365a"]	0
+P0288	[278, 281]	Seihou / Shuusou Gyoku (Getting pbg's code through static analysis)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/47f365a...fedaf5e"]	0
+P0289	[281, 288]	Seihou / Shuusou Gyoku (Game logic portability, part 3/? + Graphics refactoring, part 3/5: Preparations and colors)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/fedaf5e...82b1b2c"]	0
+P0290	[288]	Seihou / Shuusou Gyoku (Graphics refactoring, part 4/5: Geometry, enumeration, and software rendering)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/82b1b2c...7d64c62"]	0
+P0291	[288, 294]	Seihou / Shuusou Gyoku (Graphics refactoring, part 5/5: Clipping, sprites, and initialization)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/7d64c62...d16c023"]	0
+P0292	[294, 306]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 3/?: Main loop + Main menu refactoring)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/d16c023...fe01bd0"]	0
+P0293	[306, 310]	Seihou / Shuusou Gyoku (Cross-platform APIs, part 4/?: SDL_Renderer backend)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/fe01bd0...2d6ae51"]	0
+P0294	[310, 315]	Seihou / Shuusou Gyoku (Window and scaling modes, part 1/2)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/2d6ae51...37cc78b"]	0
+P0295	[315, 313]	Seihou / Shuusou Gyoku (Window and scaling modes, part 2/2 + Hotkeys) + Website (Adding missing money amounts to the log)	2024-10-22T05:18:43Z	["nmlgc/ssg/compare/37cc78b...P0275"]	0
+P0296	[313, 317]	Website / Blog (Post list page + Navigation and post header redesign)	2024-11-22T04:00:03Z	["nmlgc/rec98.nmlgc.net/compare/3658763...32d8f54"]	0
+P0297	[285]	TH03 decompilation (Character selection screen)	2024-11-22T04:00:03Z	["nmlgc/ReC98/compare/23fc9e7...c879dfc"]	1
+P0298	[289, 299, 303, 307, 311, 316, 317, 323, 325, 322]	TH04/TH05 finalization (GENSOU.SCR, part 2/?) + Decompilation (High Score view screen)	2024-12-04T14:29:20Z	["nmlgc/ReC98/compare/c879dfc...71f4810"]	1
+M0003	[3]	Seihou / Shuusou Gyoku (Icon commission from <a href="https://bsky.app/profile/tremolomeasure.bsky.social">Mr. Tremolo Measure)</a>	2025-01-25T23:56:48Z	["nmlgc/ssg/commit/M0003"]	0
+P0299	[332]	tupblocks (Clang and GCC support)	2025-01-25T23:56:48Z	["nmlgc/tupblocks/compare/fae347c...49255da"]	0
+P0300	[320, 293, 298]	Seihou / Shuusou Gyoku (Build portability + Game logic portability, part 4/4 + SDL threads)	2025-01-25T23:56:48Z	["nmlgc/ssg/compare/M0003...dc235ca"]	0
+P0301	[298, 302]	Seihou / Shuusou Gyoku (Pango/Cairo text rendering, part 1/2)	2025-01-25T23:56:48Z	["nmlgc/ssg/compare/dc235ca...7712632"]	0
+P0302	[302]	Seihou / Shuusou Gyoku (Pango/Cairo text rendering, part 2/2 + Linux build script + Arch Linux package)	2025-01-25T23:56:48Z	["nmlgc/ssg/compare/7712632...aec7839"]	0
+P0303	[324]	Seihou / Shuusou Gyoku (Icon integration + Flatpak package)	2025-01-25T23:56:48Z	["nmlgc/ssg/compare/aec7839...P0303"]	0
+P0304	[258, 277, 305, 309, 250]	TH02 RE (Stage / (mid)boss variables) + Decompilation (Bullets, part 1/2)	2025-02-24T23:48:53Z	["nmlgc/ReC98/compare/71f4810...96ada76"]	0
+P0305	[197, 301, 314, 327, 336, 250]	TH02 decompilation (Bullets, part 2/2 + Sparks, part 1/2)	2025-02-24T23:48:53Z	["nmlgc/ReC98/compare/96ada76...3c710f9"]	0
+P0306	[318, 342, 326]	TH02 decompilation (Player, part 1/2: Update/render functions + Miss animation) + Random TH04/TH05 finalization	2025-02-24T23:48:53Z	["nmlgc/ReC98/compare/3c710f9...165f090"]	0
+P0307	[339, 345]	Seihou / Shuusou Gyoku (SDL 3 platform layer)	2025-04-09T03:03:14Z	["nmlgc/ssg/compare/P0303-2...a4adcbb"]	0
+P0308	[345]	Seihou / Shuusou Gyoku (Render API unbricking / ReC98 build label on the title screen / Revamped pixel format handling)	2025-04-09T03:03:14Z	["nmlgc/ssg/compare/a4adcbb...c62f7ad"]	0
+P0309	[346]	Seihou / Shuusou Gyoku (WebP screenshot compression / Compression benchmark in the main menu)	2025-04-09T03:03:14Z	["nmlgc/ssg/compare/c62f7ad...P0309"]	0
+P0310	[330, 331, 338, 344, 349, 350, 354]	Seihou / Shuusou Gyoku (SDL Windows 98 backport, part 1 / D3DWindower support)	2025-04-25T23:37:38Z	["nmlgc/ssg/compare/P0309...P0310"]	0
+P0311	[207, 347, 356, 363]	TH03 decompilation (Main menu, part 1/2)	2025-05-10T20:41:57Z	["nmlgc/ReC98/compare/165f090...9b2d7eb"]	1
+P0312	[363, 373, 250, 333, 340, 348, 357, 364, 374, 326, 366, 334]	TH03 decompilation (Main menu, part 2/2 + Static HUD parts) + TH02 PI (Stage 3 midboss/boss state) + TH03 PI (Technical 100% for MAINL.EXE)	2025-05-10T20:41:57Z	["nmlgc/ReC98/compare/9b2d7eb...f6d836b"]	1

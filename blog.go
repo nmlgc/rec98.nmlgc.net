@@ -598,33 +598,35 @@ func (b *Blog) AutogenerateTags(repo *Repository) *Blog {
 	for _, entry := range b.Entries {
 		var gameSeen [5]bool
 		for _, p := range entry.Pushes {
-			if (p.Diff.Top != nil) && (p.Diff.Bottom != nil) {
-				iter, err := repo.GetLogAt(p.Diff.Top)
-				FatalIf(err)
-				err = iter.ForEach(func(c *object.Commit) error {
-					if c.Hash == p.Diff.Bottom.Hash {
-						return storer.ErrStop
-					}
-					subject := strings.SplitN(c.Message, "\n", 2)[0]
+			for _, diff := range p.Diff {
+				if (diff.Top != nil) && (diff.Bottom != nil) {
+					iter, err := repo.GetLogAt(diff.Top)
+					FatalIf(err)
+					err = iter.ForEach(func(c *object.Commit) error {
+						if c.Hash == diff.Bottom.Hash {
+							return storer.ErrStop
+						}
+						subject := strings.SplitN(c.Message, "\n", 2)[0]
 
-					if strings.HasPrefix(subject, "[Maintenance]") ||
-						strings.HasPrefix(subject, "Merge") {
-						return nil
-					}
-					if m := rxGames.FindString(subject); m != "" {
-						for _, c := range m {
-							if c >= '1' && c <= '5' {
-								gameSeen[c-'1'] = true
+						if strings.HasPrefix(subject, "[Maintenance]") ||
+							strings.HasPrefix(subject, "Merge") {
+							return nil
+						}
+						if m := rxGames.FindString(subject); m != "" {
+							for _, c := range m {
+								if c >= '1' && c <= '5' {
+									gameSeen[c-'1'] = true
+								}
 							}
 						}
-					}
-					return nil
-				})
-				FatalIf(err)
-			}
-			if p.Diff.Project != nil {
-				entry.Tags = append(p.Diff.Project.BlogTags, entry.Tags...)
-				RemoveDuplicates(&entry.Tags)
+						return nil
+					})
+					FatalIf(err)
+				}
+				if diff.Project != nil {
+					entry.Tags = append(diff.Project.BlogTags, entry.Tags...)
+					RemoveDuplicates(&entry.Tags)
+				}
 			}
 		}
 		for i := len(gameSeen) - 1; i >= 0; i-- {

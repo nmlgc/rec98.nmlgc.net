@@ -283,7 +283,7 @@ type Push struct {
 	Transactions      []*Transaction
 	Goal              template.HTML
 	Delivered         time.Time
-	Diff              DiffInfo
+	Diff              []DiffInfo
 	IncludeInEstimate bool
 }
 
@@ -481,16 +481,16 @@ type pushTSV struct {
 	Transactions      []int
 	Goal              template.HTML
 	Delivered         time.Time
-	Diff              string
+	Diff              []string
 	IncludeInEstimate bool
 }
 
 func (p *pushTSV) toActualPush(repo *Repository) *Push {
-	return &Push{
+	ret := &Push{
 		ID:                *p.ID,
 		Goal:              p.Goal,
 		Delivered:         p.Delivered,
-		Diff:              NewDiffInfo(p.Diff, repo),
+		Diff:              make([]DiffInfo, len(p.Diff)),
 		IncludeInEstimate: p.IncludeInEstimate,
 
 		Transactions: func() (ret []*Transaction) {
@@ -514,6 +514,10 @@ func (p *pushTSV) toActualPush(repo *Repository) *Push {
 			return
 		}(),
 	}
+	for i, diff := range p.Diff {
+		ret.Diff[i] = NewDiffInfo(diff, repo)
+	}
+	return ret
 }
 
 var tsvPushes []*pushTSV
@@ -527,7 +531,9 @@ func NewPushes(transactions tTransactions, tsv []*pushTSV, repo *Repository) (re
 	// them out of the resulting cache. Runs 200% faster than if we just used
 	// the linear loop below!
 	parallel.For(len(tsv), func(i int, _ int) {
-		NewDiffInfo(tsv[i].Diff, repo)
+		for _, diff := range tsv[i].Diff {
+			NewDiffInfo(diff, repo)
+		}
 	})
 
 	for _, p := range tsvPushes {

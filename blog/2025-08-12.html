@@ -1,0 +1,59 @@
+{{$rr_b := (call .Video "SH01-Ripper-Roo-bug-broken" "Video of the gameplay-forking bug that the ReC98 P0925 build introduced into Shuusou Gyoku's Extra Stage, resulting in a pattern that differs from what this previously recorded replay expects") -}}
+{{$rr_c := (call .Video "SH01-Ripper-Roo-bug-correct" "Video of the expected gameplay behavior that the bug-triggering Shuusou Gyoku Extra Stage replay was recorded with") -}}
+
+{{$rr_b.SetTitle "Broken/desynced gameplay" -}}
+{{$rr_c.SetTitle "Expected gameplay" -}}
+
+<p>
+	<i>Another</i> replay desync bug in Shuusou Gyoku's Extra Stage that I accidentally introduced in <a href="https://github.com/nmlgc/ssg/releases/tag/P0295">P0295</a> and that therefore falls under my <a href="/faq#mod-bugs">free bugfix policy</a>?! Last time, we were lucky and there was a general solution that would allow automatic repairs for affected replays inside the game, but not this time. That's right, the most dreaded catastrophic case has actually happened, and I accidentally forked gameplay. ⚠️ If you've recorded an Extra Stage replay on any build I released in the last 10 months, there's a rare chance that your replay might be invalid and would desync on the original game and future builds.
+</p>{{call .TOC}}<hr id="bug-{{.Date}}"><p>
+	So, what happened? {{Blog_PostLink "2024-10-22#cleanup" "Modernizing pbg's gameplay code for the sole sake of satisfying static analysis"}} was a scary prospect from the start, despite the already reduced scope of warnings I went for. And sure enough, this bug <i>had</i> to be an issue with integer casting once again, specifically in the code that controls the rotation of Marisa's {{Blog_PostLink "2022-04-18#marisa" "bits"}}:
+</p><figure>
+	<pre class="chroma">// Calculate the angular velocity (`dir`) of a bit.
+// `bit->Angle` is the same kind of {{Blog_PostLink "2022-03-05" "8-bit angle"}} used in PC-98 Touhou.
+const uint8_t d = ((BitData.BaseAngle >> 1) + (delta * bit->BitID));
+
+<span class="gi">// Original pbg code
+int dir = (int)d - (int)(bit->Angle);</span>
+
+<span class="gd">// Broken modern rewrite in P0295
+int dir = (Cast::sign&lt;int8_t&gt;(d) - Cast::sign&lt;int8_t&gt;(bit->Angle));</span>
+
+<span class="gi">// Correct modern rewrite in P0310-2
+int dir = (Cast::up_sign&lt;int&gt;(d) - Cast::up_sign&lt;int&gt;(bit->Angle));</span>
+</pre>
+	<figcaption>Why did I try to be smart here?</figcaption>
+</figure><p>
+	Let's plug in <var>44</var> for <code>d</code> and <var>172</var> for <code>bit->Angle</code>. With the original <code>int</code> casts, this results in an obvious <code>dir</code> of
+</p><figure>
+	(44&nbsp;-&nbsp;172)&nbsp;= -128
+</figure><p>
+	But if an <code>int8_t</code> cast would turn <var>172</var> to <var>-84</var>, shouldn't a result of
+</p><figure>
+	(44&nbsp;-&nbsp;(-84))&nbsp;= 128
+</figure><p>
+	then also overflow to -128 if the calculation is done in 8 bits? <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0907r0.html">As of C++20, this overflow is even well-defined.</a> Well, C <i>still</i> promotes both operands to <code>int</code> and only <i>then</i> checks whether they're the same type, as specified in Section 6.3.1.8/1 of the C standard. Thus, we lose the expected overflow, and the bits begin to rotate in the other direction. That's now the third time that C's integer promotion rules have {{Blog_PostLink "2024-12-04#limit-2024" "ruined my day"}}…
+</p><p>
+	It's easy to see how a difference in rotation can lead to different gameplay by changing the spawn points of bullets, but this bug actually tends to have far bigger consequences. At one point during the fight, the ECL script reads out the bit angle and not only applies it to Marisa's own movement angle, but also uses it to determine the next danmaku pattern. And with a large enough difference compared to pbg's original intentions, we get the reported desync:
+</p><figure {{$rr_b.FigureAttrs}}>
+	{{call .VideoPlayer $rr_b.FlipActive $rr_c}}
+</figure><p>
+	Since a lot of Marisa's behavior and pattern selection comes down to RNG, this doesn't necessarily <i>have</i> to happen. While most fights will run into a case where this bug would change bit direction for a few frames, <i>pattern</i> differences like this one appear to be rather rare. None of my six Marisa-beating test replays desync in response to this bug, which explains how it remained undetected during all my testing.<br>
+	Thankfully, the replay above was recorded on <a href="https://github.com/nmlgc/ssg/releases/tag/P0275">P0275</a>. Thus, it relied on the original behavior, and the replay will play back correctly again on the new and future builds. So far, I haven't seen any replay that relies on the wrong behavior; even <a href="https://www.youtube.com/watch?v=OjkJiEHArcI">BWF6's crazy god-tier RNG run that got all the easy patterns</a> remains legit. But the possibility definitely exists.
+</p><hr id="defense-{{.Date}}"><p>
+	The only true defense against this kind of RNG-dependent gameplay fork involves validation against tons and tons of replays. Unfortunately, Shuusou Gyoku's original single-replay system makes collecting them too impractical for everyone involved. And as long as the backers focus on flashier features over <a class="goal" href="https://github.com/nmlgc/ssg/issues/37">testability</a>, we'll always run the risk of accidental gameplay forks, despite my best efforts and promises.<br>
+	Still, the obvious and actionable lesson for myself is that I have to get better at not touching gameplay code. And as a first step of that, I will keep the fix at this single line instead of trying to look for and fix more of these potential issues by throwing more static analysis onto pbg's code.
+</p><p>
+	This bug could have been prevented by having at least a basic physical split of gameplay and rendering code into different source files, which would allow the former to be excluded from these massive modernizing refactors more easily. Sure, TH02 and especially TH01 intertwine gameplay and rendering so much that this would have been another subproject consuming multiple pushes. But for Shuusou Gyoku, it would have been easy, and I still didn't do it. Big mistake. I'm definitely going to take the time once we get to Kioh Gyoku.<br>
+	In that light, it's a massive advantage that I'll have to implement TH03 netplay <i>without</i> <code>MAIN.EXE</code> being position-independent. This way, the binary diff against the original version remains small by necessity, and the risk of accidental gameplay forks is massively reduced.
+</p><p>
+	Many, <i>many</i> thanks to Ripper Roo for reporting this bug and providing the one affected replay. Let's hope that this was the one and only bug hiding in these guideline rewrites…<br>
+	We're lucky to have found this one <i>before</i> I implemented the upcoming <a class="goal" href="https://github.com/nmlgc/ssg/issues/36">better and more community-usable replay system</a>. Imagine if we already had a replay site that hosted a bunch of replays recorded on the broken builds. We'd now have to mark all of them as forked, <i>except</i> that we probably want to manually validate and remove that fork marker for every replay that syncs on pbg's original build after all… That would have been even more bureaucracy waiting for me now.
+</p><ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0310-2">
+	{{HTML_Emoji "sh01n"}} Shuusou Gyoku P0310-2 Windows build</a></li>
+	<li><a class="release" href="https://aur.archlinux.org/packages/seihou-shuusou-gyoku">Shuusou Gyoku P0310-2 on the AUR</a></li>
+	<li><a class="release" href="https://flathub.org/apps/net.nmlgc.rec98.sh01">Shuusou Gyoku P0310-2 on Flathub</a></li>
+</ul><p>
+	At least the next regular PC-98 Touhou delivery doesn't even try to touch game code. It's been feature-complete for a while and is only missing the blog post, some in-depth testing, and the usual release preparations. As you might have guessed from the time it took, this first foray into portability escalated to another big 10-push monster… Really happy with the visualizations this time around, though.
+</p>

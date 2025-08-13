@@ -19,7 +19,6 @@ import (
 
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/gorilla/mux"
-	"github.com/lucasb-eyer/go-colorful"
 )
 
 // FatalIf removes the boilerplate for cases where errors are fatal.
@@ -284,47 +283,7 @@ func HTMLTagBlock(tag string, filters []string) (template.HTML, error) {
 	return template.HTML(ret), nil
 }
 
-var meterGradient = GradientTable{
-	{MustParseHex("#d73414"), 0},
-	{MustParseHex("#d7b614"), 50},
-	{MustParseHex("#75b635"), 100},
-}
-
-// CSSMeter generates a CSS background gradient for the given meter percentage.
-func CSSMeter(val float64) template.CSS {
-	var middle, edge, highlight string
-	h, s, l := meterGradient.GetInterpolatedColorFor(val).Hsl()
-
-	// go-colorful does not clamp these themselves.
-	s = Min(s, 1/1.2)
-	l = Min(l, 1/1.6)
-
-	middle = colorful.Hsl(h, s, l).Hex()
-	edge = colorful.Hsl(h, (s * 1.1), (l * 1.3)).Hex()
-	highlight = colorful.Hsl(h, (s * 1.2), (l * 1.6)).Hex()
-	return template.CSS(fmt.Sprintf(
-		`background: linear-gradient(%v, %v 20%%, %v 45%%, %v 55%%, %v);`,
-		edge, highlight, middle, middle, edge,
-	))
-}
-
-var pages = template.New("").Funcs(map[string]any{
-	// Arithmetic, safe
-	"pct": func(f float64) float64 { return (f * 100.0) },
-	"inc": func(i int) int { return i + 1 },
-
-	// Control flow, safe
-	"loop": func(from int, to int) chan int {
-		ret := make(chan int)
-		go func() {
-			for i := from; i < to; i++ {
-				ret <- i
-			}
-			close(ret)
-		}()
-		return ret
-	},
-
+var pages = template.New("").Funcs(SharedFuncs).Funcs(map[string]any{
 	// String munging, safe
 	"hasprefix": strings.HasPrefix,
 
@@ -342,7 +301,6 @@ var pages = template.New("").Funcs(map[string]any{
 	"HTML_Screen_Y":     HTMLScreenY,
 	"HTML_200_Y":        HTML200Y,
 	"HTML_PerfBar":      HTMLPerfBar,
-	"CSS_Meter":         CSSMeter,
 	"StaticFileURL":     func(fn string) string { return staticHP.VersionURLFor(fn) },
 	"th03pc":            HTMLTH03Playchar,
 

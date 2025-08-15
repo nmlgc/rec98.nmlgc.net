@@ -95,28 +95,33 @@ var esbuildLoader = map[string]esbuild.Loader{
 	".scss": esbuild.LoaderGlobalCSS,
 }
 
-// esbuild runs the esbuild Build API with common settings on the given file.
-func (hp *HostedPath) esbuild(outBasename, inBasename string) (deps []string) {
+// runESBuild runs the esbuild Build API with common settings on the given file.
+func runESBuild(outFN, inFN string) bool {
+	result := esbuild.Build(esbuild.BuildOptions{
+		LogLevel:          esbuild.LogLevelWarning,
+		EntryPoints:       []string{inFN},
+		Outfile:           outFN,
+		Loader:            esbuildLoader,
+		MinifyWhitespace:  true,
+		MinifyIdentifiers: true,
+		MinifySyntax:      true,
+		Sourcemap:         esbuild.SourceMapLinked,
+		Supported:         map[string]bool{"nesting": false},
+		Write:             true,
+	})
+	return len(result.Errors) != 0
+}
+
+// build runs the given build function (returning `false` on success) to generate `outBasename` if
+// `inBasename` exists in this path.
+func (hp *HostedPath) build(outBasename, inBasename string, build func(outFN string, inFN string) bool) (deps []string) {
 	inFN := filepath.Join(hp.LocalPath, inBasename)
 	_, err := os.Stat(inFN)
 	if err == nil {
 		outFN := filepath.Join(hp.LocalPath, outBasename)
 		os.Remove(outFN)
 		deps = []string{inBasename}
-
-		result := esbuild.Build(esbuild.BuildOptions{
-			LogLevel:          esbuild.LogLevelWarning,
-			EntryPoints:       []string{inFN},
-			Outfile:           outFN,
-			Loader:            esbuildLoader,
-			MinifyWhitespace:  true,
-			MinifyIdentifiers: true,
-			MinifySyntax:      true,
-			Sourcemap:         esbuild.SourceMapLinked,
-			Supported:         map[string]bool{"nesting": false},
-			Write:             true,
-		})
-		if len(result.Errors) > 0 {
+		if build(outFN, inFN) {
 			// Return [deps] without the target file, since it doesn't exist.
 			return deps
 		}
@@ -130,10 +135,10 @@ func (hp *HostedPath) buildFile(fn string) (deps []string) {
 	switch strings.ToLower(path.Ext(fn)) {
 	case ".js":
 		// Transpile TypeScript
-		return hp.esbuild(fn, (strings.TrimSuffix(fn, ".js") + ".ts"))
+		return hp.build(fn, (strings.TrimSuffix(fn, ".js") + ".ts"), runESBuild)
 	case ".css":
 		// Minify and polyfill CSS
-		return hp.esbuild(fn, (strings.TrimSuffix(fn, ".css") + ".scss"))
+		return hp.build(fn, (strings.TrimSuffix(fn, ".css") + ".scss"), runESBuild)
 	}
 	return append(deps, fn)
 }

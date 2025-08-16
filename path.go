@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"text/template"
 
 	esbuild "github.com/evanw/esbuild/pkg/api"
 	"github.com/gorilla/mux"
@@ -112,6 +113,30 @@ func runESBuild(outFN, inFN string) bool {
 	return len(result.Errors) != 0
 }
 
+func runTemplate(outFN, inFN string) bool {
+	tmpl, err := template.New(filepath.Base(inFN)).Funcs(SharedFuncs).ParseFiles(inFN)
+	if err != nil {
+		log.Printf("Error parsing `%v`: %v", inFN, err)
+		return true
+	}
+	f, err := os.Create(outFN)
+	if err != nil {
+		log.Printf("Error creating `%v`: %v", outFN, err)
+		return true
+	}
+	err = tmpl.Execute(f, nil)
+	if err != nil {
+		log.Printf("Error executing `%v`: %v", outFN, err)
+		return true
+	}
+	err = f.Close()
+	if err != nil {
+		log.Printf("Error closing `%v`: %v", outFN, err)
+		return true
+	}
+	return false
+}
+
 // build runs the given build function (returning `false` on success) to generate `outBasename` if
 // `inBasename` exists in this path.
 func (hp *HostedPath) build(outBasename, inBasename string, build func(outFN string, inFN string) bool) (deps []string) {
@@ -139,6 +164,9 @@ func (hp *HostedPath) buildFile(fn string) (deps []string) {
 	case ".css":
 		// Minify and polyfill CSS
 		return hp.build(fn, (strings.TrimSuffix(fn, ".css") + ".scss"), runESBuild)
+	case ".svg":
+		// Run a potential template
+		return hp.build(fn, fn+".tmpl", runTemplate)
 	}
 	return append(deps, fn)
 }

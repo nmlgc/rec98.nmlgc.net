@@ -162,8 +162,15 @@ func (hp *HostedPath) buildFile(fn string) (deps []string) {
 		// Transpile TypeScript
 		return hp.build(fn, (strings.TrimSuffix(fn, ".js") + ".ts"), runESBuild)
 	case ".css":
+		scss := (strings.TrimSuffix(fn, ".css") + ".scss")
+
+		// Run a potential template
+		deps = append(deps, hp.build(scss, scss+".tmpl", runTemplate)...)
+
 		// Minify and polyfill CSS
-		return hp.build(fn, (strings.TrimSuffix(fn, ".css") + ".scss"), runESBuild)
+		deps = append(deps, hp.build(fn, scss, runESBuild)...)
+
+		return deps
 	case ".svg":
 		// Run a potential template
 		return hp.build(fn, fn+".tmpl", runTemplate)

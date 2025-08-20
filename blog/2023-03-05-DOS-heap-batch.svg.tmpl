@@ -1,0 +1,34 @@
+{{$h := SVG_DOSHeap -}}
+{{$bios := $h.MCB "BIOS" 35 -}}
+{{$dos := $h.MCB "DOS,\n<tspan class=\"binary\">COMMAND.COM</tspan>" 60 -}}
+{{$mdrv98_env := $h.MCB "<tspan class=\"binary\">MDRV98</tspan>\n(env.)" 40 -}}
+{{$mdrv98 := $h.MCB "<tspan class=\"binary\">MDRV98</tspan>" 50 -}}
+{{$game_env := $h.MCB "<tspan class=\"binary\">OP</tspan>\n(env.)" 40 -}}
+{{$game := $h.MCB "<tspan class=\"binary\">OP / REIIDEN / FUUIN</tspan>\n" 125 -}}
+{{$free := $h.MCB "(free)\n" 250 -}}
+{{$resident := $h.MCB "Resident\nstructure" 40 -}}
+
+{{$arr_l := sub $game.R 5 -}}
+{{$arr_w := 200.0 -}}
+{{$arr_cx := add $arr_l (div $arr_w 2) -}}
+{{$arr_r := add $arr_l $arr_w -}}
+
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
+	{{- $h.CSS -}}
+	{{- $h.BIOSAndDOS $bios $dos -}}
+	{{- $mdrv98_env.RegularAlloc -}}
+	{{- $mdrv98.RegularAlloc -}}
+	{{- $game_env.RegularAlloc -}}
+	{{- $game.Game -}}
+
+	<path class="heap" d="M{{$arr_l}} 45v10" stroke="#000"/>
+	<path class="heap" d="M{{$arr_l}} 50h{{$arr_w}}" stroke="#000"/>
+	<path class="heap" d="M{{sub $arr_r 5}} 47.5, {{$arr_r}} 50, {{sub $arr_r 5}} 52.5" stroke="#000"/>
+	<text class="label" x="{{$arr_cx}}" y="42.5">C heap growth direction</text>
+
+	{{- $free.Free -}}
+	<g opacity="0.25">{{- $resident.RegularAlloc -}}</g>
+	{{- $h.TRAM -}}
+	{{- $h.Line -}}
+</svg>

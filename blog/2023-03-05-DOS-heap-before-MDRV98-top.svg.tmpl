@@ -1,0 +1,17 @@
+{{$h := SVG_DOSHeap -}}
+{{$bios := $h.MCB "BIOS" 35 -}}
+{{$dos := $h.MCB "DOS,\n<tspan font-family=\"monospace\">COMMAND.COM</tspan>" 60 -}}
+{{$game_env := $h.MCB "<tspan class=\"binary\">DEBLOAT /</tspan>\n<tspan class=\"binary\">ANNIV</tspan>\n(env.)" 40 -}}
+{{$game := $h.MCB "<tspan class=\"binary\">DEBLOAT / ANNIV</tspan>" 415 -}}
+{{$free := $h.MCB "(free)" 90 -}}
+
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
+	{{- $h.CSS -}}
+	{{- $h.BIOSAndDOS $bios $dos -}}
+	{{- $game_env.RegularAlloc -}}
+	{{- $game.Game -}}
+	{{- $free.Free -}}
+	{{- $h.TRAM -}}
+	{{- $h.Line -}}
+</svg>

@@ -49,6 +49,9 @@ var SharedFuncs = map[string]any{
 	// Arithmetic
 	"pct": func(f float64) float64 { return (f * 100.0) },
 	"inc": func(i int) int { return i + 1 },
+	"add": func(a, b float64) float64 { return a + b },
+	"sub": func(a, b float64) float64 { return a - b },
+	"div": func(a, b float64) float64 { return a / b },
 
 	// Control flow
 	"loop": func(from int, to int) chan int {
@@ -68,4 +71,5 @@ var SharedFuncs = map[string]any{
 
 	// SVG
 	"SVG_BlitperfCSS": func() string { return svg.BlitperfCSS(CSSMeterFG) },
+	"SVG_DOSHeap":     svg.NewHeap,
 }

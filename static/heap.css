@@ -9,7 +9,7 @@ text.label {
 	alignment-baseline: middle;
 }
 
-.label.binary {
+tspan.binary {
 	font-family: monospace;
 }
 
@@ -42,13 +42,7 @@ path.alloc {
 	stroke-width: .25;
 }
 
-path.alloc.game {
-	stroke: black;
-	fill: #f88;
-	stroke-width: .25;
-}
-
-line.alloc.free {
+.free line.alloc {
 	stroke-width: .25;
 	stroke-dasharray: 1;
 }

@@ -15,6 +15,11 @@ var meterGradient = GradientTable{
 	{MustParseHex("#75b635"), 100},
 }
 
+// CSSMeterPoint generates a CSS color for the given meter percentage.
+func CSSMeterPoint(val float64) template.CSS {
+	return template.CSS(meterGradient.GetInterpolatedColorFor(val).Hex())
+}
+
 // CSSMeter generates a CSS background gradient for the given meter percentage.
 func CSSMeter(val float64) template.CSS {
 	var middle, edge, highlight string
@@ -51,5 +56,6 @@ var SharedFuncs = map[string]any{
 	},
 
 	// Markup
-	"CSS_Meter": CSSMeter,
+	"CSS_Meter":      CSSMeter,
+	"CSS_MeterPoint": CSSMeterPoint,
 }

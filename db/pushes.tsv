@@ -314,3 +314,4 @@ P0309	[346]	Seihou / Shuusou Gyoku (WebP screenshot compression / Compression be
 P0310	[330, 331, 338, 344, 349, 350, 354]	Seihou / Shuusou Gyoku (SDL Windows 98 backport, part 1 / D3DWindower support)	2025-04-25T23:37:38Z	["nmlgc/ssg/compare/P0309...P0310"]	0
 P0311	[207, 347, 356, 363]	TH03 decompilation (Main menu, part 1/2)	2025-05-10T20:41:57Z	["nmlgc/ReC98/compare/165f090...9b2d7eb"]	1
 P0312	[363, 373, 250, 333, 340, 348, 357, 364, 374, 326, 366, 334]	TH03 decompilation (Main menu, part 2/2 + Static HUD parts) + TH02 PI (Stage 3 midboss/boss state) + TH03 PI (Technical 100% for MAINL.EXE)	2025-05-10T20:41:57Z	["nmlgc/ReC98/compare/9b2d7eb...f6d836b"]	1
+P0313	[213, 355]	Debloating (Build system preparations / TH01 cleanup)	2025-09-06T03:01:24Z	["nmlgc/ReC98/compare/f6d836b...04724c9", "nmlgc/ReC98/compare/72525a7...604c22f"]	1

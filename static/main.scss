@@ -1,6 +1,8 @@
 /* Variables
    --------- */
 :root {
+	--c-text: black;
+
 	/**
 	 * Not picking #000 as the background for videos and tab switchers allows
 	 * them to frame the video in fullscreen mode, clarifying its aspect ratio.

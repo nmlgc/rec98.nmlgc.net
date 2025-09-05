@@ -1,0 +1,11 @@
+Anchor	Name
+strategy	Deciding on a porting strategy
+slowdown	<q>Accurate slowdown</q>
+config	Picking a CPU clock speed for emulators
+66	- Can 66&nbsp;MHz be enough for anybody?
+fp	<q>Frame-perfect</q>
+solve	- Resolving screen tearing
+thoughts	Port implementation thoughts
+nonissues	- Non-issues
+palettes	- Palettized and planar graphics
+pages	- Page flipping

@@ -1,0 +1,332 @@
+{{$th01_bomb := (call .Video "TH01-Bomb" "Video of TH01's bomb animation, recorded in Makai Stage 12") -}}
+{{$vram_raw := (call .Video "TH05-DEMO5.REC-unscrolled" "Video of a single screen from TH05's Extra Stage, as it appears in the original game. Taken from ZUN's hidden TH05 Extra Stage replay with Mima") -}}
+{{$vram_scroll := (call .Video "TH05-DEMO5.REC-scrolling" "Video of a single screen from TH05's Extra Stage, as it appears in the original game. Taken from ZUN's hidden TH05 Extra Stage replay with Mima") -}}
+{{$np21w_asynccpu := (call .PostFileURL "NP21W-Async-CPU-settings.webp") -}}
+{{$zunsoft_1ghz := (call .Video "TH04-ZUN-Soft-1-GHz-fluctuating" "Video of TH04/TH05's ZUN Soft logo animation, recorded in Neko Project 21/W ver.0.86 rev.95 configured with a clock speed of 2.4576 × 407 = 1000.2432 MHz, running on an Intel Core i5-8400T, demonstrating a wildly fluctuating frame rate and BGM tempo") -}}
+{{$perf_np21w := (call .PostFileURL "blitperf-wide-NP21W-async-1-GHz.webp") -}}
+{{$perf_dx_simple := (call .PostFileURL "blitperf-wide-DOSBox-X-simple-max.webp") -}}
+{{$perf_dx_dynamic := (call .PostFileURL "blitperf-wide-DOSBox-X-dynamic-max.webp") -}}
+{{$perf_anex86 := (call .PostFileURL "blitperf-wide-Anex86-sync-1.webp") -}}
+{{$th04_tear := (call .PostFileURL "TH04-Music-Room-tearing.webp") -}}
+{{$th04_tear_v := (call .PostFileURL "TH04-Music-Room-tearing-visualization.webp") -}}
+{{$th02_s3 := (call .Video "TH02-Stage-3-shake" "Video of the shake animation at the beginning of TH02's Stage 3, demonstrating how shaking VRAM by 16 pixels temporarily reveals parts of the tile area below the HUD")}}
+{{$th02_s3_t := (call .Video "TH02-Stage-3-shake-with-tiles" "Video of the shake animation at the beginning of TH02's Stage 3 with cleared TRAM, demonstrating how shaking VRAM by 16 pixels temporarily reveals parts of the tile area below the HUD")}}
+
+{{$vram_raw.SetTitle "Unscrolled VRAM" -}}
+{{$vram_scroll.SetTitle "Scrolling" -}}
+
+{{$vram_raw.AddMarker  606 "Flickering redraw" "" -}}
+{{$vram_raw.AddMarker 1534 "Row 0 on top" "" -}}
+{{$vram_scroll.AddMarker 1534 "Row 0 on top" "" -}}
+
+{{$th02_s3.SetTitle "Original TRAM contents" -}}
+{{$th02_s3_t.SetTitle "TRAM cleared" -}}
+
+{{$th02_s3.AddMarker 217 "Tiles below HUD" "" -}}
+{{$th02_s3_t.LinkMarkers $th02_s3 -}}
+
+<style>
+	#readme-{{.Date}} blockquote {
+		font-family: monospace;
+		color: white;
+		text-align: left;
+	}
+</style>
+
+<p>
+	Talk about a nerd snipe! I <i>just</i> wanted to take the first meaningful step towards getting PC-98 Touhou portable. But then, that step massively escalated and resulted in not only the single biggest subproject of 2025, but also in the most productive dev cycle this project has seen since the beginning of the crowdfunding era. 401 commits over 11 pushes, and touching on so many topics that writing a single blog post would have been way too much for even me to handle. So let's try something new and split this delivery into four "smaller" and thematically more focused posts that I'll release in quick succession:
+</p><ul>
+	<li>Part 1 (this post) describes the various strategies of porting PC-98 Touhou to modern platforms, explains which one I'm going to take and why, and clears up common misconceptions surrounding performance and accuracy. This one is required reading for anyone (yes, <i>anyone</i>) who believes they want to see these games ported. Hence, it's also intended for people who aren't that familiar with ReC98 and its usual ideals, and tries to not go all too far into technical detail. (Hopefully.)</li>
+	<li>Part 2 will continue my {{Blog_PostLink "2023-03-05#blitperf" "investigation into PC-98 blitting performance"}}, figuring out how we can get the PC-98 versions closer to the ideals described in Part 1.</li>
+	<li>Part 3 will cover the few decompilations I needed to do in preparation for…</li>
+	<li>Part 4, which will cover the actual set of changes I made to all the games.</li>
+</ul>{{call .TOC}}<hr id="strategy-{{.Date}}"><p>
+	So, how <i>do</i> we get the PC-98 Touhou codebase into a portable state? That entirely depends on what kind of port we want in the first place, and how much of ZUN's code we are willing to change. Three particularly efficient options immediately come to mind:
+</p><ol><li><p>
+	On one end of the spectrum, we have a preconfigured PC-98 emulator with disabled configuration options and a stripped-down UI that tricks people into believing they're playing a port and prevents them from accidentally breaking the working configuration.<br>
+	This might sound like a joke, but it's unironically the most efficient and pragmatic solution that will be good enough for the overwhelming majority of players. If you ask people what they expect from a port, they primarily name <q>ease of use</q> and <q>not having to configure emulators</q>. Both of these can be solved with a preconfigured emulator and thus don't justify the monumental engineering effort of the more complex porting methods described below. That effort also wouldn't be justified if people just wanted <i>a</i> port and had no standards regarding its technical implementation, besides maybe <q>no input lag</q>. <i>Someone</i> has to put in the effort to solve every little challenge on the way from PC-98 to modern systems, and if that effort is not appreciated…
+</p><p>
+	By the way, I have no idea what people are talking about when they claim that PC-98 Touhou <q>has input lag</q>, because there sure is nothing like that in the code that would indicate anything above 1 frame&nbsp;/ 17.7&nbsp;ms for <span class="hovertext" title="Menus are more complicated, but I don't think that's what people are typically referring to when they talk about input lag.">the in-game portions</span>. Any investigation into these issues would therefore have to come from someone else, I'm afraid. Everything points to input lag being the result of misconfigured emulators.
+</p><p>
+	This is not like Shuusou Gyoku, where a port to modern APIs made sense because almost every subsystem still performs suboptimally on modern Windows even <i>after</i> you set up DxWnd, a better MIDI synth, and whatever people are using to make modern gamepads work with ancient DirectInput these days. If you correctly set up a PC-98 emulator, the games do run at full speed, and are highly likely to continue running fine after emulator and operating system version updates.<br>
+	Thus, can we conclude that wishing for ports is primarily a symptom of the Touhou community's past failure and negligence to spread preconfigured emulators to people? Because this <i>surely</i> shouldn't be a problem in this day and age anymore? While <a href="https://github.com/nmlgc/np2debug/commit/a40ad5c19545323cb639faec771b0eae84f7334b">I did my part way back in 2013</a>, it would take until spaztron64's 2021 package for the community at large to finally wake up and realize that this was a problem. Nowadays though, we have at least three decent packages made by separate people that have my personal seal of approval. And yes, this even includes the offering you can obtain at a certain mountaintop place of worship. That site used to be infamous for pushing out slop that violated their own mission statement and externalized costs to the tech support departments of their supply chain, but I'm glad to announce that they've leveled up and now provide a decent solution. And once they remove that archive inside their archive, it will be even better!<br>
+	Still, if your emulator configuration guides are presented more prominently than your preconfigured emulator downloads, you're doing a disservice to the community. Make guides <i>available</i>, yes, but clearly label them as background information for people who already played the games and <i>then</i> got curious about this old Japanese computer architecture.
+</p></li><li><p>
+	OK, but what if you do have standards and <i>would</i> appreciate a technically more solid port that removes layers and maybe even improves the games beyond the limits of the PC-98's architecture? If we take a single step towards native code and native performance, we end up with what people call a "static recompilation" these days. As I explained in <a href="/faq#recomp">the FAQ entry I wrote last year</a>, this kind of port would still emulate the graphics, sound, input, and memory subsystems of a PC-98, but it <i>would</i> cut out CPU emulation.<br>
+	For PC-98 Touhou, this is actually quite a huge deal: CPU speed is the single biggest point of contention when configuring PC-98 emulators for Touhou, and the vastly different x86 cores of each emulator result in vastly different performance characteristics once you start to benchmark them all more thoroughly. With no more CPU cycles to count, we'd also lose all the VRAM access latencies that emulators typically strive to replicate, and thus pretty much guarantee 0% slowdown in the resulting port. While the aforementioned kind of modded emulator could theoretically also remove cycle counting and VRAM latencies, it would still interpret x86 instructions and thus have a harder time actually reaching the native performance required for 0% slowdown.
+</p><p>
+	This kind of port would also find immediate acceptance within the gameplay community. Since it would only take ZUN's original binaries as input and ignore our reconstructed source, we're guaranteed to retain the exact gameplay logic. The entire instruction translation process would be automated, leaving no room for modernizing the codebase by hand {{Blog_PostLink "2025-08-12#bug" "and accidentally breaking gameplay"}}. We'd still have to defuse at least a few landmines to get the port running without issue, but those would be limited to things like <a href="https://github.com/nmlgc/ReC98/blob/f6d836b3a3142543830b519792f11938030863e4/th03/formats/cfg.hpp#L5">filename casing</a>, for example. Nothing even remotely close to gameplay code.
+</p></li><li><p>
+	On the other end of the spectrum, we have something like <a href="https://web.archive.org/web/20210411064709/https://m.newsmth.net/article/TouHou/single/11992">uth05win</a>: A fully native rewrite of the graphics code that takes every liberty and cuts every corner it needs to rework the game into something that naturally renders within <span class="hovertext" title="Or, in uth05win's case, the immediate-mode API of old OpenGL.">a modern graphics API of our choice</span>. Unlike uth05win, however, our ports will be based on complete decompilations and thus retain the original gameplay code instead of <a href="https://github.com/KyoriAsh/uth05win/blob/9ad0c7a80948fd46408a538e515a8698e03b0871/Game/Stage/EnemyBullet/EnemyBullet.cpp#L636-L648">freely rewriting certain parts because they look strange</a>. In turn, we would basically scrap all of ZUN's menu and cutscene code and write quirk-free and sane replacements. Part 4 will drive home just how much more relaxing this course of action would have been…<br>
+	There's certainly an argument to be had that a modern port <i>should</i> reimagine the game to look and feel as modern as you can get within the original assets, and <i>not</i> stick to PC-98 limitations. After all, the unmodified PC-98 version is always there for you to play on your correctly configured emulator, right? In fact, if we ever wanted to port the games to weaker systems or consoles, this kind of port would be our only option.
+</p></li></ol><p>
+	But as you might have guessed, we're not going for either of these options:
+</p><ol><li><p>
+	The first option doesn't even need anything from ReC98. Even the sleekest imaginable release could be done by anyone who either knows about PC-98 emulation or keeps in contact with someone who does, and is comfortable messing around with emulator source code. In fact, I'm not even a particularly qualified person for this job; I frequently mess with emulator configurations for research reasons, and then forget the correct values for certain obscure settings. {{HTML_Emoji "tannedcirno"}}<br>
+	This is such an obvious and efficient move that I seriously wonder why nobody has done it so far… but then again, I thought the same about every other idea I ended up doing myself in this space over the past 15 years. If that idea sounds great to you, feel free to go ahead – it represents the opposite of what this project is about, so the resulting fame is yours for the taking. If y'all see "ports" popping up from a place that isn't this project in the not-too-distant future, you can be pretty sure that their developers followed this strategy.
+</p></li><li><p>
+	The second option would indeed be an interesting project in its own right, as I've stated in the FAQ entry. But if you remember {{Blog_PostLink "2024-07-09#msdos" "the last time I thought about static recompilation"}}, I was way more excited for recompiling the old <i>compiler</i> we use for the PC-98 code rather than the games themselves. Ironically, this is primarily because of how much a recompilation would complicate the new features we plan to add to the games. Since I can only develop new features on top of a previous reverse-engineering effort, they will necessarily remain tied to the PC-98-native version of the codebase at first. How would we port them, then?
+	</p><ul>
+		<li>Do I continue developing these features for the PC-98 and then simply recompile them along with the rest of the game? The issue with that approach is that most features won't have a version that could work with the original ZUN codebase that we'd prefer to recompile. For everyone's sanity, most features will only exist as part of a respective game's <code>anniversary</code> branch, which in turn is based on the rearchitected and de-landmined <code>debloated</code> branch. Recompiling these branches would undermine the entire selling point of delivering the pure, untainted ZUN code that would have probably convinced the gameplay community to invest in this strategy in the first place. It might be good enough for the rest of the community, but if I'm going to rearchitect the PC-98 codebase <i>anyway</i>, would there even be a point in developing the required recompilation techniques on the side? Would this give us ports faster than following a more classical approach?</li>
+		<li>Then again, I could still try slicing out the code for these features in a way that would allow them to be shared between the rearchitected PC-98 and recompiled ZUN codebases. But that's bound to create an unnatural and awkward mess that's probably even worse than the way I have to arrange ZUN's code on the unmodified <code>master</code> branch. I'd definitely charge extra for that.</li>
+		<li>Do I just copy-paste and maintain two versions of the feature code for both platforms, manually transferring all required reverse-engineering to the recompilation? That might feel very dull, but it's probably more efficient than any attempt at sharing that code.</li>
+		<li>Or do I just abandon the PC-98-native codebase? In favor of a pseudo-PC-98 codebase that still very much <i>assumes</i> PC-98 hardware but doesn't actually <i>run</i> on real <i>or</i> conventionally emulated PC-98 hardware… {{HTML_Emoji "thonk"}}</li>
+	</ul><p>
+	The last point in particular demonstrates just how little of a help a recompilation would actually be. Since it would continue to emulate the PC-98's graphics system, I'd still have to write any new graphics code against the PC-98's planar and two-page VRAM. Automatically porting the games to a friendlier and more generic rendering paradigm is infeasible for even an advanced recompiler: Every part of the original game expects PC-98 hardware, and a generic rewrite requires engineering decisions at a much higher level than the individual x86 instructions a recompilation operates at.<br>
+	And ultimately, it's these individual features that people should be (and mostly are) hyped for. Community-usable replays, translations, and TH03 netplay can all be implemented natively on PC-98. Sure, netplay would be easier to develop <i>and</i> easier to use within a TH03 recompilation since we can just use the native network stack of your host OS {{Blog_PostLink "2024-04-24#compipes" "without any intermediaries"}}. But developing both a recompiler <i>and</i> netplay would still take longer than {{Blog_PostLink "2024-04-24#integration" "following through with our current PC-98-native plan"}}.
+</p></li><li><p>
+	The third option is actually quite popular, or would at least be acceptable to the majority of the general fandom. This is what non-technical people have in mind anyway when they think about ports, even if they don't confuse ports with remakes.<br>
+	To find out just how acceptable such a port would be, I picked screen fade effects as a representative detail for the corners that such a port would cut, and <a href="https://x.com/ReC98Project/status/1941624615316410492">asked how people judge the natural alpha-blended implementation in uth05win against the palette-based method you'd use on a PC-98</a>. Surprisingly, a whopping 79% of respondents don't have any problem with a port using whatever is most natural for the system it runs on. And that's 79% of <i>my</i> audience, which certainly is at least somewhat aware of PC-98 hardware details and the limitations that shaped these games into what they are. Of course, the 21% of die-hard PC-98 supremacists would then loudly complain that such a choice would make the port literally unplayable, but we could easily dismiss them by pointing to the poll where the community decided in favor of the smoother option. After all, ZUN's intention was to have <i>a</i> fade, and manipulation of a 12-bit color palette was simply the only tool he had on a PC-98.
+</p><p>
+	However, the gameplay community has much higher hopes for ReC98. Both them and I don't just want to <i>supplement</i> the original PC-98 versions with something that's playable on modern systems, but
+	</p><blockquote>&gt; replace the need for the proprietary, PC-98-exclusive original releases and their emulation for even the most conservative fan</blockquote><p>
+	<a href="https://github.com/nmlgc/ReC98/commit/e0ecdf40f29c724e9e4b93e256512f413d013d06">as I wrote back in 2014</a>. Sure, the community can manage spreading pre-configured emulators for a few more years, but wouldn't it be great if they <i>could</i> stop doing that at some point in the far future?
+</p></li></ol><p>
+	So if all the "easy" solutions either don't have much of a purpose or disappoint in some way, we're only left with the hard one: A classic, manual port done primarily for the sake of solving an engineering challenge. But hey, this means that it'll also produce tons of blog posts for all of you to read, which apparently is at least equally as popular as actually <i>playing</i> the games. {{HTML_Emoji "onricdennat"}}<br>
+	Here's what we're going to do:
+</p><ul>
+	<li>Rearchitect the game to end up with one shared codebase that compiles for both PC-98 and modern systems, avoiding the code duplication drawback of static recompilation approaches.</li>
+	<li>Accept nothing less than a pixel-perfect port. The PC-98 and modern versions should look identical on every frame. It is not ReC98's job to reimagine the games; as usual, I'm going to do the hard work, and it's up to other modders to throw it all out and simplify it later.</li>
+	<li>Perform all the automated gameplay validation we possibly can to earn the trust of the gameplay community, avoiding debacles like {{Blog_PostLink "2025-05-20" "the"}} {{Blog_PostLink "2025-08-12" "two"}} recent desyncs in my Shuusou Gyoku build. This forces us to have a lightweight method of recording replays on top of the unmodified <code>master</code> branch <i>before</i> we can start porting – a fact that {{DB_CustomerByID 13}} already somewhat identified within his current roadmap of funding priorities for TH03.</li>
+	<li>Continue fixing <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#labeling-weird-or-broken-code">landmines, bugs, and bloat</a>. Many landmines must necessarily be fixed for a port to work at all, bugfixes are highly requested by most fans and backers, and bloat fixes ensure maintainability, moddability, and bring the PC-98 versions closer to the performance a modern port will naturally run at.</li>
+</ul><p>
+	Sure, the main drawback here is the immense development effort required. But in exchange, the port retains <a href="/faq#automate">readable and moddable code</a> and continues to deliver the insights that this project has always stood for. Imagine stepping through gameplay code using a native C/C++ debugger at your native screen resolution!
+</p><hr id="slowdown-{{.Date}}"><p>
+	But before we can get to <i>how</i> I'm going to do all that, there are two popular misconceptions I have to address.
+</p><h3><q>Accurate slowdown</q></h3><p>
+	The initial version of <a href="https://github.com/MaribelHearn/maribelhearn.com/commit/525ad47f04413bf31523e36d8b2989905e18c332">Maribel Hearn's new emulator guide for PC-98 Touhou</a> had the following sentence that spaztron64 and I successfully lobbied against:
+</p><blockquote>Note that none of the emulators have accurate slowdown; the slowdown will not match real hardware.</blockquote><p>
+	Objectively, this is a true statement. Neko Project's i386 core is the closest thing to cycle-accurate PC-98 emulation we have, as its per-instruction cycle counts match Intel's documentation. But even <i>its</i> performance characteristics are wildly inaccurate compared to a real PC-98 system with a 386, as we're going to see in the next blog post.<br>
+	The problem I have with this sentence is that it's very misleading in this specific context. The mere mention of <q>accurate slowdown</q> in a beginner's guide on PC-98 emulation paints said slowdown as something desirable and worthy of preservation. It evokes stories of console speedrunners and emulator developers who deal with fixed, well-defined hardware where the concept of accurate slowdown makes sense. Stories that probably originated from a time before decompilations of classic games became commonplace, when it was hard to say whether a particular instance of slowdown was intended or not. And even with a decompilation, these things remain a matter of interpretation if you can't ask the original developer. Thus, it's completely understandable why observable behavior of real hardware remains the one benchmark of accuracy and quality that people can understand and rally around.<br>
+	The PC-98, however, is very much not that kind of fixed system, but <a href="https://en.wikipedia.org/wiki/PC-98#Models">a computer architecture that spanned 18 years of hardware evolution</a>, from 1982 to 2000. Even if we reduce this list of models to the ones that match ZUN's stated minimum system requirements, we're still looking at 7 years of hardware, running different microarchitectures at different clock speeds and with different resulting bottlenecks. If there's such a big variety of systems, which particular slowdown behavior should the ports even preserve?
+</p><p>
+	The obvious answer is <i>"the one from the exact system ZUN wrote these games on"</i>, but we don't know that system. {{Blog_PostLink "2024-11-22#perf" "Last year"}}, I claimed that ZUN developed these games on a PC-9821Xa7, but I didn't add a citation back then and can't find one now. The closest piece of related known info is <a href="http://www.kt.rim.or.jp/~aotaka/am/get.htm">this note on the Amusement Makers page that hosts the official downloads for the trial versions</a>, listing three PC-98 models that they confirmed to run the games without issues:
+</p><blockquote lang="ja" style="font-family: monospace; white-space: pre-wrap;">なお当サークルでは
+    ・ NEC PC-9821Xs        i486DX2 66MHz
+    ・ NEC PC-9821La13      Pentium Processor (P54C) 133MHz
+    ・ EPSON PC-486MS       AMD 5x86-P133 換装
+などで正常に動くことを確認しています</blockquote><p>
+	These models are one whole CPU generation apart and their clock speed differs by 100%. Which one of these is supposed to have the <q>accurate slowdown</q>?<br>
+	But even if we knew, <i>it doesn't matter</i>. The README is clear about ZUN's intentions:
+</p><figure id="readme-{{.Date}}"><rec98-child-switcher style="background-color: black;">
+	<blockquote
+	lang="ja" class="active" data-title="TH02, <code>封魔録.TXT</code>"
+>　　ＰＣ９８、またはその互換機専用です。（ＥＧＣ搭載機種）
+　　３８６以上で動作しますが、４８６ぐらい無いときついかも知れません。実際は
+　　ＶＲＡＭアクセスが速いことが重要です。
+　　オプションで、処理の重い演出を減らすことも出来ます。
+　　また、ＭＳＤＯＳが必要です
+
+　　ＣＰＵは４８６（６６ＭＨｚ）でしか動作確認を取っておりませんので、あんま
+　　り遅い機種ですと不幸かもしれません。
+　　ちなみに、４８６（６６ＭＨｚ）ですといっさい処理落ちや、欠けなどは出ませ
+　　ん。</blockquote><blockquote
+	lang="ja" data-title="TH03, <code>夢時空.TXT</code>"
+>　　ＰＣ９８、またはその互換機専用です。（ＥＧＣ搭載機種）
+　　ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
+　　　　　（３８６でも動作はしますがゲームにならないでしょう。
+　　　　　　ただし、３８６命令を使っているので２８６は不可です。
+　　　　　　また、低クロックの４８６でもかなり処理落ちするかも知れません）
+
+　　実際は、ＣＰＵの他にもＶＲＡＭアクセスが速いことも重要です。</blockquote><blockquote
+	lang="ja" data-title="TH04, <code>夢時空.TXT</code>"
+>　　ＰＣ９８（ＰＣ９８－ＮＸ除く）、またはその互換機専用です。
+　　（ＥＧＣ搭載機種）
+　　ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
+　　　　　（３８６でも動作はしますがゲームにならないでしょう。
+　　　　　　ただし、３８６命令を使っているので２８６は不可です。
+　　　　　　はっきり言って、４８６でも６６ＭＨｚ位はないとかなり
+　　　　　　処理落ちするかも知れません）
+
+　　実際は、ＣＰＵの他にもＶＲＡＭアクセスが速いことも重要です。</blockquote><blockquote
+	lang="ja" data-title="TH05, <code>怪綺談.TXT</code>"
+>　　●ＰＣ９８（ＰＣ９８－ＮＸ除く）、またはその互換機専用です。
+　　　（ＥＧＣ搭載機種）
+　　●ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
+　　　　　（３８６でも動作はしますがゲームにならないでしょう。
+　　　　　　ただし、３８６命令を使っているので２８６は不可です。
+　　　　　　はっきり言って、４８６でも６６ＭＨｚ位はないとかなり
+　　　　　　処理落ちするかも知れません）
+　　　　　　実際は、ＣＰＵの他にもＶＲＡＭアクセスが速いことも重要です。</blockquote>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption></figure><p>
+	If ZUN recommends <q>a 486 or faster to avoid slowdown</q>, this necessarily means that any unintentional slowdown is indeed unwanted.<br>
+	Also, note how only TH02's README claims that the game was exclusively tested on a 66&nbsp;MHz model, which is highly likely to be that PC-9821Xs listed on the Amusement Makers page. Did ZUN switch to a faster PC-98 model for the development of the last three games? That late into the architecture's lifespan? Or did he merely <i>test</i> the game on faster models while the main development still took place on his 66&nbsp;MHz model?
+</p><h4 id="config-{{.Date}}">Picking a CPU clock speed for emulators</h4><p>
+	Of course, this now creates a problem for everyone wanting to configure emulators for PC-98 Touhou. If the ideal Touhou machine is infinitely fast, we should always pick the fastest possible emulated CPU speed, right? Historically, this has been bad advice: Most emulators will then stick to <i>exactly</i> the amount of cycles per emulated second you specified in the menu, slowing down the emulated system as a result. It's this kind of emulator behavior that gets players to manually look for <i>"the sweet spot"</i> – the maximum possible explicitly specified CPU clock speed that still manages to render without slowdown on their system. This is a tragedy for many reasons:
+</p><ul>
+	<li>Regular players probably don't analyze performance with any kind of rigor. I certainly have never heard them say how they made sure to record a video at 56.423&nbsp;FPS and then stepped through its individual frames to confirm the absence of lag.</li>
+	<li>Instead, they will probably present their clock speed configuration as a general recommendation to others, without realizing that the "sweet spot" they found is specific to <i>their</i> system. If others then try this clock speed on a slower CPU, they get slowdown instead, and thus gain an entirely wrong impression about how fast the game is supposed to run, backed by a presumptive expert on the topic.<br>
+	Admittedly, this will become less likely as time marches on, CPUs get faster, and emulators keep optimizing their x86 cores. </li>
+	<li>But really, why are we expecting players to do this?!</li>
+</ul><p>
+	Ever since 2019, however, <a href="https://twitter.com/simk98l">SimK</a> has been developing an <i>Async CPU</i> mode for Neko Project 21/W, which
+	<a href="https://simk98.github.io/np21w/version.html">finally got stabilized in ver0.86 rev.93, back in April of this year</a>. Activate this mode with the <i>Screen → CPU clock stabilizer</i> and <i>Screen → Dynamic CPU clock adjustment</i> options, and then you should theoretically be able to finally stop worrying: Just specify the maximum possible clock speed in the usual configuration menu, and Neko Project will dynamically reduce the emulated clock speed to the fastest speed your system can handle.
+</p><figure class="pixelated" style="width: 644px;"><img
+	src="{{$np21w_asynccpu}}" width="644" alt="Screenshot of Neko Project 21/W's Async CPU options"
+/></figure><p>
+	Then, the games are supposed to run similarly to how a correctly configured Anex86 has been running them all along, but with an additional 21 years of emulation accuracy improvements.<br>
+	Sadly, this mode still needs a bit of work. Excessively high clock speeds will result in wildly fluctuating frame rates and even BGM tempos during the first few seconds of a game session as Neko Project 21/W apparently takes a while to find the optimal clock speed. Even afterwards, emulation remains noticeably slower than Anex86:
+</p><figure {{$zunsoft_1ghz.FigureAttrs}}>
+	{{call .VideoPlayer $zunsoft_1ghz}}
+	<figcaption>This is Neko Project 21/W ver.0.86 rev.95 configured with a clock speed of 1&nbsp;GHz, running on an Intel Core i5-8400T. The fluctuations are not nearly as intense during the rest of a game session, but remain noticeable throughout.</figcaption>
+</figure><p>
+	But what about DOSBox-X, the other good emulator recommended these days? This Async CPU mode is very similar to the <code>cycles=max</code> option that DOSBox-X has supported all along. If you try running my {{Blog_PostLink "2023-03-05#blitperf-2023" "past"}} and future blitting benchmarks using this option, you can observe how DOSBox-X also starts with a low cycle count and then gradually speeds up to accommodate the actual processing load.<br>
+	In the much less synthetic test case of running PC-98 Touhou, however, DOSBox-X's cycle adjustment reveals itself as much more sophisticated than Neko Project 21/W's implementation. The <code>showdetails=true</code> option reveals that the cycle count does fluctuate quite heavily, which does translate into minor BGM dropouts particularly near the start of a session. But these dropouts are tiny in comparison to what you'd get on Neko Project 21/W, and the framerate remains stable throughout.
+</p><p>
+	As for overall performance, DOSBox-X's <code>simple</code> interpreter core is not nearly as optimized as Neko Project 21/W's interpreter and peaks at roughly half of its speed. The <code>dynamic_nodhfpu</code> core, however, solidly beats Neko Project 21/W by the same 50%. And it's this added bit of performance that makes all the difference: It eradicates slowdown in most of the usual spots in PC-98 Touhou where emulators and even Anex86 typically struggle, and turns DOSBox-X into the first emulator to finally beat Anex86's performance on the same hardware in all the workloads that matter. The dynamic core still doesn't <i>quite</i> reach the speeds of the hypothetical infinitely fast PC-98 on my outdated system, but it remains the most reliable configuration option when it comes to delivering ZUN's intended vision. If we ignore the BGM dropouts. {{HTML_Emoji "thonk"}}<br>
+	Just make sure to explicitly select the  <code>dynamic_nodhfpu</code> variant, <i>not</i> the regular <code>dynamic</code> core. The latter is infamous for <a href="https://github.com/joncampbell123/dosbox-x/issues/2395">recompilation errors in FPU code that break TH01 gameplay</a>. While that specific issue is ostensibly fixed, I still managed to occasionally run into smaller FPU-related bugs in current DOSBox-X versions. Unfortunately, I didn't manage to capture them on video; I would have reopened the issue on the spot if I did.
+</p><figure class="fullres pixelated">
+	{{define "desc_head"}}Decorative screenshot of the first two rows of the wide blitting benchmark, running on{{end -}}
+	<rec98-child-switcher><img
+		src="{{$perf_dx_simple}}"
+		data-title="DOSBox-X, max cycles, simple core"
+		width="640"
+		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=simple`"
+	/><img
+		src="{{$perf_np21w}}"
+		data-title="Neko Project 21/W, Async @1&nbsp;GHz"
+		width="640"
+		alt="{{template "desc_head"}} Neko Project 21/W in Async CPU mode with a maximum clock speed of 2.4576&nbsp;× 407&nbsp;= 1000.2432&nbsp;MHz"
+		class="active"
+	/><img
+		src="{{$perf_dx_dynamic}}"
+		data-title="DOSBox-X, max cycles, dynamic core"
+		width="640"
+		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=dynamic`"
+	/><img
+		src="{{$perf_anex86}}"
+		data-title="Anex86, Sync 1"
+		width="640"
+		alt="{{template "desc_head"}} Anex86 in Sync 1 mode"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		Of course, any performance measurement of an emulator with dynamic cycle adjustment can only ever represent a snapshot of the ever-changing adjustment state, and should therefore be taken with a grain of salt. Hence, these screenshots are purely decorative; I just added them because I'm sure that <i>someone</i> would have asked for exact numbers otherwise. Also, the exact relations between emulators are <i>highly</i> dependent on the workload…<br>
+		And yes, that's a new benchmark! More about this one in part 2.
+	</figcaption>
+</figure><p>
+	(Still, it's remarkable how close Anex86 gets despite its interpreter core, and how it even beats DOSBox-X in MOVS performance. I looked at Anex86's disassembly for 10 minutes and saw big tables of tiny per-instruction functions with custom calling conventions that make remarkably efficient use of the few registers you get in x86. Also, negative offsets? They must have written this entire x86-on-x86 core in ASM.)
+</p><p id="66-{{.Date}}">
+	While this is great news for players, the whole situation remains very unsatisfying at a technical level. Even if you don't care about the remaining BGM dropouts, running these games at the highest possible emulated clock speed means that you constantly spend 100% of all CPU cores assigned to your emulator just to avoid slowdown and lag in a few particularly CPU-intensive sections. Power saving might be the single best practical argument in favor of a port. {{HTML_Emoji "thonk"}}
+</p><p>
+	Also, all this complexity involved in dynamic cycle adjustment raises one question you might have had all along. Why don't we just leave our emulated CPUs at 66&nbsp;MHz? After all, ZUN said that 66&nbsp;MHz is enough to eliminate all slowdown in at least TH02 and TH03, so how about just living with whatever slowdown we'd still experience in TH04 and TH05? This is certainly a healthier approach, much more appropriate for these silly little indie games that were never meant to be obsessed about at this level, <i>and</i> we get rid of those last few BGM dropouts in DOSBox-X!<br>
+	Well, if that statement was ever correct to begin with, it would have only applied to real hardware and not to emulators. <a href="https://www.twitch.tv/Mu021">mu021</a> reported that the final phase of TH02's Mima fight slowed down even at 78&nbsp;MHz in Neko Project, and part 4 will contain even more examples of how 66&nbsp;MHz slows down several effects in menus and cutscenes, and thus paints a wrong picture of them. Hence, choosing 66&nbsp;MHz for a preconfigured emulator package <i>might</i> have a particularly annoying side effect: If people get used to how slow these effects run on emulators, they might be rather irritated once the modern ports will invariably run them at their intended speed denoted in the code. I can already imagine them yelling <i><q>too fast!</q></i>, <i><q>inaccurate!</q></i>, and <i><q>literally unplayable!</q></i>, oblivious to the fact that they had the wrong idea about these effects all along.<br>
+	Or maybe it'll all be fine once part 4 has documented these issues in depth. I certainly wouldn't criticize a package for choosing 66&nbsp;MHz. All choices are unsatisfying at some level…
+</p><p>
+	If only we could optimize the games enough to remove any unwanted slowdown at 66&nbsp;MHz. Then, people could freely choose one emulator over another for reasons unrelated to performance, because even cycle-limited emulators could then actually deliver on ZUN's statements in the README files… {{HTML_Emoji "thonk"}}<br>
+	And since we've defined debloating as an integral part of port development earlier, that's exactly what we're going to do.
+</p><hr id="fp-{{.Date}}"><p>
+	But <i>can</i> we even do that within our high standards? Obviously, our ports should remain…
+</p><h3><q>Frame-perfect</q></h3><p>
+	Since all five games are explicitly timed around VSync, it's immediately clear what we mean by this term:
+</p><blockquote>Everything rendered to a single page of VRAM between two VSync wait loops defines one single logical frame.</blockquote>
+	If both the game and the emulated PC-98 system are fast enough to finish rendering a frame within two VSync events, everything is fine: The sequence of frames you can observe on your screen matches the logical sequence of internal frames in VRAM, and we can easily record this sequence from an emulator and compare the port against it.<br>
+	But what about all the unintentional slowdown? In these cases, ZUN asks the CPU to do way more work than it can execute between two VSync signals. Notably, this also includes most loading times: Once we add disk access into the mix, we can't guarantee hitting <i>any</i> VSync deadlines anymore, and decompressing all these 640×400 images is quite expensive as well. Obviously, we don't want to abandon our goal of frame-perfection and the comparability of ports just because of this variability, so let's add another rule:
+</p><blockquote>Individual defined frames may be shown on screen for any integer multiple of the frame time.</blockquote><p>
+	The reason for the integer restriction is obvious: If we start drawing to the screen in the middle of a frame, we get screen tearing and thus a non-perfect frame – not just because tearing looks bad, but also because the position of the tearing line always depends on the overall performance of the system.<br>
+	The combination of these two rules leads to an immediate consequence:
+</p><p><blockquote>The games must only ever display complete logical frames.</blockquote><p>
+	And now we have a problem. Our rules have just outlawed screen tearing, but <i>nearly every menu and cutscene screen in ZUN's original code has some kind of screen tearing issue</i> and thus violates these rules. {{Blog_PostLink "2024-02-03#mess" "The Music Room of TH02-TH04"}} represents probably the worst example as it suffers from screen tearing on every single frame:
+</p><figure class="fullres pixelated bglayer">
+	<rec98-child-switcher><img
+		src="{{$th04_tear}}"
+		data-title="Raw image"
+		width="640"
+		alt="Screenshot of TH04's Music Room, demonstrating the screen tearing landmine that the original game exhibits on every frame"
+		class="active"
+		/><img
+		src="{{$th04_tear_v}}"
+		data-title="Tearing visualization"
+		width="640"
+		alt="Colored visualization of which lines correspond to which frame in the TH04 Music Room screenshot"
+		style="background-image: url('{{$th04_tear}}');"
+	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		Which frame are we even on? 😵 This landmine is the reason why the first rule explicitly restricts rendering to a single VRAM page. {{Blog_PostLink "2024-02-03#mess" "Check the Music Room blog post for an explanation of what went wrong here."}}
+	</figcaption>
+</figure><p>
+	If you change the emulated CPU speed, you'll also move all tearing lines to another place. Also, how would you possibly preserve them once you've ported the game to run natively on much faster CPUs? This can only mean one thing:
+</p><p>
+	<strong>It is fundamentally impossible to port the unmodified codebase of PC-98 Touhou and remain <q>frame-perfect</q> to the original release.</strong>
+</p><p>
+	You could maybe get there by throwing out the integer multiple rule and accepting teared frames as legitimate. But then you'd have to decide on a particular model whose slowdown behavior you'd replicate and lock down exactly – and as I've stated in the section above, that's quite a silly and impractical proposition.<br>
+</p><h4 id="solve-{{.Date}}">Resolving screen tearing</h4><p>
+	So, how do we get back to a comparable sequence of well-defined frames? This can only work if we leave the confines of real hardware and instead reach for the infinitely fast PC-98 that ZUN wanted to have anyway. Such a system would never exhibit screen tearing because it would naturally complete all rendering within the <a href="https://en.wikipedia.org/wiki/Vertical_blanking_interval">vertical blanking interval</a> preceding each displayed frame. Once our code then ends a frame by entering a busy-waiting loop for the next VSync signal, the screen would then get to draw static and well-defined VRAM contents. This behavior is the whole reason why I get to classify screen tearing issues as <i>landmines</i> that must always be fixed, as opposed to <i>bugs</i> that a port could potentially retain.<br>
+	If we actually had such an infinitely fast PC-98, we could just run ZUN's unmodified code on that system and be done now. But as we've seen above, not even DOSBox-X's dynamic core manages to run PC-98 Touhou at the infinitely fast level we'd need. Also, we wanted to get rid of relying on specific emulators and have already planned to optimize all this code anyway…
+</p><p>
+	So let's defuse each screen tearing landmine one by one by rewriting its code to match the output of an infinitely fast PC-98. This is a lot more feasible than it sounds because these landmines aren't actually caused by a lack of CPU power. Every screen tearing issue comes down to ZUN misplacing certain screen-affecting operations within the hellscape of imperative hardware state mutations that is his menu and cutscene code. You can either hide the issue by throwing an infinite amount of processing power at the problem so that the order of mutations no longer matters, or you can just write good code.<br>
+	In theory, we only have to follow a few rules:
+</p><ul>
+	<li>All VRAM page flips and hardware palette changes must be moved to the vertical blanking interval.</li>
+	<li>Since <span class="hovertext" title="Apparently, TRAM can be page-flipped just like VRAM, but I don't know any documentation or examples that show how it's done. What is that extra 4 KiB of TRAM between 0xA1000 and 0xA2000 even good for???">TRAM is always single-buffered</span> and ZUN rarely writes to the topmost rows, we can get by with merely moving any TRAM writes close to the vertical blanking interval if we don't manage to hit the interval exactly.</li>
+	<li>On single-buffered screens, the same is true for VRAM. This category mainly includes menu screens whose upper VRAM rows thankfully remain static, so we also get some leeway here. Rewriting these screens to be double-buffered might sound better, but doing so at the high level where these landmines have to be fixed would only create more of a mess, for reasons I'll explain below.</li>
+	<li>In rare cases, ZUN placed expensive file load calls <i>and</i> draw calls on the same logical frame within a single-buffered screen. For an infinitely fast PC-98, this is no problem. But since all bets are off once disk access is involved, there is no way we can hide the draw calls and avoid the resulting screen tearing on real hardware and emulators while still sticking to ZUN's defined sequence of logical frames. Thus, we have to make an exception and insert an additional VSync delay loop after the load calls to separate loading and rendering, creating a new logical frame that did not exist in ZUN's original code.<br>
+	This might sound very controversial. We've just come up with this mental model of an infinitely fast PC-98 to solve frame-perfection, only to now deviate from it again and snap back to reality? However:<ul>
+		<li>As I'm going to describe in part 2, we're about to speed up loading and blitting by much more than this one added frame.</li>
+		<li>If we run this logical frame on the actual fastest real-hardware PC-98 system the community has to offer and even <i>that</i> system takes longer than 17.7&nbsp;ms to render it, it's hard to argue against formalizing a delay you'd be getting on real hardware anyway.</li>
+	</ul></li>
+</ul><p>
+	The difficulty of actually pulling this off, however, can range anywhere from Easy to Lunatic, depending on the screen, because <i>of course</i> every one of them is different. Even after these 11 pushes, I'll be far from done. But in the end, we'll have perfect <i>and</i> easily verifiable frame parity between the PC-98 versions and the future ports, even though we had to bend the code a little. Or a lot. Oh well.
+</p><hr id="thoughts-{{.Date}}"><p>
+	If you only opened this post for the required reading part, you can stop reading now. I've got a few more technical thoughts about a few implementation details of the future ports that tend to come up in discussions, but these aren't as essential as the high-level issues above.
+</p><p id="nonissues-{{.Date}}">
+	So we've now decided on what to do in order to make the ports <i>good</i>, but what are the basic challenges we have to solve in order to port these games to modern systems in the first place? Let's start with a perhaps surprising list of non-issues that some people might perceive as challenges:
+</p><ul>
+	<li>Sound. As people of culture, we can all agree that PCM recordings of sequenced sound are sacrilegious, so the ports will always use some kind of emulation here. Therefore, I'll simply ask sound people for the best YM2608 and PMD cores that won't get me canceled. If I still get canceled, we'll just resolve the disagreement with a violent flamew- I mean, a constructive discussion, or just offer multiple options if there are valid arguments for either choice – similar to how you can {{Blog_PostLink "2024-03-09#choice" "choose between real SC-88Pro or virtual Sound Canvas VA recordings for my Shuusou Gyoku build"}}.</li>
+	<li>TH03's SPRITE16-powered in-game renderer. For a port, it does not matter at all <i>how</i> a sprite driver was originally implemented. ZUN already streamlined regular sprite blitting down to <a href="https://github.com/nmlgc/ReC98/blob/04724c9f2f88bb4755a6eb7f21b96c84f8e7ee1e/th03/main/sprite16.hpp#L66-L84">three common functions</a>, which a port would simply need to implement differently. The game code still contains 21 additional calls to SPRITE16 functions for certain special effects, but none of <a href="https://github.com/nmlgc/ReC98/blob/04724c9f2f88bb4755a6eb7f21b96c84f8e7ee1e/libs/sprite16/sprite16.h#L17-L32">these additional monochrome, masked, or overlapped blitting modes</a> are unique to TH03.</li>
+</ul><p>
+	In short: If the feature in question is consistently used through an API, it's not a challenge in itself. The hard parts are all the opposite cases – when ZUN suddenly starts writing to VRAM segments or I/O ports in the middle of gameplay code, like he does all over TH01. All of these instances need to be manually cleaned up and abstracted away. Conversely, this is also why {{Blog_PostLink "2023-03-30#mistakes" "TH02 remains by far the easiest individual game to port"}} – it has the least amount of hand-written blitting code and mostly sticks to master.lib functions.
+</p><p>
+	Instead, the biggest immediate challenge is something far more basic:
+</p><h3 id="palettes-{{.Date}}">🎨 Palettized and planar graphics 🎨</h3>
+	After all, PC-98 Touhou doesn't just view the PC-98's graphics subsystem as an obstacle to overcome, but occasionally makes creative use of both palettes and individual bitplanes. How would we possibly cover these effects in a modern graphics API that will be far removed from these concepts? Three challenges immediately come to mind in that regard:
+</p><ol><li>
+	The whole concept of enforcing a single 16-color palette across the entire screen in a world where 32-bit RGBA is the only reliably available texture format. Shaders offer a simple solution: We simply wouldn't use traditional textures, and just write <a href="https://www.khronos.org/opengl/wiki/Common_Mistakes#Paletted_textures">our own sampler that takes both the original palettized 16-color+alpha image and the global palette as input, and performs a lookup for each texel</a>. But what are we supposed to do in SDL_Renderer's fixed-function pipeline? Use the CPU to update all loaded textures on every palette color change? Split each sprite into a separate texture for each color and consume 16× the amount of VRAM just so that we can use vertex colors for each individual color layer? {{HTML_Emoji "onricdennat"}} Or break down every sprite into a point list to save the VRAM? {{HTML_Emoji "tannedcirno"}}{{HTML_Emoji "onricdennat"}}</li>
+</li><li>
+	Any kind of sprite-shaped palette color bit flipping effect, such as {{Blog_PostLink "2024-02-03#b" "the falling polygons in the Music Room"}}. Effects like these <i>could</i> potentially be hardware-rendered even in a fixed-function pipeline if we split the background image into two and render the polygons using regular triangles with their UV coordinates matched to the pixel coordinates on every frame. But would all the involved interpolation reliably give us the original sharp edges without reaching for a shader to ensure that it does? In any case, this solution would need a completely different implementation for a modern port than it currently uses in ZUN's PC-98-native code, which gets by with less per-frame redraw than you'd think that this effect would need.<br>
+	uth05win didn't even get to port the Music Room, which is probably not without reason.
+</li><li>
+	TH01's square-shaped inverting effects used during bomb and entrance animations. Flipping a given bit of a pixel's palette index? Based on what's there before? No way around a shader for this one…
+	<figure {{$th01_bomb.FigureAttrs}}>{{call .VideoPlayer $th01_bomb}}<figcaption>
+		Note how the flipped cards rip holes into the square trails. I'm not even sure what the TH01 Anniversary Edition would change about the effect, or whether it even <i>should</i> change anything about it. Good luck porting this effect pixel-perfectly without pixel-level access.
+	</figcaption></figure>
+</li></ol><p>
+	However, writing all this custom graphics code for the modern port would run against my previously stated goal of sharing as much code as possible between PC-98 and modern platforms. While shaders are the conceptually simpler solution for all of these challenges, they aren't <i>easy</i> in practical terms, and I already {{Blog_PostLink "2024-10-22#lens" "decided against using them for Shuusou Gyoku for good reasons"}}. Also, is all of this really worth the effort if these games demonstrably don't even <i>need</i> the performance of GPU rendering?<br>
+	But that only leaves one conclusion:
+</p><p>
+	<strong>The future ports of PC-98 Touhou to modern systems will software-render the graphics layer on the CPU.</strong>
+</p><p>
+	I know, that sounds very shocking and probably disappointing at first. But at a closer look, it's really not all that bad. These games have been software-rendered all along by not only PC-98 emulators, but by real hardware at mid-90's CPU speeds. You might point to the GRCG and EGC chips as evidence for at least some capacity of hardware acceleration, but I see them more as workarounds for the unfortunate planar nature of VRAM on this Japanese business computer architecture. In the end, <i>"software rendering"</i> only means that the CPU receives access to every pixel in the framebuffer. Once all graphical functionality is neatly abstracted away and the game no longer directly accesses the four physical bitplanes, the ports can store sprites and the rendered graphics layer in the most performant way.<br>
+	Also, note how I only said <i>"graphics layer"</i>. Besides {{Blog_PostLink "2024-10-22#lens" "the obvious candidate of framebuffer scaling"}}, the ports will use the GPU for two more important aspects:
+</p><ul><li>
+	The PC-98's text layer. With 8 fixed colors and glyphs drawn from a more or less static font ROM/{{HTML_TagInline "gaiji"}} texture, there is no reason not to render this layer entirely on the GPU. Even <span style="background-color: var(--c-text); color: var(--c-bg)">color reversing</span> is as simple as defining a custom blend mode that inverts the alpha channel, <a href="https://wiki.libsdl.org/SDL3/SDL_ComposeCustomBlendMode">which SDL supports for all of its renderer backends</a>.
+</li><li>
+	Vertical scrolling. {{Blog_PostLink "2023-06-30" "The original games also reach for a PC-98 hardware feature here"}}, and this feature can be replicated within 3D APIs in exactly the same way by adjusting the UV coordinates of the VRAM texture. This insight reduces the software renderer's required per-frame redraw to exactly the same amount as the PC-98 version, and should defeat any remaining concerns you might have about software rendering.<br>
+	The still image in that post from two years ago doesn't demonstrate the PC-98 way of VRAM scrolling all too well, so here's a longer video that scrolls an entire screen's worth of tiles:
+	<figure {{$vram_raw.FigureAttrs}}>
+		{{call .VideoPlayer $vram_raw.FlipActive $vram_scroll}}
+		<figcaption>
+		In the game logic, all entity positions represent the scrolled on-screen view, while the sprites are offset by the Y coordinate of the <span style="color: #20AA20">green</span> line (representing the top of the scrolled screen) before they are blitted. Also note how ZUN never redraws the area between the yellow line (representing the bottom of the playfield) and the green line as part of the scrolling process, since it's always covered by a 16-pixel row of black TRAM cells. Any redraws there are a result of regular tile invalidation caused by overlapping sprites, and remain isolated to the VRAM page that the game rendered to when the overlap happened.<br>
+		The gameplay is taken from {{Blog_PostLink "2020-09-21" "ZUN's hidden TH05 Extra Stage Clear replay"}}.</figcaption>
+	</figure>
+</li></ul><p>
+	As a result, the software renderer of our hand-crafted ports would still internally produce a graphics and text layer that persists across frames and receives minimal redraws, just like the PC-98 originals did. In fact, it would have to produce the exact <i>same</i> graphics layer if we wanted to port the non-Anniversary Edition, including the tile source area. There's no technical need to keep tiles on the graphics layer in a port, but certain intense shake effects temporarily reveal individual tiles below the HUD:
+</p><figure {{$th02_s3.FigureAttrs}}>
+	{{call .VideoPlayer $th02_s3.FlipActive $th02_s3_t}}
+	<figcaption>This definitely counts as a bug to be fixed in this game's Anniversary Edition, but how would we fix this one on PC-98 where we do need the tile area in VRAM? Moving the tiles to another place and patching the {{Blog_PostLink "2023-03-30#diffs" ".MAP"}} at runtime?</figcaption>
+</figure>
+	Applying the palette to produce the final rendered image then raises another set of exciting engineering questions. Would we actually use a palettized 4bpp buffer in memory, storing two pixels in a byte? Perhaps with an 8-bit palette that maps each possible pair of pixels to a pair of 32-bit RGBA values, halving the amount of per-frame palette lookups? Or would we always store an RGBA image and merely offer a palettized API around it? As far as I'm concerned, these challenges are way more exciting than the prospect of locking ourselves into some shader language.
+</p><h3 id="pages-{{.Date}}">📃 Page flipping 📃</h3>
+	But wait. If the port produces <i>a</i> persistent graphics layer, shouldn't it produce <i>two</i>, one for each VRAM page on the PC-98? From the point of view of a modern port, we really don't need to. We only ever upload one "VRAM page" to the GPU anyway, which is then scrolled and scaled onto one of the GPU's backbuffers inside the <a href="https://en.wikipedia.org/wiki/Swap_chain">swapchain</a>. Then, the game can immediately continue drawing onto the same software-rendered VRAM buffer in the next frame without affecting the GPU output.
+</p><p>
+	Obviously, this rendering paradigm doesn't translate back to the PC-98. There, we must render each frame to either the invisible or the visible page. Also, minimal redraw is crucial because we can neither afford the memory nor the performance to regularly copy an entire 128&nbsp;KB of pixel data from whatever place to VRAM. As a result, page flips are a common sight in even the highest levels of menu and cutscene code, adding yet another unsightly piece of state you have to keep track of while reviewing and modding the code. I've grown to hate them quite a lot over the past four months because of just how often they are associated with bad code: In most menu and cutscene screens, ZUN just uses the second VRAM page as pixel storage for inter-page copies using the EGC, {{Blog_PostLink "2022-06-17" "whose slowness is a regular topic on this blog"}}. Once you've replaced these copies with optimized blits from conventional RAM, you've not only removed all these page flips and clearly revealed these screens as the single-buffered affairs they've always been, but you've also accelerated them enough to remove any screen tearing issues they might have had at 66&nbsp;MHz.
+</p><p>
+	Unfortunately, things are not that easy everywhere:
+</p><ul>
+	<li>Sometimes, menus and cutscenes do require involved page flipping tricks to cleanly switch between two screens without tearing.</li>
+	<li>But a few of them are genuinely double-buffered. Their minimal redraw code must indeed always keep two alternating states of VRAM in mind, which effectively leaks a hardware detail – the length of the PC-98's "swapchain" – into the highest levels of game code.</li>
+</ul><p>
+	Can we rewrite all of these cases in a way that high-level game code no longer has to care about pages? Can we perhaps even banish page flipping to a new lower level of the architecture that all menus and cutscenes are built on top of, and thus unconditionally double-buffer every screen while still maintaining minimal redraw? Or is none of this worth it and we'll just live with two VRAM pages on all platforms? I'm honestly not sure. And that's just a small preview of the porting challenges that still await us and were far beyond the scope of even these 11 pushes…
+</p><hr><p>
+	As for the commits that are formally assigned to this blog post: It was all maintenance, build system setup, and some debloating work on TH01 around its packfile support that I thought would be necessary but thankfully didn't need after all. More about that in, you guessed it, part 4.
+</p><p>
+	Alright! Improving performance, fixing screen tearing issues, establishing better cross-platform interfaces, and cleaning up ZUN's code to facilitate all of that… I've got a lot to do now. Next up: Getting closer to our performance goals by optimizing all PC-98-native code surrounding the .PI files used for backgrounds and cutscene pictures, since we later want to draw our TH03 netplay menus on top.
+</p>

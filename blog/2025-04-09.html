@@ -16,23 +16,8 @@
 		background-image: url('{{StaticFileURL "sh01-main-menu-bg.png"}}');
 	}
 
-	.benchmark-{{.Date}} table {
-		background-color: var(--c-bg);
-	}
-
-	.benchmark-{{.Date}} table thead:not(:first-child),
 	.benchmark-{{.Date}} table td:not(:first-child) {
-		font-family: monospace;
-	}
-
-	.benchmark-{{.Date}} table td:not(:first-child) {
-		text-align: right;
 		width: 7ch;
-	}
-
-	.benchmark-{{.Date}} table td:not(:last-child),
-	.benchmark-{{.Date}} table th:not(:last-child) {
-		border-right: var(--table-border);
 	}
 
 	.benchmark-{{.Date}} table td[colspan="10"] {
@@ -220,7 +205,7 @@ uint16_t pixel_hash(uint32_t p) {
 	All this is echoed by <a href="https://github.com/libjxl/libjxl/issues/4150">this recent issue</a> that points out JPEG XL's inadequacy with an even more retro 16-color example. In the end, the <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/doc/xl_overview.md#lossless">documentation</a> said it all along:
 </p><blockquote>They are about 60-75% of size of PNG, and smaller than WebP lossless <strong>for photos.</strong></blockquote><hr id="bench-{{.Date}}"><p>
 	But there is one widely-used image codec that both perfectly fits {{DB_CustomerByID 13}}'s priorities <i>and</i> compresses well on lower effort levels. Let's finally look at the complete benchmark numbers:
-</p><figure class="benchmark-{{.Date}}">
+</p><figure class="ratios benchmark-{{.Date}}">
 	<rec98-child-switcher id="numbers-{{.Date}}" data-link="images-{{.Date}}">
 		<table class="numbers active" data-title="<code>main_menu</code>"><thead>
 			<tr><th><code>main_menu</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></th></tr>

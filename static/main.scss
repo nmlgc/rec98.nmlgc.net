@@ -1115,6 +1115,25 @@ article figure {
 	}
 }
 
+.ratios table {
+	background-color: var(--c-bg);
+
+	thead:not(:first-child),
+	td:not(:first-child) {
+		font-family: monospace;
+	}
+
+	td:not(:first-child) {
+		text-align: right;
+		width: 7ch;
+	}
+
+	td:not(:last-child),
+	th:not(:last-child) {
+		border-right: var(--table-border);
+	}
+}
+
 /* ---- */
 
 /* Syntax highlighting

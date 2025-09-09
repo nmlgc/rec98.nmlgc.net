@@ -400,3 +400,4 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-08-24T09:30:25Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0396
 2025-09-01T12:17:17Z	0	3500	TH03 RE		T0397
 2025-09-09T11:06:48Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; Anniversary Edition (one release) &gt; replays &gt; modern port &gt; netplay)		T0398
+2025-09-09T11:32:02Z	0	12500	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0399

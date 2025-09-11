@@ -1,0 +1,14 @@
+Anchor	Name
+wide	Benchmarking wide and opaque sprites
+wide-algs	- Algorithms
+wide-res	- Results
+blitter	Reworking the blitter
+xfade	Benchmarking masked crossfading
+xfade-algs	- Algorithms
+xfade-res	- Results
+xfade-future	- Future work
+pi	Optimizing .PI image handling
+pi-attempts	- Initial attempts
+pi-piload	- Extending PiLoad
+pi-th03	- TH03's silly line-doubled sprite sheets
+goal	Meeting our performance target (and uncovering ZUN bugs along with it)

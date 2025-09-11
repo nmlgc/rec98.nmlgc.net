@@ -13,6 +13,14 @@ text.label {
 	font-family: monospace;
 }
 
+.free text {
+	font-size: 0.4em;
+}
+
+.small_env text {
+	font-size: 37.5%;
+}
+
 text.number {
 	font-family: monospace;
 	font-size: 0.75em;

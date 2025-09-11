@@ -109,7 +109,7 @@ Date	Tags
 2022-11-30	["cutscene", "blitting", "micro-optimization", "glitch", "master.lib", "pc98", "performance", "kaja", "unused", "meta", "midboss", "animation"]
 2022-12-31	["meta", "cutscene", "unused", "file-format"]
 2023-01-17	["gameplay", "boss", "sara", "tcc", "laser", "micro-optimization", "glitch"]
-2023-03-05	["pc98", "tcc", "debloating", "file-format", "anniversary-edition", "master.lib", "emulation", "bullet"]
+2023-03-05	["pc98", "blitting", "tcc", "debloating", "file-format", "anniversary-edition", "master.lib", "emulation", "bullet"]
 2023-03-14	["rec98", "th01", "policy-bugfix", "anniversary-edition", "gameplay", "bullet", "boss", "sariel"]
 2023-03-30	["stage", "blitting", "micro-optimization", "unused", "tcc"]
 2023-05-01	["meta", "anniversary-edition", "debloating", "master.lib", "cutscene", "animation", "debug"]
@@ -137,3 +137,4 @@ Date	Tags
 2025-05-20	["seihou", "sh01", "policy-bugfix", "replay"]
 2025-08-12	["seihou", "sh01", "policy-bugfix", "gameplay", "rng"]
 2025-09-06	["portability", "emulation", "dosbox-x", "input", "palette", "menu"]
+2025-09-10	["pc98", "blitting", "performance", "master.lib", "emulation", "animation", "cutscene"]

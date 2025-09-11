@@ -13,6 +13,7 @@
 	--c-lightgray: rgb(220, 220, 220);
 	--c-border: silver;
 	--c-bg: #f8f8f8;
+	--c-table-border: gray;
 
 	--c-link: blue;
 	--c-link-hover: red;
@@ -21,7 +22,7 @@
 	--c-trial-mid: rgb(256, 256, 220);
 	--c-trial-good: rgb(220, 256, 220);
 
-	--table-border: 1px solid gray;
+	--table-border: 1px solid var(--c-table-border);
 	--table-border-thick: 2px solid black;
 
 	--header-height: 2.5em;

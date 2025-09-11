@@ -1,0 +1,998 @@
+{{- /* Ensure that the base SVGs get generated */ -}}
+{{$_ := (call .PostFileURL "blitperf-wide-base.svg") -}}
+{{$_ := (call .PostFileURL "blitperf-xfade-base.svg") -}}
+
+{{$enemy01 := (call .PostFileURL "TH03-ENEMY01.PI.webp") -}}
+{{$wide := (call .Video "blitperf-wide" "Video of the wide-sprite blitting benchmark running on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz") -}}
+{{$siddham := (call .Video "TH01-Konngara-Siddhaṃ-blit-66-MHz" "Video of the blitting process of the Siddhaṃ seed syllables at the start of TH01's Konngara fight, which are drawn using the transparency feature of BERO's PiLoad library. Recorded on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz") -}}
+{{$xfade_egc := (call .Video "xfade-EGC-optimized" "Visualization of optimized EGC-powered crossfading, demonstrated with TH03 Yumemi's \"battle wear\" image") -}}
+{{$xfade := (call .Video "blitperf-xfade" "Video of the masked crossfading benchmark running on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz") -}}
+{{$title5_o := (call .Video "TH05-Title-animation-original-66-MHz" "Video of TH05's title screen crossfading effect, as rendered by the original game on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz. Showcases how slow .PI blitting and crossfading adds a whole 60 frames of lag to the animation")}}
+{{$title5_d := (call .Video "TH05-Title-animation-fixed-66-MHz" "Video of TH05's title screen crossfading effect, as rendered by the debloated P0323 build on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz. Showcases how ReC98's performance improvements now allow even 486 CPUs to run this animation at the speed ZUN specified in the code")}}
+{{$dl := printf "%v%v" .DatePrefix "benchmarks.zip" -}}
+
+{{$siddham.AddMarker  0 "<code>BOSS8_D1.GRP</code>" "" -}}
+{{$siddham.AddMarker 12 "<code>BOSS8_D2.GRP</code>" "" -}}
+{{$siddham.AddMarker 24 "<code>BOSS8_D3.GRP</code>" "" -}}
+{{$siddham.AddMarker 37 "<code>BOSS8_D4.GRP</code>" "" -}}
+
+{{$title5_o.SetTitle "Original game" -}}
+{{$title5_d.SetTitle "Debloated P0323 build" -}}
+
+{{$title5_o.AddMarker 27 "1" "" -}}
+{{$title5_o.AddMarker 50 "2" "" -}}
+{{$title5_o.AddMarker 66 "3" "" -}}
+{{$title5_o.AddMarker 82 "4" "" -}}
+{{$title5_o.AddMarker 98 "Full picture" "left" -}}
+
+{{$title5_d.AddMarker 22 "1" "" -}}
+{{$title5_d.AddMarker 27 "2" "" -}}
+{{$title5_d.AddMarker 31 "3" "" -}}
+{{$title5_d.AddMarker 35 "4" "" -}}
+{{$title5_d.AddMarker 38 "Full picture" "left" -}}
+
+{{- define "wide-thead" -}}
+<tr>
+	<th>Width</th>
+	<th>Displaced</th>
+	<th>Marching</th>
+	<th><code>MOVS</code></th>
+	<th><code>REP&nbsp;MOVS</code></th>
+	<th></th>
+</tr>
+{{- end -}}
+{{- define "xfade-thead" -}}
+<tr>
+	<th>Width</th>
+	<th>EGC<br>(optimized)</th>
+	<th>EGC<br>(ZUN)</th>
+	<th>GRCG&nbsp;+<br>CPU</th>
+	<th>CPU<br>only</th>
+	<th></th>
+</tr>
+{{end -}}
+{{- define "xfade-base" -}}
+{{end -}}
+
+<style>
+	.cycles-{{.Date}} tbody tr th {
+		text-align: left;
+	}
+
+	.benchmark-{{.Date}} > div {
+		display: grid;
+		grid-template-columns: min-content 7em;
+		place-items: center;
+	}
+
+	.benchmark-{{.Date}} table {
+		font-size: min(2.25vw, 100%);
+		color: white;
+	}
+
+	.benchmark-{{.Date}} table .used {
+		font-weight: 900;
+	}
+
+	.benchmark-{{.Date}} table.wide th:nth-child(2),
+	.benchmark-{{.Date}} table.wide td:nth-child(2) {
+		color: {{CSS_MeterFG 33}}
+	}
+
+	.benchmark-{{.Date}} table.wide th:nth-child(3),
+	.benchmark-{{.Date}} table.wide td:nth-child(3) {
+		color: {{CSS_MeterFG 0}}
+	}
+
+	.benchmark-{{.Date}} table.wide th:nth-child(4),
+	.benchmark-{{.Date}} table.wide td:nth-child(4) {
+		width: 5ch;
+		color: {{CSS_MeterFG 66}}
+	}
+
+	.benchmark-{{.Date}} table.wide th:nth-child(5),
+	.benchmark-{{.Date}} table.wide td:nth-child(5) {
+		color: {{CSS_MeterFG 100}}
+	}
+
+	.benchmark-{{.Date}} table.xfade th:nth-child(2),
+	.benchmark-{{.Date}} table.xfade td:nth-child(2) {
+		color: {{CSS_MeterFG 100}}
+	}
+
+	.benchmark-{{.Date}} table.xfade th:nth-child(3),
+	.benchmark-{{.Date}} table.xfade td:nth-child(3) {
+		color: {{CSS_MeterFG 66}}
+	}
+
+	.benchmark-{{.Date}} table.xfade th:nth-child(4),
+	.benchmark-{{.Date}} table.xfade td:nth-child(4) {
+		color: {{CSS_MeterFG 0}}
+	}
+
+	.benchmark-{{.Date}} table.xfade th:nth-child(5),
+	.benchmark-{{.Date}} table.xfade td:nth-child(5) {
+		width: 5ch;
+		color: {{CSS_MeterFG 33}}
+	}
+
+	.benchmark-{{.Date}} table tr {
+		background-color: unset;
+		border-bottom: var(--table-border);
+	}
+	.benchmark-{{.Date}} table th:not(:last-child),
+	.benchmark-{{.Date}} table tr:first-child td:not(:last-child),
+	.benchmark-{{.Date}} table tr:not(:first-child) td {
+		border-right: var(--table-border);
+	}
+
+	.benchmark-{{.Date}} embed {
+		height: 28lh;
+		max-height: 28lh;
+	}
+
+	.pi-{{.Date}} table td:not(:first-child) {
+		width: 11ch;
+	}
+</style>
+
+<p>
+	PC-98 blitting performance research, part 2! As well as part 2 in {{Blog_PostLink "2025-09-06" "the 4-post series about the big 2025 PC-98 Touhou portability subproject"}}. This one gets pretty technical and is primarily interesting for anyone else wanting to write code for the PC-98. If you're just here for funny details about PC-98 Touhou, you can {{Blog_PostLink "2025-09-10#pi-th03" "skip to the last two bullet points"}}.
+</p>{{call .TOC}}<hr id="wide-{{.Date}}"><p>
+	{{Blog_PostLink "2023-03-05#blitperf" "The first part of this blitting performance series"}} dealt with single-color transparent 8-wide and 16-wide sprites blitted to non-byte-aligned X positions, whose performance was the primary goal for the first release of the TH01 Anniversary Edition. Now that we're all about menus and cutscenes, we're dealing with the exact opposite kind of image: No transparency, always displayed at byte-aligned X positions, and much wider. The PC-98 doesn't offer any hardware support here, so this is purely about finding the fastest way to <code>memcpy()</code> from RAM to VRAM. We could just take Intel's CPU reference manuals, count cycles, pick the fastest method, and call it a day, but those manuals can't know about the PC-98's infamous hefty VRAM latencies or any potentially relevant differences between real hardware and emulators.<br>
+	This time, I'll also provide the ASM code for each technique. All of the following code snippets show a single row of the dedicated blitter for 64-wide pixels, with the following register allocation:
+</p><ul>
+	<li><code>DS:SI</code> points to the source sprite data in conventional RAM</li>
+	<li><code>ES:DI</code> points into VRAM</li>
+	<li><code>CX</code> contains the stride of the source image</li>
+</ul><ol id="wide-algs-{{.Date}}"><li>
+	<i>Displaced</i><br>
+	Let's start with the method that is supposedly optimal on i486 CPUs, at least according to Intel's reference manual. <a href="https://en.wikipedia.org/w/index.php?title=X86&oldid=1307442739#Addressing_modes">x86's addressing modes</a> have always supported displacements for shifting the pointed-to address by a constant value, at the natural cost of a single code byte. This is the typical way you'd address structure fields from a pointer to an instance. In the context of blitting, this technique analogously treats the pixel chunks as fields within a "VRAM row" structure, and only updates the pointers at the end of each row to jump to the next one. Since all kinds of memory-accessing <code>MOV</code> instructions take just one cycle on an i486, this approach at least shouldn't add any CPU overhead on top of the unavoidable VRAM latencies.
+	<figure><pre>; Row loop
+mov  	eax, [si]     	; Pixels  0-31
+mov  	es:[di], eax
+mov  	eax, [si+4]   	; Pixels 32-63
+mov  	es:[di+4], eax
+
+; Move to next row
+add  	si, cx
+add  	di, (640 / 8)</pre></figure>
+	</li><li>
+	<i>Marching</i><br>
+	These displacements sure are a nice feature of x86, but how big is their effect on performance really? Asked probably no one ever, considering that the alternative of constantly moving both pointers would add two more instructions that cost 6 bytes per 32-bit chunk, as well as &gt;4 more CPU cycles on ≤386, not including instruction fetching costs as usual. I still had a column to fill in my benchmark output though, so why not fill it with a really bad approach that can demonstrate the impact of unoptimized code. Or lack thereof 👀
+		<figure><pre>; We march by 64 pixels in every row.
+sub  	cx, (64 / 8)
+
+; Row loop body
+mov  	eax, [si]   	; Pixels  0-31
+mov  	es:[di], eax
+add  	si, 4
+add  	di, 4
+mov  	eax, [si]   	; Pixels 32-63
+mov  	es:[di], eax
+add  	si, 4
+add  	di, 4
+
+; Move to next row
+add  	si, cx
+add  	di, ((640 - 64) / 8)</pre></figure>
+	</li><li>
+		<i>MOVS</i><br>
+	Maybe, however, the marching approach isn't all that bad if we can express it more succinctly. In fact, the four-instruction <code>MOV</code>/<code>MOV</code>/<code>ADD</code>/<code>ADD</code> sequence does the same as the single <code>MOVS</code> instruction, and <code>MOVS</code> doesn't even require a temporary register! At <span class="hovertext" title="Since MOVSD needs a size prefix byte in Real Mode, the complete instruction is as long as two MOVSW instructions. Therefore, they only differ in execution speed.">one byte per 16 pixels</span>, this would by far be the most compact method for shorter sprites. Our 2023 benchmark showed <code>MOVS</code> to be the preferred approach for 8- and 16-wide sprites on 286 and 386 CPUs, which matches Intel's documentation. Usually, <q>complex</q> instructions like these are discouraged on later microarchitectures as they tend to get slower and slower, but maybe VRAM is even slower and it doesn't actually matter?
+		<figure><pre>; We march by 64 pixels in every row.
+sub  	cx, (64 / 8)
+cld  	                    	; Don't go backwards!
+
+; Row loop body
+movsd	                    	; Pixels  0-31
+movsd	                    	; Pixels 32-63
+add  	si, cx              	; Move to next row
+add  	di, ((640 - 64) / 8)</pre></figure>
+	</li><li>
+		<i>REP MOVS</i><br>
+	Thanks to the <code>REP</code> prefix, we can compress such a series of <code>MOVS</code> instructions down even further and let the CPU handle the repetition. This is the preferred way you'd implement a <code>memcpy()</code> in hand-written x86 ASM if you're going for code clarity, but does it also perform well? Given the startup cost of <code>REP</code>, this will probably only ever be faster than <code>MOVS</code> past a certain sprite width. But it's almost certain to be the optimal approach for 640-wide sprites: Once the distance between the end of the previous row and the start of a new row becomes zero, we no longer need a vertical loop either, and can multiply the height into the repetition count to blit a whole bitplane in a single instruction.
+		<figure><pre>; We might be blitting a smaller area out of a larger sprite.
+mov  	ax, cx              	; The REP prefix needs CX itself
+sub  	ax, (64 / 8)
+cld  	                    	; Don't go backwards!
+
+; Row loop body
+mov  	cx, (64 / 32)       	; 64 pixels = 2 DWORDs
+rep movsd
+
+; Move to next row
+add  	si, ax
+add  	di, ((640 - 64) / 8)</pre></figure>
+	</li>
+</ol><p>
+	Since we've thoroughly tested the GRCG against 4-plane blitting performance {{Blog_PostLink "2023-03-05#blitperf" "last time"}}, we no longer need to check both. Instead, we can use the screen space for testing all possible image widths at 32-pixel intervals, using a self-made 640-wide dithered gradient:
+</p><figure {{$wide.FigureAttrs}}>
+	{{call .VideoPlayer $wide}}
+	<figcaption>This recording in Neko Project 21/W at 2.4576 × 27 = 66.3552 MHz might even be representative?</figcaption>
+</figure><p id="wide-res-{{.Date}}">
+	But of course, the only relevant results are those from real hardware:
+</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}}">
+	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="wide numbers active">
+		{{- template "wide-thead" -}}
+		<tr>
+			<th> 32</th><td> 1.47</td><td> 1.56</td><td> 1.34</td><td> 1.35</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-wide-1991-PC9801DS-U2.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td> 2.28</td><td> 2.49</td><td> 2.04</td><td> 2.09</td></tr>
+		<tr><th> 96</th><td> 3.16</td><td> 3.51</td><td> 2.84</td><td> 2.84</td></tr>
+		<tr><th>128</th><td> 4.01</td><td> 4.46</td><td> 3.58</td><td> 3.54</td></tr>
+		<tr><th>160</th><td> 4.92</td><td> 5.52</td><td> 4.39</td><td> 4.34</td></tr>
+		<tr><th>192</th><td> 5.74</td><td> 6.49</td><td> 5.10</td><td> 5.04</td></tr>
+		<tr><th>224</th><td> 6.72</td><td> 7.58</td><td> 5.78</td><td> 5.80</td></tr>
+		<tr><th>256</th><td> 7.61</td><td> 8.50</td><td> 6.73</td><td> 6.46</td></tr>
+		<tr><th>288</th><td> 8.35</td><td> 9.55</td><td> 7.44</td><td> 7.18</td></tr>
+		<tr><th>320</th><td> 9.36</td><td>10.51</td><td> 8.18</td><td> 7.89</td></tr>
+		<tr><th>352</th><td>10.26</td><td>11.45</td><td> 8.93</td><td> 8.62</td></tr>
+		<tr><th>384</th><td>11.14</td><td>12.48</td><td> 9.68</td><td> 9.30</td></tr>
+		<tr><th>416</th><td>12.03</td><td>13.43</td><td>10.17</td><td>10.01</td></tr>
+		<tr><th>448</th><td>12.85</td><td>14.34</td><td>11.13</td><td>10.72</td></tr>
+		<tr><th>480</th><td>13.71</td><td>15.36</td><td>11.83</td><td>11.43</td></tr>
+		<tr><th>512</th><td>14.53</td><td>16.23</td><td>12.62</td><td>12.13</td></tr>
+		<tr><th>544</th><td>15.51</td><td>17.23</td><td>13.31</td><td>12.84</td></tr>
+		<tr><th>576</th><td>16.24</td><td>18.25</td><td>14.08</td><td>13.54</td></tr>
+		<tr><th>608</th><td>17.10</td><td>19.19</td><td>14.57</td><td>14.29</td></tr>
+		<tr><th>640</th><td>18.09</td><td>20.04</td><td>15.44</td><td>14.67</td></tr>
+	</table>
+	<table data-title="Neko Project 21/W (16 MHz)" class="wide numbers">
+		{{- template "wide-thead" -}}
+		<tr>
+			<th> 32</th><td>0.74</td><td>0.76</td><td>0.68</td><td>0.67</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-wide-NP21-16-MHz.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>1.06</td><td>1.21</td><td>0.98</td><td>1.08</td></tr>
+		<tr><th> 96</th><td>1.44</td><td>1.64</td><td>1.28</td><td>1.41</td></tr>
+		<tr><th>128</th><td>1.78</td><td>2.06</td><td>1.58</td><td>1.71</td></tr>
+		<tr><th>160</th><td>2.19</td><td>2.51</td><td>1.91</td><td>2.03</td></tr>
+		<tr><th>192</th><td>2.52</td><td>2.96</td><td>2.22</td><td>2.33</td></tr>
+		<tr><th>224</th><td>3.00</td><td>3.47</td><td>2.58</td><td>2.74</td></tr>
+		<tr><th>256</th><td>3.31</td><td>3.88</td><td>2.88</td><td>3.00</td></tr>
+		<tr><th>288</th><td>3.67</td><td>4.29</td><td>3.18</td><td>3.31</td></tr>
+		<tr><th>320</th><td>4.00</td><td>4.75</td><td>3.50</td><td>3.60</td></tr>
+		<tr><th>352</th><td>4.38</td><td>5.14</td><td>3.75</td><td>3.89</td></tr>
+		<tr><th>384</th><td>4.74</td><td>5.56</td><td>4.05</td><td>4.20</td></tr>
+		<tr><th>416</th><td>5.07</td><td>6.00</td><td>4.35</td><td>4.49</td></tr>
+		<tr><th>448</th><td>5.43</td><td>6.41</td><td>4.64</td><td>4.76</td></tr>
+		<tr><th>480</th><td>5.74</td><td>6.83</td><td>4.94</td><td>5.07</td></tr>
+		<tr><th>512</th><td>6.13</td><td>7.25</td><td>5.25</td><td>5.38</td></tr>
+		<tr><th>544</th><td>6.50</td><td>7.69</td><td>5.50</td><td>5.66</td></tr>
+		<tr><th>576</th><td>6.82</td><td>8.10</td><td>5.81</td><td>5.96</td></tr>
+		<tr><th>608</th><td>7.18</td><td>8.50</td><td>6.11</td><td>6.25</td></tr>
+		<tr><th>640</th><td>7.50</td><td>8.88</td><td>6.32</td><td>6.16</td></tr>
+	</table>
+	<table data-title="Neko Project 21/W (66 MHz)" class="wide numbers">
+		{{- template "wide-thead" -}}
+		<tr>
+			<th> 32</th><td>0.16</td><td>0.18</td><td>0.15</td><td>0.15</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-wide-NP21-66-MHz.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>0.25</td><td>0.28</td><td>0.22</td><td>0.25</td></tr>
+		<tr><th> 96</th><td>0.33</td><td>0.38</td><td>0.30</td><td>0.33</td></tr>
+		<tr><th>128</th><td>0.42</td><td>0.49</td><td>0.37</td><td>0.40</td></tr>
+		<tr><th>160</th><td>0.51</td><td>0.59</td><td>0.45</td><td>0.48</td></tr>
+		<tr><th>192</th><td>0.60</td><td>0.70</td><td>0.52</td><td>0.55</td></tr>
+		<tr><th>224</th><td>0.70</td><td>0.82</td><td>0.61</td><td>0.64</td></tr>
+		<tr><th>256</th><td>0.78</td><td>0.92</td><td>0.68</td><td>0.71</td></tr>
+		<tr><th>288</th><td>0.87</td><td>1.02</td><td>0.75</td><td>0.78</td></tr>
+		<tr><th>320</th><td>0.95</td><td>1.13</td><td>0.82</td><td>0.85</td></tr>
+		<tr><th>352</th><td>1.04</td><td>1.22</td><td>0.89</td><td>0.92</td></tr>
+		<tr><th>384</th><td>1.13</td><td>1.33</td><td>0.96</td><td>1.00</td></tr>
+		<tr><th>416</th><td>1.20</td><td>1.43</td><td>1.03</td><td>1.06</td></tr>
+		<tr><th>448</th><td>1.29</td><td>1.53</td><td>1.10</td><td>1.13</td></tr>
+		<tr><th>480</th><td>1.38</td><td>1.63</td><td>1.17</td><td>1.21</td></tr>
+		<tr><th>512</th><td>1.46</td><td>1.73</td><td>1.25</td><td>1.28</td></tr>
+		<tr><th>544</th><td>1.54</td><td>1.83</td><td>1.31</td><td>1.34</td></tr>
+		<tr><th>576</th><td>1.63</td><td>1.94</td><td>1.38</td><td>1.42</td></tr>
+		<tr><th>608</th><td>1.71</td><td>2.03</td><td>1.46</td><td>1.49</td></tr>
+		<tr><th>640</th><td>1.79</td><td>2.13</td><td>1.52</td><td>1.47</td></tr>
+	</table>
+	<rec98-parent-init></rec98-parent-init>
+</rec98-child-switcher><figcaption>
+	Number of frames required to blit <var>Width</var>×5120 pixels of a 1bpp bitmap to a byte-aligned position in VRAM, using the GRCG. The plots are relative to the respective <code>REP MOVS</code> result. Thanks to 1️⃣ オップナー2608 for the real-hardware test.
+</figcaption></figure><p>
+	Wait, only one run from a real system that's way below the minimum requirements of PC-98 Touhou? Furball is currently waiting for 286 and 486 hardware and will test those models once the shipment arrives. But all other test results I received came from Pentium-era or later models, and had <i>identical</i> performance for every blitting technique, <i>including</i> the terrible marching one! Turns out that the superscalar microarchitecture of these CPUs erases any difference between blitting methods, and does so independently of clock speed. My testers and I replicated this behavior on
+</p><ul>
+	<li>a PC-9821Na7 (clocked at 75 MHz),</li>
+	<li>my own PC-9821Nw133 (clocked at 133 MHz),</li>
+	<li>an AMD K6-III (clocked at 400 MHz), and</li>
+	<li>an AMD K6-2 (clocked at 533 MHz).</li>
+</ul><p>
+	Thus, if your minimum target is a Pentium and you've got any kind of large image to blit to a byte-aligned position: Go with <code>REP MOVS</code> or even just <code>memcpy()</code>, enjoy having one generic blitter for every sprite width, and don't waste any further thoughts on the issue.<br>
+	But since we have to make <i>a</i> choice, we might as well optimize for the one target with stable performance characteristics that would be used by the most people: the i386 emulated by Neko Project, which prefers <code>MOVS</code> for all widths except 640 pixels.
+</p><hr id="blitter-{{.Date}}"><p>
+	Deploying these blitting functions outside of a benchmark quickly runs into a practical problem. <code>MOVS</code> requires us to stay with the original plan of generating a dedicated blitter function for every possible byte-aligned sprite width. But this would mean that we'd unconditionally generate (<sup>640</sup>/<sub>8</sub>)&nbsp;= 80 blitter functions and link them into every game. Most of these will not only never be used and just bloat the binaries, but also needlessly increase compile times due to how they are currently <a href="https://github.com/nmlgc/ReC98/blob/9e3869341542d9fa8220056c972bf709a989bd54/platform/x86real/pc98/blit_low.hpp">stitched together out of an unholy mess of macros and force-inlined recursive functions</a>. I'll probably fully drop down to ASM and one translation unit per blitter in the next iteration of this system; Turbo C++ 4.0J still generates several unnecessary instructions around <a href="https://en.wikipedia.org/wiki/Duff%27s_device">Duff's Device</a> in particular. Now that I've constructed all these test cases, I really get how one could lose themselves in these tiny micro-optimizations. But I doubt that ZUN had the tools to measure the actual impact of what he did. {{HTML_Emoji "onricdennat"}}
+</p><p>
+	For now though, an opt-in model would be the next obvious step: Start with an empty blit function array, and let each game request and generate blitters for all the sizes it needs. But that just replaces the bloat with manual tedium: For deduplication reasons, this instantiation must happen in a dedicated (and obviously PC-98-exclusive) translation unit, far away from the actual blitting call in the (future cross-platform) translation unit that requires each size. Maybe this is practicable for a single game, but it gets really dumb if you have five games whose blitting widths are kind of similar except for the places where they aren't.<br>
+	Also, the games will now crash if they ever try to blit at a width we didn't generate. Which in turn either requires a bloat-free way of reporting this error, or living with the annoyance of these mysterious crashes during development, because all the text areas in menus sure come in a wide variety of widths…
+</p><p>
+	In the end, we'd like to have some kind of generic and width-independent blitter after all. Execution speed doesn't matter all too much for these menu use cases, which only call their blitters whenever any pixels are supposed to change. <code>REP MOVSD</code> would be the preferred generic method in such a blitter, and this choice is even well-informed now that the benchmarks have confirmed it to be at least the second-fastest option everywhere. Then, we only need two more conditional branches per line to cover the remaining pixels in case the width doesn't cleanly divide by 32:
+</p><figure>
+	<pre>; BH: Sprite width in bytes
+; BL: 32-pixel chunks per row (BH / 4)
+; AX: Bytes between end of blitted width
+;     and start of next row (= stride - BH)
+
+	xor  	cx, cx
+
+; Row loop body
+	mov  	cl, bl
+	rep movsd
+
+@@missing_16_or_24_pixels?:
+	test 	bh, 2
+	jz   	@@missing_8_pixels?
+	movsw
+
+@@missing_8_or_24_pixels?:
+	test 	bh, 1
+	jz   	@@next_row
+	movsb
+
+@@next_row:
+	add  	si, ax
+	mov  	cl, bh       	; Roll back DI to
+	sub  	di, cx       	; start of row, and
+	add  	di, (640 / 8)	; jump to the next.</pre>
+	<figcaption>The generic byte-aligned blitter, supporting any byte size between 8 and 2,048.</figcaption>
+</figure><p>
+	And since we still have this whole on-demand blitter generation framework for specific widths, games can still opt into faster blitters to accelerate commonly used sprite widths. TH01, for example, definitely gets back its fast 8- and 16-wide blitters for byte-aligned and pre-shifted pellets, that's for sure.
+</p><hr id="xfade-{{.Date}}"><p>
+	If that was the only kind of image blitting in menus and cutscenes, we'd be done with benchmarking now. But PC-98 Touhou also has one special effect we need to look at, which also happens to hold the most interesting unresolved performance question…
+</p><h4>Masked crossfading</h4><p>
+	This effect made its debut in TH03, where ZUN used it for a small number of the 320×200 picture transitions in the Stage 8/9 cutscenes and endings. In TH04 and TH05, it then became the default for most of these picture transitions. Its most prominent appearance, though, can be found at the end of TH05's title screen animation, where ZUN applies this effect to a full 640×400 image. Here's how this looks at 66&nbsp;MHz on Neko Project 21/W, in all of its sluggish glory:
+</p><figure {{$title5_o.FigureAttrs}}>{{call .VideoPlayer $title5_o}}</figure><p>
+	As you might have guessed, this effect works by only blitting certain pixels of the target image, as selected by a mask, on top of the current contents of VRAM. Each of these fade animations iterates over four fixed 4×4 masks that gradually show more pixels of the target image, before blitting it without a mask:
+<figure class="side_by_side small pixelated" style="width: 256px;"><rec98-child-switcher>{{range loop 0 4 -}}
+	{{- $mask := printf "PI-mask-%1X.webp" . -}}
+	<img
+		src="{{call $.PostFileURL $mask}}"
+		data-title="&ZeroWidthSpace;"
+		alt="PC-98 Touhou PI mask #{{inc .}}"
+		width="256"
+		style="max-height: unset;"
+		class="{{if eq . 0}}active{{end}}"
+	>
+{{- end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	The white/1 bits represent the new pixels of the destination image.
+</figcaption></figure><p id="xfade-algs-{{.Date}}">
+	On a system with packed 8-bit colors and a fast CPU, you could naively implement this effect by dropping down to drawing one pixel at a time and simply skipping over any pixel whose corresponding mask bit is not set. In a planar environment, however, you'll always have to perform a read-modify-write operation on a larger chunk of pixels. <a href="https://en.wikipedia.org/w/index.php?title=Bit_blit&oldid=1260205951#Technique">Wikipedia has a nice visualization of the general algorithm</a>, which translates naturally to the planar VRAM of the PC-98:
+</p><ul>
+	<li>Read the source pixels from a VRAM bitplane and the target pixels from an image buffer in RAM</li>
+	<li><code>AND</code> the VRAM bits with the <i>negated</i> bits from the current mask row to erase the bits that we want to overwrite</li>
+	<li><code>AND</code> the RAM bits with the bits from the current mask row to erase the bits we <i>don't</i> want to overwrite</li>
+	<li><code>OR</code> the two pixel chunks together and write the result back to VRAM</li>
+</ul><p>
+	Once again, there are four ways in which we could implement this on a PC-98. The code examples assume 64-wide sprites once again:
+</p><ol><li><p>
+	<i>CPU only</i><br>
+	Let's start with the most naive approach that ignores all of the PC-98's blitter chips. Since we've decided on targeting Neko Project, we'd like to use x86 string instructions where possible, but we unfortunately can't do a direct copy due to the mask we have to apply to the source and destination pixels. But we <i>can</i> at least use <code>LODSD</code> for getting the source pixels into <code>EAX</code> while advancing the source pointer, and use displaced instructions to avoid marching the destination register.<br>
+	If we go for the least amount of instructions, we end up with the following algorithm:
+</p><figure><pre>; EAX: Source pixels
+; EBX: Source mask (1 = blit pixel)
+; ECX: Destination mask (1 = erase pixel)
+; [si_skip]: (image stride - (64 / 8))
+
+; Row loop body
+lodsd	                	; EAX = next 32 pixels at DS:[SI], then SI += 4
+and  	eax, ebx        	; Clear out source bits we don't want to change
+and   	es:[di], ecx    	; Clear out destination bits we want to change
+or     	es:[di], eax    	; Pixels 0-31
+lodsd	                	; Repeat with a destination displacement for
+and  	eax, ebx        	; pixels 32-63
+and   	es:[di+4], ecx
+or     	es:[di+4], eax
+
+; Move to the next row
+add  	si, [bp-si_skip]
+add  	di, (640 / 8)</pre>
+	<figcaption>DX is already used for the image height, in case you're wondering about that variable on the stack.</figcaption>
+</figure><p>
+	However, this specific algorithm would turn out to be the worst thing we could possibly do. On paper, these memory-mutating <code>AND</code> and <code>OR</code> instructions might only cost 3 cycles on a 486, but both of them must transfer bits from VRAM to the CPU and back. That's two loads and two stores in a situation where we only really need one of each.<br>
+	We could go for minimal VRAM accesses instead of blindly keeping instruction counts low, but then we'd end up with twice as many instructions:
+</p><figure><pre>; EAX: Source pixels
+; EBX: Source mask (1 = blit pixel)
+; ECX: VRAM pixels
+; [si_skip]: (image stride - (64 / 8))
+
+; Row loop body
+lodsd	                	; EAX = next 32 pixels at DS:[SI], then SI += 4
+and  	eax, ebx        	; Clear out source bits we don't want to change
+not  	ebx             	; Turn EBX into the destination mask
+mov  	ecx, es:[di]    	; VRAM read
+and  	ecx, ebx        	; Clear out destination bits we want to change
+or   	eax, ecx        	; Combine source and VRAM
+stosd	                	; VRAM write; DI += 4
+not  	ebx             	; Turn EBX back into the source mask
+lodsd	                	; Repeat for pixels 32-63
+and  	eax, ebx
+not  	ebx
+mov  	ecx, es:[di]
+and  	ecx, ebx
+or   	eax, ecx
+stosd
+not  	ebx
+
+; Move to the next row
+add  	si, [bp-si_skip]
+add  	di, ((640 - 64) / 8)</pre></figure><p>
+	But sure enough, this version also runs almost twice as fast as my initial attempt above, across all systems we've tried!<br>
+	I still left a few micro-optimizations on the table with this one, though. Storing both masks on the stack might be faster than flipping <code>EBX</code> back and forth, and we should probably read from the per-row mask array through the <code>FS</code> or <code>GS</code> segment registers if we compile for ≥386 CPUs. But that shouldn't matter too much in view of all the more promising methods we've still got to try.
+</p></li><li><p>
+	<i>GRCG + CPU</i><br>
+	The simpler one of the PC-98's blitter chips is best used as part of a two-pass approach: First, we use the GRCG's RMW mode and a tile register filled with 0 bits to perform the erase step across the entire area of the image. The erase loop uses a simple <code>REP STOS</code> per image line and probably doesn't need any further optimizing attention if the <code>REP MOVS</code> result above is any indication. The second pass then only needs a mere three instructions per 32 pixels to perform the missing <code>OR</code> of the masked pixels:
+<figure><pre>; EAX: Source pixels
+; EBX: Source mask (1 = blit pixel)
+; CX: Free for mask retrieval!
+; [si_skip]: (image stride - (64 / 8))
+
+; Row loop body
+lodsd	                	; EAX = next 32 pixels at DS:[SI], then SI += 4
+and  	eax, ebx        	; Clear out source bits we don't want to change
+or     	es:[di], eax    	; Pixels 0-31
+lodsd	                	; Repeat with a destination displacement for
+and  	eax, ebx        	; pixels 32-63
+or     	es:[di+4], eax
+
+; Move to the next row
+add  	si, [bp-si_skip]
+add  	di, (640 / 8)</pre></figure>
+	But that looks eerily similar to the initial CPU attempt we scrapped earlier. The combination of a GRCG run in <b>R</b>ead-<b>M</b>odify-<b>W</b>rite mode and the <code>OR</code> instruction means that we're back to two read-modify-write operations per pixel, one more than we actually need. Therefore, this approach can only outperform our fast CPU algorithm if the GRCG run manages to be faster than the 5×4 extra instructions we need to perform the erase step on the CPU.<br>
+	And that's indeed the best use we can get out of the GRCG for this effect. The GRCG is hardwired for blitting a rather static 8-pixel tile with a more variable mask provided by the CPU, but this effect calls for the exact opposite, a static mask and variable pixels. If we wanted to draw the <i>entire</i> effect using the GRCG, we'd have to send our source pixels through slow I/O ports 8 pixels at a time, which already wastes all the added throughput we could get from a 32-bit and even 16-bit CPU. Meanwhile, the mask register on the CPU – <i>the thing we can easily change</i> – only changes on every <i>line</i> of pixels.<br>
+	The initial blit of the Siddhaṃ seed syllables at the beginning of TH01's Konngara fight roughly demonstrates how slow such an approach would be. BERO's PiLoad library implements transparent blitting in a similar way, sending each decoded byte to the GRCG and then blitting it with a mask:
+	<figure {{$siddham.FigureAttrs}}>
+		{{call .VideoPlayer $siddham}}
+		<figcaption>All of these images would decompress within 6 frames on Neko Project 21/W at 66&nbsp;MHz, but PiLoad's transparent blitting algorithm easily doubles that. That's what, ~36,750 cycles for every single line of the image?<br>
+		The resulting rolling effect is another great example of CPU-speed-dependent lag. Everything here is supposed to happen within a single logical frame, and only doesn't because the system is too slow. A faster PC-98 would blit the image more quickly and thus spend fewer frames, and ports will display all four syllables instantly.</figcaption>
+	</figure>
+	Fortunately, the PC-98 also has a second blitter chip that is much more suited to what we're trying to do here, …
+</p></li><li><p>
+	<i>EGC (ZUN's Version)</i><br>
+	…and it also happens to be the one ZUN used in his original code. But isn't the EGC infamous for only supporting block copies if the source pixels are already in VRAM? How would we get them there in a setting where we show a full-screen 640×400 image and don't hide <i>anything</i> using {{Blog_PostLink "2023-03-30#tiles" "black cells on the text layer"}}?<br>
+	The answer can be found by looking at <a href="https://radioc.web.fc2.com/column/pc98bas/pc98memmap_en.htm">the PC-98's memory map</a>. Each bitplane requires the physical existence of (<sup>640</sup>/<sub>8</sub>&nbsp;×&nbsp;400)&nbsp;= 32,000 bytes of memory. But that's a rather odd number for a memory map, which typically prefers sizes that are powers of 2. And so, NEC not only rounded up the area in the memory map, but also the size of physically available VRAM, giving us 32,<strong>768</strong> bytes per bitplane and page. That's an extra <span class="hovertext" title="×2 if you consider that we have two pages, but we're not going to ruin our performance with a page flip every 16 pixels, as I've thoroughly explained in earlier posts.">768×4 bytes</span> of memory that isn't shown on screen but still counts as VRAM and can be accessed by the EGC.<br>
+	This allowed ZUN to go for a line-by-line approach using the EGC's mask register (<code>0x4A8</code>):</p><ol>
+		<li>Regularly blit the source pixels of the current line to the beginning of each bitplane's offscreen section</li>
+		<li>Turn on the EGC, configure it for a regular VRAM-to-VRAM copy, and set the mask register depending on the current row</li>
+		<li>EGC-blit the line to its intended position</li>
+		<li>Turn off the EGC</li>
+		<li>Repeat for every line of the image</li>
+	</ol><p>
+	From all we've learned about PC-98 hardware so far, this should still be pretty slow. While we're back to a single read-modify-write operation for the masked blit itself, the initial blit of the source pixels to the offscreen area still adds one extra VRAM write per 32 pixels, on an architecture that's already notorious for having slow VRAM. Worse, however, is the fact that configuring the EGC still involves these slow I/O port writes I've been writing about time and time again. EGC-accelerated blitting would have to be <i>really</i> fast to be worth the added I/O cost of this approach. {{Blog_PostLink "2021-02-21" "I sure couldn't believe that this was actually faster when I first saw this piece of ZUN code in early 2021"}}, but he probably was onto something here.
+	</p></li>
+	<li><p><i>EGC (optimized)</i><br>
+	But wait. Blitting only one line in each EGC run only utilizes (<sup>640</sup>/<sub>8</sub>)&nbsp;=80 of the 768 available offscreen bytes we get on each bitplane. How much faster could we go if we used the <i>entire</i> offscreen area during each run?<br>
+	After all, nothing stops us from treating invisible VRAM as regular linear memory for 4bpp pixel data, ignoring the spatial layout of the source image. For TH05's 640×400 title screen image, we can fit ⌊<sup>768</sup>&nbsp;/&nbsp;<sub>(<sup>640</sup>/<sub>8</sub>)</sub>⌋&nbsp;= 9 lines of pixels into the offscreen area, which reduces the number of EGC runs from 400 to just 45. For the crossfaded 320×200 cutscene pictures, we get ⌊<sup>768</sup>&nbsp;/&nbsp;<sub>(<sup>320</sup>/<sub>8</sub></sub>)⌋&nbsp;= 19 lines and <i>11</i> EGC runs, wasting even less VRAM.
+	<figure {{$xfade_egc.FigureAttrs}}>
+		{{call .VideoPlayer $xfade_egc}}
+		<figcaption>A visualization of the 11 EGC runs required for masked blitting of a 320×200 cutscene picture. The offscreen area of VRAM is highlighted in <span style="color:#f0f">pink</span> on the first frame; the white stripe on its last line represents the nonexistent memory past 32,768 bytes, since 768 bytes do not cleanly divide into 640-pixel rows.<br>
+		For 320-wide images, this approach only leaves 64 pixels (or 8 bytes) of VRAM unused. Micro-optimizing those last few bytes won't matter – not only because we'd still need 11 EGC runs even if we blitted 19.2 lines on each frame instead of 19, but also because the mask patterns force us to iterate over discrete rows anyway.</figcaption>
+	</figure>
+	Aside from this major algorithmic optimization, this approach also offers a vast potential for micro-optimizations:
+	<ul>
+		<li>The EGC retains its registers across activations, so we only need to set them up once at the beginning of the image. This saves an additional 5 I/O port writes per EGC run over ZUN's version.</li>
+		<li>Using <code>REP MOVSW</code> for the EGC copy not only follows from our previous results, but also makes sense because we can use a segment override prefix to overwrite <code>MOVSW</code>'s source register and thus make it copy entirely within the <code>ES</code> register. Since we still access the pixel masks for each line through <code>DS</code>, using an <code>ES</code> override removes the need for the awkward <code>DS</code> register juggling that ZUN had to do for each line of the image.</li>
+		<li>Our linear nature of accessing offscreen VRAM necessitates a new set of blitters that doesn't move <code>DI</code> to the next VRAM row at the end of an image row. <i>However</i>, we only actually need these blitters for their ability to skip to the next line of the <i>source</i> image in case we only blit a subregion whose width is smaller than the width of the image. If we blit an image's entire width, we can go down an even faster code path that blasts all lines of an EGC run to VRAM with a single <code>REP MOVS</code> per bitplane. As we've seen for the 640-pixel case above, this is always the optimal choice.</li>
+	</ul></li>
+</ol><p id="xfade-res-{{.Date}}">
+	So, let's construct another benchmark, do some preliminary tests on Neko Project 21/W, and…
+</p><figure {{$xfade.FigureAttrs}}>{{call .VideoPlayer $xfade}}
+</figure><p>
+	…whoa, ZUN's EGC algorithm is <i>bad</i> on emulators. This benchmark even paints it somewhat favorably; for code simplicity reasons, I merely simulate it within my optimized implementation by reducing the number of blitted image rows per EGC run to 1.<br>
+	Let's see how fast it all runs on real hardware. This time, the results for ≥Pentium models are interesting as well:
+</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}}">
+	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="xfade numbers">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.66</td><td>2.50</td><td>1.15</td><td>1.11</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-1991-PC9801DS-U2.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>1.02</td><td>2.90</td><td>1.65</td><td>1.64</td></tr>
+		<tr><th> 96</th><td>1.36</td><td>3.26</td><td>2.14</td><td>2.14</td></tr>
+		<tr><th>128</th><td>1.72</td><td>3.56</td><td>2.60</td><td>2.64</td></tr>
+		<tr><th>160</th><td>2.07</td><td>3.79</td><td>3.07</td><td>3.14</td></tr>
+		<tr><th>192</th><td>2.42</td><td>4.15</td><td>3.58</td><td>3.65</td></tr>
+		<tr><th>224</th><td>2.81</td><td>4.34</td><td>4.06</td><td>4.15</td></tr>
+		<tr><th>256</th><td>3.15</td><td>4.68</td><td>4.52</td><td>4.65</td></tr>
+		<tr><th>288</th><td>3.49</td><td>5.02</td><td>5.01</td><td>5.15</td></tr>
+		<tr class="used"><th>320</th><td>3.82</td><td>5.35</td><td>5.52</td><td>5.66</td></tr>
+		<tr><th>352</th><td>4.20</td><td>5.70</td><td>5.99</td><td>6.17</td></tr>
+		<tr><th>384</th><td>4.52</td><td>6.03</td><td>6.44</td><td>6.66</td></tr>
+		<tr><th>416</th><td>4.88</td><td>6.36</td><td>6.92</td><td>7.16</td></tr>
+		<tr><th>448</th><td>5.20</td><td>6.71</td><td>7.43</td><td>7.68</td></tr>
+		<tr><th>480</th><td>5.58</td><td>7.04</td><td>7.93</td><td>8.17</td></tr>
+		<tr><th>512</th><td>5.91</td><td>7.38</td><td>8.36</td><td>8.67</td></tr>
+		<tr><th>544</th><td>6.26</td><td>7.72</td><td>8.85</td><td>9.18</td></tr>
+		<tr><th>576</th><td>6.59</td><td>8.05</td><td>9.39</td><td>9.68</td></tr>
+		<tr><th>608</th><td>6.95</td><td>8.40</td><td>9.84</td><td>10.18</td></tr>
+		<tr class="used"><th>640</th><td>7.30</td><td>8.65</td><td>10.39</td><td>10.66</td></tr>
+	</table><table data-title="PC-9821Na7 (Pentium, 75 MHz, 1995)" class="xfade numbers active">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.17</td><td>0.41</td><td>0.23</td><td>0.23</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-1995-PC9821Na7.svg"}}" />
+			</td></tr>
+		<tr><th> 64</th><td>0.27</td><td>0.51</td><td>0.40</td><td>0.39</td></tr>
+		<tr><th> 96</th><td>0.38</td><td>0.66</td><td>0.58</td><td>0.56</td></tr>
+		<tr><th>128</th><td>0.48</td><td>0.72</td><td>0.76</td><td>0.73</td></tr>
+		<tr><th>160</th><td>0.60</td><td>0.79</td><td>0.95</td><td>0.91</td></tr>
+		<tr><th>192</th><td>0.70</td><td>0.89</td><td>1.13</td><td>1.08</td></tr>
+		<tr><th>224</th><td>0.80</td><td>0.98</td><td>1.30</td><td>1.25</td></tr>
+		<tr><th>256</th><td>0.90</td><td>1.09</td><td>1.47</td><td>1.42</td></tr>
+		<tr><th>288</th><td>1.02</td><td>1.21</td><td>1.67</td><td>1.60</td></tr>
+		<tr class="used"><th>320</th><td>1.13</td><td>1.31</td><td>1.84</td><td>1.77</td></tr>
+		<tr><th>352</th><td>1.23</td><td>1.41</td><td>2.02</td><td>1.93</td></tr>
+		<tr><th>384</th><td>1.33</td><td>1.51</td><td>2.19</td><td>2.10</td></tr>
+		<tr><th>416</th><td>1.45</td><td>1.63</td><td>2.39</td><td>2.29</td></tr>
+		<tr><th>448</th><td>1.56</td><td>1.74</td><td>2.57</td><td>2.45</td></tr>
+		<tr><th>480</th><td>1.66</td><td>1.83</td><td>2.74</td><td>2.62</td></tr>
+		<tr><th>512</th><td>1.76</td><td>1.93</td><td>2.91</td><td>2.78</td></tr>
+		<tr><th>544</th><td>1.86</td><td>2.04</td><td>3.09</td><td>2.95</td></tr>
+		<tr><th>576</th><td>1.97</td><td>2.14</td><td>3.27</td><td>3.12</td></tr>
+		<tr><th>608</th><td>2.07</td><td>2.24</td><td>3.44</td><td>3.28</td></tr>
+		<tr class="used"><th>640</th><td>2.17</td><td>2.34</td><td>3.61</td><td>3.45</td></tr>
+	</table><table data-title="PC-9821Nw133 (Pentium, 133 MHz, 1997)" class="xfade numbers">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.09</td><td>0.21</td><td>0.15</td><td>0.14</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-1997-PC9821Nw133.svg"}}" />
+			</td></tr>
+		<tr><th> 64</th><td>0.17</td><td>0.28</td><td>0.30</td><td>0.27</td></tr>
+		<tr><th> 96</th><td>0.25</td><td>0.36</td><td>0.44</td><td>0.41</td></tr>
+		<tr><th>128</th><td>0.33</td><td>0.43</td><td>0.59</td><td>0.55</td></tr>
+		<tr><th>160</th><td>0.41</td><td>0.52</td><td>0.74</td><td>0.68</td></tr>
+		<tr><th>192</th><td>0.49</td><td>0.59</td><td>0.89</td><td>0.82</td></tr>
+		<tr><th>224</th><td>0.58</td><td>0.66</td><td>1.03</td><td>0.95</td></tr>
+		<tr><th>256</th><td>0.66</td><td>0.75</td><td>1.18</td><td>1.09</td></tr>
+		<tr><th>288</th><td>0.74</td><td>0.84</td><td>1.33</td><td>1.22</td></tr>
+		<tr class="used"><th>320</th><td>0.82</td><td>0.91</td><td>1.48</td><td>1.36</td></tr>
+		<tr><th>352</th><td>0.90</td><td>0.99</td><td>1.62</td><td>1.49</td></tr>
+		<tr><th>384</th><td>0.99</td><td>1.08</td><td>1.77</td><td>1.63</td></tr>
+		<tr><th>416</th><td>1.07</td><td>1.17</td><td>1.92</td><td>1.76</td></tr>
+		<tr><th>448</th><td>1.15</td><td>1.24</td><td>2.06</td><td>1.90</td></tr>
+		<tr><th>480</th><td>1.23</td><td>1.32</td><td>2.21</td><td>2.03</td></tr>
+		<tr><th>512</th><td>1.31</td><td>1.40</td><td>2.35</td><td>2.17</td></tr>
+		<tr><th>544</th><td>1.40</td><td>1.48</td><td>2.50</td><td>2.30</td></tr>
+		<tr><th>576</th><td>1.48</td><td>1.56</td><td>2.65</td><td>2.44</td></tr>
+		<tr><th>608</th><td>1.56</td><td>1.65</td><td>2.80</td><td>2.57</td></tr>
+		<tr class="used"><th>640</th><td>1.64</td><td>1.73</td><td>2.94</td><td>2.71</td></tr>
+	</table><table data-title="AMD K6-III (400 MHz)" class="xfade numbers">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.08</td><td>0.16</td><td>0.14</td><td>0.13</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-K6-III.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>0.16</td><td>0.23</td><td>0.29</td><td>0.26</td></tr>
+		<tr><th> 96</th><td>0.24</td><td>0.31</td><td>0.43</td><td>0.39</td></tr>
+		<tr><th>128</th><td>0.32</td><td>0.39</td><td>0.57</td><td>0.52</td></tr>
+		<tr><th>160</th><td>0.40</td><td>0.46</td><td>0.72</td><td>0.65</td></tr>
+		<tr><th>192</th><td>0.48</td><td>0.54</td><td>0.86</td><td>0.78</td></tr>
+		<tr><th>224</th><td>0.56</td><td>0.62</td><td>1.00</td><td>0.92</td></tr>
+		<tr><th>256</th><td>0.64</td><td>0.70</td><td>1.15</td><td>1.05</td></tr>
+		<tr><th>288</th><td>0.71</td><td>0.78</td><td>1.29</td><td>1.18</td></tr>
+		<tr class="used"><th>320</th><td>0.79</td><td>0.86</td><td>1.43</td><td>1.31</td></tr>
+		<tr><th>352</th><td>0.87</td><td>0.93</td><td>1.58</td><td>1.44</td></tr>
+		<tr><th>384</th><td>0.95</td><td>1.02</td><td>1.72</td><td>1.57</td></tr>
+		<tr><th>416</th><td>1.03</td><td>1.09</td><td>1.86</td><td>1.70</td></tr>
+		<tr><th>448</th><td>1.11</td><td>1.17</td><td>2.01</td><td>1.83</td></tr>
+		<tr><th>480</th><td>1.19</td><td>1.25</td><td>2.15</td><td>1.96</td></tr>
+		<tr><th>512</th><td>1.27</td><td>1.33</td><td>2.29</td><td>2.09</td></tr>
+		<tr><th>544</th><td>1.35</td><td>1.41</td><td>2.44</td><td>2.22</td></tr>
+		<tr><th>576</th><td>1.43</td><td>1.49</td><td>2.58</td><td>2.35</td></tr>
+		<tr><th>608</th><td>1.50</td><td>1.56</td><td>2.72</td><td>2.48</td></tr>
+		<tr class="used"><th>640</th><td>1.58</td><td>1.64</td><td>2.87</td><td>2.61</td></tr>
+	</table><table data-title="PC-9821V166 Shooting Star (upgraded to K6-2, 533 MHz, 1997)" class="xfade numbers">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.10</td><td>0.24</td><td>0.17</td><td>0.16</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-1997-PC9821V166-K6-2.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>0.19</td><td>0.33</td><td>0.34</td><td>0.31</td></tr>
+		<tr><th> 96</th><td>0.29</td><td>0.40</td><td>0.50</td><td>0.46</td></tr>
+		<tr><th>128</th><td>0.38</td><td>0.48</td><td>0.67</td><td>0.61</td></tr>
+		<tr><th>160</th><td>0.47</td><td>0.57</td><td>0.83</td><td>0.77</td></tr>
+		<tr><th>192</th><td>0.56</td><td>0.66</td><td>1.00</td><td>0.92</td></tr>
+		<tr><th>224</th><td>0.65</td><td>0.75</td><td>1.16</td><td>1.07</td></tr>
+		<tr><th>256</th><td>0.75</td><td>0.84</td><td>1.33</td><td>1.22</td></tr>
+		<tr><th>288</th><td>0.84</td><td>0.93</td><td>1.50</td><td>1.38</td></tr>
+		<tr class="used"><th>320</th><td>0.93</td><td>1.02</td><td>1.66</td><td>1.53</td></tr>
+		<tr><th>352</th><td>1.02</td><td>1.11</td><td>1.83</td><td>1.69</td></tr>
+		<tr><th>384</th><td>1.11</td><td>1.21</td><td>1.99</td><td>1.83</td></tr>
+		<tr><th>416</th><td>1.21</td><td>1.30</td><td>2.16</td><td>1.99</td></tr>
+		<tr><th>448</th><td>1.30</td><td>1.39</td><td>2.33</td><td>2.14</td></tr>
+		<tr><th>480</th><td>1.39</td><td>1.48</td><td>2.49</td><td>2.29</td></tr>
+		<tr><th>512</th><td>1.48</td><td>1.57</td><td>2.66</td><td>2.45</td></tr>
+		<tr><th>544</th><td>1.57</td><td>1.66</td><td>2.82</td><td>2.60</td></tr>
+		<tr><th>576</th><td>1.67</td><td>1.76</td><td>2.99</td><td>2.75</td></tr>
+		<tr><th>608</th><td>1.76</td><td>1.84</td><td>3.15</td><td>2.90</td></tr>
+		<tr class="used"><th>640</th><td>1.85</td><td>1.94</td><td>3.32</td><td>3.06</td></tr>
+	</table><table data-title="Neko Project 21/W (66 MHz)" class="xfade numbers">
+		{{- template "xfade-thead" -}}
+		<tr>
+			<th> 32</th><td>0.08</td><td>0.44</td><td>0.20</td><td>0.18</td>
+			<td rowspan="20">
+				<embed src="{{call .PostFileURL "blitperf-xfade-NP21-66-MHz.svg"}}" />
+			</td>
+		</tr>
+		<tr><th> 64</th><td>0.11</td><td>0.47</td><td>0.25</td><td>0.24</td></tr>
+		<tr><th> 96</th><td>0.15</td><td>0.51</td><td>0.30</td><td>0.30</td></tr>
+		<tr><th>128</th><td>0.18</td><td>0.54</td><td>0.36</td><td>0.36</td></tr>
+		<tr><th>160</th><td>0.22</td><td>0.56</td><td>0.41</td><td>0.42</td></tr>
+		<tr><th>192</th><td>0.25</td><td>0.59</td><td>0.46</td><td>0.48</td></tr>
+		<tr><th>224</th><td>0.30</td><td>0.60</td><td>0.52</td><td>0.54</td></tr>
+		<tr><th>256</th><td>0.33</td><td>0.64</td><td>0.57</td><td>0.60</td></tr>
+		<tr><th>288</th><td>0.37</td><td>0.67</td><td>0.62</td><td>0.66</td></tr>
+		<tr class="used"><th>320</th><td>0.40</td><td>0.71</td><td>0.68</td><td>0.72</td></tr>
+		<tr><th>352</th><td>0.44</td><td>0.74</td><td>0.73</td><td>0.78</td></tr>
+		<tr><th>384</th><td>0.47</td><td>0.77</td><td>0.78</td><td>0.84</td></tr>
+		<tr><th>416</th><td>0.51</td><td>0.81</td><td>0.83</td><td>0.90</td></tr>
+		<tr><th>448</th><td>0.54</td><td>0.84</td><td>0.89</td><td>0.96</td></tr>
+		<tr><th>480</th><td>0.57</td><td>0.88</td><td>0.94</td><td>1.02</td></tr>
+		<tr><th>512</th><td>0.61</td><td>0.91</td><td>0.99</td><td>1.08</td></tr>
+		<tr><th>544</th><td>0.64</td><td>0.94</td><td>1.04</td><td>1.14</td></tr>
+		<tr><th>576</th><td>0.68</td><td>0.98</td><td>1.09</td><td>1.20</td></tr>
+		<tr><th>608</th><td>0.71</td><td>1.01</td><td>1.15</td><td>1.26</td></tr>
+		<tr class="used"><th>640</th><td>0.74</td><td>1.03</td><td>1.20</td><td>1.32</td></tr>
+	</table>
+	<rec98-parent-init></rec98-parent-init>
+</rec98-child-switcher><figcaption>
+	Number of frames required to crossfade <var>Width</var>×400 pixels onto all four planes of VRAM. Thanks to 1️⃣ オップナー2608, 2️⃣ Furball, 4️⃣ Will.Broke.It, and 5️⃣ spaztron64 for the real-hardware tests.
+</figcaption></figure><p>
+	Now <i>that's</i> what we want to see! A clear winner across all relevant generations of PC-98 hardware. Activating the EGC really is only costly on paper; it's worth it even if you just need to perform a single tall RMW blit across all bitplanes.<br>
+	Most importantly, though: <i>This optimization was crucial for emulators, and absolutely worth it.</i> At Neko Project's emulated 66&nbsp;MHz, ZUN's code took consistently longer than one frame to crossfade 640×400 pixels onto VRAM. Hence, TH05's title screen animation always effectively rounded up that logical frame to 2 displayed frames. While this is still valid as per {{Blog_PostLink "2025-09-06#fp" "frame-perfection rule #2"}}, it still counts as unintentional slowdown that we've now removed.
+</p><p>
+	In return, ZUN also made the right call by not bothering about this particular optimization. As image widths and CPU speeds increase, minimizing the number of EGC runs has increasingly diminishing returns.<br>
+	These results might even suggest that we should just formalize a 2-frame delay because <i>clearly</i>, no real-hardware model could ever overcome the VRAM latencies and actually crossfade a single 640×400 image within less than one frame. But again, such a 2-frame delay would be no more or less correct than the 3-frame delay on the PC-9821Na7, or the probably even higher delays on a 486 model. When in doubt, we just go by what ZUN <i>wrote</i>. My allegiance lies with code, not with Japan's e-waste.
+</p><p>
+	Finally, we can also see how upgrading the CPU of your real-hardware PC-98 does nothing to work around VRAM latencies – i.e., the one bottleneck that actually matters for PC-98 Touhou. You'd basically just burn all those additional CPU cycles on waiting for VRAM. Such a CPU upgrade might even be counter-productive, as we can see with the 533&nbsp;MHz CPU getting outperformed by not only the 400&nbsp;MHz AMD K6-III, but even a 133&nbsp;MHz Pentium, due to what spaztron64 suspects to be a southbridge issue.
+</ul></p><h4 id="xfade-future-{{.Date}}">Future work</h4><p>
+	But let's think ahead for a moment about what this means for the games as a whole. If the EGC is <i>that</i> good at this task compared to the CPU, how good could it possibly be for 16-color sprites with an alpha plane? master.lib's <code>super_*()</code> functions blit these using GRCG&nbsp;+ CPU techniques, which decisively lost this benchmark on ≥Pentium hardware and weren't that good on Neko Project either. In contrast, the EGC has a lot going for it, and not just because of these benchmark numbers:
+</p><ul>
+	<li>We get {{Blog_PostLink "2023-03-05#egc" "blitting at non-byte-aligned X positions for basically free"}}, without having to bit-shift on the CPU. Since our source data will always be byte-aligned, I don't even have to handle {{Blog_PostLink "2023-03-05#egc" "the second case of (source bit address &gt; destination bit address) that requires the tile register to be prefilled"}}.</li>
+	<li>Since we never cut any of these <code>super_*()</code> sprites into subregions, we can always blast sprite data into VRAM with a single <code>REP MOVSD</code> instruction per bitplane. The VRAM representation as a contiguous 1D strip of bytes matches the way sprites are stored in RAM.</li>
+	<li>If we treat the 768×4 offscreen bytes as a more sophisticated kind of sprite cache, we <i>might</i> be able to further reduce those initial VRAM writes.<br>
+	(Probably not, though: There's a good chance that this would actually slow down the game due to the overhead of managing these very few cache bytes. At first, this idea might seem perfect for directional bullets: Since these typically come in multiples and at different angles, couldn't we just blit the 512×4 bytes for {{Blog_PostLink "2023-06-30" "all 16 directional variants"}} to the offscreen area once and then blit every bullet of that type at every possible direction without refilling the cache? However, the original game always renders 16×16 bullets in <i>array</i> order, without grouping them by type first. We can't <i>add</i> grouping ourselves because it would violate our {{Blog_PostLink "2025-09-06#fp" "frame-perfection rules"}}: If the game fires different 16×16 bullet types simultaneously, <a href="https://youtu.be/Hjvg3LYVVRo?si=5SPHvrRgYgNLdLM6&t=926">such as in these three patterns in the Mai &amp; Yuki fight</a>, we might change the rendering order and thus end up with a visible difference if two bullets of different types overlap. And since there's no bug here, I can't even justify changing this for the Anniversary Editions.)</li>
+</ul><p>
+	If this frees up enough performance, it might not <i>just</i> help with achieving 0% slowdown on real or emulated PC-98 systems. Maybe the games would then even run decently well on real 386 models, which might even shift the entire marketplace for PC-98 hardware in response? {{HTML_Emoji "tannedcirno"}} Or maybe, we could even have a high-res mod of TH03 that removes {{Blog_PostLink "2022-02-18" "SPRITE16 and its sprite area"}} to run the in-game portion at twice its original vertical resolution with more detailed sprites, but without increasing real-hardware system requirements all too much? Looking forward to writing and running that benchmark in another 2 years or so…
+</p><hr id="pi-{{.Date}}"><p>
+	For now though, that's enough research into blitting performance. Now that we know the optimal way of getting big images from RAM to VRAM in any situation, how do we get them from disk to RAM in the first place? Also, wasn't that animation much slower than the 2 frames per fade step that we would expect from the benchmark results? What's going on there?
+</p><h3>Optimizing .PI image handling</h3><p>
+	Uncompressed 640×400 images are rather large, common hard disk capacities were just starting to hit single-digit GB ranges in the late 90s, and you wouldn't want to haul even more floppy disks to Comiket. So it made sense why ZUN wanted to store these images in compressed form. Enter PI, the second-most common losslessly compressed image format within the PC-98 scene of the 90s. Technically, it's <a href="https://mooncore.eu/bunny/txt/pi-pic.htm">not that complex</a>, but it still achieves great compression ratios for ZUN's images:
+</p><figure class="ratios pi-{{.Date}}"><rec98-child-switcher>
+	<table data-title="Byte sizes" class="active">
+		<thead>
+			<tr>
+				<th></th>
+				<th>{{HTML_Emoji "th02"}} TH02</th>
+				<th>{{HTML_Emoji "th03"}} TH03</th>
+				<th>{{HTML_Emoji "th04"}} TH04</th>
+				<th>{{HTML_Emoji "th05"}} TH05</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Uncompressed</td>
+				<td> 2,195,904</td>
+				<td> 4,874,240</td>
+				<td> 4,815,360</td>
+				<td> 5,905,920</td>
+				<td>17,791,424</td>
+			</tr><tr>
+				<th>.PI</th>
+				<td>  290,921</td>
+				<td>  807,690</td>
+				<td>  765,909</td>
+				<td>  822,993</td>
+				<td>2,687,513</td>
+			</tr><tr>
+				<th><code>oxipng -o max -Z</code></th>
+				<td>  254,074</td>
+				<td>  660,020</td>
+				<td>  635,537</td>
+				<td>  617,115</td>
+				<td>2,166,746</td>
+			</tr>
+		</tbody>
+	</table>
+	<table data-title="Ratios">
+		<thead>
+			<tr>
+				<th></th>
+				<th>{{HTML_Emoji "th02"}} TH02</th>
+				<th>{{HTML_Emoji "th03"}} TH03</th>
+				<th>{{HTML_Emoji "th04"}} TH04</th>
+				<th>{{HTML_Emoji "th05"}} TH05</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Uncompressed</td>
+				<td>100.00 %</td>
+				<td>100.00 %</td>
+				<td>100.00 %</td>
+				<td>100.00 %</td>
+				<td>100.00 %</td>
+			</tr><tr>
+				<th>.PI</th>
+				<td> 13.25 %</td>
+				<td> 16.57 %</td>
+				<td> 15.91 %</td>
+				<td> 13.94 %</td>
+				<td> 14.91 %</td>
+			</tr><tr>
+				<th><code>oxipng -o max -Z</code></th>
+				<td> 11.57 %</td>
+				<td> 13.54 %</td>
+				<td> 13.20 %</td>
+				<td> 10.45 %</td>
+				<td> 12.19 %</td>
+			</tr>
+		</tbody>
+	</table>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure>
+	However, these compression ratios come at an annoying price for the PC-98 in particular. The algorithm naturally decompresses images into a <i>packed</i> representation with color values from 0 to 15 inclusive, <i>not</i> into the planar 4×1bpp format required by the PC-98's 16-color graphics mode. It makes a lot of sense why PI is <i>designed</i> around packed pixels:
+</p><ul>
+	<li>PIC, PI's bigger sibling, originated on the Sharp X68000, <a href="https://gamesx.com/wiki/doku.php?id=x68000:screen_control">whose graphics RAM uses a packed format as well</a>. (By the way, that platform would also be the technically most interesting porting target for PC-98 Touhou, but that's a story for another day.)</li>
+	<li>If a bitplane-centric compressor only looks at one bitplane at a time and doesn't correlate its bits with the other three planes, it's bound to compress the same shapes and image features up to 4 times, depending on how many palette index bits are involved in creating them. Optimally compressing individual bitplanes therefore turns into an exercise of isolating these features within as few bitplanes as possible, which doesn't always work for every image. This <i>could</i> work for standalone images where the encoder is free to optimize the palette and  image bits. But game assets must typically conform to a predefined palette because of other sprites or even game code that already references certain colors within that palette.<br>
+	By focusing on packed colors, PI gets to implement a <a href="https://mooncore.eu/bunny/txt/pi-pic.htm">move-to-front transform</a> that easily manages a similar kind of compression regardless of specific bit values. If the next color to be encoded has been recently seen next to the previously encoded color, that next color can then be encoded in just 2 bits rather than 4. Combine this delta encoding with a way of copying previously encoded pixel strips of arbitrary length, and you've got a great match for the often heavily dithered images you'd want to use on a PC-98.</li>
+</ul><p>
+	But why, then, does master.lib only provide <code>graph_pi_load_pack()</code>, which returns the loaded image in the same packed format that the decompressor naturally produces? I've been wondering that ever since I {{Blog_PostLink "2022-11-30#games" "decompiled the TH03 cutscene system"}}, where the performance issues of this packed format became obvious. This approach only makes sense for the rare use case of using 16-color images as an input for some algorithm and not actually displaying them on screen. But since people <i>do</i> want to display .PI images, master.lib had to provide a second function for actually rendering these packed pixel buffers <i>anyway</i>. Just look at the sheer amount of work that <code>graph_pack_put_8()</code> has to do to unpack just 8 pixels into the 4×1 bytes for every bitplane, every time you want to write them to VRAM:
+</p><figure>
+	<pre style="height: 15em">mov	CL, 2
+
+mov	BL, [SI]
+mov	BH, 0
+shl	BX, CL
+mov	AX, word ptr CS:RotTbl[BX]
+mov	DX, word ptr CS:RotTbl[BX + 2]
+inc	SI
+shl	AX, CL
+shl	DX, CL
+mov	BL, [SI]
+mov	BH, 0
+shl	BX, CL
+or 	AX, word ptr CS:RotTbl[BX]
+or 	DX, word ptr CS:RotTbl[BX + 2]
+inc	SI
+shl	AX, CL
+shl	DX, CL
+mov	BL, [SI]
+mov	BH, 0
+shl	BX, CL
+or 	AX, word ptr CS:RotTbl[BX]
+or 	DX, word ptr CS:RotTbl[BX + 2]
+inc	SI
+shl	AX, CL
+shl	DX, CL
+mov	BL, [SI]
+mov	BH, 0
+shl	BX, CL
+or 	AX, word ptr CS:RotTbl[BX]
+or 	DX, word ptr CS:RotTbl[BX + 2]
+inc	SI
+
+mov	ES:[DI], AL      	; 0a800h
+mov	BX, ES
+mov	ES:[DI+8000h], AH	; 0b000h
+add	BH, 10h
+mov	ES, BX
+mov	ES:[DI], DL       	; 0b800h
+add	BH, 28h
+mov	ES, BX
+mov	ES:[DI], DH       	; 0e000h
+sub	BH, 38h
+mov	ES, BX
+inc	DI</pre>
+	<figcaption>Don't try to understand this code, just look at the sheer <i>amount</i> of instructions. Ideally, we want to replace four of these loop bodies with one <code>MOVSD</code> per bitplane, or just blit an entire bitplane with a single <code>REP MOVSD</code> for 640-wide images.</figcaption>
+</figure><p>
+	This algorithm costs &gt;81 cycles on a 486 and &gt;141 cycles on a 386, <i>for every 8 pixels</i>. Multiply this by the 256,000 pixels of a single 640×400 image, and you get <i>up to 5 frames</i> on Neko Project's 66&nbsp;MHz CPU for blitting <i>any</i> full-screen background image.<br>
+	There is an undocumented <code>graph_pi_load_<strong>un</strong>pack()</code> function, but that one "unpacks" a .PI into an utterly wasteful and unhelpful packed <i>8-bit</i> format, and so is probably undocumented for a reason.
+</p><p>
+	OK, but if performance is bad, there must be some really good other arguments in favor of this packed representation. Right?
+</p><ul>
+	<li>PI's sequence repetition mechanism requires access to previously decoded pixels. Copying them around within a single packed buffer is just way faster than masking and reassembling bits from four different buffers.</li>
+	<li>Keeping <i>both</i> packed and planar versions of the same image in heap memory during decoding becomes increasingly prohibitive in Real Mode as image sizes increase.</li>
+	<li>Also, we can support images whose widths are multiples of 2 rather than 8!</li>
+</ul><p>
+	Err, nope. If you look at <a href="https://mooncore.eu/bunny/txt/pi-pic.htm">PI's location codes</a>, you'll see that they can only reach up to two rows back from the current cursor position. Hence, we only ever need to keep a three-row window of packed pixels – the current row, and the two previous ones – which would slide down as the image gets decoded. At the end of each row, we then convert the third row to planar pixels, write them to our result buffer, and slide down the window by shifting up the bottom two packed rows, making room for the next row. Sure, this means that we end up shifting ((<sup><var>width</var>&nbsp;× <var>height</var></sup>/<sub class="hovertext" title="Each byte contains 2 4-bit pixels">2</sub>)&nbsp;× <span class="hovertext" title="Number of backreference lines shifted up for each row">2</span>) more bytes around in memory. But copies are fast, and the first blit of a resulting 640×400 planar image would still be faster than &gt;5 frames even with these copies factored in.<br>
+	Also, the width restriction is not really an argument if you consider that <code>graph_pack_put_8()</code> already had the same limitation. Consequently, all of ZUN's .PI images already fulfill that requirement.
+</p><hr id="pi-attempts-{{.Date}}"><p>
+	Still, 23 frames to decode a single 640×400 image, using a function that <a href="https://github.com/koizuka/master.lib/blob/c4a5e54116656681fc9449a363528dcf5a60ef05/src/grppilod.asm#L73">restricts itself to 80186-level instructions</a>? Surely we can do better if we target ≥386 CPUs anyway? I've also been on a {{Blog_PostLink "2023-03-05#blitperf" "mission to remove master.lib and any ASM translation units in the debloated/portable branch"}}, so let's write a new .PI loader in C++!<br>
+	Unfortunately, it quickly becomes obvious why you want to write this sort of unpacker in ASM. If we look back at the current record holder for the most unoptimized ZUN-written code, {{Blog_PostLink "2024-11-22#perf" "the curve animation in TH03's character selection screen"}} primarily wastes CPU cycles because the sheer number of 4,096 points per logical frame magnifies the impact of every suboptimal code generation detail. Now increase that to the roughly <i>100,000</i> decoding operations required by a moderately complex 640×400 .PI file, and your C++ code just can't possibly compete with any well-written ASM implementation. There isn't much use for 32-bit instructions in PI decoding either, since it mostly comes down to making decisions based on individual <i>bits</i>. You'd rather use the 4 main general-purpose registers (<code>AX</code>, <code>BX</code>, <code>CX</code>, and <code>DX</code>) as 8 8-bit registers rather than 4 32-bit ones. And not only are C compilers of that era bad at allocating registers, but we would also have to constantly fight C's {{Blog_PostLink "2024-10-22#cleanup" "integer"}} {{Blog_PostLink "2024-12-04#limit" "promotion"}} {{Blog_PostLink "2025-08-12#bug" "rules"}} that will prevent us from using 8-bit registers at every point.<br>
+	And so, my initial attempt at a C++ version was 3.3× slower than the combination of master.lib's <code>graph_pi_load_pack()</code> and <code>graph_pack_put_8()</code>. Even after deploying every inline ASM trick I came up with, I could only bring down that number to 1.7×. There goes the dream of using 100% C++ and no ASM in the codebase for PC-98 Touhou. Might as well continue using all the good parts of master.lib then…
+</p><p>
+	On to plan B then, forking <code>graph_pi_load_pack()</code> to immediately unpack the image into four bitplanes. Integrating the sliding-window algorithm into plain ASM code was slightly tricky, but not the worst thing in the world.<br>
+	It did reveal another slight drawback with the general approach of decoding a PI image into a single output buffer, though. PI supports backreferences to the two previous rows even <i>within</i> the first two rows of an image, where you'd expect them to point outside of the image and thus be invalid. In this case, the algorithm expects the two rows "above" the image to be flood-filled with the 2×1-pixel pair in the top-left corner of the image. This also means that every PI bitstream must start by explicitly specifying these colors in PI's delta encoding. master.lib implements this requirement by always allocating the image buffer with two additional rows at the top, which remain allocated once that buffer is returned. I probably don't even have to explain how the sliding-window algorithm naturally solves this issue as well. Thus, we get to reduce the size of the returned buffer to exactly the size of the image and save a few bytes on the heap.
+</p><p>
+	As expected, this change merges the execution time of <code>graph_pack_put_8()</code> into the execution time of <code>graph_pi_load_pack()</code>, and even manages to be slightly shorter despite all the added memory copies.<br>
+	But now that this works, it would be interesting to compare the performance against the .PI library that ZUN used for TH01:
+</p><h4 id="pi-piload-{{.Date}}">PiLoad</h4><p>
+	It's obvious why ZUN moved away from this library for the later four games. Despite the <i>Load</i> in its name, PiLoad exclusively decodes directly to VRAM, without ever writing the full planar image to conventional memory. This prevents any of the more dynamic use cases that ZUN had in mind for TH02: The multiple and quickly alternating <span lang="ja">東方封魔録</span> images in the title screen animation, the darkening/highlighting effect in the character selection, and the in-game bomb backgrounds all require decompressed image buffers in RAM to run at anywhere close to acceptable speeds at 66&nbsp;MHz.<br>
+	Besides, PiLoad also restricts itself to 80186-level instructions, but looks like a giant mess. Self-modifying code? A packed→planar conversion that doesn't even use lookup tables, which <a href="https://github.com/koizuka/master.lib/blob/c4a5e54116656681fc9449a363528dcf5a60ef05/src/grppput8.asm#L62">master.lib probably uses by default for good reasons</a>? Sure seems as if PiLoad is heavily micro-optimized for the very first generations of PC-98 models that typically wouldn't even have enough RAM for such an image…
+</p><p>
+	…except that all this micro-optimization makes PiLoad more than 2× as fast as master.lib's PI functions, even on Neko Project's emulated i386?!<br>
+	Yup. If you look closer, PiLoad is nothing short of a masterclass in x86 optimization, applied to a use case where every cycle actually matters:
+</p><ul>
+	<li><p>PiLoad internally decompresses into an 8-bit format that keeps the color in the top 4 bits and leaves the bottom 4 bits zeroed. While this wastes quite a bit of buffer space on the surface, it allows a few key optimizations:</p><ul>
+		<li><p>Since every pixel is now byte-aligned, PiLoad can handle every possible type of sequence repetition with a simple <code>REP MOVSB</code> instruction. This is especially handy for the <code>110</code> and <code>111</code> location codes, which refer to a source block of pixels that starts either (<var>width</var>&nbsp;- 1) or (<var>width</var>&nbsp;+ 1) pixels before the current write cursor. With a 4bpp in-memory format, you additionally have to handle the slower case you'd run into 50% of the time, where the source block starts in the middle of a byte and forces you to manually extract and recombine nibbles.</p></li>
+		<li><p>PiLoad can then optimally place the color table for the move-to-front transform in the "zero page" of the decode buffer's segment, from offsets <code>0x00</code> to <code>0xFF</code> inclusive. Then, each 8-bit color value doubles as the address to its corresponding table row, removing any need for further address calculations. 🤯</p></li>
+	</ul></li>
+	<li>Bit reading is incredibly efficient, making use of the key insight that early x86 favors non-taken jumps over taken ones. If you consumed all bits in your current byte-sized input data shift register, you must advance to the next byte in your file buffer and potentially reload bytes from disk after you reach the end of the buffer. Optimally, you'd want to optimize for the happy path you will hit in 7 out of 8 cases: decrement the bit counter (1 instruction), jump away to buffer refill code if necessary (1 instruction), read the bit into the carry flag (1 instruction), and then immediately process the value of the carry flag in the next instruction. But how do you conditionally "jump away" and then return to where you came from? x86 only has conditional <i>jumps</i> and no conditional <i>calls</i>, and even if it did, calls would add even more cycles of latency. This means that you can't just define a single bit reader function and then inline it, because such a function would always look something like this:
+	<figure><pre>	dec	bits_remaining
+	jnz	@@buffer_still_contains_bits
+
+@@refill:
+	; Load [bits] from buffer or disk…
+	; …
+
+	mov	bits_remaining, 8
+
+@@buffer_still_contains_bits:
+	shl	bits, 1	; Shift next bit into carry flag</pre></figure>
+	The <code>@@refill</code> code necessarily has to be part of the function, but awkwardly sits between the check and the call-site usage code. Execution would have to jump over it in the majority of cases, which is the opposite of what we want. This is what <code>graph_pi_load_pack()</code> does, and it wastes &gt;14 cycles per compressed .PI input byte on a 486, &gt;35 cycles on a 386 or 286, &gt;63 cycles on a 186, and &gt;84 cycles on an 8086.<br>
+	Instead, PiLoad instantiates a separate copy of its <code>@@refill</code> code for every one of the 22 instances where the decoder needs to read a bit. This way, each bit reader instance can directly jump back to the happy path of its usage code:
+	<figure><pre>	dec	bits_remaining
+	jz	refill_instance_0
+happy_path_0:
+	add	bit_reg, bit_reg	; Shift next bit into carry flag
+	; Use the carry flag…
+	; …
+
+refill_instance_0:
+	; Load [bit_reg] from buffer or disk…
+	; …
+	mov	bits_remaining, 8
+	jmp	happy_path_0</pre></figure>
+	This kind of optimization even reaches into the physical layout of the code. On the 80186, conditional jumps were still limited to ±128 bytes from the current position. Therefore, PiLoad can't just bunch all 22 instances into a single place, but must place each instance as close as possible to its usage code, at a place where regular execution jumps over a large part of code anyway.</li>
+	<li><p>Finally, the packed→planar conversion is done by… alternating <code>ADD</code> and <code>ADC</code> instructions?!</p>
+	<figure><pre>
+; Each iteration of this loop consumes two pixels and thus writes two output bits per bitplane.
+; Thus, looping 4 times gives us a full byte for each bitplane.
+rept 4
+	; Note how processing 2 pixels / 16 bits is the most natural solution here, even on a 32-bit
+	; system. The algorithm relies on each decoded packed pixel byte being independently
+	; accessible, and x86 only gives you this access to the first and second byte of its AX, BX,
+	; CX, and DX registers. Hence, this instruction loads the next two pixels into AL (left) and AH
+	; (right), due to x86 being little-endian.
+	; On 32-bit CPUs, `LODSD` followed by a `SHR EAX, 16` further down would be faster on paper,
+	; but the actual impact is something we'd have to benchmark.
+	lodsw
+
+	; Shift out each successive color bit into the carry flag, and from there into one of our four
+	; target 8-bit registers (DH, DL, BH, BL) that represent the next 8 pixels on each bitplane.
+	; Since we have to look at the upper 4 bits of AL and AH, left-shifting via addition gives us
+	; the color bits in order from most to least significant, so we also have to shift them into
+	; the bitplane registers in this order.
+	; Another neat little detail: We don't even have to clear the target registers before this
+	; unrolled loop! After 4 iterations, we will have rotated 8 new bits into each of our four
+	; 8-bit target registers, which will have automatically shifted out any of their previous bits.
+	add	al, al	; Left
+	adc	bl, bl	; Plane 3
+	add	ah, ah	; Right
+	adc	bl, bl	; Plane 3
+	add	al, al	; Left
+	adc	bh, bh	; Plane 2
+	add	ah, ah	; Right
+	adc	bh, bh	; Plane 2
+	add	al, al	; Left
+	adc	dl, dl	; Plane 1
+	add	ah, ah	; Right
+	adc	dl, dl	; Plane 1
+	add	al, al	; Left
+	adc	dh, dh	; Plane 0
+	add	ah, ah	; Right
+	adc	dh, dh	; Plane 0
+endm</pre>
+		<figcaption>A lot simpler than what you'd apparently have to do on an Amiga, as revealed by a Google search for <kbd>chunky to planar</kbd>. {{HTML_Emoji "thonk"}}</figcaption>
+	</figure>
+	It seems like BERO was just as surprised about this equivalence between <code>ADD/ADC reg, reg</code> and <code>SHL/RCL reg, 1</code> as I was, and probably defined the <a href="https://github.com/nmlgc/ReC98/blob/9e3869341542d9fa8220056c972bf709a989bd54/libs/piloadc/piloadc.asm#L18-L23"><code>shl1</code> and <code>rcl1</code> macros</a> used by the actual code to improve clarity.<br>
+	Comparing the <a href="https://www2.math.uni-wuppertal.de/~fpf/Uebungen/GdR-SS02/opcode_i.html">cycle counts</a> of the two variants then reveals quite a surprise:
+	<figure>
+		<table id="cycles-{{.Date}}">
+			<thead>
+				<tr>
+					<th></th>
+					<th>8086</th><th>80186</th><th>80286</th><th>80386</th><th>80486</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th><code>ADD/ADC reg, reg</code></th>
+					<td>3</td><td>3</td><td>2</td><td>2</td><td>1</td>
+				</tr>
+				<tr>
+					<th><code>SHL/ROL/RCL reg, 1</code></th>
+					<td>2</td><td>2</td><td>2</td><td>3</td><td>3</td>
+				</tr>
+			</tbody>
+		</table>
+		<figcaption>Without Pentium numbers, as we've seen above that Pentium systems are bottlenecked by the GDC, not the CPU.</figcaption>
+	</figure><p>
+		Yup. PiLoad's choice of instructions tells us that it was indeed deliberately optimized for ≥386 CPUs, the exact ones you'd want to optimize PC-98 Touhou code for, despite formally restricting itself to the 80186 ISA. We don't know whether Koizuka deliberately wanted to target ≤286 CPUs with <code>graph_pack_put_8()</code>, but the fact remains that this choice slowed down PC-98 Touhou on its target hardware. And yes, this includes the table-less version: While that one uses the exact same <i>algorithm</i> as PiLoad, it spells <code>ADD</code> and <code>ADC</code> as <code>ROL 1</code> and <code>RCL 1</code> and thus only runs minimally faster than the table-driven version on Neko Project's emulated i386.
+	</p>
+	<li>Despite all the inlining, PiLoad still ends up 207 bytes <i>smaller</i> than the combination of master.lib's <code>graph_pi_load_pack()</code> and the default version of <code>graph_pack_put_8()</code> with its 1,024-byte lookup table.</li>
+</li></ul><p>
+	So, let's add decoding into memory to PiLoad instead! Turns out that PiLoad was the simpler library to extend all along, since it already used the same sliding-window technique for unpacking pixels into VRAM. All it needed was a width check for a multiple of 8, a calculation of the bitplane size, and a new and much simpler unpacking function that doesn't need to support unaligned X positions or GRCG-powered transparency.<br>
+	However, a certain unfortunate issue that will crop up in part 4 will require more outside control over the loading process. As a result, the API of my forked version looks quite different:
+</p><ul>
+	<li>I separated the loading process into a <i>header loading</i> and <i>bitplane decoding</i> step, giving the caller full control over how and where to allocate the final image buffer.</li>
+	<li>I replaced all of PiLoad's own <code>INT 21h</code> file reading code with a single read callback, shifting the responsibility for opening and closing .PI files to the caller. master.lib's <code>INT 21h</code>-hooking packfile feature would later turn out to be one of the most poorly-implemented and overly complex features I've seen so far within that library, perhaps even worse than packed .PI loading. Hooking <code>INT 21h</code> was the obvious choice for easily supporting optional packfiles in both master.lib's own code and any third-party libraries, but the cost this comes at…</li>
+</ul><p>
+	In exchange for the new features, I decided to drop a few features that we either don't need in this codebase or that are better implemented at another level. This list includes
+</p><ul>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/13629ddd6c7702450e0ef77c2169516ac7c1d148">direct blitting at unaligned X positions</a> (not needed),</li>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/6d506155272f5942a26e21ad0c26280bd0043a5c">support for using the library from Pascal</a> (sorry),</li>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/89075413fe085f79243811bf886281192b0d182c">palette setting and toning</a> (covered by master.lib),</li>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/09c367362ebdf9b8d7bb3677d44d67273f44b039">video mode setting</a> (covered by master.lib), and</li>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/422c985396b54bef332e91c9f21e4a8f17d2f47c">comment display</a> (not needed).</li>
+</ul><p>
+	This might not be ideal for other PC-98 developers who might want to use my fork in their projects, but you can always revert these commits in your own version.
+</p><hr id="pi-th03-{{.Date}}"><p>
+	Before we can entirely replace master.lib's PI functions with PiLoad in TH02-TH05 though, we have to address one particular silly detail:
+</p><h4>{{HTML_Emoji "zunpet"}} TH03's silly line-doubled sprite sheets {{HTML_Emoji "zunpet"}}</h4>
+	As we all know by now, {{Blog_PostLink "2022-02-18" "TH03 renders its in-game graphics at line-doubled 640×200 to free up half of VRAM for sprite data"}}. This means that it can store all sprites at half of their displayed vertical resolution, saving some disk space and RAM in the process. However, ZUN only <i>actually</i> did this for the uncompressed sprites loaded from the .BF2 and {{Blog_PostLink "2020-11-16" ".MRS"}} files. All in-game .PI sprite sheets are, for some reason, stored in the same line-doubled form that would be shown on screen:
+</p><figure class="pixelated" style="width: 640px;">
+	<img src="{{$enemy01}}" width="640" alt="TH03's ENEMY01.PI, showing off the unnecessary line doubling of TH03's in-game sprites loaded from .PI files">
+	<figcaption>
+		Since PI's location codes are designed around vertical repetition, line doubling has a negligible impact on compressed file sizes. Such an image still decodes into twice as many bytes as needed, though…
+	</figcaption>
+</figure><p>
+	This is very silly because your PI implementation now needs a feature to undo this doubling by skipping over every second line at either load or render time. ZUN chose to place this feature at render time because that's the simplest solution when you use master.lib's PI functions. Since <code>graph_pack_put_8()</code> unpacks and blits only one line at a time, it already expects the caller to loop over all lines of a PI image and to do all the x86 segment arithmetic required for handling images larger than 64&nbsp;KiB. From there, it's only natural to add a copy of that function that skips every second line.<br>
+	But such a render-time feature would strain our generic blitter:
+</p><ul>
+	<li>At worst, we'd have a <i>"are we line-skipping"</i> check and branch within the low-level blitter functions, at the end of every row. Such a branch would add new code for the line-skipping case that would be jumped over in the optimal case, slowing down the common case in the one place where we want to go fast.</li>
+	<li>We could generate separate line-skipping versions for all low-level blitters, but that adds code bloat, blitter management bloat, <i>and</i> API surface area bloat.</li>
+	<li>We could adapt master.lib's solution and have the high-level draw calls only run the blitter for each 1-pixel row, which allows them to jump over every second line just like you would do with <code>graph_pack_put_8()</code>. But conceptually, this just feels so <i>wrong</i>. I designed the entire blitter to be fast for sprites with arbitrary height, even going so far as to unroll the usual vertical loop for images shorter than 192 pixels on the X axis, and then we're slamming the brakes just to work around these silly assets. Plus, the added API surface is still a burden for regular draw calls.</li>
+</ul><p>
+	Moving the skip to load time, on the other hand, has several clear advantages:
+</p><ul>
+	<li>The loaded images <i>actually</i> only require half the memory.</li>
+	<li>They also decode slightly faster since we can skip the packed→planar conversion for every second line.</li>
+	<li><a href="https://github.com/nmlgc/ReC98/commit/1e28b16861c2e7b4dddb7b49e49ddd8bc0e99090">The whole feature only requires 12 additional ASM instructions</a>.</li>
+	<li>We'd still have to add a flag to the load call. But that's a one-time API surface cost, not a multiplicative one, and thus doesn't hurt at all.</li>
+</ul><hr id="goal-{{.Date}}"><p>
+	And if we now put all of this together, we indeed get TH05's crossfaded title screen animation running at its intended speed on a 66&nbsp;MHz Neko Project. Mission accomplished!
+</p><figure {{$title5_o.FigureAttrs}}>
+	{{call .VideoPlayer $title5_o.SetNoLoop $title5_d.FlipActive.SetNoLoop}}
+</figure><p>
+	Interestingly though, running this animation at its denoted speed now reveals a page-flipping bug in ZUN's code. Each crossfading step is supposed to be visible for 4 logical frames, but that's not what we get:
+</p><ul>
+	<li>For some reason, ZUN goes single-buffered before the first logical frame of the first mask pattern, by both showing and accessing page 0. The recording from the original game demonstrates how ZUN's code hilariously fails to race the beam here, as the combination of <code>graph_pack_put_8()</code> and unoptimized crossfaded blitting stretches this single high-level draw call to 7 frames. {{HTML_Emoji "zunpet"}}</li>
+	<li>ZUN then continues double-buffering after this first frame, accessing page 1 and showing page 0 for the second frame of the first mask pattern. However, we've just seen page 0 on the frame before, so we're now spending a second logical frame on the same page.</li>
+	<li>The rest of the animation is properly double-buffered. Each fade step is (wastefully) rendered twice, or once for each page, providing an example of {{Blog_PostLink "2025-09-06#pages" "the hardware detail leak I mentioned in part 1"}}. But since the very first frame got duplicated, we've shifted the entire timing of the animation back by one logical frame.</li>
+	<li>After the code rendered the 4<sup>th</sup> logical frame of the 4<sup>th</sup> mask pattern, ZUN immediately returns to single-buffering on page 0 for the main menu, as the original game needs to use page 1 to store the raw background image for cursor and text unblitting purposes. This creates a more unusual landmine:<ul>
+		<li><p>
+			The original game does first blit the final unmasked image to page 1, but then copies it from page 1 to page 0 using master.lib's notoriously slow <code>graph_copy_page()</code> function <i>while showing page 0</i>. <code>graph_copy_page()</code> fully copies each bitplane before moving on to the next one, which explains the intermediate result on frame 97: Some colors of the title screen image already appear unmasked because their palette indices only use the lowest two bits whose planes have already been fully copied, the other colors get a discolored version of the fourth mask pattern, and we get a screen tearing line at the 371<sup>st</sup> row of VRAM which reveals that master.lib only managed to copy 2.9275 out of the 4 bitplanes within this physical frame.<br>
+			Hence, ZUN wasn't effectively double-buffering at all, despite the page flip.
+		</p></li>
+		<li><p>
+			Since the debloated build retains the background image in RAM, it doesn't need to blit anything to page 1. Therefore, it can go fully single-buffered and start blasting planar pixels from RAM to VRAM at some point near the start of the vertical blanking interval. Mysteriously, we manage to race the beam on every 66&nbsp;MHz configuration, despite also fully blitting each 640×400 bitplane in order. 😲<br>
+		</p></li>
+	</ul>
+	In both cases, the sudden flip to single-buffering cuts the last double-buffered frame from the crossfade animation that we were still supposed to show. Thus, the code defines a 5-4-4-3 sequence of logical frames for each fade step instead of the intended 4-4-4-4 one.</li>
+</ul><p>
+	See? And that's just one example of {{Blog_PostLink "2025-09-06#pages" "the bad code quality you invite by having page flips in high-level menu code"}}. Now multiply that by the number of screen tearing landmines, and you'll get why this has taken so long.
+</p><p>
+	Another minor reason: Some of the code I wanted to debloat or make more portable within these 11 pushes was still in ASM, and it would have been way more annoying to keep and work around that code than to just decompile it. Next up: Taking a very quick look at these few decompilations.
+</p><p>
+	Oh, and just in case you want to run these benchmarks yourself:
+	{{HTML_Download .HostedPath $dl}}
+</p>

@@ -7,6 +7,7 @@ import (
 	"html/template"
 
 	"github.com/lucasb-eyer/go-colorful"
+	"github.com/nmlgc/rec98.nmlgc.net/src/svg"
 )
 
 var meterGradient = GradientTable{
@@ -15,9 +16,15 @@ var meterGradient = GradientTable{
 	{MustParseHex("#75b635"), 100},
 }
 
-// CSSMeterPoint generates a CSS color for the given meter percentage.
-func CSSMeterPoint(val float64) template.CSS {
-	return template.CSS(meterGradient.GetInterpolatedColorFor(val).Hex())
+// CSSMeterFG generates a CSS foreground color for the given meter percentage.
+func CSSMeterFG(val float64) template.CSS {
+	h, s, l := meterGradient.GetInterpolatedColorFor(val).Hsl()
+
+	// go-colorful does not clamp these themselves.
+	s = Min(s, 1/1.1)
+	l = Min(l, 1/1.3)
+
+	return template.CSS(colorful.Hsl(h, (s * 1.1), (l * 1.3)).Hex())
 }
 
 // CSSMeter generates a CSS background gradient for the given meter percentage.
@@ -56,6 +63,9 @@ var SharedFuncs = map[string]any{
 	},
 
 	// Markup
-	"CSS_Meter":      CSSMeter,
-	"CSS_MeterPoint": CSSMeterPoint,
+	"CSS_Meter":   CSSMeter,
+	"CSS_MeterFG": CSSMeterFG,
+
+	// SVG
+	"SVG_BlitperfCSS": func() string { return svg.BlitperfCSS(CSSMeterFG) },
 }

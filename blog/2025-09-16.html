@@ -1,0 +1,176 @@
+{{$title2_key := (call .PostFileURL "TH02-Hit-key-mockup.webp") -}}
+{{$regist3_sort := (call .PostFileURL "TH03-High-Score-credit-sort-bug.webp") -}}
+{{$regist3_default := (call .Video "TH03-High-Score-default-name" "Video showcasing the default name replacement in TH03's High Score menu, triggered by entering BBBBBBBB to showcase that this happens for any character, not just A or an empty name")}}
+{{$title4 := (call .Video "TH04-Title-animation" "Video of TH04's title animation")}}
+{{$allcast_orig := (call .Video "TH05-All-Cast-first-original" "Video of the first 8 beats of TH05's All Cast sequence as shown in the original game, showcasing how 1) the first picture crossfades onto the screen way behind the second beat of Peaceful Romancer indicated in the code, and 2) how the crossfading effect only uses two out of the four 4×4 mask patterns")}}
+{{$allcast_dequirked := (call .Video "TH05-All-Cast-first-dequirked" "Video of the first 8 beats of TH05's All Cast sequence in a hypothetical dequirked version that 1) crossfades the first picture exactly on the second beat of Peaceful Romancer as indicated in the code, and 2) uses all four 4×4 mask patterns")}}
+{{$allcast_cu := (call .Video "TH05-All-Cast-catch-up" "Video of the transition from the second to the third screen of Yuuka's TH05 All Cast sequence, demonstrating how the picture and text cues have to catch up with the BGM beat targets during such a transition") -}}
+{{$zerobyte4 := (call .PostFileURL "TH04-0-byte-GENSOU.SCR.webp") -}}
+{{$zerobyte5 := (call .PostFileURL "TH05-0-byte-GENSOU.SCR.webp") -}}
+{{$zerobyte3 := (call .PostFileURL "TH03-0-byte-YUME.NEM.webp") -}}
+{{$ra4bug := (call .PostFileURL "TH04-Reimu-A-Good-Ending-script-bug.webp") -}}
+
+{{$title4.AddMarker  90 "Outline fade-in start" "right" -}}
+{{$title4.AddMarker 106 "Outline fade-in end" "left" -}}
+
+{{$allcast_orig.SetTitle "Original game" -}}
+{{$allcast_dequirked.SetTitle "Dequirked version" -}}
+
+{{$allcast_orig.AddMarker   0  "1" "" -}}
+{{$allcast_orig.AddMarker  23  "2" "" -}}
+{{$allcast_orig.AddMarker  47  "3" "" -}}
+{{$allcast_orig.AddMarker  70  "4" "" -}}
+{{$allcast_orig.AddMarker  94  "5" "" -}}
+{{$allcast_orig.AddMarker 117  "6" "" -}}
+{{$allcast_orig.AddMarker 141  "7" "" -}}
+{{$allcast_orig.AddMarker 164  "8" "" -}}
+{{$allcast_dequirked.LinkMarkers $allcast_orig -}}
+
+{{$allcast_cu.AddMarker  40 "Fade-out" "" -}}
+{{$allcast_cu.AddMarker  77 "Fade-in" "" -}}
+{{$allcast_cu.AddMarker 120 "TH02" "" -}}
+{{$allcast_cu.AddMarker 142 "Reimu" "left" -}}
+{{$allcast_cu.AddMarker 180 "Rika" "left" -}}
+{{$allcast_cu.AddMarker 228 "Meira" "left" -}}
+{{$allcast_cu.AddMarker 274 "Marisa" "left" -}}
+{{$allcast_cu.AddMarker 322 "Mima" "left" -}}
+
+<p>
+	Part 3 of {{Blog_PostLink "2025-09-06" "the 4-post series about the big 2025 PC-98 Touhou portability subproject"}}, and we actually get to move some percentages on the front page with this one! For once, there truly isn't a lot to mention about most of these five disconnected small-feature decompilations, so let's go for more of a <a href="https://touhou-memories.com">touhou-memories</a> style and string together a few shorter bullet points and paragraphs. For even greater brevity, I'll also use the ZUN code issue emoji you might already know from Twitter or Bluesky: 🐞 denotes a bug, 💣 denotes a landmine, and 🎺 denotes a quirk.
+</p>{{call .TOC}}<hr id="th02-main-{{.Date}}"><h3>Revising TH02's main menu</h3><p>
+	This was one of those old decompilations from 2015 that I really wanted to bring up to current standards before the <code>debloated</code> branch would roll out the new more portable and performant blitting code. Replacing the magic-number coordinates with constants and calculations revealed {{Blog_PostLink "2025-05-10#menu" "the usual off-by-one text positioning bugs in the Option menu"}}, despite ZUN still using monospaced text in this game…<br>
+	As for more unique and exciting details in this screen: ZUN's defined {{HTML_TagInline "gaiji"}} strings contain an unused adaptation of TH01's blinking <code lang="ja">ＨＩＴ　ＫＥＹ</code> text. On screen, it might have looked something like this:
+</p><figure class="fullres pixelated">
+	<img
+		src="{{$title2_key}}"
+		width="640"
+		alt="Mockup of the TH01's &amp;ＨＩＴ　ＫＥＹ&amp; string in TH02"
+	>
+	<figcaption>
+		This string is so unused that we don't even know its intended position, though.
+	</figcaption>
+</figure><hr id="th03-regist-{{.Date}}"><h3>Finishing TH03's High Score menu</h3><p>
+	At the end of 2021, {{Blog_PostLink "2021-12-27" "I already decompiled most of this menu"}}, but left two functions in ASM due to push scope constraints. Originally, I thought that this menu would need a few changes to address a certain scorefile inconsistency I'll mention in Part 4, but I ended up finding a better solution. Still, we got one interesting discovery per function out of it:
+</p><ul><li>
+	If you've ever entered a score and were too lazy to type a proper name, you know that TH03 just uses the name of the player character in Romaji if you enter either nothing or <kbd>AAAAAAAA</kbd>. But did you know that this happens if you enter <i>any</i> letter 8 times?
+	<figure {{$regist3_default.FigureAttrs}}>{{call .VideoPlayer $regist3_default}}</figure>
+</li><li>
+	🐞 When sorting a new score into the list, ZUN does not look at the 9<sup>th</sup> digit, i.e., the number of continues used. If you ever manage to enter a score whose most significant 8 digits match an existing entry in the current difficulty's score list, those two scores are considered equal and the new score always gets inserted below the old one. If you enter more than one such score, the list will therefore maintain the order in which the scores were entered:
+	<figure class="fullres pixelated">
+		<img
+			src="{{$regist3_sort}}"
+			width="640"
+			alt="Screenshot of TH03's sorting bug for new high scores. Places 2 to 5 show four 800-million scores that used 0, 3, 1, and 2 continues"
+		>
+		<figcaption>In this example, I first entered 800-million scores with 0, 3, and 1 continues in exactly this order, before entering this new 2-continue score.</figcaption>
+	</figure>
+</li></ul><hr id="th04-title-{{.Date}}"><h3>TH04's title screen animation</h3><p>
+	This decompilation was necessary because its palette manipulation code did the very dubious thing of accessing the palette in a freed .PI slot. I don't think that the stylish effect of separately whiting in the image's black outlines is appreciated enough. And yes, that formally was the last non-RE'd tiny bit of any <code>OP.EXE</code> binary!
+</p><figure {{$title4.FigureAttrs}}>
+	{{call .VideoPlayer $title4}}
+	<figcaption>
+		Also note that single black pixel in Reimu's gohei. {{HTML_Emoji "zunpet"}}
+	</figcaption>
+</figure><hr id="th05-allcast-{{.Date}}"><h3>TH05's All Cast sequence</h3><p>
+	This sequence contained the last not yet decompiled instance of {{Blog_PostLink "2025-09-10#xfade" "masked crossfading"}}, which the <code>debloated</code> branch wants to replace with our single optimized implementation.<br>
+	Most picture and text cues in this sequence are synced to the BGM, using <a href="https://github.com/nmlgc/ReC98/blob/9e3869341542d9fa8220056c972bf709a989bd54/libs/kaja/pmddata.doc#L172-L184">PMD's <code>AH=05h</code> function to retrieve the current measure</a>. And yes, that's <i>measures</i>, which is indeed the only time unit you get from PMD. The cues appear to be timed based on <i>beats</i> rather than measures, but the secret there is that ZUN simply wrote <span lang="ja">Peaceful Romancer</span> in the internal time signature of <sup>1</sup>/<sub>4</sub>. Just in case anyone tries to mod this BGM and starts wondering why the sequence suddenly progresses more slowly. I'll just use <q>beats</q> below since it's shorter.<br>
+	Any cues that <i>don't</i> appear synced only do so because of – you guessed it – weird ZUN code issues.
+</p><ul><li>
+	<p>🐞 But first, what happens if you run the game on a system without an FM chip? PMD does remain resident in that case, but enters a reduced-functionality mode that refuses to even process song data, leaving you with no BGM beats to sync to. Due to the various ways of setting the tempo in a .M file, it's impossible to just parse out the tempo without <a href="https://github.com/Blargzargo/pmd2mml">reimplementing the entire format</a>, so it makes sense why ZUN just hardcoded a fixed replacement delay of 44 frames per beat. However, 44 frames translate to (<sup>44</sup>/<sub>56.423</sub>)&nbsp;≈ 780&nbsp;ms&nbsp;≈ 76.94&nbsp;BPM, which is ~1.9× slower than <span lang="ja">Peaceful Romancer</span>'s actual ~145-147 BPM.<br>
+	Discoveries like these always start out as quirks until I find evidence that would promote them to bugs. And sure enough: ZUN renders this entire sequence at the halved frame rate of 28.212&nbsp;FPS, that slowdown factor is suspiciously close to 2, and <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th05/end/allcast.cpp#L140">the code actually specifies 22 frames</a>. This looks as if ZUN simply didn't realize that 22 frames would only translate to the slightly more correct 153.88&nbsp;BPM at the native frame rate of 56.423&nbsp;FPS.<br>
+	This bug also applies if you deactivated BGM in the Option menu, since ZUN treats both cases identically.</p>
+</li><li>
+	<p>🎺 The very first crossfading animation doesn't appear to be synced to any beat, though? It starts close to but not exactly on beat 5:</p>
+	<figure {{$allcast_orig.FigureAttrs}}>
+		{{call .VideoPlayer $allcast_orig.FlipActive $allcast_dequirked}}
+	</figure>
+	<p>This one is quickly explained: ZUN does <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th05/end/allcast.cpp#L176">enter the first screen within 2 frames of <span lang="ja">Peaceful Romancer</span>'s first downbeat on "beat" 3</a>, but each screen <i>actually</i> starts with a 34-frame fade-out of the previous screen before crossfading in the new picture. Hence, most of this apparent delay is taken up by a fade-out from black to black. {{HTML_Emoji "tannedcirno"}} The remaining 4 frames between the beat and the first visible on-screen pixels can be attributed to double-buffering at the sequence's halved frame rate.</p>
+</li><li>
+	<p>🎺 Also, why does the crossfading animation only use two of the four mask patterns across its 16 frames? This seems like <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th05/end/allcast.cpp#L91">a typo in the code</a>, but was almost certainly done on purpose to make this sequence feel more languid and relaxed. The dequirked version with all four mask patterns looks almost too hectic, especially compared to the single mask pattern that ZUN used for text.</p>
+</li><li>
+	<p>But even after that initial screen, the first two or three text cues on later screens don't appear in sync with the BGM beats either?</p>
+	<figure {{$allcast_cu.FigureAttrs}}>
+		{{call .VideoPlayer $allcast_cu}}
+		<figcaption>As pointed out by the uneven placement of the Reimu and Rika cues.<br>
+		These are Yuuka's second and third screens; the fact that each character gets its own sequence of pictures is common knowledge by now, right?</figcaption>
+	</figure><p>
+		To understand this, we have to look at how ZUN defines the target BGM beat for each cue in the first place. There's only a single variable that defines the target beat for the BGM-syncing delay, and ZUN simply adds a certain number of beats to this variable before every cue. In the case of these text cues, he adds 2 beats, which matches what we can observe for the correctly synced cues in the video above. The very first text cue, however, is placed two beats after… the beat the fade-out was started on, even though we've just spent at least 56 frames on the two fading effects. This means that BGM playback will not only have already reached this beat, but will even have progressed about half a beat beyond. {{HTML_Emoji "zunpet"}} Thus, the game just fades in the text immediately…
+	</p><p>
+		💣 …except that it doesn't! All of the above was pretty quirky, but then ZUN adds a definite landmine by loading the .PI file with the picture for the next screen <i>right after the fade-in animation</i>. If you just look at <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th05/end/allcast.cpp#L113-L117">the few lines after that load call</a>, this seems like a productive use of an intended 2-beat delay, but we don't actually get that 2-beat delay, as I explained above. Instead, BGM playback gets to progress even further beyond the target beat, by the CPU-specific amount of frames it takes to load that next .PI image on the system the game happens to run on. I've recorded the video above by running the original game on our target Neko Project 66&nbsp;MHz configuration, and got an additional 17 frames of cue drift, between frames 101 and 118 inclusive. In the end, it takes the first three text cues for the beat target to catch up with the BGM on this system, and we only return to proper syncing with Meira, where the beat target has finally moved ahead of BGM playback.<br>
+		That .PI load call would have been much more appropriate before the 30-beat delay in front of the fade-out…
+	</p>
+</li><li>
+	💣 Even worse, ZUN also loads a new image on the last screen, which defines no next image. This causes the game to unconditionally load from a null pointer, resulting in a landmine in {{Blog_PostLink "2023-03-05#landmines" "the classic sense of the word"}}: You can completely ignore it on PC-98 because</p><ul>
+		<li>Real Mode just lets you read from address <code>0000:0000</code> without a segmentation fault</li>
+		<li>The far pointer to the handler for <code>INT 0</code> is highly unlikely to actually point to the name of an existing file</li>
+		<li>That file is even less likely to be a valid .PI file</li>
+		<li>The game won't display that image anyway, and free its buffer once the sequence ends shortly after</li>
+	</ul>But you wouldn't want to rely on null pointers being filtered by the platform layer.</li>
+</ul><hr id="score-{{.Date}}"><h3>Finishing TH03/TH04/TH05 scorefiles</h3><p>
+	Well, at least as far as decompilation is concerned. Cleaning up all these binary-specific inconsistencies on the <code>debloated</code> branch will be just as annoying as reconstructing them in the first place, and I won't even get it all the way done within these 11 pushes. TH05 made this even worse by continuing its general trend of taking TH04's slightly bloated but overall fine C++ code and needlessly rewriting it in micro-optimized and only semi-decompilable ASM. If you still believe that the <code>master</code> branch is a good foundation for any kind of serious work, <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th04/hiscore/score_ld.cpp">this file</a> should convince you otherwise.<br>
+	Two more discoveries here:
+</p><ul><li>
+	<p>If you game over and continue in-game while having a score that would qualify for the current character/difficulty list, the game automatically enters it with a <code>CONTINUE</code> name while staying within <code>MAIN.EXE</code>. Of course, this means that both games get yet another dedicated piece of code to mutate the High Score list… {{HTML_Emoji "zunpet"}}<br>
+	🐞 And so, the TH04 variant of this code also gets its own distinct version of the {{Blog_PostLink "2024-12-04#limit" "C integer promotion issue"}} that limits the technically supported score to 959 million points. In an unexpected twist though, TH05's ASM rewrite actually manages to fix this issue in a surprisingly <q>natural</q> way by explicitly performing the necessary calculations on 8-bit registers. On the other hand, fixing it within C++ would have still been totally possible <i>and</i> natural <i>and</i> code-simplifying…</p>
+</li><li>
+	The single biggest source of inconsistencies can be found in the code that recreates corrupted scorefiles. During my tests of the cleaned-up and improved rewrite on the <code>debloated</code> branch, I regularly had to corrupt these files on purpose. File contents getting fully or partially overwritten with <code>00</code> bytes is the most common kind of corruption you'd encounter with modern operating systems and SSDs, but hilariously enough, that happens to be the exact kind of corruption these games might even fail to detect. If these <code>00</code> bytes cover an <i>entire</i> character-/difficulty-specific section, all three games consider such a zeroed section as valid, since it passes checksum validation? {{HTML_Emoji "onricdennat"}}<br>
+	The deobfuscation algorithm explains why:
+</p><figure><pre>// [key1] and [key2] are `uint8_t` as well.
+decoded_byte[i] = (key1 + (std::rotr&lt;uint8_t&gt;(encoded_byte[i + 1], 3) ^ key2) + encoded_byte[i]);</pre></figure><p>
+	When saving a section within these files, the games generate new random values for <code>key1</code> and <code>key2</code> and store them directly in the file. Without any kind of hardcoded nonce to perturb the input, this obfuscation scheme thus fully relies on the combination of keys and data to generate random-looking output. Set both of them to 0, and deobfuscation turns into a no-op. Then, a buffer of <code>00</code> also sums to 0, which also matches the 0 checksum in the file. In contrast, <a href="https://github.com/nmlgc/ReC98/blob/b2c520bd4eb3f9a0befa2653f765b802f3d948ae/th02/scoreenc.c#L19">TH02's obfuscation scheme</a> lacked any source of randomness, but it did cover this exact case… {{HTML_Emoji "thonk"}}
+</p><p>
+	Here's how such a fully zeroed-out <code>GENSOU.SCR</code> looks like in TH04's and TH05's High Score viewer:
+</p><figure class="fullres pixelated"><rec98-child-switcher>
+	{{define "desc"}}Screenshot of TH0{{.}}'s High Score viewer, rendering a GENSOU.SCR file that consists entirely of 00 bytes{{end -}}
+	<img
+		src="{{$zerobyte4}}"
+		data-title="TH04"
+		width="640"
+		alt="{{template "desc" 4}}"
+		class="active"
+	><img
+		src="{{$zerobyte5}}"
+		data-title="TH05"
+		width="640"
+		alt="{{template "desc" 5}}"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	If you remember how <code>GENSOU.SCR</code> saves scores in {{Blog_PostLink "2024-12-04#limit" "this silly gaiji-offsetted way"}}, these screens almost explain themselves. 0 minus 160 will always be an invalid sprite ID, and since master.lib's <code>super_put()</code> doesn't bounds-check sprite IDs, it blindly accesses invalid sprite data and probably ends up filling every VRAM bitplane with 1 bits. After the game spent way too much time rendering this garbage data, we then only end up seeing the sprites that get rendered after the very last score digit.<br>
+	The <span style="color: #f44">VV</span> characters might look especially weird in place of the usual stage number, but they quickly make sense once you remember that these numbers are gaiji rendered to VRAM. The PC-98's character generator simply can't support a gaiji with an ID of 0, since it would have to be encoded as <code>0x<strong>00</strong>56</code>, which is indistinguishable from the halfwidth V in ASCII. And since master.lib assumes that all gaiji are fullwidth, we get two of them next to each other.
+</p><p>
+	The visual result for a zeroed-out <code>YUME.NEM</code> in TH03's High Score screen, however, is much more… well-defined:
+</p><figure class="fullres pixelated">
+	<img
+		src="{{$zerobyte3}}"
+		width="640"
+		alt="Screenshot of TH03's High Score viewer, rendering a YUME.NEM file that consists entirely of 00 bytes"
+	>
+	<figcaption>
+		Since <code>YUME.NEM</code> stores names, scores, and stage numbers as raw sprite IDs, we get sprite #0 from <code>REGI2.BFT</code> for all of them.<br>
+		AAAAAAAA AAAAAAAAAA A</figcaption>
+</figure></li></ul><hr id="th04-script-bug-{{.Date}}"><p>
+	Finally, I stumbled over a script bug in TH04's Good Ending for Reimu A:
+</p><figure class="fullres pixelated">
+	<img
+		src="{{$ra4bug}}"
+		width="640"
+		alt="Screenshot of the &amp;,4魔理沙&amp; script bug in TH04's Good Ending for Reimu A"
+	><figcaption>
+		The 2014 static English patch fixes this issue. That's probably why this isn't talked about anywhere.
+	</figcaption>
+</figure><p>
+	This looks unintentional, and the same line in Reimu B's Good Ending confirms that this is indeed a typo:
+</p><figure><rec98-child-switcher class="plaintext">
+	<blockquote class="active" data-title="<code>_ED000.TXT</code>"
+>\p,ed07.pi
+\=0,4
+<span class="ja">魔理沙：なんだよ、そりゃ</span>\ga9\s160\c</blockquote><blockquote
+	data-title="<code>_ED010.TXT</code>"
+>\p,ed07.pi
+\==0,4
+<span class="ja">魔理沙：なんだよ、そりゃ</span>\ga9\s160\c</blockquote>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption></figure>
+	The {{Blog_PostLink "2022-11-30#ref" "cutscene command reference"}} tells us that the line in the Reimu B variant is preceded by <code>\==</code>, the picture crossfading command, followed by both possible parameters, <var>0</var> and <var>4</var>. Reimu A's script, however, lacks that second <code>=</code> and instead spells out <code>\=</code>, the immediate picture display command, which doesn't take a second parameter. Thus, the command stops reading after the <var>0</var> and leaves the trailing <code>,4</code> as text to be displayed in the newly started box. The line break is then ignored as usual, causing <code lang="ja">魔理沙</code> to be displayed right next to these two characters.
+</p><p>
+	Whew! Once again, this did turn into more of the typical ReC98 research by the end after all. {{HTML_Emoji "godzun"}} And that was just 75% of the pushes assigned to this post, because the rest already went towards the debloating work. Next up: Concluding this series and actually applying all this research to the games.
+</p>

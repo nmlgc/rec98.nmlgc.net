@@ -138,3 +138,4 @@ Date	Tags
 2025-08-12	["seihou", "sh01", "policy-bugfix", "gameplay", "rng"]
 2025-09-06	["portability", "emulation", "dosbox-x", "input", "palette", "menu"]
 2025-09-10	["pc98", "blitting", "performance", "master.lib", "emulation", "animation", "cutscene"]
+2025-09-16	["menu", "unused", "gaiji", "animation", "cutscene", "bgm", "kaja", "micro-optimization", "master.lib", "file-format", "score"]

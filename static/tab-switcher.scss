@@ -41,6 +41,17 @@ rec98-child-switcher {
 			z-index: 1;
 		}
 	}
+
+	&.plaintext {
+		background-color: black;
+		font-family: monospace;
+		text-align: left;
+
+		blockquote {
+			color: white!important;
+		}
+	}
+
 }
 
 figcaption.dynamic {

@@ -1,0 +1,37 @@
+{{$h := SVG_DOSHeap -}}
+{{$bios := $h.MCB "BIOS" 25 -}}
+{{$dos := $h.MCB "DOS,\n<tspan font-family=\"monospace\">COMMAND.COM</tspan>" 45 -}}
+{{$game_env := $h.MCB "<tspan class=\"binary\">DEBLOAT /</tspan>\n<tspan class=\"binary\">ANNIV</tspan>\n(env.)" 30 -}}
+{{$game := $h.MCB "<tspan class=\"binary\">DEBLOAT / ANNIV</tspan>" 65 -}}
+
+{{$arr_l := sub $game.R 5 -}}
+
+{{$viewbox_w := 250.0 -}}
+
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 {{$viewbox_w}} 82.5"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<linearGradient id="stops">
+			<stop style="stop-color:#000; stop-opacity:1;" offset="0" />
+			<stop style="stop-color:#000; stop-opacity:0;" offset="1" />
+		</linearGradient>
+		<linearGradient xlink:href="#stops" id="fadeoutGradient" x1="{{add $arr_l 5}}"
+			y1="45" x2="{{sub $viewbox_w 15}}" y2="55" gradientUnits="userSpaceOnUse" />
+	</defs>
+	{{- $h.CSS -}}
+	{{- $h.BIOSAndDOS $bios $dos -}}
+	<g class="small_env">{{- $game_env.RegularAlloc -}}</g>
+	{{- $game.Game -}}
+
+	<g class="free">
+		<line class="alloc" x1="0" y1="0" x2="640" y2="0" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+	</g>
+
+	<text class="number" x="0.5" y="77.5" style="text-anchor: start;">0000h</text>
+	<path class="heap" d="M{{$arr_l}} 45v10" stroke="#000" />
+	<path class="heap" d="M{{$arr_l}} 50h100" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+
+	<path d="M0 60h700" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+	<path d="M0 55v10" stroke="#000" />
+</svg>

@@ -1,0 +1,640 @@
+{{$title2_o := (call .Video "TH02-Title-animation-original-66-MHz" "Video of the flashing 東方封魔録 animation before TH02's title screen, as rendered by the original game on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz. Showcases screen tearing and slow .PI blitting")}}
+{{$title2_d := (call .Video "TH02-Title-animation-fixed-66-MHz" "Video of the flashing 東方封魔録 animation before TH02's title screen, as rendered by the debloated P0323 build on Neko Project 21/W with a clock speed of 2.4576 × 27 = 66.3552 MHz. Showcases how the performance improvements and screen tearing fixes now render the animation exactly as ZUN defined it to look")}}
+{{$select3_o := (call .Video "TH03-Select-landmines-original" "Video of TH03's character selection screen in 1P vs. CPU mode, selecting Reimu for both players, as rendered by the original game with all screen tearing landmines in place")}}
+{{$select3_d := (call .Video "TH03-Select-landmines-fixed" "Video of TH03's character selection screen in 1P vs. CPU mode, selecting Reimu for both players, as rendered by the debloated P0323 build with all screen tearing landmines fixed")}}
+{{$hiscore2_o := (call .Video "TH02-High-Score-landmines-original-33-MHz" "Video of entering and leaving TH02's HiScore menu, as rendered by the original game on Neko Project 21/W with a clock speed of 1.9968 × 17 = 33.9456 MHz, showcasing a grand total of 6 screen tearing landmines and 2 bugs")}}
+{{$hiscore2_d := (call .Video "TH02-High-Score-landmines-fixed-33-MHz" "Video of entering and leaving TH02's HiScore menu, as rendered by the debloated P0323 build on Neko Project 21/W with a clock speed of 1.9968 × 17 = 33.9456 MHz. Showcases how the screen tearing fixes even apply at this lower clock speed, and how retaining the title screen background image in memory allows an instant switch back to that menu")}}
+{{$view4 := (call .PostFileURL "TH04-High-Score-viewer-Marisa-corruption.webp")}}
+{{$anniv3 := (call .PostFileURL "TH03-anniv-VS-Start.webp")}}
+{{$dl := printf "%v%v" .DatePrefix "ReC98.zip" -}}
+
+{{$title2_o.SetTitle "Original game" -}}
+{{$title2_d.SetTitle "Debloated P0323 build" -}}
+{{$title2_o.AddMarker  25 "End of flash animation" "" -}}
+{{$title2_d.AddMarker  19 "End of flash animation" "" -}}
+{{$title2_d.AddMarker 128 "In main menu" "" -}}
+{{$title2_o.AddMarker 137 "In main menu" "" -}}
+
+{{$select3_o.SetTitle "Original game" -}}
+{{$select3_d.SetTitle "Debloated P0323 build" -}}
+{{$select3_o.AddMarker   1 "💣 #1" "" -}}
+{{$select3_o.AddMarker  31 "💣 #2" "" -}}
+{{$select3_o.AddMarker  73 "💣 #3" "" -}}
+{{$select3_o.AddMarker 115 "💣 #3" "" -}}
+{{$select3_o.AddMarker 160 "💣 #4" "" -}}
+{{$select3_d.LinkMarkers $select3_o -}}
+
+{{$hiscore2_o.SetTitle "Original game" -}}
+{{$hiscore2_d.SetTitle "Debloated P0323 build" -}}
+{{$hiscore2_o.AddMarker   6 "First regular frame" "" -}}
+{{$hiscore2_d.AddMarker   6 "First regular frame" "" -}}
+{{$hiscore2_o.AddMarker  57 "Key pressed" "" -}}
+{{$hiscore2_d.AddMarker  57 "Key pressed" "" -}}
+{{$hiscore2_o.AddMarker  77 "<code>OP2.PI</code> load" "" -}}
+{{$hiscore2_d.AddMarker  77 "Delay done" "" -}}
+{{$hiscore2_d.AddMarker  79 "Back to the main menu" "left" -}}
+{{$hiscore2_o.AddMarker  98 "<code>OP2.PI</code> blit" "" -}}
+{{$hiscore2_o.AddMarker 111 "Page copy" "left" -}}
+
+<style>
+	.fragmentation-{{.Date}} td:not(:last-child),
+	.fragmentation-{{.Date}} th:not(:last-child) {
+		border-right: var(--table-border);
+	}
+
+	.fragmentation-{{.Date}} th {
+		vertical-align: bottom;
+	}
+
+	.heap-{{.Date}} tbody {
+		font-family: monospace;
+	}
+
+	.bundle-{{.Date}} {
+		background-color: var(--c-bg);
+	}
+	.bundle-{{.Date}} td:not(:first-child) {
+		font-family: monospace;
+	}
+	.bundle-{{.Date}} tr th:nth-child(3),
+	.bundle-{{.Date}} tr td:nth-child(3),
+	.bundle-{{.Date}}.naive-{{.Date}} tr th:nth-child(5),
+	.bundle-{{.Date}}.naive-{{.Date}} tr td:nth-child(5) {
+		border-right: var(--table-border);
+		border-right-width: 2px;
+	}
+	.bundle-{{.Date}} th:not(:last-child),
+	.bundle-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+
+	#kaja-{{.Date}} th:not(:last-child),
+	#kaja-{{.Date}} td:not(:last-child) {
+		border-right: var(--table-border);
+	}
+</style>
+
+<p>
+	Part 4! Let's get this over with, fix all these landmines, and conclude {{Blog_PostLink "2025-09-06" "this 4-post series about the big 2025 PC-98 Touhou portability subproject"}}. Unless I find something big in TH03, this is likely to be the final long blog post for this year. I wanna code again!
+</p>{{call .TOC}}<hr id="scope-{{.Date}}"><p>
+	As you can already tell by this table of contents, this "initial" cleanup work was quite larger in scope than its counterpart for {{Blog_PostLink "2023-03-05" "the first TH01 Anniversary Edition release"}}. Even that already took unexpectedly long 2½ years ago, and now imagine doing that across four games simultaneously while keeping all the little required inconsistencies in place. Then you'll get why this has taken over four months…<br>
+	With an overall goal of "general portability", it's very tempting to escalate the scope towards covering <i>everything</i> in these menu and cutscene binaries. So I had to draw at least <i>some</i> boundaries:
+</p><ul>
+	<li>No big feature work in TH01</li>
+	<li>No work on any graphics formats besides PI</li>
+	<li>Graphical text will still get rendered directly to VRAM</li>
+</ul><p>
+	Even then, this was way premature. Not only because we still need to maintain the memory layout of TH02's and TH03's <code>MAIN.EXE</code>, but also because of all the undecompilable ASM code in all four games that blocks certain architectural simplifications.<br>
+	The biggest problem, however: I haven't quite decided on how to use static libraries within my build environment yet. Since Turbo C++ 4.0J's linker just blindly includes every explicitly named object file without eliminating dead code, static libraries are essential for reducing bloat by providing a layer of optional files to be included on demand. However, the Windows and DOS versions of TLIB are easily confused, TLIB's usual paradigm of mutating existing library files goes against Tup's explicit dependency graph, and should we <i>really</i> depend on an ancient proprietary tool for a job that I could reimplement in a few hundred lines? Famous last words, I know. But since I {{Blog_PostLink "2025-01-25#ipapatch" "didn't want to do any dedicated build system work this year"}}, I also didn't want to sort out these questions in a 12<sup>th</sup> or even 13<sup>th</sup> push. Leaving the build environment woefully ill-equipped for the complexity of this task was probably a mistake; while the resulting workaround of <a hef="https://github.com/nmlgc/ReC98/blob/6729270d15026400ed98643e676be1596a56ea42/Tupfile.lua#L307-L355">feature bundles</a> does the job, it's very silly and hopefully won't last very long. I'm <i>definitely</i> going to spend some time sorting out the static library situation before I ever attempt something like this again. Or at some general point before we hit the overall 100% finalization mark, because we've still got that long-awaited librarization of ZUN's master.lib fork ahead of us.
+</p><hr id="retain-{{.Date}}"><p>
+	Let's get to it then, starting with the feature that will remove lag in menus by removing PC-98-specific page-flipping and EGC code:
+</p><h3>Retaining menu backgrounds in conventional RAM</h3><p>
+	At first, this seems to be no problem. We just swap out master.lib's .PI functions with our forked PiLoad and our generic blitter, and make sure to keep the images allocated. master.lib's <code>graph_pi_load_pack()</code> has always loaded .PI images into one big contiguous buffer in conventional RAM, so this shouldn't negatively affect the heap layout. If anything, we'd be <i>saving</i> memory by {{Blog_PostLink "2025-09-10#pi-attempts" "not allocating these extra two rows"}}, right?<br>
+	Unfortunately, it's that second goal that would turn out to be a massive problem. {{Blog_PostLink "2025-09-06#pages" "The end of part 1"}} already hinted at how the majority of menu backgrounds are only rendered to VRAM a single time before ZUN immediately frees them from memory. These cases are so common that I defined a macro for them:
+</p><figure>
+	<pre>#define pi_fullres_load_palette_apply_put_free(slot, fn) { \
+	pi_load(slot, fn); \
+	pi_palette_apply(slot); \
+	pi_put_8(0, 0, slot); \
+	pi_free(slot); \
+}</pre>
+	<figcaption>At the current state of decompilation, this macro is used 16 times across TH02-TH05, and it will appear an additional 12 times by the time decompilation is done.</figcaption>
+</figure><p>
+	In these cases, the games only need that single 128&nbsp;KiB block temporarily, and then get to reuse that memory for other, more dynamic graphics. Consequently, ZUN probably dimensioned the master.lib heap sizes for TH02-TH05 to leave ample headroom with this fact in mind. I wasn't so sure about deliberately limiting the amount of heap memory {{Blog_PostLink "2021-11-29" "in late 2021 when I fixed the one out-of-memory landmine that remained in TH04"}}, but I've begun to appreciate these memory limits quite a lot as the scope of my research has deepened. Specify the right amount of bytes, perform the single allocation from the DOS heap at startup, and if that allocation succeeds, you've removed an entire class of out-of-memory bugs from consideration. Sure, modders might prefer <code>mem_assign_all()</code> for simplicity during development, but it does make sense to return to a static limit when shipping. For once, ZUN was right, and there is no excuse. {{HTML_Emoji "godzun"}}
+</p><p>
+	On the surface, this macro is equivalent to PiLoad's original direct-to-VRAM approach. And indeed, we <i>can</i> replace this code with a call to PiLoad's original code path in the few cases where we just want to show a static image without unblitting any of its regions later on, removing even the requirement for that temporary 128&nbsp;KiB block in the process. But in the majority of cases, we <i>do</i> need these images in RAM, and ZUN's original heap sizes simply weren't intended for that.<br>
+	But how much of a problem are ZUN's limits in practice? Well, there's at least one instance where retaining all images would require significantly more memory than ZUN anticipated. TH02's <code>OP.EXE</code> requests a 256,000-byte master.lib heap, but then wants to do this:
+</p><figure {{$title2_o.FigureAttrs}}>
+	{{call .VideoPlayer $title2_o.SetNoLoop.FlipActive $title2_d.SetNoLoop}}
+</figure><p>
+	If you step through this video, you'll see that this effect indeed page-flips between the later menu background (128,000 bytes) and the three images with the resized text (3&nbsp;× 54,720&nbsp;= 164,160 bytes). Hence, we must have already loaded all four of them into the heap before this animation starts. While the menu's main text is rendered on the text layer, its shadow is part of the graphics layer and must be unblitted when switching to the option menu and back, thus requiring this image in at least <i>some</i> portion of memory.<br>
+	Since VRAM page 1 always shows the unmodified menu background image, we could cheat, use PiLoad's direct-to-VRAM code path, and then do a second load of the image to conventional RAM on frame 19, before the white-in palette effect. {{Blog_PostLink "2025-09-06#fp" "Frame-perfection rule #2"}} would also allow us to do that. But adding a second load time is lame, especially because the white-in effect wouldn't even hide <i>that</i> many expensive calls in the debloated build anymore. After replacing the original final <code>graph_pack_put_8()</code> call for the main menu image with a faster planar blit, it only hides the draw calls for the <code>©ZUN</code> text and some minor file and port I/O to load and apply the menu's final 48-byte palette from <code>OP.RGB</code>.
+</p><p>
+	There's really no reason against just increasing the size of the master.lib heap to incorporate all of these four images at the same time. But how much additional memory do we actually need? Obviously, these four images are not the only allocations on the heap, which also needs to fit at least the following buffers:
+</p><ul>
+	<li>The 8,192-byte snapshot of the {{HTML_TagInline "gaiji"}} loaded before the game, which are restored upon quitting the game… as well as when switching between game binaries. Yup – since the master.lib heap is not retained across binary switches, every one of the three binaries restores the system's previous gaiji before being switched out, before the new binary reads those same gaiji from the character generator back onto the master.lib heap. {{HTML_Emoji "tannedcirno"}} It would have been much smarter to keep them in a separate persistent allocation on the DOS heap instead.</li>
+	<li>The 16,384-byte .PI load buffer. This one has to be allocated <i>before</i> we allocate any .PI, so it will necessarily fragment away that memory.</li>
+	<li>The 2,560 bytes of High Score menu sprites loaded from <code>op_h.bft</code>. We might have shown the High Score menu if we came from a demo, and ZUN wants to keep these sprites loaded across the lifetime of the process.</li>
+	<li>The 9,216-byte <code>super_buffer</code> that master.lib pre-allocates upon loading the first BFNT sprite, just in case you later want to call <code>super_convert_tiny()</code>.</li>
+</ul><p>
+	We can bypass the <code>super_buffer</code> allocation <a href="https://github.com/nmlgc/ReC98/blob/6729270d15026400ed98643e676be1596a56ea42/th02/op_04.cpp#L146-L160">through a dumb trick</a>. But the single worst aspect hides <i>between</i> all these individual allocations:
+</p><h4 id="fragment-{{.Date}}">Fighting heap fragmentation</h4><p>
+	Let's look at TH05's <code>OP.EXE</code>, whose heap limit of 336,000 bytes is much more lenient. This limit should be more than enough to fit the new additional 128,000-byte buffer for the background image in addition to the original heap contents on every menu screen, and we can indeed enter the main menu without any issue. But then, we're still greeted with an out-of-memory crash after entering and leaving the Music Room? Let's take a look into the master.lib heap, with the retained background images we'd like to have:
+</p><figure>
+	<table class="fragmentation-{{.Date}}">
+		<thead>
+			<tr>
+				<th>Step</th>
+				<th colspan="4">Heap layout</th>
+				<th style="width: 7ch;">Total remaining</th>
+				<th style="width: 7ch;">Largest free block</th>
+				<th style="width: 7ch;">Fragmentation loss</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Entering the main menu</th>
+				<td><code>op1.pi</code> (128,000)</td>
+				<td><code>sft*.cd2</code> + <code>car.cd2</code> (7,360)</td>
+				<td><code>sl*.cdg</code> (90,240)</td>
+				<td><code>scnum.bft</code> + <code>hi_m.bft</code> (7,680)</td>
+				<td>76,352</td>
+				<td>66,240</td>
+				<td>10,112</td>
+			</tr><tr>
+				<th>Leaving the main menu</th>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><code>scnum.bft</code> + <code>hi_m.bft</code> (7,680)</td>
+				<td>301,984</td>
+				<td>234,608</td>
+				<td>67,376</td>
+			</tr><tr>
+				<th>Entering the Music Room</th>
+				<td><code>music.pi</code> (128,000)</td>
+				<td><code>{{Blog_PostLink "2024-02-03#colors" "nopoly_B"}}</code> (32,000)</td>
+				<td></td>
+				<td><code>scnum.bft</code> + <code>hi_m.bft</code> (7,680)</td>
+				<td>139,536</td>
+				<td>66,240</td>
+				<td>73,296</td>
+			</tr><tr>
+				<th>Leaving the Music Room</th>
+				<td><code>music.pi</code> (!) (128,000)</td>
+				<td></td>
+				<td></td>
+				<td><code>scnum.bft</code> + <code>hi_m.bft</code> (7,680)</td>
+				<td>165,552</td>
+				<td>81,920</td>
+				<td>83,632</td>
+			</tr><tr>
+				<th>Re-entering the main menu</th>
+				<td>.PI load buffer (16,384)</td>
+				<td><code>sft*.cd2</code> + <code>car.cd2</code> (7,360)</td>
+				<td><code>sl*.cdg</code> (90,240)</td>
+				<td><code>scnum.bft</code> + <code>hi_m.bft</code> (7,680)</td>
+				<td>179,760</td>
+				<td><strong style="color: red">115,648</strong></td>
+				<td>64,112</td>
+			</tr>
+		</tbody>
+	</table>
+</figure><p>
+	<i>Something</i> gradually shreds our heap into tiny pieces that ultimately prevent us from allocating the main menu background image a second time. We can surely blame this on ZUN's suboptimal order of load calls that doesn't prioritize larger images over smaller ones, or on the 16&nbsp;KiB .PI load buffer that we maybe should have allocated statically. But the biggest hidden offender turns out to be… master.lib's packfile implementation?!
+</p><p>
+	Yup. Every time you load a file out of an archive, master.lib heap-allocates a 31-byte state structure and a file read buffer that master.lib originally dimensioned at 520 bytes. TH03's <code>MAIN.EXE</code> and <code>MAINL.EXE</code> then increased the size of that buffer to 4,104 bytes, before TH04 and TH05 went up to 8,200 bytes. {{HTML_Emoji "zunpet"}}<br>
+	Ultimately though, it's not the size that's the problem here, but the fact that we repeatedly allocate <i>any</i> memory that could have been allocated once when setting up the <code>INT 21h</code> handlers. You'd think that master.lib went for dynamic allocations in order to support the fact that the <code>INT 21h</code> file API lets you open multiple file handles simultaneously, which would point to different RLE-compressed files within the archive. But no, master.lib doesn't even support this case, and even incorrectly returns <code>FileNotFound</code> if you attempt to open a second file from an archive before closing the first one! {{HTML_Emoji "onricdennat"}}
+</p><p>
+	After I identified this whole issue, I immediately wanted to replace master.lib's packfile code with the much saner and more explicit C++ implementation from TH01. Sooner or later, we'll have to do this anyway because we can't just hook file syscalls on other operating systems the way we can hook them on DOS.<br>
+	However, TH01's implementation would quickly turn out to have its own share of heap fragmentation issues. Every time the game loads an RLE-compressed file from <code>東方靈異.伝</code>, the archived file is completely decompressed into a newly allocated temporary buffer, from where the game then copies out parts into the actual game structures. The resulting fragmentation is at least easily fixable though, and that's what the TH01 part of the very first push assigned to part 1 went to. Switching to a zero-copy architecture basically only required persisting the RLE state and brought a significant improvement: 15,776 bytes of heap memory during Stage 1 freed up by that switch alone, as reported by the <code>coreleft()</code> output seen in debug mode?! <i>That</i> much for just removing temporary allocations that the game was freeing anyway?<br>
+	Let's check the Borland C++ <cite>DOS Reference</cite> for how this value is actually calculated. Turns out that it is simply intended to be <q>a measure of unused RAM memory</q>, and sure enough:
+</p><blockquote>In the large data models, <i>coreleft</i> returns the amount of memory between the highest allocated block and the end of memory.</blockquote><p>
+	That's a reasonably meaningful measurement that can be determined in constant time, compared to the 𝑂(𝑛) operation of finding the true total size of available heap memory by walking over every node.
+</p><p>
+	In the end though, rolling out this C++ implementation to the other four games was way premature and would have pushed this delivery way above 12 pushes. After all, both ZUN's <i>and</i> master.lib's code is still full of <code>INT 21h</code> file syscalls that would all need to be replaced. Conditionally, even, given the two binaries that are not yet position-independent…<br>
+	Fortunately, .PI loading itself is just as much of an issue <i>and</i> can be worked around in the much simpler way I already spoiled when explaining {{Blog_PostLink "2025-09-10#pi-piload" "the API changes I made to PiLoad"}}: We simply hold on to the menu background pixel buffer for as long as possible. Ideally, we only allocate these 128&nbsp;KiB once, decode every new menu background into that same buffer, and only explicitly free it when we really need to. That's why the platform layer logic requires full control over .PI buffer allocation.<br>
+	This was enough to keep the required amount of additional heap memory to a more than acceptable level:
+</p><ul><li>
+	None of the <code>MAINE.EXE</code>/<code>MAINL.EXE</code> binaries needed a larger memory limit.
+</li><li>
+	TH04's <code>OP.EXE</code> also got to keep its original 336,000-byte heap.
+</li><li>
+	As did TH03's <code>OP.EXE</code>. That one seems particularly surprising if you remember {{Blog_PostLink "2024-11-22#select" "its 255,216-byte character selection screen"}}. But since ZUN only preloads 186,096 bytes before or during the main menu, we can nicely fit the title screen image into the original 352,000-byte heap.
+</li><li>
+	TH05's <code>OP.EXE</code> needed a slight increase by 4,768 bytes to a new limit of 340,768 bytes, for the mere sake of accommodating the heap fragmentation caused by entering and leaving the Music Room and then entering its character selection screen. An increase at that level would have been fine even if it wasn't temporary, as we're still 52,832 bytes short of reaching the amount of memory required by <code>MAIN.EXE</code>:
+	<figure><table class="heap-{{.Date}} numbers">
+		<thead>
+			<tr>
+				<th>{{HTML_Emoji "th05"}} (original)</th>
+				<th>Static</th><th>Heap</th><th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>OP.EXE</th>
+				<td> 88,064</td><td>336,000</td><td>424,064</td>
+			</tr>
+			<tr>
+				<th>MAIN.EXE</th>
+				<td>190,464</td><td>291,200</td><td>481,664</td>
+			</tr>
+		</tbody>
+	</table></figure>
+</li><li><p>
+	That only left TH02's <code>OP.EXE</code>, which did require a whopping additional 80,416 bytes up to a very similar new limit of 336,416 bytes. But again, an increase at that level is also fine for this game when compared against its <code>MAIN.EXE</code>, which would allow <code>OP.EXE</code> to go up to 383,232 bytes of heap without increasing the original memory requirements:
+</p><figure><table class="heap-{{.Date}} numbers">
+	<thead>
+		<tr>
+			<th>{{HTML_Emoji "th02"}} (original)</th>
+			<th>Static</th><th>Heap</th><th>Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>OP.EXE</th>
+			<td> 69,632</td><td>256,000</td><td>325,632</td>
+		</tr>
+		<tr>
+			<th>MAIN.EXE</th>
+			<td>164,864</td><td>288,000</td><td>452,864</td>
+		</tr>
+	</tbody>
+</table></figure><p>
+	Not to mention that our final merged <code>DEBLOAT.EXE</code> will only require 63,488 bytes of static memory, and that's <i>despite</i> TH02 being the one game that received the quickest and sloppiest merge job with a lot of corners cut for budget reasons.
+</p></li></ul><p id="tearing-{{.Date}}">
+	And after a few rewritten function calls, we've indeed removed every single EGC-powered inter-page copy from all menus and cutscenes of TH02-TH05! On to the next goal…
+</p><hr><h3 id="vblank-{{.Date}}">Resolving screen tearing landmines</h3><p>
+	…which requires individual solutions for every case that merely follow a common pattern. If things are already done close to a VSync wait loop and just in a slightly wrong order, the solution is easy and we just have to shift around a few function calls.<br>
+	But what can we do if ZUN mutates visible pixels at some place far away from the last VSync wait loop? After all, a lot of these landmines result from confusing the current CRT beam position across multiple functions. Often, it's impossible to see at a glance where these menu-specific subfunctions are called within a frame without tracing execution back to the last VSync delay loop at the call site. For starters, it would be nice to clearly formalize that a specific section of code must be run in VBLANK.
+</p><p>
+	master.lib's <code>vsync_Proc</code> function pointer already gets us most of the way there. Its VSync subsystem automatically calls any non-<code>nullptr</code> shortly after the VSync interrupt fires, and our task function would then set <code>vsync_Proc</code> back to a <code>nullptr</code> to ensure the intended one-shot behavior.<br>
+	However, this approach can at best defer a task to the <i>next</i> VBLANK interval, which might leave us one frame behind the original game and hurt our frame-perfection goals. What we actually want is a conditional approach for timing-sensitive tasks, as a common operation that only requires a single line of code:
+</p><ul>
+	<li>If we're within VBLANK, run the task right now.</li>
+	<li>If we aren't, set up a VSync proc that runs the task immediately after the next VSync and then removes the proc.</li>
+</ul><p>
+	Now we're only missing that crucial one bit of information, which is delivered by Bit 5 of the graphics GDC's status register at I/O port <code>0xA0</code>. In fact, ZUN uses the same bit in all hand-written VSync wait code throughout TH01 and in the bouncing-ball ZUN Soft logo:
+</p><figure>
+	<pre>void vsync_wait_via_gdc_polling(void)
+{
+	// Bit 5 of the graphics GDC register indicates VBLANK. Wait until this bit
+	// is set.
+	while((inportb(0xA0) & 0x20) != 0) {
+	}
+
+	// Once Bit 5 is no longer set, the CRT has started drawing the next frame.
+	// I have no idea why you would ever want to throw away all your precious
+	// vertical retrace time, but ZUN does this all throughout TH01.
+	while((inportb(0xA0) & 0x20) == 0) {
+	}
+}</pre>
+</figure><p>
+	Of course, this only solves the problem in theory, as the tasks themselves don't come with any real-time guarantees. It's entirely possible for the resulting <code>vblank_run()</code> function to get called near the end of VBLANK, start the task immediately, and return long after the CRT beam has started drawing again. Heck, if the system is slow enough, the task might not even complete within the VBLANK interval if we run it immediately after VSync. But this is a much more complex problem to solve, requiring upfront measurements of both the VBLANK interval <i>and</i> the execution time for each potential task, which can then be factored into the run-now-or-defer decision. We definitely don't need to go there as long as we're mainly targeting emulated 66&nbsp;MHz systems.
+</p><p id="tearing-easy-{{.Date}}">
+	In easy cases, <code>vblank_run()</code> can then resolve screen tearing landmines completely by itself. Towards the end of PC-98 Touhou, ZUN's menus made more and more use of master.lib's blocking palette fading functions, which delay themselves to the next VSync signal and thus avoid any tearing issues. Hence, TH04's and TH05's screen tearing landmines are limited to the very few sudden palette changes that remained in these games:
+</p><figure><pre class="chroma">void return_from_other_screen_to_main_menu(void)
+{
+	// Loads the .PI image into our persistent menu image background buffer,
+	// and overwrites master.lib's 8-bit palette. Takes a few frames and
+	// probably won't return during VBLANK.
+	GrpSurface_LoadPI(bgimage, &Palettes, "op1.pi");
+
+	graph_accesspage(0);
+	bgimage.write(0, 0); // Planar blit
+	PaletteTone = 100;   // Use original brightness in palette_show()
+<span class="gd">
+-	// ZUN landmine: Updating the hardware palette right now will most likely
+-	// cause screen tearing.
+-	palette_show();</span><span class="gi">
++	vblank_run(palette_show);</span>
+
+	[…]
+}</pre></figure><p id="tearing-hard-{{.Date}}">
+	The fixes for the landmines in TH03 and TH02, however, require much more thought and care to stay as close to ZUN's defined logical frame sequence as possible. TH03's character selection screen, which prompted this whole subproject in the first place, houses one of the harder groups of landmines:
+</p><figure {{$select3_o.FigureAttrs}}>
+	{{call .VideoPlayer $select3_o.FlipActive $select3_d}}
+	<figcaption>
+		Recorded on DOSBox-X with 375,000 cycles, since exact machine specifications are not important to demonstrate these landmines.
+	</figcaption>
+</figure><ul><li><p>
+	💣 Landmine #1 is caused by loading the <span lang="ja">Selection</span> BGM and the character name sprites before clearing VRAM, without a frame delay inbetween. The fix is obvious.
+</p></li><li><p>
+	💣 Landmine #2 already got mentioned in passing in the corresponding blog post from last year: {{Blog_PostLink "2024-11-22#tearing" "If a frame took longer than 3 VSync interrupts to render, ZUN flips the VRAM pages immediately without waiting for the next VSync interrupt"}}. This always applies to the very first frame {{Blog_PostLink "2024-11-22#issues" "because the game thinks it took ≥30 VSync interrupts to render"}}.<br>
+	In both versions, we enter the loop as <code>vsync_Count1</code> turns 30. But while the original game page-flips as soon as it finishes rendering in the middle of the screen frame, the debloated build instead waits for VSync during that 30<sup>th</sup> frame and only page-flips and resets the counter <i>after</i> VSync. This way, we still guarantee ZUN's originally defined 30 black frames preceding this menu, despite <code>vsync_Count1</code> being one frame ahead in the debloated version of that delay.
+</p></li><li><p>
+	💣 Landmine #3 looks conceptually identical to landmine #2, being another mid-screen-frame page flip caused by <code>vsync_Count1</code> being ≥3 by the time execution reaches the frame-rate-dropping delay loop. However, this one is caused by the game's response to a selection-confirming input and therefore needs a dedicated fix. Here's what's going on:
+</p><ul><li>
+	The game renders the next frame to the invisible VRAM page, as it usually does. We won't see this frame for a while.
+</li><li>
+	The game checks for input and sees the Shot key. It then immediately runs the palette flash effect, using master.lib's blocking <code>palette_white_in()</code> while still displaying the previously rendered frame.
+</li><li>
+	<code>palette_white_in()</code> itself avoids screen tearing issues by running its own VSync busy-waiting loops using the <code>(inportb(0xA0) & 0x20)</code> check, without mutating <code>vsync_Count1</code>. This is why the game immediately page-flips once execution is back to the main loop.
+</li><li>
+	<i>However</i>, this is <i>not</i> the cause of this landmine. <code>palette_white_in()</code> also stops within VBLANK, so you'd also expect the immediate page flip to not cause any screen tearing.
+</li><li>
+	<i>Except</i> that ZUN then (re-)loads the .CDG portrait for the selected or automatically assigned palette variant of the confirmed character, immediately after <code>palette_white_in()</code>, and only <i>then</i> drops back into the main loop, without any further delay. Hence, we have file I/O in our logical frame, and thus can't guarantee anything.
+</li></ul><p>
+	On the hypothetical infinitely fast PC-98, the .CDG load call completes instantly and turns this into a non-issue. On real systems, however, we would need some way of hiding this load call to stick to ZUN's defined logical frames:
+</p><ul>
+	<li>Leaving it after <code>palette_white_in()</code> is completely wrong because it messes with the defined sequence of logical frames. Even just maintaining the original <i>number</i> of frames requires inserting an additional delay frame <i>and</i> compensating for that by cutting that one frame from the next iteration of the loop. <a href="https://x.com/ReC98Project/status/1926428420998639960">This was my original solution</a>, and the realization of how wrong it was certainly delayed this blog post by about a day…</li>
+	<li>Moving it in front of <code>palette_white_in()</code> might work since the effect starts with a VSync wait, but it might also insert an additional screen frame of delay. Keep in mind that we're still on the same logical frame that rendered the very expensive curve effect.</li>
+</ul><p>
+	That only leaves one answer: Running both the white-in effect and the .CDG load concurrently. 💡 Using <code>vsync_Proc</code>, we can implement a non-blocking version of <code>palette_white_in()</code> that runs one iteration of its palette-manipulating loop during VBLANK. Meanwhile, the "main thread" gets 16 frames to load a single 22.5&nbsp;KiB character portrait and then simply waits for the white-in effect to complete. And since our VSync proc also always signals completion during VBLANK, we then get to immediately page-flip and retain ZUN's intended 3-frame timing. With this solution, we don't even have to optimize away the .CDG load in the usual case where the game just reloads the character's regular palette variant.
+</p></li><li><p>
+	💣 Landmine #4 is the palette tearing issue that got an entire section in the post from last year. After moving the palette-mutating branch from before VSync to immediately after VSync, we also have to adjust the calculation of the palette brightness value to match ZUN's original values.
+</p></li></ul><p>
+	Very finicky work, where every single branch has the potential to introduce an off-by-one-frame error, and <code>vblank_run()</code> doesn't help at all.
+</p><p id="tearing-lunatic-{{.Date}}">
+	And <i>then</i> you reach TH02, which asks for way too much to happen within a single frame, in plain sight, and with no palette tricks to hide it. The screen transitions into and out of its HiScore screen are by far the worst example:
+</p><figure {{$hiscore2_o.FigureAttrs}}>
+	{{call .VideoPlayer $hiscore2_o.FlipActive $hiscore2_d}}
+	<figcaption>
+		Recorded at 1.9968&nbsp;× 17&nbsp;= 33.9456 MHz for a change to magnify the jank that you perhaps wouldn't see at higher clock speeds.
+	</figcaption>
+</figure><p>
+	These screen transitions exhibit no less than 6 landmines and 2 bugs:
+</p><ol><li><p>
+	💣 Frame 1 shows how TRAM (containing the actual menu text as gaiji) gets cleared immediately, but VRAM (containing the shadow) remains untouched as ZUN decides to load <code>HUUHI.DAT</code> first.
+</p></li><li><p>
+	💣 While the following VRAM clear <i>appears</i> to produce a well-defined black frame 2, it's anything <i>but</i> well-defined, as the load operation only happens to conclude within VBLANK by sheer chance in this recording.
+</p></li><li><p>
+	💣 Frame 4 is wild. First of all, the code still hasn't waited for a single VBLANK signal ever since entering the menu, and therefore shouldn't be writing to TRAM to begin with.<br>
+	But even then, you wouldn't expect to see only the name and nothing else on the scanlines of a score record in such a partial rendering. How can TRAM operations possibly be <i>that</i> slow? This almost seemed as if I was missing some crucial timing-related detail about the hardware. But in the end, what we're seeing here is simply Neko Project not actually using scanline rendering for the text layer. If you write to a TRAM cell, Neko Project just marks the entire 16-pixel row to be redrawn during the next screen refresh event.
+</p></li><li><p>
+	🐞 Frame 5, then, is the first well-defined frame that actually renders the way it's defined in the code. The green <span lang="ja" style="color: green">東方封魔録</span> logo is indeed only meant to be visible from the next frame onwards. This certainly meets all criteria for a bug, but the debloated build isn't allowed to fix those. In fact, it needs <a href="https://github.com/nmlgc/ReC98/blob/6729270d15026400ed98643e676be1596a56ea42/th02/op_04.cpp#L117-L121">a dedicated conditional branch</a> to preserve this bug.
+</p></li><li><p>
+	Once you leave the menu, you'll first have to sit through a stylistic and non-productive 20-frame delay, before… the screen switches back to the last frame rendered before the delay on frame 77?<br>
+	💣 By that point, we're technically already back to the main menu, where the first thing ZUN does is to switch from double-buffering back to single-buffering with VRAM page 0 shown. If you happened to leave the menu by hitting a key on the 50% of frames where VRAM page 1 is shown, the screen will therefore flip back to the frame rendered before the 20-frame delay, and keep it visible while master.lib decodes the title screen image.
+</p></li><li><p>
+	💣 This decoding process finishes after ~20.4 frames in this recording, near the middle of frame 98. Clearly, we then have to immediately switch the hardware palette to the one we just loaded. Let's completely disregard that we're probably not in VBLANK, or that the screen is still showing the last High Score menu frame… {{HTML_Emoji "zunpet"}}
+</p></li><li><p>
+	Then, we need to get the image onto both VRAM pages. {{Blog_PostLink "2025-09-10#pi-piload" "As we found out in Part 2"}}, a low-clocked 386 is pretty much the most suboptimal system for master.lib's packed→planar conversion code, and 12 frames exactly match the performance we would expect from Neko Project at 33&nbsp;MHz.<br>
+	💣 But that only rendered the image to the invisible VRAM page 1. We could now temporarily show page 1 after the next VSync signal to hide the pretty much guaranteed multi-frame VRAM writes… but nah, who cares except for some researcher 28 years later. By leaving VRAM page 0 on screen, ZUN doesn't even attempt to hide the jank that is about to occur. Once again, he reaches for master.lib's <code>graph_copy_page()</code>, {{Blog_PostLink "2025-09-10#goal" "whose slowness I already talked about in Part 2"}}. At 33&nbsp;MHz, Neko Project takes 3 frames to copy one page after another, leaving us with two frames of mixed pixels. This can be even worse on real hardware: On {{Blog_PostLink "2025-09-10#xfade-res" "spaztron64's K6-2-upgraded and southbridge-bottlenecked PC-9821V166 model"}}, this copy took 100&nbsp;ms. I was able to watch every single bitplane getting individually copied in the recording. Unpacking the .PI image a second time would have been faster on that machine. {{HTML_Emoji "onricdennat"}}
+</p></li><li><p>
+	🐞 Also, ZUN should have definitely cleared TRAM before the page copy instead of deferring this responsibility to the main menu rendering code. Since we then return to the main menu's VSync-timed loop and regularly wait for VSync while the scoreboard remains on screen and part of the current logical frame, this is not a landmine.
+</p></li></ol><p>
+	Compare this with the debloated version:
+</p><ul><li><p>
+	The first three landmines are fixed by running the common "set palette to black and clear TRAM" operation in VBLANK, and deferring both the palette update and the scoreboard rendering to the VBLANK interval preceding frame 5.
+</p></li><li><p>
+	Everything between frame 77 and frame 113 inclusive is defined to happen on a single logical frame. Since this screen doesn't allocate its own 640×400 background, we get to keep the title screen image in memory and actually turn this logical frame into a real one. Then, we can use ZUN's defined 20-frame delay constructively:</p><ul>
+		<li>First, we render the last frame to the other VRAM page to defuse landmine #5. Yes, <i>render</i> – a GRCG-accelerated 385×209-pixel flood fill followed by eight transparent 16-color 128×32 sprites is much faster than copying VRAM pages.</li>
+		<li>Then, we can unconditionally switch to showing VRAM page 1 and accessing VRAM page 0 on the next VSync, without affecting what's shown on screen.</li>
+		<li>Then, we have all the time in the world to blit the planar title screen image from memory to VRAM page 0, the only one we still need to touch.</li>
+	</ul><p>
+	On the VSync that precedes frame 77, we then simply 🫰 flip VRAM pages and the hardware palette to produce exactly the well-defined image that an infinitely fast PC-98 would have produced for ZUN's original code.
+</p></li></ul><p>
+	Then, I did that 13 more times for the other screen tearing landmines fixed in this build. And no, these new builds don't even fix every instance of this issue…
+</p><hr><h3 id="unused-{{.Date}}">Intermission: Handling unused code on fork branches</h3><p>
+	Given that all of these improvements are taking place on the <code>debloated</code> branch, it's time to decide on how to handle the biggest unneeded obstacle in the way of our portability efforts, after {{Blog_PostLink "2023-03-05#single" "I procrastinated this question 2½ years ago"}}.<br>
+	In Shuusou Gyoku, I've been trying to retain every single line of unused code <a href="https://github.com/nmlgc/ssg/tree/master/unused">in a dedicated directory</a>, not least because that game has {{Blog_PostLink "2022-12-31" "some very wild effects that should be reasonably preserved"}}. The problem with this approach is that all this unused code quickly stopped compiling as I started to refactor the game into its current cross-platform state. For discoverability, this is still better than outright deleting the code and expecting people to read pbg's original codebase, but it's not all too practical either. {{HTML_Emoji "thonk"}}
+</p><p>
+	In the ReC98 codebase, we have a different situation: All the unused code doesn't just exist at some old commit that maybe won't even compile going forward, but is an integral part of the <code>master</code> branch. Therefore, removing this code from fork branches is not only in line with their goals, but also completely non-destructive, since its compilable form on <code>master</code> keeps getting maintained <a href="https://github.com/nmlgc/ReC98/blob/3130b0ae7125bacb72bfac94ff8873315b87fefa/README.md#supported-build-platforms">for a handful of building platforms</a>.<br>
+	Then again, I like the added overview and discoverability of the Shuusou Gyoku approach. So let's meet in the middle: From now on, the <code>debloated</code> branch will only keep unused code in the form of its declarations and some short explanatory comments, <a href="https://github.com/nmlgc/ReC98/tree/debloated/unused">in files within the <code>unused/</code> directory</a> whose names point to the actual implementations on the <code>master</code> branch.
+</p><p>
+	Funnily enough, unused code wasn't even the main reason why TH01's <code>ANNIV.EXE</code> lost 10,834 bytes between the previous and current builds. Although TH01 is the one game with by far the most unused engine code, that code only made up 3,728 bytes of that difference. The rest came from the work surrounding the zero-copy unpacker and the few portability features that already made sense to be rolled out for this game. Yes, TH01 really is <i>that</i> bloated.
+</p><hr><h3 id="merge-{{.Date}}">Merging TH02-TH05's <code>OP.EXE</code> and <code>MAINE.EXE</code>/<code>MAINL.EXE</code></h3><p>
+	Onto the second most exciting feature, {{Blog_PostLink "2025-05-10#ports" "as motivated by the blog post from May"}}! A true single-executable build {{Blog_PostLink "2023-11-30#main" "never looked that viable for TH04 and TH05"}} to begin with, so let's just go for the one viable partial merge that makes sense for all of the four games. With all of <code>MAINE.EXE</code>/<code>MAINL.EXE</code> being position-independent, the remaining bunch of ASM code there isn't much of an obstacle either.
+</p><p id="scorefiles-{{.Date}}">
+	And once again, this merge means that we have to resolve all {{Blog_PostLink "2023-03-05#single" "binary-specific inconsistencies"}} at once. While ZUN thankfully eliminated most of them by the end of the PC-98 era, the scorefile code remained inconsistent until the very end, {{Blog_PostLink "2025-09-16#score" "as Part 3 already mentioned"}}. Hopefully, this is the second-to-last time I have to mention these formats…<br>
+	Funnily enough, all of their most noteworthy inconsistencies are found in how these formats deal with corrupted files:
+</p><ul><li><p>
+	{{HTML_Emoji "th03"}} The TH03 inconsistency I {{Blog_PostLink "2025-09-16#th03-regist" "teased in part 3"}} is almost not worth mentioning. If the game ends up recreating <code>YUME.NEM</code> while loading the high scores for name registration after a 1CC, the clear flag is written for all difficulties, not just the one you've actually cleared. Our exact <a href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#observable">definition of observable bugs</a> comes in doubly handy here:
+</p><ol>
+	<li>To get a 1CC in the first place, you must have gone through character selection, which also (re-)creates <code>YUME.NEM</code> if necessary. Therefore, <code>MAINL.EXE</code> would only ever recreate <code>YUME.NEM</code> in this "1CC mode" if something outside the game deleted or tampered with the file while the game was running.</li>
+	<li>TH03 offers no benefits for a 1CC on specific difficulties, and doesn't even visually indicate this flag, unlike the three other games. 1CC'ing <i>any</i> difficulty is all that matters for unlocking Chiyuri and Yumemi.</li>
+</ol><p>
+	With no way to observe this per-difficulty state, this is one of the rare landmines where we get total freedom for the fix. Thus, we can just do the right thing and set the clear flag for only the current difficulty, reflecting your actual achievements and paving the way for a future feature that can highlight this per-difficulty clear state in the UI.
+</p></li><li><p>
+	{{HTML_Emoji "th04"}} TH04's <code>OP.EXE</code> simultaneously loads both Reimu's and Marisa's scores for the currently selected difficulty into two separate structures. This alone is a great source of unnecessary inconsistencies, but it gets even worse when either of the two sections is found to be corrupted during decryption. In that case, the game doesn't decrypt Marisa's section and leaves its encrypted state in the respective structure. However, the High Score viewer still assumes that both sections were decrypted. While Reimu's section will always contain either valid or recreated default data, you probably won't see that under all the garbage sprite data rendered for the still encrypted Marisa:
+</p><figure class="fullres pixelated">
+	<img src="{{$view4}}" width="640" alt="Screenshot of TH04's High Score viewer, rendering a GENSOU.SCR file whose Marisa/Lunatic section was corrupted with random bytes">
+	<figcaption>Corruption with random bytes will look slightly more varied than the zeroed-out example from the previous post.</figcaption>
+</figure></li><li><p>
+	{{HTML_Emoji "th04"}}/{{HTML_Emoji "th05"}} The original games would recreate the full <code>GENSOU.SCR</code> with its default data if even just one character×difficulty-specific section of the file was found to be corrupted. The debloated build now only resets individual corrupted sections to their default state, preserving as much of the file as possible. This also went hand in hand with removing that separate Marisa score structure in TH04, giving us identical and glitchless corruption repair behavior in both games and saving me from having to mention TH04's corruption behavior in the release notes. Efficiency!
+</p></li><li><p>
+	{{HTML_Emoji "th04"}}/{{HTML_Emoji "th05"}} As an added consistency bonus, the debloated builds no longer fully re-encrypt <code>GENSOU.SCR</code> after entering a score after a cutscene. <a href="https://github.com/nmlgc/ReC98/commit/daf65bcd50e6d89fcb560b1bc0dd3803fd7ce850">This was dumb for many reasons.</a>
+</p></li><li><p>
+	{{HTML_Emoji "th05"}} Also, they still preserve {{Blog_PostLink "2024-12-04#recreate" "the inconsistent stage numbers upon recreation"}}. I couldn't bring myself to fix this 😩
+</p></li></ul><p id="sizes-{{.Date}}">
+	The actual merge then indeed delivers what we were hoping for: In three of the four games, the added unique code from <code>OP.EXE</code> and <code>MAINE.EXE</code>/<code>MAINL.EXE</code> comes in at far below the 20,512 bytes we freed by removing {{Blog_PostLink "2023-03-05#single" "Borland's C++ exception handler"}}, both in the binaries themselves and in their loaded in-memory state.<br>
+	But it's TH05 where both <code>OP.EXE</code>'s expanded Music Room and <code>MAINE.EXE</code>'s Staff Roll and All Cast sequence add so much unique data that the initial merge ended up slightly larger than the size of the original <code>MAINE.EXE</code>. Getting the binary and run-time size of the new <code>DEBLOAT.EXE</code> below that point required every trick in the book and then some. The more critical tricks were good ideas in their own right:
+</p><ul>
+	<li>Heap-allocating {{Blog_PostLink "2020-09-12" "the scrollable verdict bitmap shown after the Staff Roll"}} frees up 28,160 bytes of statically allocated memory. The fact that you can just <i>have</i> such large arrays of static data seemed like a great benefit of this binary splitting model 5 years ago, but it really doesn't hold up against just writing the two lines to allocate and free that memory from the heap. <code>MAINE.EXE</code>'s 320,000-byte heap memory limit is more than enough to fit that bitmap in addition to all the simultaneously loaded Staff Roll sprites.</li>
+	<li>Heap-allocating {{Blog_PostLink "2022-11-30#games-2022-11-30" "TH04's and TH05's cutscene script buffer"}} not only does the same at the smaller scale of 8,192 bytes, but also practically saves over half of that memory, as TH05's largest <i>actual</i> script (Reimu's Good Ending, stored in <code>_ED10.TXT</code>) is just 3,152 bytes. And not just that: It also removes the original 8&nbsp;KiB limit on cutscene scripts in those games, allowing mods to use up to 64&nbsp;KiB just like TH03.</li>
+</ul><p>
+	But the rest of them definitely crossed over into silly micro-optimization territory:
+</p><ul><li><p>
+	The single biggest reduction came from turning the various statically allocated <code>far</code> pointers to hardcoded strings into <code>near</code> ones. ZUN used the <a href="https://en.wikipedia.org/w/index.php?title=X86_memory_models&oldid=1310812895#Memory_models">Large memory model</a> for every .EXE binary, where every statically initialized C pointer variable not only gets turned into this 4-byte segment+offset form, but also receives a 2-byte relocation in the <a href="https://wiki.osdev.org/index.php?title=MZ&oldid=28644#Relocations">MZ header</a> that allows the DOS .EXE loader to adjust the relative segment part to the correct absolute value in conventional RAM. These relocations don't remain in memory after a process has started, but they do have quite an impact on a binary's size if it uses lots of hardcoded strings.<br>
+	The correct high-level solution is to simply switch to the Medium memory model, which restricts a program to just 64&nbsp;KiB of statically allocated data and reduces all data pointers to offset-only <code>near</code> pointers by default. Sadly, switching memory models is one of those wide-ranging architectural changes that we absolutely can not realistically do with that much undecompiled and undecompilable ASM left in the codebase:
+</p><ul>
+	<li>All ZUN-written ASM code came out of the disassembler in a Large-exclusive form and would have to be manually adapted to work for the Medium model as well.</li>
+	<li>Due to all the code sharing between the games, we'd pretty much have to flip the Medium model switch for all games at the same time. A gradual transition would take even more effort.</li>
+</ul><p>
+	Hence, this will only make sense at that far point in the future when we've even translated the majority of undecompilable ASM back to C++. In the meantime, we're left with manually declaring all such pointers as <code>near</code>. With a total of 471 pointers to hardcoded strings in the merged TH05 executable, this brought the binary size down by 1,884 bytes. 1,356 of those bytes came from the Music Room and its hardcoded track titles and BGM filenames, but we've also got 300 bytes in {{Blog_PostLink "2025-09-16#th05-allcast" "the All Cast sequence"}}, 156 bytes in the main menu, and 72 bytes in the sound setup menu.
+</p></li><li><p>
+	At startup, Borland's libc must correctly set up buffering for C's <code>stdin</code> and <code>stdout</code> streams. Section 7.21.3/7 of the C standard mandates how this setup must behave in case any of these streams are redirected away from the terminal, but even the <q>"implementation-defined"</q> terminal case must at least set up line buffering for <code>stdin</code> to make <code>scanf()</code> and similar functions behave as expected, just in case you ever want to use these functions. TH01 uses <code>scanf()</code> for the stage selection feature in Debug mode, but other games thankfully stay far away from C's standard I/O functions and use master.lib's text layer functions instead. Disabling this I/O setup in the same way we disable Borland's forced C++ exception handler saves 1,722 bytes in TH02-TH05.<br>
+	At least C doesn't even pretend to make you not pay for things you don't use in the way C++ does. It just unconditionally throws <i>all</i> the trash your way…
+</p></li><li><p>
+	Removing trailing whitespace from the hardcoded Music Room track titles and sound setup menu help texts saved another 862 bytes. Hex-editing translators might disapprove, but <i>come on</i>, we have C++ code now. If you commit and push your edits somewhere, there's at least a chance that we can keep them working into the future.
+</p></li><li><p>
+	The explosion sprite structure in the ZUN Soft logo has an unused 2-byte structure field that wastes 512 statically allocated bytes in the game's data segment. That array would have been another prime candidate for heap allocation, but that would have only been feasible with a decompilation, and {{Blog_PostLink "2024-12-04#zunsoft" "<i>someone</i> insisted on keeping this particular animation in ASM for the time being"}}…
+</p></li><li><p>
+	Removing unnecessary inlining from game startup saved 64 bytes.
+</p></li><li><p>
+	Data-driving the Demo Play characters and stages saved 54 bytes.
+</p></li><li><p>
+	The original <code>MAINE.EXE</code> contains a second copy of the <code lang="ja">スローモードでのプレイでは、スコアは記録されません</code> string because ZUN didn't use a single optimal set of compiler flags for the entire game. Removing that second copy gives us our final 51 bytes.
+</p></li></ul><hr><p>
+	Alright, another idealistic bonus goal reached! That means we're only missing a single aspect to reach feature parity with the debloated TH01 build:
+</p><h3 id="game-bat-{{.Date}}">Replicating TH02-TH05's <code>GAME.BAT</code> in C++</h3><p>
+	In TH03, this is slightly more involved. We not only need to launch PMD using this technique, but also apply it to the <code lang="ja">INTvector set program</code> and SPRITE16. {{Blog_PostLink "2023-03-05#mdrv98" "You know the way this goes"}}:
+</p><p>
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-sketch.svg"}}" class="inline_sprite" style="height: 11.25vw; margin-right: 0.5em; float: left;" />
+	…actually, wait a moment! TH02-TH05 don't even use the C heap, and the master.lib heap works in a completely different way. Borland implemented their heap in a traditional <a href="https://linux.die.net/man/2/sbrk"><code>sbrk(2)</code></a> style that dynamically resizes a program's main DOS memory block as needed, which is how we end up with the whole concept of the heap growing in one direction. master.lib, however, needs to place its heap entirely within a single pre-allocated and fixed-size block of memory. And since <code>mem_assign_dos()</code> simply allocates this block via the usual <a href="https://stanislavs.org/helppc/int_21-48.html">DOS <code>INT 21h, AH=48h</code> API</a>, it doesn't matter <i>where</i> on the DOS heap this block is located. This means that we don't even have to do the error-prone witchcraft of pushing these TSRs to the top of conventional memory that we had to do for TH01! Right?
+</p><figure style="clear: both;">
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-naive.svg"}}" />
+	<figcaption>Just like last time, these visualizations are not even remotely to scale.<br>
+	Also, note the small gap between SPRITE16 and PMD. That's <i>supposed</i> to be PMD's environment segment, and DOS does allocate it, but PMD explicitly frees it before going resident. Sure, it's just a few bytes on real DOS, but still, very considerate!</figcaption>
+</figure><p>
+	Unfortunately though, the fixed position of all these TSRs would still prevent the <span style="color: red">game allocation</span> from being replaced with a binary that asks for more memory than the one this block was initially allocated for. In TH01, this would have been a minor issue because it only applied to hot-reloading the single <code>DEBLOAT.EXE</code> or <code>ANNIV.EXE</code> that contains all game code. For the other four games, however, we still keep the larger <code>MAIN.EXE</code> as a separate binary, and most likely will do so for the foreseeable future. And we're surely not getting into the business of <span class="hovertext" title="Seems easy in theory: For TSRs spawned from a .COM binary, their code and data is limited to the single memory block, so we would simply move the memory and adjust the (hardcoded) interrupt vector. But what about TSRs that allocate and save the addresses of other DOS memory blocks (*cough* SPRITE16), or even just they store and load a copy of their their CS/DS/SS register at any globally persistent location? Welcome to replicating tons of implementation details…">moving already allocated</span> TSRs…<br>
+	So we're back to the technique from two years ago after all. Let's precalculate the size of each TSR, push that TSR to the top of conventional RAM by temporarily claiming all free memory minus its expected size, and then we get…
+</p><figure><embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-failure.svg"}}" /></figure><p>
+	…a <code>ZUN.COM</code> spawn failure from DOS as we try to start the <code>ZUNINIT</code> sub-binary. {{HTML_Emoji "zunpet"}}<br>
+	Yup. Thanks to ZUN's fantastic idea of bundling these small utility tools and TSRs into a single binary that's larger than each individual TSR, we can't just reuse the strategy that worked for TH01. DOS must load the entirety of <code>ZUN.COM</code> into conventional RAM <i>before</i> the bundling code gets a chance to shift the selected sub-binary to the top of the program's memory block and then reduce the size of that block.<br>
+	So how are we going to solve this?
+</p><ul>
+	<li>We could ship the individual small binaries bundled in <code>ZUN.COM</code>. But that would defeat the whole point of reducing clutter in the game directory, being even worse than the batch file we're trying to eliminate.</li>
+	<li>We could reserve the entire required size of <code>ZUN.COM</code> instead of just the size we expect for each TSR. But that would leave the difference between <code>ZUN.COM</code> and the TSR as an unallocated block we can't do anything with, fragmenting the DOS heap as a result:</li>
+</ul><figure>
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-overallocated.svg"}}" />
+	<figcaption>Sure, we could allocate the resident structure into the gap left by <code>ZUNINIT</code>'s instance of <code>ZUN.COM</code>, but that's just a few bytes. Keep in mind that the <i>(env.)</i> blocks are much smaller than they appear here. Thus, the free blocks are also a lot larger in reality, but still not large enough to fit PMD and its music buffer.</figcaption>
+</figure><p>
+	But if we can't get rid of <code>ZUN.COM</code>'s high load-time memory requirements, how about using that memory more productively? Is there a way we could maybe spawn the other TSRs <i>into</i> the hole left by <code>ZUN.COM</code> after it went resident?<br>
+	Let's take a step back from individual TSRs and instead look at the full picture of spawning a <i>bundle</i> of TSRs in a defined order. First, we determine both the <i>binary size</i> (file size of the .COM binary + <a href="https://en.wikipedia.org/wiki/Program_Segment_Prefix">Program Segment Prefix</a> + 256 bytes of stack) and the <i>resident size</i> (the size of its memory block after it goes resident) of each TSR. With these metrics, we can calculate a <i>minimum</i> and <i>resident</i> size for the full bundle by simulating the TSR spawns in order:
+</p><figure><pre>uint32_t bundle_size_min = 0;
+uint32_t bundle_size_resident = 0;
+
+for(const auto& tsr : tsrs) {
+	// Since DOS has freed all excess binary memory before we get to spawn a new TSR, the new
+	// one will end up next to the previous resident allocations. We only need to consider
+	// the previous minimum size because it might be larger than the one we calculate here.
+	bundle_size_min = std::max((bundle_size_resident + tsr.size_binary), bundle_size_min);
+
+	bundle_size_resident += tsr.size_resident;
+}</pre></figure><p>
+	Let's step through the bundle construction for TH03:
+</p><figure><table class="numbers bundle-{{.Date}} naive-{{.Date}}"><thead><tr>
+	<th>TSR</th>
+	<th>Binary</th>
+	<th>Resident</th>
+	<th>Bundle minimum</th>
+	<th>Bundle resident</th>
+	<th>Naive</th>
+</tr></thead><tbody><tr>
+	<td>ZUNINIT (<code>ZUN.COM</code>)</td>
+	<td>23,276</td>
+	<td> 1,056</td>
+	<td>23,276</td>
+	<td> 1,056</td>
+	<td>23,276</td>
+</tr><tr>
+	<td>SPRITE16 (<code>ZUN.COM</code>)</td>
+	<td>23,276</td>
+	<td>36,528</td>
+	<td>24,332</td>
+	<td>37,584</td>
+	<td>59,804</td>
+</tr><tr>
+	<td><code>PMD86.COM</code></td>
+	<td>29,295</td>
+	<td>30,144</td>
+	<td>66,879</td>
+	<td>67,728</td>
+	<td>89,948</td>
+</tr></tbody></table></figure><p>
+	Then, we only need to resize our main memory block a single time to leave a gap at the top of conventional RAM whose size matches the larger of the minimum or resident bundle sizes. If we then spawn the TSRs into this gap, we indeed save 22,220&nbsp;bytes over the naive approach! Let's visualize the resulting memory layout with TH02 because there's a nice detail with MMD and PMD:
+</p><figure>
+	<embed src="{{call .PostFileURL "TH02-DOS-heap-bundled.svg"}}" />
+	<figcaption>MMD also frees its environment segment before going resident, so we can subtract the size of one environment segment from the reserved heap size if we spawn both PMD and MMD.<br>
+	Unfortunately, <i>one</i> of these gaps will always remain with this approach. We could get rid of it by spawning MMD and PMD first, which would merge it into the remaining free memory. But then, we'd have nothing to spawn into the hole left by the <code>ZUN.COM</code> binary for <code>ZUNINIT</code>, and we'd be back to the naive fragmented situation above. Thus, this trick remains unique to TH02.</figcaption>
+</figure><p>
+	However, there's one crucial detail in all of this that would prove to be more complicated:
+</p><h4 id="prespawn-{{.Date}}">Calculating correct resident sizes</h4><p>
+	In TH01, this was no big deal. MDRV98 was the only TSR we had to care about, and there was no reason not to just replicate its simple resident size calculation within the code. After all, people would either run the version bundled with the game or the smaller previous version if they played on a real-hardware CanBe model. No one really cares about MDRV98 beyond that level; the driver is almost universally disliked for just not being PMD, which managed to attract a sizable community, documentation, and even <a href="http://www5.airnet.ne.jp/kajapon/tool.html">new developments</a> over the years. A PMD port of TH01 has been one of the most common mod requests as well.<br>
+	The TSRs in later games, however, are much more flexible. We compile both <code>ZUNINIT</code> and <code>SPRITE16</code> from source and should therefore expect people to mod them, but these two in particular <i>might</i> just be considered uninteresting and static enough to justify hardcoding their sizes. But this approach utterly breaks with PMD, whose chip-specific variants come in multiple versions depending on the game:
+</p><figure><table class="numbers" id="kaja-{{.Date}}">
+	<thead>
+		<tr>
+			<th></th>
+			<th>{{HTML_Emoji "th02"}} TH02</th>
+			<th>{{HTML_Emoji "th03"}} TH03</th>
+			<th>{{HTML_Emoji "th04"}} TH04</th>
+			<th>{{HTML_Emoji "th05"}} TH05</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th><code>PMD.COM</code></th>
+			<td colspan="4">4.8l (1996-12-28)<br>14,336 bytes</td>
+		</tr>
+		<tr>
+			<th><code>PMDB2.COM</code><br>(ADPCM)</th>
+			<td colspan="2">4.8l (1996-12-28)<br>18,496 bytes</td>
+			<td colspan="2">4.8o (1997-06-19)<br>18,592 bytes</td>
+		</tr>
+		<tr>
+			<th><code>PMD86.COM</code><br>(86PCM)</th>
+			<td colspan="2">4.8l (1996-12-28)<br>19,904 bytes</td>
+			<td colspan="2">4.8o (1997-06-19)<br>19,984 bytes</td>
+		</tr>
+		<tr>
+			<th><code>PMDPPZ.COM</code><br>(PPZ8/CanBe)</th>
+			<td colspan="2">4.8l (1996-12-28)<br>20,768 bytes</td>
+			<td colspan="2">4.8o (1997-06-19)<br>21,024 bytes</td>
+		</tr>
+	</tbody>
+</table><figcaption>
+	The PMD versions that ZUN shipped with each game. The byte size refers to the in-memory TSR size without any music, voice, or effect data added on top.
+</figcaption></figure><p>
+	In theory, nothing stops us from hardcoding these sizes for each game as well. But these physical details about specific PMD versions are even less of a property of the game. There's no reason why modders shouldn't be able to replace any of the hardware-specific driver versions with any other – and given the sizable PMD composer and arranger community, this is a much more likely kind of mod to happen. <a href="https://www.youtube.com/watch?v=BRy26PViAZs">SSG-EG</a>, anyone?
+</p><p>
+	But how could we figure out the required resident size of arbitrary PMD versions without hardcoding anything? From the outside, we can only really know for sure by <i>running</i> the driver and seeing how much memory it keeps resident…<br>
+	…so that's exactly what we need to do. The merged binaries spawn each driver three times during setup – once to figure out its size, a second time to remove this test TSR, and a third time to respawn the TSR at its designated place at the top of conventional memory. And if we have such a system in place, nothing stops us from applying it to all other TSRs as well, removing the need to precalculate or hardcode <i>any</i> size… well, except for SPRITE16, which <a href="https://github.com/nmlgc/ReC98/blob/6729270d15026400ed98643e676be1596a56ea42/th02/pc98/game_bat.cpp#L347-L357">still needs a hack to factor in its extra two blocks on the DOS heap</a>. In TH03, these <span title="Test spawn, test release">2</span>×<span class="hovertext" title="ZUNINIT, SPRITE16, PMD">3</span> additional processes do slow down startup by about 6 frames on our target 66&nbsp;MHz Neko Project configuration when compared to the batch file, which should still be tolerable relative to the .PI load times we removed by switching to PiLoad.
+</p><p id="obstacles-{{.Date}}">
+	The whole feature has a few other nice properties as well:
+</p><ul><li><p>
+	Since this entire <code>GAME.BAT</code> replica should be optional, we need a reliable way of detecting whether we were started from <code>GAME.BAT</code>. Checking whether all of a game's TSRs are already resident is the obvious choice here. But then, we can even do one better and only start the <i>specific</i> TSRs that aren't resident by the time our merged binary is started. Of course, removing any non-<code>ZUN.COM</code> TSR from the bundle will invariably leave gaps in the DOS heap, but we do gain an extra bit of resilience since the game at least <i>starts</i> in case of a messed-up batch file.<br>
+	If we do see all TSRs in memory though, we also skip TH02's and TH03's bouncing-ball ZUN Soft logo as well as TH05's gaiji upload, {{Blog_PostLink "2023-05-01" "matching the behavior I ended up with in TH01"}}. After all, we can't validate whether <i>those</i> were already run or not. If you remove the <code>zun -g</code> line from an edited version of TH05's <code>GAME.BAT</code> that launches <code>DEBLOAT.EXE</code> instead of <code>OP.EXE</code>, you'd therefore get the same gaiji- and HUD-less game that you'd get with ZUN's original binaries.
+</p></li><li><p>
+	We also don't spawn TH04's and TH05's memory checks from C++ for a similar reason. Their hardcoded memory values assume that the checks are run from <code>GAME.BAT</code> <i>before</i> the game gets loaded, which would obviously cause them to fail if all menu and cutscene code is already loaded into conventional RAM. After merging that code into a single binary, there's not much of a point to such an upfront check either:
+</p><ul>
+	<li>If there wasn't enough memory to launch <code>DEBLOAT.EXE</code>/<code>ANNIV.EXE</code> in the first place, you'd immediately get to know.</li>
+	<li>If the single DOS-heap-allocating call to <code>mem_assign_dos()</code> failed, we should probably adopt ZUN's original errors to tell you about it in detail, but the game would also refuse to start immediately. This must necessarily be one of the first function calls made by each binary.</li>
+	<li>If either of these two issues occurred for just a game's <code>MAIN.EXE</code>, it would be somewhat inconvenient to always go through the title screen animation and the main menu to test any new memory setup, but it wouldn't be a big deal either.</li>
+	<li>The original games did have the theoretical issue that their <code>MAINE.EXE</code>/<code>MAINL.EXE</code> could have required more memory than either <code>OP.EXE</code> or <code>MAIN.EXE</code>. Without an upfront check for the expected size of <code>MAINE.EXE</code>/<code>MAINL.EXE</code>, a lack of memory <i>could</i> have meant losing a run to an out-of-memory crash upon switching to <code>MAINE.EXE</code>/<code>MAINL.EXE</code>, where scores and clear flags get written to disk. In practice, none of the games actually have this issue, and merging the two binaries avoids it entirely.</li>
+</ul></li><li><p>
+	These merged binaries also integrate PMDPPZ/CanBe support via the <kbd>-c</kbd> or <kbd>--canbe</kbd> option. It is quite silly how the community refers to the combination of <code>PMDPPZ.COM</code> and <code>GAMECB.BAT</code> as a <q>CanBe patch</q>, since this is a strict surface-level <i>addition</i> and doesn't <i>modify</i> anything. Now that my package integrates at least one of the two required parts, can we maybe stop calling it like that? You even get a nice error message in case <code>PMDPPZ.COM</code> is still missing from your game directory!
+</p></li></ul><p>
+	And then you test with the actual <code>ZUN.COM</code> and notice that you're <i>still</i> not done:
+</p><ul><li><p>
+	The <code lang="ja">INTvector set program</code> sets up handlers for <code>INT 5</code> and <code>INT 6</code>, which collide with Turbo C++ 4.0J's implementation of <a href="https://man7.org/linux/man-pages/man2/signal.2.html"><code>signal(2)</code></a>. If your program only consists of its main process and the TSR you launch from it, this is no problem as long as you shut down the TSR before your process. However, we want to launch <code>DEBLOATM.EXE</code>/<code>ANNIVM.EXE</code> via <code>execl()</code> from the same process that launched the TSR. You'd think that Borland's <code>signal()</code> implementation would then install an <code>atexit()</code> handler to restore the specific hooked interrupt vector at shutdown. But no: <code>execl()</code> unconditionally resets <i>all</i> interrupts that <code>signal()</code> can possibly hook to their original handlers during libc initialization, <i>even if your program never calls <code>signal()</code></i>. Hence, <code>execl()</code> would not only remove ZUN's <code>INT 5</code> and <code>INT 6</code> handlers if they were set up by a C++-spawned <code>ZUNINIT</code> process, but also leak said process: <code>ZUNINIT</code>'s <code>-r</code> command locates the resident process via the segment part of the system-wide <code>INT 6</code> handler, which obviously no longer works after Borland overwrote that handler.<br>
+	Thankfully, Borland's function pointers for the original handlers must come with public symbols to remain accessible from two different places in the standard library. Overwriting these pointers after spawning and removing the <code>ZUNINIT</code> TSR is therefore enough to work around this dumb issue.
+</p></li><li><p>
+	Bundling all these small utility programs into <code>ZUN.COM</code> was apparently not enough for ZUN, and so he additionally compressed TH03's and TH04's <code>ZUN.COM</code> using Diet. This means that these binaries <i>also</i> have to first decompress themselves before they can unbundle and actually launch the requested sub-binary. {{HTML_Emoji "godzun"}} Any compressed binary necessarily decompresses into a process larger than the size of its binary file, and the .COM format has no way of expressing that larger size. Dynamically resizing the program's DOS memory block at startup could work, but Diet made the much more reliable choice of turning such .COM binaries into .EXE binaries, which can declaratively request more memory. Although it certainly is questionable how these binaries retain their original .COM extension… {{HTML_Emoji "thonk"}}<br>
+	Thus, our TSR size calculation code also needs to support .EXE binaries. The implementation is not complicated at all; you read the MZ header and adapt <a href="https://github.com/joncampbell123/dosbox-x/blob/f359dd9a8055c3386868a2ec0dc2c92be851d456/src/dos/dos_execute.cpp#L379-L381">the single expression for calculating the minimum size from DOSBox-X's source code</a>. But then, we're up for a major disappointment once we see how Diet requests almost one full 64&nbsp;KiB segment to fit both its compressed and decompressed payload. This doesn't matter for TH03, where SPRITE16 allocates an extra 32&nbsp;KB for alpha channels that would be placed into that extra bit of memory allocated for Diet before. But TH04 doesn't have a similarly sized third TSR, which leaves us with an unsightly 34,944-byte hole at the top of the DOS heap:
+</p></li></ul><figure><rec98-child-switcher>
+	<table data-title="Uncompressed" class="numbers bundle-{{.Date}}"><thead><tr>
+		<th>TSR</th>
+		<th>Binary</th>
+		<th>Resident</th>
+		<th>Bundle minimum</th>
+		<th>Bundle resident</th>
+	</tr></thead><tbody><tr>
+		<td>ZUNINIT (<code>ZUN.COM</code>)</td>
+		<td>13,394</td>
+		<td>   784</td>
+		<td>13,394</td>
+		<td>   784</td>
+	</tr><tr>
+		<td><code>PMD86.COM</code></td>
+		<td>29,383</td>
+		<td>30,224</td>
+		<td>30,167</td>
+		<td>31,008</td>
+	</tr></tbody></table>
+	<table data-title="Compressed" class="numbers bundle-{{.Date}} active"><thead><tr>
+		<th>TSR</th>
+		<th>Binary</th>
+		<th>Resident</th>
+		<th>Bundle minimum</th>
+		<th>Bundle resident</th>
+	</tr></thead><tbody><tr>
+		<td>ZUNINIT (<code>ZUN.COM</code>)</td>
+		<td>65,968</td>
+		<td>   784</td>
+		<td>65,968</td>
+		<td>   784</td>
+	</tr><tr>
+		<td><code>PMD86.COM</code></td>
+		<td>29,383</td>
+		<td>30,224</td>
+		<td>66,752</td>
+		<td>31,008</td>
+	</tr></tbody></table>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure><p>
+	It's this TH04 issue that raises the question of whether this whole TSR bundling solution was even worthwhile in the first place. It sure was an interesting problem to solve, but it'd be much simpler <i>and</i> less bloated to just integrate the <code lang="ja">INTvector set program</code> into every binary. For TH03, we could similarly integrate all SPRITE16 functionality directly into <code>DEBLOATM.EXE</code>/<code>ANNIVM.EXE</code> and <i>still</i> end up with a smaller-than-original binary after removing Borland's C++ exception handler. That would leave PMD and MMD as the only TSRs we'd need to spawn from C++, and those do have good reasons to be separate from game code.<br>
+	Oh well, gotta get TH03's <code>MAIN.EXE</code> position-independent first…
+</p><p>
+	Also, the usual caveats from two years ago still apply. This whole trick of pushing TSRs to the top of conventional RAM still relies on witchcraft that may not work on certain DOS kernels. For developers, tinkerers, and people who know what they're doing, it does succeed at nicely decluttering the game directory. But for… ahem, <i>distributors</i>, I still recommend shipping the modified version of <code>GAME.BAT</code> and <code>GAMECB.BAT</code> in the package below to defend against any potential stability issues.
+</p><hr id="th03-vs-quit-{{.Date}}"><p>
+	Finally, if the performance improvements aren't enough of a reason to upgrade to these new builds, how about an actual new feature? TH03's Anniversary Edition now lets you quit out of the VS Start menu via either <kbd>ESC</kbd> or a new menu item, without going through the Select screen. 🙌
+</p><figure class="fullres pixelated">
+	<img src="{{$anniv3}}" width="640" alt="Screenshot of the VS Start menu in the P0323 build of TH03's Anniversary Edition, showing off the new Quit option and the version text">
+	<figcaption>Matching the style of the version text to the style of <q>☪ The Phantasmagoria of Dim. Dream</q> on the other side seemed like the least bad option here. That outline is indeed created by rendering every line 9 times…</figcaption>
+</figure><p>
+	And with that, I'm finally done with 2025's most indulgent subproject! Let's quickly check the overall impact on the codebase:
+</p><figure><pre>$ git diff --stat debloated~193 debloated -- . ":(exclude)Tupfile.lua" ":(exclude)build_dumb.bat" ":(exclude)unused/"
+[…]
+259 files changed, 4145 insertions(+), 8099 deletions(-)</pre></figure><p>
+	That's almost 4,000 lines of ad-hoc PC-98-native graphics code, bloat, landmines, bloat- and landmine-documenting comments, and binary-specific inconsistencies removed from game code, in exchange for…
+</p><figure><pre>git diff --stat master~203 master -- platform/
+[…]
+28 files changed, 2213 insertions(+), 258 deletions(-)</pre></figure><p>
+	…not even half that many additional lines in the platform layer. And here's what all of this compiles to:
+</p><p>
+	<a class="release" href="https://github.com/nmlgc/ReC98/releases/tag/P0323">
+	<img
+		src="{{StaticFileURL "logo.png"}}"
+		alt="Richard Stallman cosplaying as a shrine maiden"
+		class="inline_sprite"
+		width="24"
+		height="24"
+	> ReC98 (version P0323)</a>
+	{{HTML_Download .HostedPath $dl}}
+</p><p>
+	After the Shuusou Gyoku debacle and the many last-minute fixes that cropped up while I was writing this post, I'm not particularly confident in these builds, despite the weeks of testing that went into them. Still, we've got to start <i>somewhere</i>. At least for TH03, we're bound to quickly find any issues that slipped through the cracks while I'm implementing netplay into the Anniversary Edition.
+</p><p>
+	Next up: The very quick round of {{Blog_PostLink "2025-04-09#tag" "Shuusou Gyoku maintenance and forward compatibility"}} I announced in April, to clear out the backlog a bit. This whole series also really stretched the concept of what 11 pushes should be, so I'll charge 2 pushes for that maintenance round to compensate. In exchange, I'll also incorporate a small bit of new Windows 98 feature work, since it fits nicely with the cleanup work.
+</p>

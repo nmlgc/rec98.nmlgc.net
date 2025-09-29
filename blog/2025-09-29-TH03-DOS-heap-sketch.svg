@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 250 82.5"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<linearGradient id="stops">
+			<stop style="stop-color:#000; stop-opacity:1;" offset="0" />
+			<stop style="stop-color:#000; stop-opacity:0;" offset="1" />
+		</linearGradient>
+		<linearGradient xlink:href="#stops" id="fadeoutGradient" x1="165"
+			y1="45" x2="235" y2="55" gradientUnits="userSpaceOnUse" />
+	</defs><link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="/static/heap.css" type="text/css" /><g opacity="0.25"><path class="alloc fixed" d="M0 0h 25v 60H 0z"/><text class="label" x="12.5" y="30"><tspan>BIOS</tspan></text><path class="alloc" d="M25 0h 45v 60H 25z"/><text class="label" x="47.5" y="23.75"><tspan>DOS,</tspan><tspan x="47.5" dy="12.5"><tspan font-family="monospace">COMMAND.COM</tspan></tspan></text></g><g class="small_env"><path class="alloc" d="M70 0h 30v 60H 70z"/><text class="label" x="85" y="17.5"><tspan><tspan class="binary">DEBLOAT /</tspan></tspan><tspan x="85" dy="12.5"><tspan class="binary">ANNIV</tspan></tspan><tspan x="85" dy="12.5">(env.)</tspan></text></g><path class="alloc" style="fill: #f88" d="M100 0h 65v 60H 100z"/><text class="label" x="132.5" y="30"><tspan><tspan class="binary">DEBLOAT / ANNIV</tspan></tspan></text><g class="free">
+		<line class="alloc" x1="0" y1="0" x2="640" y2="0" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+	</g>
+
+	<text class="number" x="0.5" y="77.5" style="text-anchor: start;">0000h</text>
+	<path class="heap" d="M160 45v10" stroke="#000" />
+	<path class="heap" d="M160 50h100" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+
+	<path d="M0 60h700" stroke="#000" style="stroke:url(#fadeoutGradient)" />
+	<path d="M0 55v10" stroke="#000" />
+</svg>

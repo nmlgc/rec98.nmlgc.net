@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5"><link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="/static/heap.css" type="text/css" /><g opacity="0.25"><path class="alloc fixed" d="M0 0h 25v 60H 0z"/><text class="label" x="12.5" y="30"><tspan>BIOS</tspan></text><path class="alloc" d="M25 0h 45v 60H 25z"/><text class="label" x="47.5" y="23.75"><tspan>DOS,</tspan><tspan x="47.5" dy="12.5"><tspan font-family="monospace">COMMAND.COM</tspan></tspan></text></g><g class="small_env"><path class="alloc" d="M70 0h 30v 60H 70z"/><text class="label" x="85" y="23.75"><tspan><tspan class="binary">DEBLOAT</tspan></tspan><tspan x="85" dy="12.5">(env.)</tspan></text></g><path class="alloc" style="fill: #f88" d="M100 0h 65v 60H 100z"/><text class="label" x="132.5" y="30"><tspan><tspan class="binary">DEBLOAT</tspan></tspan></text><path class="alloc" d="M165 0h 145v 60H 165z"/><text class="label" x="237.5" y="30"><tspan>master.lib heap</tspan></text><g class="free">
+			<line class="alloc" x1="310" y1="0" x2="470" y2="0" stroke="#000" /><text class="label" x="390" y="30"><tspan>(free)</tspan></text>
+		</g><g class="small_env"><path class="alloc" d="M470 0h 25v 60H 470z"/><text class="label" x="482.5" y="23.75"><tspan><tspan class="binary">ZUNINIT</tspan></tspan><tspan x="482.5" dy="12.5">(env.)</tspan></text></g><path class="alloc" d="M495 0h 30v 60H 495z"/><text class="label" x="510" y="30"><tspan><tspan class="binary">ZUNINIT</tspan></tspan></text><g class="free">
+			<line class="alloc" x1="525" y1="0" x2="530" y2="0" stroke="#000" /><text class="label" x="527.5" y="30"><tspan></tspan></text>
+		</g><path class="alloc" d="M530 0h 30v 60H 530z"/><text class="label" x="545" y="30"><tspan>MMD</tspan></text><path class="alloc" d="M560 0h 40v 60H 560z"/><text class="label" x="580" y="30"><tspan>PMD</tspan></text><path class="alloc" d="M600 0h 40v 60H 600z"/><text class="label" x="620" y="23.75"><tspan>Resident</tspan><tspan x="620" dy="12.5">structure</tspan></text><g opacity="0.25"><path class="alloc fixed" d="M640 0h 60v 60H 640z"/><text class="label" x="670" y="30"><tspan>Text RAM</tspan></text></g>
+	<text class="number" x="0.5" y="77.5" style="text-anchor: start;">0000h</text>
+	<text class="number" x="639.5" y="77.5" style="text-anchor: end;">9FFFh</text>
+	<text class="number" x="645" y="77.5" style="text-anchor: start;">(640 KiB)</text>
+	<path d="M0 60h700" stroke="#000"/>
+	<path d="M0 55v10" stroke="#000"/>
+	<path d="M640 55v10" stroke="#000"/></svg>

@@ -1,0 +1,22 @@
+{{$h := SVG_DOSHeap -}}
+{{$bios := $h.MCB "BIOS" 25 -}}
+{{$dos := $h.MCB "DOS,\n<tspan font-family=\"monospace\">COMMAND.COM</tspan>" 45 -}}
+{{$game_env := $h.MCB "<tspan class=\"binary\">DEBLOAT /</tspan>\n<tspan class=\"binary\">ANNIV</tspan>\n(env.)" 30 -}}
+{{$game := $h.MCB "<tspan class=\"binary\">DEBLOAT / ANNIV</tspan>" 495 -}}
+{{$zuncom := $h.MCB "" 90 -}}
+
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
+	{{- $h.CSS -}}
+	{{- $h.BIOSAndDOS $bios $dos -}}
+	<g class="small_env">{{- $game_env.RegularAlloc -}}</g>
+	{{- $game.Game -}}
+	{{- $h.TRAM -}}
+{{- with $zuncom -}}
+	<path class="alloc" style="fill: #800" {{.Path}} />
+	<text class="label" x="{{.CX}}" y="26" style="fill: white">
+		<tspan class="binary">🛑 ZUN.COM 🛑</tspan>
+	</text>
+{{- end -}}
+	{{- $h.Line -}}
+</svg>

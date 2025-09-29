@@ -1,0 +1,17 @@
+Anchor	Name
+scope	The scope
+retain	Retaining menu backgrounds in conventional RAM
+fragment	- Fighting heap fragmentation
+tearing	Resolving screen tearing landmines
+vblank	- Deterministically running tasks in VBLANK
+tearing-easy	- An easy example (TH04/TH05 main menu reinitialization)
+tearing-hard	- A hard example (TH03 character selection)
+tearing-lunatic	- A lunatic example (TH02 High Score screen)
+unused	Intermission: Handling unused code on fork branches
+merge	Merging TH02-TH05's <code>OP.EXE</code> and <code>MAINE.EXE</code>/<code>MAINL.EXE</code>
+scorefiles	- Scorefile inconsistencies
+sizes	- Keeping TH05's binary size low
+game-bat	Replicating TH02-TH05's <code>GAME.BAT</code> in C++
+prespawn	- Calculating correct resident sizes
+obstacles	- Additional features and obstacles
+th03-vs-quit	Topping it off with an actual feature

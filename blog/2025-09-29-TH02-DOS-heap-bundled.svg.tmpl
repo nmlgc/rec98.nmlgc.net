@@ -1,0 +1,36 @@
+{{$h := SVG_DOSHeap -}}
+{{$bios := $h.MCB "BIOS" 25 -}}
+{{$dos := $h.MCB "DOS,\n<tspan font-family=\"monospace\">COMMAND.COM</tspan>" 45 -}}
+{{$game_env := $h.MCB "<tspan class=\"binary\">DEBLOAT</tspan>\n(env.)" 30 -}}
+{{$game := $h.MCB "<tspan class=\"binary\">DEBLOAT</tspan>" 65 -}}
+{{$master := $h.MCB "master.lib heap" 145 -}}
+{{$free := $h.MCB "(free)" 160 -}}
+{{$zuninit_env := $h.MCB "<tspan class=\"binary\">ZUNINIT</tspan>\n(env.)" 25 -}}
+{{$zuninit := $h.MCB "<tspan class=\"binary\">ZUNINIT</tspan>" 30 -}}
+{{$mmd_env_freed := $h.MCB "" 5 -}}
+{{$mmd := $h.MCB "MMD" 30 -}}
+{{$pmd := $h.MCB "PMD" 40 -}}
+{{$resident := $h.MCB "Resident\nstructure" 40 -}}
+
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-9 -1 705 82.5">
+	{{- $h.CSS -}}
+	{{- $h.BIOSAndDOS $bios $dos -}}
+
+	<g class="small_env">{{- $game_env.RegularAlloc -}}</g>
+	{{- $game.Game -}}
+	{{- $master.RegularAlloc -}}
+
+	{{- $free.Free -}}
+
+	<g class="small_env">{{- $zuninit_env.RegularAlloc -}}</g>
+	{{- $zuninit.RegularAlloc -}}
+
+	{{- $mmd_env_freed.Free -}}
+	{{- $mmd.RegularAlloc -}}
+	{{- $pmd.RegularAlloc -}}
+
+	{{- $resident.RegularAlloc -}}
+	{{- $h.TRAM -}}
+	{{- $h.Line -}}
+</svg>

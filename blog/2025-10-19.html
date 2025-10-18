@@ -1,0 +1,169 @@
+{{$mincho := (call .PostFileURL "SH01-Windows-98-MS-Mincho.webp")}}
+{{$gothic := (call .PostFileURL "SH01-Windows-98-MS-Gothic.webp")}}
+
+<style>
+	.bmp-{{.Date}} thead th {
+		text-align: center;
+	}
+	.bmp-{{.Date}} td:not(:last-child),
+	.bmp-{{.Date}} th:not(:last-child) {
+		border-right: var(--table-border);
+	}
+	.bmp-{{.Date}} tbody tr:nth-child(3) td,
+	.bmp-{{.Date}} tbody tr:nth-child(3) th {
+		border-bottom: var(--table-border);
+	}
+</style>
+
+<p>
+	So, one push to make up for {{Blog_PostLink "2025-04-09" "Shuusou Gyoku screenshots being closer to 4 pushes than 3"}}, a second push to make up for {{Blog_PostLink "2025-09-06" "the big PC-98 Touhou portability subproject being closer to 12 pushes than 11"}}… and a third push because the planned Shuusou Gyoku maintenance turned out to actually involve significant work? I did not expect that implementing my vision would involve <a href="https://github.com/libsdl-org/SDL/pulls?q=author%3Anmlgc+created%3A2025-10-01..2025-10-16">sending four pull requests to SDL</a> that fixed three bugs and added one small feature.<br>
+	On the flipside, it's great to see how my contributions were reasonable and well-explained enough for Sam Lantinga to merge them pretty much instantly. It's things like these, the <a href="https://github.com/libsdl-org/SDL/pull/14210">merged support for ancient MSVC versions</a>, or the <a href="https://github.com/libsdl-org/SDL/pull/13906">ongoing DOS port that will probably be merged as well</a>, that give SDL a sense of being more of a community-owned project as opposed to a more tightly controlled one. We should definitely try upstreaming our Windows 98 port too, once it's done.
+</p><p>
+	Most of the changes in this build concern aspects I've explained at length in earlier blog posts:
+</p><ul><li><p>
+	{{Blog_PostLink "2025-01-25#modules" "As planned in January"}}, the Linux build now compiles on GCC ≥15! As usual for C++ compilers, this switch once again required a nonzero amount of changes to make this codebase compile without errors or warnings, but that set of changes was far smaller this time around than it was when I added Clang support back in December.<br>
+	Seeing how GCC lacks support and certain overloads for {{Blog_PostLink "2025-01-25#porting" "a different set of C++ range algorithms"}} is so tragic that it's almost hilarious again at this point. As for actual annoyances though, GCC still struggles with {{Blog_PostLink "2024-10-22#modules" "import-then-<code>#include</code>"}}, the apparent prime challenge of implementing C++ modules that both MSVC and Clang have largely solved by now. The resulting redefinition errors pretty much force us to move all <code>#include</code>s of third-party C library headers to above the first <code>import</code>. In <code>.cpp</code> files, this is no problem, but what if we need any of those third-party data types in our headers? After all, we can <code>#include</code> our headers in any order and can thus no longer guarantee that the third-party <code>#include</code>s will come before the <code>import std;</code> statement we need in our headers. Further C++-modularization of our logic code is way beyond the scope of these three pushes, so we have no choice but to completely remove any third-party header <code>#include</code>s from our headers. If we need their declarations, we now have to resort to <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/game/graphics.h#L127">pre-declared struct types</a> and <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/game/format_bmp.h#L68-L70C2">even worse <code>#ifdef</code> hacks for enum types</a>… Oh well, this <i>does</i> speed up the build ever so slightly in the end. {{HTML_Emoji "tannedcirno"}}
+</p><p>
+	On a more positive note, GCC brought another set of highly useful warnings to the table, especially in conjunction with the <code>CFLAGS</code> that Arch Linux sets by default for every package built with <code>makepkg</code>. Special shoutout to <code>-Wformat-overflow</code>, which <a href="https://gitlab.archlinux.org/archlinux/rfcs/-/blob/f196c4e5fd4c4645adff35d0431f06dbc03dd177/rfcs/0003-buildflags.md#specification">Arch Linux specifies via <code>-Werror=format-security</code></a>. This warning brings <code>sprintf()</code> buffer size validation to its logical conclusion: It doesn't just consider the format string and arguments in isolation, but factors in <i>all</i> statically available information and even control flow to precisely determine the <i>exact</i> required size of the output buffer, and then warns if the given buffer is too small.
+</p><figure><pre>void format_stage_number(uint8_t stage)
+{
+	// This is a classic shmup, we only ever have 6 stages, so 1 digit
+	// plus terminating 0 is enough, right?
+	char buffer[1 + 1];
+
+	// Wrong: A `uint8_t` can range from 0 to 255 inclusive, and the
+	// compiler can't statically prove that [stage] will only ever have
+	// a single-digit value. By comparing the (statically known) value
+	// range of [stage] to the (statically known) [buffer] size, GCC's
+	// `-Wformat-overflow` can then precisely warn that [buffer] must
+	// be at least four characters large to safely avoid buffer
+	// overflows in all possible circumstances.
+	sprintf(buffer, "%d", stage);
+
+	// This, on the other hand, causes no warning because the string
+	// can't possibly take up more than two bytes.
+	const uint8_t known_stage = 1;
+	sprintf(buffer, "%d", known_stage);
+
+	// This also passes with no warning! Compilers are awesome.
+	if(stage >= 10) {
+		return;
+	}
+	sprintf(buffer, "%d", stage);
+}
+</pre><figcaption>
+	<a href="https://godbolt.org/z/hjzT661Go">Here's the full warning.</a>
+</figcaption></figure></li><li><p>
+	Now that Shuusou Gyoku can compile with both GCC and Clang, it makes sense to support both of them in the build system without requiring users to edit the Lua files. Defining a generic *nix toolchain that just uses the <code>cc</code> and <code>c++</code> symlinks might look like a good idea due to the general compatibility of GCC's and Clang's command-line flags, but wouldn't work for us due to {{Blog_PostLink "2025-01-25#modules" "the completely different command-line flags needed for C++ modules"}}. The build system must know in advance what's behind these symlinks in order to generate the correct set of build rules for Tup.<br>
+	While CMake solves this compiler detection issue by <a href="https://gitlab.kitware.com/cmake/cmake/-/blob/c7089d67517272e8a4932986f434f603b541b0e6/Modules/CMakeDetermineCompilerId.cmake">compiling a test program that accesses a compiler's predefined macros</a>, I went for the much simpler solution of parsing the string returned by <code>cc --version</code>. If you want to use a different compiler after all, you can always override <code>cc</code> with the <code>CC</code> environment variable, as you'd expect.
+</p></li><li><p>
+	{{Blog_PostLink "2025-04-09#sdl3" "As planned in April"}}, the config file now stores the selected graphics API in terms of SDL's driver identifier string rather than using the more volatile index into SDL's build-specific driver list.
+</p></li><li><p>
+	{{Blog_PostLink "2025-04-25#sdl" "As also planned later in April"}}, I now went all in on SDL 3, made it a hard dependency, and removed the SDL 2 code path, which paved the way for a much simpler and more featureful overall architecture. And yes, this means that even the Windows 98 build runs on SDL 3 now! The Windows 98 port of SDL 3 reuses most of the small changes we needed for SDL 2, but required <a href="https://github.com/nmlgc/SDL/compare/c016315ec769da0eacd4bdb31bab9fa925fde614...P0324">a few more on top</a> to compile SDL 3's expanded feature set without warnings.
+</p><p>
+	Then, I went straight to replacing my {{Blog_PostLink "2022-12-31#unicode" "makeshift locale-independent file I/O abstraction"}} with <a href="https://wiki.libsdl.org/SDL3/CategoryIOStream">SDL's always-UTF-8 counterpart</a>. And oh boy did this reveal how terrible my code actually was, particularly due to its aim of naturally supporting C++ data structures. {{HTML_Emoji "onricdennat"}} Switching to a more traditional stream-based API not only allowed me to delete all these abstractions, but surprisingly also simplified most file I/O call sites. Sure, a C API means no more well-defined lifetimes and forces me to manually close streams again, but Shuusou Gyoku doesn't do <i>that</i> much file I/O for that to be even just a slight annoyance. I sure didn't feel the need for a wrapper class, but I <i>did</i> feel the need for <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/platform/sdl/file_sdl.cpp"><code>char8_t*</code> wrappers</a> that made SDL's file functions work more naturally with <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/game/narrow.h">the strong type-level distinction between UTF-8 and packfile-originating Shift-JIS</a> I applied to the rest of the code.<br>
+	In the end, {{Blog_PostLink "2025-05-20#filesizes" "timestamp preservation"}} is the only remaining file-related feature that still requires custom platform-specific code, since it's most certainly outside of SDL's scope. It originally seemed as if I also needed to keep exclusive file opening for screenshots as SDL had no way of specifying <a href="https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew#create_new"><code>CREATE_NEW</code> on Windows</a>, but since <code>fopen(…, "wx")</code> did work in an undocumented way on all of SDL's other automatically tested platforms, <a href="https://github.com/libsdl-org/SDL/pull/14165">it made sense to just turn this into an officially supported feature and provide the missing Windows implementation</a>.
+</p></li></ul><p>
+	Unfortunately, SDL 3 turned out to be not as perfect as it seemed in April after all:
+</p><ol><li><p>
+	Most of <a href="https://wiki.libsdl.org/SDL3/CategoryStdinc">SDL's C standard library function implementations</a> do not deliver on the promise of a consistent implementation across platforms because they fall back on the compiler's C runtime by default. This may make sense for all the floating-point functions, which behave in largely unsurprising ways. In that case, you might as well use a compiler's own optimized implementation, sure. But doing the same for all the string functions, where we <i>do</i> want consistent behavior that <i>isn't</i> forced to implement the <a href="https://github.com/mpv-player/mpv/commit/1e70e82baa9193f6f027338b0fab0f5078971fbe">locale braindeath</a> mandated by the C standard? Or maybe this <i>is</i> preferable after all if you consider the subtle limitations in SDL's rather lazily implemented replacements, like how the <a href="https://github.com/libsdl-org/SDL/blob/cbcb145eb4d0b1a9ef2f57a837d42fef1f930b65/src/stdlib/SDL_string.c#L2030"><code>printf()</code> family prints an undefined value if the integer portion of a <code>float</code> value exceeds the range of an <code>unsigned long long</code></a>? This probably hurts more applications than the rare actual effects of locale braindeath ever could. {{HTML_Emoji "thonk"}}<br>
+	Sure, we <i>could</i> configure our Windows builds to opt into these replacements, but we don't have that control on Linux where we'd better use a distribution's SDL package. If I do start using them one day, it's purely because it removes the statically linked implementations from the game binary.
+</p></li><li><p>
+	The Windows implementation of SDL's file I/O functions uses buffered I/O for reading, but <a href="https://github.com/libsdl-org/SDL/issues/12424">not for writing</a>. This isn't much of a problem for Shuusou Gyoku itself because all of the file formats written by game logic just consist of a rather small number of buffers.<br>
+	But it does become a problem in conjunction with <a href="https://wiki.libsdl.org/SDL3/SDL_SaveBMP"><code>SDL_SaveBMP()</code></a>, which we'd like to use for .BMP screenshots due to its support for any possible pixel format. My previous implementation for pbg's unpublished .BMP saving code evolved out of the debug code I quickly cobbled together while I was {{Blog_PostLink "2023-08-01#ddraw" "reverse-engineering all the porting-relevant surface management details of DirectDraw"}}. This code was (and still is) limited to the pixel formats that .BMP most naturally supports, which was fine since those formats exactly matched the ones used by DirectDraw's framebuffer at all relevant bit depths, at least on my machine. Thanks to my <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/game/endian.h">objectively correct solution for handling endianness at the type level</a>, this code even has well-defined byte order for the header fields, and thus works just as well on big-endian systems. After naturally filling in two structures, the code can then simply <a href="https://github.com/nmlgc/ssg/blob/882bdc1dd640fcf24d8dac75e1f03b8fea810985/game/format_bmp.cpp#L131-L134">write out the entire .BMP file within four write calls</a>. Even with my previously equally unbuffered file I/O functions, it doesn't get much faster than that.<br>
+	SDL's .BMP writer, on the other hand, was implemented with the exact opposite set of priorities: With <a href="https://wiki.libsdl.org/SDL3/SDL_ConvertPixels">a pixel format converter as part of the library</a>, it can always convert any image into a .BMP-compatible format. But then, it decided to shift byte order handling to the I/O subsystem, using <a href="https://github.com/libsdl-org/SDL/blob/e2195621d792eb9a9f1268d31625ad35bbc3f927/src/video/SDL_bmp.c#L744-L786">one write call for each individual field within the .BMP header</a>. And if those write calls aren't buffered and get directly translated into Win32 <code>WriteFile()</code> syscalls, well…
+</p><figure><table class="bmp-{{.Date}} numbers">
+	<thead style="vertical-align: bottom;">
+		<tr>
+			<th></th>
+			<th>Surface<br>conversion</th>
+			<th>Header</th>
+			<th>Pixels</th>
+			<th>Total</th>
+			<th>Notes</th>
+		</tr>
+	</thead><tbody>
+		<tr>
+			<th>8-bit, fast</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>0.008 ms</td>
+			<td></td>
+		</tr><tr>
+			<th>16-bit, fast</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>0.095 ms</td>
+			<td>only supports XRGB1555</td>
+		</tr><tr>
+			<th>32-bit, fast</th>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>0.164 ms</td>
+			<td></td>
+		</tr><tr>
+			<th>8-bit, SDL</th>
+			<td></td>
+			<td>8.196 ms</td>
+			<td>1.972 ms</td>
+			<td>10.169 ms</td>
+			<td></td>
+		</tr><tr>
+			<th>16-bit, SDL</th>
+			<td>2.154 ms</td>
+			<td>0.299 ms</td>
+			<td>3.166 ms</td>
+			<td>5.619 ms</td>
+			<td>gets converted to 24-bit</td>
+		</tr><tr>
+			<th>32-bit, SDL</th>
+			<td>0.753 ms</td>
+			<td>0.279 ms</td>
+			<td>3.162 ms</td>
+			<td>4.194 ms</td>
+			<td>gets converted to 24-bit</td>
+		</tr>
+	</tbody>
+</table><figcaption>
+	Durations of saving an already retrieved 640×480-pixel buffer on the same Windows system.
+</figcaption></figure><p>
+	It's quite hilarious to see SDL getting slower as the bit depth <i>decreases</i>. If SDL ends up calling <code>WriteFile()</code> <a href="https://github.com/libsdl-org/SDL/blob/e2195621d792eb9a9f1268d31625ad35bbc3f927/src/video/SDL_bmp.c#L788-L803">1024 times to save the palette for an 8-bit image one byte at a time</a>, it's no wonder that writing the header takes 4× as long as writing the pixel data itself. With that much of a performance difference, removing my previous fast path would be an unacceptable downgrade. This is why the P0326 build only uses SDL's .BMP writer if it absolutely has to.
+</p><p>
+	That said, we could definitely improve SDL's .BMP writer to get the best of both worlds. Aside from adding general write buffering for Windows, I could add some of my fast paths, or even cover 16-bit RGB565 using .BMP's obscure <a href="https://www.virtualdub.org/blog2/entry_177.html"><code>BI_BITFIELDS</code> feature</a> rather than upconverting such images to 24-bit RGB888. If you like ReC98 being used as a means to get me to make much more globally valuable contributions to SDL, <a class="goal" href="https://github.com/nmlgc/ssg/issues/93">this is the issue you want to fund</a>. If you do primarily care about <span class="hovertext" title="Remember, everything we implement for Shuusou Gyoku now will be reused in the future ports of PC-98 Touhou!">the games</span> though, it might still be worth it – then, we could save 32-bit screenshots as 24-bit .BMPs, making them 25% smaller with not <i>that</i> much of a reduction in saving performance.<br>
+	Then again, having access to <code>SDL_ConvertPixels()</code> in logic code means that we now even support arbitrary pixel formats for WebP, and computers are only going to get faster… {{HTML_Emoji "thonk"}}
+</p></li></ol><p>
+	These pushes only scratched the surface, and there's still a bit to do in terms of fully embracing SDL and removing redundant glue code. For example, we now load {{Blog_PostLink "2023-09-30#resampling" "Shuusou Gyoku's packed sound effect files"}} using SDL's .WAV loader, which removed miniaudio's integrated <a href="https://github.com/mackron/dr_libs/blob/24d738be2349fd4b6fe50eeaa81f5bd586267fd0/dr_wav.h">dr_wav</a> along with the C runtime's <code>fopen()</code> implementation it forcibly depends on, but we still use miniaudio for both sound mixing and output. Swapping out these libraries takes more testing effort than you might think, and I had to stop somewhere. For now, I got everything out of this that I wanted, and it's time to go back to working on actual features.
+</p><hr><p>
+	In a final bit of SDL-unrelated and more wholesome news, the Windows 98 port now makes sure to actually pick MS Gothic on non-Japanese systems instead of potentially falling back on the different and possibly Mincho-styled font you might have seen in {{Blog_PostLink "2025-04-25#d3dwindower" "the screenshots for my first Windows 98 release"}}:
+</p><figure style="width: 646px"><rec98-child-switcher>
+	<img
+		src="{{$mincho}}"
+		data-title="P0310-2"
+		width="646"
+		alt="Screenshot of Shuusou Gyoku's main menu as rendered by the P0310-2 build on Windows 98, falsely using MS Mincho rather than MS Gothic for all its text"
+		class="active"
+	><img
+		src="{{$gothic}}"
+		data-title="P0326"
+		width="646"
+		alt="Screenshot of Shuusou Gyoku's main menu as rendered by the P0326 build on Windows 98, now using the correct MS Gothic font"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	And that's it for now!
+</p><ul>
+	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0326">
+	{{HTML_Emoji "sh01n"}} Shuusou Gyoku P0326 Windows build</a></li>
+	<li><a class="release" href="https://aur.archlinux.org/packages/seihou-shuusou-gyoku">Shuusou Gyoku P0326 on the AUR</a></li>
+	<li><a class="release" href="https://flathub.org/apps/net.nmlgc.rec98.sh01">Shuusou Gyoku P0326 on Flathub</a></li>
+</ul><p>
+	Next up: No more delays, no more excuses, it's finally time for the long-expected big look at TH03's <code>MAIN.EXE</code>! I've long dreaded this moment because every time I've looked at that binary, I saw highly intertwined foundational gameplay features that made it hard to focus on just a single thing. But now that netplay hype has accumulated plenty of budget, I can take a more extended look at all of these aspects, or even cover all of them in one big delivery if need be.<br>
+	The goal of netplay also guides my RE efforts into two more specific directions:
+</p><ol>
+	<li>Identifying {{Blog_PostLink "2025-05-10#tuning" "the two remaining difficulty-controlling variables"}} is crucial before we can even start working on netplay.</li>
+	<li>Identifying data at the top and bottom edges of the currently un-RE'd portion of the data segment can help with optimizing rollback. If that data is constant, we can reduce the amount of per-frame data saved in the rollback buffer, increasing performance and rollback times.</li>
+</ol><p>
+	Or maybe it makes more sense to just go for the AI, enemy, or pattern code commissioned by {{DB_CustomerByID 20}} instead? We'll see.
+</p>

@@ -46,6 +46,7 @@ var projectMap = map[string]*ProjectInfo{
 	"mly":             {"mly", []string{"midi-projects"}},
 	"BGMPacks":        {"BGM packs", []string{"bgm"}},
 	"msdos-player":    {"MS-DOS Player", []string{"build-process"}},
+	"SDL":             {"SDL", []string{}},
 }
 
 // DiffInfo contains all pieces of information parsed from a GitHub diff URL.

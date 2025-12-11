@@ -21,7 +21,7 @@
 		style="{{CSS_Meter   0}} width: {{ .FracIncoming}}%"></div><div
 		style="{{CSS_Meter  50}} width: {{ .FracReserved}}%"></div
 	></div>{{- if .Reached -}}<p class="desc">
-		Currently sold out, please check back after the next delivery.<br />
+		Currently sold out, please check back after the next delivery.<br>
 		In the meantime, you can <a href="/donate">donate</a>.
 	</p>{{- else if not .Ctx -}}<p>
 		Interested in contributing? Make sure you've read the <a href="/faq">
@@ -32,7 +32,7 @@
 		{{HTML_Emoji "opencollective"}} <a href="https://opencollective.com/thpatch">Touhou Patch Center</a>;
 		{{Blog_PostLink "2023-07-28" "check the announcement for more info"}}!
 	</p>
-	{{if len $discounts -}}<hr style="width: 100%;" />
+	{{if len $discounts -}}<hr style="width: 100%;">
 		<small>Current discounts:</small>
 		<ul class="discounts">{{range $discounts -}}
 			<li>
@@ -46,4 +46,4 @@
 			</li>{{- end}}</ul>
 	{{- end}}
 </section>
-<hr />
+<hr>

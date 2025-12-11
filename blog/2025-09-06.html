@@ -155,7 +155,7 @@
 	<a href="https://simk98.github.io/np21w/version.html">finally got stabilized in ver0.86 rev.93, back in April of this year</a>. Activate this mode with the <i>Screen → CPU clock stabilizer</i> and <i>Screen → Dynamic CPU clock adjustment</i> options, and then you should theoretically be able to finally stop worrying: Just specify the maximum possible clock speed in the usual configuration menu, and Neko Project will dynamically reduce the emulated clock speed to the fastest speed your system can handle.
 </p><figure class="pixelated" style="width: 644px;"><img
 	src="{{$np21w_asynccpu}}" width="644" alt="Screenshot of Neko Project 21/W's Async CPU options"
-/></figure><p>
+></figure><p>
 	Then, the games are supposed to run similarly to how a correctly configured Anex86 has been running them all along, but with an additional 21 years of emulation accuracy improvements.<br>
 	Sadly, this mode still needs a bit of work. Excessively high clock speeds will result in wildly fluctuating frame rates and even BGM tempos during the first few seconds of a game session as Neko Project 21/W apparently takes a while to find the optimal clock speed. Even afterwards, emulation remains noticeably slower than Anex86:
 </p><figure {{$zunsoft_1ghz.FigureAttrs}}>
@@ -174,23 +174,23 @@
 		data-title="DOSBox-X, max cycles, simple core"
 		width="640"
 		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=simple`"
-	/><img
+	><img
 		src="{{$perf_np21w}}"
 		data-title="Neko Project 21/W, Async @1&nbsp;GHz"
 		width="640"
 		alt="{{template "desc_head"}} Neko Project 21/W in Async CPU mode with a maximum clock speed of 2.4576&nbsp;× 407&nbsp;= 1000.2432&nbsp;MHz"
 		class="active"
-	/><img
+	><img
 		src="{{$perf_dx_dynamic}}"
 		data-title="DOSBox-X, max cycles, dynamic core"
 		width="640"
 		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=dynamic`"
-	/><img
+	><img
 		src="{{$perf_anex86}}"
 		data-title="Anex86, Sync 1"
 		width="640"
 		alt="{{template "desc_head"}} Anex86 in Sync 1 mode"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		Of course, any performance measurement of an emulator with dynamic cycle adjustment can only ever represent a snapshot of the ever-changing adjustment state, and should therefore be taken with a grain of salt. Hence, these screenshots are purely decorative; I just added them because I'm sure that <i>someone</i> would have asked for exact numbers otherwise. Also, the exact relations between emulators are <i>highly</i> dependent on the workload…<br>
 		And yes, that's a new benchmark! More about this one {{Blog_PostLink "2025-09-10#wide" "in part 2"}}.
@@ -225,13 +225,13 @@
 		width="640"
 		alt="Screenshot of TH04's Music Room, demonstrating the screen tearing landmine that the original game exhibits on every frame"
 		class="active"
-		/><img
+	><img
 		src="{{$th04_tear_v}}"
 		data-title="Tearing visualization"
 		width="640"
 		alt="Colored visualization of which lines correspond to which frame in the TH04 Music Room screenshot"
 		style="background-image: url('{{$th04_tear}}');"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		Which frame are we even on? 😵 This landmine is the reason why the first rule explicitly restricts rendering to a single VRAM page. {{Blog_PostLink "2024-02-03#mess" "Check the Music Room blog post for an explanation of what went wrong here."}}
 	</figcaption>
 </figure><p>

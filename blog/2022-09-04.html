@@ -10,7 +10,7 @@
 	implementing and PR'ing the feature in a very clean way. That makes at least
 	two people I know who wanted to see feed support, so there are probably
 	a few more out there.
-</p><hr /><p>
+</p><hr><p>
 	So, Shuusou Gyoku. pbg released the original source code for the first two
 	Seihou games back in February 2019, but notably removed the crucial
 	decompression code for the original packfiles due to… various unspecified
@@ -26,7 +26,7 @@
 	href="https://twitter.com/WishMakers_TH/status/1520633977756786688">WishMakers
 	informed me about it</a> shortly after this push was funded. Both of them
 	might also contribute some features to my fork in the future if their time
-	allows it.<br />
+	allows it.<br>
 	In this fork, Priw8 replaced packfile decompression with raw reads from
 	directories with the pre-extracted contents of all the .DAT files. This
 	works for playing the game, but there are actually two more things that
@@ -48,11 +48,11 @@
 	hand, pbg expressed the clear wish to not include data reverse-engineered
 	from the original binary. On the other hand, he released the code under the
 	MIT license, which allows us to modify the code and distribute the results
-	in any way we wish.<br />
+	in any way we wish.<br>
 	So, let's meet in the middle, and go for a clean-room implementation of the
 	missing features as indicated by their usage, without looking at either the
 	original binary or wangqr's reverse-engineered code.
-</p><hr /><p>
+</p><hr><p>
 	With incremental rebuilds being broken in the latest Visual Studio project
 	files as well, it made sense to start from scratch on pbg's last commit. Of
 	course, I can't pass up a chance to use
@@ -85,7 +85,7 @@
 	favorite system. This Tupfile definitely does a better job there than your
 	average <code>.vcxproj</code> file – but if you still want such a thing (or,
 	gasp, 🤮&nbsp;CMake project files&nbsp;🤮) for better Visual Studio IDE
-	integration, you should have no problem generating them for yourself.<br />
+	integration, you should have no problem generating them for yourself.<br>
 	There might still be a point in doing that because that's the one part that
 	unfortunately sucks about this approach. Visual Studio is horribly broken
 	for any nonstandard C++ project even in 2022:
@@ -117,7 +117,7 @@
 	progress bar in the terminal. It might be Electron bloatware and horribly
 	slow at times, but Visual Studio Code has long outperformed regular Visual
 	Studio in terms of non-debug functionality.
-</p><hr /><p>
+</p><hr><p>
 	On to the compression algorithm then… and it's just textbook <a
 	href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Storer%E2%80%93Szymanski">LZSS</a>,
 	with 13 bits for the offset of a back-reference and 4 bits for its length?
@@ -184,7 +184,7 @@
 	and worth fixing even if they don't cause issues in the original game. Who
 	knows how many of these will turn into crashes once we get to porting PC-98
 	Touhou?
-</p><hr /><p>
+</p><hr><p>
 	So here we go, a new build of Shuusou Gyoku, compiled with Visual Studio
 	2022, and compatible with all original data formats:
 </p><p>
@@ -221,7 +221,7 @@
 	hope that I get to do more work on the series. There is quite a lot to be
 	done with Shuusou Gyoku alone, and the <a
 	href="https://github.com/nmlgc/ssg/issues">21 GitHub issues</a> I've opened
-	are probably only scratching the surface.<br />
+	are probably only scratching the surface.<br>
 	However, all the required research for this one consumed more like 1⅔
 	pushes. Despite just one push being funded, it wouldn't have made sense to
 	release the commits or this binary in any earlier state. To repay this debt,

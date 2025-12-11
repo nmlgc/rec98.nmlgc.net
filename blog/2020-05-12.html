@@ -2,7 +2,7 @@
 	Back to TH01, and its high score menu… oh, wait, that one will eventually
 	involve keyboard input. And thanks to the generous TH01 funding situation,
 	there's really no reason <i>not</i> to cover that right now. After all,
-	TH01 is the last game where input still hadn't been RE'd.<br />
+	TH01 is the last game where input still hadn't been RE'd.<br>
 	But first, let's also cover that one unused blitting function, together
 	with <code>REIIDEN.CFG</code> loading and saving, which are in front of
 	the input function in <code>OP.EXE</code>… (By now, we all know about
@@ -36,7 +36,7 @@
 	Which means that <i>this screen is actually re-entered for every 3 frames
 	that the PgUp key is being held</i>. And yes, you can, of course, also
 	crash the system via a stack overflow this way by holding down PgUp for a
-	few seconds, if that's your thing.<br />
+	few seconds, if that's your thing.<br>
 	<strong>Edit (2020-09-17):</strong> Here's a video from
 	<a href="https://twitter.com/spaztron64">spaztron64</a>, showing off this
 	exact stack overflow crash while running under the
@@ -64,7 +64,7 @@
 	double-tapping the Z and X keys is also handled here, and now we know that
 	both keys simply have to be tapped twice within a window of 20 frames.
 	They are tracked independently from each other, so you don't necessarily
-	have to press them simultaneously.<br />
+	have to press them simultaneously.<br>
 	In debug mode, the <code>bomb</code> count tracks precisely this window of
 	time. That's why it only resets back to 0 when pressing Z or X if it's
 	≥20.

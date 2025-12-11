@@ -100,14 +100,14 @@
 	margin. These pushes ended up covering so many aspects that could be
 	interesting to a general and non-Seihou-adjacent audience, so I think we
 	need a table of contents for this one:
-</p>{{call .TOC}}<hr /><p id="zig-{{.Date}}">
+</p>{{call .TOC}}<hr><p id="zig-{{.Date}}">
 	Before we can start migrating to SDL, we of course have to integrate it into
 	the build somehow. On Linux, we'd ideally like to just dynamically link to a
 	distribution's SDL development package, but since there's no such thing on
 	Windows, we'd like to compile SDL from source there. This allows us to reuse
 	our debug and release flags and ensures that we get debug information,
 	without <a href="https://vcpkg.io/">needing to clone build scripts for every
-	C++ library ever in the process</a> or something.<br />
+	C++ library ever in the process</a> or something.<br>
 	So let's get my Tup build scripts ready for compiling vendored libraries… or
 	maybe not? Recently, I've kept hearing about a <a
 	href="https://www.youtube.com/watch?v=YXrb-DqsBNU&t=455s">hot new
@@ -269,7 +269,7 @@
 	(If you came from the <a
 	href="https://github.com/ziglang/zig/wiki/Third-Party-Tracking-Issues-(what-is-important-to-other-people%3F)">Zig
 	wiki</a>, you can stop reading here.)
-</p><hr /><p id="concepts-{{.Date}}">
+</p><hr><p id="concepts-{{.Date}}">
 	A few remnants of the Zig experiment still remain in the final delivery. If
 	that experiment worked out, I would have had to immediately change the
 	execution encoding to UTF-8, and decompile a few ASM functions exclusive to
@@ -348,7 +348,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	beyond the age where compilers differed in their interpretation of the core
 	language, and that opting into a current C++ standard turns off any
 	remaining antiquated behaviors…
-</p><hr /><p id="tup-{{.Date}}">
+</p><hr><p id="tup-{{.Date}}">
 	So let's <i>actually</i> get my Tup build scripts ready for compiling
 	vendored libraries, because the
 	{{Blog_PostLink "2022-09-04" "previous 70 lines of Lua"}} definitely
@@ -378,12 +378,12 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	stagnated. If Zig does indeed get better and better at being a Clang
 	frontend/build system, the only niches left for Tup will be Visual
 	Studio-exclusive projects, or retrocoding with nonstandard toolchains (i.e.,
-	ReC98). Quite ironic, given Tup's Unix heritage…<br />
+	ReC98). Quite ironic, given Tup's Unix heritage…<br>
 	Oh, and maybe general Makefile-like tasks where you just want to run
 	specific programs. Maybe once the general hype swings back around and people
 	start demanding proper graph-based dependency tracking instead of <a
 	href="https://github.com/casey/just">just a command runner</a>…
-</p><hr /><p id="sdl-{{.Date}}">
+</p><hr><p id="sdl-{{.Date}}">
 	Alright, alternatives evaluated, build system ready, time to include SDL!
 	Once again, I went for Git submodules, but this time they're held together
 	by <a
@@ -402,7 +402,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	well as a few linker settings, but it's ultimately not much of a big deal.
 	I'm quite happy that it was possible at all without pre-configuring a build,
 	but hey, that's what maintaining a Visual Studio project file does to a
-	project. {{HTML_Emoji "tannedcirno"}}<br />
+	project. {{HTML_Emoji "tannedcirno"}}<br>
 	By building SDL with the stock Windows configuration, we then end up with
 	exactly what the SDL developers want us to use… which is a DLL. You
 	<i>can</i> statically link SDL, but they <i>really</i> don't want you to do
@@ -427,7 +427,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	referenced somewhere, so there's no dead code for the linker to eliminate.
 	Linking SDL statically with link-time code generation just prolongs your
 	link time for no benefit, even without the dynamic API thwarting any chance
-	of SDL calls getting inlined.<br />
+	of SDL calls getting inlined.<br>
 	There's one thing I still don't like about all this, though. The dynamic
 	API's table references force you to include all of SDL's subsystems in the
 	DLL even if your game doesn't need some of them. But it does fit with their
@@ -467,7 +467,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	we port SDL&nbsp;2 to Windows 98 and benefit all other SDL&nbsp;2 games as
 	well? <a class="goal" href="https://github.com/nmlgc/ssg/issues/53">I leave
 	that for my backers to decide.</a>
-</p><hr /><p id="fps-{{.Date}}">
+</p><hr><p id="fps-{{.Date}}">
 	Immediately after writing the first bits of actual SDL code to initialize
 	the library and create the game window, you notice that SDL makes it very
 	simple to gradually migrate a game. After creating the game window, you can
@@ -475,7 +475,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://wiki.libsdl.org/SDL2/SDL_GetWindowWMInfo"><code>SDL_GetWindowWMInfo()</code></a>
 	to retrieve <code>HWND</code> and <code>HINSTANCE</code> handles that allow
 	you to continue using your original DirectDraw, DirectSound, and DirectInput
-	code and focus on porting one subsystem at a time.<br />
+	code and focus on porting one subsystem at a time.<br>
 	Sadly, D3DWindower can no longer turn SDL's fullscreen mode into a windowed
 	one, but DxWnd still works, albeit behaving a bit janky and insisting on
 	minimizing the game whenever its window loses focus. But in exchange, the
@@ -486,7 +486,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	blocking the Win32 "syscommand" that allows a window to be moved</a>. By
 	deleting a <i>system menu</i>… seriously?! Now I'm dying to hear the Raymond
 	Chen explanation for how this behavior dates back to an unfortunate decision
-	during the Win16 days or something.<br />
+	during the Win16 days or something.<br>
 	As implied by that commit, I immediately backported window movability to the
 	i586 build.
 </p><p>
@@ -531,13 +531,13 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	usage into the 0%-2% range during gameplay on my Intel Core i5-8400T CPU,
 	which is over 5 years old at this point. Your laptop battery will appreciate
 	this new build quite a bit.
-</p><hr /><p id="sdlaudio-{{.Date}}">
+</p><hr><p id="sdlaudio-{{.Date}}">
 	Time to look at audio then, because it sure looks less complicated than
 	input, doesn't it? Loading sounds from .WAV file buffers, playing a fixed
 	number of instances of every sound at a given position within the stereo
 	field and with optional looping… and that's everything already. The
 	DirectSound implementation is so straightforward that the most complex part
-	of its code is the .WAV file parser.<br />
+	of its code is the .WAV file parser.<br>
 	Well, the big problem with audio is actually <i>finding</i> a cross-platform
 	backend that implements these features in a way that seamlessly works with
 	Shuusou Gyoku's original files. DirectSound really is the perfect sound API
@@ -601,7 +601,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	doesn't care, <a
 	href="https://github.com/libsdl-org/SDL/blob/60070d0b3d3c55d608af58d6a74f9fa540dfb3b0/src/audio/directsound/SDL_directsound.c#L160-L168">the
 	DirectSound version of this function has to actually use the more modern
-	WASAPI, and remains unimplemented if that API is not available</a>.<br />
+	WASAPI, and remains unimplemented if that API is not available</a>.<br>
 	Standardizing the game on a single sampling rate, bit depth, and channel
 	count might be a decent choice for games that consistently use a single
 	format for all its sounds anyway. In that case, you get to do all mixing and
@@ -612,7 +612,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	44,100&nbsp;Hz. In such a scenario, you would have to pick the highest
 	sampling rate among all sound sources, and resample any lower-quality sounds
 	to that rate. But if the audio device uses a different sampling rate, those
-	lower-quality sounds would get resampled a second time.<br />
+	lower-quality sounds would get resampled a second time.<br>
 	I know that <a href="https://wiki.libsdl.org/SDL3/SDL_OpenAudioDevice">this
 	will be fixed in SDL 3</a>, but that version is still under heavy
 	development.</li>
@@ -683,7 +683,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://github.com/thpatch/thcrap/releases/tag/2018-12-03">2018</a>,
 	where I concluded that <a
 	href="https://github.com/Wintiger0222/uth05win/issues/10">separate intro and
-	loop files are the way to go</a>.<br />
+	loop files are the way to go</a>.<br>
 	But OK, we only plan to use FLAC and Ogg Vorbis for the SC-88Pro BGM, for
 	which SDL_mixer does support loop points in the form of <a
 	href="https://github.com/libsdl-org/SDL_mixer/blob/49d2e332c54b39e4b5593dfb52b7dc6ac214c7b1/src/codecs/music_drflac.c#L122-L129">Vorbis</a>
@@ -720,7 +720,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	Because surely, when I think about missing features in an audio backend, I
 	immediately think about <a
 	href="https://wohlsoft.github.io/SDL-Mixer-X/SDL_mixer_ext.html#Mix_005fLoadMUS_005fRW_005fGME">support
-	for a vast array of chiptune file formats</a>… 🤪<br /> And wait,
+	for a vast array of chiptune file formats</a>… 🤪<br> And wait,
 	<i>what</i>, <a href="https://github.com/libsdl-org/SDL_mixer/pull/378">they
 	merged this piece of bloat back into the official SDL_mixer library</a>?!
 	Thanks for <a
@@ -728,7 +728,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	up a vast attack surface for potential security vulnerabilities</a> in code
 	that would never run for the majority of users, just to cover some niche
 	formats that nobody would seriously expect in a general audio library. And
-	that's coming from someone who loves listening to that stuff!<br />
+	that's coming from someone who loves listening to that stuff!<br>
 	At this rate, I'm expecting SDL_mixer to gain <a
 	href="https://en.wikipedia.org/wiki/Jamie_Zawinski#Zawinski's_Law">a mail
 	client</a> by the end of the decade. Hmm, what's the closest audio thing to
@@ -741,14 +741,14 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	Gyoku to begin with. Looking at other low-level cross-platform game
 	libraries, you'll quickly notice that <i>all</i> of them come with mostly
 	equally capable 2D renderers these days, and mainly differentiate themselves
-	in minute API details that you'd only notice upon a really close look.<br />
+	in minute API details that you'd only notice upon a really close look.<br>
 	<a href="https://www.raylib.com/">raylib</a> is another one of those
 	libraries and has been getting exceptionally popular in recent years, to the
 	point of even having more than twice as many GitHub stars as SDL. By
 	restricting itself to OpenGL, it can even <a
 	href="https://www.raylib.com/cheatsheet/cheatsheet.html">offer an
 	abstraction for shaders</a>, which we'd <i>really</i> like for the <span
-	lang="ja">西方Ｐｒｏｊｅｃｔ</span> lens ball effect.<br />
+	lang="ja">西方Ｐｒｏｊｅｃｔ</span> lens ball effect.<br>
 	In the case of raylib's audio system, the lack of sound effect looping is
 	the minute API detail that would make it annoying to use for Shuusou Gyoku.
 	But it might be worth a look at how raylib implements all this if it doesn't
@@ -780,7 +780,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		Vorbis one as part of the repo, …</li>
 		<li>🤩 … and even supports gapless switching between the intro and loop
 		files via a single declarative call to
-		<code>ma_data_source_set_next()</code>!<br />
+		<code>ma_data_source_set_next()</code>!<br>
 		(Oh, and it also has <code>ma_data_set_loop_point_in_pcm_frames()</code>
 		for anyone who still believes in <i>obviously</i> and <i>objectively</i>
 		inferior out-of-band loop points.)</li>
@@ -826,7 +826,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	like these, you'd immediately suspect the bug to lie in the resampler or its
 	low-pass filter, both of which are so much more of a fickle and configurable
 	part of the conversion chain here. Compared to that, stereo expansion is so
-	conceptually simple that you wouldn't imagine anyone getting it wrong.<br />
+	conceptually simple that you wouldn't imagine anyone getting it wrong.<br>
 	While the latter PR has been merged, the fix is still only part of the
 	<code>dev</code> branch and hasn't been properly released yet. Fortunately,
 	raylib is not affected by this bug: It does <a
@@ -842,11 +842,11 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	abstractions to handle this use case. We surely could turn Shuusou Gyoku's
 	numeric sound effect IDs into fake file names, but it doesn't really fit the
 	existing architecture where the sound interface just receives in-memory .WAV
-	file buffers loaded from the <code>SOUND.DAT</code> packfile.<br />
+	file buffers loaded from the <code>SOUND.DAT</code> packfile.<br>
 	In that case, this seems to be the best way:
 </p><ul>
 	<li>Call <code>ma_decode_memory()</code> to decode from any of the supported
-	audio formats to a buffer of raw PCM samples.<br /> At this point, you can
+	audio formats to a buffer of raw PCM samples.<br> At this point, you can
 	choose between<ol>
 		<li>decoding into the original format the sound effect is stored in,
 		which would require it to be converted to the playback format every
@@ -864,7 +864,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	can better fit into the CPU cache? That would be an interesting question to
 	benchmark, but just like the similar text rendering question from the last
 	blog posts, <i>it doesn't matter for this tiny 2000s retro game</i>. 😌
-	<br />
+	<br>
 	I went with 2) mainly because it simplified all the debugging I was doing.
 	At a sampling rate of 48,000&nbsp;Hz, this increases the memory usage for
 	all sound effects from 379&nbsp;KiB to 3.67&nbsp;MiB. At least I'm not
@@ -878,7 +878,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		<li><code>ma_sound_init_from_data_source()</code> to create a new
 		high-level sound node that will play back the reference buffer.</li>
 	</ul></li>
-</ul><hr /><p id="resampling-{{.Date}}">
+</ul><hr><p id="resampling-{{.Date}}">
 	As a side effect of hunting that one critical bug in miniaudio, I've now
 	learned a fair bit about audio resampling in general. You'll probably need
 	some knowledge about <a href="https://xiph.org/video/vid2.shtml">basic
@@ -906,7 +906,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	extended high-frequency range – i.e., from the original Nyquist frequencies
 	of 11,025&nbsp;Hz/5,512.5&nbsp;Hz up to the new limit of 24,000&nbsp;Hz – is
 	still within the audible range of most humans and can clearly color the
-	resulting sound.<br />
+	resulting sound.<br>
 	But it gets worse if the audio data you put into the resampler is
 	objectively defective to begin with, which is exactly the problem we're
 	facing with over half of Shuusou Gyoku's sound effects. Encoding them all as
@@ -942,7 +942,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		{{- $seFN := (call $.PostFileURL $se) -}}
 		<td><img
 			src="{{$seFN}}" alt="<code>SOUND.DAT</code>, file {{inc .}}/20"
-		/></td>
+		></td>
 	{{- end}}</tr></tbody><tfoot><tr>
 		<td colspan="20" style="height: 53px;"></td>
 	</tr></tfoot></table>
@@ -986,7 +986,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://forum.audacityteam.org/t/29575/4">the development team argues
 	that there is no "true waveform" to be visualized as every DAC behaves
 	differently</a>. While this is correct in <i>theory</i>, we'd be happy just
-	to get a rough approximation here.<br />
+	to get a rough approximation here.<br>
 	ffmpeg's <code>ebur128</code> filter has a parameter to measure the true
 	peak of a waveform and fairly understandable source code, and once I looked
 	at it, all the pieces suddenly started to make sense: For our purpose of
@@ -1016,7 +1016,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	these amplitudes are clipped to the maximum value of the integer bit depth,
 	and baked into the waveform with no way to get rid of them again. After all,
 	the resampled file now uses a higher sampling rate, and the clipping
-	distortion is now a defined part of what the sound <i>is</i>.<br />
+	distortion is now a defined part of what the sound <i>is</i>.<br>
 	Finally, storing a digital signal with inter-sample peaks in a
 	floating-point format also makes it possible for <i>you</i> to reduce the
 	volume, which moves these peaks back into the regular, unclipped amplitude
@@ -1052,7 +1052,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		only occur at the exact boundary between individual sound effects. These
 		are a simple result of the discontinuities that naturally occur in the
 		waveform when concatenating signals that don't start or end at a 0
-		sample.<br />
+		sample.<br>
 		As mentioned above, you'll only get this sound out of your DAC at lower
 		volumes where all of the resampled peaks still fit within 0&nbsp;dBFS.
 		But you most likely will have reduced your volume anyway, because these
@@ -1066,7 +1066,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		time domain then turn into distortion across the entire 24,000&nbsp;Hz
 		frequency domain, which then remains a part of the waveform even at
 		lower volumes. The locations of the high-frequency noise exactly match
-		the clipped locations in the time-domain waveform images above.<br />
+		the clipped locations in the time-domain waveform images above.<br>
 		The resulting additional distortion can be best heard in
 		<code>BOSSBOMB</code>, where the low source frequency ensures that any
 		distortion stays firmly within the hearing range of most humans.
@@ -1097,7 +1097,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		resampler. If we do want to go for perfect accuracy though, we might as
 		well <a class="goal" href="https://github.com/nmlgc/ssg/issues/50">go
 		for 1️⃣ directly</a>?
-	</div><hr /><span>
+	</div><hr><span>
 		These spectrum images were initially created using ffmpeg's <code>-lavfi
 		showspectrumpic=mode=combined:s=1280x720</code> filter. The samples
 		appear in the same order as in the <a
@@ -1114,7 +1114,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	Web video codecs only support lossy audio, so the sound in these videos will
 	not exactly match the spectrum image, but the lossless source files do
 	contain the original audio as uncompressed PCM streams.
-</p><hr /><p id="sdlinput-{{.Date}}">
+</p><hr><p id="sdlinput-{{.Date}}">
 	Compared to that whole mess of signals and noise, keyboard and joypad input
 	is indeed much simpler. Thanks to SDL, it's <i>almost</i> trivial, and only
 	slightly complicated because SDL offers two subsystems with seemingly
@@ -1131,7 +1131,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	long list of mappings for specific controllers</a>, and therefore doesn't
 	work with joypads that don't match this standard.
 	<figure>
-		<embed src="{{call .PostFileURL "SDL_GameController.svg"}}" />
+		<embed src="{{call .PostFileURL "SDL_GameController.svg"}}">
 		<figcaption>
 			<a
 			href="https://raw.githubusercontent.com/libsdl-org/SDL/SDL2/test/controllermap.bmp">According
@@ -1162,7 +1162,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://wiki.libsdl.org/SDL_GameControllerGetBindForAxis">a function
 	to retrieve the SDL_Joystick ID for the main X and Y axis</a>, close the
 	SDL_GameController instance, and keep using SDL_Joystick for the rest of the
-	game.<br />
+	game.<br>
 	And with that, the SDL build no longer needs DirectInput 7, <a href="https://www.hybrid-analysis.com/sample/e7e5e6206500b69e870d4861984165cddfa32c68c9e197594b4241b85f4fbfa4">certain antivirus scanners will no longer complain about
 	its low-level keyboard hook</a>, and I turned the original game's
 	single-joypad hot-plugging into multi-joypad hot-plugging with barely any
@@ -1183,12 +1183,12 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 		src="{{$unmap_orig}}"
 		data-title="Original game"
 		alt="Joypad button unbinding in the original version of Shuusou Gyoku, indicated by a rather confusing [Button 0] label"
-		/><img
+	><img
 		src="{{$unmap_P0256}}"
 		data-title="P0256 build"
 		alt="Joypad button unbinding in the P0256 build of Shuusou Gyoku, using a much clearer [--------] label"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption><code lang="ja">ESC</code> is not bound to any joypad button in
 	either screenshot, but it's only really obvious in the P0256
 	build.</figcaption>
@@ -1198,7 +1198,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	a~nd they quickly found a bug when running on Linux and Wine. When holding a
 	button, the game randomly stops registering directional inputs for a short
 	while on some joypads? Sounds very much like a Wine bug, especially if the
-	same pad works without issues on Windows.<br />
+	same pad works without issues on Windows.<br>
 	And indeed, on certain joypads, Wine maps the buttons to completely
 	different and disconnected IDs, as if it simply invents new buttons or axes
 	to fill the resulting gaps. Until we can <a class="goal"
@@ -1210,7 +1210,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 </p><p>
 	Still, by itself, this shouldn't cause any issues with my SDL event handling
 	code… except, of course, if I forget a <code>break;</code> in a switch case.
-	🫠<br />
+	🫠<br>
 	This completely preventable implicit fallthrough has now caused a few hours
 	of debugging on my end. I'd better crank up the warning level to keep this
 	from ever happening again. Opting into this specific warning also revealed
@@ -1225,7 +1225,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	a separate static analysis mode together with a plugin</a>, which
 	significantly slows down build times. Therefore I only activate them for
 	release builds, since these already take long enough. {{HTML_Emoji
-	"onricdennat"}}<br />
+	"onricdennat"}}<br>
 </p><p>
 	But that wasn't the only step I took as a result of this blunder. In
 	addition, I now offer <a href="/faq#mod-bugs">free fixes for regressions in
@@ -1234,14 +1234,14 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	{{Blog_PostLink "2023-03-14" "earlier this year when mu021 reported the unblitting bug in the initial release of the TH01 Anniversary Edition"}},
 	and merely made it official now. If I was the one who broke a thing, I'll
 	fix it for free.
-</p><hr /><p id="screenshots-{{.Date}}">
+</p><hr><p id="screenshots-{{.Date}}">
 	Since all that input debugging already started a 5<sup>th</sup> push, I
 	might as well fill that one by restoring the original screenshot feature.
 	After all, it's triggered by a key press (and is thus related to the input
 	backend), reads the contents of the frame buffer (and is thus related to the
 	graphics backend), and it honestly looks bad to have this disclaimer in the
 	release notes just because we're one small feature away from 100% parity
-	with pbg's original binary.<br />
+	with pbg's original binary.<br>
 	Coincidentally, I had already written code to save a DirectDraw surface to a
 	.BMP file for all the debugging I did in the last delivery, so we were
 	<i>basically</i> only missing filename generation. Except that Shuusou
@@ -1268,13 +1268,13 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	up saving multiple frames in a row. <a class="goal"
 	href="https://github.com/nmlgc/ssg/issues/54">We should probably compress
 	them one day.</a>
-</p><hr /><p id="utmath-{{.Date}}">
+</p><hr><p id="utmath-{{.Date}}">
 	Since I already translated some of Shuusou Gyoku's ASM code to C++ during
 	the Zig experiment, it made sense to finish the fifth push by covering the
 	rest of those functions. The integer math functions are used all throughout
 	the game logic, and are the main reason why this goal is important for a
 	Linux port, or any port to a 64-bit architecture for that matter. If you've
-	ever read a {{HTML_TagInline "micro-optimization"}}-related blog post, you'll know that hand-written ASM is a great recipe that often results in the finest jank, and the game's square root function definitely delivers in that regard, right out of the gate.<br />
+	ever read a {{HTML_TagInline "micro-optimization"}}-related blog post, you'll know that hand-written ASM is a great recipe that often results in the finest jank, and the game's square root function definitely delivers in that regard, right out of the gate.<br>
 	What slightly differentiates this algorithm from the typical definition of
 	an <a href="https://en.wikipedia.org/wiki/Integer_square_root">integer
 	square root</a> is that it rounds up: In real numbers, <code>√﻿3</code> is
@@ -1297,7 +1297,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	system. 🐌 In a way, I've found the literal opposite of <code><a
 	href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Q_rsqrt()</a></code>
 	here: Not fast, not inverse, no bit hacks, and surely without the
-	awe-inspiring kind of WTF.<br />
+	awe-inspiring kind of WTF.<br>
 	I really didn't want to run the same loop over <a
 	href="https://github.com/nmlgc/ssg/commit/5f06cd419f646eb363db528eda7186a29be2fb73">a
 	literal C++ translation of the same algorithm</a> afterward. Calculating
@@ -1320,7 +1320,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	just fine? Our CPUs have had SSE for a long time, and this probably compiles
 	into the single <code>SQRTSD</code> instruction. All that extra
 	floating-point hardware might mean that this instruction could even run in
-	parallel with non-SSE code!"</i><br />
+	parallel with non-SSE code!"</i><br>
 	And yes, all of that is technically true. So I tested it, and my very
 	synthetic and constructed micro-benchmark did indeed deliver the same
 	results in… 48 seconds. {{HTML_Emoji "thonk"}} That's not enough of a
@@ -1354,7 +1354,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	And with that, there's no more ASM code left in Shuusou Gyoku's codebase,
 	and the original <code>DirectXUTYs</code> directory is slowly getting
 	emptier and emptier.
-</p><hr /><p>
+</p><hr><p>
 	Phew! Was that everything for this delivery? I think that was everything.
 	Here's the new build, which checks off 7 of the 15 remaining portability
 	boxes:

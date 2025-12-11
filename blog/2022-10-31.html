@@ -63,7 +63,7 @@
 	3.67 pushes it should have taken. To fund the rest, I stole some of the
 	reserved JIS trail word rendering research pushes, which means that the next
 	{{HTML_Currency 10000}} towards anything will go back towards that goal.
-</p><hr /><p>
+</p><hr><p>
 	The codec situation is especially sad because it seems like so much of a
 	solved problem. ZMBV, the lossless capture codec introduced by DOSBox, is
 	both very well suited for retro game footage and remarkably simple too:
@@ -71,7 +71,7 @@
 	650 lines of C++, excluding the Deflate implementation. Heck, the AVI
 	container <i>around</i> the codec is more complicated to write than the
 	compressed video data itself, and AVI is already the easiest choice you have
-	for a widely supported video container format.<br />
+	for a widely supported video container format.<br>
 	Currently, this blog contains 9:02 minutes of video across 86 files, with a
 	total frame count of 24,515. In case this post attracts a general video
 	encoding audience that isn't familiar with what I'm encoding here: The
@@ -98,7 +98,7 @@
 	the shocking realization that my previous, historically grown conversion
 	script didn't <i>actually</i> encode in a lossless way. 😢 By extension,
 	this meant that every video before that post could have had minor
-	discolorations as well.<br />
+	discolorations as well.<br>
 	For the majority of videos, I still had the original ZMBV capture files
 	straight out of DOSBox-X, and reproducing the final videos wasn't too big of
 	a deal. For the few cases where I didn't, I went the extra mile, took the
@@ -109,13 +109,13 @@
 	each frame as an image and perform the color replacement with ImageMagick's
 	<code>-opaque</code> and <code>-fill</code> options.
 	{{HTML_Emoji "tannedcirno"}}
-</p><hr /><p>
+</p><hr><p>
 	So, time to encode our new definite collection of source files into AV1, and
 	<i>what the hell</i>, how slow <i>is</i> this codec? With ffmpeg's
 	<code>libaom-av1</code>, fully encoding all 86 videos takes <i>almost 9
 	hours</i> on my <a
 	href="https://twitter.com/lunasorcery/status/1578483707979014144">mid-range
-	development system</a>, regardless of the quality selected.<br />
+	development system</a>, regardless of the quality selected.<br>
 	But sure, the encoded videos are managed by a cache, and this obviously only
 	needs to be done once. If the results are amazing, they might even justify
 	these glacial encoding speeds. Unfortunately, they don't: In its lossless
@@ -175,7 +175,7 @@
 	know what would maybe even <i>motivate</i> people to intrinsically do that?
 	Good documentation, with examples of the intent behind every option and its
 	optimal use case. Nobody needs long help strings that just spell out all of
-	the abbreviations that occur in the name of the option…<br />
+	the abbreviations that occur in the name of the option…<br>
 	But hey, that at least means there's no reason to not use anything but ZMBV
 	for storing and archiving the lossless source files. Best compression
 	efficiency, encodes in real-time, and the files are much easier to edit.
@@ -198,16 +198,16 @@
 		src="{{$median_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
-	/><img
+	><img
 		src="{{$median_av1}}"
 		data-title="AV1 <code>-crf 1</code>"
 		alt="The same image encoded in AV1"
-	/><img
+	><img
 		src="{{$median_difference}}"
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		That's frame 455 (0-based) of
 		{{Blog_PostLink "2022-08-08" "YuugenMagan's reconstructed Phase 5 pattern on Easy mode"}}.
@@ -222,16 +222,16 @@
 		src="{{$bleed_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
-	/><img
+	><img
 		src="{{$bleed_av1}}"
 		data-title="AV1 <code>-crf 1</code>"
 		alt="The same image encoded in AV1"
-	/><img
+	><img
 		src="{{$bleed_difference}}"
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		Frame 25 (0-based) of the
 		{{Blog_PostLink "2020-08-28" "TH05 Reimu bomb animation quirk video"}}.
@@ -242,14 +242,14 @@
 	glass between the physical pixels and your eyes. In any case, it's very
 	hard, even if you know where to look. As far as I'm concerned, I can
 	confidently call this "visually lossless", and it's definitely good enough
-	for regular watching and even single-frame stepping on this blog.<br />
+	for regular watching and even single-frame stepping on this blog.<br>
 	Since the appeal of the original lossless files is undeniable though, I also
 	made those more easily available. You can directly download the one for the
 	currently active video with the <span style="font-family:
 	ReC98 video player symbols;">⍗</span> button in the new video player – or <a
 	href="https://github.com/nmlgc/rec98.nmlgc.net/tree/master/blog/video/zmbv">directly
 	get all of them from the Git repository</a> if you don't like clicking.
-</p><hr /><p>
+</p><hr><p>
 	Unfortunately, even that only made up for half of the complexity in this
 	pipeline. As impressive as the AV1 <code>-crf 1</code> result may be, it
 	does in fact come with the drawback of also being impressively heavy to
@@ -257,7 +257,7 @@
 	for <i>single-frame stepping</i> being way beyond what I'd consider
 	tolerable. To compensate, we have to invest another 78&nbsp;MiB into turning
 	every 10<sup>th</sup> frame into a keyframe until single-stepping through an
-	entire video becomes as fast as it could be on my system.<br />
+	entire video becomes as fast as it could be on my system.<br>
 	But fine, 146&nbsp;MiB, that's still less than the 178&nbsp;MiB that the old
 	committed VP9 files used to take up. However, we still want to support VP9
 	for <a href="https://caniuse.com/?search=av1">older browsers, older
@@ -550,16 +550,16 @@
 		src="{{$sub_zmbv}}"
 		data-title="Lossless"
 		alt="The lossless source image"
-	/><img
+	><img
 		src="{{$sub_vp9}}"
 		data-title="VP9 <code>-crf 15 -vf format=yuv422p</code>"
 		alt="The same image encoded in VP9, exhibiting a severe case of chroma subsampling"
-	/><img
+	><img
 		src="{{$sub_difference}}"
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		The worst example of chroma subsampling in a VP9-encoded file according
 		to the above metric, from frame 130 (0-based) of
@@ -578,7 +578,7 @@
 	<code>-crf</code> on seeking speed being much less pronounced. Encoding VP8
 	also just takes 3 minutes for all 86 videos, so I could have experimented
 	much more. Too bad that it only matters for <i>really</i> ancient systems…
-	{{HTML_Emoji "onricdennat"}}<br />
+	{{HTML_Emoji "onricdennat"}}<br>
 	Two final takeaways about VP9:
 </p><ul>
 	<li><code>-tune-content screen</code> and the tile options make no
@@ -589,7 +589,7 @@
 	slightly worse with two passes, yielding 154,201,892 bytes rather than the
 	153,643,316 bytes we get with a single pass. But that's a difference of
 	0.36%, and hardly significant.</li>
-</ul><hr /><p>
+</ul><hr><p>
 	Alright, <i>now</i> we're done with codecs and get to finish the work on the
 	pipeline with perhaps its biggest advantage. With a ffmpeg conversion
 	infrastructure in place, we can also easily output a video's first frame as
@@ -616,7 +616,7 @@
 	weird jump back by one frame when pausing a video within the second half of
 	a frame, caused by snapping the continuous time in seconds back onto the
 	frame grid in order to maintain a consistent frame counter. But the whole
-	feature of frame-based seeking more than makes up for that.<br />
+	feature of frame-based seeking more than makes up for that.<br>
 	The new scrubbable timeline might be even nicer to use with a mouse or a
 	finger than just letting a video play regularly. With all the tuning work I
 	put into keyframes, seeking is buttery smooth, and much better than the

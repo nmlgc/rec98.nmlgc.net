@@ -37,7 +37,7 @@
 	out of the big translation units yet, and nothing has ever been decompiled.
 	With these boundary points, this is what we get:
 </p><figure><a
-	href="{{$pic1}}"><img src="{{$pic1}}" alt="Visualizing technical debt in terms of the total amount of instructions that could possibly be not finalized" /></a>
+	href="{{$pic1}}"><img src="{{$pic1}}" alt="Visualizing technical debt in terms of the total amount of instructions that could possibly be not finalized"></a>
 </figure><p>
 	Not too bad! So it's 6.22% of total RE that we will have to revisit at some
 	point, concentrated mostly around TH04 and TH05 where it resulted from a
@@ -49,7 +49,7 @@
 	most useful measurement to have on a front page. But how about subtracting
 	those 6.22% from the number shown on the RE% bars? Then, we get this:
 </p><figure><a
-	href="{{$pic2}}"><img src="{{$pic2}}" alt="Visualizing technical debt in terms of the absolute number of 'finalized' instructions per binary" /></a>
+	href="{{$pic2}}"><img src="{{$pic2}}" alt="Visualizing technical debt in terms of the absolute number of 'finalized' instructions per binary"></a>
 </figure><p>
 	Which is where we get to the good news: Twitter surprisingly helped me out
 	in choosing one visualization over the other, <a
@@ -59,7 +59,7 @@
 	obtain the raw financial cost of technical debt, it clearly shows, for the
 	first time, how far away we are from the main goal of fully decompiling all
 	5 games… at least to the extent it's possible.
-</p><hr /><p>
+</p><hr><p>
 	Now that the parser is looking at these recursively included .ASM files for
 	the first time, it needed a small number of improvements to correctly handle
 	the more advanced directives used there, which no automatic disassembler
@@ -94,7 +94,7 @@ endif</pre><p>
 	href="/progress/d9858113d8135d265b88e0325d40fc237e6b9763">P0140</a>, where
 	the progress bar didn't move at all: Repaying 3.49% of previously
 	accumulated technical debt across all games. 👌
-</p><hr /><p>
+</p><hr><p>
 	As announced, I've also implemented a new caching system for this website,
 	as the second main feature of these two pushes. By appending a hash string
 	to the URLs of static resources, your browser should now both cache them

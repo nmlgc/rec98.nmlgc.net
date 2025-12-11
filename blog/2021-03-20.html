@@ -3,7 +3,7 @@
 	done right now. Time to <i>really</i> focus on parts 6 and 7 of repaying
 	technical debt, right? Except that we don't get to speed up just yet, as
 	TH05's barely decompilable PMD file loading function is rather…
-	complicated.<br/>
+	complicated.<br>
 	Fun fact: Whenever I see an unusual sequence of x86 instructions in PC-98
 	Touhou, I first consult the disassembly of Wolfenstein 3D. That game was
 	originally compiled with the quite similar Borland C++ 3.0, so it's quite
@@ -17,7 +17,7 @@
 	and <code>strchr()</code>, available via <code>#pragma intrinsic</code>.
 	Bu~t those unfortunately still generate worse code than what ZUN
 	micro-optimized here. Commenting how these sequences of instructions
-	<i>should</i> look in C is unfortunately all I could do here.<br />
+	<i>should</i> look in C is unfortunately all I could do here.<br>
 	The conditional branches in this function <i>did</i> compile quite nicely
 	though, clarifying the control flow, <i>and</i> clearly exposing a ZUN
 	bug: TH05's <code>snd_load()</code> will hang in an infinite loop when
@@ -37,10 +37,10 @@
 	<a href="https://github.com/nmlgc/ReC98/commit/7f971a0">Found that out in
 	September 2019, and confirmed that there's no way around it.</a> All the
 	small helper functions here are quite simply too optimized, throwing away
-	any concern for such safety measures. 🤷<br />
+	any concern for such safety measures. 🤷<br>
 	Oh well, the two functions that <i>were</i> decompilable at least indicate
 	that I do try.
-</p><hr /><p>
+</p><hr><p>
 	Within that same 6th push though, we've finally reached the one function
 	in TH05 that was blocking further progress in TH04, allowing that game
 	to finally catch up with the others in terms of separated translation
@@ -56,7 +56,7 @@
 	reference <i>quite</i> as often. At its best, this even allows us to
 	declare certain functions with the <code>__fastcall</code> convention and
 	express their parameter lists as regular C, with no additional
-	pseudo-registers or macros required.<br />
+	pseudo-registers or macros required.<br>
 	As for output registers, Turbo C++'s code generation turns out to be even
 	more amazing than previously thought when it comes to returning
 	pseudo-registers from <code>inline</code> functions. A nice example for

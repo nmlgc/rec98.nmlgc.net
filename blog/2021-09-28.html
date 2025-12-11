@@ -13,7 +13,7 @@
 	structure as its own reference parameter</i>. Like, why, you have a
 	structure, right there?! That's one way to really practice the C++ language
 	concept of passing arbitrary structure fields by mutable reference…
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	To complete the unwarranted grand generic design of this function, it calls
 	back into per-type collision detection, drop, and collect functions with
 	another three reference parameters. Yeah, why use C++ virtual methods when
@@ -30,7 +30,7 @@
 	though. Changing entity coordinates from left/top to center was one of the
 	better lessons from TH01 that ZUN implemented in later games, it really
 	makes collision detection code much more intuitive to grasp.
-</p><hr /><p>
+</p><hr><p>
 	The card flip code is where we find out some slightly more interesting
 	aspects about item drops in this game, and how they're controlled by a
 	hidden cycle variable:
@@ -47,7 +47,7 @@
 	<s>Then again, score players largely ignore point items anyway, as card
 	combos simply have a much bigger effect on the score. With this, I should
 	have RE'd all information necessary to construct a tool-assisted score run,
-	though?</s><br />
+	though?</s><br>
 	<strong>Edit:</strong> Turns out that 1) point items are becoming
 	increasingly important in score runs, and 2) Pearl already did a TAS some
 	months ago. Thanks to
@@ -71,11 +71,11 @@
 	{{Blog_PostLink "2020-11-30" "thanks to a bug"}}, even a 75% chance is high
 	enough to typically flip most cards during a bomb. Each of these flips
 	still only removes a single card HP, just like after a regular collision
-	with the Orb.<br />
+	with the Orb.<br>
 	Also, why are the card score popups rendered <i>before</i> the cards
 	themselves? That's two needless frames of flicker during that 25-frame
 	animation. Not all too noticeable, but still.
-</p><hr /><p>
+</p><hr><p>
 	And that's over 50% of <code>REIIDEN.EXE</code> decompiled as well! Next
 	up: More HUD update and rendering code… with a direct dependency on
 	<s>rank</s> pellet speed modifications?

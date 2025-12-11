@@ -18,7 +18,7 @@
 	the visible area of VRAM might be limited to [0;&nbsp;200] when running in
 	the PC-98's line-doubled 640×200 mode. A VRAM Y coordinate also always
 	implies an added offset for vertical scrolling.
-	<br />
+	<br>
 	During all of the code reconstruction, these types can only have a
 	documenting purpose. Turning them into anything more than just
 	<code>typedef</code>s to <code>int</code>, in order to define conversion
@@ -27,7 +27,7 @@
 	doing just that, and can entirely lift coordinate system transformations
 	into the type system, without having to proofread all the meaningless
 	<code>int</code> declarations themselves.
-</p><hr /><p>
+</p><hr><p>
 	So, what was left in terms of memory references? EX-Alice's fire waves
 	were our final unknown entity that can collide with the player. Decently
 	implemented, with little to say about them.
@@ -46,11 +46,11 @@
 	<i>"pulling all items to player"</i> flag in TH04 and TH05, which is
 	actually separate from bombing. The obvious cheat mod is left as an
 	exercise to the reader.
-</p><hr /><p>
+</p><hr><p>
 	So, TH05 bomb animations. Just like the
 	{{Blog_PostLink "2020-02-29" "custom entity types of this game"}}, all 4
 	characters share the same memory, with the superficially same 10-byte
-	structure.<br />
+	structure.<br>
 	But let's just look at the very first field. Seen from a low level, it's a
 	simple <code>struct { int x, y; } pos</code>, storing the current position
 	of the character-specific bomb animation entity. But all 4 characters use
@@ -70,7 +70,7 @@
 	<code>struct { screen_x_t x; screen_y_t y; } center</code>.</li>
 	<li>For Yuuka's spinning heart, it's the top-left corner in regular pixel
 	coordinates. Much better represented as
-	<code>struct { screen_x_t x; screen_y_t y; } topleft</code>.<br />
+	<code>struct { screen_x_t x; screen_y_t y; } topleft</code>.<br>
 	And yes, singular. The game is actually smart enough to only store a single
 	heart, and then create the rest of the circle on the fly. (If it were even
 	smarter, it wouldn't even use this structure member, but oh well.)</li>
@@ -85,7 +85,7 @@
 	>Jigoku*</span> for setting and updating the positions of the falling star
 	trails. {{HTML_Emoji "zunpet"}} While that certainly required several
 	comments to wrap my head around the current array positions, the one "bug"
-	in all this arithmetic luckily has no effect on the game.<br />
+	in all this arithmetic luckily has no effect on the game.<br>
 	There <i>is</i> a small glitch with the growing circles, though. They are
 	spawned at the end of the loop, with their position taken from the star
 	pointer… but <i>after</i> that pointer has already been incremented. On
@@ -94,7 +94,7 @@
 	most of the game. If you look at the animation, you can easily spot these
 	bugged circles, consistently growing from the top-left corner (0,&nbsp;0)
 	of the playfield:
-</p><figure>{{call .VideoPlayer $vid}}</figure><hr /><p>
+</p><figure>{{call .VideoPlayer $vid}}</figure><hr><p>
 	After all that, there was barely enough remaining time to filter out and
 	label the final few memory references. But now, TH05's
 	<code>MAIN.EXE</code> is <i>technically</i> position-independent! 🎉
@@ -103,7 +103,7 @@
 	effect of both the 100% PI mark and that demo, I'll be delaying the push
 	covering the remaining false positives in that binary until that demo is
 	done. I've accumulated a pretty huge backlog of minor maintenance issues
-	by now…<br />
+	by now…<br>
 	Next up though: The first part of the long-awaited build system
 	improvements. I've finally come up with a way of sanely accelerating the
 	32-bit build part on most setups you could possibly want to build ReC98

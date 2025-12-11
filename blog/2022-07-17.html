@@ -55,7 +55,7 @@
 	previous pattern, and does provide a nice visual separation between the two
 	main phases.</li>
 	<li>That's it – nothing special in Phase 3.</li>
-</ul><hr /><p>
+</ul><hr><p>
 	And there aren't even any weird hitboxes this time. What <i>is</i> maybe
 	special about Mima, however, is how there's something to cover about all of
 	her patterns. Since this is TH01, it's won't surprise anyone that the
@@ -64,7 +64,7 @@
 	transformation in a separate function for creating <a
 	href="https://en.wikipedia.org/wiki/Regular_polygon">regular polygons</a>
 	with an arbitrary number of sides, which might hint toward some more varied
-	shapes having been planned at one point?<br />
+	shapes having been planned at one point?<br>
 	5 of the 6 patterns even follow the exact same steps during square update
 	frames:
 </p><ol>
@@ -97,11 +97,11 @@
 		when defeating Mima,
 		{{Blog_PostLink "2022-05-31" "check out the Elis blog post for the details behind this bug, and grab the bugfix patch from there"}}.
 	</figcaption>
-</figure><hr /><p>
+</figure><hr><p>
 	When Mima isn't shooting bullets from the corners of a square or hopping
 	across the playfield, she's raising flame pillars <img
 	src="data:image/gif;base64,R0lGODlhIAAQAIABAP8AAMCAACH5BAEKAAEALAAAAAAgABAAAAJEjI8ItgmvYmINsvDanDrn020gBVnlJyqLh3krqm2nS3+WWOd12up+jAH9fo7K0Md5HXWj3pLZEj5zUdWUmry6cFrWoQAAOw=="
-	/> from the bottom of the playfield within very specifically calculated
+	> from the bottom of the playfield within very specifically calculated
 	random ranges… which are then rendered at byte-aligned VRAM positions, while
 	collision detection still uses their actual pixel position. Since I  don't
 	want to sound like a broken record all too much, I'll just direct you to
@@ -113,7 +113,7 @@
 		Mima's flame pillar pattern. This video was recorded on a particularly
 		unlucky seed that resulted in great disparities between a pillar's
 		internal X coordinate and its byte-aligned on-screen appearance, leading
-		to lots of right-shifted hitboxes.<br />
+		to lots of right-shifted hitboxes.<br>
 		Also note how the change from the meteor animation to the three-arm 🚫
 		casting sprite</a> doesn't unblit the meteor, and leaves that job to
 		any sprite that happens to fly over those pixels.
@@ -138,7 +138,7 @@
 	game is nothing I would wish on anybody. And it's not like TH01 is
 	particularly unique in its choppiness anyway; low frame rates are actually a
 	rather typical part of the PC-98 game aesthetic.
-</p><hr /><p>
+</p><hr><p>
 	The final piece of weirdness in this fight can be found in phase 1's hop
 	pattern, and specifically its palette manipulation. Just from looking at the
 	pattern code itself, each of the 4 hops is supposed to darken the hardware
@@ -161,7 +161,7 @@
 	Looking at the frame counter, it appears that <i>something</i> outside the
 	pattern resets the palette every 40 frames. The only known constant with a
 	value of 40 would be the invincibility frames after hitting a boss with the
-	Orb, but we're not hitting Mima here… {{HTML_Emoji "thonk"}}<br />
+	Orb, but we're not hitting Mima here… {{HTML_Emoji "thonk"}}<br>
 	But as it turns out, that's exactly where the palette reset comes from: The
 	hop animation darkens the hardware palette directly, while the
 	{{Blog_PostLink "2020-12-18" "infamous 12-parameter boss collision handler function"}}
@@ -189,7 +189,7 @@
 	at the beginning of the entrance animation, to the palette of this image.
 	Apart from consistency reasons, it doesn't even make sense to set the stage
 	palette there, as you can't enter the Pause menu or bomb during a blocking
-	animation function.<br />
+	animation function.<br>
 	And just 3 lines of code later, ZUN loads <code>BOSS8_A1.GRP</code>, the
 	main background image of the fight. Moving the stage palette assignment
 	there would have easily prevented the discoloration.
@@ -214,7 +214,7 @@
 </figure><p>
 	In any case, that's Mima done! 7<sup>th</sup> PC-98 Touhou boss fully
 	decompiled, 24 bosses remaining, and 59 functions left in all of TH01.
-</p><hr /><p>
+</p><hr><p>
 	In other thrilling news, my call for secondary funding priorities in new
 	TH01 contributions has given us three different priorities so far. This
 	raises an interesting question though: Which of these contributions should I

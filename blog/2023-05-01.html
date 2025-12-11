@@ -35,7 +35,7 @@
 	remote scripts to obtain consent for. In reality though, Stripe shares
 	<i>much</i> more potential personal data about your credit card or bank
 	account with a merchant, compared to PayPal's almost bare minimum of
-	necessary data. {{HTML_Emoji "thonk"}}<br />
+	necessary data. {{HTML_Emoji "thonk"}}<br>
 	It's also rather annoying how the backend has to persist the order form
 	information throughout the entire Checkout session, because it would
 	otherwise be lost if the server restarts while a customer is still busy
@@ -53,7 +53,7 @@
 	kind of wants to stay out of the way of the payment process as much as
 	possible, and just be a wrapper around its supported payment methods. So if
 	customers aren't really meant to register with Stripe, how would they cancel
-	their subscriptions? {{HTML_Emoji "thonk"}}<br />
+	their subscriptions? {{HTML_Emoji "thonk"}}<br>
 	Answer: <a
 	href="https://support.stripe.com/questions/cancelling-a-subscription-made-through-stripe">Through
 	the… merchant?</a> Which I quite dislike in principle, because why should
@@ -102,7 +102,7 @@
 	including a <q>payment status</q> field. Which initially seems just like
 	another field that could indicate hacking attempts, but treating it as such
 	and rejecting any unpaid session can also reject perfectly valid
-	subscriptions. I don't <i>want</i> all this control… 🥲<br />
+	subscriptions. I don't <i>want</i> all this control… 🥲<br>
 	Instead, all I can do in this case is to tell you about it. In my test, the
 	Stripe dashboard said that it might take days or even weeks for the initial
 	subscription transaction to be confirmed. In such a case, the respective
@@ -116,20 +116,20 @@
 	href="https://esbuild.github.io/">esbuild</a> to handle transpilation inside
 	the server binary. Let's see how long it will now take for me to upgrade to
 	SCSS…
-</p><hr /><p>
+</p><hr><p>
 	With the new payment options, it makes sense to go for another slight price
 	increase, from {{HTML_Currency 7500}} up to {{HTML_Currency 8500}} per push.
 	The amount of taxes I have to pay on this income is slowly becoming
 	significant, and the store has been selling out almost immediately for the
 	last few months anyway. If demand remains at the current level or even
 	increases, I plan to gradually go up to {{HTML_Currency 12500}} by the end
-	of the year. <br />
+	of the year. <br>
 	{{Blog_PostLink "2021-12-01" "As"}} {{Blog_PostLink "2022-08-15" "usual"}},
 	I'm going to deliver existing orders in the backlog at the value they were
 	originally purchased at. Due to the way the cap has to be calculated, these
 	contributions now appear to have increased in value by a rather awkward
 	13.33%.
-</p><hr /><p>
+</p><hr><p>
 	This left ½ of a push for some more work on the TH01 Anniversary Edition.
 	Unfortunately, this was too little time for the grand issue of removing
 	byte-aligned rendering of bigger sprites, which will need some additional
@@ -188,7 +188,7 @@
 			<code>0x01</code>, or <code>0x03</code> to the specific byte that
 			then gets repurposed as the debug mode flag, this lack of
 			initialization does in fact result in a distinct non-test and
-			non-debug stage selection mode. {{HTML_Emoji "tannedcirno"}}<br />
+			non-debug stage selection mode. {{HTML_Emoji "tannedcirno"}}<br>
 			This is what happens on a certain widely circulated .HDI copy of
 			TH01 that boots MS-DOS 3.30C. On this system, the memory that
 			master.lib will allocate to the TH01 resident structure was
@@ -249,7 +249,7 @@
 	search-replacing the respective function calls would immediately get us to
 	the optimized version shown in that blog post. But is this something we
 	actually want? If we wanted to retain the lag, we could surely preserve that
-	function just for this one instance…<br /> The discovery of this issue
+	function just for this one instance…<br> The discovery of this issue
 	predates the clear distinction between bloat, quirks, and bugs, so it makes
 	sense to first classify what this issue even is. The distinction comes all
 	down to <i>observability</i>, which I defined as changes to rendered frames

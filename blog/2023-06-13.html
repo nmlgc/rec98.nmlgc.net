@@ -48,7 +48,7 @@
 	remained relatively unpopular among backers, and only received more than the
 	funded attention because it shares most of its core code with the more
 	popular TH05. Which, coincidentally, ended up becoming
-	{{Blog_PostLink "2023-05-29" "the reason for getting this done now"}}.<br />
+	{{Blog_PostLink "2023-05-29" "the reason for getting this done now"}}.<br>
 	Not that it matters a lot. Ever since we reached 100% PI for TH05, community
 	and backer interest in position independence has dropped to near zero. We
 	just didn't end up seeing the expected large amount of community-made mods
@@ -69,7 +69,7 @@
 	website bugs</a> and a certain piece of code that was way more difficult to
 	document than it was to decompile… The next push will have slightly less
 	content in exchange, though.
-</p><hr /><p>
+</p><hr><p>
 	{{Blog_PostLink "2023-05-29" "P0240 and P0241"}} already covered the final
 	remaining structures, so I only needed to do some superficial RE to prove
 	the remaining numeric literals as either constants or memory addresses. For
@@ -83,7 +83,7 @@
 	lighting animation, thanks to hex literals that were way too complicated to
 	leave in ASM. And this one probably takes the crown for TH04's worst set of
 	landmines and bloat that still somehow results in no observable bugs or
-	quirks.<br />
+	quirks.<br>
 	This animation starts at frame 1664, roughly 29.5 seconds into the stage,
 	and quickly turns the stage background into a repeated row of dark-red plaid
 	carpet tiles by moving out from the center of the playfield towards the
@@ -97,16 +97,16 @@
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAQMAAAAhYj2mAAAABlBMVEVlAAAAAAD9XicmAAAAT0lEQVR42mP4Dwan6iEYO/gXDMEgwAChzkIxDrAZimEa/v8/B8U4QDEUwzT8/3+yHoJxOGkyBFOigVQnkeppUoN1NB5G42E0HkbjYTDFAwAgub5MJE1lSQAAAABJRU5ErkJggg=="
 		data-title="Light level 0"
 		alt="A row of the carpet tiles from TH04's Stage 4, at the lowest light level"
-	/><img
+	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAgMAAABmwkd2AAAACVBMVEWKAABlAAAAAAAoIf34AAAA4klEQVR4nO1VMQrEIBBcUmydFOmDLzkh94CD6A/0IalSprW9KvjKQ2NgN3hFxNJimUZmmBlhwHvnzlNq30ZF8dEdAzJMvOC9td4bE4m/5+MLn90bOQZOa4E5OJLAUSIwIkfmQOtIvKaI1pKIJDKMnHcHVQVyHVSNKNdB1ZJzHVT9pqkD57YtnFIA+9wDxUe3DEjx4gVrhTBmmiLx5wUUn92MFANn4OYOliSwlAj0SJE50LrrIrFMEcmSiCRSDJx3B1UF8h3UiuhfBzVLzndQ65vSDtoetD1oe9D2oO1B2wMrxA9toETNSUdWqgAAAABJRU5ErkJggg=="
 		data-title="Light level 1"
 		alt="A row of the carpet tiles from TH04's Stage 4, at the medium light level"
-	/><img
+	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAAgAgMAAABmwkd2AAAADFBMVEX/RUWKAABlAAAAAAB3PiuCAAABDElEQVR4nO2VwQmEMBBFc59TYC0oEAsQEqzEBjxtHXsS7cAcUolgBTbgYZbRBEbIJcFjFj7vIj+ZvIURiMdBmWdr929jObMySeCMvQLxPBHX9Sr+3R9H5qUFTuqkbvGYYAoHTCUHNMAZewWi94jLchWP4YnGkidSwEmd1P2c4NUDUg5efaKUg1clpxy8+jcNDo7rt23War3rj+bMipHASZ3ULM7TuXUdBmul3LtOcualBU7qpO7nBOa+TWReGuCMEwjvnVuWvr9uru7bRGbFKOCkTup+TqCCA1XiQAFn2oEJDkyJgwY40w664KArcdACZ9qBDg50iQMJnNGBqPug7oO6D+o+qPug7gPv3B9P8HKMKHLEfgAAAABJRU5ErkJggg=="
 		data-title="Light level 2"
 		alt="A row of the carpet tiles from TH04's Stage 4, at the highest light level"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The repeating 384×16 row of carpet tiles at the beginning of TH04's
 		Stage 4 in all three light levels, shown twice for better visibility.
 	</figcaption>
@@ -117,7 +117,7 @@
 	rest of the stage render normally and use new tile sections that are only
 	defined for the final light level. This means that the "initial" dark
 	version of the carpet is as much a result of hardcoded tile manipulation as
-	the animation itself.<br />
+	the animation itself.<br>
 	But then, ZUN proceeded to implement it all by directly manipulating the
 	ring buffer of on-screen tiles. This is the lowest level before the tiles
 	are rendered, and rather detached from the defined content of the
@@ -139,7 +139,7 @@
 	ZUN uses the regular tile invalidation function for this, which will only
 	cause actual redraws on the next frame. Again, the tile rendering call has
 	already happened by the time the Stage 4-specific rendering function gets
-	called.<br />
+	called.<br>
 	But wait, this game also flips VRAM pages between frames to provide a
 	tear-free gameplay experience. This means that the intended redraw of the
 	new tiles actually hits the wrong VRAM page. {{HTML_Emoji "tannedcirno"}}
@@ -148,7 +148,7 @@
 	represents the top of the hardware-scrolled screen. Once we're back on the
 	original VRAM page on the next frame, the lines we initially set out to
 	remove could have already scrolled past that point, making it impossible to
-	ever catch up with them in this way.<br />
+	ever catch up with them in this way.<br>
 	The only real "solution": Defining the height of the tile invalidation
 	rectangle at 3× the scroll speed, which ensures that each invalidation call
 	covers 3 frames worth of newly scrolled-in lines. This is not intuitive at
@@ -190,7 +190,7 @@
 	fixing and redrawing. The CPU cycles saved this way could have then maybe
 	been put towards writing the tile-replacing part of the animation in C++
 	rather than ASM…
-</p><hr /><p>
+</p><hr><p>
 	Wow, that was an unreasonable amount of research into a feature that
 	superficially works fine, just because its decompiled code didn't make
 	sense. {{HTML_Emoji "onricdennat"}} To end on a more positive note, here are
@@ -209,7 +209,7 @@
 		</tr></thead><tbody>
 			<tr><th style="color: #f00">2</th><td>64</td><td rowspan="8"><img
 				class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAADgBAMAAABBW30DAAAAKlBMVEUAAAD/////7u7/7sz//1Xuu6qZmf+qqkTMVcz/RER3AHeIAAAAAN0AAACWojNmAAAAAXRSTlMAQObYZgAAAf5JREFUeNrt07GK20AQBuDhipBCKtz4AdQkjSuT8hqzIAgEAkGlwdeocmlYOFB9Rm9g8gAXBuYJ3LhytYUgMTJj5l3CrrQgG61NysBO+ftjmBmtAaAsyxJuC3wOEUQQQQQRRBBBBBFEEEEEEUQQQQQRRBBBBBFE8H8CEbkLnra/qLkHPteIEgKQQbpFRAqBeQbnGpGxGQfpfC5nRCIJADgVgogsaQikhTARNRACqYggcwOHUWB/Pj0LUZOsR8GMmeXHs0igw9OWiEh+f1nK+CU/bmu0PeTEgTW39oj2CkI0PiTXVtg23FwBY0q/JWPXhYb52phj/xS0J80wN2Vpug6t1lpcDfPk+DJdu8VTlWtb3ZY+B1NOJh2VTKmNzrX0jfvcvEwmUwf+ZJ+UUkq7HXw+BLLIN1mW5SzXwLVauRm+6cUiy3kGw9wNc5y6Lap2o5SWmR+yy906tgO0lbS5qvqP5fNVYoxJ+ktSm+cVuRl8/mEKxhwOdmFhYdFa3JA+B1hBkiSugxAJtZV9UzDM4dA1AGZG/yqHuZcghEjsvuZV7guY0V7S//duC0DeN18RUb2GAL/WNdd1/fZajYOWusdwfg91kGIpIsWSJTDD6Xt62QsU/a1vC9IC0t1eAAINnNntQr/24PIIXH42dwFc9g+AXB6AVB6B+zMCQPOv4C+KgKJn9nbbeQAAAABJRU5ErkJggg==" alt=""
-			/></tr>
+			></tr>
 			<tr><th style="color: #f0f">3</th><td>72</td></tr>
 			<tr><th style="color: #f0f">4</th><td>88</td></tr>
 			<tr><th style="color: #00f">5</th><td>104</td></tr>

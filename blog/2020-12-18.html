@@ -6,8 +6,8 @@
 	graphics layer that really should have been drawn to the text layer
 	instead": The boss HP bar. Oh well, using the graphics layer at least made
 	it possible to have this half-red, half-white pattern
-	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAPCAIAAACnY0LpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVChTY/jPwPAfCFDJUVEISbwoAwMAdbLCPuvaYX8AAAAASUVORK5CYII=" alt="" />
-	for the middle section.<br />
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAPCAIAAACnY0LpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVChTY/jPwPAfCFDJUVEISbwoAwMAdbLCPuvaYX8AAAAASUVORK5CYII=" alt="">
+	for the middle section.<br>
 	This one pattern is drawn by making surprisingly good use of the GRCG. So
 	far, we've only seen it used for fast monochrome drawing:
 </p><pre>// Setting up fast drawing using color #9 (1001 in binary)
@@ -64,14 +64,14 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre><p>
 	{{Blog_PostLink "2022-05-31" "potential heap corruption after all, which can be triggered in some fights in test mode (<code>game t</code>) or debug mode (<code>game d</code>)"}}.)
 	There's one minor hit point discoloration bug if the red-white or white
 	sections start at an odd number of hit points, but that's never the case for
-	any of the original 7 bosses.<br />
+	any of the original 7 bosses.<br>
 	The remaining sloppiness is ultimately inconsequential as well: The game
 	always backs up <i>twice</i> the number of hit point backgrounds, and thus
 	uses twice the amount of memory actually required. Also, this
 	self-restriction of only unblitting 16×16 pixels at a time requires any
 	remaining odd hit point at the last position to, of course, be rendered
 	again {{HTML_Emoji "onricdennat"}}
-</p><hr /><p>
+</p><hr><p>
 	After stumbling over the weakest imaginable random number
 	<s>generator</s>, we finally arrive at the shared boss↔orb collision
 	handling function, the final blocker among the final blockers. This
@@ -91,11 +91,11 @@ outportb(0x7E, 0xAA); // Plane 3: (E): (* * * * )</pre><p>
 	made at least <i>some</i> sort of sense, considering the other usages of
 	the variables passed as references to that function. Turns out that
 	YuugenMagan, Kikuri, and Elis abuse what's meant to be the "invincibility
-	frame" variable as a frame counter for some of their animations 🙄<br />
+	frame" variable as a frame counter for some of their animations 🙄<br>
 	Oh well, the game at least doesn't call the collision handling function
 	during those, so "invincibility frame" is <i>technically</i> still a
 	correct variable name there.
-</p><hr /><p>
+</p><hr><p>
 	And that's it! We're finally ready to start with Konngara, in 2021. I've
 	been waiting quite a while for this, as all this high-level boss code is
 	very likely to speed up TH01 progress quite a bit. Next up though: Closing

@@ -55,13 +55,13 @@
 	transitioning to the next one. The fight always starts at pattern 1 of phase
 	1 (the random purple lasers), and each new phase also starts at its
 	respective first pattern.
-</p><hr /><p>
+</p><hr><p>
 	Sariel's bugs already start at the graphics asset level, before any code
 	gets to run. Some of the patterns include a wand raise animation, which is
 	stored in <code>BOSS6_2.BOS</code>:
 </p><figure class="pixelated">
 	<a href="{{$pic1}}"><img
-		src="{{$pic1}}" alt="TH01 BOSS6_2.BOS" style="height: 192px"/></a>
+		src="{{$pic1}}" alt="TH01 BOSS6_2.BOS" style="height: 192px"></a>
 	<figcaption>Umm… OK? The same sprite twice, just with slightly different
 	colors? So how is the wand lowered again?</figcaption>
 </figure><p>
@@ -72,7 +72,7 @@
 	different meaning in Sariel's case. Since this captured sprite is fully
 	opaque, it will reset the entire 128×128 wand area… wait, 128×128, rather
 	than 96×96? Yup, this lowered sprite is larger than necessary, wasting 1,967
-	bytes of conventional memory.<br /> That still doesn't quite explain the
+	bytes of conventional memory.<br> That still doesn't quite explain the
 	second sprite in <code>BOSS6_2.BOS</code> though. Turns out that the black
 	part is indeed <i>meant to unblit the purple reflection (?) in the first
 	sprite</i>. But… that's not how you would correctly unblit that?
@@ -80,11 +80,11 @@
 	<a href="{{$pic2}}"><img
 		src="{{$pic2}}"
 		alt="VRAM after blitting the first sprite of TH01's BOSS6_2.BOS"
-		style="height: 224px;"/></a>
+		style="height: 224px;"></a>
 	<a href="{{$pic3}}"><img
 		src="{{$pic3}}"
 		alt="VRAM after blitting the second sprite of TH01's BOSS6_2.BOS"
-		style="height: 224px;"/></a>
+		style="height: 224px;"></a>
 </figure></p>
 	The first sprite already eats up part of the red HUD line, and the second
 	one additionally fails to recover the seal pixels underneath, leaving a nice
@@ -92,11 +92,11 @@
 	transition. {{HTML_Emoji "tannedcirno"}} Quite ironic given that both
 	sprites do include the right part of the seal, which isn't even part of the
 	animation.
-</p><hr /><p>
+</p><hr><p>
 	Just like Konngara, Sariel continues the approach of using a single function
 	per danmaku pattern or custom entity. While I appreciate that this allows
 	all pattern- and entity-specific state to be scoped locally to that one
-	function, it quickly gets ugly as soon as such a function has to do more than one thing.<br />
+	function, it quickly gets ugly as soon as such a function has to do more than one thing.<br>
 	The "bird function" is particularly awful here: It's just one <code>if(…)
 	{…} else&nbsp;if(…) {…} else&nbsp;if(…) {…}</code> chain with different
 	branches for the subfunction parameter, with zero shared code between any of
@@ -120,7 +120,7 @@
 	{{HTML_Emoji "zunpet"}} As a result, the well-intentioned 640×400
 	screen-space clipping rectangle effectively shrinks to 38×23 pixels in the
 	top-left corner of the screen. Which the sprite is always outside of, and
-	thus never rendered again.<br />
+	thus never rendered again.<br>
 	The intended animation is easily restored though:
 </p><figure {{$vid1.FigureAttrs}}>
 	{{call .VideoPlayer $vid1.FlipActive $vid2}}
@@ -137,7 +137,7 @@
 	Another 3 of the 8 bugs can be found in the symmetric, interlaced spawn rays
 	used in three of the patterns, and the 32×32 debris "sprites" <img
 		src="data:image/gif;base64,R0lGODlhYAAgAPABAAAAAP///yH5BAUKAAEALAAAAABgACAAAAJVjI+py+0Po5y0Wgqu3jHzD4biSJaNZ6bqyrauhL4yEs+2XN/6zvda7gtegEOhEXdMKpdMDvHzNESP06a1V736shOuyKsNf8XkCriM3p3TbNO6DW8XAAA7"
-		style="vertical-align: middle;" alt="" /> shown at their endpoint, at
+		style="vertical-align: middle;" alt=""> shown at their endpoint, at
 	the edge of the screen. You kinda have to commend ZUN's attention to detail
 	here, and how he wrote a lot of code for those few rapidly animated pixels
 	that you most likely <span class="hovertext" title="And your brain probably didn't either, with all the sloppy unblitting everywhere…">don't
@@ -146,13 +146,13 @@
 	of phase 4 even turns them into the vortex sprites from the second pattern
 	in phase 1 <img
 		src="data:image/gif;base64,R0lGODlhYAAgAPABAAAAAP///yH5BAUKAAEALAAAAABgACAAAAK0jI+py+0Pozyggomz3sj6y3VgSE5WqVToCqks5b4yNQeePOK1HbP5/roFgbuTjjgzDpGan8j5VDqkqQ9z2kt8hA1uNAZdLrKM7cO7DRexEevZaL52sOpoO11PrcghN53atpeX4dXCx1Zy2Kc4xtiY6Fh2RhgpQoJ2N4kBiMhBNch5WQkzWPZZFyraNGqnpVYouMrKw1kIizL75YN3qyp6UvqXJkdsGFeMnKy8zNzs/Awd7VwAADs="
-		style="vertical-align: middle;" alt="" /> during the first 5 frames of
+		style="vertical-align: middle;" alt=""> during the first 5 frames of
 	the first time the pattern is active, and I had to single-step the blitting
-	calls to verify it.<br />
+	calls to verify it.<br>
 	It certainly was annoying how much time I spent making sense of these bugs,
 	and all weird blitting offsets, for just <i>a few pixels</i>… Let's look at
 	something more wholesome, shall we?
-</p><hr /><p>
+</p><hr><p>
 	So far, we've only seen the PC-98 GRCG being used in RMW (read-modify-write)
 	mode, which I previously
 	{{Blog_PostLink "2020-12-18" "explained in the context of TH01's red-white HP pattern"}}.
@@ -191,7 +191,7 @@
 	As far as I can tell, ZUN didn't use TCR mode anywhere else in PC-98 Touhou.
 	Tune in again later during a TH04 or TH05 push to learn about TDW, the final
 	GRCG mode!
-</p><hr /><p>
+</p><hr><p>
 	Speaking about the 2×2 particle systems, why do we need three of them? Their
 	only observable difference lies in the way they move their particles:
 </p><ol>
@@ -220,7 +220,7 @@
 	of Magic"</span>! Or <span lang="ja">"死なばもろとも"</span>? Or <span
 	lang="ja">"Theme of 地獄めくり"</span>? Or whatever <code>SYUGEN</code> is
 	supposed to mean…
-<p><hr /><p>
+<p><hr><p>
 	… and the code of these final patterns comes out roughly as exciting as
 	their in-game impact. With the big exception of the very final "swaying
 	leaves" pattern: After {{Blog_PostLink "2019-12-05" "Q4.4"}},
@@ -260,13 +260,13 @@
 	one reference to a missing <code>BOSS6.GRP</code> file during the
 	first→second form transition, suggesting that Sariel originally had a
 	separate "first form defeat" graphic, before it was replaced with just the
-	shaking effect in the final game.<br />
+	shaking effect in the final game.<br>
 	Speaking about the transition code, it is kind of funny how the… um,
 	<i>imperative</i> and <i>concrete</i> nature of TH01 leads to these 2×24
 	lines of straight-line code. They kind of look like ZUN rattling off a
 	laundry list of subsystems and raw variables to be reinitialized, making
 	damn sure to not forget anything.
-</p><hr /><p>
+</p><hr><p>
 	Whew! Second PC-98 Touhou boss completely decompiled, 29 to go, and they'll
 	only get easier from here! 🎉 The next one in line, Elis, is somewhere
 	between Konngara and Sariel as far as x86 instruction count is concerned, so

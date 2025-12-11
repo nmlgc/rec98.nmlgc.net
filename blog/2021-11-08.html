@@ -14,7 +14,7 @@
 	{{Blog_PostLink "2020-07-12" "interlaced rendering"}}, this time in every
 	stage. ZUN probably did this because missiles are the only 16×16 sprite in
 	TH01 that is blitted to unaligned X positions, which effectively ends up
-	touching a 32×16 area of VRAM per sprite.<br />
+	touching a 32×16 area of VRAM per sprite.<br>
 	But even <i>if</i> we assume VRAM writes to be the bottleneck here, it would
 	have been totally possible to render every missile in every frame at roughly
 	the same amount of CPU time that the original game uses for interlaced
@@ -42,14 +42,14 @@
 	{{Blog_PostLink "2020-06-13" "<code>double</code> variables are compared to <code>float</code> literals"}}.
 	That one will have to wait
 	{{Blog_PostLink "2020-08-12" "until after SinGyoku"}}.
-</p><hr /><p>
+</p><hr><p>
 	After some effectively unused Mima sprite effect code that is so broken that
 	it's impossible to make sense out of it, we get to the final feature I
 	wanted to cover for all bosses in parallel before returning to Sariel: The
 	separate sprite background storage for moving or animated boss sprites in
 	the Mima, Elis, and Sariel fights. But, uh… why is this necessary to begin
 	with? Doesn't TH01 already reserve the other VRAM page for backgrounds?
-	<br />
+	<br>
 	Well, these sprites are quite big, and ZUN didn't want to blit them from
 	main memory on every frame. After all, TH01 and TH02 had a minimum required
 	clock speed of 33 MHz, half of the speed required for the later three games.
@@ -63,13 +63,13 @@
 	into a sprite slot. No problem with that approach in theory, as the size of
 	all these bigger sprites is a multiple of 32×32; splitting a larger sprite
 	into these smaller 32×32 chunks makes the code look just a little bit clumsy
-	(and, of course, slower).<br/>
+	(and, of course, slower).<br>
 	But somewhere during the development of Mima's fight, ZUN apparently forgot
 	that those sprite backgrounds existed. And once Mima's 🚫 casting sprite is
 	blitted on top of her regular sprite, using just regular sprite
 	transparency, she ends up with her infamous third arm:
 </p><figure class="pixelated"><a href="{{$pic1}}"><img
-	src="{{$pic1}}" alt="TH01 Mima's third arm" style="height: 320px"/></a>
+	src="{{$pic1}}" alt="TH01 Mima's third arm" style="height: 320px"></a>
 </figure><p>
 	Ironically, there's an unused code path in Mima's unblit function where ZUN
 	assumes a height of 48 pixels for Mima's animation sprites rather than the
@@ -78,14 +78,14 @@
 	yielded that third arm, although it wouldn't have looked as natural. Still
 	wouldn't say that it was intentional; maybe this casting sprite was just
 	added pretty late in the game's development?
-</p><hr /><p>
+</p><hr><p>
 	So, mission accomplished, Sariel unblocked… at 2¼ pushes. {{HTML_Emoji
 	"thonk"}} That's quite some time left for some smaller stage initialization
 	code, which bundles a bunch of random function calls in places where they
 	logically really don't belong. The stage opening animation then adds a bunch
 	of VRAM inter-page copies that are not only redundant but can't even be
 	understood without knowing the hidden internal state of the last VRAM page
-	accessed by previous ZUN code…<br />
+	accessed by previous ZUN code…<br>
 	In better news though: Turbo C++ 4.0 really doesn't seem to have any
 	complexity limit on inlining arithmetic expressions, as long as they only
 	operate on compile-time constants. That's how we get macro-free,
@@ -96,7 +96,7 @@
 </p><p>
 	But wait, there's more! With still ¼ of a push left, I also went for the
 	boss defeat animation, which includes the route selection after the SinGyoku
-	fight.<br />
+	fight.<br>
 	As in all other instances, the 2× scaled font is accomplished by first
 	rendering the text at regular 1× resolution to the other, invisible VRAM
 	page, and then scaled from there to the visible one. However, the route
@@ -124,13 +124,13 @@
 	src="{{$pic3}}"
 	onmouseover="this.setAttribute('src', {{$pic2}});"
 	onmouseout ="this.setAttribute('src', {{$pic3}});"
-	alt="Demonstration of palette changes in TH01's route selection" />
+	alt="Demonstration of palette changes in TH01's route selection">
 </figure><p>
 	This push did end on a high note though, with the generic, non-SinGyoku
 	version of the defeat animation being an easily parametrizable copy. And
 	that's how you decompile another 2.58% of TH01 in just slightly over three
 	pushes.
-</p><hr /><p>
+</p><hr><p>
 	Now, we're not only ready to decompile Sariel, but also Kikuri, Elis, and
 	SinGyoku without needing any more detours into non-boss code. Thanks to the
 	current TH01 funding subscriptions, I can plan to cover most, if not all, of

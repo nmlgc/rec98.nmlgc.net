@@ -17,7 +17,7 @@
 	used in Reimu's gohei, slide, and kick animations. The only reason these
 	had to use the .BOS format at all is simply because Reimu's regular
 	sprites are 32×32, and are therefore loaded from
-	{{Blog_PostLink "2020-03-18" ".PTN files"}}.<br />
+	{{Blog_PostLink "2020-03-18" ".PTN files"}}.<br>
 	Yes, this makes no sense, because why would you split animations <i>for
 	the same character</i> across two file formats and two APIs, just because
 	of a sprite size difference?
@@ -111,7 +111,7 @@
 	ZUN tries to minimize the amount of VRAM writes when unblitting Reimu's
 	slide animations. Technically, it's only necessary to restore the pixels
 	that Reimu traveled by, plus the ones that <i>wouldn't</i> be redrawn by
-	the new animation frame at the new X position.<br />
+	the new animation frame at the new X position.<br>
 	The theoretically arbitrary distance between the two sprites is, of
 	course, modeled by a fixed-size buffer on the stack
 	{{HTML_Emoji "onricdennat"}}, coming with the further assumption that the

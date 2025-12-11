@@ -4,7 +4,7 @@
 	Nothing really noteworthy in TH01's stage timer code, just yet another HUD
 	element that is needlessly drawn into VRAM. Sure, ZUN applies his custom
 	boldfacing effect on top of the glyphs retrieved from font ROM, but he could
-	have easily installed those modified glyphs as gaiji.<br />
+	have easily installed those modified glyphs as gaiji.<br>
 	Well, OK, halfwidth gaiji aren't exactly well documented, and sometimes not
 	even correctly emulated
 	{{Blog_PostLink "2021-09-12" "due to the same PC-98 hardware oddity I was researching last month"}}.
@@ -14,7 +14,7 @@
 </p><p>
 	And since it doesn't seem to be clearly documented elsewhere: Every 2 ticks
 	on the stage timer correspond to 4 frames.
-</p><hr /><p>
+</p><hr><p>
 	So, TH01 <s>rank</s> pellet speed. The resident pellet speed value is a
 	factor ranging from a minimum of -0.375 up to a maximum of 0.5 (pixels per
 	frame), multiplied with the difficulty-adjusted base speed for each pellet
@@ -44,13 +44,13 @@
 	Q12.4 subpixel even if all numbers are integers. The only limiting issue
 	here would be the potential overflow of the 16-bit multiplication at
 	unadjusted base speeds of more than 50 pixels per frame, but that'd be
-	<i>seriously</i> unplayable.<br />
+	<i>seriously</i> unplayable.<br>
 	So yeah, pellet speed modifications are indeed gradual, and don't just fall
 	into the coarse three "high, normal, and low" categories.
-</p><hr /><p>
+</p><hr><p>
 	That's ⅝ of P0160 done, and the continue and pause menus would make good
 	candidates to fill up the remaining ⅜… except that it seemed impossible to
-	figure out the correct compiler options for this code?<br />
+	figure out the correct compiler options for this code?<br>
 	The issues centered around the two effects of Turbo C++ 4.0J's
 	<code>-O</code> switch:
 </p><ol>
@@ -80,23 +80,23 @@
 	function which copies this data array to the local variable on the stack.
 	And as soon as this <code>SCOPY@</code> call is emitted, the <code>-O</code>
 	optimization #1 is disabled <i>for the entire rest of the translation
-	unit</i>?!<br />
+	unit</i>?!<br>
 	So, any code segment with an <code>SCOPY@</code> call followed by
 	<code>__cdecl</code> functions must strictly be decompiled from top to
 	bottom, mirroring the original layout of translation units. That means no
 	TH01 continue and pause menus before we haven't decompiled the bomb
-	animation, which contains such an <code>SCOPY@</code> call. 😕<br />
+	animation, which contains such an <code>SCOPY@</code> call. 😕<br>
 	Luckily, TH01 is the only game where this bug leads to significant
 	restrictions in decompilation order, as later games predominantly use the
 	<code>pascal</code> calling convention, in which each function itself clears
 	its stack as part of its <code>RET</code> instruction.
-</p><hr /><p>
+</p><hr><p>
 	What now, then? With 51% of <code>REIIDEN.EXE</code> decompiled, we're
 	slowly running out of small features that can be decompiled within ⅜ of a
 	push. Good that I haven't been looking a lot into <code>OP.EXE</code> and
 	<code>FUUIN.EXE</code>, which pretty much <i>only</i> got easy pieces of
 	code left to do. Maybe I'll end up finishing their decompilations entirely
-	within these smaller gaps?<br /> I still ended up finding one more small
+	within these smaller gaps?<br> I still ended up finding one more small
 	piece in <code>REIIDEN.EXE</code> though: The particle system, seen in the
 	Mima fight.
 </p><figure>{{call .VideoPlayer $vid}}</figure><p>
@@ -119,7 +119,7 @@
 	spawned away far enough from the bottom and right edges, the spawning code
 	will then kill it off before its unblitting code gets to run, leaving its
 	pixel on the screen until something else overlaps it and causes it to be
-	unblitted.<br />
+	unblitted.<br>
 	Which, during regular gameplay, will quickly happen with the Orb, all the
 	pellets flying around, and your own player movement. Also, the RNG can
 	easily spawn this particle at a position and velocity that causes it to

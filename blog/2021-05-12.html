@@ -4,14 +4,14 @@
 	all, leaving no room for the additional decompilations I wanted to do. At
 	least, this <i>did</i> end up being the final one, completing all
 	<code>SHARED</code> segments for the time being.
-</p><hr /><p>
+</p><hr><p>
 	The first one of these functions determines the BGM and sound effect
 	modes, combining the resident type of the PMD driver with the Option menu
 	setting. The TH04 and TH05 version is apparently coded quite smartly, as
 	PC-98 Touhou only needs to distinguish <i>"OPN-&nbsp;/
 	PC-9801-26K-compatible sound sources handled by <code>PMD.COM</code>"</i>
 	from <i>"everything else"</i>, since all other PMD varieties are
-	OPNA-&nbsp;/ PC-9801-86-compatible.<br />
+	OPNA-&nbsp;/ PC-9801-86-compatible.<br>
 	Therefore, I only documented those two results returned from PMD's
 	<code>AH=09h</code> function. I'll leave a comprehensive, fully documented
 	enum to interested contributors, since that would involve research into
@@ -19,7 +19,7 @@
 	out-of-scope PC-88VA. After all, distinguishing between more versions of
 	the PMD driver in the Option menu (and adding new sprites for them!) is
 	strictly mod territory.
-</p><hr /><p>
+</p><hr><p>
 	The honor of being the final decompiled function in any <code>SHARED</code>
 	segment went to TH04's <code>snd_load()</code>. TH04 contains by far the
 	sanest version of this function: Readable C code, no new ZUN bugs (and
@@ -39,20 +39,20 @@
 	sizes in <code>snd_load()</code> are completely wrong, no matter how you
 	look at them. {{HTML_Emoji "onricdennat"}} Consequently, this read syscall
 	<i>will</i> overflow PMD's or MMD's song or sound effect buffer if the
-	given file is larger than the respective buffer size.<br />
+	given file is larger than the respective buffer size.<br>
 	Now, ZUN could have simply hardcoded the sizes from <code>GAME.BAT</code>
 	instead, and it would have been fine. As it <i>also</i> turns out though,
 	PMD has an API function (<code>AH=22h</code>) to retrieve the actual
 	buffer sizes, provided for exactly that purpose. There is little excuse
 	not to use it, as it also gives you PMD's default sizes if you don't
-	specify any yourself.<br />
+	specify any yourself.<br>
 	(Unless your build process enumerates all PMD files that are part of the
 	game, and bakes the largest size into both <code>snd_load()</code> and
 	<code>GAME.BAT</code>. That would even work with MMD, which doesn't have
 	an equivalent for <code>AH=22h</code>.)
 </p><p>
 	What'd be the consequence of loading a larger file then? Well, since we
-	don't get a full segment, let's look at the theoretical limit first.<br />
+	don't get a full segment, let's look at the theoretical limit first.<br>
 	PMD prefers to keep both its driver code and the data buffers in a single
 	memory segment. As a result, the limit for the combined size of the song,
 	instrument, and sound effect buffer is determined by the amount of
@@ -65,7 +65,7 @@
 	message if they exceed 40 KiB. Would have been even better if he calculated
 	the exact size – even in the current
 	<a href="http://www5.airnet.ne.jp/kajapon/tool.html">PMD version 4.8s from
-	January 2020</a>, it's still a hardcoded value (see line 8581).<br />
+	January 2020</a>, it's still a hardcoded value (see line 8581).<br>
 	Either way: If the file is larger than this maximum, the concrete effect
 	is down to the <code>INT 21h, AH=3Fh</code> implementation in the
 	underlying DOS version. DOS 3.3 treats the destination address as linear
@@ -88,7 +88,7 @@
 	regular ReC98 development! That's probably been the final time though, as
 	all involved functions are now decompiled, and I'm unlikely to iterate
 	over them again.
-</p><hr /><p>
+</p><hr><p>
 	And that's it! Repaid the biggest chunk of technical debt, time for some
 	actual progress again. Next up: Reopening the store tomorrow, and waiting
 	for new priorities. If we got nothing by Sunday, I'm going to put the

@@ -11,7 +11,7 @@
 </p><figure class="pixelated"><img
 	src="data:image/gif;base64,R0lGODlhgAAIAIAAAAAAAP///yH5BAAAAAAALAAAAACAAAgAAAJtDI6pYerH2ktRTlDty3rxyzEXNlLdFJVQWmatC35oCKqIaLMvPsJx1ZNtaCjbyqgL8n7LIZCZ9AgdpxmyOcNSn9DqyredLowYrzQXdWpNXHX6RtyQ12E0Hf5m579tKXh8dWWGN1i2x3cXF+ZSAAA7"
 	alt="TH01 shootout laser 'sprites'"
-	style="height: 24px;" /></figure
+	style="height: 24px;"></figure
 ><p>
 	A shootout laser can have a width from 1 to 8 pixels, so ZUN stored a
 	separate 16×1 sprite with a line for each possible width (left-to-right).
@@ -19,7 +19,7 @@
 	8 possible start positions within a planar VRAM byte (top-to-bottom).
 	Because… doing that bit shift programmatically is <i>way</i> too
 	expensive, so let's pre-shift at compile time, and use 16× the memory per
-	sprite? {{HTML_Emoji "tannedcirno"}}<br />
+	sprite? {{HTML_Emoji "tannedcirno"}}<br>
 </p><p>
 	Since a bunch of other sprite sheets need to be pre-shifted as well (this
 	is the 5th one we've found so far), our sprite converter has a feature to
@@ -36,7 +36,7 @@
 	<li>ZUN did, at least during TH01's development, <i>not</i> have a sprite
 	converter, and directly hardcoded these dot patterns in the C++ code
 	{{HTML_Emoji "zunpet"}}</li>
-</ol><hr /><p>
+</ol><hr><p>
 	The waste continues with the class itself. 69 bytes, with 22 bytes
 	outright unused, and 11 not really necessary. As for actual innovations
 	though, we've got
@@ -44,13 +44,13 @@
 	time <i>actually</i> using 8 bits for the fractional part. Therefore, the
 	ray position is tracked to the 1/256th of a pixel, using the full
 	precision of master.lib's 8-bit <i>sin()</i> and <i>cos()</i> lookup
-	tables.<br />
+	tables.<br>
 	Unblitting is also remarkably efficient: It's only done once the laser
 	stopped extending and started moving, and only for the exact pixels at the
 	start of the ray that the laser traveled by in a single frame. If only the
 	ray part was also rendered as efficiently – it's fully blitted every frame,
 	right next to the collision detection for each row of the ray.
-</p><hr /><p>
+</p><hr><p>
 	With a public interface of two functions (spawn, and update / collide /
 	unblit / render), that's superficially all there is to lasers in this
 	game. There's another (apparently inlined) function though, to both reset
@@ -58,7 +58,7 @@
 	that it fails hilariously at doing the latter, and ends up effectively
 	unblitting random 32-pixel line segments, due to ZUN confusing both the
 	coordinates and the parameter types for the line unblitting function.
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	A while ago, I was asked about
 	<a href="https://youtu.be/Al0KTB_0u4A?t=80">this crash that tends to
 	happen when defeating Elis</a>. And while you can clearly see the random

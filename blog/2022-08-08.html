@@ -116,11 +116,11 @@
 	<span style="color: red">HARRY UP</span> at least once during the attempt.
 	And let's be real, you're <i>very</i> likely to subsequently lose a
 	life.</li>
-</ul><hr /><p>
+</ul><hr><p>
 	At a pixel-perfect 81×61 pixels, the Orb hitboxes are laid out rather
 	generously this time, reaching quite a bit outside the 64×48 eye sprites:
 </p><figure>
-	<img src="{{$pic_hitbox}}" alt="TH01 YuugenMagan's hitboxes."/>
+	<img src="{{$pic_hitbox}}" alt="TH01 YuugenMagan's hitboxes.">
 </figure><p>
 	And that's about the only positive thing I can say about a position
 	calculation in this fight. Phase 0 already starts with the lasers being off
@@ -128,7 +128,7 @@
 	add than 29, but the result won't be byte-aligned either way? This is
 	followed by the eastern laser's hitbox somehow being 24 pixels larger than
 	the others, stretching a rather unexpected 70 pixels compared to the 46 of
-	every other laser.<br />
+	every other laser.<br>
 	On a more hilarious note, the eye closing keyframe contains the following
 	(pseudo-)code, comprising the only real accidentally "unused" danmaku
 	subpattern in TH01:
@@ -153,7 +153,7 @@ if(rank == RANK_HARD) {
 		an initial Reimu position that points out the disparity between
 		byte-aligned rendering and the internal coordinates one final time.
 	</figcaption>
-</figure><hr /><p>
+</figure><hr><p>
 	After a few utility functions that look more like a quickly abandoned
 	refactoring attempt, we quickly get to the main attraction: YuugenMagan
 	combines the entire boss script and most of the pattern code into a single
@@ -161,7 +161,7 @@ if(rank == RANK_HARD) {
 	<code>REIIDEN.EXE</code>. For comparison, ReC98's version of this code
 	consists of at least 49 functions, excluding those I had to add to work
 	around ZUN's little inconsistencies, or the ones I added for stylistic
-	reasons.<br />
+	reasons.<br>
 	In fact, this function is so large that Turbo C++ 4.0J refuses to generate
 	assembly output for it via the <code>-S</code> command-line option, aborting
 	with a <code>Compiler table limit exceeded in function</code> error.
@@ -176,7 +176,7 @@ if(rank == RANK_HARD) {
 	way more function calls than you probably wanted to have inlined. Because
 	<i>you</i> definitely <i>won't</i> explicitly spell out such a long function
 	in newly-written code, right?
-	{{HTML_Emoji "tannedcirno"}}<br />
+	{{HTML_Emoji "tannedcirno"}}<br>
 	At least it wasn't the worst copy-pasting job in this
 	game; that trophy still goes to {{Blog_PostLink "2022-05-31" "Elis"}}. And
 	while the tracking code for adjusting an eye's sprite according to the
@@ -190,23 +190,23 @@ if(rank == RANK_HARD) {
 	to:
 </p><figure class="th01_playfield">
 	<img src="{{$pic_coord_0}}" alt="Pellets unexpectedly spawned at the exact
-	bottom center of an eye" />
+	bottom center of an eye">
 	<figcaption>Combining the bottom of the pupil with the exact horizontal
 	center of the sprite as a whole might sound like a good idea, but looks
 	especially wrong if the eye is facing right.</figcaption>
 </figure><figure class="th01_playfield">
 	<img src="{{$pic_coord_1}}" alt="Missile spawn positions in the TH01
-	YuugenMagan fight" />
+	YuugenMagan fight">
 	<figcaption>Here it's the other way round: OK for a right-facing eye, really
 	wrong for a left-facing one.</figcaption>
 </figure><figure class="th01_playfield">
 	<img src="{{$pic_coord_2}}" alt="Spawn position of the 3-pixel laser in the
-	TH01 YuugenMagan fight" />
+	TH01 YuugenMagan fight">
 	<figcaption>Dude, the eye is even <i>supposed</i> to track the laser in this
 	one!</figcaption>
 </figure><figure class="th01_playfield">
 	<img src="{{$pic_coord_3}}" alt="The final center position of the regular
-	pentagram in the TH01 YuugenMagan fight" />
+	pentagram in the TH01 YuugenMagan fight">
 	<figcaption>Hint: That's not the center of the playfield. At least the
 	pellets spawned from the corners are sort of correct, but with the corner
 	calculates precomputed, you could only get them wrong on
@@ -215,13 +215,13 @@ if(rank == RANK_HARD) {
 	Due to their effect on gameplay, these inaccuracies can't even be called
 	"bugs", and made me devise a new "quirk" category instead. More on that in
 	the TH01 100% blog post, though.
-</p><hr /><p>
+</p><hr><p>
 	While we did see an <i>accidentally</i> unused bullet pattern earlier, I can
 	now say with certainty that there are no <i>truly</i> unused danmaku
 	patterns in TH01, i.e., pattern code that exists but is never called.
 	However, the code for YuugenMagan's phase 5 reveals another small piece of
 	danmaku design <i>intention</i> that never shows up within the parameters of
-	the original game.<br />
+	the original game.<br>
 	By default, pellets are clipped when they fly past the top of the playfield,
 	which we can clearly observe for the first few pellets of this pattern.
 	Interestingly though, the second subpattern actually configures its pellets
@@ -237,7 +237,7 @@ if(rank == RANK_HARD) {
 	second subpattern extended to reveal the different pellet behavior that
 	remained in the final game code. In the original game, the eyes would stop
 	spawning bullets on the marked frame.</figcaption>
-</figure><hr /><p>
+</figure><hr><p>
 	If we also disregard everything else about YuugenMagan that fits the
 	upcoming definition of <i>quirk</i>, we're left with 6 "fixable" bugs, all
 	of which are a symptom of general blitting and unblitting laziness. Funnily
@@ -294,7 +294,7 @@ if(rank == RANK_HARD) {
 	{{Blog_PostLink "2022-05-31" "I described that in detail back when I debugged the shootout laser crash"}}.
 	Ironically, using fixed-size hitboxes for a variable-sized pentagram means
 	that the larger one is easier to dodge.
-</p><hr /><p>
+</p><hr><p>
 	The final puzzle in TH01's boss code comes
 	{{Blog_PostLink "2022-07-17" "once again"}} in the form of weird hardware
 	palette changes. The <span class="ja">邪</span> kanji on the background
@@ -347,7 +347,7 @@ if(rank == RANK_HARD) {
 	overflowing. Given that the decrement operation on the
 	<code>stage_palette</code> <i>is</i> clamped though, this might be another
 	one of those accidents that ZUN deliberately left in the game,
-	{{Blog_PostLink "2022-07-10" "similar to the conclusion I reached with infinite bumper loops"}}.<br />
+	{{Blog_PostLink "2022-07-10" "similar to the conclusion I reached with infinite bumper loops"}}.<br>
 	But guess what, that's also the last time we're going to encounter this type
 	of palette component domain quirk! Later games use master.lib's 8-bit
 	palette system, which keeps the comfort of using a single byte per
@@ -356,7 +356,7 @@ if(rank == RANK_HARD) {
 </p><p>
 	OK, but <i>now</i> we're done with TH01's bosses! 🎉That was the
 	8<sup>th</sup> PC-98 Touhou boss in total, leaving 23 to go.
-</p><hr /><p>
+</p><hr><p>
 	With all the necessary research into these quirks going well into a fifth
 	push, I spent the remaining time in that one with transferring most of the
 	data between YuugenMagan and the upcoming rest of <code>REIIDEN.EXE</code>
@@ -365,7 +365,7 @@ if(rank == RANK_HARD) {
 	ending sequence in <code>FUUIN.EXE</code>. Decompiling that executable's
 	<code>main()</code> function in a meaningful way requires pretty much all
 	remaining data from <code>REIIDEN.EXE</code> to also be moved into C land,
-	just in case you were wondering why we're stuck at 99.46% there.<br />
+	just in case you were wondering why we're stuck at 99.46% there.<br>
 	On a more disappointing note, the static initialization code for the
 	{{Blog_PostLink "2020-08-12" "5 boss entity slots"}} ultimately revealed why
 	YuugenMagan's code is as bloated and redundant as it is: The 5 slots really
@@ -392,7 +392,7 @@ if(rank == RANK_HARD) {
 	with all the small videos in this blog. Just look at the video immediately
 	above, where I disabled the controls because they would cover the debug text
 	at the bottom… <strong>Edit (2022-10-31):</strong>… which no longer is an
-	issue with our {{Blog_PostLink "2022-10-31" "custom video player"}}.<br />
+	issue with our {{Blog_PostLink "2022-10-31" "custom video player"}}.<br>
 	I already reserved this month's anonymous {{HTML_Currency
 	5000}} contribution for this work, so it would take another {{HTML_Currency
 	1000}} to be turned into a full push.</li>

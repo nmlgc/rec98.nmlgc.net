@@ -9,16 +9,16 @@
 </p><p>
 	(For the sake of readability, "bullets" in this blog post refers to the
 	white 8×8 pellets
-	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgMAAAC5YVYYAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAAlQTFRFAAAAqqr/////38h8nAAAAAF0Uk5TAEDm2GYAAAAeSURBVAjXY+BawKC1gmHVKoZVK0EoaymDaAgDawAAXhcHRDMdG+8AAAAASUVORK5CYII=" />
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAgMAAAC5YVYYAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAAlQTFRFAAAAqqr/////38h8nAAAAAF0Uk5TAEDm2GYAAAAeSURBVAjXY+BawKC1gmHVKoZVK0EoaymDaAgDawAAXhcHRDMdG+8AAAAASUVORK5CYII=">
 	and all 16×16 bullets loaded from <code>MIKO16.BFT</code>, nothing else.)
-</p><hr /><p>
+</p><hr><p>
 	But first, what was going <i>on</i>
 	{{Blog_PostLink "2020-02-16" "in 2020"}}? Spent 4 pushes on the basic types
 	and constants back then, still ended up confusing a couple of things, and
 	even getting some wrong. Like how TH05's "bullet slowdown" flag actually
 	always <i>prevents</i> slowdown and fires bullets at a constant speed
 	instead. {{HTML_Emoji "tannedcirno"}} Or how "random spread" is not the
-	best term to describe that unused bullet group type in TH04.<br />
+	best term to describe that unused bullet group type in TH04.<br>
 	Or that there are two distinct ways of clearing all bullets on screen,
 	which deserve different names:
 </p><figure class="side_by_side">
@@ -48,7 +48,7 @@
 	However, one of the internal step variables is capped at a different number
 	of points for each difficulty (and game), after which the points only
 	increase linearly. Hence, "semi-exponential".
-</p><hr /><p>
+</p><hr><p>
 	On to TH04's bullet spawn code then, because that one can at least be
 	decompiled. And immediately, we have to deal with a pointless distinction
 	between <i>regular</i> bullets, with either a decelerating or constant
@@ -71,7 +71,7 @@
 	search through the set of cases. 𝑂(log&nbsp;𝑛) as the worst case for a
 	<code>switch</code> statement in a C++ compiler from 1994… that's so cool.
 	But still, why are the values in TH04's group type <code>enum</code> all
-	over the place to begin with? {{HTML_Emoji "onricdennat"}}<br />
+	over the place to begin with? {{HTML_Emoji "onricdennat"}}<br>
 	Unfortunately, this optimization is pretty rare in PC-98 Touhou. It only
 	shows up here and in a few places in TH02, compared to at least 50
 	<code>switch</code> value tables.
@@ -83,7 +83,7 @@
 	certainly took quite a bit of that to verify that all of the things which
 	looked like bugs or quirks were in fact correct. And that's how the code
 	for this function ended up with 35% comments and blank lines before I could
-	confidently call it "reverse-engineered"…<br />
+	confidently call it "reverse-engineered"…<br>
 	Oh well, at least it finally fixes a correctness issue from TH01 and TH04,
 	where an invalid bullet group type would fill all remaining slots in the
 	bullet array with identical versions of the first bullet.
@@ -114,7 +114,7 @@
 	exchange for the additional maintenance and compile-time cost of another
 	translation unit. Not worth it – and for a TH05 port, you'd already have to
 	decompile all the rest of the bullet spawning code anyway!
-</p><hr /><p>
+</p><hr><p>
 	The only thing in there that <i>was</i> still somewhat worth being
 	decompiled was the pre-spawn clipping and collision detection function. Due
 	to what's probably a micro-optimization mistake, the TH05 version continues
@@ -139,7 +139,7 @@
 	right by 2 pixels. So, a bullet can be grazed up to 20 pixels right of the
 	player, but only up to 16 pixels left of the player. uth05win also spotted
 	this… and rotated the deltas clockwise by 90°?!
-</p><hr /><p>
+</p><hr><p>
 	Which brings us to the bullet updates… for which I <i>still</i> had to
 	research a decompilation workaround, because
 	{{Blog_PostLink "2021-07-20" "P0148"}} turned out to not help at all?
@@ -164,7 +164,7 @@
 	bullets on screen is ≥ <code>(24 + (difficulty * 8) + rank)</code> in TH04,
 	or <code>(42 + (difficulty * 8))</code> in TH05, Slow Mode reduces the frame
 	rate by 33%, by waiting for one additional VSync event every two frames.
-	<br />
+	<br>
 	The code also reveals a second tier, with 50% slowdown for a slightly
 	higher number of bullets, but that conditional branch can never be executed
 	{{HTML_Emoji "zunpet"}}</li>

@@ -22,7 +22,7 @@
 	(Protip for everyone interested in starting their own ReC project: Just
 	declare one segment per function, right from the start, then group them
 	together to restore the original code segmentation…)
-</p><hr /><p>
+</p><hr><p>
 	Except that TH05 then just throws more of its infamous micro-optimized and
 	undecompilable ASM at you. 🙄 This push covered the function that adjusts
 	the bullet group template based on rank and the selected difficulty,
@@ -63,11 +63,11 @@
 	<i>spread</i> group that was fired before this stack – whenever that was".
 	uth05win also spotted this quirk, considered it a bug, and wrote
 	fanfiction by changing <code>spread_angle_delta</code> to
-	<code>stack_bullet_count</code>.<br />
+	<code>stack_bullet_count</code>.<br>
 	As usual for functions that occur in more than one game, I also decompiled
 	the TH04 bullet group tuning function, and it's perfectly sane, with no
 	such quirks.
-</p><hr /><p>
+</p><hr><p>
 	In the more PI-focused parts of this push, we got the TH05-exclusive
 	smooth boss movement functions, for flying randomly or towards a given
 	point. Pretty unspectacular for the most part, but we've got yet another
@@ -77,7 +77,7 @@
 	both. This might make uth05win a couple of frames slower in all boss
 	fights from Stage 3 on. Hard to measure though – and boss movement partly
 	depends on RNG anyway.
-</p><hr /><p>
+</p><hr><p>
 	Next up: Shinki's background animations – which are actually the single
 	biggest source of position dependence left in TH05.
 </p>

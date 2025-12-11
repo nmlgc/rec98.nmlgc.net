@@ -33,7 +33,7 @@
 	copy-pasta. This time, it didn't even stop at the big copy-pasted code
 	blocks for the rift sprite and 256-pixel circle animations, with the words
 	"redundant" and "unnecessary" ending up a total of 18 times in my source
-	code comments.<br />
+	code comments.<br>
 	But damn is this fight broken. As usual with TH01 bosses, let's start with a
 	high-level overview:
 </p><ul>
@@ -118,7 +118,7 @@
 	that her HP bar is always filled up completely. So ultimately, this bug ends
 	up comparable in seriousness to the
 	{{Blog_PostLink "2020-05-12" "recursion&nbsp;/ stack overflow bug in the memory info screen"}}.
-</p><hr /><p>
+</p><hr><p>
 	These wavy teleport animations point to a quite frustrating architectural
 	issue in this fight. It's not even the fact that unblitting the yellow star
 	sprites rips temporary holes into Elis' sprite; that's almost expected from
@@ -127,7 +127,7 @@
 </p><figure class="pixelated"><img
 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgBAMAAAAnVGd6AAAAIVBMVEUAAADw8PDw0LDQoJCwoABgYGDQAACAEBAwMDCgAABwAFDmaxhHAAAAAXRSTlMAQObYZgAAAhpJREFUeAHtwUF24zgQBcEPAqzJyvsfeB4oyfZ095KahdsR+TMueQHI3wlAlUsSLj5A3gZwgwTIRpLgBcjtADdIQjckAZIEHyDvAF5IEqq7gK4iJPhE3gfwQrYqtsWWBFEFyNsBqkAurLUWQP1DJUG8APkL4BMhCQtYTBZAkoAPuRm+kEzCMRbMyXaQBPxAboIvJJmsNWHOybHgYPMTuZkXknCsCRxzcsBiHhP8BHkLVFGShAVyHHgUExIALwh5IwA3FBLmoo6DOY/jYC1ARcUN8p3hf8AEJsdRx3GwFguOAx/y4wZe1mROxqCLCc05xoA5WfiJvIGKyFprMU6qm+4qxhgs1gJVQBXyFoCAisBiMQZUFWdXcZ6DxVoLVEAVcj/8AhYLBnSdg0E15wDWWgtfcjt8QV24ZEAzBoNtKGstcMuPG/jpBDhPTp4EtzHEC7mf4guX7obm5EF1jIEXyLeGH/AJoLeqbs5T0KEOH3I3/B3Q3VVdVd1sw5d8A+AT+ELXh27cUAIoQSA3EV+or7q9kCRIkii5HYoCKvULVEkSyAXI94ZkA5IE7fpVq7mQ98A8QDao3yHZyL0gD+RC/QHkbpgHcqG+6rpANvIEuQ/ZqM2ytu6q0iIbeYH8eD/yRBJKyyqtS1tbk4S8EXkhoT5YCpZVBUnI/cgXXU9WVXV3VxWahNyMPBEeuru23kDJF5DbkShbPwCa/8G/V+gpftGVucEAAAAASUVORK5CYII="
 alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
-/>
+>
 </figure><p>
 	With this sprite still being part of <code>BOSS5.BOS</code>, Girl-Elis has a
 	total of 9 animation frames, 1 more than the
@@ -143,7 +143,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	image slots to 3. That would have actually <i>saved</i> 420 bytes in
 	addition to the manual synchronization trouble. Looking forward to SinGyoku,
 	that's going to be fun again…
-</p><hr /><p>
+</p><hr><p>
 	As for the fight itself, it doesn't take long until we reach its most janky
 	danmaku pattern, right in phase 1:
 </p><figure {{$vid_3_0.FigureAttrs}}>
@@ -173,7 +173,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	since the bullets are spawned in clockwise order starting at Elis' right
 	side with an angle of <code>0x00</code>. On lower positions though, you can
 	definitely see a difference if the cap were high enough to allow all coded
-	pellets to actually be spawned.<br />
+	pellets to actually be spawned.<br>
 	The Hard version gets dangerously close to the cap by spawning a total of 96
 	pellets. Since this is the only pattern in phase 1 that fires pellets
 	though, you are guaranteed to see all of the unclipped ones.</li>
@@ -185,7 +185,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	lower-right quarter of the circle, because seriously, how would you not spot
 	that? The phase 3 patterns continue with more minor graphical glitches that
 	aren't even worth talking about anymore.
-</p><hr /><p>
+</p><hr><p>
 	And then Elis transforms into her bat form at the beginning of Phase 5,
 	which displays some rather unique hitboxes. The one against the Orb is fine,
 	but the one against player shots…
@@ -225,7 +225,7 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	surrounding circle, but there you at least get a flash animation to justify
 	it. All the overlap is actually quite a good reason for not even attempting
 	to {{Blog_PostLink "2021-11-08" "mess with the hardware color palette instead"}}.
-</p><hr /><p>
+</p><hr><p>
 	And that's the 4th PC-98 Touhou boss decompiled, 27 to go… but wait, all
 	these quirks, and I still got nothing about <a
 	href="https://youtu.be/Al0KTB_0u4A?t=80">the one actual crash that can
@@ -316,8 +316,8 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 		everything else is clipped already, right? {{HTML_Emoji "godzun"}}</li>
 	</ol></li>
 </ol><figure class="side_by_side">
-	<img src="{{$pic_1}}" class="th01_playfield" />
-	<img src="{{$pic_2}}" class="th01_playfield" />
+	<img src="{{$pic_1}}" class="th01_playfield">
+	<img src="{{$pic_2}}" class="th01_playfield">
 	<figcaption>Possible laser states that will cause the fault, with some debug
 	output to help understand the cause, and any pellets removed for better
 	readability. This can happen for all bosses that can potentially have
@@ -366,14 +366,14 @@ alt="An unused wave animation frame from TH01's BOSS5.BOS" style="height: 96px;"
 	heap corruption in test or debug mode – simply changing the <code>==</code>
 	comparison to <code>&lt;=</code> is enough to avoid it, and negative HP will
 	still create aesthetic glitch art.
-</p><hr /><p>
+</p><hr><p>
 	Once again, I then was left with ½ of a push, which I finally filled with
 	some <code>FUUIN.EXE</code> code, specifically the verdict screen. The most
 	interesting part here is the player title calculation, which is quite
 	sneaky: There are only 6 skill <i>levels</i>, but three <i>groups</i> of
 	titles for each level, and the title you'll see is picked from a random
 	group. It looks like this is the first time anyone has documented the
-	calculation?<br />
+	calculation?<br>
 	As for the levels, ZUN definitely didn't expect players to do particularly
 	well. With a 1cc being the standard goal for completing a Touhou game, it's
 	especially funny how TH01 expects you to continue <i>a lot</i>: The code has

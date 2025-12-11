@@ -61,13 +61,13 @@
 			alt="The proportional text section from TH03's MIKOFT.BFT"
 			width="544"
 			hidden
-		/>
+		>
 		<img
 			id="mikoft-grid-{{.Date}}"
 			src="{{$mikoft_grid}}"
 			alt="The proportional text section from TH03's MIKOFT.BFT, with the 16×16 gaiji grid overlaid"
 			width="544"
-		/>
+		>
 	</div>
 </figure><p>
 	If your combined amount of text is short enough to fit into the PC-98's 256 gaiji slots, this is a nice way of using hardware features to replace the need for a proportional text renderer. It especially simplifies transitions between menus – simply wiping the entire TRAM is both cheap and certainly less error-prone than (un)blitting pixels in VRAM, which {{Blog_PostLink "2023-11-30#main" "ZUN was always kind of sloppy at"}}.<br>
@@ -287,12 +287,12 @@ for(int stage = 0; stage &lt; 6; stage++) {
 		<img
 			src="{{$midboss3}}"
 			alt="The first animation frame of TH02's Stage 3 midboss, taken from STAGE2.BMT"
-		/>
+		>
 		<span>Back then, we left with the positions of the Five Magic Stones, where ZUN's choice of storing them in arrays was almost revolutionary compared to what we saw in TH01. The same now applies to the state flags and total damage amount of not just the boss of Stage 3, but also the two independently damageable entities of the stage's midboss. In total, all of the newly identified arrays made up 3.36% of all memory references in TH02, and we're not even <i>done</i> with Stage 3.</span>
 		<img
 			src="{{$midboss3}}"
 			alt="The first animation frame of TH02's Stage 3 midboss, taken from STAGE2.BMT"
-		/>
+		>
 	</span>
 </p><hr id="ports-{{.Date}}"><p>
 	Actually, you know what, let's round out that second push with even more low-hanging PI fruit and ensure {{Blog_PostLink "2019-12-28" "technical position independence"}} for TH03's <code>MAINL.EXE</code>. This was very helpful considering that I'm going to build netplay into the <code>anniversary</code> branch, whose <code>debloated</code> foundation {{Blog_PostLink "2023-03-05#single" "aims to merge every game into as few executables as possible"}}. Due to TH03's overall lower level of bloat and the dedicated SPRITE16-based rendering code in <code>MAIN.EXE</code>, it might not make <i>as</i> much sense to merge all three of TH03's .EXE binaries as it did for TH01, and <code>MAIN.EXE</code>'s lack of position independence currently prevents this anyway. However, merging just <code>OP.EXE</code> and <code>MAINL.EXE</code> makes tremendous sense not just for TH03, but for the other three games as well. These binaries have a much smaller ratio of ZUN code to library code, and use the same file formats and subsystems.<br>

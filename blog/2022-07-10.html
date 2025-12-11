@@ -46,7 +46,7 @@
 	TH01 done – especially since I expect YuugenMagan to come with lots of
 	redundant code. Therefore, please also request a secondary priority for
 	these final TH01 RE contributions.</li>
-</ul><hr /><p>
+</ul><hr><p>
 	So, how did this card-flipping stage obstacle delivery get so horribly
 	delayed? With all the different layouts showcased in the 28 card-flipping
 	stages, you'd expect this to be among the more stable and bug-free parts of
@@ -67,7 +67,7 @@ if(delta_y_between_orb_and_bumper <= 0) {
 	Immediately, you wonder why these assignments only exist for the Y
 	coordinate. Sure, hitting a bumper from the left or right side should happen
 	less often, but it's definitely possible. Is it really a good idea to warp
-	the Orb to the top or bottom edge of a bumper regardless?<br />
+	the Orb to the top or bottom edge of a bumper regardless?<br>
 	What's more important though: The fact that these immediate assignments
 	exist at all. The game's regular Orb physics work by producing a Y velocity
 	from the single force acting on the Orb and a gravity factor, and are
@@ -153,7 +153,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	Forgetting to handle ⅖ of your discrete X velocity cases is simply not
 	something you do by accident. So we might as well say that ZUN deliberately
 	designed the game to behave exactly as it does in this regard.
-</p><hr /><p>
+</p><hr><p>
 	Bumpers also come in vertical or horizontal bar shapes. Their collision
 	handling also turns off further collision testing for the next 7 frames, and
 	doesn't do any manual coordinate assignment. That's definitely a step up in
@@ -202,7 +202,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	<figcaption>
 		This footage was recorded without the workaround I am about to describe.
 		It does not reflect the behavior of the original game. <strong>You
-		cannot do this in the original game.</strong><br />
+		cannot do this in the original game.</strong><br>
 		While the visualization reveals small sections where three hitboxes
 		overlap, the Orb can never actually collide with three of them at the
 		same time, as those 3-hitbox regions are 2 pixels smaller than they
@@ -232,7 +232,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	<i>any</i> vertical bar for the next 7 frames. This quick hack made all
 	vertical bars work as intended, and avoided the need for involving the Orb's
 	X velocity in any kind of physics system. {{HTML_Emoji "zunpet"}}
-</p><hr /><p>
+</p><hr><p>
 	<strong>Edit (2022-07-12):</strong> This flag only works around glitches
 	that would be caused by simultaneously colliding with more than one vertical
 	bar. The actual response to a bumper bar collision still remains unaffected,
@@ -265,7 +265,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	href="https://touhou-memories.com/">touhou-memories</a> for bringing these
 	issues to my attention! That definitely was a glaring omission from the
 	initial version of this blog post.
-</p><hr /><p>
+</p><hr><p>
 	With that clarified, we can now try mashing the Orb into these two vertical
 	bars:
 </p><figure>{{call .VideoPlayer $vid_vbar}}</figure><p>
@@ -290,7 +290,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	at least has a <i>chance</i> to last for the full 7 frames. This difference
 	adds those crucial extra frames of upward movement, which add up to send the
 	Orb to the top. Without the flag, you'd always see the Orb oscillating
-	between a fixed range of the bar column.<br />
+	between a fixed range of the bar column.<br>
 	Finally, it's the "top of playfield" force that gradually slows down the Orb
 	and makes sure it ultimately only moves at sub-pixel velocities, which have
 	no visible effect. Because
@@ -303,7 +303,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	the Y velocity, it's already too late: The new velocity can't be larger than
 	0﻿.﻿5, and the Orb only has 1 or 2 frames before the flag reset causes it to
 	be bounced back up to the top again.
-</p><hr /><p>
+</p><hr><p>
 	Portals, on the other hand, turn out to be much simpler than the <a
 	href="https://en.touhouwiki.net/index.php?title=Highly_Responsive_to_Prayers%2FGameplay&type=revision&diff=56492&oldid=56491">old
 	description that ended up on Touhou Wiki in October 2005</a> might suggest.
@@ -325,7 +325,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	ZUN instead iterates over all obstacles, selects any non-entered portal with
 	a chance of ¼, and just gives up if that dice roll wasn't successful after
 	16 loops over the whole array, defaulting to the entered portal in that
-	case.<br />
+	case.<br>
 	In all its silliness though, this works perfectly fine, and results in a
 	chance of 0.75<sup>16(𝑛&nbsp;-&nbsp;1)</sup> for the Orb exiting out of the
 	same portal it entered, with 𝑛 being the total number of portals in a
@@ -338,14 +338,14 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	matter whether it already shows up inside the sprite of the destination
 	portal. Neither of the two portal sprites is reset when this happens,
 	leading to "two Orbs" being visible simultaneously.
-	{{HTML_Emoji "tannedcirno"}}{{HTML_Emoji "onricdennat"}}<br />
+	{{HTML_Emoji "tannedcirno"}}{{HTML_Emoji "onricdennat"}}<br>
 	This makes very little sense no matter how you look at it. The Orb doesn't
 	receive a new velocity or force when this happens, so it will simply
 	re-enter the same portal once the gameplay resumes on Reimu's next life:
 </p><figure>{{call .VideoPlayer $vid_p}}</figure><p>
 	And that's it! At least the turrets don't have anything notable to say about
 	them {{Blog_PostLink "2020-11-30" "that I haven't said before"}}.
-</p><hr /><p>
+</p><hr><p>
 	That left another ½ of a push over at the end. Way too much time to finish
 	<code>FUUIN.exe</code>, way too little time to start with Mima… but the bomb
 	animation fit perfectly in there. No secrets or bugs there, just a bunch of
@@ -356,7 +356,7 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	and 8 pixels per frame respectively. At these comparatively slow speeds, the
 	byte alignment of each square adds some further noise to the discoloration
 	pattern… if you even notice it below all the shaking and seizure-inducing
-	hardware palette manipulation.<br />
+	hardware palette manipulation.<br>
 	And yes, due to the very destructive nature of the effect, the game does in
 	fact rely on it only being applied to VRAM page 0. While that will cause
 	every moving sprite to tear holes into the inverted squares along its

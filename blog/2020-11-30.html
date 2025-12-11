@@ -20,7 +20,7 @@
 	it?"</i> And so, the 22-byte header still references some music and
 	background files that aren't part of the final game. The game doesn't use
 	<i>anything</i> from there, and instead derives those file names from the
-	scene ID.<br />
+	scene ID.<br>
 	That's probably nothing new to anyone who has ever looked at TH01's data
 	files. In a slightly more interesting discovery though, seeing the
 	{{Blog_PostLink "2020-07-27" ".GRF extension"}}, in some of the file names
@@ -39,7 +39,7 @@
 	<figure><a href="{{$pic}}"><img
 		src="{{$pic}}"
 		alt="Experimenting with putting obstacles on top of cards in TH01"
-	/></a></figure>
+	></a></figure>
 	<p>As you can see, the final version of the blitting code was not written
 	with such overlaps in mind either, blitting the <i>cards</i> on top of all
 	the <i>obstacles</i>, and not the other way round.</p>
@@ -75,7 +75,7 @@
 	how the layout of the internal card and obstacle SoA classes is quite
 	disjointed. So here's the new ZUN bugs you've probably already been
 	expecting!
-</p><hr /><p>
+</p><hr><p>
 	Cards and obstacles are blitted to both VRAM pages. This way, any other
 	entities moving on top of them can simply be unblitted by restoring pixels
 	from VRAM page 1, without requiring the stationary objects to be redrawn
@@ -93,7 +93,7 @@
 	address in a regular <code>far</code> pointer rather than a
 	<code>huge</code> one. This way, the game <i>still</i> can only display a
 	total of 102 objects (i.&nbsp;e., cards and obstacles combined) per stage,
-	without any unblitting glitches.<br />
+	without any unblitting glitches.<br>
 	What a shame, that limit could have been 127 if ZUN didn't needlessly
 	allocate memory for <i>alpha planes</i> when backing up VRAM content.
 	{{HTML_Emoji "onricdennat"}}
@@ -102,7 +102,7 @@
 	64 KiB, trying to save the background of the 103rd object is guaranteed to
 	corrupt the memory block header at the beginning of the returned segment.
 	{{HTML_Emoji "zunpet"}} When TH01 runs in <strong>d</strong>ebug mode, it
-	correctly reports a corrupted heap in this case.<br />
+	correctly reports a corrupted heap in this case.<br>
 	After detecting such a corruption, the game loudly reports it by playing the
 	"player hit" sound effect and locking up, freezing any further gameplay or
 	rendering. The locking loop can be left by pressing ↵&nbsp;Return, but the
@@ -115,13 +115,13 @@
 	just throws away its C heap when restarting the process for a boss. But then
 	again, holding ↵&nbsp;Return will also auto-flip all cards on the way there…
 	🤨
-</p><hr /><p>
+</p><hr><p>
 	Finally, some unused content! Upon discovering TH01's stage selection debug
 	feature, probably everyone tried to access Stage 21,
 	just to see what happens, and indeed landed in an actual stage, with a
 	black background and a weird color palette. Turns out that ZUN <i>did</i>
 	ship an unused scene in <code>SCENE7.DAT</code>, which is exactly what's
-	loaded there.<br />
+	loaded there.<br>
 	However, it's easy to believe that this is just garbage data (as I
 	initially did): At the beginning of "Stage 22", the game seems to enter an
 	infinite loop somewhere during the flip-in animation.
@@ -150,8 +150,8 @@
 	<a href="{{$picFN}}"><img
 		src="{{$picFN}}"
 		alt="TH01 stage {{.}}, loaded from <code>STAGE7.DAT</code>"
-	/></a>
-{{- end}}</figure><hr /><p>
+	></a>
+{{- end}}</figure><hr><p>
 	Wow, what a mess. All that was just a bit too much to be covered in two
 	pushes… Next up, assuming the current subscriptions: Taking a vacation with
 	one smaller TH01 push, covering some smaller functions here and there to

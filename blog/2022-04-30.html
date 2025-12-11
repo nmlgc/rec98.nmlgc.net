@@ -45,7 +45,7 @@
 </ul><p>
 	Declaring a separate structure instance with the static data for every
 	pattern would be both safer <i>and</i> more space-efficient, and there's
-	more than enough space left for that in the game's data segment.<br />
+	more than enough space left for that in the game's data segment.<br>
 	But all in all, the pattern functions are short, sweet, and easy to follow.
 	The <a href="https://www.youtube.com/watch?v=W8UHzPi4K7c&t=136s">"devil"
 	pattern</a> <i>is</i> significantly more complex than the others, but still
@@ -72,7 +72,7 @@
 			<figcaption>Of course, there are more than enough safespots <i>between</i> the lasers.</figcaption>
 		</figure>
 	</div></li>
-</ul><hr /><p>
+</ul><hr><p>
 	Speaking about that wing sprite: If you look at <code>ST05.BB2</code> (or
 	any other file with a large sprite, for that matter), you notice a rather
 	weird file layout:
@@ -80,7 +80,7 @@
 	<img
 	src="{{$pic1}}"
 	alt="Raw file layout of TH05's ST05.BB2, demonstrating master.lib's supposed BFNT width limit of 64 pixels"
-	style="height: 384px;" />
+	style="height: 384px;">
 	<figcaption>A large sprite split into multiple smaller ones with a width of
 	64 pixels each? What's this, hardware sprite limitations? On <i>my</i>
 	PC-98?!</figcaption>
@@ -91,7 +91,7 @@
 	<code>MASTER.MAN</code> claims. Whatever the restriction was, it seems to be
 	completely nonexistent as of master.lib version 0.23, and none of the
 	master.lib functions used by the games have any issues with larger
-	sprites.<br />
+	sprites.<br>
 	Since ZUN stuck to the supposed 64-pixel width limit though, it's now the
 	<i>game</i> that expects Shinki's winged form to consist of 4 physical
 	sprites, not just 1. Any conversion from another, more logical sprite sheet
@@ -104,7 +104,7 @@
 	now been fixed – just in case there are some underground modders out there
 	who used these scripts and wonder why their game crashed as soon as the
 	Shinki fight started.
-</p><hr /><p>
+</p><hr><p>
 	And then the code quality takes a nosedive with Shinki's main function.
 	{{HTML_Emoji "onricdennat"}} Even in TH05, these boss and midboss update
 	functions are still very imperative:
@@ -146,7 +146,7 @@
 	<i>before</i> the "devil" pattern. The main function then sequence-breaks
 	right to the defeat phase, skipping the final pattern with the burning Makai
 	background. Luckily, the HP boundaries are far away enough to make this
-	impossible in practice.<br />
+	impossible in practice.<br>
 	The takeaway here: If you <i>want</i> to use the state bytes for your custom
 	boss script mods, alias them to your own 16-byte structure, and limit each
 	of the bytes to a clearly defined meaning across your entire boss script.
@@ -165,11 +165,11 @@
 	requires new code, should ideally look a bit prettier than just removing
 	cheetos between one frame and the next, and I'd still like it to fit within
 	the original position-dependent code layout… Let's do that some other
-	time.<br />
+	time.<br>
 	Not much to say about the Stage 1 midboss, or midbosses in general even,
 	except that their update functions have to imperatively handle even more
 	subsystems, due to the relative lack of helper functions.
-</p><hr /><p>
+</p><hr><p>
 	The remaining ¾ of the third push went to a bunch of smaller RE and
 	finalization work that would have hardly got any attention otherwise, to
 	help secure that 50% RE mark. The nicest piece of code in there shows off
@@ -188,13 +188,13 @@ endm
 </pre><p>
 	Thanks to Turbo C++'s inlining capabilities, the loop body even decompiles
 	into a surprisingly nice one-liner. What a beautiful micro-optimization, at
-	a place where micro-optimization doesn't hurt and is almost expected.<br />
+	a place where micro-optimization doesn't hurt and is almost expected.<br>
 	Unfortunately, the micro-optimizations went all downhill from there,
 	becoming increasingly dumb and undecompilable. Was it really necessary to
 	save 4 x86 instructions in the highly unlikely case of a new spark sprite
 	<img
 	src="data:image/gif;base64,R0lGODlhQAAIAPABAOy8qv///yH5BAUKAAEALAAAAABAAAgAAAJIjGGJye28nnygxuMu0hOrwE2h1yyRCZHeqaJgplhnVV6HDdIQrr/5LavxhsIMceVqqXwhlu/zZC6jTtIIBqV2rtFS5zsF53QFADs="
-	/> being spawned outside the playfield? That one 2D polar→Cartesian
+	> being spawned outside the playfield? That one 2D polar→Cartesian
 	conversion function then pointed out Turbo C++ 4.0J's woefully limited
 	support for 32-bit micro-optimizations. The code generation for 32-bit
 	{{Blog_PostLink "2022-02-18" "pseudo-registers"}} is so bad that they almost
@@ -202,12 +202,12 @@ endm
 	flat out doesn't support anything 32-bit. No use in decompiling a function
 	that you'd have to entirely spell out in machine code, especially if the
 	same function already exists in multiple other, more idiomatic C++
-	variations.<br />
+	variations.<br>
 	Rounding out the third push, we got the TH04/TH05 <code>DEMO?.REC</code>
 	replay file reading code, which should finally prove that nothing about the
 	game's original replay system could serve as even just the foundation for
 	community-usable replays. Just in case anyone was still thinking that.
-</p><hr /><p>
+</p><hr><p>
 	Next up: Back to TH01, with the Elis fight! Got a bit of room left in the
 	cap again, and there are <i>a lot</i> of things that would make a lot of
 	sense now:

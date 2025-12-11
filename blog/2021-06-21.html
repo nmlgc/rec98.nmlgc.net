@@ -12,7 +12,7 @@
 	pixels worth of bits, ending up with a frame size of 128 bytes, and a
 	per-frame waste of 59 bytes. {{HTML_Emoji "tannedcirno"}} At least it was
 	possible to decompile the core blitting function as <code>__fastcall</code>
-	for once. <br />
+	for once. <br>
 	But wait, TH05 comes with, and loads, a bomb .BB file for every character,
 	not just for the Reimu and Yuuka bomb transitions you see in-game… 🤔
 	Restoring those unused stage tile&nbsp;→&nbsp;bomb image transition
@@ -32,7 +32,7 @@
 	Oh well, it's not like I have any idea what I'm talking about here. I'd
 	better stop talking about anything relating to VRAM performance on PC-98…
 	{{HTML_Emoji "onricdennat"}}
-</p><hr /><p>
+</p><hr><p>
 	Second, it finally was time to solve the long-standing confusion about all
 	those callbacks that are supposed to render the playfield background. Given
 	the aforementioned static bomb background images, ZUN chose to make this
@@ -47,7 +47,7 @@
 	ZUN does indeed dynamically change hardware color #0 based on the current
 	boss phase, the remaining one function for Shinki, and all of EX-Alice's
 	background rendering becomes very straightforward and understandable.
-</p><hr /><p>
+</p><hr><p>
 	Meanwhile, {{DB_CustomerByID 2}} told me about his plans to publicly
 	release {{Blog_PostLink "2020-09-17" "his TH05 scripting toolkit"}} once
 	TH05's <code>MAIN.EXE</code> would hit around 50% RE! That pretty much

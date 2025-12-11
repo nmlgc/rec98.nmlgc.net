@@ -15,7 +15,7 @@
 	name after 1000… <i>key presses</i>? Not frames? Why. Like, how do you
 	even realistically such a number. (Best guess: It's a hidden easter egg to
 	amuse players who place drinking glasses on cursor keys. Or beer bottles.)
-	<br />
+	<br>
 	That's all the differences that are <i>maybe</i> visible if you squint
 	hard enough. On top of that though, we got a bunch of further, minor code
 	organization differences that serve no purpose other than to waste
@@ -34,7 +34,7 @@
 	cursor would simply be two variables, indicating the logical row and
 	column inside the character map. When rendering, you'd then transform
 	these into screen space. This can keep the on-screen position constants in
-	a single place of code.<br />
+	a single place of code.<br>
 	TH01 does the opposite: The selected character is stored directly in terms
 	of its on-screen position, which is then mapped <i>back</i> to a character
 	index for every processed input and the subsequent screen update. There's
@@ -44,7 +44,7 @@
 	<li>Which might not be <i>as</i> bad if the character map had a uniform
 	grid structure, with no gaps. But the one in TH01 looks like this:
 	<figure><a
-href="{{$pic1}}"><img src="{{$pic1}}" alt="TH01 high score name character map" /></a></figure
+href="{{$pic1}}"><img src="{{$pic1}}" alt="TH01 high score name character map"></a></figure
 >
 	And with no sense of abstraction anywhere, both input handling and
 	rendering end up with a separate <code>if</code> branch for at least 4 of

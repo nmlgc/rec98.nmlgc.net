@@ -16,7 +16,7 @@
 	readable C. This was probably motivated by ZUN insisting that his modified
 	master.lib function for blitting particles takes its X and Y parameters as
 	registers. If he had just used the <code>__fastcall</code> convention, he
-	also would have got the sprite ID passed as a register. 🤷<br />
+	also would have got the sprite ID passed as a register. 🤷<br>
 	So, we <i>really</i> don't want to be forced into inline assembly just
 	because of the third comparison in the otherwise perfectly decompilable
 	four-comparison <code>if()</code> expression that prevents invisible
@@ -24,13 +24,13 @@
 	instead, which only the linker gets to resolve to the actual value of 0.
 	{{HTML_Emoji "tannedcirno"}} This way, the compiler has to make room for
 	any 16-bit literal, and can't optimize anything.
-</p><hr /><p>
+</p><hr><p>
 	And then we go straight from {{HTML_TagInline "micro-optimization"}} to
 	{{HTML_TagInline "waste"}}, with all the duplication in the code that
 	animates all those particles together with the zooming and spinning lines.
 	This push decompiled 1.31% of all code in TH05, and thanks to alignment,
 	we're still missing Shinki's high-level background rendering function that
-	calls all the subfunctions I decompiled here.<br />
+	calls all the subfunctions I decompiled here.<br>
 	With all the manipulated state involved here, it's not at all trivial to
 	see how this code produces what you see in-game. Like:<ol>
 	<li>If all lines have the same Y velocity, how do the other three lines in

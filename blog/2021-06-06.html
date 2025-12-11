@@ -44,14 +44,14 @@
 	will fund – no more manual <a href="/faq#duration">divisions</a> required.
 	Shoutout to the one email I received, which pointed out this potential
 	improvement!
-</p><hr /><p>
+</p><hr><p>
 	As for the "invisible" changes: The one main feature of this website, the
 	aforementioned calculation of the progress metrics, also turned out as its
 	biggest annoyance over the years. It takes a little while to parse all the
 	big .ASM files in the source tree, once for every push that can affect the
 	average number of removed instructions and unlabeled addresses. And without
 	a cache, we've had to do <i>that</i> every time we re-launch the app server
-	process.<br />
+	process.<br>
 	Fundamentally, this is – you might have guessed it – a dependency tracking
 	problem, with two inputs: the .ASM files from the ReC98 repo, and the
 	Golang code that calculates the instruction and PI numbers. Sure, the code
@@ -77,7 +77,7 @@
 	parallelizing that parsing process onto all available CPU cores seemed
 	enough in 2019 when this site launched. Back then, the estimates were
 	calculated from slightly over 10 million lines of ASM, which took about 7
-	seconds to be parsed on my mid-range dev system.<br />
+	seconds to be parsed on my mid-range dev system.<br>
 	Fast forward to P0142 though, and we have to parse 34.3 million lines of
 	ASM, which takes about 26 seconds on my dev system. That would have only
 	got worse with every new delivery, especially since this production server
@@ -92,7 +92,7 @@
 </p><p>
 	So with the tag system, as always, taking longer and consuming more pushes
 	than I had planned, the time had come to finally address the underlying
-	dependency tracking problem.<br />
+	dependency tracking problem.<br>
 	Initially, this sounded like a nail that was tailor-made for
 	{{Blog_PostLink "2020-09-03" "my favorite hammer, Tup"}}: Move the parser
 	to a separate binary, gather the list of all commits via <code>git
@@ -117,7 +117,7 @@
 	makes up a binary at runtime via some kind of reflection, right? Right? …Of
 	<i>course</i> not, in the great Unix tradition, this functionality is only
 	available as a CLI tool that prints its result to <code>stdout</code>.
-	🙄<br />
+	🙄<br>
 	But sure, no problem, let's just <code>exec()</code> a separate process on
 	the parser's library package file… oh wait, such a thing doesn't exist
 	anymore, unless you manually <kbd>install</kbd> the package. This would
@@ -133,7 +133,7 @@
 	starters, one does not simply <i>serialize</i> the returned AST. At least
 	into Golang's own, most "native" <a hreF="https://blog.golang.org/gob">Gob
 	format</a>, which requires all types from the <code>go/ast</code> package
-	to be manually registered first.<br />
+	to be manually registered first.<br>
 	That leaves
 	<a href="https://golang.org/pkg/go/ast/#Fprint">ast.Fprint()</a> as the
 	only thing close to a ready-made serialization function… and guess what,
@@ -143,7 +143,7 @@
 	Guess there's no way around the simplest, most stupid way of simply
 	calculating any cryptographically secure hash over the ASM parser file. 😶
 	It's not like we frequently change comments in this file, but still, this
-	could have been so much nicer.<br />
+	could have been so much nicer.<br>
 	Oh well, at least I <i>did</i> get that issue resolved now, in an
 	acceptable way. If you ever happened to see this website rebuilding: That
 	should now be a matter of seconds, rather than minutes. Next up: Shinki's

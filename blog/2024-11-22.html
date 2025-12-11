@@ -37,9 +37,9 @@
 	width="9"
 	height="9"
 	alt=""
-/> sprite for an individual stat star. There's <code>SLWIN.CDG</code>, but that file just contains a full stat window with five stars in all three rows. And sure enough, ZUN renders each character's stats not by blitting sprites, but by painting <code>(5 - value)</code> yellow rectangles over the existing stars in that image. {{HTML_Emoji "tannedcirno"}}
+> sprite for an individual stat star. There's <code>SLWIN.CDG</code>, but that file just contains a full stat window with five stars in all three rows. And sure enough, ZUN renders each character's stats not by blitting sprites, but by painting <code>(5 - value)</code> yellow rectangles over the existing stars in that image. {{HTML_Emoji "tannedcirno"}}
 </p><figure class="pixelated" style="width: 256px;">
-	<img src="{{$slwin}}" width="256" alt="TH03's SLWIN.CDG, showing off how ZUN baked all 15 possible stat stars into the image" />
+	<img src="{{$slwin}}" width="256" alt="TH03's SLWIN.CDG, showing off how ZUN baked all 15 possible stat stars into the image">
 	<figcaption>The only stat-related image you will find as part of the game files. The number of stat stars per character is hardcoded and not based on any other internal constant we know about.</figcaption>
 </figure>
 	Together with the <span style="color: #800">EXTRA🎔</span> window and the question mark portrait for Story Mode, all of this sums up to 255,216&nbsp;bytes of image data across 14 files. You could remove the unnecessary alpha plane from <code>SLEX.CD2</code> (-1,584 bytes) or store <code>CHNAME.BFT</code> in a 1-bit format (-6,912 bytes), but using 3.3% less memory barely makes a difference in the grand scheme of things.<br>
@@ -102,7 +102,7 @@
 	<li>The small trailing curves have a noticeable discontinuity where they suddenly get rotated by ±90° between the last and first frame of the animation cycle.<br>
 	This quirk comes down to the small curve's <code>ẟ<sub>y</sub></code> angle offset being calculated as <code>((c/2)-i)</code>, with <code>i</code> being the number of the trailing curve. Halving the main cycle variable effectively restricts this smaller curve to only the first half of the sine oscillation, between [<code>0x00</code>,&nbsp;<code>0x80</code>[. For the main curve, this is fine as <code>i</code> is always zero. But once the trailing curves leave us with a negative value after the subtraction, the resulting angle suddenly flips over into the second half of the sine oscillation that the regular curve never touches. And if you recall how a sine wave looks, the resulting visual rotation immediately makes sense:
 	<figure>
-		<embed src="{{call .PostFileURL "TH03-Select-small-curve-quirk.svg"}}" />
+		<embed src="{{call .PostFileURL "TH03-Select-small-curve-quirk.svg"}}">
 		<figcaption>Negated input, negated output.</figcaption>
 	</figure>
 	Removing the division would be the most obvious fix, but that would double the speed of the sine oscillation and change the shape of the curve way beyond ZUN's intentions. The second-most obvious fix involves matching the trailing curves to the movement of the main one by restricting the subtraction to the first half of the oscillation, i.e., calculating <code>ẟ<sub>y</sub></code> as <code>(((c/2)-i)&nbsp;%&nbsp;0x80)</code> instead. With <code>c</code> increasing by <code>0x02</code> on each frame of the animation, this fix would only affect the first 8 frames.</li>
@@ -132,7 +132,7 @@
 	Frame 97 is the much more intriguing one, though. While it's mildly amusing to see the palette actually go <i>brighter</i> for a single frame before it fades out, the interesting aspect here is that 2) practically guarantees its palette changes to happen mid-frame. And since the CRT's electron beam might be anywhere at that point… yup, that's how you'd get more than 16 colors out of the PC-98's 16-color graphics mode. 🎨<br>
 	Let's exaggerate the brightness difference a bit in case the original difference doesn't come across too clearly on your display:
 </p><figure class="pixelated fullres">
-	<img src="{{$palette}}" width="640" alt="Frame 97 of the video above, with a brighter initial palette to highlight the mid-frame palette change" />
+	<img src="{{$palette}}" width="640" alt="Frame 97 of the video above, with a brighter initial palette to highlight the mid-frame palette change">
 	<figcaption>
 		Probably not too much of a reason for demosceners to get excited; generic PC-98 code that doesn't try to target specific CPUs would still need a way of reliably timing such mid-frame palette changes. Bit 6 (<code>0x40</code>) of I/O port <code>0xA0</code> indicates HBlank, and the usual documentation suggests that you could just busy-wait for that bit to flip, but an HBlank interrupt would be much nicer.
 	</figcaption>

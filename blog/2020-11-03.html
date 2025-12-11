@@ -10,7 +10,7 @@
 	edges, indicated in <span style="color: red;">red</span> in the picture
 	below.
 <figure><a
-	href="{{$pic}}"><img src="{{$pic}}" alt="Backed-up VRAM area in TH04's player character selection" /></a></figure
+	href="{{$pic}}"><img src="{{$pic}}" alt="Backed-up VRAM area in TH04's player character selection"></a></figure
 ><p>
 	These take up just 4 KB of heap memory… but require custom blitting
 	functions, and expanding this explicitly hardcoded approach to TH05's 4
@@ -19,7 +19,7 @@
 	area in TH05, saving the entire 640×400 screen, and thus spending 128 KB
 	of heap memory on this rather simple selection shadow effect.
 	{{HTML_Emoji "zunpet"}}
-</p><hr /><p>
+</p><hr><p>
 	So, this really wasn't something to quickly get done during the first half
 	of a push, even after already having done TH05's equivalent of this menu.
 	But since life is very busy right now, I also used the occasion to start
@@ -51,7 +51,7 @@
 	helping much. Therefore, my upstream version of ReC98 will never include
 	all of master.lib. There's no point in lengthening compile times for
 	everyone by default, and those <i>will</i> be getting quite noticeable
-	after moving to a full 16-bit build process.<br />
+	after moving to a full 16-bit build process.<br>
 	(Actually, what retro system ports should <i>rather</i> be doing: Get rid
 	of master.lib's original ASM code, replace it with
 	<a href="https://www.youtube.com/watch?v=zBkNBP00wJE">readable, modern
@@ -66,7 +66,7 @@
 	after roughly 60% of the transition has been completed, we get median
 	build times of 319&nbsp;ms for <code>master.h</code>, and 144&nbsp;ms for
 	<code>master.hpp</code> on my (admittedly rather slow) DOSBox setup.
-	Nice!<br />
+	Nice!<br>
 	As of this push, ReC98 consists of 107 translation units that have to be
 	compiled with Turbo C++ 4.0J. Fully rebuilding all of these currently
 	takes roughly 37.5&nbsp;seconds in DOSBox. After the transition to
@@ -74,7 +74,7 @@
 	seconds off this time, simply by switching header files. And that's just
 	the beginning, as this will also pave the way for further
 	<code>#include</code> optimizations. Life in this codebase will be great!
-</p><hr /><p>
+</p><hr><p>
 	Unfortunately, there wasn't enough time to repay some of the actual
 	technical debt I was looking forward to, after all of this. Oh well, at
 	least we now also have nice identifiers for the three different boldface

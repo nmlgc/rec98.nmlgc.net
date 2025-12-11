@@ -11,7 +11,7 @@
 	.ASM translation units didn't assemble anymore on this version. I've only
 	spotted this on my own because I casually compiled ReC98 somewhere else –
 	on my development system, I happened to have TASM32 version 5.0 in the
-	<code>PATH</code> during all this time.<br />
+	<code>PATH</code> during all this time.<br>
 	At least this was a good occasion to
 	<a href="https://github.com/nmlgc/ReC98/commit/8bcf5d7">get rid of some
 	weird segment alignment workarounds from 2015, and replace them with the
@@ -24,7 +24,7 @@
 	But that might be exactly
 	<i>because</i> it doesn't seem like something you can trivially outsource
 	to one of the big CI providers for open-source projects, and quickly set
-	it up with a few lines of YAML.<br />
+	it up with a few lines of YAML.<br>
 	That might still work in the beginning, and we might get by with a regular
 	64-bit Windows 10 and DOSBox running the exact build tools from the DevKit.
 	Ideally, though, such a server should really run the optimal configuration
@@ -33,12 +33,12 @@
 	there offers. Then, we'd optimally expand to Linux, every other Windows
 	version down to 95, emulated PC-98 systems, other TASM versions… yeah, it'd
 	be a lot. An experimental project all on its own, with additional hosting
-	costs and probably diminishing returns, the more it expands…<br />
+	costs and probably diminishing returns, the more it expands…<br>
 	I've added it as a category to the order form, let's see how much interest
 	there is once the store reopens (which will be at the beginning of May, at
 	the latest). That aside, it would {{Blog_PostLink "2020-07-12" "also"}} be
 	a great project for outside contributors!
-</p><hr /><p>
+</p><hr><p>
 	So, technical debt, part 8… and right away, we're faced with TH03's
 	low-level input function, which
 	{{Blog_PostLink "2020-11-16" "once"}}
@@ -69,7 +69,7 @@
 	ways, but does in fact mark the code segment as word-aligned. We can
 	consider ourselves quite lucky that we get to use Turbo C++ 4.0, because
 	this feature isn't available in any previous version of Borland's C++
-	compilers.<br />
+	compilers.<br>
 	That allowed us to restore all the decompilations I previously threw away…
 	well, two of the three, that lookup table generator was too much of a mess
 	in C. {{HTML_Emoji "tannedcirno"}} But <i>what</i> an abuse this is. The
@@ -89,7 +89,7 @@
 a_function_compiled_with_wx endp</pre><p>
 </p><p>
 	Luckily again, all the functions that currently require <code>-WX</code>
-	don't set up a stack frame and don't take any parameters.<br />
+	don't set up a stack frame and don't take any parameters.<br>
 	While this hasn't <i>directly</i> been an issue so far, it's been pretty
 	close: <code>snd_se_reset(void)</code> is one of the functions that require
 	word alignment. Previously, it shared a translation unit with the

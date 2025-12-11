@@ -17,7 +17,7 @@
 	have been, showing its last sprite for just 1 frame rather than 3: <img
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAKCgoPDw8AAAADLNMiH/C05FVFNDQVBFMi4wAwEAAAAh+QQFHgADACwAAAAAIAAgAEAChZyPqcsG/4IMQswb2hCg+u9hGKCBIfVBpMaoE6s8XGeJttSYuqdCcJJ6/IZEluuG+/UAlwqyIavQnEjMYreLTHwMrK439M6ExbL5jE4fIDfzsZqBLSefNnQOv7Rk0Vo+CTQ1dQJ3NYh1QwYkBuLCpcDYCJaj08Sj8mNiObZSlKWoFip6UAAAIfkEBR4AAwAsAwAEABkAGQAAAlucf6Eb6D+YVNDNSyvecHvrfUnIGSQjpIICmKcKB+0ZwDYASOtk9/mi0vVqNQFgV0QqesgYUDhcBjfMldXJq/YGKagWZviKU4exFmGuOtI2CJtcYVfQ37l7WykAACH5BAUeAAMALAMABAAZABkAAAJrnH+hwIAPhwqtuogmtRbL2WhcJFYLI6Tpo22MqMZZyaGxkLT1fRvt2eD1fkCbUEVcHIVJxZLXdD6RUemzCrpGLcvPbyf0gUDgnnhzSlV4M4ALEAuaE26uYC2D1Dj5yF6+4mGwpyKoZ4SDUQAAIfkEBQoAAwAsAwAEABkAGQAAAnGcf6Ar6D+WZNDNC4SuEesPQtgFbsjolSealaHBujI8ysF9b6iL94G2CACEipLPJwjeGCBkL6nAZVoaZDVHFAqTzedVCqJ+lxnp8CcTHEeDHM/HbrvHZszhuI4b8D2WI88CAEEWqMBRuMCR4KdoccFRAAAh/hVNYWRlIHdpdGggU2NyZWVuVG9HaWYAOw=="
 	alt="TH01's Orb animation cycle as an animated GIF, with frame durations
-	proportional to the ones found in the game" /></li>
+	proportional to the ones found in the game"></li>
 	<li>The text in the Pause and Continue menus is not <i>quite</i> correctly
 	centered.</li>
 	<li>The memory info screen hides quite a bit of information about the .PTN
@@ -34,13 +34,13 @@
 	even a good, user-friendly one, asking the user to launch the batch file
 	instead. For some reason, this convenience went out of fashion in the later
 	games.
-</p><hr /><p>
+</p><hr><p>
 	The Game Over animation (how fitting) gives us TH01's final piece of weird
 	sprite blitting code, which seriously manages to include 2 bugs and 3 quirks
 	in under 50 lines of code. In test mode (<code>game t</code> or <code>game
 	d</code>), you can trigger this effect by pressing the ⬇️ down arrow key,
 	which certainly explains why I encountered seemingly random Game Over events
-	during all the tests I did with this game…<br />
+	during all the tests I did with this game…<br>
 	The animation appears to have changed quite a bit during development, to the
 	point that probably even ZUN himself didn't know what he wanted it to look
 	like in the end:
@@ -64,7 +64,7 @@
 		the final animation should have been.
 	</div></figcaption>
 	{{call .VideoPlayer $vid_orig.FlipActive $vid_wimpy $vid_no}}
-</figure><hr /><p>
+</figure><hr><p>
 	Finally, we get to the big <code>main()</code> function, serving as the duct
 	tape that holds this game together. It may read rather disorganized with all
 	the (actually necessary) assignments and function calls, but the only
@@ -85,7 +85,7 @@
 	calls do… well, probably not what ZUN intended. The guaranteed out-of-bounds
 	memory access in the <code>select_flag</code> route prompt thankfully has no
 	real effect on the game, but it gets really interesting with the <code
-	lang="ja">面数 </code> stage prompt.<br />
+	lang="ja">面数 </code> stage prompt.<br>
 	Back in 2020, I already wrote about
 	{{Blog_PostLink "2020-11-30" "stages 21-24, and how they're loaded from actual data that ZUN shipped with the game"}}.
 	As it now turns out, the code that maps stage IDs to <code>STAGE?.DAT</code>
@@ -105,10 +105,8 @@
 	{{- $pic := printf "TH01-Stage-minus-%d.png" . -}}
 	{{- $picFN := (call $.PostFileURL $pic) -}}
 	<figure>
-		<a href="{{$picFN}}"><img
-			src="{{$picFN}}"
-			alt="TH01's stage -{{.}}"
-	/></a><figcaption>Stage -{{.}}</figcaption>
+		<a href="{{$picFN}}"><img src="{{$picFN}}" alt="TH01's stage -{{.}}"></a>
+		<figcaption>Stage -{{.}}</figcaption>
 	</figure>
 {{- end}}</figure><p>
 	The scene loading function takes the entered 0-based stage ID value modulo
@@ -123,7 +121,7 @@
 	the obstacles/card HP on the few tiles before are similarly controlled by
 	the x86 segment values of certain initialization function addresses, these
 	glitch stages would be completely deterministic across PC-98 systems, and
-	<i>technically</i> canon… {{HTML_Emoji "tannedcirno"}}<br />
+	<i>technically</i> canon… {{HTML_Emoji "tannedcirno"}}<br>
 	Stage -4 is the only playable one here as it's the only stage to end up
 	below the
 	{{Blog_PostLink "2020-11-30" "heap corruption limit of 102 stage objects"}}.
@@ -131,7 +129,7 @@
 	just like it does if it's directly selected. Unsurprisingly, this happens
 	because all 50 card bytes at that memory location are 0, so one division (or
 	in this case, modulo operation) by the number of cards is enough to crash
-	the game.<br />
+	the game.<br>
 	Stage -5 is modulo'd to 0 and thus loads the first regular stage. The only
 	apparent broken element there is the timer, which is handled by a completely
 	different function that still operates with a (0-based) stage ID value of

@@ -28,15 +28,15 @@
 	that? But for the time being, I simply went with the obvious name,
 	<code>seg2</code>. Maybe I'll come up with something more convincing in
 	the future.
-</p><hr /><p>
+</p><hr><p>
 	Oh, but wait, why were we assembling all the previous undecompilable ASM
 	translation units in the 16-bit build part? By moving those to the 32-bit
 	part, we don't even need a 16-bit TASM in our list of dependencies, as
-	long as our build process is not fully 16-bit.<br />
+	long as our build process is not fully 16-bit.<br>
 	And with that, ReC98 now also builds on Windows 95, and thus, every 32-bit
 	Windows version. 🎉 Which is certainly the most user-visible improvement
 	in all of these two pushes. {{HTML_Emoji "onricdennat"}}
-</p><hr /><p>
+</p><hr><p>
 	Back in 2015, I already decompiled all of TH02's <code>seg2</code>
 	functions. As suggested by the Borland compiler, I tried to follow a "one
 	translation unit per segment" layout, bundling the binary-specific
@@ -57,7 +57,7 @@
 	turning every sequence of related functions into its own translation unit.
 	This way, we can simply reuse the once-compiled .OBJ files for all the
 	binaries those functions appear in, without requiring that additional
-	layer of translation units mirroring the original segmentation.<br />
+	layer of translation units mirroring the original segmentation.<br>
 	The best example for this is
 	<a href="https://github.com/nmlgc/ReC98/blob/ecc1372842ad2872f38ce7f0f134dfff6580ae15/th03/hfliplut.c">TH03's
 	almost undecompilable function that generates a lookup table for
@@ -76,7 +76,7 @@
 	the end of code segment #2 in TH03's <code>MAIN.EXE</code> that were in
 	front of a number of library functions I already covered in this push. But
 	let's leave that to an actual RE push 😛
-</p><hr /><p>
+</p><hr><p>
 	All in all though, I was just getting started with this; the <i>real</i>
 	gains in terms of removed ASM files are still to come. <i>But</i> in the
 	meantime, the funding situation has become even better in terms of

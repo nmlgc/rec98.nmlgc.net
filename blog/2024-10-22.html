@@ -154,9 +154,9 @@
 </p><figure class="pixelated" style="width: 768px;">
 	<rec98-child-switcher><img
 		src="{{$feathercast_missing}}" data-title="Removed cast" class="active" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, but with one feather bullet turned into a &quot;YZ&quot; sprite due to a removed downcast of the dividend in the angle calculation"
-	/><img
+	><img
 		src="{{$feathercast_correct}}" data-title="Original game" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, rendered correctly"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The first file in <code>GRAPH.DAT</code> explains what we're seeing here.
 	</figcaption>
 </figure><p>
@@ -324,9 +324,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<figure class="pixelated" style="width: 512px;">
 		<rec98-child-switcher><img
 			src="{{$circles_8}}" data-title="8-bit" class="active" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
-		/><img
+		><img
 			src="{{$circles_16}}" data-title="16-bit" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			It's not like the APIs prevent the 16-bit mode from taking the same approach as the 8-bit mode, so I suppose that pbg profiled this and concluded that lines offloaded to the GPU performed better than locking the framebuffer and writing pixels? Then again, given Shuusou Gyoku's comparatively high system requirements…
 		</figcaption>
 	</figure><p>For preservation and consistency reasons, the SDL backend will also go with the approximation, although <a class="goal" href="https://github.com/nmlgc/ssg/issues/63">we could provide the accurate rendering of 8-bit mode via point lists if there's interest</a>.</p></li>
@@ -334,9 +334,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<figure class="pixelated" style="width: 640px;">
 		<rec98-child-switcher><img
 			src="{{$ob1_vp_8}}" data-title="8-bit" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
-		/><img
+		><img
 			src="{{$ob1_vp_16}}" data-title="16-bit" class="active" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			The fix is obvious.
 		</figcaption>
 	</figure></li>
@@ -344,9 +344,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<figure class="pixelated" style="width: 912px;">
 		<rec98-child-switcher><img
 			src="{{$ob1_box_8}}" data-title="8-bit" width="912" class="active" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 8-bit mode, highlighting 1st place with red backgrounds that are 1 pixel wider than in 16-bit mode"
-		/><img
+		><img
 			src="{{$ob1_box_16}}" data-title="16-bit" width="912" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 16-bit mode, highlighting 1st place with red backgrounds at the correct size passed by game code"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			The game code also clearly asks for 400 and 14 pixels, respectively.
 		</figcaption>
 	</figure></li>
@@ -354,9 +354,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<figure class="pixelated" style="width: 640px;">
 		<rec98-child-switcher><img
 			src="{{$ob1_circles_8}}" data-title="8-bit" width="640" class="active" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight, this time with the circles closer to the right edge of the playfield to highlight the off-by-one error in their clipping condition"
-		/><img
+		><img
 			src="{{$ob1_circles_16}}" data-title="Line approximation (with fixed clipping)" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight and with a fixed playfield clipping region for Direct3D shapes, this time with the circles closer to the right edge of the playfield to compare their correct clipping against the off-by-one error in 8-bit mode"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			No circle pixels at the right edge of the playfield. Obviously, I had to fix bug #2 in order for the line approximation to not also get clipped at the same coordinate.
 		</figcaption>
 	</figure></li>
@@ -373,9 +373,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure class="pixelated" style="width: 960px;">
 	<rec98-child-switcher><img
 		src="{{$spect}}" data-title="Solid" width="960" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, at 6× magnification"
-	/><img
+	><img
 		src="{{$spect_wf}}" data-title="Wireframe" width="960" class="active" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, with a wireframe render of the spectrum overlaid to demonstrate how the new SDL backend renders these gradient lines, at 6× magnification"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The wireframe was generated via a raw <code>glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);</code>
 	</figcaption>
 </figure><p>
@@ -588,15 +588,15 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 		data-title="Integer"
 		alt="Screenshot of the Integer fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
 		class="active"
-	/><img
+	><img
 		src="{{$720p_aspect}}"
 		data-title="4:3"
 		alt="Screenshot of the 4:3 fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
-	/><img
+	><img
 		src="{{$720p_stretch}}"
 		data-title="Stretch"
 		alt="Screenshot of the Stretch fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		The three scaling options available in borderless fullscreen mode as rendered on a 1280×720 display, which is one of the worst display resolutions you could play this game on.<br>
 		And yes – as the presence of the <code>FullScr[Borderless]</code> option implies, the new build also still supports exclusive, display mode-changing 640×480 boomer fullscreen. 🙌<br>
@@ -640,11 +640,11 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 		data-title="Geometry scaling"
 		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using geometry scaling, showing off both the sharp edges on boxes and the darker, individually-blended lines of text"
 		class="active"
-	/><img
+	><img
 		src="{{$menu_framebuf}}"
 		data-title="Framebuffer scaling"
 		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using framebuffer scaling, showing off the more natural bilinearly-filtered look that blends the entire screen together and results in brighter text"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
 	Surprisingly though, we don't see much of a difference with the circles in the Weapon Select screen. If geometry scaling only multiplies and offsets vertices, shouldn't the lines along the 32-sided polygons still be just one pixel thick? As it turns out, SDL puts in quite a bit of effort here: <a href="https://github.com/libsdl-org/SDL/blob/378234437fa2a99224391d5578f46971e190c0b7/src/render/SDL_render.c#L3201-L3202">It never actually uses the API's line primitive when scaling the output</a>, but instead takes the endpoints, rasterizes the line on the CPU, and turns each point on the resulting line into a quad the size of the scale factor. Of course, this completely nullifies pbg's original intent of approximating circles with lines for performance reasons. {{HTML_Emoji "onricdennat"}}<br>
 	The result looks better and better the larger the window is scaled. On low fractional scale factors like 1.25×, however, lines end up looking truly horrid as the complete lack of anti-aliasing causes the 1.25×1.25-pixel point quads to be rasterized as 2 pixels rather than a single one at regular intervals:
@@ -655,12 +655,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 			width="320"
 			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using geometry scaling, showing off the inconsistent rasterization of point quads without anti-aliasing"
 			class="active"
-		/><img
+		><img
 			src="{{$c125_framebuf}}"
 			data-title="Framebuffer scaling"
 			width="320"
 			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using framebuffer scaling"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			Also note how you can either have bright circle colors or bright text colors, but not both.
 		</figcaption>
 	</figure>
@@ -672,12 +672,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at a scale factor of 3× and using geometry scaling for smooth edges at the scaled resolution"
 		width="1152"
 		class="active"
-	/><img
+	><img
 		src="{{$llaser_framebuf}}"
 		data-title="Framebuffer scaling"
 		width="1152"
 		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at 640×480 and framebuffer-scaled to 3× of the original resolution"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		Note how the HP gauge, being a gradient, also looks smoother with geometry scaling, whereas the Evade gauge, being 9 additively-blended red boxes with decreasing widths, doesn't differ between the modes.<br>
 		For an even smoother rendering, enable anti-aliasing in your GPU's control panel; SDL unfortunately doesn't offer an API-independent way of enabling it.
 	</figcaption>
@@ -696,24 +696,24 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 		data-title="Geometry scaling"
 		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using geometry scaling, showing off tons of tilemap texture coordinate glitches and the usually half-transparent shadow of Gates' plane showing up in a strange green color"
 		class="active"
-	/><img
+	><img
 		src="{{$s3_15_framebuf}}"
 		data-title="Framebuffer scaling"
 		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using framebuffer scaling, with no graphical glitches"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
 	With both scaling paradigms in place, we now have a screenshot strategy for every possible rendering mode:
 </p><ol><li><p>
-	<i>Software-rendering (i.e., <a href="#lens-{{.Date}}">showing the <span lang="ja">西方Ｐｒｏｊｅｃｔ</span> logo</a>)?</i><br/>
+	<i>Software-rendering (i.e., <a href="#lens-{{.Date}}">showing the <span lang="ja">西方Ｐｒｏｊｅｃｔ</span> logo</a>)?</i><br>
 	This is the optimal case. We've already rendered everything into a system-memory framebuffer anyway, so we can just take that buffer and write it to a file.
 </p></li><li><p>
-	<i>Hardware-rendering at unscaled 640×480?</i><br/>
+	<i>Hardware-rendering at unscaled 640×480?</i><br>
 	Requires a transfer of the GPU framebuffer to the system-memory buffer we initially allocate for software rendering, but no big deal otherwise.
 </p></li><li><p>
-	<i>Hardware-rendering with framebuffer scaling?</i><br/>
+	<i>Hardware-rendering with framebuffer scaling?</i><br>
 	As we've seen with the initial solution for the lens ball effect, flagging a texture as a render target thankfully always allows us to read pixels back from the texture, so this is identical to the case above.
 </p></li><li><p>
-	<i>Hardware-rendering with geometry scaling?</i><br/>
+	<i>Hardware-rendering with geometry scaling?</i><br>
 	This is the initial case where we must indeed bite the bullet and save the screenshot at the scaled resolution because that's all we can get back from the GPU. Sure, we could software-scale the resulting image back to 640×480, but:<ul>
 		<li>That would defeat the entire point of geometry scaling as it would throw away all the increased detail displayed in the screenshots above. Maybe that <i>is</i> something you'd like to capture if you deliberately selected this scale mode.</li>
 		<li>If we scaled back an image rendered at a fractional scaling factor, we'd lose every last trace of sharpness.</li>
@@ -723,9 +723,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
 		src="{{$vo_orig}}" data-title="pbg's Direct3D backend" class="active" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by pbg's original Direct3D backend"
-	/><img
+	><img
 		src="{{$vo_sdl}}" data-title="SDL" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by the initial state of the SDL graphics backend, showing slightly displaced vertices compared to pbg's original Direct3D backend"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		As if each polygon was shifted slightly up and to the left…
 	</figcaption>
 </figure><p>
@@ -811,11 +811,11 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 		data-title="Original"
 		alt="Screenshot of the all SysEx messages appearing in the original MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
 		class="active"
-	/><img
+	><img
 		src="{{$domino_02_fixed}}"
 		data-title="Fixed"
 		alt="Screenshot of the all SysEx messages appearing in the a SysEx-fixed MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>As visualized by {{Blog_PostLink "2024-03-09#sysex" "Domino"}}.</figcaption>
 </figure><p>
 	Thus, this track definitely counts toward the 11 with a distinct echo version. But comparing that version against the no-echo one reveals something truly mind-blowing: The Sound Canvas VA rendering only differs within exactly the 8 bars of the loop, and is bit-by-bit identical anywhere else. 🤯 This is why you use softsynths.
@@ -858,7 +858,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</div><div>
 		Still saying <i>Panning Delay</i>, even though we obviously hear the default reverb. A clear bug in the Sound Canvas VA UI.
 	</div></figcaption>{{call .VideoPlayer $vid_compat_on.FlipActive $vid_compat_off}}
-</figure><hr /><p>
+</figure><hr><p>
 	Anything I forgot? Oh, right, download links:
 </p><ul>
 	<li><a class="release" href="https://github.com/nmlgc/ssg/releases/tag/P0295">

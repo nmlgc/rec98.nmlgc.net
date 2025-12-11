@@ -24,7 +24,7 @@
 	<td rowspan="4"><img
 		src="data:image/gif;base64,R0lGODlhQABAALMAAACA//z8/PzszOy4qOyouKio/MxUzPxERIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAAALAAAAABAAEAAAwT/EMhJq7046827/2AojmRpnmhqEkYLtAahzgBhw61t02gQ6EBdgFfy/VgxoZEoMvqQOaeM+XH+WolEVEf1BJGJQTZ363ZYOuxgPU6bOVpcNiyY496bMXYuqOtdeBoJAHNhA31sWlqBHCx0fYh2U4wZN48CYnE7lJWOhZ8xnBkwCQVzBaalBaGiFAGoirCoprOwg6JOqbWppaVGqYy5tgVWp6hOt2+/tVnHRsavyHjLr4XHhQjNxcpWtgnZnwji2bNzb4U+vOPrCAfu4MCUzdjtSj8H4OacvYXu7kHu5ohp9enbOH/vsqwZKMpQwTn+8iXa53DOOojjDDEMlAVTJoMI/7O8y7amDqMEHj+KQ8hS3KNkXTomssiyJck+MIkUwpRFAsiaETv6MSOUjc+VQBOixMmR560E+JImhDT0nD6RUpXiLHSOAtSs+B66zBkTbECD7Fxy/AoW7cGLeNhmzbYOYUayNORmzYK05lgqWM1+mwsOsFl/gwnjRRFYcDugRmwsNtFYMGQfESfN0NtWL+aWk0mwfdyW9IHPoHl87buXNGq72fL6YN3a3eugPTcfIEA7ak2oRlh+OhBaBFQbQE0jvg0RsU4EyG3+/g38bPERBqOPVJ40gQ+uTPhCJxCR9ux2Ls/GzY55PAEr+Maezm2V3RF224EHuJ7Xbdq0X9FHkQ9/AH7SilcPGXjgggyiEAEAOw=="
 		alt="Sprite of Sara in TH05"
-	/></td>
+	></td>
 	<th>(Entrance)</th>
 	<td></td>
 	<th>4,650</th>
@@ -64,7 +64,7 @@
 	only differ in the clockwise or counterclockwise turning direction of the
 	spawner; these directions are treated as individual unrelated patterns, so
 	it's possible for the "same" pattern to be fired multiple times in a row
-	with a flipped direction.<br />
+	with a flipped direction.<br>
 	The two phases also differ in the wait and pattern durations:
 	<ul>
 		<li>In Phase 2, the wait time starts at 64 frames and decreases by 12
@@ -83,7 +83,7 @@
 	difficulties and rank values. The
 	{{Blog_PostLink "2022-04-30" "general code structure of TH05 bosses"}}
 	won't ever make for {{HTML_TagInline "good-code"}}, but Sara's code is just a
-	lesser example of what I already documented for Shinki.<br />
+	lesser example of what I already documented for Shinki.<br>
 	So, no bugs, no unused content, only inconsequential bloat to be found here,
 	and less than 1 push to get it done… That makes 9 PC-98 Touhou bosses
 	decompiled, with 22 to go, and gets us over the sweet 50% overall
@@ -91,7 +91,7 @@
 	lasers in Sara's final pattern, but the boss script just controls the
 	origin, angle, and activity of lasers, so any quirk there would be part of
 	the laser code… wait, you can do <i>what</i>?!?
-</p><hr /><p>
+</p><hr><p>
 	TH05 expands TH04's one-off code for Yuuka's Master and Double Sparks into a
 	more featureful laser system, and Sara is the first boss to show it off.
 	Thus, it made sense to look at it again in more detail and finalize the code
@@ -119,7 +119,7 @@
 	So while it's not a lot of instructions, it's quite dense and really hard to
 	follow. This code would <i>really</i> benefit from a decompilation that
 	anchors all this madness as much as possible in existing C++ structures… so
-	let's decompile it anyway? {{HTML_Emoji "tannedcirno"}}<br />
+	let's decompile it anyway? {{HTML_Emoji "tannedcirno"}}<br>
 	Doing so would involve emitting lots of raw machine code bytes to hide the
 	<code>SI</code> and <code>DI</code> registers from the compiler, but I
 	already had a certain
@@ -137,7 +137,7 @@
 	classes. We only need a couple of <code>enum</code>s with opcode, register,
 	and prefix constants from the x86 reference documentation, and a set of
 	associated macros that token-paste pseudoregisters onto the prefixes of
-	these <code>enum</code> constants.<br />
+	these <code>enum</code> constants.<br>
 	And that's how you get a custom compile-time assembler in a 1994 C++
 	compiler and expand the limits of decompilability even further. What's even
 	truly left now? Self-modifying code, layout tricks that can't be replicated
@@ -152,7 +152,7 @@
 	time? Oh well, time to finally learn the true way of fixing this highly
 	annoying issue in a <i>second</i> new piece of decompilation tech – and one
 	that might actually be useful for other x86 Real Mode retro developers at
-	that.<br />
+	that.<br>
 	Earlier in the RE history of TH04 and TH05, I often wrote about the need to
 	split the two original code segments into multiple segments within two
 	<i>groups</i>, which makes it possible to slot in code from different
@@ -226,7 +226,7 @@ void baz(void) {
 	knowing about these details. This is the true solution to
 	{{Blog_PostLink "2021-07-31" "any issues involving references to <code>near</code> functions"}},
 	and I'm glad to see that ZUN did <i>not</i> in fact lie to the compiler. 👍
-</p><hr /><p>
+</p><hr><p>
 	OK, but <i>now</i> the remaining laser code compiles, and we get to write
 	C++ code to draw some hitboxes during the two collision-detected states of
 	each laser. These confirm what the low-level code from earlier already
@@ -290,7 +290,7 @@ void baz(void) {
 	another instance where
 	{{Blog_PostLink "2022-08-11" "aiming for a cinematic 30 FPS look"}}
 	made the resulting code much more complicated than if ZUN had just evenly
-	spread out the subtraction across 2 frames. 🤷<br />
+	spread out the subtraction across 2 frames. 🤷<br>
 	Oh well, it's not as if any of the fixed lasers in the original scripts came
 	close to any of these limits. Moving lasers are much more streamlined and
 	limited to begin with: Since they're hardcoded to 6 pixels, the game can

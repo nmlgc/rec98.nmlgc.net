@@ -173,11 +173,11 @@
 		alt="Sprite #0 of TH02's MIKO.BFT"
 		width="320"
 		class="active"
-	/><img
+	><img
 		src="{{$miko_2}}" data-title="Moving left" alt="Sprite #2 of TH02's MIKO.BFT" width="320"
-	/><img
+	><img
 		src="{{$miko_3}}" data-title="Moving right" alt="Sprite #3 of TH02's MIKO.BFT" width="320"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>It's the <span style="color: red;">red</span> point.</figcaption>
 </figure><p>
 	So let's transform these checks to a more useful comparison of the respective center points against each other, and also fix that inconsistency of the right coordinates being compared with <code>&lt;</code> instead of <code>&lt;=</code> like the other values:
@@ -203,15 +203,15 @@
 		alt="Hitbox of TH02's 8×8 pellets"
 		class="active"
 		width="384"
-	/><img
+	><img
 		src="{{$hb_ball}}" data-title="Ball" alt="Hitbox of TH02's 16×16 ball bullets" width="384"
-	/><img
+	><img
 		src="{{$hb_呪}}" data-title="呪" alt="Hitbox of TH02's 呪 bullets" width="384"
-	/><img
+	><img
 		src="{{$hb_bill}}" data-title="Billiard" alt="Hitbox of TH02's billiard bullets" width="384"
-	/><img
+	><img
 		src="{{$hb_star}}" data-title="Star" alt="Hitbox of TH02's star bullets" width="384"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>{{Blog_PostLink "2022-06-17" "As"}} {{Blog_PostLink "2022-07-10" "usual"}}, a bullet sprite has to be fully surrounded by the blue box for a hit to be registered.</figcaption>
 </figure><p>
 	Yup. Quite asymmetric indeed, and probably surprising no one.
@@ -224,17 +224,17 @@
 		alt="A 2-spread pattern using a base angle of 0x40, TH02's hardcoded medium spread angle, and spawned at the center of the playfield to trap the player at its spawn point"
 		class="active"
 		width="768"
-	/><img
+	><img
 		src="{{$asym_l}}"
 		data-title="Asymmetry (left)"
 		alt="Visualization of the asymmetry in this 2-spread pattern if the right lane moved at the correct angle; the cyan area shows the symmetric triangle the pattern is expected to form, and the red area shows the inaccurate extra amount of space covered by the left lane"
 		width="768"
-	/><img
+	><img
 		src="{{$asym_r}}"
 		data-title="Asymmetry (right)"
 		alt="Visualization of the asymmetry in this 2-spread pattern if the left lane moved at the correct angle; the cyan area shows the asymmetric triangle being formed by the pattern as it is, and the red area shows the extra amount of space missing from the right lane to make the pattern actually symmetric"
 		width="768"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>By the time the bullets have reached the bottom of the playfield, the inaccuracy has compounded so much that the right lane ends up 6 pixels closer to the player's center position than the left lane. Depending on which of the two lanes actually gets the correct angle, this either means that the left lane is moving too far (2️⃣) or that the right lane is not moving far enough (3️⃣).</figcaption>
 </figure><p>
 	This is very weird because the angles that go into the velocity calculations are demonstrably correct. You'd therefore get this asymmetry for not only the hardcoded spreads, but also for code that does its own angle calculations and spawns each bullet manually. It's not something that can arise from the other known issue of {{Blog_PostLink "2022-03-05" "Q12.4 quantization"}} either, because that would affect all parts of a pattern equally.
@@ -330,19 +330,19 @@ int16_t polar_x(int16_t center, int16_t radius, uint8_t angle)
 </p><figure class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
 		src="{{$s_o_2_120}}" data-title="Frame 120" class="active" width="384" alt="Frame 120 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
-	/><img
+	><img
 		src="{{$s_o_2_121}}" data-title="Frame 121" width="384" alt="Frame 121 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
-	/><img
+	><img
 		src="{{$s_o_2_122}}" data-title="Frame 122" width="384" alt="Frame 122 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
-	/><img
+	><img
 		src="{{$s_o_2_123}}" data-title="Frame 123" width="384" alt="Frame 123 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>That's not a safespot, that's Reimu barely surviving only thanks to rounding.</figcaption>
 </figure><p>
 	So, for once, this is not a quirk, and doesn't even qualify as a "funny ZUN code moment" if you ask me. This is the game working exactly as designed, and it's the players who are instead making wild assumptions about safespots that only hold when the rank system plugs very specific numbers into the game's fixed-point math.<br>
 	If anything, you could make the stronger case that this safespot should not work under any circumstance. If the game tested the whole parallelogram covered by a bullet's trajectory between two successive frames instead of just looking at a bullet's current position, it would consistently detect this collision regardless of rank. But even the later games don't go to these lengths.
 </p><figure class="pixelated" style="width: 256px;">
-	<img src="{{$plg}}" alt="Visualization of potential collision detection with parallelograms" width="256" />
+	<img src="{{$plg}}" alt="Visualization of potential collision detection with parallelograms" width="256">
 	<figcaption>By testing with parallelograms, the game would not only look at the distinct bullet positions in green, but also detect that the bullet traveled through the position highlighted in cyan, which does lie fully within the hitbox.</figcaption>
 </figure><p>
 	Amusingly, if you die twice before this pattern and reach a rank of -2, bullet speed drops enough for the <q>safespot</q> to work again:
@@ -350,7 +350,7 @@ int16_t polar_x(int16_t center, int16_t radius, uint8_t angle)
 	{{call .VideoPlayer $s_o_2.FlipActive $s_o_0 $s_o_m2.FlipActive}}
 	<figcaption>It's even the same bullet that fails to hit Reimu, although coming in 5 frames later.</figcaption>
 </figure><p>
-	If you're now sad because you liked the idea of ZUN deliberately putting hitbox-shifting code into the game, you don't have to be! You might have already noticed it in the 1-life videos above, but TH02 <i>does</i> have one funny but inconsequential instance of death-induced player position shifting. In the 19 frames between the end of the <img class="inline_sprite" src="{{$miko_d}}" alt="" /> animation and Reimu respawning at the bottom of the playfield, ZUN just adds 4 pixels to Reimu's Y position. You don't really notice it because the game doesn't render Reimu's sprite during these frames, but this modified position still partakes in collision detection, causing bullets to be removed accordingly.
+	If you're now sad because you liked the idea of ZUN deliberately putting hitbox-shifting code into the game, you don't have to be! You might have already noticed it in the 1-life videos above, but TH02 <i>does</i> have one funny but inconsequential instance of death-induced player position shifting. In the 19 frames between the end of the <img class="inline_sprite" src="{{$miko_d}}" alt=""> animation and Reimu respawning at the bottom of the playfield, ZUN just adds 4 pixels to Reimu's Y position. You don't really notice it because the game doesn't render Reimu's sprite during these frames, but this modified position still partakes in collision detection, causing bullets to be removed accordingly.
 </p><figure {{$falling.FigureAttrs}}>
 	{{call .VideoPlayer $falling}}
 	<figcaption>Hilariously, ZUN was well aware that this shift could move the player's Y position beyond the bottom of the playfield, and thus cause sparks to be spawned at Y coordinates larger than 400. So he just… wrapped these spark spawn coordinates back into the visible range of VRAM, thus moving them to the top of the playfield… {{HTML_Emoji "zunpet"}}<br>

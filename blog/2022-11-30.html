@@ -51,7 +51,7 @@
 	TH03, where it's also used for the cutscenes before stages 8 and 9. This
 	means that it was one of the final pieces of code shared between three of
 	the four remaining games, which I got to decompile at roughly 3× the usual
-	speed, or ⅓ of the price.<br />
+	speed, or ⅓ of the price.<br>
 	The only other bargains of this nature remain in <code>OP.EXE</code>. The
 	Music Room is largely equivalent in all three remaining games as well, and
 	the sound device selection, ZUN Soft logo screens, and main/option menus are
@@ -60,7 +60,7 @@
 	significantly than RE%. Therefore, make sure to order the new
 	<i>Finalization</i> option rather than <i>Reverse-engineering</i> if you
 	want to make number go up.
-</p>{{call .TOC}}<hr id="overview-{{.Date}}" /><p>
+</p>{{call .TOC}}<hr id="overview-{{.Date}}"><p>
 	So, cutscenes. On the surface, the .TXT files look simple enough: You
 	directly write the text that should appear on the screen into the file
 	without any special markup, and add commands to define visuals, music, and
@@ -72,7 +72,7 @@
 	<code>EDBK?.PI</code> images:<figure><img
 		src="{{$area}}"
 		alt="The text area of the TH03/TH04/TH05 cutscene system."
-	/><figcaption>
+	><figcaption>
 		The yellow area is designated for character names.
 	</figcaption></figure></li>
 	<li>Since the font weight can be customized, all text is rendered to VRAM.
@@ -92,13 +92,13 @@
 	area when this happens, which is almost certainly not what you expect, given
 	that automatic line breaks stay within the red area. A script author might
 	as well add the necessary text box change commands manually, if you're
-	forced to anticipate the automatic ones anyway…<br />
+	forced to anticipate the automatic ones anyway…<br>
 	Due to ZUN forgetting an unblitting call during the TH05 refactoring of the
 	box background buffer, this feature is even completely broken in that game,
 	as any new text will simply be blitted on top of the old one:<figure><img
 		src="{{$th05_boxfeed}}"
 		alt="The effects of relying on automatically added text boxes in TH05's cutscene system."
-	/><figcaption>
+	><figcaption>
 		Wait, why are we already talking about game-specific differences after
 		all? Also, note how the ⏎ animation appears one line below where you'd
 		expect it.
@@ -125,7 +125,7 @@
 		that can't be interrupted by commands:<figure><img
 			src="{{$hw}}"
 			alt="Issues with half-width text in the TH03/TH04/TH05 cutscene system."
-			/></figure></li>
+			></figure></li>
 		<li>As a workaround for at least the ASCII space issue, you can replace
 		them with any of the <a
 		href="https://en.wikipedia.org/w/index.php?title=Shift_JIS&oldid=1118113512#Shift_JIS_byte_map">unassigned
@@ -139,7 +139,7 @@
 	Due to the blocking nature of all commands, the <kbd>ESC</kbd> key state is
 	only updated between commands or 2-byte text groups though, so it can't
 	interrupt an ongoing delay.</li>
-</ul><hr id="games-{{.Date}}" /><p>
+</ul><hr id="games-{{.Date}}"><p>
 	Superficially, the list of game-specific differences doesn't look too long,
 	and can be summarized in a rather short table:
 </p><figure><table class="comparison"><thead>
@@ -179,7 +179,7 @@
 	<td><img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAAAAP///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDwABACwAAAAAEAAQAAACK4yPicDtCdQ6kT5T62q4Kx5kEihSGONpaLiWziW+cCqboTXaNwTJoAQ0FAAAIfkECQ8AAQAsAQABAA4ADgAAAiNMgKl2DOwanAZRai/MdXWcfOBzkFNYbh3JZairvGUcmrRXAAAh+QQJDwABACwBAAEADgAOAAACI0yAqXbqB9sziFVmAdaY8t5d4PaNHplk4NKMabte2seltMMWACH5BAUPAAEALAEAAQAOAA4AAAIlTICpdszZgJMHGXsprFlh6y1c5T3U6KBNqrKZm2KdLJ3zSoZUAQA7"
 		alt="⏎⃣"
-	/>, past right edge of current row</td>
+	>, past right edge of current row</td>
 </tr><tr>
 	<th>Inexplicable delays</th>
 	<td colspan="2">None</td>
@@ -230,7 +230,7 @@
 	writing to the second VRAM page anyway, before copying each crossfade step
 	to the visible one.
 	{{Blog_PostLink "2022-06-17" "We learned in June how costly EGC-\"accelerated\" inter-page copies are"}};
-	shouldn't it be faster to just blit the image once rather than twice?<br />
+	shouldn't it be faster to just blit the image once rather than twice?<br>
 	Well, master.lib decodes .PI images into a packed-pixel format, and
 	unpacking such a representation into bitplanes on the fly is just about the
 	worst way of blitting you could possibly imagine on a PC-98. EGC inter-page
@@ -241,7 +241,7 @@
 	more than one frame for a 320×200 image. While I'd argue that the resulting
 	tearing could have been an acceptable part of the transition between two
 	images, it's understandable why you'd want to avoid it in favor of the
-	pure effect on a slower framerate.<br />
+	pure effect on a slower framerate.<br>
 	Really makes me wonder why master.lib didn't just directly decode .PI images
 	into bitplanes. The performance impact on load times should have been
 	negligible? {{HTML_Emoji "thonk"}} <a
@@ -249,7 +249,7 @@
 	the often dithered 16-color artwork you typically see on PC-98</a>, and
 	deserves better than master.lib's implementation which is both slow to
 	decode and slow to blit.
-</p></li></ul><hr id="ref-{{.Date}}" /><p>
+</p></li></ul><hr id="ref-{{.Date}}"><p>
 	That brings us to the individual script commands… and yes, I'm going to
 	document every single one of them. Some of their interactions and edge cases
 	are not clear at all from just looking at the code.
@@ -262,7 +262,7 @@
 	would actually use nowadays. But interestingly, <code>iconv
 	-f&nbsp;shift-jis -t&nbsp;utf-8</code> does convert any <code>0x5C</code>
 	lead bytes to actual <code>¥ U+00A5 YEN SIGN</code> code points
-	{{HTML_Emoji "tannedcirno"}}.<br />
+	{{HTML_Emoji "tannedcirno"}}.<br>
 	Ultimately, the distinction comes down to the font. There <i>are</i> fonts
 	that still render <code>0x5C</code> as <code>¥</code>, but mainly do so out
 	of an obvious concern about backward compatibility to JIS X 0201, where this
@@ -301,7 +301,7 @@
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
 		<td>\@</td>
-		<td>Clears both VRAM pages by filling them with VRAM color 0.<br /> 🐞
+		<td>Clears both VRAM pages by filling them with VRAM color 0.<br> 🐞
 		In TH03 and TH04, this command does not update the internal text area
 		background used for unblitting. This bug effectively restricts usage of
 		this command to either the beginning of a script (before the first
@@ -324,7 +324,7 @@
 		ASM version of
 		<code>{{Blog_PostLink "2021-04-23" "graph_putsa_fx()"}}</code>; <a
 		href="#{{.Date}}-b-example">see the image below for an example</a>.
-		<br />
+		<br>
 		In these games, the parameter also directly corresponds to the
 		<code>graph_putsa_fx()</code> effect function, removing the sanity check
 		that was present in TH03. In exchange, you can also access the four
@@ -346,7 +346,7 @@
 		<td>Adds a color map entry: If <var>字</var> is the first code point
 		inside the name area on a new line, the text color is automatically set
 		to <var class="default">15</var>. Up to 8 such entries can be registered
-		before overflowing the statically allocated buffer.<br />
+		before overflowing the statically allocated buffer.<br>
 		🐞 The comma is assumed to be present even if the color parameter is omitted.</td>
 	</tr><tr>
 		<td>{{HTML_Emoji "th03"}}</td>
@@ -365,7 +365,7 @@
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
 		<td>
-			\fi<var class="default">1</var><br />
+			\fi<var class="default">1</var><br>
 			\fo<var class="default">1</var>
 		</td>
 		<td>Calls master.lib's <code>palette_black_<b>i</b>n()</code> or
@@ -379,7 +379,7 @@
 		<td>\fm<var class="default">1</var></td>
 		<td>Fades out BGM volume via PMD's <code>AH=02h</code> interrupt call,
 		in a non-blocking way. The fade speed can range from <var
-		class="default">1</var> (slowest) to <var>127</var> (fastest).<br />
+		class="default">1</var> (slowest) to <var>127</var> (fastest).<br>
 		Values from <var>128</var> to <var>255</var> technically correspond to
 		<code>AH=02h</code>'s fade-in feature, which can't be used from cutscene
 		scripts because it requires BGM volume to first be lowered via
@@ -409,7 +409,7 @@
 		TH04. The default ID of <var class="default">3</var> corresponds to the
 		<img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAAAAP///yH5BAUAAAEALAAAAAAQABAAAAIojA15y5H/GoK0gVXZtfso2U2So40kNn5QemXWFHnK5lJdDOPgasJLAQA7"
-		alt="♫" /> gaiji. Not to be confused with <a
+		alt="♫"> gaiji. Not to be confused with <a
 		href="#{{.Date}}-at"><code>\@</code></a>, which starts with a backslash,
 		unlike this command.</td>
 	</tr><tr>
@@ -419,7 +419,7 @@
 		<td>@h</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIjjAN5y+n3oHsTyIotytjwvn1RKF5fUy6pyjEe6JJaTNKXbRQAOw=="
-		alt="🎔" /> gaiji.</td>
+		alt="🎔"> gaiji.</td>
 	</tr><tr>
 		<td></td>
 		<td></td>
@@ -427,7 +427,7 @@
 		<td>@t</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIgjI+pywnfzptxUmavyqBqDEVGKJLBJ0mZo1rN+ooyUgAAOw=="
-		alt="💦" /> gaiji.</td>
+		alt="💦"> gaiji.</td>
 	</tr><tr>
 		<td></td>
 		<td></td>
@@ -435,7 +435,7 @@
 		<td>@!</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIejB8AyKja2lvRvWohNnPz63UhOHqHZqYnNaKYWDYFADs="
-		alt="!" /> gaiji.</td>
+		alt="!"> gaiji.</td>
 	</tr><tr>
 		<td></td>
 		<td></td>
@@ -443,7 +443,7 @@
 		<td>@?</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIgjI+pwK3HTIsrzWop0pLDDDyL9zhiR2bnyqaju5ltqBQAOw=="
-		alt="?" /> gaiji.</td>
+		alt="?"> gaiji.</td>
 	</tr><tr>
 		<td></td>
 		<td></td>
@@ -451,7 +451,7 @@
 		<td>@!!</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIojANwqGuZHnQs1rZg05TfPn2O52VheZDhiDGUZL7ybMGghUr4GqdtAQA7"
-		alt="‼" /> gaiji.</td>
+		alt="‼"> gaiji.</td>
 	</tr><tr>
 		<td></td>
 		<td></td>
@@ -459,7 +459,7 @@
 		<td>@!?</td>
 		<td>Shows the <img
 		src="data:image/gif;base64,R0lGODlhEAAQAPABAAEBAQGB/yH5BAUAAAEALAAAAAAQABAAAAIqTACmu4jmXJPvREjZ3cymnUyfdGjP1XleaLKVyFpmStMv1qFr65LTvCgAADs="
-		alt="⁉" /> gaiji.</td>
+		alt="⁉"> gaiji.</td>
 	</tr><tr id="{{.Date}}-k">
 		<td>{{HTML_Emoji "th03"}}</td>
 		<td>{{HTML_Emoji "th04"}}</td>
@@ -468,7 +468,7 @@
 		<td>Waits <var class="default">0</var> frames (0 = forever) for an <a
 		href="#{{.Date}}-advance">advance key</a> to be pressed before
 		continuing script execution. Before waiting, TH05 crossfades in any new
-		text that was previously rendered to the invisible VRAM page…<br />
+		text that was previously rendered to the invisible VRAM page…<br>
 		🐞 …but TH04 doesn't, leaving the text invisible during the wait time.
 		As a workaround, <a href="#{{.Date}}-vp"><code>\vp1</code></a> can be
 		used before <code>\k</code> to immediately display that text without a
@@ -501,11 +501,11 @@
 		<td>Starts a new line at the leftmost X coordinate of the box, i.e., the
 		start of the name area. This is how scripts can "change" the name of the
 		currently speaking character, or use the entire 480×64 pixels without
-		being restricted to the non-name area.<br />
+		being restricted to the non-name area.<br>
 		Note that automatic line breaks already move the cursor into a new line.
 		Using this command at the "end" of a line with the maximum number of 30
 		full-width glyphs would therefore start a second new line and leave the
-		previously started line empty.<br />
+		previously started line empty.<br>
 		If this command moved the cursor into the 5<sup>th</sup> line of a box,
 		<a href="#{{.Date}}-s"><code>\s</code></a> is executed afterward, with
 		any of <code>\n</code>'s parameters passed to <code>\s</code>.</td>
@@ -555,14 +555,14 @@
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
 		<td>
-			\s<var class="default">0</var><br />
-			\s-<br />
+			\s<var class="default">0</var><br>
+			\s-<br>
 		</td>
 		<td>Ends a text box and starts a new one. Fades in any text rendered to
 		the invisible VRAM page, then waits <var class="default">0</var> frames
 		(0 = forever) for an <a href="#{{.Date}}-advance">advance key</a> to be
 		pressed. Afterward, the new text box is started with the cursor moved to
-		the top-left corner of the name area.<br />
+		the top-left corner of the name area.<br>
 		<code>\s-</code> skips the wait time and starts the new box
 		immediately.</td>
 	</tr><tr>
@@ -619,7 +619,7 @@
 			back the current BGM for the total number of measures, including
 			loops, given in the first parameter, and fall back on calling
 			<code>\w</code> and <code>\wk</code> with the second parameter as
-			the frame number if BGM is disabled.<br />
+			the frame number if BGM is disabled.<br>
 			🐞 Neither PMD nor MMD reset the internal measure when stopping
 			playback. If no BGM is playing and the previous BGM hasn't been
 			played back for at least the given number of measures, this command
@@ -627,14 +627,14 @@
 		</ul>
 		Since both TH04 and TH05 fade in any new text from the invisible VRAM
 		page, these commands can be used to simulate TH03's typing effect in
-		those games. <a href="#{{.Date}}-w-example">Demo video below.</a><br />
+		those games. <a href="#{{.Date}}-w-example">Demo video below.</a><br>
 		Contrary to <a href="#{{.Date}}-k"><code>\k</code></a> and <a
 		href="#{{.Date}}-s"><code>\s</code></a>, specifying 0 frames would
-		simply remove any frame delay instead of waiting forever.<br />
+		simply remove any frame delay instead of waiting forever.<br>
 		The TH03-exclusive <code>k</code> variants allow the delay to be
 		interrupted if <kbd>⏎ Return</kbd> or <kbd>Shot</kbd> are held down.
 		TH04 and TH05 recognize the <code>k</code> as well, but removed its
-		functionality.<br />
+		functionality.<br>
 		All of these commands have no effect if <kbd>ESC</kbd> is held.</td>
 	</tr><tr>
 		<td>\wm<var class="default">64</var>,<var class="default">64</var></td>
@@ -653,7 +653,7 @@
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
 		<td>
-			\wi<var class="default">1</var><br />
+			\wi<var class="default">1</var><br>
 			\wo<var class="default">1</var>
 		</td>
 		<td>Calls master.lib's <code>palette_white_<b>i</b>n()</code> or
@@ -685,7 +685,7 @@
 		<td>\$</td>
 		<td>Stops script execution. Must be called at the end of each file;
 		otherwise, execution continues into whatever lies after the script
-		buffer in memory.<br />
+		buffer in memory.<br>
 		TH05 automatically deallocates the loaded .PI image, TH03 and TH04
 		require a separate manual call to <a
 		href="#{{.Date}}-p-"><code>\p-</code></a> to not leak its memory.</td>
@@ -697,7 +697,7 @@
 </figcaption></figure><figure id="{{.Date}}-at-example" class="fullres"><img
 	src="{{$at}}"
 	alt="Using the \@ command in the middle of a TH03 or TH04 cutscene script"
-/><figcaption>
+><figcaption>
 	The <a href="#{{.Date}}-at"><code>\@</code></a> bug. Yes, the ¥ is fake. It
 	was easier to GIMP it than to reword the sentences so that the backslashes
 	landed on the second byte of a 2-byte half-width character pair.
@@ -707,23 +707,23 @@
 		src="{{$th03_b}}"
 		data-title='TH03'
 		alt="Cutscene font weights in TH03"
-	/><img
+	><img
 		src="{{$th05_b}}"
 		data-title="TH04 / TH05"
 		alt="Cutscene font weights in TH05, demonstrating the <code>\b3</code> bug that also affects TH04"
 		class="active"
-	/><img
+	><img
 		src="{{$th03_b_unaligned}}"
 		data-title='TH03 (unaligned)'
 		alt="Cutscene font weights in TH03, rendered at a hypothetical unaligned X position"
-	/><img
+	><img
 		src="{{$th05_b_unaligned}}"
 		data-title="TH04 / TH05 (unaligned)"
 		alt="Cutscene font weights in TH05, rendered at a hypothetical unaligned X position"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The font weights and effects available through <a
 		href="#{{.Date}}-b"><code>\b</code></a>, including the glitch with
-		<code>\b3</code> in TH04 and TH05.<br />
+		<code>\b3</code> in TH04 and TH05.<br>
 		Font weight 3 is technically not rendered correctly in TH03 either; if
 		you compare 1️⃣ with 4️⃣, you notice a single missing column of pixels
 		at the left side of each glyph, which would extend into the previous
@@ -762,12 +762,12 @@
 	other system, so I won't have to deal with it until we're close to finishing
 	<code>MAIN.EXE</code>… that is, unless someone requests it before. And it
 	won't involve text encodings or unblitting…
-</p><hr id="translations-{{.Date}}" /><p>
+</p><hr id="translations-{{.Date}}"><p>
 	The cutscene system got me thinking in greater detail about how I would
 	implement translations, being one of the main dependencies behind them. This
 	goal has been on the order form for a while and could soon be implemented
 	for these cutscenes, with 100% PI being right around the corner for the TH03
-	and TH04 cutscene executables.<br />
+	and TH04 cutscene executables.<br>
 	Once we're there, the "Virgin" old-school way of static translation patching
 	for Latin-script languages could be implemented fairly quickly:
 </p><ol>
@@ -780,7 +780,7 @@
 	way, the text retains a consistent look regardless of whether the translated
 	game is run with an NEC or EPSON font ROM, or the <img
 	src="data:image/gif;base64,R0lGODlhlgALAPABAAAAAAAAACH5BAUKAAEALAAAAACWAAsAAALiRI4IlskNo5xUvRqu0xjy1TWcKI3epJnRpWYb9bSf+Tnkkq74xu7KbwHBcAyD70AMCoG/Yyb5hCI9RyPIx6I+LdOtdxljloDCcrHoWrpe3rV7nWWbkVU280y2vfEdMD0P2PUnxuemxkUo2LYX1xX3qBeFARkIF7lIKXg4qIiG2NloOZj5triiR+oJeqlqWBLaqtbD+ucXuLlJu9epOZu4q2gH7Buc8zVDxmf7OopoG0byO8cZzRkbY9wEdigliW16giWpdHfibFPVXSpV9mX+QvxZ6YRi5KhVXn0PL1LTH22gAAA7"
-	alt="hideous abomination" /> that Neko Project II auto-generates if you
+	alt="hideous abomination"> that Neko Project II auto-generates if you
 	don't provide either.</li>
 	<li><i>(Optional)</i> Change automatic line breaks to work on a per-word
 	basis, rather than per-glyph</li>
@@ -814,7 +814,7 @@
 	{{DB_CustomerByID 9}}'s Open Collective funds, separate from the ReC98 cap.
 	This way, we can make sure that the feature is completely implemented, and I
 	can talk with every interested translator to make sure that their language
-	works.<br />
+	works.<br>
 	It's still cheaper overall to do this on PC-98 than to first port the games
 	to a modern system and <i>then</i> translate them. On the other hand, most
 	of the tasks in the Chad variant (3, 4, 5, and half of 2) purely deal with
@@ -829,28 +829,28 @@
 	generation for dynamic translations to keep text rendering consistent with
 	the rest of the PC-98 system, and just not support non-Latin-script
 	languages in the beginning? In any case, I've added both options to the
-	order form.<br />
+	order form.<br>
 	<strong>Edit (2023-07-28):</strong> {{DB_CustomerByID 9}} has agreed to fund
 	a basic feature set somewhere between the Virgin and Chad level. Check the
 	{{Blog_PostLink "2023-07-28" "dedicated announcement blog post"}} for more
 	details and ideas, and to find out how you can support this goal!
-</p><hr /><p>
+</p><hr><p>
 	Surprisingly, there was still a bit of RE work left in the third push after
 	all of this, which I filled with some small rendering boilerplate. Since I
 	also wanted to include TH02's playfield overlay functions,
 	<sup>1</sup>/<sub>15</sub> of that last push went towards getting a
 	TH02-exclusive function out of the way, which also ended up including that
-	game in this delivery. {{HTML_Emoji "tannedcirno"}}<br />
+	game in this delivery. {{HTML_Emoji "tannedcirno"}}<br>
 	The other small function pointed out how TH05's Stage 5 midboss pops into
 	the playfield quite suddenly, since its clipping test thinks it's only 32
 	pixels tall rather than 64:
 </p><figure {{$popin.FigureAttrs}}>
 	{{call .VideoPlayer $popin}}
 	<figcaption>
-		<s>Good chance that the pop-in might have been intended.</s><br />
+		<s>Good chance that the pop-in might have been intended.</s><br>
 		<strong>Edit (2023-06-30):</strong> Actually, it's a
 		{{Blog_PostLink "2023-06-30" "systematic consequence of ZUN having to work around the lack of clipping in master.lib's sprite functions"}}.
-		<br />
+		<br>
 		There's even another quirk here: The white flash during its first frame
 		is actually carried over from the <i>previous</i> midboss, which the
 		game still considers as actively getting hit by the player shot that

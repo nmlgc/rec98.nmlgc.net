@@ -22,7 +22,7 @@
 	Turns out I was not <i>quite</i> done with the TH01 Anniversary Edition yet.
 	You might have noticed some white streaks at the beginning of Sariel's
 	second form, which are in fact a bug that I accidentally added to the
-	initial release. {{HTML_Emoji "tannedcirno"}}<br />
+	initial release. {{HTML_Emoji "tannedcirno"}}<br>
 	These can be traced back to a <a
 	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">quirk</a>
 	I wasn't aware of, and hadn't documented so far. When defeating Sariel's
@@ -35,7 +35,7 @@
 	<i>Except</i> if they're currently showing the 10-frame delay cloud
 	animation <img
 	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/hRLR3kgU09GVCBHSUYgRW5jb2RlcgAh+QQJHgABACwAAAAAEAAQAAACJ4wNqceR7UB7MB4pq9tZo+0xVIh0l1lC40myLddmmIetKmpblbIwBQAh+QQFCgAAACwIAAgAAQABAAACAkQBACH5BAkeAAEALAAAAAAQABAAAAIfjB8AyLb8YDsxTneztTInr3EhBYok6Jkd2iiTmjxcAQAh+QQFCgAAACwIAAgAAQABAAACAkQBADs="
-	alt="" />, activated for all pellets during the symmetrical radial 2-ring
+	alt="">, activated for all pellets during the symmetrical radial 2-ring
 	pattern in Phase 2 and left activated for the rest of the fight. These
 	pellets will continue their animation after the transition to the second
 	form, and turn into regular pellets you have to dodge once their animation
@@ -47,14 +47,14 @@
 	all pellets, this counter is simply set to 0, regardless of any delay cloud
 	pellets that may still be alive, and it's merely incremented or decremented
 	when pellets are spawned or leave the playfield.
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	In the original game, this counter is only used as an optimization to skip
 	spawning new pellets once the cap is reached. But with batched
 	EGC-accelerated unblitting, it also makes sense to skip the rather costly
 	setup and shutdown of the EGC if no pellets are active anyway. Except if the
 	counter you use to check for that case can be 0 even if there <i>are</i>
 	pellets alive, which consequently don't get unblitted…
-	{{HTML_Emoji "onricdennat"}}<br />
+	{{HTML_Emoji "onricdennat"}}<br>
 	There is an optimal fix though: Instead of unconditionally resetting the
 	living pellet counter to 0, we decrement it for every pellet that
 	<i>does</i> get reset. This preserves the quirk <i>and</i> gives us a

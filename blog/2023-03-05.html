@@ -73,7 +73,7 @@
 	decompilation mark before the 25<sup>th</sup> anniversary last August.
 	However, all the structural changes that I can't commit to
 	<code>master</code> reveal how much of a mess the TH01 codebase actually
-	is.<br />
+	is.<br>
 	Merging the executables is mainly difficult because of all the
 	inconsistencies between <code>REIIDEN.EXE</code> and <code>FUUIN.EXE</code>.
 	The worst parts can be found in the <code>REYHI*.DAT</code> format code and
@@ -84,7 +84,7 @@
 	commits just to sort out all of these issues, it's no wonder that the only
 	thing I've seen being done with this codebase since TH01's 100%
 	decompilation was a single porting attempt that ended in a rather quick
-	ragequit.<br />
+	ragequit.<br>
 	So why are we merging the executables in preparation for the Anniversary
 	Edition, and not waiting with it until we start doing ports?
 </p><ul>
@@ -116,7 +116,7 @@
 	file sizes of the original three executables, this might <a
 	href="https://twitter.com/Tasos500/status/1626321988925915137">look like a
 	pretty impressive feat</a>. Like, how can we <i>possibly</i> get 407,812
-	bytes into less than 238,612 bytes, without using compression?<br />
+	bytes into less than 238,612 bytes, without using compression?<br>
 	If you've ever looked at the linker map though, it's not at all surprising.
 	Excluding the aforementioned inconsistencies that are hard to quantify,
 	<code>OP.EXE</code> and <code>FUUIN.EXE</code> only feature 5,767 and 6,475
@@ -126,7 +126,7 @@
 	is the C++ exception handler that Borland <a
 	href="https://github.com/nmlgc/Slices/blob/81787e49bccfc6bf22689d7aa4f14c9d25df4b48/Turbo%20C%2B%2B%204.02J%20(1994)/c0.asm#L258-L262">forces
 	onto every non-.COM binary by default</a>, which alone adds 20,512 bytes
-	even if your binary doesn't use C++ exceptions.<br />
+	even if your binary doesn't use C++ exceptions.<br>
 	On a more hilarious note, <a
 	href="https://github.com/nmlgc/ReC98/blob/6370f96d9a5850ea71e4c12d7cc3f1d45e8c9d73/th01/hardware/graph.cpp#L550">this
 	single line</a> is responsible for pulling another unnecessary 14,242 bytes
@@ -152,7 +152,7 @@
 	As does, of course, removing unused code: The only remaining purpose of
 	features such as {{Blog_PostLink "2020-01-05" "resident palettes"}} is to
 	potentially make porting more difficult for anyone who doesn't immediately
-	realize that nothing in the game uses these functions.<br />
+	realize that nothing in the game uses these functions.<br>
 	Technically, <i>all</i> unused code would be bloat, but for now, I'm keeping
 	the parts that may tell stories about the game's development history (such
 	as unused effects or the {{Blog_PostLink "2022-08-11" "mouse cursor"}}), or
@@ -167,14 +167,14 @@
 	the C <code>spawn()</code> function works fine on this compiler, so
 	<code>spawn("MDRV98.COM")</code> would be all we need to do, right? Except
 	that the game crashes very soon after that subprocess returned.
-	{{HTML_Emoji "thonk"}}<br />
+	{{HTML_Emoji "thonk"}}<br>
 	So it's not going to be <i>that</i> easy if the spawned process is a <a
 	href="https://en.wikipedia.org/wiki/Terminate-and-stay-resident_program">TSR</a>.
 	But why should this be a problem? Let's take a look at the DOS heap, and how
 	DOS lays out processes in conventional memory if we launch the game
 	regularly through <code>GAME.BAT</code>:
 </p><figure>
-	<embed src="{{call .PostFileURL "DOS-heap-batch.svg"}}" />
+	<embed src="{{call .PostFileURL "DOS-heap-batch.svg"}}">
 	<figcaption>The rough layout of the DOS heap when launching TH01 from
 	<code>GAME.BAT</code>.</figcaption>
 </figure><p>
@@ -186,10 +186,10 @@
 	to search for free memory in one direction – and this is exactly how Borland
 	implemented the C heap for functions like <code>malloc()</code> and
 	<code>free()</code>, and the C++ <code>new</code> and <code>delete</code>
-	operators.<br />
+	operators.<br>
 	But if we spawn MDRV98 <i>after</i> starting TH01, well…
 </p><figure>
-	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-adjacent.svg"}}" />
+	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-adjacent.svg"}}">
 </figure><p>
 	MDRV98 will spawn in the next free memory location, allocate itself, return
 	to TH01… which suddenly finds its C heap blocked from growing. As a result,
@@ -207,7 +207,7 @@
 	place if DOS already comes with a perfectly fine native one</a>? Using the
 	native allocator would completely erase the distinction between TSR memory
 	and game memory, and inherently allow the game to allocate beyond
-	MDRV98.</a><br />
+	MDRV98.</a><br>
 	I did in fact implement this, and noticed even more benefits:
 </p><ul>
 	<li>While DOS uses 16 bytes rather than Borland's 4 bytes for the control
@@ -237,12 +237,12 @@
 	importantly though, this is how <code>REIIDEN.EXE</code> can launch into
 	another <code>REIIDEN.EXE</code> process even if there are less than 238,612
 	bytes free when <code>exec()</code> is called, and without consuming more
-	memory for every successive binary.<br />
+	memory for every successive binary.<br>
 	For now, <code>ANNIV.EXE</code> still re-<code>exec()</code>s itself at
 	every point where the original game did, as ZUN's original code really
 	depends on being reinitialized at boss and scene boundaries. The resulting
 	accidental semi-<q>hot reloading</q> is also a useful property to retain
-	during development.<br />
+	during development.<br>
 	So why is the DOS heap a bad idea for regular game allocation after all?
 </p><ul>
 	<li>Even DOS automatically releases all memory associated with a process
@@ -264,7 +264,7 @@
 	href="https://stanislavs.org/helppc/memory_control_block.html">memory
 	control blocks</a>, but in reality, DOS will likely just throw error code #7
 	(<code>ERROR_ARENA_TRASHED</code>) on the next memory management syscall,
-	forcing a reboot.<br />
+	forcing a reboot.<br>
 	With a custom allocator, small corruptions remain isolated to the process.
 	They can be even further limited if the process adds some padding between
 	its last internal allocation and the end of the allocated DOS memory block;
@@ -286,18 +286,18 @@
 	it in the games. Instead, let's stay with the Borland C heap, and find a way
 	to push MDRV98 to the very top of conventional RAM. Like this:
 </p><figure>
-	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-top.svg"}}" />
+	<embed src="{{call .PostFileURL "DOS-heap-MDRV98-top.svg"}}">
 </figure><p>
 	Which is much easier said than done. It would be nice if we could just use
 	the <i>last fit</i> allocation strategy here, but .COM executables always
 	receive all free memory by default anyway, which eliminates any difference
-	between the strategies.<br />
+	between the strategies.<br>
 	But we can still change <i>memory</i> itself. So let's temporarily claim all
 	remaining free memory, minus the exact amount we need for MDRV98, for our
 	process. Then, the only remaining free space to spawn MDRV98 is at the exact
 	place where we want it to be:
 </p><figure>
-	<embed src="{{call .PostFileURL "DOS-heap-before-MDRV98-top.svg"}}" />
+	<embed src="{{call .PostFileURL "DOS-heap-before-MDRV98-top.svg"}}">
 	<figcaption>
 		Obviously, we release all the additional memory after spawning MDRV98.
 	</figcaption>
@@ -306,7 +306,7 @@
 	we need to replicate the assumption that MDRV98's <code>-M7</code>
 	command-line parameter corresponds to a resident size of 23,552 bytes. This
 	is not as bad as it seems, because the <code>-M</code> parameter explicitly
-	has a KiB unit, and we can nicely abstract it away for the API.<br />
+	has a KiB unit, and we can nicely abstract it away for the API.<br>
 	The <i>(env.)</i> block though? Its minimum size equals the combined length
 	of all environment variables passed to the process, but its maximum size is…
 	not limited at all?! As in, DOS implementations can add and have
@@ -319,7 +319,7 @@
 	FreeDOS on a slow emulator</a>. It's not even worth sending a bug report for
 	this specific case, because it's only a symptom of the fact that
 	unexpectedly large program environment blocks can and will happen, and are
-	to be expected in DOS land.<br />
+	to be expected in DOS land.<br>
 	So thanks to this cruel joke, it's technically impossible to achieve what we
 	want to do there. Hooray! The only thing we can kind of do here is an
 	educated guess: Sum up the length of all environment variables in our
@@ -334,7 +334,7 @@
 	these functions are inaccurate because they don't factor in the
 	aforementioned KiB padding to the underlying DOS memory block. So we have to
 	directly use the DOS syscalls after all. Which at least means that learning
-	about them wasn't <i>completely</i> useless…<br />
+	about them wasn't <i>completely</i> useless…<br>
 	The final issue is caused inside <span class="borland-{{.Date}}">Borland's
 	<code>spawn()</code> implementation</span>. The environment block for the
 	child process is built out of all the strings reachable from C's
@@ -363,7 +363,7 @@
 	So yes, launching MDRV98 from C <i>can</i> be done, but it involves advanced
 	witchcraft and is completely ridiculous. {{HTML_Emoji "tannedcirno"}}
 	Launching external sound drivers from a batch file <i>is</i> the right way
-	of doing things.<br />
+	of doing things.<br>
 	Fortunately, you don't have to rely on this auto-launching feature. You can
 	still launch <code>DEBLOAT.EXE</code> or <code>ANNIV.EXE</code> from a batch
 	file that launched <code>MDRV98.COM</code> before, and the binaries will
@@ -371,7 +371,7 @@
 	unlikely that my heuristic will ever break, but I definitely recommend
 	replicating <code>GAME.BAT</code> just to be completely sure – especially
 	for user-friendly repacks that don't want to include the original game
-	anyway.<br />
+	anyway.<br>
 	This is also why <code>ANNIV.EXE</code> doesn't launch
 	<code>ZUNSOFT.COM</code>: The "correct" and stable way to launch
 	<code>ANNIV.EXE</code> still involves a batch file, and I would say that
@@ -384,7 +384,7 @@
 	actually triggered by SinGyoku's <code>BOSS1_3.BOS</code> and Konngara's
 	<code>BOSS8_1.BOS</code>. They only do not immediately crash the game when
 	loading these bosses thanks to two implementation details of Borland's C
-	heap. {{HTML_Emoji "zunpet"}}<br />
+	heap. {{HTML_Emoji "zunpet"}}<br>
 	Obviously, this is a bug we should fix, but according to the definition of
 	bugs, that fix would be exclusive to the <code>anniversary</code> branch.
 	Isn't that too restrictive for something this critical? This code is
@@ -397,7 +397,7 @@
 	invisible internal issues like these. Let's call it <i>landmine</i>, and fix
 	them on the <code>debloated</code> branch as well. <a
 	href="https://twitter.com/Clerish/status/1623990678937034752">Thanks to
-	Clerish for the naming inspiration</a>!<br />
+	Clerish for the naming inspiration</a>!<br>
 	With this new category, the full definitions for all categories have become
 	quite extensive. Thus, they now live in <a
 	href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#labeling-weird-or-broken-code"><code>CONTRIBUTING.md</code>
@@ -427,7 +427,7 @@
 	href="https://github.com/nmlgc/ReC98/blob/dd2265cf92022b1d7e48e0b3e701e11dd5995a67/th01/main/stage/stageobj.cpp#L30-L104">hardcoding
 	the exact original data that the game would originally read</a>, and even <a
 	href="https://github.com/nmlgc/ReC98/blob/dd2265cf92022b1d7e48e0b3e701e11dd5995a67/th01/main/stage/stageobj.cpp#L355-L370">emulate
-	the original segment relocations and other pieces of global data</a>.<br />
+	the original segment relocations and other pieces of global data</a>.<br>
 	Doing this is feasible thanks to the fact that there are only 4 glitch
 	stages. Unfortunately, the same can't be said for the timer values, which
 	are determined by an array lookup with the un-modulo'd stage ID. If we
@@ -446,7 +446,7 @@
 	redundant, bad, and slow code, and would make no progress in terms of
 	portability. It'd be much better to first write a single generic blitter
 	that's decently optimized, but supports all kinds of sprites to make this
-	optimization actually worth something.<br />
+	optimization actually worth something.<br>
 	So, next research question: How would such a blitter look like? After I
 	learned during my
 	{{Blog_PostLink "2022-06-17" "first foray into cycle counting"}} that port
@@ -479,7 +479,7 @@
 	<code>MOV</code> instruction for the lowest possible number of cycles per
 	row – for example, we'd blit a 56-wide sprite with three <code>MOV</code>s
 	(32-bit + 16-bit + 8-bit), and a 64-wide one with two 32-bit
-	<code>MOVs</code>.<br />
+	<code>MOVs</code>.<br>
 	Or maybe not? There's a lot of blitting code in both master.lib and PC-98
 	Touhou that checks for empty bytes within sprites to skip needlessly writing
 	them to VRAM:
@@ -751,7 +751,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	dedicated PC-98 platform layer</a>. This code will gradually eliminate the
 	dependency on master.lib and replace it with better optimized and more
 	readable C++ code. The blitting benchmark, for example, is already
-	implemented completely without master.lib.<br />
+	implemented completely without master.lib.<br>
 	While this platform layer is mainly written to generate optimal code within
 	Turbo C++ 4.0J, it can also serve as general PC-98 documentation for
 	everyone who prefers code over machine-translating old Japanese books. Not
@@ -775,7 +775,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	reproducible tearing in the top part of the playfield, suggesting exactly
 	<i>why</i> ZUN interlaced the rendering in the first place. 😕 So have we
 	already reached the limit of single-buffered PC-98 games here, or can we
-	still do something about it?<br />
+	still do something about it?<br>
 	As it turns out, the main bottleneck actually lies in the pellet
 	<i>unblitting</i> code. Every EGC-"accelerated" unblitting call in TH01 is
 	as unbatched as the pellet blitting calls were, spending an additional 17
@@ -807,7 +807,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	our own EGC code presents a nice opportunity to finally look deeper into <a
 	href="https://www.webtech.co.jp/company/doc/undocumented_mem/io_egc.txt">all
 	its registers and configuration options</a>, and see what exactly we can do
-	about ZUN's enforced 16-pixel alignment.<br />
+	about ZUN's enforced 16-pixel alignment.<br>
 	To nobody's surprise, this alignment is completely unnecessary, and only
 	displays a lack of knowledge about the chip. While it <i>is</i> true that
 	the EGC wants VRAM to be exclusively addressed in 16-bit chunks at
@@ -840,7 +840,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	of the rectangle will appear 16 pixels to the right of the destination
 	address, and the second one will start at bit offset 0 with pixels from the
 	rightmost byte of the first line, which weren't blitted and remained in the
-	tile register.<br />
+	tile register.<br>
 	There is an easy solution though: Before the horizontal loop on each line of
 	the rectangle, simply read one additional 16-pixel chunk from the source
 	location to prefill the shift register. Thankfully, it's large enough to
@@ -856,13 +856,13 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 </p><figure class="fullres pixelated"><img
 	src="{{$pic_egc_t98}}"
 	alt="Glitched blitting results on T98-Next when trying EGC copies where the source bit address is larger than the destination bit address"
-/></figure><p>
+></figure><p>
 	Every other emulator agrees with real hardware in this regard, so we can
 	safely assume this to be a bug in T98-Next. Just in case this old emulator
 	with its last release from June 2010 still has any fans left nowadays… For
 	now though, even they can still enjoy the TH01 Anniversary Edition: The only
 	EGC copy algorithm that TH01 actually needs is the left one during the
-	single-buffered tests, which even <i>that</i> emulator gets right.<br />
+	single-buffered tests, which even <i>that</i> emulator gets right.<br>
 	That only leaves
 	{{Blog_PostLink "2019-11-06" "my old offer of documenting the EGC raster ops"}},
 	and we've got the EGC figured out completely!
@@ -887,7 +887,7 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 	their blitting APIs hide that fact by taking a pixel position regardless.
 	This is why we can't just replace ZUN's original 16-pixel-aligned EGC
 	unblitting function with ours, and always have to replace both the blitter
-	<i>and</i> the unblitter on a per-sprite basis.<br />
+	<i>and</i> the unblitter on a per-sprite basis.<br>
 	To completely remove all flickering, we'd also like to get rid of all the
 	sprite-specific unblit&nbsp;➜ update&nbsp;➜ render sequences, and instead
 	gather all unblitting code to the beginning of the game loop, before any
@@ -908,11 +908,11 @@ pokew(VRAM_SEGMENT, vram_offset, both_halves);
 		data-title="Anniversary Edition"
 		alt="TH01 SinGyoku's crossing pellet pattern in the Anniversary Edition, demonstrating smaller unblitting artifacts"
 		class="active"
-	/><img
+	><img
 		src="{{$pic_unblit_o}}"
 		data-title="Original game"
 		alt="The same frame in the original game, featuring much more giant holes ripped into the sphere sprite"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>SinGyoku's "crossing pellets" pattern, shortly before completing
 	the transformation back to the sphere.</figcaption>
 </figure><p>

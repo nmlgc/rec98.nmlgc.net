@@ -92,7 +92,7 @@ func HTMLEmoji(emoji string) template.HTML {
 	}
 
 	return template.HTML(fmt.Sprintf(
-		`<img src="%s" alt=":%s:" %s %s/>`,
+		`<img src="%s" alt=":%s:" %s %s>`,
 		emojiURL(fn+ext), emoji, EMOJI_ATTRS, extra,
 	))
 }
@@ -187,7 +187,7 @@ func HTMLTH03Playchar(i int) template.HTML {
 	name := TH03_PLAYCHARS[i]
 	url := emojiURL("th03-pc" + strconv.Itoa(i) + ".webp")
 	return template.HTML(fmt.Sprintf(
-		`<img src="%s" alt="%s" %s/> %s`, url, name, EMOJI_ATTRS, name,
+		`<img src="%s" alt="%s" %s> %s`, url, name, EMOJI_ATTRS, name,
 	))
 }
 

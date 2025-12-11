@@ -12,7 +12,7 @@
 	that started with the .GRC functions. P0105 already started these with the
 	(surprisingly sanely implemented) 8×8 diamond, star, and… uh, snowflake
 	(?) sprites
-	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAIAQMAAADZb60gAAAABlBMVEUAAH4AAAAuh25gAAAAAXRSTlMAQObYZgAAACZJREFUeAEFwTEBACAAw7DKmJhdyEAAMma9JCShLfOi4mS79JWcfK+gCvOAwD5hAAAAAElFTkSuQmCC" alt="" />,
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAIAQMAAADZb60gAAAABlBMVEUAAH4AAAAuh25gAAAAAXRSTlMAQObYZgAAACZJREFUeAEFwTEBACAAw7DKmJhdyEAAMma9JCShLfOi4mS79JWcfK+gCvOAwD5hAAAAAElFTkSuQmCC" alt="">,
 	prominently seen in the Konngara, Elis, and Sariel fights, respectively.
 	Now, we've also got:
 </p><ul>
@@ -26,15 +26,15 @@
 </ul><p>
 	The weirdness becomes obvious with just a single screenshot:
 </p><figure><a
-	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness" /></a></figure
+	href="{{$pic}}"><img src="{{$pic}}" alt="TH01 invincibility sprite weirdness"></a></figure
 ><p>
 	First, we've got the obvious issue of the sprites not being clipped at the
 	right edge of VRAM, with the rightmost pixels in each row of the sprite
 	extending to the beginning of the next row. Well, that's just what you get
 	if you insist on writing unique low-level blitting code for the majority
-	of the individual sprites in the game… 🤷<br />
+	of the individual sprites in the game… 🤷<br>
 	More importantly though, the sprite sheet looks like this:
-	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAIAQMAAACiS2/sAAAABlBMVEUAAKUAAADf0lD4AAAAAXRSTlMAQObYZgAAACBJREFUeF5jYGCQkABhHQYJHZ0oBp26//8hBJgLlgCRAJs0B/0NobvEAAAAAElFTkSuQmCC" alt="" />
+	<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAIAQMAAACiS2/sAAAABlBMVEUAAKUAAADf0lD4AAAAAXRSTlMAQObYZgAAACBJREFUeF5jYGCQkABhHQYJHZ0oBp26//8hBJgLlgCRAJs0B/0NobvEAAAAAElFTkSuQmCC" alt="">
 	So how do we even get these fully filled red diamonds?
 </p><p>
 	Well, turns out that the sprites are never consistently unblitted during
@@ -48,7 +48,7 @@
 	contents of one bitplane to the read destination. <i>Maybe</i> ZUN thought
 	that setting the RMW color to <span style="color: #ff0000;">red</span>
 	also sets some internal 4-plane mask register to match that color?
-	{{HTML_Emoji "zunpet"}} <br />
+	{{HTML_Emoji "zunpet"}} <br>
 	Instead, the rather random pixels read from the first bitplane are then
 	used as a mask for a <i>second</i> blit of the same red sprite.
 	Effectively, this only really "unblits" the invincibility pixels that are
@@ -66,7 +66,7 @@
 </p><figure>{{call .VideoPlayer $vid}}</figure><p>
 	Because Reimu would barely be visible under all that flicker. In
 	comparison, those fully filled diamonds actually look pretty good.
-</p><hr /><p>
+</p><hr><p>
 	After all that, the remaining time wouldn't have been enough for the next
 	few essential classes, so I closed out the push with three more VRAM
 	effects instead:
@@ -84,7 +84,7 @@
 	that this sort of thing could have also been accelerated using the PC-98's
 	EGC… although simply writing better C would have already gone a long way.
 	The function also comes with three unused mesh patterns.</li>
-</ul><hr /><p>
+</ul><hr><p>
 	And with that, ReC98, as a whole, is not only ⅓ done, but I've also fully
 	caught up with the feature backlog for the first time in the history of
 	this crowdfunding! Time to go into maintenance mode then, while we wait

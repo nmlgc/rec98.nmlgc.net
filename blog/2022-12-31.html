@@ -24,7 +24,7 @@
 	href="https://github.com/narzoul/DDrawCompat">DDrawCompat</a> is one of the
 	simpler solutions for Shuusou Gyoku in particular: Just drop its
 	<code>ddraw</code> proxy DLL into the game directory, and the game will run
-	as it's supposed to.<br />
+	as it's supposed to.<br>
 	So let's just bundle that DLL with all my future Shuusou Gyoku releases
 	then? That <i>would</i> have been the quick and dirty option, coming with
 	several drawbacks:
@@ -39,7 +39,7 @@
 	hypothetical concern: DDrawCompat does rely on particularly volatile Win32
 	API details, to the point that the recent Windows 11 22H2 update <a
 	href="https://github.com/narzoul/DDrawCompat/commit/f1d8dbd1cb96fb641c31d55c9cf576406a5c2d01">completely
-	broke it, causing a hang at startup that required a workaround</a>.<br />
+	broke it, causing a hang at startup that required a workaround</a>.<br>
 	But sure, it's still just a single third-party component. Keeping it up to
 	date doesn't sound too bad by itself…</li>
 	<li>…if DDrawCompat weren't evolving way beyond what we need to keep Shuusou
@@ -49,7 +49,7 @@
 	href="https://github.com/narzoul/DDrawCompat/wiki/Configuration">lots of
 	configuration options</a> with default settings that <a
 	href="https://github.com/nmlgc/ssg/issues/3#issuecomment-1264267695">actually
-	break Shuusou Gyoku</a>.<br />
+	break Shuusou Gyoku</a>.<br>
 	To get a glimpse of how this is likely to play out, we only have to look at
 	the more mature <a href="https://sourceforge.net/projects/dxwnd/">DxWnd</a>
 	project. In its expert mode, DxWnd features three rows of tabs, each packed
@@ -68,13 +68,13 @@
 	out that among all the hooks and patches, the game only needs the most
 	central one: Enforcing a 32-bit display mode regardless of whatever lower
 	bit depth the game requests natively, combined with converting the game's
-	pixel buffer to 32-bit on the fly.<br />
+	pixel buffer to 32-bit on the fly.<br>
 	So does this mean that adding 32-bit to the game's list of supported bit
 	depths is everything we have to do?
 </p><figure class="fullres pixelated"><img
 	src="{{$32bit}}"
 	alt="The new 32-bit rendering option in the Shuusou Gyoku P0226 build."
-/><figcaption>
+><figcaption>
 	Interestingly, Shuusou Gyoku already saved the DirectDraw enumeration flag
 	that indicates support for 32-bit display modes. The official version just
 	did nothing with it.
@@ -109,7 +109,7 @@
 	href="https://github.com/nmlgc/ssg/commit/20e4544efcdcd01fd70c74fd312c2bc86821ee2f">hey,
 	I'd like to have 32-bit as well</a></q>, and C++ will automatically
 	instantiate correct 32-bit variants of all bit depth-dependent code
-	snippets.<br />
+	snippets.<br>
 	There are only three features in the entire game that access pixel buffers
 	this way: a color key retrieval function, the lens ball animation on the
 	logo screen, and… the ending staff roll? Sure, the text sprites fade in and
@@ -123,7 +123,7 @@
 </p><figure {{$spiral.FigureAttrs}}>{{call .VideoPlayer $spiral}}<figcaption>
 	They probably considered it <i>too </i> wild for the <a
 	href="https://www.youtube.com/watch?v=SRbwQahZBsE">mood</a> of this
-	ending.<br />
+	ending.<br>
 	The main ending text was the only remaining issue of mojibake present in my
 	previous Shuusou Gyoku builds, and is now fixed as well. Windows <i>can</i>
 	render Shift-JIS text via GDI even outside Japanese locale, but only when
@@ -144,7 +144,7 @@
 	originally supported 8-bit or 16-bit modes. Setting the
 	<code>BitDepth</code> field to any other value causes the <i>entire</i> file
 	to be reset to its defaults, re-locking the Extra Stage in the process.
-	{{HTML_Emoji "onricdennat"}}<br />
+	{{HTML_Emoji "onricdennat"}}<br>
 	Introducing a <a
 	href="https://github.com/nmlgc/ssg/issues/34">backward-compatible version
 	system for <code>秋霜CFG.DAT</code></a> was beyond the scope of this push.
@@ -155,7 +155,7 @@
 	original approach, this would have caused your entire configuration to fail
 	the validation check. Instead, you can now safely update to the new build
 	without losing your option settings, or your previously unlocked access to
-	the Extra Stage.<br />
+	the Extra Stage.<br>
 	Side note: The validation limit for starting bombs is off by one, and the
 	one for starting lives check is off by two. By modifying
 	<code>秋霜CFG.DAT</code>, you could theoretically get new games to start with
@@ -185,18 +185,18 @@
 	is definitely suboptimal though, <a
 	href="https://github.com/nmlgc/ssg/issues/33">especially given how hard it
 	is to programmatically remove this flag within the binary itself</a>. It
-	only adds additional complexity to the ideal clean upgrade path.<br />
+	only adds additional complexity to the ideal clean upgrade path.<br>
 	So, make sure to check your registry and manually remove these flags for the
 	time being. Without them, the new <i>Config → Graphic</i> menu will
 	correctly prevent you from selecting anything else but 32-bit on modern
 	Windows.
-</p><hr /><p id="unicode-{{.Date}}">
+</p><hr><p id="unicode-{{.Date}}">
 	After all that, there was just enough time left in this push to implement
 	basic locale independence, as requested by the <i>Seihou development</i>
 	Discord group, without looking into automatic fixes for previous mojibake
 	filenames yet. Combining <code>std::filesystem::path</code> with the native
 	Win32 API should be straightforward and bloat-free, especially with all the
-	abstractions I've been building, right?<br />
+	abstractions I've been building, right?<br>
 	Well, turns out that <code>std::filesystem::path</code> does not
 	<i>actually</i> meet my expectations. At least as long as it's not
 	<code>constexpr</code>-enabled, because you <i>still</i> get the unfortunate
@@ -209,13 +209,13 @@
 	null-terminated, which is required by both the POSIX and Win32 APIs. Not to
 	mention dynamic filenames: C++20's <code>std::format()</code> would be the
 	obvious idiomatic choice here, but using it almost <i>doubles</i> the size
-	of the compiled binary… 🤮<br />
+	of the compiled binary… 🤮<br>
 	In the end, the most bloat-free way of implementing C++ file I/O in 2023 is
 	still the same as it was 30 years ago: Call system APIs, roll a custom
 	abstraction that conditionally uses the <code>L</code> prefix, and pass
 	around raw pointers. And if you need a dynamic filename, just write the
 	dynamic characters into arrays at fixed positions. Just as PC-98 Touhou used
-	to do… {{HTML_Emoji "zunpet"}}<br />
+	to do… {{HTML_Emoji "zunpet"}}<br>
 	Oh, and the game's window also uses a Unicode title bar now.
 </ul><p>
 	And that's it for this push! Make sure to rename your configuration

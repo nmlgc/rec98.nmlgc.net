@@ -25,28 +25,28 @@
 {{- define "th02_power" -}}
 	<img class="inline_sprite" width="16" height="16" alt="Power" title="Power"
 	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAP8AAP///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI8nIOJxqffBhK00uWsFni+yQWAFFylGQ4ACIbhyD6mGm8IfLbVspaKdstsXirHJzhiHEXFyOhZTEaiVEYBADs="
-	/>
+	>
 {{- end -}}
 {{- define "th02_point" -}}
 	<img class="inline_sprite" width="16" height="16" alt="Point" title="Point"
 	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAIgAiP///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI+nIOJxqffBhK00uXsrHjf9AFSoJFcMADTAyLiagkrqpLs/JrxmW62DHQ5YCahaHQLiI7DxzKSij6ZkWmUUQAAOw=="
-	/>
+	>
 {{- end -}}
 {{- define "th02_bomb" -}}
 	<img class="inline_sprite" width="16" height="16" alt="Bomb" title="Bomb"
 	src="data:image/gif;base64,R0lGODlhEAAQAKEDAAAAAFWIEf///2ZmZiH5BAEKAAMALAAAAAAQABAAAAI5nIOJxqffBhK00uWuqngKDwaAFGjmFwxAmHAieYZq6KIjjWpzibbaCLO4RsDHg9gwIpARpDPCeEYKADs="
-	/>
+	>
 {{- end -}}
 {{- define "th02_bigpower" -}}
 	<img class="inline_sprite" width="16" height="16" alt="5-power"
 	title="5-power"
 	src="data:image/gif;base64,R0lGODlhEAAQAPEDAP////8AAAAAAAAAACH5BAUKAAMALAAAAAAQABAAAAI2nAepeQ0BIwQNyRuoeXmpaXWLOHEJdnZTmZomO6qy1LreKttvjuWh98kcOD2hYFikHB1ApaEAADs="
-	/>
+	>
 {{- end -}}
 {{- define "th02_1up" -}}
 	<img class="inline_sprite" width="16" height="16" alt="1-up" title="1-up"
 	src="data:image/gif;base64,R0lGODlhEAAQAKECAIgAiP///wAAAAAAACH5BAEKAAIALAAAAAAQABAAAAIzlA2pcA0BI2RO2kDFw0tNPXVLOEUiyYVjyp7t9mwmDGM2mpQyLtEf7crsLhnE5dNAiIoFADs="
-	/>
+	>
 {{- end -}}
 
 <p>
@@ -163,13 +163,13 @@
 		of <code>(﻿28,000&nbsp;-&nbsp;(﻿<var>top Y coordinate of item in
 		screen space</var>&nbsp;×&nbsp;70﻿)﻿)</code>:
 		<figure class="pixelated" id="points-{{.Date}}">
-			<img src="{{$points}}" alt="" /><figcaption>
+			<img src="{{$points}}" alt=""><figcaption>
 			Point items and their collection value in TH02. The numbers
 			correspond to items that are collected while their top Y coordinate
 			matches the line they are directly placed on. The upper
 			{{template "th02_point"}} item in the image would therefore give
 			23,450 points if the player collected it at that specific
-			position.<br />
+			position.<br>
 			Reimu collects any item whose 16×16 bounding box lies fully within
 			the <span style="color: red;">red</span> 48×40 hitbox. Note that
 			the box isn't cut off in this specific case: At Reimu's lowest
@@ -181,7 +181,7 @@
 			before it falls below the collection hitbox.
 		</figcaption>
 	</figure></p></li>
-</ul><hr /><p>
+</ul><hr><p>
 	Onto score tracking then, which only took a single commit to raise another
 	big research question. It's widely known that TH02 grants extra lives upon
 	reaching a score of 1, 2, 3, 5, or 8 million points. But what hasn't been
@@ -197,7 +197,7 @@
 	score-based extra lives is theoretically unlimited, and would even continue
 	after the signed 32-bit value overflowed into the negative range. Although
 	we certainly have bigger problems once scores ever reach that point…
-	{{HTML_Emoji "tannedcirno"}}<br />
+	{{HTML_Emoji "tannedcirno"}}<br>
 	That said, it seems impossible that any of this could ever happen
 	legitimately. The current high scores of <a
 	href="https://www.youtube.com/watch?v=Q-XY9bb50_k">42,942,800 points on
@@ -207,7 +207,7 @@
 	value. Without either a graze or a bullet cancel system, the scoring
 	potential in this game is fairly limited, making it unlikely for high scores
 	to ever increase by that additional order of magnitude to end up anywhere
-	near the 1 billion mark.<br />
+	near the 1 billion mark.<br>
 	But can we <i>really</i> be sure? Is this a landmine because it's impossible
 	to ever reach such high scores, or is it a quirk because these extends
 	<i>could</i> be observed under rare conditions, perhaps as the result of
@@ -222,7 +222,7 @@
 	when the difference between quirks and landmines will become relevant.
 	Still, all that uncertainty just because ZUN didn't restrict a loop to the
 	size of the extend threshold array…
-</p><hr /><p>
+</p><hr><p>
 	TH02 marks a pivotal point in how the PC-98 Touhou games handle the current
 	score. It's the last game to use a 32-bit variable before the later games
 	would regrettably start using arrays of <a
@@ -268,7 +268,7 @@
 	The quirk resulting from 2) is more intriguing though. Without a separate
 	reset of the score delta, the function effectively awards the current delta
 	value as a one-time point bonus, since the same delta will still be
-	regularly transferred to the score on further game frames.<br />
+	regularly transferred to the score on further game frames.<br>
 	This function is called at the start of every dialog sequence. However, TH02
 	stops running the regular game loop between the post-boss dialog and the
 	next stage where the delta is reset, so we can only observe this quirk for
@@ -281,7 +281,7 @@
 	slightly better with Mima since you can at least shoot her and use a bomb to
 	keep the delta at a nonzero value, but without a health bar, there is little
 	indication of <i>when</i> the dialog starts, and it'd be long after Mima
-	gave out her last bonus items in any case.<br />
+	gave out her last bonus items in any case.<br>
 	But two of the bosses – that is, Rika, and the Five Magic Stones – are
 	scrolled onto the playfield as part of the stage script, and can also be hit
 	with player shots and bombs for a few seconds before their dialog starts.

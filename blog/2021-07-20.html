@@ -11,7 +11,7 @@
 	spawning code, before I get to put all that accumulated TH01 money towards
 	finishing all of {{HTML_TagInline "konngara"}}'s code in TH01. For a full
 	picture of what's happening with bullets, we'd <i>really</i> also like to
-	have the bullet update function as readable C code though.<br />
+	have the bullet update function as readable C code though.<br>
 	Clearing all bullets on the playfield will trigger a <i>Bonus!!</i> popup,
 	displayed as {{Blog_PostLink "2020-09-16" "gaiji"}} in that proportional
 	font. Unfortunately, TLINK refused to link the code as soon as I referenced
@@ -32,13 +32,13 @@
 	code. However, what we get in return is total freedom as far as
 	decompilation order is concerned,
 	{{Blog_PostLink "2020-08-16" "which should be the case for any ReC project, really"}}.
-	And in the end, all these tiny code segments will cancel out anyway.<br />
+	And in the end, all these tiny code segments will cancel out anyway.<br>
 	If only we could do the same with the data segment…
-</p><hr /><p>
+</p><hr><p>
 	The popup function happened to be the final one I RE'd before my long break
 	in the spring of 2019. Back then, I didn't even bother looking into that
 	64-frame delay between changing popups, and what that meant for the game.
-	<br />
+	<br>
 	Each of these popups stays on screen for 128 frames, during which, of
 	course, another popup-worthy event might happen. Handling this cleanly
 	without removing previous popups too early would involve some sort of event
@@ -59,7 +59,7 @@
 	stack frame was previously thought to be undecompilable… except that it
 	isn't, and the decompilation didn't even require any new workarounds to be
 	developed? Good thing that I already forgot how impossible it was to
-	decompile the first function I looked at that fell into this category!<br />
+	decompile the first function I looked at that fell into this category!<br>
 	Oh well, this discovery wasn't <i>too</i> groundbreaking. Looking back at
 	all the other functions with that combination only revealed a grand total
 	of 1 additional one where a decompilation made sense: TH05's version of
@@ -71,6 +71,6 @@
 	the original code, which never uses this function to retrieve anything from
 	KAJA's drivers. But people apparently do copy ReC98 code into their own
 	projects, so it <i>is</i> something to keep in mind.
-</p><hr /><p>
+</p><hr><p>
 	All in all, nothing quite at {{HTML_TagInline "jank"}} level in this one, but we were surely <i>grazing</i> that tag. Next up, with that out of the way: The bullet update/step function! Very soon in fact, since I've mostly got it done already.
 </p>

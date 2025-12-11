@@ -10,7 +10,7 @@
 	there <i>really</i> wasn't any free register left for an indirect
 	<code>CALL</code>, eh? The necessary distance, from the call site to the
 	function itself, has to be calculated at assembly time, by subtracting the
-	target function label from the call site label.<br />
+	target function label from the call site label.<br>
 	This usually wouldn't be a problem… if ZUN didn't store the resulting
 	lookup tables in the <code>.DATA</code> segment. With code segments, we
 	can easily split them at pretty much any point between functions because
@@ -22,20 +22,20 @@
 	moved to its own translation unit, which in turn requires
 	<code>EXTERN</code> references in the big .ASM file to all that moved
 	data… in short, it would turn the codebase into an even greater
-	mess.<br />
+	mess.<br>
 	Declaring the labels as <code>EXTERN</code> wouldn't work either, since
 	the linker can't do fancy arithmetic and is limited to simply replacing
 	address placeholders with one single address. So, we're now stuck with
 	this function at the bottom of the <code>SHARED</code> segment, for the
 	foreseeable future.
-</p><hr /><p>
+</p><hr><p>
 	We can still continue to separate functions off the top of that segment,
 	though. Pretty much the only thing noteworthy there, so far: TH04's code
 	for loading stage tile images from .MPN files, which we hadn't
 	reverse-engineered so far, and which nicely fit into one of
 	{{DB_CustomerByID 15}}'s pending ⅓ RE contributions. Yup, we finally moved
 	the RE% bars again! If only for a tiny bit.
-	{{HTML_Emoji "tannedcirno"}}<br />
+	{{HTML_Emoji "tannedcirno"}}<br>
 	Both TH02 and TH05 simply store one pointer to one dynamically allocated
 	memory block for all tile images, as well as the number of images, in the
 	data segment. TH04, on the other hand, reserves memory for 8 .MPN slots,

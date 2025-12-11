@@ -57,13 +57,13 @@
 	href="/faq#tsa-takedown">current version of the FAQ section on a potential
 	takedown of this project</a>, updated in light of the recent DMCA claims
 	against PC-98 Touhou game downloads.)
-</p><hr /><p>
+</p><hr><p>
 	Slight change of plans, because we got <a
 	href="https://github.com/nmlgc/rec98.nmlgc.net/issues/2">instructions for
 	reliably reproducing the TH04 Kurumi Divide Error crash</a>! Major thanks to
 	Colin Douglas Howell. With those, it also made sense to immediately look at
 	the crash in the Stage 4 Marisa fight as well. This way, I could release
-	both of the obligatory bugfix mods at the same time.<br />
+	both of the obligatory bugfix mods at the same time.<br>
 	Especially since it turned out that I was wrong: Both crashes are entirely
 	unrelated to the custom entity structure that would have required PI-centric
 	progress. They are completely specific to Kurumi's and Marisa's
@@ -84,7 +84,7 @@
 	<i>have</i> to go into fanfiction territory to work around crashes in the
 	canon games, we'd better document what exactly we're fixing here and how, as
 	comprehensible as possible.
-</p>{{call .TOC}}<hr id="kurumi-{{.Date}}" /><p>
+</p>{{call .TOC}}<hr id="kurumi-{{.Date}}"><p>
 	With that out of the way, let's look at Kurumi's crash first, since it's way
 	easier to grasp. This one is known to primarily happen to new players, and
 	it's easy to see why:
@@ -181,11 +181,11 @@
 	more leaning towards the 0-bullet interpretation, which only got 28.7% of
 	the vote. Also interesting are the 2.3% in favor of the Game Over option but
 	I get it, low-rank Easy Mode isn't exactly the most competitive mode of
-	playing TH04.<br />
+	playing TH04.<br>
 	There are reports of Kurumi crashing on higher difficulties as well, but I
 	could verify none of them. If they aren't fixed by this workaround, they're
 	caused by an entirely different bug that we have yet to discover.
-</p><hr id="marisa-{{.Date}}" /><p>
+</p><hr id="marisa-{{.Date}}"><p>
 	Onto the Stage 4 Marisa crash then, which <i>does</i> in fact apply to all
 	difficulty levels. I was also wrong on this one – it's a hell of a lot more
 	intricate than being just a division by the number of on-screen bits.
@@ -195,13 +195,13 @@
 	<li>Marisa uses different patterns, depending on whether at least one of her
 	bits <img
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAIkAAP1ERfzs7f///yH5BAUKAAMALAAAAAAgACAAAAKjnI8my5sP0Qq0UhfzpKD7imXHFnjmdwniIFjnC1hq1HLwDUJ1eeN5UusJf6OKsCeT2Hy8U1JhxG2clsBs1zSlSs3qhVV9gbBeGTlrbTDK5nInpT5XSd7YmO2l49P7dn+LwqZXFzNBlScnZniYRAbD9/jkGMn0BbV0xDhzmZUZaAUU5Rm4WYTp+RR6ekT0sIPaqvNaGbJColm6MiKXpisSVxtRAAA7"
-	/><img
+	><img
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAHQAdMxUzfzs7f///yH5BAUKAAMALAAAAAAgACAAAAKnnI8my5sP0Qq0UhfzpKD7imXHFnjmdwniIFjnC1hq1HLwDUJ1eeN5UusJf6OKsCeT2Hw8kyUwYxlxjGbsCVW4XikbNrdbfhqkb/fpBFXNavaVXP7GsQ1o2Dx/1qpXdl4e1AfI5sWHQncn1tF1Iie1xdUCo6cFeSI5mVRp1YhE9Mh5dJilpCjaF1VkeqQJNHWKqvE69Kmz45myMnKblqsLlOj7awunWwAAOw=="
-	/><img
+	><img
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAAAB3ZiX/Pzs7f///yH5BAUKAAMALAAAAAAgACAAAAKknI8my5sP0Qq0UhfzpKD7imXHFnjmdwniIFjnC1hq1HLwDUJ1eeN5UusJf6OKsCeT2I4vS2DGMsKcS+pT4To9n61WzHrdLT8NEphL1ZbFYLPz2+2eQWznmjFH57nBvLu90TH398bnhUJF2ISmlRiVtTjR+MM2xGNiVzTGhHilecnZCYW1yUn0GSqqIxV6CsRqebFCgkS3MrIzyXX7QLjLS3N3WwAAOw=="
-	/><img
+	><img
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAABkACCoH/zs7f///yH5BAUKAAMALAAAAAAgACAAAAKonI8my5sP0Qq0UhfzpKD7imXHFnjmdwniIFjnC1hq1HLwDUJ1eeN5UusJf6OKsCeT2I4vS2DGMsJsy5jzqXC9NhPrFburdp410jd1NYHIZ6f52oiH4XM3l9FG59nPvX7fwJH31haIQvd1wteiBhel9bHDqJj0KIXyMVVpyaR5oSTW6YUFyiM69gl0KbpZeuoF9bDT2aoz65OyMnJ7SKYrW5f7SyMXG1EAADs="
-	/> is still alive, or all of them have been destroyed.</li>
+	> is still alive, or all of them have been destroyed.</li>
 	<li>Destroying the last bit will immediately switch to the bit-less
 	counterpart of the current pattern.</li>
 	<li>The bits won't respawn before the pattern ended, which ensures that the
@@ -211,7 +211,7 @@
 	reflection of her position at the start of the pattern across the playfield
 	coordinate of (﻿192,&nbsp;112﻿), or (﻿224,&nbsp;128﻿) on screen.</li>
 </ul><figure class="singleplayer_playfield">
-	<img src="{{$m_pic}}" />
+	<img src="{{$m_pic}}">
 	<figcaption>Reference points for Marisa's point-reflected movement. Cyan:
 	Marisa's position, green: (﻿192,&nbsp;112﻿), yellow: the intended end
 	point.</figcaption>
@@ -307,7 +307,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	else came up with the idea either. {{HTML_Emoji "onricdennat"}} In the end,
 	you can always merge together your preferred combination of workarounds from
 	the Git branches linked below.)
-</p><hr /><p>
+</p><hr><p>
 	So here you go: The new definitive version of TH04, containing not only the
 	community-chosen Kurumi and Stage 4 Marisa workaround variant, but also the
 	{{Blog_PostLink "2021-11-29" "No-EMS bugfix from last year"}}.
@@ -331,7 +331,7 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	Again, because it can't be stated often enough: <i>These fixes are
 	fanfiction. The {{HTML_TagInline "gameplay"}} community should be aware of
 	this, and might decide to handle these cases differently.</i>
-</p><hr /><p>
+</p><hr><p>
 	With all of that taking way more time to evaluate and document, this
 	research really had to become part of a proper push, instead of just being
 	covered in the quick non-push blog post I initially intended. With ½ of a
@@ -339,8 +339,8 @@ boss_velocity.y = ((112 - boss_position.y) / ((duration / 2) - (12 / 2)));</pre>
 	fit in perfectly there. If you wonder how these static backdrop images even
 	need any boss-specific code to begin with, you're right – it's basically the
 	same function copy-pasted 4 times, differing only in the backdrop image
-	coordinates and some other inconsequential details.
-	<br />Only Sara receives a nice variation of the typical
+	coordinates and some other inconsequential details.<br>
+	Only Sara receives a nice variation of the typical
 	{{Blog_PostLink "2021-06-21" "blocky entrance animation"}}: The usually
 	opaque bitmap data from <code>ST00.BB</code> is instead used as a transition
 	mask from stage tiles to the backdrop image, by making clever use of the

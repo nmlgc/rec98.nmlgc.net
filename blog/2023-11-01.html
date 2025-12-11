@@ -84,7 +84,7 @@
 </p><p>
 	The table of contents was pretty popular last time around, so let's have
 	another one:
-</p>{{call .TOC}}<hr /><p id="th04-{{.Date}}">
+</p>{{call .TOC}}<hr><p id="th04-{{.Date}}">
 	Let's start with the ones from TH04 and TH05, since they are not <i>that</i>
 	broken. For TH04, ZUN started out by copy-pasting the cutscene system,
 	causing the result to inherit many of the caveats I already described in the
@@ -146,17 +146,17 @@
 		data-title="TH05"
 		alt="Demonstrating the lack of automatic line or box breaks in TH05's dialog system"
 		class="active"
-	/><img
+	><img
 		src="{{$hw_4}}"
 		data-title="TH04"
 		alt="Demonstrating the lack of automatic line or box breaks in TH04's dialog system, in addition to its lack of support for ASCII 0x20 spaces carried over from TH03's cutscene system"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
-</figure><hr /><p id="th05-{{.Date}}">
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><hr><p id="th05-{{.Date}}">
 	TH05 then moved from TH04's plaintext scripts to the binary
 	<code>.TX2</code> format while removing all the unused commands copy-pasted
 	from the cutscene system. Except for <a href="#{{.Date}}-th05-boxwipe">a
 	single additional command intended to clear a text box</a>, TH05's dialog
-	system only supports a strict subset of the features of TH04's system.<br />
+	system only supports a strict subset of the features of TH04's system.<br>
 	This change also introduced the following differences compared to TH04:
 </p><ul>
 	<li>The game now stores the dialog of all 4 playable characters in the same
@@ -181,7 +181,7 @@
 	href="#{{.Date}}-gaiji">gaiji</a> commands in the middle of text. All other
 	commands do execute, but the interpreter then also treats their command byte
 	as a Shift-JIS lead byte and places it in text RAM together with whatever
-	other byte follows in the script.<br />
+	other byte follows in the script.<br>
 	This is why TH04 can and does put its <a
 	href="#{{.Date}}-face"><code>\=</code> commands</a> <q>into</q> the boxes
 	started with the <code>0</code> or <code>1</code> commands, but TH05 has to
@@ -193,8 +193,8 @@
 			class="inline_sprite"
 			src="data:image/gif;base64,R0lGODlhBwAPAPABAAAAAAAAACH5BAUKAAEALAAAAAAHAA8AAAIUDB4Jacp/1nONGjSzrLtXtjke1RUAOw=="
 			alt="SX"
-		/> character, which is simply the PC-98 font ROM's glyph for that
-		Shift-JIS codepoint.<br /> Also note how each face change is now
+		> character, which is simply the PC-98 font ROM's glyph for that
+		Shift-JIS codepoint.<br> Also note how each face change is now
 		preceded by two frames of delay.
 	</div><div>
 		No problem in TH04. Note how the dialog also runs a bit faster – TH04
@@ -223,7 +223,7 @@
 	href="https://youtu.be/iP2ywlW2u4U?t=217">skip the dialog altogether in the
 	specific case of the Extra Stage replay being active</a>, and replicated all
 	sprite management commands from the dialog script by just hardcoding
-	them.<br />
+	them.<br>
 	And you know what? Not only do I not mind this hack, but I would have
 	preferred it over the actual dialog system! The aforementioned <q>sprite
 	management commands</q> effectively boil down to manual memory management,
@@ -232,7 +232,7 @@
 	hardcoded boss rendering function then expects these sprites to be available
 	at these exact IDs… which means that <i>the otherwise hardcoded bosses can't
 	render properly without the dialog script running before them</i>.
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	There is absolutely no excuse for the game to burden dialog scripts with
 	this functionality. Sure, delayed deallocation would allow them to blit
 	stage-specific sprites, but the original games don't do that; probably
@@ -253,25 +253,25 @@
 		data-title="Marisa"
 		alt="TH04's dialog before the Stage 4 Marisa fight without deallocating the stage sprites inside the script, causing Marisa to be turned into one of the stage enemies"
 		class="active"
-	/><img
+	><img
 		src="{{$noclear_2}}"
 		data-title="Yuuka"
 		alt="TH04's dialog before the Stage 6 Yuuka fight without deallocating the stage sprites inside the script, causing Yuuka to be turned into two different cels of the same stage enemy"
-	/><img
+	><img
 		src="{{$noclear_3}}"
 		data-title="Louise"
 		alt="TH05's dialog before the Louise fight without deallocating the stage sprites inside the script, causing Louise to be turned into one of the ice enemies from TH05's Stage 2"
-	/><img
+	><img
 		src="{{$noclear_4}}"
 		data-title="Mai & Yuki"
 		alt="TH05's dialog before the Louise fight without deallocating the stage sprites inside the script, causing Mai and Yuki to be turned into a windmill and fairy/demon enemy, respectively"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		Some of the more amusing consequences of not calling the
 		sprite-deallocating
 		{{HTML_Emoji "th04"}}&nbsp;<code>\c</code>&nbsp;/&nbsp;
 		{{HTML_Emoji "th05"}}&nbsp;<code>0x04</code> command inside a dialog
-		script.<br />
+		script.<br>
 		In the case of 4️⃣, the game then even crashes on this frame at the end
 		of the dialog, in a way that resembles the infamous
 		{{Blog_PostLink "2021-11-29" "TH04 crash before Stage 5 Yuuka if no EMS driver is loaded"}}.
@@ -279,7 +279,7 @@
 		this point, leaving no room for the 256×256-pixel background image on
 		the size-limited master.lib heap.
 	</figcaption>
-</figure><hr /><p id="ref-{{.Date}}">
+</figure><hr><p id="ref-{{.Date}}">
 	With all the general details out of the way, here's the command reference:
 </p><figure><table class="vm comparison">
 	<thead>
@@ -287,8 +287,8 @@
 		<th>{{HTML_Emoji "th05"}}</th>
 		<th></th>
 	</thead><tbody><tr id="{{.Date}}-speaker">
-		<td>0<br/>1</td>
-		<td>0x00<br />0x01</td>
+		<td>0<br>1</td>
+		<td>0x00<br>0x01</td>
 		<td>Selects either the player character (0) or the boss (1) as the
 		currently speaking character, and moves the cursor to the beginning of
 		the text box. In TH04, this command also directly starts the new dialog
@@ -319,13 +319,13 @@
 		midbosses), freeing up conventional RAM for the boss sprites and
 		ensuring that master.lib's patnum write cursor ends up at
 		{{HTML_Emoji "th04"}}&nbsp;128&nbsp;/
-		{{HTML_Emoji "th05"}}&nbsp;180.<br />
+		{{HTML_Emoji "th05"}}&nbsp;180.<br>
 		In TH05's Extra Stage, this command also replaces
 		{{Blog_PostLink "2023-06-30" "the sprites loaded from <code>MIKO16.BFT</code> with the ones from <code>ST06_16.BFT</code>"}}.</td>
 	</tr><tr>
 		<td>\d</td>
 		<td></td>
-		<td>Deallocates all face portrait images.<br />
+		<td>Deallocates all face portrait images.<br>
 		The game automatically does this at the end of each dialog sequence.
 		However, ZUN wanted to load Stage 6 Yuuka's 76&nbsp;KiB of additional
 		animations inside the script via <a
@@ -340,7 +340,7 @@
 	</tr><tr>
 		<td class="unused">\m$</td>
 		<td>0x05 <var>$</var> 0x00</td>
-		<td>Stops the currently playing BGM.<br />
+		<td>Stops the currently playing BGM.<br>
 		Note that TH05 interprets <var>$</var> as a null-terminated filename as
 		well.</td>
 	</tr><tr class="unused">
@@ -366,7 +366,7 @@
 		(fully white). 100 corresponds to the palette's original colors.</td>
 	</tr><tr class="unused">
 		<td>
-			\fo<var class="default">1</var><br />
+			\fo<var class="default">1</var><br>
 			\fi<var class="default">1</var>
 		</td>
 		<td></td>
@@ -376,17 +376,17 @@
 		class="default">1</var> frame on each of the 16 fade steps.</td>
 	</tr><tr>
 		<td>
-			\wo<var class="default">1</var><br />
+			\wo<var class="default">1</var><br>
 			\wi<var class="default">1</var>
 		</td>
 		<td>
-			0x09 <var>0x!!</var><br />
+			0x09 <var>0x!!</var><br>
 			0x0A <var>0x!!</var>
 		</td>
 		<td>Calls master.lib's <code>palette_white_<b>o</b>ut()</code> or
 		<code>palette_white_<b>i</b>n()</code> to play a hardware palette fade
 		animation from or to white, spending roughly <var
-		class="default">1</var> frame on each of the 16 fade steps.<br /> The
+		class="default">1</var> frame on each of the 16 fade steps.<br> The
 		TH05 version of <code>0x09</code> also clears the text in both boxes
 		before the animation.</td>
 	</tr><tr id="{{.Date}}-linebreak">
@@ -394,7 +394,7 @@
 		<td>0x0B</td>
 		<td>Starts a new line by resetting the X coordinate of the TRAM cursor
 		to the left edge of the text area and incrementing the Y coordinate.
-		<br />
+		<br>
 		The new line will always be the next one below the last one that was
 		properly started, regardless of whether the text previously wrapped to
 		the next TRAM row at the edge of the screen.</td>
@@ -420,19 +420,19 @@
 		<td>Starts a new dialog box with the <a
 		href="#{{.Date}}-speaker">previously selected speaker</a>. All text
 		until the next <a href="#{{.Date}}-th05-halt"><code>0xFF</code>
-		command</a> will appear on screen.<br />
+		command</a> will appear on screen.<br>
 		<span class="unused">Inside dialogs, this is a no-op.</span></td>
 	</tr><tr id="{{.Date}}-th05-boxwipe">
 		<td></td>
 		<td>0x0E</td>
 		<td>Takes the current dialog cursor as the top-left corner of a
 		240×48-pixel rectangle, and replaces all text RAM characters within that
-		rectangle with whitespace.<br />
+		rectangle with whitespace.<br>
 		This is only used to clear the player character's text box before
 		Shinki's final <span lang="ja"><q>いくよ‼</q></span> box. Shinki has two
 		consecutive text boxes in all 4 scripts here, and ZUN probably wanted to
 		clear the otherwise blue text to imply a dramatic pause before Shinki's
-		final sentence. Nice touch.<br />
+		final sentence. Nice touch.<br>
 		(You could, however, also use it after <a href="#{{.Date}}-th05-halt">a
 		box-ending <code>0xFF</code> command</a> to mess with text RAM in
 		general.)</td>
@@ -466,7 +466,7 @@
 	Shift-JIS iterator that properly chunks a byte buffer into halfwidth and
 	fullwidth codepoints, and I'd still be throwing it out for the upcoming
 	non-ASCII translations in favor of something that either also supports UTF-8
-	or performs dictionary lookups with a full box of text.<br />
+	or performs dictionary lookups with a full box of text.<br>
 	The only <i>actual</i> bug can be found in the input detection, which once
 	again doesn't correctly handle <a
 	href="https://github.com/nmlgc/ReC98/commit/8dfc2cd">the infamous <i>key
@@ -477,7 +477,7 @@
 	2-byte chunk of text before it shows the full text of a box after
 	all… But even this bug is highly theoretical and could probably only be
 	observed very, <i>very</i> rarely, and exclusively on real hardware.
-</p><hr /><p id="th02-{{.Date}}">
+</p><hr><p id="th02-{{.Date}}">
 	The same can't be said about TH02 though, but more on that later. Let's
 	first take a look at its data, which started out much simpler in that game.
 	The <code>STAGE?.TXT</code> files contain just raw Shift-JIS text with no
@@ -510,7 +510,7 @@
 	with the rest being part of <a
 	href="https://github.com/nmlgc/ReC98/blob/ae2fc2865a74b095bdbc8b469073f43c8cbc2d98/th02/main/dialog/dialog.cpp#L429-L602">the
 	dedicated hardcoded dialog scripts for <sup>2</sup>/<sub>3</sub> of the
-	game's stages.</a><br />
+	game's stages.</a><br>
 	Without the restriction to a fixed set of scripting commands, TH02 naturally
 	gravitated to having the most varied dialog sequences of all PC-98 Touhou
 	games. This flexibility certainly facilitated Mima's grand entrance
@@ -524,7 +524,7 @@
 	know that some people in my audience like VMs, but I would have considered
 	it <i>more</i> bloated if ZUN had implemented a full-blown scripting
 	language just to handle all these special cases.
-</p><hr /><p id="th02-face-{{.Date}}">
+</p><hr><p id="th02-face-{{.Date}}">
 	Another unique aspect of TH02 is the way it stores its face portraits, which
 	are infamous for how hard they are to find in the original data files. These
 	sprites are actually <i>map tiles</i>, stored in <code>MIKO_K.MPN</code>,
@@ -563,7 +563,7 @@
 			<label for="grid-toggle-{{.Date}}">Show tile ID grid</label>
 		</form>
 		TH02's <code>MIKO_K.PTN</code>, arranged into a 16×16-tile layout that
-		reveals how these tiles are combined into face portraits.<br />
+		reveals how these tiles are combined into face portraits.<br>
 		<code>MPNDEF</code> from {{DB_CustomerByID 2}}'s <a
 		href="http://lunarcast.net/mystictk.php">MysticTK</a> conveniently uses
 		this exact layout in its .BMP output. Earlier <code>MPNDEF</code>
@@ -583,12 +583,12 @@
 			style="width: 512px; left: unset; top: unset; right: 0; bottom: 0;"
 			alt="TH02's MIKO_K.PTN"
 			hidden
-		/>
+		>
 		<img
 			id="miko_k-grid-{{.Date}}"
 			src="{{$miko_k_grid}}"
 			alt="TH02's MIKO_K.PTN with the 16×16 tile grid overlaid"
-		/>
+		>
 	</div>
 </figure><p>
 	And since you're certainly wondering about all these black tiles at the
@@ -597,7 +597,7 @@
 	9.5&nbsp;KiB of conventional RAM. That's 172 seconds of potential input
 	replay data, just for those people who might still think that we need EMS
 	for replays.
-</p><hr /><p id="th02-start-{{.Date}}">
+</p><hr><p id="th02-start-{{.Date}}">
 	Alright, we've got the text, we've got the faces, let's slide in the box and
 	display it all on screen. Apparently though, we also have to blit the player
 	and option sprites using raw, low-level master.lib function calls in the
@@ -614,16 +614,16 @@
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABACAMAAAC6GQAEAAAAJFBMVEWadXUAAABVAABlVSCaVUWqAAD/AAD///+6VbqKAIpVihC6ut8RUTigAAABwElEQVR42u2X0W7CMAxF76lrl5X//9+RmGwVSwVb8jaO1SQoV0ehEhYRk9ED6/Dn62Sk6+R68+afAvoNqz0pAFtfLi1PALaNwvIS4gVSOqcf0ubKhH7I1wgb4/0QcqwzjPdDcmQnZ41CeiAXw8bmMWzOEdMyXZhM+xXDRwHG3yFA9V0ul2LEjFEfxXeYRoVlSFHOGlKCtu2hQwjx537YF2L8tR8CPAiBhV/2w4DgKed5HQlp/V5ywnrMN+KsH8Z2I+oSA3cKHrcCBxCdfL8fhsp+oayumLuHp68+qb/SzXf7Yd3PhFSEEeFFBkTOiG6+R+i+e0PRhEXpQPFFnrCf7xBbxG0/E1WYPir5/RH9fAevgVJbuN+FfoPEg4Lo5js+RZ6/BuQYXqHh6TvJd4Sep/dwL0JI3xED0c33j+iHfRphNMwQJ/kO7mU3Efq22EGIOMl38B8+2w1LI3sdxUn+hGYTlT0tmGH7Thr7+dN+SCtWyNNZQmGhnz/th9xroWK27+UpIxhwlk/EU5qw2sfvy2ApBDAm3JdpL5L8mzh+X6aiVhPuywBStU0C0GxjTtJ/MgpmG1PG+zb9g9XmlpbJfAKYWSRpEPtACAAAAABJRU5ErkJggg=="
 		data-title="Frame 35"
 		alt="Zoomed-in area around Reimu's sprite from frame 35 of the video above"
-	/><img
+	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABACAMAAAC6GQAEAAAAJFBMVEWadXX///+6ut+6VbpVihCaVUVlVSD/AACKAIqqAABVAAAAAACuhtTuAAAB2klEQVR42u2X0a4aMQwFT7i7dr3z///bTaxcIWqKyqaVKjGGZCOORuYBi4jF6IH98vm2GOm2uD78f8BqHyz2tcZCK4KUrvIl/EmTuz0vvldoFImidDwHcoXvw2vEa7ZV85B+ZqaAi/MQcjWMfLo4D+krKRxnLs5DxpIs+xXDjw5IV7UAw/f19dWNmHHVR/fdbVeFEqQod11SglrjntaEWCy8YAR4EPKGz/trQI2o87Xs/hFq6vyzeejtxMczBhF0ws+CANgp8vU89PPVBt4PWER4pG+8U39Q5st56K0lDnShu0eXAZ57UuYnmrjawE/kSuFQBtB9zuDYi3w1D725t+YjcbtNYQSD/P4YSEW+mIcxAr2aRyiFcUISnv2hW5H/dR6GPPsfAQVGDJgEgEC3Kq9HQpHdh0d0IaTvHiM7LPIqjB53nzNxY2KWHVb5ggg/KxGCabE7IQd1vjY++mwzLI1sYxXUedVMmxhsacEM2zZAHNR5PYNZCLI7S+gIqvxrnxiYbVt/9xUsOyzzrwEETOGwww66AlgKAQxpP9jf/H+YBdjJnIQcB4e9+f8wYXDM6sLfo39/XyZDiFX3Zcht3X0Zxs66+zLkpnXAamPK+NymP/wddltbOhbzE0ExQQX1ARnkAAAAAElFTkSuQmCC"
 		data-title="Frame 36"
 		alt="Zoomed-in area around Reimu's sprite from frame 36 of the video above"
-	/><img
+	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABABAMAAAB/6e0FAAAAJFBMVEWadXX///+6ut+6VbpVihCaVUVlVSD/AACKAIqqAABVAAAAAACuhtTuAAACI0lEQVR42t2VMWvjMBiGRbhSwrecsmS4JfFyQ8b7C6FLdy9dgxYtzWTcG28JeOlmjH9AIVl0oYg4z587JZfaLi216NgHkY+8PE4MepEUkagLV4MziUSNIlFfGXGRIsSZAnGqCDrKdCKgUe+QvsL71KdA+ga17bM7Hncct/zYvkF9ro8iV/DsBDfQRxYJsE9goI97BKwdwUAfnTuLSjG00Y4CEAY3mgObTeGtMLTRxeHPr83QhsszsIFDAfCR6FEUQIFw+6HoNGf+fsfGirzvXKv7IAbjIoJzbd7XTtwLlhcM0ub9Pq71NE3voIGyrGnw3rd518eHJ631w9MOyrrJmzwM2LV5r4/rEEyBJsub3+RhYLu86+N9+J5l1+KbLKtr6jLLsHdt3vXx53Q90TpZnMQczp923+ZdH8vpeq71RGjKvAaqModFm7d9HF/riQ4soKnqgqKqapxr85m6MB6v1+HBZAFU9WFDVWFZtHkrqsd8nuh5kmBoKopge+Ncl7fi+HGeTCZ6JoYL3iJdrjpzrpNEzxyAxVjAuS5XHaPwJjPlYGWNMfbGeqTL++IoGSn5ZlhawC8xuDZ/xfm58EvmP36FdLmo1zi/tH51Y1bhn5fOdbl7c4iu4DmIt3BLL5f++ehPkOKDaD0cTS/vn4+7wGngjQV2x37++fMxTAFAIu5rSNjvI+5rIayo+5rTikGC5mJElHMSIzoViTutL04aidpG8g9rsB8etXIeNQAAAABJRU5ErkJggg=="
 		data-title="Frame 37"
 		alt="Zoomed-in area around Reimu's sprite from frame 37 of the video above"
 		class="active"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
 	This one image shows off no less than <i>4</i> bugs:
 </p><ol>
@@ -670,7 +670,7 @@
 	<code>cur</code> structure fields and you'd just index it with the back page
 	for every rendering call. But if you then decide to go single-buffered for
 	dialogs and render them onto the <i>front</i> page instead…
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	Note that fixing bug #2 would not cancel out this one – the sprites would
 	then simply be rendered to their position in the frame before 1️⃣.</p></li>
 	<li>And of course, the fixed option sprite ID also counts as a bug.</li>
@@ -685,13 +685,13 @@
 	</span> kanji looks quite awkward with the fullwidth space between the name
 	and the colon. Kind of makes you wonder why ZUN just didn't spell out his
 	proper name, <span lang="ja">玄爺</span>, instead, but I get the stylistic
-	difference.<br/>
+	difference.<br>
 	In Stage 4, the two-kanji assumption then breaks with Marisa's three-kanji
 	name, which causes the full-width colon to be printed as the first delayed
 	character in each of her boxes:
 </p><figure>
 	{{call .VideoPlayer $vid_prefix_1.FlipActive $vid_prefix_2 $vid_prefix_3}}
-</figure><hr /><p id="th02-mima-{{.Date}}">
+</figure><hr><p id="th02-mima-{{.Date}}">
 	That's all the issues and quirks in the system itself. The scripts
 	themselves don't leave much room for bugs as they basically just loop over
 	the hardcoded face ID array at this level… until we reach the end of the
@@ -731,14 +731,14 @@
 		rendered planet background. Since the entire script runs on the front
 		page (and thus, on top of the previous frame) and the game launches into
 		the ending immediately after, you don't ever get to see this new partial
-		frame in the original game.<br />
+		frame in the original game.<br>
 		Showing this partial frame would also ensure that you can actually
 		<i>read</i> the dialog text without a surrounding box. Then, the white
 		letters won't ever be put on top of any white bullets – or, worse, <a
 		href="https://youtu.be/bYxWi3WcagI&t=210">be completely invisible if the
 		dialog is triggered in the middle of Reimu-B's bomb animation, which
 		fills VRAM with lots of white pixels</a>. {{HTML_Emoji "onricdennat"}}
-		<br />
+		<br>
 		Hence, we've got enough evidence to classify not showing the back page
 		as a <a
 		href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">ZUN
@@ -756,7 +756,7 @@
 		no way of <i>not</i> drawing a face for a dialog box. Filling the face
 		area with graphics chip color #0, as seen in the first and third boxes
 		of the Extra Stage pre-boss dialog, would have been an alternative, but
-		that would have been equally wrong with regard to the background.<br />
+		that would have been equally wrong with regard to the background.<br>
 		Hence, the invisible face portrait from the original game is a <a
 		href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-quirk">ZUN
 		quirk</a>. 🎺</li>
@@ -764,7 +764,7 @@
 	So, the future TH02 Anniversary Edition will fix the <i>bug</i> by showing
 	the back page, but retain the <i>quirk</i> by rewriting the dialog code to
 	not blit the face.
-</p><hr /><p id="final-{{.Date}}">
+</p><hr><p id="final-{{.Date}}">
 	And with that, we've secured all in-game dialog for the upcoming non-ASCII
 	translations! The remaining <sup>2</sup>/<sub>3</sub> of the last push made
 	for a good occasion to also decompile the small amount of code related to
@@ -775,7 +775,7 @@
 	allocated buffer that it renders from. These control characters are then
 	only filtered to whitespace by ZUN's <code>graph_putsa_fx()</code> function.
 	If you remove the line breaks, you get to use the full 60 bytes on every
-	line.<br />
+	line.<br>
 	The final commits went to the <code>MIKO.CFG</code> loading and saving
 	functions used in TH04's and TH05's <code>OP.EXE</code>, as well as TH04's
 	game startup code to finally catch up with

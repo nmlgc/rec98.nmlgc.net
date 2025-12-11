@@ -49,7 +49,7 @@
 		phases, effectively skipping them. Take <a
 		href="https://youtu.be/gh20KvvEgMM?t=39">this video</a> for example,
 		where Kikuri has 6 HP by the end of Phase 4, and therefore directly
-		starts Phase 6.<br />
+		starts Phase 6.<br>
 		(Obviously, Kikuri's HP can also be reduced to 0 or below, which will
 		end the fight immediately after this phase.)</li>
 	</ul></li>
@@ -76,7 +76,7 @@
 	</ul></li>
 </ul><p>
 	So yeah, there's your new timeout challenge. {{HTML_Emoji "godzun"}}
-</p><hr /><p>
+</p><hr><p>
 	The few issues in this fight all relate to hitboxes, starting with the main
 	one of Kikuri against the Orb. The coordinates in the code clearly describe
 	a hitbox in the upper center of the disc, but then ZUN wrote a &lt; sign
@@ -107,31 +107,31 @@
 	</figcaption>
 	<div class="multilayer">
 		<!-- Force onto z-index: 1 to cover the inactive transparent image -->
-		<img src="{{$pic1}}" class="active" alt="TODO" />
+		<img src="{{$pic1}}" class="active" alt="TODO">
 		<img
 			id="{{.Date}}-intended"
 			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVpRwDwAADVixDUAAAAAXRSTlMAQObYZgAAAJpJREFUeJzt2LENAjEURMFFBISUQKlQGqVQAgUgTHSSTeqP8EkzBbxoo00AAAAAAGDPTm3TWrvP1pJc+uBztpbk2gdfs7Ukfa+9Z2vJYQi22VxyHIO31YJfq6nYTXUw5zH4EBQUFBQUFBQUFBQUFBQUFFwyuPrNsoerqvqdq/4Pf/FwVn+w1S8xAAAAAAAAAAAAAAAAAADA33wA8BYPrD97Uz8AAAAASUVORK5CYII="
 			style="opacity: 0.5"
 			alt="TH01 Kikuri's intended hitbox"
-		/><img
+		><img
 			id="{{.Date}}-actual"
 			class="active"
 			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAFQAQMAAAAV1V3SAAAABlBMVEVARhnwAADlWXWPAAAAAXRSTlMAQObYZgAAAIdJREFUeNrt0rENg1AQBcFnOSCkBJdqSqMUSqAAyyblSBxc8pFmCthokz/mX7GlS1BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFDwbsFMNbiOFkyeNbiMFkweNdjNJSm9b7eW5H0Ofrq1JK9zcO/Wrt90rwEAAAAAAAAAAAAAAAAAAAAAAACGcgD8KH1Pn8wO8QAAAABJRU5ErkJggg=="
 			style="opacity: 0.5"
 			alt="TH01 Kikuri's actual hitbox"
-		/>
+		>
 	</div>
 </figure><p>
 	Much worse, however, are the teardrop ripples. It already starts with their
 	rendering routine, which places the sprites from <code>TAMAYEN.PTN</code>
 	<img
 	src="data:image/gif;base64,R0lGODlhIAAQAKEDAMAwoKDQ8PDw8P///yH5BAEKAAMALAAAAAAgABAAAAJlnI9pYXI+mJp0OCZzrQ5aC4Wbgn1BKWgjEqRpdGLtux7xmcYpENcHD7zFeAGAzwAEBJPK4ufRADWU1KpVCY0sYJ+rl6p5uXDIr7clTA/N1xtRfWK3h/SivSiv2sH8e/5vhQcIUAAAOw=="
-	/> at byte-aligned VRAM positions in the ultimate piece of <code>if(…) {…}
+	> at byte-aligned VRAM positions in the ultimate piece of <code>if(…) {…}
 	else&nbsp;if(…) {…} else&nbsp;if(…) {…}</code> meme code. Rather than
 	tracking the position of each of the five ripple sprites, ZUN suddenly went
 	purely functional and manually hardcoded the exact rendering and collision
 	detection calls for each frame of the animation, based on nothing but its
-	total frame counter. {{HTML_Emoji "zunpet"}}<br />
+	total frame counter. {{HTML_Emoji "zunpet"}}<br>
 	Each of the (up to) 5 columns is also unblitted and blitted individually
 	before moving to the next column, starting at the center and then
 	symmetrically moving out to the left and right edges. This wouldn't be a
@@ -169,13 +169,13 @@
 	(or "grazing") attempt turns into a coin flip. It's <i>sort of</i> mitigated
 	by the fact that Reimu is <i>also</i> only ever rendered at byte-aligned
 	VRAM positions, but I wouldn't say that these two bugs cancel out each
-	other.<br />
+	other.<br>
 	Oh well, another set of rendering issues to be fixed in the hypothetical
 	Anniversary Edition – obviously, the hitboxes should remain unchanged. Until
 	then, you can always memorize the exact internal positions. The sequence of
 	teardrop spawn points is completely deterministic and only controlled by the
 	fixed per-difficulty spawn interval.
-</p><hr /><p>
+</p><hr><p>
 	Aside from more minor coordinate inaccuracies, there's not much of interest
 	in the rest of the pattern code. In another parallel to Elis though, the
 	first soul pattern in phase 4 is aimed on every difficulty <i>except</i>
@@ -187,17 +187,17 @@
 	{{call .VideoPlayer $vid_p4_e $vid_p4_n $vid_p4_h $vid_p4_l.FlipActive}}
 	<figcaption>Kikuri's phase 4 patterns, on every difficulty.</figcaption>
 </figure>
-</p><hr /><p>
+</p><hr><p>
 	That brings us to 5 fully decompiled PC-98 Touhou bosses, with 26 remaining…
 	and another ½ of a push going to the cutscene code in
-	<code>FUUIN.EXE</code>.<br />
+	<code>FUUIN.EXE</code>.<br>
 	You wouldn't expect something as mundane as the boss slideshow code to
 	contain anything interesting, but there is in fact a slight bit of
 	speculation fuel there. The text typing functions take explicit string
 	lengths, which precisely match the corresponding strings… for the most part.
 	For the <code>"Gatekeeper 'SinGyoku'"</code> string though, ZUN passed 23
 	characters, not 22. Could that have been the "h" from the Hepburn
-	romanization of <span lang="ja">神玉</span>?!<br />
+	romanization of <span lang="ja">神玉</span>?!<br>
 	Also, <i>come on</i>, if this text is already blitted to VRAM for no reason,
 	you could have gone for perfect centering at unaligned byte positions; the
 	rendering function would have perfectly supported it. Instead, the X
@@ -208,7 +208,7 @@
 	don't, and we reach the <span lang="ja">地獄</span>/Jigoku Bad Ending with
 	its special shake/"boom" effect, and this picture:
 </p><figure>
-	<img src="{{$pic2}}" />
+	<img src="{{$pic2}}">
 	<figcaption>Picture #2 from <code>ED2A.GRP</code>.</figcaption>
 </figure><p>
 	Which is rendered by the following code:
@@ -293,7 +293,7 @@
 	I pushed the optimized code to the <a
 	href="https://github.com/nmlgc/ReC98/tree/th01_end_pic_optimize"><code>th01_end_pic_optimize</code></a>
 	branch, to also serve as an example of how to get close to optimal code out
-	of Turbo C++ 4.0J without writing a single ASM instruction.<br />
+	of Turbo C++ 4.0J without writing a single ASM instruction.<br>
 	And if you really want to use the EGC for this, that's the best you can do.
 	It really sucks that it merely expanded the GRCG's 4×8-bit tile register to
 	4×16 bits. With 32 bits, ≥386 CPUs could have taken advantage of their wider
@@ -326,7 +326,7 @@
 	MOVSD</code> only becomes larger. (Note that the page I linked above has a
 	typo in the cycle count of <code>REP MOVSD</code> on Pentium CPUs: According
 	to the original Intel <cite>Architecture and Programming Manual</cite>, it's
-	<code>13﻿+﻿𝑛</code>, not <code>3﻿+﻿𝑛</code>.)<br />
+	<code>13﻿+﻿𝑛</code>, not <code>3﻿+﻿𝑛</code>.)<br>
 	This difference explains why later games rarely use EGC-"accelerated"
 	inter-page VRAM copies, and keep all of their larger images in main memory.
 	It especially explains why TH04 and TH05 can get away with naively redrawing

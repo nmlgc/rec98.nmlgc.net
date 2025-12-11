@@ -16,7 +16,7 @@
 	This means I also had to reverse-engineer that "boss entity" class… yeah,
 	what else to call something a boss can have multiple of, that may or may
 	not be part of a larger boss sprite, may or may not be animated, and that
-	may or may not have an orb hitbox?<br />
+	may or may not have an orb hitbox?<br>
 	All bosses except for Kikuri share the same 5 global instances of this
 	class. Since renaming all these variables in ASM land is tedious anyway, I
 	went the extra mile and directly defined separate, meaningful names for
@@ -32,7 +32,7 @@
 	<li>(code for regular card-flipping stages)</li>
 	<li>Mima</li>
 	<li>YuugenMagan</li>
-</ol><hr /><p>
+</ol><hr><p>
 	As everyone kind of expects from TH01 by now, this class reveals yet
 	another… um, <i>unique and quirky</i> piece of code architecture. In
 	addition to the position and hitbox members you'd expect from a class like
@@ -42,7 +42,7 @@
 	one individual on-screen sprite, how can YuugenMagan have 5 eye sprites,
 	or Kikuri have more than one soul and tear sprite? By duplicating that
 	metadata, of course! And copying it from one entity to another
-	{{HTML_Emoji "onricdennat"}}<br />
+	{{HTML_Emoji "onricdennat"}}<br>
 	At this point, I feel like I even have to congratulate the game for not
 	actually loading YuugenMagan's eye sprites 5 times. But then again, 53,760
 	bytes of waste would have definitely been noticeable in the DOS days.
@@ -61,12 +61,12 @@
 	Except that there's also a <i>third</i> one for Attacking-Girl-Elis,
 	because Girl-Elis has 9 frames of animation in total, and the global .BOS
 	bitplane pointers are divided into 4 slots of only <i>8</i> images each.
-	{{HTML_Emoji "zunpet"}}<br />
+	{{HTML_Emoji "zunpet"}}<br>
 	Same for SinGyoku, who is split into a <i>sphere</i> entity, a <i>
 	person</i> entity, and a… <i>white flash</i> entity for all three forms,
 	all at the same resolution. Or Konngara's facial expressions, which also
 	require two entities just for themselves.
-</p><hr /><p>
+</p><hr><p>
 	And once you decompile all this code, you notice just how much of it the
 	game didn't even use. 13 of the 50 bytes of the boss entity class are
 	outright unused, and 10 bytes are used for a movement clamping and lock
@@ -79,7 +79,7 @@
 	As for the rendering functions, 5 out of 10 are unused. And while those
 	definitely make up <i>less</i> than half of the code, I still must have
 	spent at least 1 of those 4 pushes on effectively unused functionality.
-	<br />
+	<br>
 	Only one of these functions lends itself to some speculation. For Elis'
 	entrance animation, the class provides functions for wavy blitting and
 	unblitting, which use a separate X coordinate for every line of the
@@ -88,7 +88,7 @@
 	indicate that Elis could originally split herself into two sprites,
 	similar to TH04 Stage 6 Yuuka? Or it might just have been some other kind
 	of animation effect, who knows.
-</p><hr /><p>
+</p><hr><p>
 	After over 3 months of TH01 progress though, it's finally time to look at
 	other games, to cover the rest of the crowdfunding backlog. Next up: Going
 	back to TH05, and getting rid of those last PI false positives. And since

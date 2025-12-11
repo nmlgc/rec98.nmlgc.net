@@ -28,7 +28,7 @@
 	<figure><a href="{{$pic1}}"><img
 		src="{{$pic1}}"
 		alt="8×16 half-width section of font ROM, with the characters in the Shift-JIS lead byte range highlighted in red"
-	/></a></figure><p>
+	></a></figure><p>
 	The half-width glyphs marked in <span style="color: red;">red</span>
 	correspond to the byte ranges from 0x80-0x9F and 0xE0-0xFF… which Shift-JIS
 	defines as lead bytes for two-byte, full-width characters. But if we turn
@@ -36,13 +36,13 @@
 	<figure><a href="{{$pic2}}"><img
 		src="{{$pic2}}"
 		alt="Visible differences between the kanji and graph modes on PC-98 DOS"
-	/></a><figcaption>
+	></a><figcaption>
 		(Yes, that <code>g</code> in the function row is how NEC DOS
 		indicates that graph mode is active. Try it yourself by pressing
 		<kbd>Ctrl+F4</kbd>!)
 	</figcaption></figure><p>
 	Jackpot, we get those half-width characters when printing their
-	corresponding bytes.<br />
+	corresponding bytes.<br>
 	<a href="https://github.com/joncampbell123/dosbox-x/pull/2547">I've
 	re-implemented all my findings into DOSBox-X</a>, which will include graph
 	mode in the upcoming 0.83.14 release. If P0140 looks a bit empty as a
@@ -56,9 +56,9 @@
 	back to kanji mode. What a waste of RE time…? Oh well, at least we've now
 	got plenty of proof that these weird escape sequences <i>actually</i> do
 	nothing of interest.
-</p><hr /><p>
+</p><hr><p>
 	As for the Konngara code itself… well, it's script-like code, what can you
-	say. Maybe minimally sloppy in some places, but ultimately harmless.<br />
+	say. Maybe minimally sloppy in some places, but ultimately harmless.<br>
 	One small thing that might not be widely known though: The large,
 	blue-green Siddhaṃ seed syllables are supposed to show up immediately, with
 	no delay between them? Good to know. Clocking your emulator too low tends
@@ -80,12 +80,12 @@
 	playfield coordinates is looking increasingly sloppy… I don't know,
 	fractions really seemed like the most sensible thing to do with what we're
 	given here. 😐
-</p><hr /><p>
+</p><hr><p>
 	So, 2 pushes in, and we've got the loading code, the entrance animation,
 	facial expression rendering, and the first one out of Konngara's 12
 	danmaku patterns. Might not sound like much, but since that first pattern
 	involves those
-	<img src="data:image/gif;base64,R0lGODlhCAAIAIABAACZqv///yH5BAEKAAEALAAAAAAIAAgAAAINjAGmiMv9okzSNRVuKAA7" alt="◆" />
+	<img src="data:image/gif;base64,R0lGODlhCAAIAIABAACZqv///yH5BAEKAAEALAAAAAAIAAgAAAINjAGmiMv9okzSNRVuKAA7" alt="◆">
 	blue-green diamond sprites and therefore is one of the more complicated
 	ones, it all amounts to roughly 21.6% of Konngara's code. That's 7 more
 	pushes to get Konngara done, then? Next up though: Two pushes of website

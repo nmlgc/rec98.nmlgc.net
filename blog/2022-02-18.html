@@ -23,7 +23,7 @@
 	<figcaption>
 		{{$desc_200 := "The upper half of VRAM during TH03's in-game portion, at the original line-doubled 640×200 resolution."}}
 		{{$desc_400 := "The full VRAM contents during TH03's in-game portion, as seen when forcing the system into a 640×400 resolution."}}
-		<span id="{{.Date}}-resolution-caption">{{$desc_400}}</span><br />
+		<span id="{{.Date}}-resolution-caption">{{$desc_400}}</span><br>
 		<button id="{{.Date}}-200-set" onclick="
 			document.getElementById('{{.Date}}-400').classList.remove('active');
 			document.getElementById('{{.Date}}-200').classList.add('active');
@@ -54,17 +54,17 @@
 			id="{{.Date}}-200"
 			src="{{$pic1}}"
 			alt="TH03's VRAM at regular line-doubled 640×200 resolution"
-		/><img
+		><img
 			id="{{.Date}}-400"
 			class="active"
 			src="{{$pic2}}"
 			alt="TH03's VRAM at full 640×400 resolution, including the SPRITE16 sprite area"
-		/><img
+		><img
 			id="{{.Date}}-tram"
 			class="active"
 			src="{{$pic3}}"
 			alt="TH03's text layer during an in-game round."
-		/>
+		>
 	</div>
 </figure><p>
 	Note that the text chip still displays its overlaid contents at 640×400,
@@ -78,7 +78,7 @@
 	let's introduce a new formatting convention for both on-screen
 	640×{{HTML_Screen_Y 400}} and undoubled 640×{{HTML_200_Y 200}} coordinates,
 	and always write out both to minimize the confusion.
-</p><hr /><p>
+</p><hr><p>
 	Alright, now what's <i>the thing</i> gonna be? The enemy structure is highly
 	overloaded, being used for enemies, fireballs, and explosions with seemingly
 	different semantics for each. Maybe a bit too much to be figured out in what
@@ -131,7 +131,7 @@
 	precisely move through those blank regions at TAS speeds. So, let's make
 	this two pushes after all and tell the complete story, since this is one of
 	the more interesting aspects to still be documented in this game.
-</p><hr /><p>
+</p><hr><p>
 	And the code only gets worse. {{HTML_Emoji "godzun"}} While the player
 	collision detection function <i>is</i> decompilable, it might as well not
 	have been, because it's just more of the same "optimized", hard-to-follow
@@ -147,7 +147,7 @@
 	first <i>("awesome, no need to rewrite this stuff for my x86_64 Linux
 	port!")</i>, you quickly realize that almost all inline assembly in this
 	codebase assumes either PC-98 hardware, segmented 16-bit memory addressing,
-	or is a temporary hack that will be removed with further RE progress.<br />
+	or is a temporary hack that will be removed with further RE progress.<br>
 	That's mainly because most of the raw arithmetic code uses Turbo C++'s
 	register pseudovariables where possible. While they certainly have their
 	drawbacks, being a non-standard extension that's not supported in other
@@ -184,7 +184,7 @@ asm { movsw; }
 	between the <code>_asm</code> keyword for "decently sane" inline assembly,
 	and the slightly less standard <code>asm</code> keyword for inline assembly
 	that relies on the contents of pseudo-registers, and <i>should</i> break on
-	compilers that don't support them.<br /> So yeah, have some minor
+	compilers that don't support them.<br> So yeah, have some minor
 	portability work in exchange for these two pushes not having all that much
 	in RE'd content.
 </p><p>
@@ -192,7 +192,7 @@ asm { movsw; }
 	player hitboxes to be a constant 8×{{HTML_Screen_Y 8}}&nbsp;/
 	8×{{HTML_200_Y 4}} pixels, and prove that the hit stripes are nothing but
 	an adequate optimization that doesn't affect gameplay in any way.
-</p><hr /><p>
+</p><hr><p>
 	And what's the obvious thing to immediately do if you have both the
 	collision bitmap and the player hitbox? Writing a "real hitbox" mod, of
 	course:
@@ -219,16 +219,16 @@ asm { movsw; }
 			class="active"
 			src="{{$pic4}}"
 			alt="A decently busy TH03 in-game frame."
-		/><img
+		><img
 			id="{{.Date}}-collmap"
 			src="{{$pic5}}"
 			alt="The underlying content of the collision bitmap, showing off all three different shapes together with the player hitboxes."
-		/>
+		>
 	</div>
 	<figcaption>
 		A decently busy TH03 in-game frame and its underlying collision bitmap,
 		showing off all three different collision shapes together with the
-		player hitboxes.<br />
+		player hitboxes.<br>
 		<button id="{{.Date}}-collmap-set" onclick="
 			document.getElementById('{{.Date}}-action').classList.remove('active');
 			document.getElementById('{{.Date}}-collmap').classList.add('active');
@@ -260,8 +260,7 @@ asm { movsw; }
 	8×{{HTML_200_Y 4}} rectangle that is smaller than your shot sprites,
 	especially without focused movement? I can't. {{HTML_Emoji "tannedcirno"}}
 	Maybe it will feel more playable after making explosions visible, but that
-	would need more RE groundwork first.<br
-	/>
+	would need more RE groundwork first.<br>
 	It's also interesting how adding two full GRCG-accelerated redraws of both
 	playfields per frame doesn't significantly drop the game's frame rate – so
 	why did the drawing functions have to be micro-optimized again? It

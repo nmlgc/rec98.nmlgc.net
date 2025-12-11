@@ -16,7 +16,7 @@
 	we get to TH05's .PI functions… and really, why did ZUN write <i>all of
 	them</i> in ASM? Why (re)declare all the necessary structures and data in
 	ASM land, when all these functions are merely one layer of abstraction
-	above master.lib, which does all the actual work?<br />
+	above master.lib, which does all the actual work?<br>
 	I get that ZUN might have wanted masked blitting to be faster, which is
 	used for the fade-in effect seen during TH05's main menu animation and the
 	ending artwork. But, uh… he knew how to modify master.lib. In fact, he
@@ -29,7 +29,7 @@
 	this function that takes a mask pattern. No amount of <code>REP
 	MOVSW</code> is going to change the fact that two VRAM writes per line are
 	slower than a single one. Not to mention that it doesn't justify writing
-	every other .PI function in ASM to go along with it…<br />
+	every other .PI function in ASM to go along with it…<br>
 	This is where we also find the most hilarious aspect about this: For most
 	of ZUN's pointless micro-optimizations, you could have maybe made the
 	argument that they do save <i>some</i> CPU cycles here and there, and

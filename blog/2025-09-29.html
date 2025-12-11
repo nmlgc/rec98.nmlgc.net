@@ -431,16 +431,16 @@
 </p><h3 id="game-bat-{{.Date}}">Replicating TH02-TH05's <code>GAME.BAT</code> in C++</h3><p>
 	In TH03, this is slightly more involved. We not only need to launch PMD using this technique, but also apply it to the <code lang="ja">INTvector set program</code> and SPRITE16. {{Blog_PostLink "2023-03-05#mdrv98" "You know the way this goes"}}:
 </p><p>
-	<embed src="{{call .PostFileURL "TH03-DOS-heap-sketch.svg"}}" class="inline_sprite" style="height: 11.25vw; margin-right: 0.5em; float: left;" />
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-sketch.svg"}}" class="inline_sprite" style="height: 11.25vw; margin-right: 0.5em; float: left;">
 	…actually, wait a moment! TH02-TH05 don't even use the C heap, and the master.lib heap works in a completely different way. Borland implemented their heap in a traditional <a href="https://linux.die.net/man/2/sbrk"><code>sbrk(2)</code></a> style that dynamically resizes a program's main DOS memory block as needed, which is how we end up with the whole concept of the heap growing in one direction. master.lib, however, needs to place its heap entirely within a single pre-allocated and fixed-size block of memory. And since <code>mem_assign_dos()</code> simply allocates this block via the usual <a href="https://stanislavs.org/helppc/int_21-48.html">DOS <code>INT 21h, AH=48h</code> API</a>, it doesn't matter <i>where</i> on the DOS heap this block is located. This means that we don't even have to do the error-prone witchcraft of pushing these TSRs to the top of conventional memory that we had to do for TH01! Right?
 </p><figure style="clear: both;">
-	<embed src="{{call .PostFileURL "TH03-DOS-heap-naive.svg"}}" />
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-naive.svg"}}">
 	<figcaption>Just like last time, these visualizations are not even remotely to scale.<br>
 	Also, note the small gap between SPRITE16 and PMD. That's <i>supposed</i> to be PMD's environment segment, and DOS does allocate it, but PMD explicitly frees it before going resident. Sure, it's just a few bytes on real DOS, but still, very considerate!</figcaption>
 </figure><p>
 	Unfortunately though, the fixed position of all these TSRs would still prevent the <span style="color: red">game allocation</span> from being replaced with a binary that asks for more memory than the one this block was initially allocated for. In TH01, this would have been a minor issue because it only applied to hot-reloading the single <code>DEBLOAT.EXE</code> or <code>ANNIV.EXE</code> that contains all game code. For the other four games, however, we still keep the larger <code>MAIN.EXE</code> as a separate binary, and most likely will do so for the foreseeable future. And we're surely not getting into the business of <span class="hovertext" title="Seems easy in theory: For TSRs spawned from a .COM binary, their code and data is limited to the single memory block, so we would simply move the memory and adjust the (hardcoded) interrupt vector. But what about TSRs that allocate and save the addresses of other DOS memory blocks (*cough* SPRITE16), or even just they store and load a copy of their their CS/DS/SS register at any globally persistent location? Welcome to replicating tons of implementation details…">moving already allocated</span> TSRs…<br>
 	So we're back to the technique from two years ago after all. Let's precalculate the size of each TSR, push that TSR to the top of conventional RAM by temporarily claiming all free memory minus its expected size, and then we get…
-</p><figure><embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-failure.svg"}}" /></figure><p>
+</p><figure><embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-failure.svg"}}"></figure><p>
 	…a <code>ZUN.COM</code> spawn failure from DOS as we try to start the <code>ZUNINIT</code> sub-binary. {{HTML_Emoji "zunpet"}}<br>
 	Yup. Thanks to ZUN's fantastic idea of bundling these small utility tools and TSRs into a single binary that's larger than each individual TSR, we can't just reuse the strategy that worked for TH01. DOS must load the entirety of <code>ZUN.COM</code> into conventional RAM <i>before</i> the bundling code gets a chance to shift the selected sub-binary to the top of the program's memory block and then reduce the size of that block.<br>
 	So how are we going to solve this?
@@ -448,7 +448,7 @@
 	<li>We could ship the individual small binaries bundled in <code>ZUN.COM</code>. But that would defeat the whole point of reducing clutter in the game directory, being even worse than the batch file we're trying to eliminate.</li>
 	<li>We could reserve the entire required size of <code>ZUN.COM</code> instead of just the size we expect for each TSR. But that would leave the difference between <code>ZUN.COM</code> and the TSR as an unallocated block we can't do anything with, fragmenting the DOS heap as a result:</li>
 </ul><figure>
-	<embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-overallocated.svg"}}" />
+	<embed src="{{call .PostFileURL "TH03-DOS-heap-ZUN.COM-overallocated.svg"}}">
 	<figcaption>Sure, we could allocate the resident structure into the gap left by <code>ZUNINIT</code>'s instance of <code>ZUN.COM</code>, but that's just a few bytes. Keep in mind that the <i>(env.)</i> blocks are much smaller than they appear here. Thus, the free blocks are also a lot larger in reality, but still not large enough to fit PMD and its music buffer.</figcaption>
 </figure><p>
 	But if we can't get rid of <code>ZUN.COM</code>'s high load-time memory requirements, how about using that memory more productively? Is there a way we could maybe spawn the other TSRs <i>into</i> the hole left by <code>ZUN.COM</code> after it went resident?<br>
@@ -496,7 +496,7 @@ for(const auto& tsr : tsrs) {
 </tr></tbody></table></figure><p>
 	Then, we only need to resize our main memory block a single time to leave a gap at the top of conventional RAM whose size matches the larger of the minimum or resident bundle sizes. If we then spawn the TSRs into this gap, we indeed save 22,220&nbsp;bytes over the naive approach! Let's visualize the resulting memory layout with TH02 because there's a nice detail with MMD and PMD:
 </p><figure>
-	<embed src="{{call .PostFileURL "TH02-DOS-heap-bundled.svg"}}" />
+	<embed src="{{call .PostFileURL "TH02-DOS-heap-bundled.svg"}}">
 	<figcaption>MMD also frees its environment segment before going resident, so we can subtract the size of one environment segment from the reserved heap size if we spawn both PMD and MMD.<br>
 	Unfortunately, <i>one</i> of these gaps will always remain with this approach. We could get rid of it by spawning MMD and PMD first, which would merge it into the remaining free memory. But then, we'd have nothing to spawn into the hole left by the <code>ZUN.COM</code> binary for <code>ZUNINIT</code>, and we'd be back to the naive fragmented situation above. Thus, this trick remains unique to TH02.</figcaption>
 </figure><p>

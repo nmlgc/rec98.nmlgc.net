@@ -11,7 +11,7 @@
 </p><p>
 	…but wait, these are drawn as transparent sprites loaded from .PTN files.
 	Guess we first have to spend a push on
-	{{Blog_PostLink "2020-03-13" "Part 2 of this format"}}.<br />
+	{{Blog_PostLink "2020-03-13" "Part 2 of this format"}}.<br>
 	Hm, 4 functions for alpha-masked blitting and unblitting of both 16×16 and
 	32×32 .PTN sprites that align the X coordinate to a multiple of 8
 	(remember, the PC-98 uses a
@@ -32,14 +32,14 @@
 	would be pretty wasteful, so TH01 just looks at all animated sprites, and
 	selectively copies only their occupied pixels from the second to the first
 	VRAM page.
-</p><hr /><p>
+</p><hr><p>
 	Alright, player shot class methods… oh, wait, the collision functions
 	directly act on the Yin-Yang Orb, so we first have to spend a push on
 	<i>that</i> one. And that's where the impression we got from the .PTN
 	functions is confirmed: <i>The orb is, in fact, only ever displayed at
 	byte-aligned X coordinates, divisible by 8.</i> It's only thanks to the
 	constant spinning that its movement appears at least <i>somewhat</i>
-	smooth.<br />
+	smooth.<br>
 	This is purely a rendering issue; internally, its position <i>is</i>
 	tracked at pixel precision. Sadly, smooth orb rendering at any unaligned X
 	coordinate wouldn't be <i>that</i> trivial of a mod, because well, the
@@ -51,12 +51,12 @@
 </p><p>
 	More importantly though, this was the right time to decompile the core
 	functions controlling the orb physics – probably the highlight in these
-	three pushes for most people.<br />
+	three pushes for most people.<br>
 	Well, "physics". The X velocity is restricted to the 5 discrete states of
 	-8, -4, 0, 4, and 8, and gravity is applied by simply adding 1 to the Y
 	velocity every 5 frames {{HTML_Emoji "zunpet"}} No wonder that this can
 	easily lead to situations in which the orb infinitely bounces from the
-	ground.<br />
+	ground.<br>
 	At least fangame authors now have
 	<a href="https://github.com/nmlgc/ReC98/blob/master/th01/main/player/orb.cpp">a
 	reference of how ZUN did it originally</a>, because really, this bad
@@ -81,13 +81,13 @@
 	{{Blog_PostLink "2022-07-10" "the current version is here"}}!</strong>
 	{{HTML_Download .HostedPath $patch}}
 	To use it, simply replace <code>REIIDEN.EXE</code>, and run the game
-	in debug mode, via <kbd>game d</kbd> on the DOS prompt.<br />
+	in debug mode, via <kbd>game d</kbd> on the DOS prompt.<br>
 	<a href="https://github.com/nmlgc/ReC98/commit/874fe6db8a1a40f978b344ed7d400bbedd7ca0a3">
 	Its code</a> might also serve as an example of how to achieve this sort of
 	thing without position independence.
 </p><figure><a
-href="{{$pic}}"><img src="{{$pic}}" alt="Screenshot of the TH01 orb physics debug mod" /></a></figure
-><hr /><p>
+href="{{$pic}}"><img src="{{$pic}}" alt="Screenshot of the TH01 orb physics debug mod"></a></figure
+><hr><p>
 	Alright, <i>now</i> it's time for player shots though. Yeah, sure, they
 	don't move horizontally, so it's not <i>too</i> bad that those are also
 	always rendered at byte-aligned positions. But, uh… why does this code
@@ -101,10 +101,10 @@ href="{{$pic}}"><img src="{{$pic}}" alt="Screenshot of the TH01 orb physics debu
 	</i> move all types, and <i>then</i> render all types, as done in later
 	PC-98 Touhou games. If you do these three steps per-type instead, you <i>
 	will</i> unblit sprites of other types that have been rendered before… and
-	therefore end up with flicker.<br />
+	therefore end up with flicker.<br>
 	Oh, and finally, ZUN also added an additional sloppy 16×16 square unblit
 	call if a shot collides with a pellet or a boss, for some <i>
 	guaranteed</i> flicker. Sigh.
-</p><hr /><p>
+</p><hr><p>
 	And that's ⅓ of all ZUN code in TH01 decompiled! Next up: Pellets!
 </p>

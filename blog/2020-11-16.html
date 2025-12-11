@@ -8,7 +8,7 @@
 	As usual, that didn't keep me from trying though. The TH04 and TH05
 	version of the infamous <i>16-pixel-aligned, EGC-accelerated rectangle
 	blitting function from page 1 to page 0</i> was fairly average as far as
-	unreasonable decompilations are concerned.<br />
+	unreasonable decompilations are concerned.<br>
 	The big blocker in TH03's <code>MAIN.EXE</code>, however, turned out to be
 	the .MRS functions, used to render the gauge attack portraits and bomb
 	backgrounds. The blitting code there uses the additional FS and GS segment
@@ -20,7 +20,7 @@
 	<code>_GS</code> pseudo-registers.</li>
 </ol><p>
 	Apparently I'm the first one to even try doing that with this compiler? I
-	haven't found any other mention of this bug…<br />
+	haven't found any other mention of this bug…<br>
 	Compiling via assembly (<code>#pragma inline</code>) would work around
 	this bug and generate the correct instructions. But that would incur yet
 	another dependency on a 16-bit TASM, for something honestly quite
@@ -40,8 +40,8 @@
 	Yeah… the result is
 	<a href="https://github.com/nmlgc/ReC98/commit/8b0165738a1fd66">batshit</a>
 	<a href="https://github.com/nmlgc/ReC98/commit/00e65f4c6b33eeb">insane.</a>
-	I may have gone too far in a few places…<br />
-</p><hr /><p>
+	I may have gone too far in a few places…<br>
+</p><hr><p>
 	One might certainly argue that all these ridiculous decompilations
 	actually hurt the preservation angle of this project. <i>"Clearly, ZUN
 	couldn't have <strong>possibly</strong> written such unreasonable C++ code.
@@ -84,7 +84,7 @@
 	enforce the needed 2-byte alignment before the function if I
 	<i>really</i> insisted on keeping the C version, but it really wasn't
 	worth it.
-</p><hr /><p>
+</p><hr><p>
 	Now that I've also described yet another meta-issue, maybe there'll
 	<i>really</i> be nothing to say about the next technical debt pushes?
 	{{HTML_Emoji "onricdennat"}} Next up though: Back to actual progress

@@ -53,17 +53,17 @@
 			data-title="<code>MIKO16.BFT</code>"
 			alt=""
 			class="active"
-		/><img
+		><img
 			src="{{$st06_16}}"
 			data-title="<code>ST06_16.BFT</code>"
 			alt=""
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	</figure></li>
 	<li>The rendering function for TH04's Stage 4 midboss, which seems to
 	feature the same premature clipping quirk we've seen for
 	{{Blog_PostLink "2022-11-30" "TH05's Stage 5 midboss, 7 months ago"}}?
 	{{HTML_Emoji "thonk"}}</li>
-	<li><img class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAFVBMVEUAAAD/7+//78/vuqq6urr/RUWKAAALp9jpAAAAAXRSTlMAQObYZgAAATlJREFUeNp9VEFuhDAMtHYr7mz7gF2HFyTLvYX+AJkzF/z/J1R2GAks6JxCxpOxYwciYDT8UgRRZmZOcZfGsTiihjJXImgsXhxBY/Eg9poxFRF1iJT8xj7lIwEJjaUX1bpWlanAJUciwaGfFWoiXafNJUdiqi4fqZ+XfVHNOuVvIrqfEU8iGorYQWrGfhSplM5zioSK5QULIhWLUNFqcj8nnvQDQqX4oerunVcRiXXKn0jK9pmxlsJIyj5eD6wtLZQhhV8t4wOKKmjbBz4OigOxV3CLo/aKKrnIap9uqpU3CwrEvTMN58QX3ayx67zgEtFCv/ZTwt2beo1omDfK842Et/Z2NSVX43M1cOcj2v0/1PEZTKWDejg+HL56ahBcPc5NAqIkCDYb/ACYjjCNIcRXjSHuuialXfwfWKCn4OUTyOMAAAAASUVORK5CYII=" />
+	<li><img class="inline_sprite" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAFVBMVEUAAAD/7+//78/vuqq6urr/RUWKAAALp9jpAAAAAXRSTlMAQObYZgAAATlJREFUeNp9VEFuhDAMtHYr7mz7gF2HFyTLvYX+AJkzF/z/J1R2GAks6JxCxpOxYwciYDT8UgRRZmZOcZfGsTiihjJXImgsXhxBY/Eg9poxFRF1iJT8xj7lIwEJjaUX1bpWlanAJUciwaGfFWoiXafNJUdiqi4fqZ+XfVHNOuVvIrqfEU8iGorYQWrGfhSplM5zioSK5QULIhWLUNFqcj8nnvQDQqX4oerunVcRiXXKn0jK9pmxlsJIyj5eD6wtLZQhhV8t4wOKKmjbBz4OigOxV3CLo/aKKrnIap9uqpU3CwrEvTMN58QX3ayx67zgEtFCv/ZTwt2beo1omDfK842Et/Z2NSVX43M1cOcj2v0/1PEZTKWDejg+HL56ahBcPc5NAqIkCDYb/ACYjjCNIcRXjSHuuialXfwfWKCn4OUTyOMAAAAASUVORK5CYII=">
 	The rendering function for the big 48×48 explosion sprite, which <i>also</i>
 	features the same clipping quirk?
 	{{HTML_Emoji "thonk"}}{{HTML_Emoji "thonk"}}</li>
@@ -78,7 +78,7 @@
 	we would actually want here. This is exactly the wrong choice to make for a
 	game engine: Not only is the game developer now stuck with either rendering
 	the sprite in full or not at all, but they're also left with the burden of
-	manually calculating <i>when</i> not to display a sprite.<br />
+	manually calculating <i>when</i> not to display a sprite.<br>
 	However, strictly limiting the top-left screen-space coordinate to
 	(﻿0,&nbsp;0﻿) and the bottom-right one to (﻿640,&nbsp;400﻿) would actually
 	stop rendering some of the sprites much earlier than the clipping conditions
@@ -94,7 +94,7 @@
 	starts at offset <code>0x0000</code> ends up being displayed <i>below</i>
 	the bottom row of VRAM that starts at offset <code>0x7CB0</code> for 399 of
 	the 400 possible scrolling positions, wouldn't we then need to vertically
-	wrap most of the rendered sprites?<br />
+	wrap most of the rendered sprites?<br>
 	For this reason, master.lib provides the <code>super_roll_*()</code>
 	functions, which unconditionally perform exactly this vertical wrapping. But
 	this creates a new problem: If these functions still can't clip, and don't
@@ -102,7 +102,7 @@
 	the screen (since master.lib's <code>graph_scrollup()</code> function
 	doesn't retain this information), won't we also see sprites wrapping around
 	the <i>actual</i> edges of the screen? That's something we certainly
-	wouldn't want in a vertically scrolling game…<br />
+	wouldn't want in a vertically scrolling game…<br>
 	The answer is yes, and master.lib offers no solution for this issue. But
 	this is where the playfield borders come in, and helpfully cover 16 pixels
 	at the top and 16 pixels at the bottom of the screen. As a result, they can
@@ -137,17 +137,17 @@
 		document.getElementById('tram-200-{{.Date}}').hidden = false;
 		document.getElementById('tram-show-{{.Date}}').hidden = true;
 		document.getElementById('tram-hide-{{.Date}}').hidden = false;
-	">(Show text layer)</button><br />
+	">(Show text layer)</button><br>
 	The earliest possible frame that TH05 can start rendering the Stage 5
 	midboss on. Hiding the text layer reveals how master.lib did in fact
 	"blindly" render the top part of her sprite to the bottom of the
 	playfield. That's where her sprite <i>starts</i> before it is correctly
-	wrapped around to the top of VRAM.<br />
+	wrapped around to the top of VRAM.<br>
 	If we scrolled VRAM by another 200 pixels (and faked an equally shifted
 	TRAM for demonstration purposes), we get an equally valid game scene
 	that points out why a vertically scrolling PC-98 game must wrap all sprites
 	at the vertical edges of VRAM to begin with.
-	<br />
+	<br>
 	Also, note how the HP bar has filled up quite a bit before the midboss can
 	actually appear on screen.
 </figcaption><div class="multilayer">
@@ -156,22 +156,22 @@
 		class="active"
 		src="{{$vram_0}}"
 		alt="VRAM contents of the first possible frame that TH05's Stage 5 midboss can appear on, at their original scrolling position. Also featuring the 64×64 bounding box of the midboss sprite."
-	/><img
+	><img
 		id="vram-200-{{.Date}}"
 		src="{{$vram_200}}"
 		alt="VRAM contents of the first possible frame that TH05's Stage 5 midboss can appear on, scrolled down by a further 200 pixels. Also featuring the 64×64 bounding box of the midboss sprite."
-	/><img
+	><img
 		id="tram-0-{{.Date}}"
 		class="active"
 		src="{{$tram_0}}"
 		alt="TH05's in-game text layer, at its original position."
 		hidden
-	/><img
+	><img
 		id="tram-200-{{.Date}}"
 		src="{{$tram_200}}"
 		alt="TH05's in-game text layer, scrolled by 200 pixels to match an equally scrolled VRAM."
 		hidden
-	/>
+	>
 </div></figure><p>
 	And that's how the lowest possible top Y coordinate for sprites blitted
 	using the master.lib <code>super_roll_*()</code> functions during the
@@ -181,7 +181,7 @@
 	cover them. Theoretically, you <i>could</i> lower this number for
 	<i>some</i> animation frames that start with multiple rows of transparent
 	pixels, but I thankfully haven't found any instance of ZUN using such a
-	hack. So far, at least… {{HTML_Emoji "godzun"}}<br />
+	hack. So far, at least… {{HTML_Emoji "godzun"}}<br>
 	Visualized like that, it all looks quite simple and logical, but for days, I
 	did <i>not</i> realize that these sprites were rendered to a scrolling VRAM.
 	This led to a much more complicated initial explanation involving the
@@ -202,7 +202,7 @@
 	{{Blog_PostLink "2023-03-30" "tile source area"}} and overwrite some of the
 	pixels there, which we obviously don't want to re-blit every frame.
 	Similarly, the right coordinate must not extend into the HUD, which starts
-	at 448 pixels.<br />
+	at 448 pixels.<br>
 	The last part might be surprising if you aren't familiar with the PC-98 text
 	chip. Contrary to the CGA and VGA text modes of IBM-compatibles, PC-98 text
 	cells can only use a single color for <i>either</i> their foreground or
@@ -243,13 +243,13 @@
 	that it's actually 64×64 pixels large, which causes even the initial
 	transformation into screen space to be misaligned from the get-go.
 	{{HTML_Emoji "zunpet"}} But these are additional bugs on top of the single
-	one that led to all this research.<br />
+	one that led to all this research.<br>
 	Because that's what this is, a bug. 🐞 Every resulting pixel boundary is a
 	systematic result of master.lib's unfortunate lack of clipping. It's as much
 	of a bug as TH01's byte-aligned rendering of entities whose internal
 	position is not byte-aligned. In both cases, the entities are alive,
 	simulated, and partake in collision detection, but their rendered appearance
-	doesn't accurately reflect their internal position.<br />
+	doesn't accurately reflect their internal position.<br>
 	Initially, I classified
 	{{Blog_PostLink "2022-11-30" "the sudden pop-in of TH05's Stage 5 midboss"}}
 	as a quirk because we had no conclusive evidence that this wasn't
@@ -281,13 +281,13 @@
 	architecture of the code from the very beginning. You <i>really</i> want to
 	have one and <i>only</i> one place where sprite clipping is done right – and
 	only once per sprite, regardless of how many bitplanes you want to write to.
-</p><hr /><p>
+</p><hr><p>
 	Which brings us to the goal that the final ¼ of this push went toward. I
 	thought I was going to start cleaning up the
 	{{Blog_PostLink "2021-10-20" "player movement and rendering code"}}, but
 	that turned out too complicated for that amount of time – especially if you
 	want to start with <i>just</i> cleanup, preserving all original bugs for the
-	time being.<br />
+	time being.<br>
 	Fixing and smoothening player and Orb movement would be the next big task in
 	Anniversary Edition development, needing about 3 pushes. It would start with
 	more performance research into runtime-shifting of larger sprites, followed
@@ -303,7 +303,7 @@
 	{{Blog_PostLink "2022-07-17" "the rotating squares around Mima"}} and
 	{{Blog_PostLink "2022-08-08" "YuugenMagan's pentagram"}}. So far, I managed
 	to remove another 1,360 bytes from the binary within this final ¼ of a push,
-	but there's still quite a bit to do in that regard.<br />
+	but there's still quite a bit to do in that regard.<br>
 	This is the perfect kind of feature for smaller (micro-)transactions. Which
 	means that we've now got meaningful TH01 code cleanup and Anniversary
 	Edition subtasks at every price range, no matter whether you want to invest
@@ -314,7 +314,7 @@
 	will be receiving all the funding it needs to happen. 🐧 Next up, therefore:
 	Turning this into my main project within ReC98 for the next couple of
 	months, and getting started by shipping the long-awaited first step towards
-	that goal.<br />
+	that goal.<br>
 	I've raised the cap to avoid the potential of rounding errors, which might
 	prevent the last needed Shuusou Gyoku push from being correctly funded. I
 	already had to pick the larger one of the two pending TH02 transactions for

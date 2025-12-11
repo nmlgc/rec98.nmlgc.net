@@ -6,7 +6,7 @@
 	TH04, only in TH05?
 </p><figure class="pixelated singleplayer_playfield"><img
 	src="{{$pic1}}"
-	alt="Screenshot of Reimu moving on top of Stage 6 Yuuka, demonstrating the lack of boss↔player collision in TH04"/>
+	alt="Screenshot of Reimu moving on top of Stage 6 Yuuka, demonstrating the lack of boss↔player collision in TH04">
 	<figcaption>Yup, Reimu is not getting hit… yet.</figcaption>
 </figure><p>
 	That's the first of only three interesting discoveries in these 3 pushes,
@@ -48,7 +48,7 @@
 	provided by Borland C++ and TASM absolutely <i>can</i> be the cause of many
 	weird runtime bugs. Even if the compiler or linker catches them, you are
 	often left with confusing error messages that aged just as poorly as memory
-	segmentation itself.<br />
+	segmentation itself.<br>
 	However, embracing the concept does provide quite the opportunity for
 	optimizations. While it definitely was a very crazy idea, there is a small
 	bit of brilliance to be gained from making proper use of all these
@@ -82,12 +82,12 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	single variable is either quite nice, or really, <i>really</i> dumb in its
 	reliance on the precise memory model of one single architecture.
 	{{HTML_Emoji "tannedcirno"}}
-</p><hr /><p>
+</p><hr><p>
 	Why look at dialog loading though, wasn't this supposed to be all about
 	shared boss functions? Well, TH04 unnecessarily puts certain stage-specific
 	code into the boss defeat function, such as loading the alternate Stage 5
 	Yuuka defeat dialog before a Bad Ending, or initializing Gengetsu after
-	Mugetsu's defeat in the Extra Stage.<br />
+	Mugetsu's defeat in the Extra Stage.<br>
 	That's TH04's second core function with an explicit conditional branch for
 	Gengetsu, after the
 	{{Blog_PostLink "2021-11-29" "dialog exit code we found last year during EMS research"}}.
@@ -105,7 +105,7 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	misguided attempt to micro-optimize away a few bytes of conventional memory,
 	TH04 reserves 16 bytes of "generic boss state", which can (and are) freely
 	used for anything a boss doesn't want to store in a more dedicated
-	variable.<br />
+	variable.<br>
 	It might have been worth it if the bosses actually <i>used</i> most of these
 	16 bytes, but the majority just use (the same) two, with only Stage 4 Reimu
 	using a whopping seven different ones. To reverse-engineer the various uses
@@ -121,11 +121,11 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	earlier bosses – just how the <a
 	href="https://www.youtube.com/watch?v=b1k82w1VzUc">Shinki death glitch in
 	TH05 is caused by reusing cheeto data from way back in Stage 4</a> – and
-	hence require much more boss-specific progress.<br />
+	hence require much more boss-specific progress.<br>
 	And yes, it might have been way too early to look into all these tiny
 	details of specific boss scripts… but then, this happened:
 </p><figure class="pixelated"><a
-	href="{{$pic2}}"><img src="{{$pic2}}" alt="TH04 crashing to the DOS prompt in the Stage 4 Marisa fight, right as the last of her bits is destroyed" /></a>
+	href="{{$pic2}}"><img src="{{$pic2}}" alt="TH04 crashing to the DOS prompt in the Stage 4 Marisa fight, right as the last of her bits is destroyed"></a>
 </figure><p>
 	Looks similar to <a
 	href="https://github.com/spaztron64/th98tuc_site/issues/11">another
@@ -139,7 +139,7 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	this to be the cause for a while</a>, and now I can pretty much confirm it
 	to be an unguarded division by the number of on-screen bits in
 	Marisa-specific pattern code. But what's the cause for Kurumi then?
-	{{HTML_Emoji "thonk"}}<br />
+	{{HTML_Emoji "thonk"}}<br>
 	As for fixing it, I can go for either a fast or a slow option:
 </p><ol>
 	<li>Superficially fixing only this crash will probably just take a fraction
@@ -151,7 +151,7 @@ hmem_free((void __seg *)dialog_p);</pre><p>
 	PI. Taking that look will probably need at least 2 pushes, and might require
 	another 3-4 to completely decompile Marisa's fight, and 2-3 to decompile
 	Kurumi's.</li>
-</ol><hr /><p>
+</ol><hr><p>
 	OK, now that that's out of the way, time to finish the boss defeat function…
 	but not without stumbling over the third of TH04's quirks, relating to the
 	Clear Bonus for the main game or the Extra Stage:

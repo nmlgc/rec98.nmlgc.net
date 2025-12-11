@@ -185,13 +185,13 @@ uint16_t pixel_hash(uint32_t p) {
 		data-title="The image"
 		width="640"
 		alt="The `main_menu` benchmark image."
-	/><img
+	><img
 		src="{{$pixel}}"
 		class="active"
 		data-title="The pixel"
 		width="640"
 		alt="A 16× zoomed view of the `main_menu` benchmark image, highlighting the single #583732FF pixel that causes the hash collision in FJXL's palette detection code"
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
 	The resulting 143&nbsp;KiB file immediately tells us how not palettizing such images completely ruins the compression ratio. If this one pixel had any other non-colliding color, FJXL would have compressed it into a still decent 52&nbsp;KiB. Therefore, the slides should have better added a graph of the failure probability, and said something like:
 </p><blockquote>Not perfect, and likely to misdetect even low-color images with &lt;256 distinct colors as not palette-friendly according to the birthday paradox.</blockquote><p>
@@ -332,37 +332,37 @@ uint16_t pixel_hash(uint32_t p) {
 		data-title="<code>main_menu</code>"
 		width="640"
 		alt="The `main_menu` benchmark image."
-	/><img
+	><img
 		src="{{$bm_ingame}}"
 		data-title="<code>ingame</code>"
 		width="640"
 		alt="The `ingame` benchmark image."
-	/><img
+	><img
 		src="{{$bm_stage6}}"
 		data-title="<code>stage6</code>"
 		width="640"
 		alt="The `stage6` benchmark image."
-	/><img
+	><img
 		src="{{$bm_laser}}"
 		data-title="<code>laser</code>"
 		width="640"
 		alt="The `laser` benchmark image."
-	/><img
+	><img
 		src="{{$bm_laserbomb}}"
 		data-title="<code>laserbomb</code>"
 		width="640"
 		alt="The `laserbomb` benchmark image."
-	/><img
+	><img
 		src="{{$bm_gates}}"
 		data-title="<code>gates</code>"
 		width="640"
 		alt="The `gates` benchmark image."
-	/><img
+	><img
 		src="{{$bm_seihou}}"
 		data-title="<code>seihou</code>"
 		width="640"
 		alt="The `seihou` benchmark image."
-	/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><hr id="webp-{{.Date}}"><h3>Lossless WebP</h3><p>
 	Yup, it's {{Blog_PostLink "2022-10-31" "ZMBV beating AV1"}} all over again. For these kinds of retro game screenshots, JPEG XL is vastly outperformed by its counterpart from the previous generation of widely-used image formats. And not just in terms of compressed file sizes, but also in every single other aspect that matters to us:
 </p><ul>
@@ -396,7 +396,7 @@ uint16_t pixel_hash(uint32_t p) {
 		src="{{$times_8400T}}"
 		width="640"
 		alt="32-bit Shuusou Gyoku screenshot encoding times on an Intel Core i5 8400T from 2018, which is just slightly too slow to guarantee real-time encoding at -z 0 without frame drops"
-	/><figcaption>These measurements start before retrieving the framebuffer's pixels, and end after the file writing syscalls. If you save to a reasonably fast and write-cached storage medium, these syscalls are unlikely to have a big impact. Thus, the BMP times almost purely represent the fixed cost of the <code>SDL_RenderReadPixels()</code> call.</figcaption>
+	><figcaption>These measurements start before retrieving the framebuffer's pixels, and end after the file writing syscalls. If you save to a reasonably fast and write-cached storage medium, these syscalls are unlikely to have a big impact. Thus, the BMP times almost purely represent the fixed cost of the <code>SDL_RenderReadPixels()</code> call.</figcaption>
 </figure><p>
 	These specific numbers I got on my now almost 7-year-old Intel Core i5 8400T are very peculiar. <code>-z&nbsp;0</code> gets quite close to the 16&nbsp;ms we have per frame, but would still be too slow to reliably compress every gameplay situation without dropping frames. <a class="goal" href="https://github.com/nmlgc/ssg/issues/84">A 64-bit build</a> would speed up <code>-z&nbsp;0</code> by 10%, <code>-z&nbsp;2</code> through <code>-z&nbsp;7</code> by 25%, <code>-z&nbsp;8</code> by 210% (!), and <code>-z&nbsp;9</code> by 60%. Linux users already enjoy these higher speeds, and the Windows build is just a few compiler settings away from matching them. {{Blog_PostLink "2024-10-22#palettized" "Last time, the bitness argument was a lot more balanced"}}, but WebP encoding performance presents the first compelling reason for going 64-bit.<br>
 	Or we could always <a href="https://github.com/nmlgc/ssg/issues/86">go multi-threaded</a>, which already is a much more popular idea within the <i>Seihou development</i> Discord group.<br>
@@ -408,7 +408,7 @@ uint16_t pixel_hash(uint32_t p) {
 		src="{{$times_9950X3D}}"
 		width="640"
 		alt="Shuusou Gyoku screenshot encoding times on a Ryzen 9 9950X3D, showcasing how this CPU can compress at least main menu screenshots in real-time using WebP ≤z7, without dropping frames"
-	/>
+	>
 	<figcaption>…yeah, I probably won't get funding for performance tuning.</figcaption>
 </figure><hr id="tag-{{.Date}}"><p>
 	Finally, you probably already noticed another small change in this build: The ReC98 push ID is now shown in the bottom-right corner of the title screen image, just below the original game version number. This was the one part of replay preparations that I wanted to get in sooner rather than later. Since the game binary and the data files can be updated or modded independently from each other, I'm going to tag future replays with both of their respective versions to guarantee reproducibility. Of course, newer builds should never introduce bugs that affect gameplay and desynchronize existing replays. But if they ever do, the included push ID allows hosting sites to remove any replays recorded on such a broken build from the official competition tier associated with a specific data file version.<br>
@@ -427,7 +427,7 @@ uint16_t pixel_hash(uint32_t p) {
 		src="{{$tag}}"
 		width="320"
 		alt="Screenshot of the bottom-right corner of Shuusou Gyoku's title screen in the P0309 build, showing the new ReC98 build tag below the version number baked into the original title screen image"
-	/>
+	>
 </figure><p>
 	And that's all I've got for these very packed three pushes! In exchange, I'll reserve the next Shuusou Gyoku push for another round of maintenance and forward compatibility.<br>
 	The new builds:

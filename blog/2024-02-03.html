@@ -5,9 +5,9 @@
 <p>
 	Oh, it's 2024 already and I didn't even have a delivery for December or January? Yeah… I can only repeat what I said at the end of November, although the finish line is actually in sight now. With 10 pushes across 4 repositories and a blog post that has already reached a word count of 9,240, the Shuusou Gyoku SC-88Pro BGM release is going to break {{Blog_PostLink "2022-01-31" "both the push record set by TH01 Sariel two years ago"}}, and {{Blog_PostLink "2023-09-30" "the blog post length record set by the last Shuusou Gyoku delivery"}}. Until that's done though, let's clear some more PC-98 Touhou pushes out of the backlog, and continue the preparation work for the non-ASCII translation project starting later this year.
 </p><p>
-	But first, we got another <a href="/faq#mod-bugs">free bugfix according to my policy</a>! {{Blog_PostLink "2022-04-18#marisa" "Back in April 2022 when I researched the <code>Divide Error</code> crash that can occur in TH04's Stage 4 Marisa fight"}}, I proposed and implemented four possible workarounds and let the community pick one of them for the generally recommended small bugfix mod. I still pushed the others onto individual branches in case the {{HTML_TagInline "gameplay"}} community ever wants to look more closely into them and maybe pick a different one… except that I accidentally pushed the wrong code for the warp workaround, probably because I got confused with the second warp variant I developed later on.<br />
+	But first, we got another <a href="/faq#mod-bugs">free bugfix according to my policy</a>! {{Blog_PostLink "2022-04-18#marisa" "Back in April 2022 when I researched the <code>Divide Error</code> crash that can occur in TH04's Stage 4 Marisa fight"}}, I proposed and implemented four possible workarounds and let the community pick one of them for the generally recommended small bugfix mod. I still pushed the others onto individual branches in case the {{HTML_TagInline "gameplay"}} community ever wants to look more closely into them and maybe pick a different one… except that I accidentally pushed the wrong code for the warp workaround, probably because I got confused with the second warp variant I developed later on.<br>
 	Fortunately, I still had the intended code for both variants lying around, and used the occasion to merge the current <code>master</code> branch into all of these mod branches. Thanks to wyatt8740 for <a href="https://github.com/nmlgc/ReC98/issues/11">spotting and reporting this oversight</a>!
-</p>{{call .TOC}}<hr id="b-{{.Date}}" /><p>
+</p>{{call .TOC}}<hr id="b-{{.Date}}"><p>
 	As the final piece of code shared in largely identical form between 4 of the 5 games, the Music Rooms were the biggest remaining piece of low-hanging fruit that guaranteed big finalization% gains for comparatively little effort. They seemed to be especially easy because I already decompiled TH02's Music Room together with the rest of that game's <code>OP.EXE</code> back in early 2015, when this project focused on just raw decompilation with little to no research. 9 years of increased standards later though, it turns out that I missed <i>a lot</i> of details, and ended up renaming most variables and functions. Combined with larger-than-expected changes in later games and the usual quality level of ZUN's menu code, this ended up taking noticeably longer than the single push I expected.
 </p><p>
 	The undoubtedly most interesting part about this screen is the animation in the background, with the spinning and falling polygons cutting into a single-color background to reveal a spacey image below. However, the only background image loaded in the Music Room is <code>OP3.PI</code> (TH02/TH03) or <code>MUSIC3.PI</code> (TH04/TH05), which looks like this in a .PI viewer or when converted into another image format with the usual tools:
@@ -19,11 +19,11 @@
 			data-title="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background in its on-disk state"
 			{{- if eq . 2}}class="active"{{end -}}
-		/>
+		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>Let's call this "the blank image".</figcaption>
 </figure><p>
-	That is definitely the color that appears on top of the polygons, but where is the spacey background? If there is no other .PI file where it could come from, it has to be somewhere in that same file, right? {{HTML_Emoji "thonk"}}<br />
+	That is definitely the color that appears on top of the polygons, but where is the spacey background? If there is no other .PI file where it could come from, it has to be somewhere in that same file, right? {{HTML_Emoji "thonk"}}<br>
 	And indeed: This effect is another bitplane/color palette trick, exactly like the {{Blog_PostLink "2023-05-29" "three falling stars in the background of TH04's Stage 5"}}. If we set every bit on the first bitplane and thus change any of the resulting even hardware palette color indices to odd ones, we reveal a full second 8-color sub-image hiding in the same .PI file:
 </p><figure class="fullres pixelated">
 	<rec98-child-switcher>{{range loop 2 6 -}}
@@ -33,13 +33,13 @@
 			data-title="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background, with all bits in the first bitplane set to reveal the spacey background image, and the full color palette at the bottom"
 			{{- if eq . 2}}class="active"{{end -}}
-		/>
+		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>The spacey sub-image. Never before seen!1!! …OK, <a href="https://touhou-memories.com/post/738606806243409920">touhou-memories beat me by a month</a>. Let's add each image's full 16-color palette to deliver some additional value.</figcaption>
 </figure><p>
 	On a high level, the first bitplane therefore acts as a stencil buffer that selects between the blank and spacey sub-image for every pixel. The important part here, however, is that the first bitplane of the blank sub-images does <i>not</i> consist entirely of 0 bits, but does have 1 bits at the pixels that represent the caption that's supposed to be overlaid on top of the animation. Since there now are some pixels that should always be taken from the spacey sub-image regardless of whether they're covered by a polygon, the game can no longer just clear the first bitplane at the start of every frame. Instead, it has to keep a separate copy of the first bitplane's original state (called <code>nopoly_B</code> in the code), captured right after it <span class="hovertext" title="master.lib decodes .PI images into a packed-pixel format, and such a capture is the simplest way of retrieving an individual plane.">blitted the .PI image to VRAM</span>. Turns out that this copy also comes in quite handy with the text, but more on that later.
-</p><hr id="grcg-{{.Date}}" /><p>
-	Then, the game simply draws polygons onto only the reblitted first bitplane to conditionally set the respective bits. ZUN used master.lib's <code>grcg_polygon_c()</code> function for this, which means that we can entirely thank the uncredited master.lib developers for this iconic animation – if they hadn't included such a function, the Music Rooms would most certainly look completely different.<br />
+</p><hr id="grcg-{{.Date}}"><p>
+	Then, the game simply draws polygons onto only the reblitted first bitplane to conditionally set the respective bits. ZUN used master.lib's <code>grcg_polygon_c()</code> function for this, which means that we can entirely thank the uncredited master.lib developers for this iconic animation – if they hadn't included such a function, the Music Rooms would most certainly look completely different.<br>
 	This is where we get to complete the series on the PC-98 GRCG chip with the last remaining four bits of its mode register. So far, we only needed the highest bit (<code>0x80</code>) to either activate or deactivate it, and the bit below (<code>0x40</code>) to choose between the {{Blog_PostLink "2020-12-18" "RMW"}} and {{Blog_PostLink "2022-01-31" "TCR"}}/{{Blog_PostLink "2023-05-29" "TDW"}} modes. But you can also use the lowest four bits to restrict the GRCG's operations to any subset of the four bitplanes, leaving the other ones untouched:
 </p><figure><pre>// Enable the GRCG (0x80) in regular RMW mode (0x40). All bitplanes are
 // enabled and written according to the contents of the tile register.
@@ -56,8 +56,8 @@ pokeb(0xA8000, offset, …);
 // We're done, turn off the GRCG.
 outportb(0x7C, 0x00);
 </pre></figure><p>
-	This could be used for some unusual effects when writing to two or three of the four planes, but it seems rather pointless for this specific case at first. If we only want to write to a single plane, why not just do so directly, without the GRCG? Using that chip only involves more hardware and is therefore slower by definition, and the blitting code would be the same, right?<br />
-	This is another one of these questions that would be interesting to benchmark one day, but in this case, the reason is purely practical: All of master.lib's polygon drawing functions expect the GRCG to be running in RMW mode. They write their pixels as bitmasks where 1 and 0 represent pixels that should or should not change, and leave it to the GRCG to combine these masks with its tile register and <code>OR</code> the result into the bitplanes instead of doing so themselves. Since GRCG writes are done via <code>MOV</code> instructions, not using the GRCG would turn these bitmasks into actual dot patterns, overwriting any previous contents of each VRAM byte that gets modified.<br />
+	This could be used for some unusual effects when writing to two or three of the four planes, but it seems rather pointless for this specific case at first. If we only want to write to a single plane, why not just do so directly, without the GRCG? Using that chip only involves more hardware and is therefore slower by definition, and the blitting code would be the same, right?<br>
+	This is another one of these questions that would be interesting to benchmark one day, but in this case, the reason is purely practical: All of master.lib's polygon drawing functions expect the GRCG to be running in RMW mode. They write their pixels as bitmasks where 1 and 0 represent pixels that should or should not change, and leave it to the GRCG to combine these masks with its tile register and <code>OR</code> the result into the bitplanes instead of doing so themselves. Since GRCG writes are done via <code>MOV</code> instructions, not using the GRCG would turn these bitmasks into actual dot patterns, overwriting any previous contents of each VRAM byte that gets modified.<br>
 	Technically, you'd only have to replace a few <code>MOV</code> instructions with <code>OR</code> to build a non-GRCG version of such a function, but why would you do that if you haven't measured polygon drawing to be an actual bottleneck.
 </p><figure class="fullres pixelated">
 	<rec98-child-switcher>
@@ -66,17 +66,17 @@ outportb(0x7C, 0x00);
 			data-title="GRCG disabled"
 			alt="Three overlapping Music Room polygons rendered using master.lib's grcg_polygon_c() function with a disabled GRCG"
 			class="active"
-		/><img
+		><img
 			src="{{$grcg_on}}"
 			data-title="GRCG enabled"
 			alt="Three overlapping Music Room polygons rendered as in the original game, with the GRCG enabled"
-		/>
+		>
 	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		An example with three polygons drawn from top to bottom. Without the GRCG, edges of later polygons overwrite any previously drawn pixels within the same VRAM byte. Note how treating bitmasks as dot patterns corrupts even those areas where the background image had nonzero bits in its first bitplane.
 	</figcaption>
-</figure><hr id="colors-{{.Date}}" /><p>
-	As far as complexity is concerned though, the worst part is the implicit logic that allows all this text to show up on top of the polygons in the first place. If every single piece of text is only rendered a single time, how can it appear on top of the polygons if those are drawn every frame?<br />
+</figure><hr id="colors-{{.Date}}"><p>
+	As far as complexity is concerned though, the worst part is the implicit logic that allows all this text to show up on top of the polygons in the first place. If every single piece of text is only rendered a single time, how can it appear on top of the polygons if those are drawn every frame?<br>
 	Depending on the game (because <i>of course</i> it's game-specific), the answer involves either the individual bits of the text color index or the actual contents of the palette:
 </p><ul>
 	<li>Colors 0 or 1 can't be used, because those don't include any of the bits that can stay constant between frames.</li>
@@ -91,13 +91,13 @@ outportb(0x7C, 0x00);
 			data-title="TH0{{.}}"
 			alt=""
 			{{- if eq . 2}}class="active"{{end -}}
-		/>
+		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>The contents of <code>nopoly_B</code> with each game's first track selected.</figcaption>
-</figure><hr id="mess-{{.Date}}" /><p>
+</figure><hr id="mess-{{.Date}}"><p>
 	Finally, here's a list of all the smaller details that turn the Music Rooms into such a mess:
 </p><ul>
-	<li><p>Due to the polygon animation, the Music Room is one of the few double-buffered menus in PC-98 Touhou, rendering to both VRAM pages on alternate frames instead of using the other page to store a background image. Unfortunately though, this doesn't actually translate to tearing-free rendering because ZUN's initial implementation for TH02 mixed up the order of the required operations. You're supposed to <i>first</i> wait for the GDC's VSync interrupt and <i>then</i>, within the display's <a href="https://en.wikipedia.org/wiki/Vertical_blanking_interval">vertical blanking interval</a>, write to the relevant I/O ports to flip the accessed and shown pages. Doing it the other way around and flipping as soon as you're finished with the last draw call of a frame means that you'll very likely hit a point where the (real or emulated) electron beam is still traveling across the screen. This ensures that there will be a tearing line <i>somewhere</i> on the screen on all but the fastest PC-98 models that can render an entire frame of the Music Room completely within the vertical blanking interval, causing the very issue that double-buffering was supposed to prevent. {{HTML_Emoji "zunpet"}}<br />
+	<li><p>Due to the polygon animation, the Music Room is one of the few double-buffered menus in PC-98 Touhou, rendering to both VRAM pages on alternate frames instead of using the other page to store a background image. Unfortunately though, this doesn't actually translate to tearing-free rendering because ZUN's initial implementation for TH02 mixed up the order of the required operations. You're supposed to <i>first</i> wait for the GDC's VSync interrupt and <i>then</i>, within the display's <a href="https://en.wikipedia.org/wiki/Vertical_blanking_interval">vertical blanking interval</a>, write to the relevant I/O ports to flip the accessed and shown pages. Doing it the other way around and flipping as soon as you're finished with the last draw call of a frame means that you'll very likely hit a point where the (real or emulated) electron beam is still traveling across the screen. This ensures that there will be a tearing line <i>somewhere</i> on the screen on all but the fastest PC-98 models that can render an entire frame of the Music Room completely within the vertical blanking interval, causing the very issue that double-buffering was supposed to prevent. {{HTML_Emoji "zunpet"}}<br>
 	ZUN only fixed this <span class="hovertext" title="Remember: It's only a bug if it also occurs on an infinitely fast PC-98.">landmine</span> in TH05.<br>
 	<strong>Edit (2025-09-06):</strong> The {{Blog_PostLink "2025-09-06#fp" "2025-09-06 blog post"}} contains a visualization of this tearing landmine.
 	</p></li>
@@ -121,22 +121,22 @@ outportb(0x7C, 0x00);
 		<li>Every track starts with a title line that mostly just duplicates the names from the hardcoded tracklist,</li>
 		<li>followed by a fixed 19 (TH02/TH03/TH04) / 9 (TH05) comment lines.</li>
 	</ul><p>In TH04 and TH05, lines can start with a semicolon (<code>;</code>) to prevent them from being rendered. This is purely a performance hint, and is visually equivalent to filling the line with spaces.</p></li>
-	<li><p>All in all, the quality of the code is even slightly below the already poor standard for PC-98 Touhou: More VRAM page copies than necessary, conditional logic that is nested way too deeply, a distinct avoidance of state in favor of loops within loops, and – of course – a couple of <code>goto</code>s to jump around as needed. {{HTML_Emoji "godzun"}}<br />
+	<li><p>All in all, the quality of the code is even slightly below the already poor standard for PC-98 Touhou: More VRAM page copies than necessary, conditional logic that is nested way too deeply, a distinct avoidance of state in favor of loops within loops, and – of course – a couple of <code>goto</code>s to jump around as needed. {{HTML_Emoji "godzun"}}<br>
 	In TH05, this gets so bad with the scrolling and game-changing tracklist that it all gives birth to a wonderfully obscure inconsistency: When pressing both  ⬆️/⬇️ and ⬅️/➡️ at the same time, the game first processes the vertical input and then the horizontal one in the next frame, making it appear as if the latter takes precedence. <i>Except</i> when the cursor is highlighting the first (⬆️ ) or 12<sup>th</sup> (⬇️ ) element of the list, <i>and</i> said list element is not the first track (⬆️ ) or the quit option (⬇️ ), in which case the horizontal input is ignored. {{HTML_Emoji "zunpet"}}</p><figure {{$vid.FigureAttrs}}>
 		{{call .VideoPlayer $vid}}
 	</figure></li>
 </ul><p>
 	And that's all the Music Rooms! The <code>OP.EXE</code> binaries of TH04 and especially TH05 are now very close to being 100% RE'd, with only the respective High Score menus and TH04's title animation still missing. As for actual <i>completion</i> though, the finalization% metric is more relevant as it also includes the ZUN Soft logo, which I RE'd on paper but haven't decompiled. I'm {{Blog_PostLink "2023-11-30#main" "still"}} hoping that this will be the final piece of code I decompile for these two games, and that no one pays to get it done earlier… {{HTML_Emoji "onricdennat"}}
-</p><hr id="cong-{{.Date}}" /><p>
-	For the rest of the second push, there was a specific goal I wanted to reach for the remaining <i>anything</i> budget, which was blocked by a few functions at the beginning of TH04's and TH05's <code>MAINE.EXE</code>. In another anticlimactic development, this involved yet another way too early decompilation of a <code>main()</code> function…<br />
-	Generally, this <code>main()</code> function just calls the top-level functions of all other ending-related screens in sequence, but it also handles the TH04-exclusive congratulating <q>All Clear</q> images within itself. After a 1CC, these are an additional reward on top of the Good Ending, showing the player character wearing a different outfit depending on the selected difficulty. On Easy Mode, however, the Good Ending is unattainable because the game always ends after Stage 5 with a Bad Ending, but ZUN still chose to show the <span lang="ja"><q>EASY ALL CLEAR!!</q></span> image in this case, regardless of how many continues you used.<br />
+</p><hr id="cong-{{.Date}}"><p>
+	For the rest of the second push, there was a specific goal I wanted to reach for the remaining <i>anything</i> budget, which was blocked by a few functions at the beginning of TH04's and TH05's <code>MAINE.EXE</code>. In another anticlimactic development, this involved yet another way too early decompilation of a <code>main()</code> function…<br>
+	Generally, this <code>main()</code> function just calls the top-level functions of all other ending-related screens in sequence, but it also handles the TH04-exclusive congratulating <q>All Clear</q> images within itself. After a 1CC, these are an additional reward on top of the Good Ending, showing the player character wearing a different outfit depending on the selected difficulty. On Easy Mode, however, the Good Ending is unattainable because the game always ends after Stage 5 with a Bad Ending, but ZUN still chose to show the <span lang="ja"><q>EASY ALL CLEAR!!</q></span> image in this case, regardless of how many continues you used.<br>
 	While this might seem inconsistent with the other difficulties, it is consistent within Easy Mode itself, as the enforced Bad Ending after Stage 5 also doesn't distinguish between the number of continues. Also, <span lang="ja"><q>Try to Normal Rank!!</q></span> could very well be ZUN's roundabout way of implying "because this is how you avoid the Bad Ending".
 </p><p>
 	With that out of the way, I was finally able to separate the VRAM text renderer of TH04 and TH05 into its own assembly unit, {{Blog_PostLink "2021-04-23" "finishing the technical debt repayment project that I couldn't complete in 2021 due to assembly-time code segment label arithmetic in the data segment"}}. This now allows me to translate this undecompilable self-modifying mess of ASM into C++ for the non-ASCII translation project, and thus unify the text renderers of all games and enhance them with support for Unicode characters loaded from a bitmap font. As the final finalized function in the <code>SHARED</code> segment, it also allowed me to remove 143 lines of particularly ugly segmentation workarounds 🙌
-</p><hr id="th02-pi-{{.Date}}" /><p>
+</p><hr id="th02-pi-{{.Date}}"><p>
 	The remaining <sup>1</sup>/<sub>6</sub>th of the second push provided the perfect occasion for some light TH02 PI work. The global boss position and damage variables represented some equally low-hanging fruit, being easily identified global variables that aren't part of a larger structure in this game. In an interesting twist, TH02 is the only game that uses an increasing damage value to track boss health rather than decreasing HP, and also doesn't internally distinguish between bosses and midbosses as far as these variables are concerned. Obviously, there's quite a bit of state left to be RE'd, not least because Marisa is doing her own thing with a bunch of redundant copies of her position, but that was too complex to figure out right now.
 </p><p>
-	Also doing their own thing are the Five Magic Stones, which need five positions rather than a single one. Since they don't move, the game doesn't have to keep {{Blog_PostLink "2023-03-30" "separate position variables for both VRAM pages"}}, and can handle their positions in a much simpler way that made for a nice final commit.<br />
+	Also doing their own thing are the Five Magic Stones, which need five positions rather than a single one. Since they don't move, the game doesn't have to keep {{Blog_PostLink "2023-03-30" "separate position variables for both VRAM pages"}}, and can handle their positions in a much simpler way that made for a nice final commit.<br>
 	And for the first time in a long while, I quite like what ZUN did there!
 	Not only are their positions stored in an array that is indexed with a consistent ID for every stone, but these IDs also follow the order you fight the stones in: The two inner ones use 0 and 1, the two outer ones use 2 and 3, and the one in the center uses 4. This might look like an odd choice at first because it doesn't match their horizontal order on the playfield. But then you notice that ZUN uses this property in the respective phase control functions to iterate over only the subrange of active stones, and you realize how brilliant it actually is.
 </p><figure><rec98-child-switcher>
@@ -145,17 +145,17 @@ outportb(0x7C, 0x00);
 		data-title="Stones 0 and 1"
 		alt="Screenshot of TH02's Five Magic Stones, with the first two (both internally and in the order you fight them in) alive and activated"
 		class="active"
-	/>
+	>
 	<img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABcBAMAAACVYn9sAAAAIVBMVEWZiIj///+qqv+7VbsimSJmZmb/AAARZhGIAIiqAAAAAABs6OBuAAAC90lEQVR42u2asW7bMBCG6QAUqk7mIiAP0mfoKrS4AuYkLof6Cbp2KVBv8SAjzOSFQKNX7FIyJpJNvwIIpxLglyAXwx/A/3CWdINVpVKpVCqVSqVSqbwPTdSv7glDtLonx26XTuxX98TY79OBtLYnOwClqV/bEx2A0kSrezLsciXqV/dEISIBD3Cn/itqAwvQvXqjX9urE3gHWsTDDWwfXHwCfS6CHm6gjEFgWu8fgJIfmJoSMt7yfP5sjHlEDbwSSMRbnq89m8j9z4UNWEsi3vJ86X08Ak2ZEHpJD+drTQSPYKAXrLUk6uF83hiOv2gErCkSIr1qZDycLzfYxR/jTIevArKWSCmW83C+c5rOxZvozY5AU6Ab9irj4XxZ6Dp/8d65uQZ4oFfCJOAtz2eMu3exvXPXHWcuOU1E40hE3lp7FfNwvjYK3jAbH4WZi4C+PY2jJ6JD+BwmEQ/ny0J8z3XRmmtAT4eHdiT/5ZN9+mHtVcDD+bLQdZwucnZzDVCvyY80fv0UnkMIk5SH87UOdJghOnii0UaepknMw/lafv2McRRmOIxEYwhTOk7Mw/ladvkqn2+gaXj4+Oyn6aqYBzkP57swd94fvWP+rmYOfDmFb/8PMh7OlwVzHwVmnnsS85AOTX9TlfNwvhMzO+OY+TjTQD6Kh/xKwFua78OFM37mEshDZpWrgLc033DiCBiAavLndsgvBbyl+Ti3eIwNNmqWhjnPXMJbnu+UjKN/jLKC5BPFPJxP05+Tjzz+sleFyLc8KQ/ny3v57wjYy2XA+fBevj04H97Ltwfnw3u5PDgf3su3B+fDe/n24Hx4L98enA/v5fLgfHgv3x6cD+/l24Pz4b1cHpwP7+Xbg/PhvXx7cD68l2/P8nzA2Bicb/tbKMxXv/VaqVQqlTeocO5uLShVbO2tMcbpUGpVZPfMO02lVtXbTg07HUqtaQJNEzsptKYJ7HlwOpRaFdlOKaep1JruQh0bHUqtqthnQK53f28v+lJr8avEPwqse/10QYvbAAAAAElFTkSuQmCC"
 		data-title="Stones 2 and 3"
 		alt="Screenshot of TH02's Five Magic Stones, with the second two (both internally and in the order you fight them in) alive and activated"
-	/>
+	>
 	<img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABcBAMAAACVYn9sAAAAIVBMVEWZiIj///+qqv+7VbsimSJmZmb/AAARZhGIAIiqAAAAAABs6OBuAAADfElEQVR42u2asWrcQBCGVwIJkkqjc1yf5jC4Pa39ACGGtIfDBE6VnEKvkAfwC4SAinN1KbawnjKbO8UuFjQyA7sW7Fd4bPiZ+WdXp/sLq0gkEolEIpFIJBJ5GxnRTs0gAShm9/MMkWKBE0qt5/XzR5LYH9yZrVUCqxu9hQLTmf28URT8kaXpGlb67s5ukK7n9fN7ASpjjgyTlb6Biy96W6xn9vN6ASpjjmwNWn8GuNMaZvfzQzJW5s2RrE4LXOjttpjdzys0fWSgVxpKgO0WQNAv4AKwwhIRLAtdoMQKEauyel8LZDs1QpMPbYKIgNougIiFoF+gBdIENQJuEEvUWKzf4QLZ5EBMSl2VjxtEwLoqcGY/Lzlu1sA0KWu4rrFGLOtq6gbI+wLjFGJuABEfTwugxgJn9PO7gK3cZwCvNWKNG/3yGeD7+cj5VnJWst8Dj/Wm1nYBrN7ST+6PE7xgmAXQomuNWAn6uXJpLqf/NA33RYY11rquACT9XH/CXJ7RiDHTYa5E1LpGDVBI+rn+hLm8Hc+LO7AWADd1jQiQivq5/mS5vMvIYiw7lU/ofiRQIm4QocBc0s/1J83l4wNLdviEKl0DnNNo6uiYfnJ/08+soTPNUU1whX/gxCc8yvq5/gSCrqUXzDCluycisLzq+H4eFmgzIup7Ijo0TXP0onP9SWItfX/q+wMR7c1XM3A6xCtWx/fj/c1fIBv2vz70dLi/bZ5+2iNjdL8dHdNPuAAfa2mX0aGn/tuteTbGDF50rj9BLifaH4j6xvI0DH50rj9RLt/3RL0xwzjOg871J8jled61H58Pw3BUXdf60bn+BLk8P03pzr+3XnSuP0ku/zcvP5+VrV50rj9BLh9Hde34lw+d60+Qy9txrhqrD53rT5DL8/G5HQfnHnSuP2kutwOnXhhyHe+Pz+UszESZjvUny+XcK0+u4/zxuTwsvD8+lweF98fn8rDw/vhcHhTeH5/Lw8L6Y3N5YDh/XC4PDeuPz+VB4f3xuTwsrD8+l4eF98fn8qDw/vhcHhbWH5/Lw8L6Y3J5cAT+Qm8g9Rf+Fcr6i//1GolEIpFXaOEoosFCtNSqdg0APGRmqVVRU3RdktFSq72BS9UmmVlmPd9AnttNllrVzl5F+5CZpVZF9irUQ0ZLrfYG4LKDzCy1KiJlIVpqVTs6YZZaFx8l/gJPZ5VZZhyRagAAAABJRU5ErkJggg=="
 		data-title="Stone 4"
 		alt="Screenshot of TH02's Five Magic Stones, with the last one (both internally and in the order you fight them in) alive and activated"
-	/>
+	>
 	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
 	This seems like a really basic thing to get excited about, especially since the rest of their data layout sure isn't perfect. Splitting each piece of state and even the individual X and Y coordinates into <a href="https://en.wikipedia.org/wiki/AoS_and_SoA#Structure_of_Arrays">separate 5-element arrays</a> is still counter-productive because the game ends up paying more memory and CPU cycles to recalculate the element offsets over and over again than this would have ever saved in cache misses on a 486. But that's a minor issue that could be fixed with a few regex replacements, not a misdesigned architecture that would require a full rewrite to clean it up. Compared to the hardcoded and bloated mess that was {{Blog_PostLink "2022-08-08" "YuugenMagan's five eyes"}}, this is definitely an improvement worthy of the {{HTML_TagInline "good-code"}} tag. The first actual one in two years, and a welcome change after the Music Room!

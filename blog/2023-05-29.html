@@ -20,7 +20,7 @@
 	over 70 commits that would take at least 5 pushes to deliver as a meaningful
 	release, and all of that is just <i>rearchitecting</i> work, preparing the
 	game for a not too Windows-specific OpenGL backend in the first place. I
-	haven't even <i>written</i> a single line of OpenGL yet… 🥲<br />
+	haven't even <i>written</i> a single line of OpenGL yet… 🥲<br>
 	This shifts the intended Big Release Month™ to June after all. Now I know
 	that the next round of Shuusou Gyoku features should better start with the
 	SC-88Pro recordings, which are much more likely to get done within their
@@ -33,7 +33,7 @@
 	{{Blog_PostLink "2020-09-17" "TH05 had been there for almost 3 years"}}. I
 	haven't heard back from {{DB_CustomerByID 9}} about how much they want to be
 	involved in funding this goal, if at all, but maybe other backers are
-	interested as well.<br />
+	interested as well.<br>
 	And sure, it would be entirely possible to implement non-ASCII translations
 	in a way that retains the layout of the original binaries and can be easily
 	compared at a binary level, in case we consider translations to be a
@@ -45,7 +45,7 @@
 	open-source {{Blog_PostLink "2022-09-04" "and I made it easy to build"}}.
 	You can just fork the code, implement all the practice features you want in
 	a much more efficient way, and I'd probably even merge your code into my
-	builds then?<br />
+	builds then?<br>
 	But I get it – recompiling the game yields just yet another build that can't
 	be easily compared to the original release. A cheat table is much more
 	trustworthy in giving players the confidence that they're still practicing
@@ -62,12 +62,12 @@
 	parts I decompiled for now contain calculations whose intent can't be
 	clearly communicated in ASM. Hitbox visualizations or other more in-depth
 	research would have to wait until I get to the proper decompilation of these
-	features.<br />
+	features.<br>
 	But even this shallow work left us with a large amount of TH04-exclusive
 	code that had its worst parts RE'd and could be decompiled fairly quickly.
 	If you want to see big TH04 finalization% gains, general TH04 progress would
 	be a very good investment.
-</p><hr /><p>
+</p><hr><p>
 	The first push went to the often-mentioned stage-specific custom entities
 	that share a single statically allocated buffer. Back in 2020, I
 	{{Blog_PostLink "2020-02-29" "wrongly claimed that these were a TH05 innovation"}},
@@ -78,7 +78,7 @@
 	with. You know what they call an area of memory that you can cleanly
 	repurpose for things? That's right, a heap! {{HTML_Emoji "tannedcirno"}}
 	And absolutely no one would mind one additional heap allocation at the start
-	of a stage, next to the ones for all the sprites and portraits.<br />
+	of a stage, next to the ones for all the sprites and portraits.<br>
 	However, we are still running in Real Mode with segmented memory. Accessing
 	anything outside a common data segment involves modifying segment registers,
 	which has a nonzero CPU cycle cost, and Turbo C++ 4.0J is terrible at
@@ -96,13 +96,13 @@
 </p></li><li><p>
 	<img class="inline_sprite"
 	src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAAgBAMAAAAoDG0WAAAAHlBMVEUAAAD87O2Yl/zMVM39REUgqB8AZAB0AHSJAAAAAd0qD5i/AAAAAXRSTlMAQObYZgAAAk9JREFUeJyllT2u4zAMhJ0bhP45QNS5NFS4NqAirQul38LqH1z4Ai5Uu/NtH4bSALaABRYbFgEYZL5wJIqsKg0RkYrxP7lzzvEb5NZae82NMeaae+/9NXfvGHcSoB+3bSUB+v48DxKg/4SwkJD1JFBPAvUkUE9CVVUP56KGc0/Nrd00rE25MaeGMSn3Pmh4r3nVZn2MbkLeZP222QF5nfXnaV7Iu6wPwc+pgDcBWsIjGWAJ1SMZYAnVIxlgCQBQH/cEoH5bE4D680gA6sOigPYKmK4OthUe6ivgdXUQFvXQ5isgoMlXoBYAoANYAIAOYGHmEcQJHOfcMx/BIOO2Wmuf6QgOY4x+PNMRLJ/lExaPQ0iXuE/tHvcEwH+vQzNCDwAsvF51DT0AsPCnmzvo/bNqFeCm1mlMjQIGkQZ6O9QJIFJDb16dAuZu7qD3MwDvuONxEGBR/EBAbeDhBkDxnT6HDHDR3QDWroOIEGCMOWCBAMjw+44A59x+s4CXKAMrUBkEN4AXYQVZeAc0g4wEaEjdE6C6bvYlQC+BAMtbIEDq/iBAh4H45QqIUxuVkAHsAwIOkV77gIBZOu2DfIhRAZEANKGM6MQEQBNKj05MgBAW8R060c9opDcBe2oktOLaaD9rI2krvmrtRzTSJ4TZzzqUUicCsL/vgJ/xDjiP/grwYQkZ8JfXuP7ra/z2Od8n0l5MpLWYSEcxkZY8kb4cad8OVZZwHetjMdb7Yqx/7mOdi8UVi8UWi8UUi8UXq8kVq80Wq80Uq61Yjt8t12/W+y9a9u+HWMq6EgAAAABJRU5ErkJggg=="
-	/> The 4 {{Blog_PostLink "2022-04-18" "bits"}} used in Marisa's Stage 4 boss
+	> The 4 {{Blog_PostLink "2022-04-18" "bits"}} used in Marisa's Stage 4 boss
 	fight. Coincidentally also related to the rare <code>Divide Error</code>
 	crash in that fight.
 </p></li><li><p>
 	<img class="inline_sprite"
 	src="data:image/gif;base64,R0lGODlhIAAgAPIBAAAAAP//Vf/P3//v75qa/wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFDgABACwAAAAAIAAgAAADoBi6rPTwtUnZGzgPIau/WihwhNeAYTqSZkCkcLZyX2zP9PTaMZ5bvB6uBAyqfD+XDCdEEpUrgBQw00SlOACRMJp6qUjBNFviir9f5HgmfaDf4PBVS4Cj5ex23Z7Ge918Xn5/e4GCWWiAYxuGfIpSGY12ZYKMkokOl41PhZpvTy6ekyeimKSlfxSdoqCnrC2Phh0tLqufrbS1cLO5OhEQtAkAIfkEBQ4AAQAsAQABAB4AHAAAA4sYuksEMALhmL3ByS3EqBijbWQ3fESYkSzknR/2tOwLp2I9CK194orZBtaD/RpFns4YW9FovqPwWYr+plSJifnJ1qxELwd8EmvJZXNny01n1+t2+A1HD7z1uByfJ1PofVwUWF9rEWw7FE5QcId5OIRjhi6PSE99lZaMmGtAQVScHZ6aPZijIpFnnaMJACH5BAUOAAEALAMAAQAcAB4AAAOAGLpBBDBCx2p1MkdqF9bgRHRPaE7XqQKjUq5n+8JhS6/jreZ63EeCgUAy0w2OP1BwaBI4n0nAcwrVUa/WK5am3a6oQG9IGyYrBQQw5Hk8TiXsdLdNF1Lbo3l9vx/Jp3yBeC5XgoItDXeGfReAi3SIDA5sjxwdDXKGlpceaXybFQkAIfkEBQ4AAQAsAQADAB4AHAAAA4wYqkTyD8hJQVuYwR1rJZnGcd6XOeNYUuCCpts6tcEbS6RsiTnQryDUYDjo+G66hoBIhAl0EgeTCYNKptSUFYDNIqHd5k8XHn6t5eJzSykb2dfwG07oztkN+xoerWH3fC11U4AUS4UzLoQrRCU0flQrh44ni3QhkGaXmDWDdx4XnC51n1GPoqOIFqcYCQAh+QQFDgAEACwAAAAAIAAgAAADoEi6rPHwtUnZGzgPIau/WihwgdeAYTqSJhGkcLZyX2zP9PTaMZ5bvB6uBAyqfD+XDCdEEpUrgBQw00SlOAAxMJp6qUjBNFviir9f5HgmfaDf4PBVG4Cj5ex23Z7Ge918Xn5/e4GCWWiAYxuGfIpSGY12ZYKMkokOl41PhZpvTy6ekyeimKSlfxSdoqCnrC2Phh0tLqufrbS1cLO5OhEQtAkAIfkEBQ4ABAAsAQABAB4AHAAAA4tIuhsBMALhmL3EyS3EqBijbWQ3fEGYkSzknR/2tOwLp2I9CK194orZBtaD/RpFns4YW9FovqPwWYr+plSJifnJ1qxELwd8EmvJZXNny01n1+t2+A1HD7z1uByfJ1PofVwUWF9rEWw7FE5QcId5OIRjhi6PSE99lZaMmGtAQVScHZ6aPZijIpFnnaMJACH5BAUOAAQALAMAAQAcAB4AAAOASLoUATBCx2p1MkdqF9bgFHRPaE7XqQKjUq5n+8JhS6/jreZ63EeCgUAy0w2OP1BwaBI4n0nAcwrVUa/WK5am3a6oQG9IGyYrBQEw5Hk8TiXsdLdNF1Lbo3l9vx/Jp3yBeC5XgoItDXeGfReAi3SIDA5sjxwdDXKGlpceaXybFQkAIfkEBQ4ABAAsAQADAB4AHAAAA4xIqhHyD8hJQVuYwR1rDZnGcd6XOeNYUuCCpts6tcQbS6RsiTnQryDUYDjo+G66hoBIhAl0EgeTCYNKptSUFYDNIqHd5k8XHn6t5eJzSykb2dfwGx7oztkN+xoerWH3fC11U4AUS4UzLoQrRCU0flQrh44ni3QhkGaXmDWDdx4XnC51n1GPoqOIFqcYCQA7
-	"/> Stage 4 Reimu's spinning orbs. Note how the game uses two different sets
+	"> Stage 4 Reimu's spinning orbs. Note how the game uses two different sets
 	of sprites just to have two different outline colors. This was probably
 	better than messing with the palette, which can easily cause unintended
 	effects if you only have 16 colors to work with. Heck, <a
@@ -111,7 +111,7 @@
 </p></li><li><p>
 	<img class="inline_sprite"
 	src="data:image/gif;base64,R0lGODlhIAAgAPEDAP9FRf+quv///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDgADACwAAAAAIAAgAAACwJyPCAvp75hcsCoZcqAW4iyEW9NFlBaKXKkYWDqyDzMsgUoe5DrrwC2I1RqcXIWxuSWJTJcxQRsqf8nRxlWy/YI/ajf2hHqBVm1XcsxQcUlu9TqcaKzuIMzOjU/2ZGDqz4U0NwgCaAjzcnhISJgoAkIXuLdX0zf4JfClNumioaVG9xkmtiS35alm8bXTuRWYmgZ74QcaUBPLI8Vmmys24xpUNQr122cjK+NEJppM+ujV7GwFF+0DGlXto5Xtgd1RAAAh+QQJDgADACwBAAAAHwAfAAACxpyPAwvamqI8rYLA1tzyBqxxk3UJ5heKFIMCpgCqo/edqWywS2Df8g7i9TiZxwH1Gm6KoV1JmTM6PBlU0BZwTB+7U+vyhDk/WRRF+Pp6xBgrOetAJ8nPoK5t4ZFh6H4b/5en5pL0AiRAlQh295Z28hgYx6WAV9I416KlUQHIU1WTtlgRNUDnCQSEdpGjSWnFV8mit2nE1ebFEKXjk9BFF8FEtEYnhcDba2mG09ElVrwcJWQ1Ch0dmlktqxf4rPJJE1O9RSJTAAAh+QQJDgADACwBAAAAHgAfAAACwZyPaQDq/1iDlLJa75RjOv4FEhCIl8KYiEamgmB6C1meXSvmL2wvJawy1CQ7YM/1GuJoxeEKmczFAs3gIUWt0kRa2Y3mog6z0d5ViTWSnagGC1n61USdhGYhJO/m8Xud1SGll7IVULdyM6A0CJajaPh0M1Yk0FJYE2KSpVM2Queg+WK5hlMSAbfYhOX1tTkFJegl4YrpuQdyhdryRJJkNrunxJv1yyRqlgvGmsb2McIq2RfjjLySA2aBEf2pnV0NUQAAIfkEBQ4AAwAsAQABAB8AHwAAAsicf6CA7Y+WgobRqEKYb92xaMJmYVXZKcJKlgwHQpm4jtwEtCB6arRtyQgljUkrUNtockylz/UK5pDK6REJPO0qStuTSmV5EjsJVVhLj0gO3EYMWKufvG0zmZu3xsVld5S0RERhlZEmOHhB9yMwE/BxEsLoN1UX6Vhj1di0EYOBidf1RZcwE+hDEvblGYnFQne34shnuIYohOVUiSFSBWMqptSx2pYH5JMSUle7xkRIWmQsdGElk6cDuVVcaUlonZGdLdEd3nZRAAA7"
-	/> The chasing cross bullets, seen in Phase 14 of the same Stage 6 Yuuka
+	> The chasing cross bullets, seen in Phase 14 of the same Stage 6 Yuuka
 	fight. Featuring some smart sprite work, making use of point symmetry to
 	achieve a fluid animation in just 4 frames. This is
 	{{HTML_TagInline "good-code"}} in sprite form. Capped to 31 entities, because the 32<sup>nd</sup> custom entity during this fight is defined to be…
@@ -140,11 +140,11 @@
 			data-title="First color"
 			alt="The spawn column lines in the TH05 Gengetsu fight, in the first of their two flashing colors."
 			class="active"
-		/><img
+		><img
 			src="{{$bx2s_1}}"
 			data-title="Second color"
 			alt="The spawn column lines in the TH05 Gengetsu fight, in the second of their two flashing colors."
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	</figure></p></li>
 </ol><p>
 	These structures only took 1 push to reverse-engineer rather than the 2 I
@@ -154,7 +154,7 @@
 	minor bug I found on this shallow level concerns Marisa's bits, which are
 	clipped at the right and bottom edges of the playfield 16 pixels earlier
 	than you would expect:
-</p><figure>{{call .VideoPlayer $vid_0.FlipActive $vid_1}}</figure><hr /><p>
+</p><figure>{{call .VideoPlayer $vid_0.FlipActive $vid_1}}</figure><hr><p>
 	The remaining push went to a bunch of smaller structures and functions:
 </p><ul><li>
 	The structure for the up to 2 "thick" (a.k.a. "Master Spark") lasers. Much
@@ -164,10 +164,10 @@
 </li><li>
 	The structure for the various monochrome 16×16 shapes in the background of
 	the Stage 6 Yuuka fight, drawn on top of the checkerboard. <img
-	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIjjI+pBrDa2kPRzVAlzbzizh2gt4HQeJolKpJZG62W9tAXUgAAOw==" alt="" /><img
-	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIrjA2Aes2PWlA00XkYzjxK52nSY31O4plbapLiZ0FtqKaaeHMVeoGbDCNJCgA7" alt="" /><img
-	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIojB8AyKzdlFwwmWfjldft2R3LBFLkiaZnl2bh6r5cLG4hBFe2jmBMAQA7" alt="" /><img
-	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIpjA2Zx6gPWoCUvXZdlEqf7oFQuExZJ54LaG6tx5Wtq9HUiN10zkq+VAAAOw==" alt="" />
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIjjI+pBrDa2kPRzVAlzbzizh2gt4HQeJolKpJZG62W9tAXUgAAOw==" alt=""><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIrjA2Aes2PWlA00XkYzjxK52nSY31O4plbapLiZ0FtqKaaeHMVeoGbDCNJCgA7" alt=""><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIojB8AyKzdlFwwmWfjldft2R3LBFLkiaZnl2bh6r5cLG4hBFe2jmBMAQA7" alt=""><img
+	src="data:image/gif;base64,R0lGODlhEAAQAPABAAAA3f///yH5BAUKAAEALAAAAAAQABAAAAIpjA2Zx6gPWoCUvXZdlEqf7oFQuExZJ54LaG6tx5Wtq9HUiN10zkq+VAAAOw==" alt="">
 </li><li>
 	The rendering code for the three falling stars in the background of Stage 5.
 	The effect here is entirely palette-related: After blitting the stage tiles,
@@ -180,12 +180,12 @@
 			src="{{$s5_0}}"
 			data-title="Lights off"
 			alt="The full tile map of TH04's Stage 5, without scrolling stars illuminating parts of the map."
-		/><img
+		><img
 			src="{{$s5_1}}"
 			data-title="Lights on"
 			alt="The full tile map of TH04's Stage 5, with the illumination effect of the scrolling star animation applied equally to the entire map."
 			class="active"
-		/><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 		<figcaption>
 			The full tile map of TH04's Stage 5, in both dark and fully
 			illuminated views. Since the illumination effect depends on two
@@ -198,7 +198,7 @@
 	</figure>
 </li><li>
 	Most code that modifies a stage's tile map, and directly specifies tiles via
-	their top-left offset in VRAM.<br />
+	their top-left offset in VRAM.<br>
 	Thanks to code alignment reasons, this forced a much longer detour into the
 	.STD format loader. Nothing all too noteworthy there since we're still
 	missing the enemy script and spawn structures before we can call .STD
@@ -206,7 +206,7 @@
 	overview of the format. Also features a buffer overflow landmine if a .STD
 	file happens to contain more than 32 enemy scripts… you know, the usual
 	stuff.
-</li></ul><hr /><p>
+</li></ul><hr><p>
 	To top off the second push, we've got the vertically scrolling checkerboard
 	background during the Stage 6 Yuuka fight, made up of 32×32 squares. This
 	one deserves a special highlight just because of its needless complexity.
@@ -232,7 +232,7 @@
 	single pass would barely be simpler, but much slower: By changing the GRCG
 	tile on every color, such an implementation would burn a low 5-digit number
 	of CPU cycles per frame for the 12×11.5-square checkerboard used in the
-	game.<br />
+	game.<br>
 	And indeed, ZUN retained all important aspects of this algorithm… but still
 	implemented it all in ASM, with a ridiculous layer of x86 segment arithmetic
 	on top? {{HTML_Emoji "zunpet"}} Which blows up the complexity to 4 state
@@ -244,10 +244,10 @@
 	and retains the 5 nested loops in all their <code>goto</code>-connected
 	glory. If you want to add a checkerboard to your next <a
 	href="https://lainnet.superglobalmegacorp.com/blog/2023_05_11_n02.html">PC-98
-	demo</a>, just stick to the algorithm I gave above.<br />
+	demo</a>, just stick to the algorithm I gave above.<br>
 	(Using a single XOR for flipping the starting X offset between 32 and 64
 	pixels <i>is</i> pretty nice though, I have to give him that.)
-</p><hr /><p>
+</p><hr><p>
 	This makes for a good occasion to talk about the third and final GRCG mode,
 	completing the series I started with my previous coverage of the
 	{{Blog_PostLink "2020-12-18" "RMW"}} and
@@ -288,7 +288,7 @@ memset(MK_FP(0xA800, 0), _AL, ((640 / 8) * 400));
 	VRAM, you don't need the <i>read</i> and <i>modify</i> parts of RMW mode
 	which require additional processing time. The <i>PC-9801 Programmers'
 	Bible</i> claims a speedup of almost 2× when using TDW mode over equivalent
-	operations in RMW mode.<br />
+	operations in RMW mode.<br>
 	And that's the only performance claim I found, because none of these old
 	PC-98 hardware and programming books did any benchmarks. Then again, it's
 	not too interesting of a question to benchmark either, as the byte-aligned
@@ -303,7 +303,7 @@ memset(MK_FP(0xA800, 0), _AL, ((640 / 8) * 400));
 </p><p>
 	So is this all that can be said about the GRCG? Not quite, because there are
 	4 bits I haven't talked about yet…
-</p><hr /><p>
+</p><hr><p>
 	And now we're just 5.37% away from 100% position independence for TH04! From
 	this point, another 2 pushes should be enough to reach this goal. It might
 	not look like we're <i>that</i> close based on the current estimate, but a
@@ -312,7 +312,7 @@ memset(MK_FP(0xA800, 0), _AL, ((640 / 8) * 400));
 	to cobble these two pushes together from the two current general
 	subscriptions and the rest of the backlog. But you can, of course, still
 	invest in this goal to allow the existing contributions to go to something
-	else.<br />
+	else.<br>
 	… Well, if the store was actually open. {{HTML_Emoji "thonk"}} So I'd better
 	continue with a quick task to free up some capacity sooner rather than
 	later. Next up, therefore: Back to TH02, and its item and player systems.

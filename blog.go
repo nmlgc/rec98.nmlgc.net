@@ -398,18 +398,25 @@ func (p *Post) tocWithFunc(urlFunc func(anchor string) string) template.HTML {
 		for ; prevDepth > cur.Depth; prevDepth-- {
 			ret += "</ul>"
 		}
-		for ; prevDepth < cur.Depth; prevDepth++ {
-			ret += "<ul>"
-		}
-		if i != 0 {
-			ret += "</li>"
+		if prevDepth < cur.Depth {
+			for ; prevDepth < cur.Depth; prevDepth++ {
+				ret += "<ul>"
+			}
+		} else {
+			if i != 0 {
+				ret += "</li>"
+			}
 		}
 		ret += template.HTML(fmt.Sprintf(
 			`<li><a href="%s">%s</a> %s`,
 			urlFunc(cur.Anchor), cur.Name, cur.Trailing,
 		))
 	}
-	ret += "</li></ol>"
+	ret += "</li>"
+	for ; prevDepth > 0; prevDepth-- {
+		ret += "</ul>"
+	}
+	ret += "</ol>"
 	return ret
 }
 

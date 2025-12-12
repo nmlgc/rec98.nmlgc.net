@@ -71,7 +71,7 @@
 	<li>Using modules within a project introduces a new kind of dependency relation between C++ source files, forcing all such code to be compiled in an implicitly defined order. For Tup, this isn't much of a problem because it has always required {{Blog_PostLink "2024-07-09#tupfile" "order-relevant dependencies to be explicitly specified"}}. So it's been quite amusing for me to hear all these CMake-entrenched CppCon speakers in recent years comment on how this aspect of modules places such a burden on build systems… 🤭</li>
 	<li>Then again, their goal is a world where devs just write <code>import name_of_module;</code> and the build system figures out a project's dependency graph on its own by <a href="https://cmake.org/cmake/help/latest/manual/cmake-cxxmodules.7.html">scanning all source files prior to compilation</a>. Or rather, asking the compiler to parse the source files and dump out this information, using the <code>fdeps-*</code> options on GCC, the separate <code>clang-scan-deps</code> tool for Clang, or the <code>cl /scanDependencies</code> option for MSVC.</li>
 	<li>Because each of the three major compilers has its own implementation of modules, it's understandable why the options and tools are different. Obviously though, CMake is interested in at least getting all three to output the dependency information in the same format. So they got onto the C++ committee's SG15 working group and <a href="http://wg21.link/P1689R5">proposed a JSON format</a>, which GCC and Clang subsequently implemented.</li>
-	<li>But wait! The source files for the <code>std</code> and <code>std.compat</code> modules</a> don't lie inside the source tree and couldn't be found by such a scan over the declared project files. So SG15 later <a href="https://wg21.link/P3286R0">simply proposed using the same JSON format for this purpose</a> and installing such a JSON file together with the standard library implementation.</li>
+	<li>But wait! The source files for the <code>std</code> and <code>std.compat</code> modules don't lie inside the source tree and couldn't be found by such a scan over the declared project files. So SG15 later <a href="https://wg21.link/P3286R0">simply proposed using the same JSON format for this purpose</a> and installing such a JSON file together with the standard library implementation.</li>
 	<li>But wait! That only shifted the problem, because now we need to find that JSON file. What does the paper have to say on that issue?<blockquote style="white-space: unset;"><ul>
 		<li>For the Standard Library:<ul>
 			<li>The build system should be able to query the toolchain (either the compiler or relevant packaging tools) for the location of that metadata file.</li>
@@ -168,9 +168,8 @@
 </figure><hr id="stack-{{.Date}}"><p>
 	Alright then, how are we going to get these fonts onto the screen with something that isn't GDI? With all the emphasis on embedded bitmaps, you might come to the conclusion that all we want to do is to place these bitmap glyphs next to each other on a monospaced grid. Thus, all we'd need is a TTF/OTF library that gives us the bitmap for a given Unicode code point. Why should we use <i>any</i> potentially system-specific API then?<br>
 	But if we instead approach this from the point of view of GDI's feature set, it does seem better to match a standard Windows text rendering API with the equivalent stack of text rendering libraries that are typically used by Linux desktop environments. And indeed, there are also solid reasons why this is a better idea for now:
-</p><ul>
-	<li>There actually is a single instance where this game uses MS Gothic at a height of 24 pixels, which is too large to be covered by its embedded bitmaps and thus requires rasterization of vector outlines. Whenever the SCL parser encounters an unknown opcode, it shows this error message:
-</p><figure class="singleplayer_playfield">
+</p><ul><li>
+	There actually is a single instance where this game uses MS Gothic at a height of 24 pixels, which is too large to be covered by its embedded bitmaps and thus requires rasterization of vector outlines. Whenever the SCL parser encounters an unknown opcode, it shows this error message:<figure class="singleplayer_playfield">
 	<rec98-child-switcher><img
 		src="{{$sclbug_msg}}"
 		data-title="MS Gothic"
@@ -389,12 +388,12 @@
 	How would I know this? Because I've tested them all. 🥲 That is, all non-AUR options listed on the Arch Wiki's <cite><a href="https://wiki.archlinux.org/index.php?title=Desktop_environment&oldid=820122">Desktop environment</a></cite> and <cite><a href="https://wiki.archlinux.org/index.php?title=Window_manager&oldid=823802">Window manager</a></cite> pages that provide something vaguely resembling a desktop you can launch arbitrary programs from:
 </p><figure>
 	<table id="icons-{{.Date}}">
-		<thead>
+		<thead><tr>
 			<th>WM / DE</th>
 			<th>Manually transferred pixels</th>
 			<th>Class-derived icons</th>
 			<th>Notes</th>
-		</thead>
+		</tr></thead>
 		<tbody>
 			<tr class="mid">
 				<th>awesome</th><td>✔️</td><td></td><td>Does not report border sizes back to SDL immediately after window creation</td>
@@ -495,12 +494,12 @@
 	<p>Speaking of extensions: This exact architectural split between build-time and run-time dependencies is why the <code>org.freedesktop.Sdk.Extension.llvm19</code> extension packages Clang, but <i>not</i> libc++. When questioned about this omission, one of the maintainers <a href="https://github.com/flathub/org.freedesktop.Sdk.Extension.llvm17/issues/6#issuecomment-2080091503">responded with the lamest of excuses</a>: Copying the library would be <q>inconvenient</q> (for them), and <q>something we can't even imagine a use case for</q>. Um, guys? <a href="https://en.cppreference.com/w/cpp/compiler_support">Here's a table. Compare the color of each cell between GCC and Clang. There's your use case.</a><br>
 	Thankfully, you can <a href="https://stackoverflow.com/questions/79055137">build libc++ without building LLVM as a whole</a>. Seeing how building libc++ takes basically no time at all compared to the rest of LLVM just raises even more questions about not simply providing some kind of script to copy it over.</p>
 </li><li>
-	<p>Flatpak stores all data of an app in an app-specific subdirectory under <code>~/.var/app</code>, inverting and blatantly violating the <a href="https://specifications.freedesktop.org/basedir-spec/latest/">XDG Base Directory Specification</a>. <a href="https://github.com/flatpak/flatpak.github.io/issues/191">Everybody</a> <a href="https://github.com/flatpak/flatpak/issues/1651">hates</a> <a href="https://github.com/flatpak/flatpak/issues/3997">this</a>, and it's indefensible no matter how you look at it. The <a href="https://web.archive.org/web/20190925004614/https://bugzilla.mindrot.org/show_bug.cgi?id=2050">OpenSSH excuse of being old and having a well-known standard path that long predates the XDG spec</a> does not apply to Flatpak at all, and neither does any sandboxing argument. Oh, and if your application ships both a Flatpak and XDG-conforming native packages, it must now add <a href="https://github.com/nmlgc/ssg/blob/c117cc186fca0804a49df51321f825d84243f2e9/platform/sdl/path_sdl.cpp#L26-L30">a special case for Flatpak if it wants to prevent its own XDG directory names from becoming even uglier</a>. Still, the Flatpak developers remain stubborn about this choice.</p><ul><li><p>
-		But wait, what's that? Couldn't you theoretically add
+	<p>Flatpak stores all data of an app in an app-specific subdirectory under <code>~/.var/app</code>, inverting and blatantly violating the <a href="https://specifications.freedesktop.org/basedir-spec/latest/">XDG Base Directory Specification</a>. <a href="https://github.com/flatpak/flatpak.github.io/issues/191">Everybody</a> <a href="https://github.com/flatpak/flatpak/issues/1651">hates</a> <a href="https://github.com/flatpak/flatpak/issues/3997">this</a>, and it's indefensible no matter how you look at it. The <a href="https://web.archive.org/web/20190925004614/https://bugzilla.mindrot.org/show_bug.cgi?id=2050">OpenSSH excuse of being old and having a well-known standard path that long predates the XDG spec</a> does not apply to Flatpak at all, and neither does any sandboxing argument. Oh, and if your application ships both a Flatpak and XDG-conforming native packages, it must now add <a href="https://github.com/nmlgc/ssg/blob/c117cc186fca0804a49df51321f825d84243f2e9/platform/sdl/path_sdl.cpp#L26-L30">a special case for Flatpak if it wants to prevent its own XDG directory names from becoming even uglier</a>. Still, the Flatpak developers remain stubborn about this choice.</p><ul><li>
+		<p>But wait, what's that? Couldn't you theoretically add</p>
 		<pre>- --filesystem=xdg-data/myapp
 - --env=XDG_DATA_HOME=~/.local/share/myapp</pre>
-	to your manifest's <code>finish-args</code>? Too bad that <a href="https://github.com/flatpak/flatpak/issues/2413">Flatpak deliberately prevents this from working</a>. Not to mention that the resulting package would fail the <a href="https://docs.flathub.org/docs/for-app-authors/linter/#finish-args-unnecessary-xdg-data-subdir-mode-access"><code>finish-args-unnecessary-xdg-data-subdir-mode-access</code></a> lint, which would prevent it from being published on Flathub without <a href="https://docs.flathub.org/docs/for-app-authors/linter#exceptions">applying for an exception</a>.
-	</p></li></ul>
+	<p>to your manifest's <code>finish-args</code>? Too bad that <a href="https://github.com/flatpak/flatpak/issues/2413">Flatpak deliberately prevents this from working</a>. Not to mention that the resulting package would fail the <a href="https://docs.flathub.org/docs/for-app-authors/linter/#finish-args-unnecessary-xdg-data-subdir-mode-access"><code>finish-args-unnecessary-xdg-data-subdir-mode-access</code></a> lint, which would prevent it from being published on Flathub without <a href="https://docs.flathub.org/docs/for-app-authors/linter#exceptions">applying for an exception</a>.</p>
+	</li></ul>
 </li><li>
 	<p>Speaking of XDG directories, why do they create the <code>.flatpak-builder</code> cache directory in the current working directory and not under <code>$XDG_CACHE_HOME</code> where it belongs?</p>
 </li><li>

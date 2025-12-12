@@ -148,7 +148,6 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 		trajectory beyond the next bumper's hitbox, breaking the original loop.
 	</div></figcaption>
 	{{call .VideoPlayer $vid_b3_0.FlipActive $vid_b3_1}}
-	</div>
 </figure><p>
 	Forgetting to handle ⅖ of your discrete X velocity cases is simply not
 	something you do by accident. So we might as well say that ZUN deliberately
@@ -236,11 +235,12 @@ if((orb.velocity.x == +4) && (delta_x_between_orb_and_bumper < 0)) {
 	<strong>Edit (2022-07-12):</strong> This flag only works around glitches
 	that would be caused by simultaneously colliding with more than one vertical
 	bar. The actual response to a bumper bar collision still remains unaffected,
-	and is <i>very</i> naive: <ul>
-		<li>Horizontal bars always invert the Orb's Y velocity</li>
-		<li>Vertical bars invert either the Y or X velocity depending on whether
-		the Orb's current X velocity is 0 (Y) or not (X)</li>
-	</ul>
+	and is <i>very</i> naive:
+</p><ul>
+	<li>Horizontal bars always invert the Orb's Y velocity</li>
+	<li>Vertical bars invert either the Y or X velocity depending on whether
+	the Orb's current X velocity is 0 (Y) or not (X)</li>
+</ul><p>
 	These conditions are only correct if the Orb comes in at an angle roughly
 	between 45° and 135° on either side of a bar. If it's anywhere close to 0°
 	or 180°, this response <i>will</i> be incorrect, and send the Orb straight

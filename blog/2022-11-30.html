@@ -142,12 +142,12 @@
 </ul><hr id="games-{{.Date}}"><p>
 	Superficially, the list of game-specific differences doesn't look too long,
 	and can be summarized in a rather short table:
-</p><figure><table class="comparison"><thead>
+</p><figure><table class="comparison"><thead><tr>
 	<th></th>
 	<th>{{HTML_Emoji "th03"}} TH03</th>
 	<th>{{HTML_Emoji "th04"}} TH04</th>
 	<th>{{HTML_Emoji "th05"}} TH05</th>
-</thead><tbody><tr>
+</tr></thead><tbody><tr>
 	<th>Script size limit</th>
 	<td>65536 bytes (heap-allocated)</td>
 	<td colspan="2">8192 bytes (statically allocated)</td>
@@ -308,7 +308,7 @@
 		background image is shown) or its end (after no more new text boxes are
 		started). <a href="#{{.Date}}-at-example">See the image below for an
 		example of using it anywhere else.</a>
-	</tr><tr id="{{.Date}}-b"></tr>
+	</tr><tr id="{{.Date}}-b">
 		<td>{{HTML_Emoji "th03"}}</td>
 		<td>{{HTML_Emoji "th04"}}</td>
 		<td>{{HTML_Emoji "th05"}}</td>
@@ -689,7 +689,7 @@
 		TH05 automatically deallocates the loaded .PI image, TH03 and TH04
 		require a separate manual call to <a
 		href="#{{.Date}}-p-"><code>\p-</code></a> to not leak its memory.</td>
-	</tr><tr>
+	</tr>
 </table><figcaption>
 	<var class="default">Bold</var> values signify the default if the parameter
 	is omitted; <a href="#{{.Date}}-c"><code>\c</code></a> is therefore

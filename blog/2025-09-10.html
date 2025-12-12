@@ -352,7 +352,7 @@ add  	di, ((640 - 64) / 8)</pre></figure>
 	This effect made its debut in TH03, where ZUN used it for a small number of the 320×200 picture transitions in the Stage 8/9 cutscenes and endings. In TH04 and TH05, it then became the default for most of these picture transitions. Its most prominent appearance, though, can be found at the end of TH05's title screen animation, where ZUN applies this effect to a full 640×400 image. Here's how this looks at 66&nbsp;MHz on Neko Project 21/W, in all of its sluggish glory:
 </p><figure {{$title5_o.FigureAttrs}}>{{call .VideoPlayer $title5_o}}</figure><p>
 	As you might have guessed, this effect works by only blitting certain pixels of the target image, as selected by a mask, on top of the current contents of VRAM. Each of these fade animations iterates over four fixed 4×4 masks that gradually show more pixels of the target image, before blitting it without a mask:
-<figure class="side_by_side small pixelated" style="width: 256px;"><rec98-child-switcher>{{range loop 0 4 -}}
+</p><figure class="side_by_side small pixelated" style="width: 256px;"><rec98-child-switcher>{{range loop 0 4 -}}
 	{{- $mask := printf "PI-mask-%1X.webp" . -}}
 	<img
 		src="{{call $.PostFileURL $mask}}"
@@ -427,7 +427,7 @@ add  	si, [bp-si_skip]
 add  	di, ((640 - 64) / 8)</pre></figure><p>
 	But sure enough, this version also runs almost twice as fast as my initial attempt above, across all systems we've tried!<br>
 	I still left a few micro-optimizations on the table with this one, though. Storing both masks on the stack might be faster than flipping <code>EBX</code> back and forth, and we should probably read from the per-row mask array through the <code>FS</code> or <code>GS</code> segment registers if we compile for ≥386 CPUs. But that shouldn't matter too much in view of all the more promising methods we've still got to try.
-</p></li><li><p>
+</p></li><li>
 	<i>GRCG + CPU</i><br>
 	The simpler one of the PC-98's blitter chips is best used as part of a two-pass approach: First, we use the GRCG's RMW mode and a tile register filled with 0 bits to perform the erase step across the entire area of the image. The erase loop uses a simple <code>REP STOS</code> per image line and probably doesn't need any further optimizing attention if the <code>REP MOVS</code> result above is any indication. The second pass then only needs a mere three instructions per 32 pixels to perform the missing <code>OR</code> of the masked pixels:
 <figure><pre>; EAX: Source pixels
@@ -453,7 +453,7 @@ add  	di, (640 / 8)</pre></figure>
 		{{call .VideoPlayer $siddham}}
 		<figcaption>All of these images would decompress within 6 frames on Neko Project 21/W at 66&nbsp;MHz, but PiLoad's transparent blitting algorithm easily doubles that. That's what, ~36,750 cycles for every single line of the image?<br>
 		The resulting rolling effect is another great example of CPU-speed-dependent lag. Everything here is supposed to happen within a single logical frame, and only doesn't because the system is too slow. A faster PC-98 would blit the image more quickly and thus spend fewer frames, and ports will display all four syllables instantly.</figcaption>
-	</figure>
+	</figure><p>
 	Fortunately, the PC-98 also has a second blitter chip that is much more suited to what we're trying to do here, …
 </p></li><li><p>
 	<i>EGC (ZUN's Version)</i><br>
@@ -661,7 +661,7 @@ add  	di, (640 / 8)</pre></figure>
 	These results might even suggest that we should just formalize a 2-frame delay because <i>clearly</i>, no real-hardware model could ever overcome the VRAM latencies and actually crossfade a single 640×400 image within less than one frame. But again, such a 2-frame delay would be no more or less correct than the 3-frame delay on the PC-9821Na7, or the probably even higher delays on a 486 model. When in doubt, we just go by what ZUN <i>wrote</i>. My allegiance lies with code, not with Japan's e-waste.
 </p><p>
 	Finally, we can also see how upgrading the CPU of your real-hardware PC-98 does nothing to work around VRAM latencies – i.e., the one bottleneck that actually matters for PC-98 Touhou. You'd basically just burn all those additional CPU cycles on waiting for VRAM. Such a CPU upgrade might even be counter-productive, as we can see with the 533&nbsp;MHz CPU getting outperformed by not only the 400&nbsp;MHz AMD K6-III, but even a 133&nbsp;MHz Pentium, due to what spaztron64 suspects to be a southbridge issue.
-</ul></p><h4 id="xfade-future-{{.Date}}">Future work</h4><p>
+</p><h4 id="xfade-future-{{.Date}}">Future work</h4><p>
 	But let's think ahead for a moment about what this means for the games as a whole. If the EGC is <i>that</i> good at this task compared to the CPU, how good could it possibly be for 16-color sprites with an alpha plane? master.lib's <code>super_*()</code> functions blit these using GRCG&nbsp;+ CPU techniques, which decisively lost this benchmark on ≥Pentium hardware and weren't that good on Neko Project either. In contrast, the EGC has a lot going for it, and not just because of these benchmark numbers:
 </p><ul>
 	<li>We get {{Blog_PostLink "2023-03-05#egc" "blitting at non-byte-aligned X positions for basically free"}}, without having to bit-shift on the CPU. Since our source data will always be byte-aligned, I don't even have to handle {{Blog_PostLink "2023-03-05#egc" "the second case of (source bit address &gt; destination bit address) that requires the tile register to be prefilled"}}.</li>
@@ -688,7 +688,7 @@ add  	di, (640 / 8)</pre></figure>
 		</thead>
 		<tbody>
 			<tr>
-				<th>Uncompressed</td>
+				<th>Uncompressed</th>
 				<td> 2,195,904</td>
 				<td> 4,874,240</td>
 				<td> 4,815,360</td>
@@ -724,7 +724,7 @@ add  	di, (640 / 8)</pre></figure>
 		</thead>
 		<tbody>
 			<tr>
-				<th>Uncompressed</td>
+				<th>Uncompressed</th>
 				<td>100.00 %</td>
 				<td>100.00 %</td>
 				<td>100.00 %</td>
@@ -747,7 +747,7 @@ add  	di, (640 / 8)</pre></figure>
 			</tr>
 		</tbody>
 	</table>
-<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure><p>
 	However, these compression ratios come at an annoying price for the PC-98 in particular. The algorithm naturally decompresses images into a <i>packed</i> representation with color values from 0 to 15 inclusive, <i>not</i> into the planar 4×1bpp format required by the PC-98's 16-color graphics mode. It makes a lot of sense why PI is <i>designed</i> around packed pixels:
 </p><ul>
 	<li>PIC, PI's bigger sibling, originated on the Sharp X68000, <a href="https://gamesx.com/wiki/doku.php?id=x68000:screen_control">whose graphics RAM uses a packed format as well</a>. (By the way, that platform would also be the technically most interesting porting target for PC-98 Touhou, but that's a story for another day.)</li>
@@ -929,7 +929,7 @@ endm</pre>
 		Yup. PiLoad's choice of instructions tells us that it was indeed deliberately optimized for ≥386 CPUs, the exact ones you'd want to optimize PC-98 Touhou code for, despite formally restricting itself to the 80186 ISA. We don't know whether Koizuka deliberately wanted to target ≤286 CPUs with <code>graph_pack_put_8()</code>, but the fact remains that this choice slowed down PC-98 Touhou on its target hardware. And yes, this includes the table-less version: While that one uses the exact same <i>algorithm</i> as PiLoad, it spells <code>ADD</code> and <code>ADC</code> as <code>ROL 1</code> and <code>RCL 1</code> and thus only runs minimally faster than the table-driven version on Neko Project's emulated i386.
 	</p>
 	<li>Despite all the inlining, PiLoad still ends up 207 bytes <i>smaller</i> than the combination of master.lib's <code>graph_pi_load_pack()</code> and the default version of <code>graph_pack_put_8()</code> with its 1,024-byte lookup table.</li>
-</li></ul><p>
+</ul><p>
 	So, let's add decoding into memory to PiLoad instead! Turns out that PiLoad was the simpler library to extend all along, since it already used the same sliding-window technique for unpacking pixels into VRAM. All it needed was a width check for a multiple of 8, a calculation of the bitplane size, and a new and much simpler unpacking function that doesn't need to support unaligned X positions or GRCG-powered transparency.<br>
 	However, {{Blog_PostLink "2025-09-29#fragment" "a certain unfortunate issue that will crop up in part 4"}} will require more outside control over the loading process. As a result, the API of my forked version looks quite different:
 </p><ul>
@@ -947,7 +947,7 @@ endm</pre>
 	This might not be ideal for other PC-98 developers who might want to use my fork in their projects, but you can always revert these commits in your own version.
 </p><hr id="pi-th03-{{.Date}}"><p>
 	Before we can entirely replace master.lib's PI functions with PiLoad in TH02-TH05 though, we have to address one particular silly detail:
-</p><h4>{{HTML_Emoji "zunpet"}} TH03's silly line-doubled sprite sheets {{HTML_Emoji "zunpet"}}</h4>
+</p><h4>{{HTML_Emoji "zunpet"}} TH03's silly line-doubled sprite sheets {{HTML_Emoji "zunpet"}}</h4><p>
 	As we all know by now, {{Blog_PostLink "2022-02-18" "TH03 renders its in-game graphics at line-doubled 640×200 to free up half of VRAM for sprite data"}}. This means that it can store all sprites at half of their displayed vertical resolution, saving some disk space and RAM in the process. However, ZUN only <i>actually</i> did this for the uncompressed sprites loaded from the .BF2 and {{Blog_PostLink "2020-11-16" ".MRS"}} files. All in-game .PI sprite sheets are, for some reason, stored in the same line-doubled form that would be shown on screen:
 </p><figure class="pixelated" style="width: 640px;">
 	<img src="{{$enemy01}}" width="640" alt="TH03's ENEMY01.PI, showing off the unnecessary line doubling of TH03's in-game sprites loaded from .PI files">

@@ -97,7 +97,7 @@
 	<li><p>TH02 also adds predefined 4-, 8-, 16-, and 32-ring groups, all of which are used by bosses.</p></li>
 	<li><p>The game does not yet offer predefined stack groups, but has an auto-stacking system that automatically turns <i>every</i> spawned group into a potential 2-stack on Hard and Lunatic. This system forms the main way in which these difficulties differ from the easier ones, and is exactly why going from Normal to Hard roughly doubles the number of bullets fired. On Hard, the second bullet in each stack moves at half the speed of the primary bullet, while Lunatic adds another 0.5 pixels per frame onto that halved speed.<br>
 	The game also has a function to apply a further multiplier on top of the difficulty-specific stack count, but only uses it to temporarily disable stacking during three patterns, one of them used by the Five Magic Stones and two of them used by Mima.</p></li>
-	<li><p>Just like all other games, TH02 offers a variety of special bullet motion types. For some reason, ZUN limited these to single 16×16 bullets in TH02; they are not supported for either 8×8 pellets or any of the multi-pellet groups. There is no <i>technical</i> reason for this, so ZUN likely did this as a deliberate game design choice. The upside is that you as a player can be certain that every 8×8 pellet moves in a straight line, which may or may not help reading patterns.
+	<li><p>Just like all other games, TH02 offers a variety of special bullet motion types. For some reason, ZUN limited these to single 16×16 bullets in TH02; they are not supported for either 8×8 pellets or any of the multi-pellet groups. There is no <i>technical</i> reason for this, so ZUN likely did this as a deliberate game design choice. The upside is that you as a player can be certain that every 8×8 pellet moves in a straight line, which may or may not help reading patterns.</p>
 	<ul>
 		<li><i>Chase</i> bullets adjust their X/Y velocity by a configurable amount on every frame relative to the player's location. These are exclusively used by the <span lang="ja">呪</span> bullets fired by the Stage 2 midboss.</li>
 		<li><i>Homing</i> bullets work in a very similar way, re-aiming at the player more properly for a customizable number of frames after a bullet was spawned. These are completely unused.</li>
@@ -107,10 +107,9 @@
 		<li>And finally, of course, we have bullets that bounce and flip their direction near the edge of the playfield. In this game, the bounce edges actually lie 8 pixels inside the playfield:<figure {{$bounce.FigureAttrs}}>
 			{{call .VideoPlayer $bounce}}
 			<figcaption>The velocity flip only happens on the frame in which a bullet enters the red bounce margin zone. So, faster bullets might still travel a good deal toward the actual edge of the playfield before getting flipped.</figcaption>
-		</figure></li>
-		This type is not only used by Meira's and Evil Eye Σ's red and purple billiard ball bullets, but also by some star bullet patterns during the Mima fight.
-	</ul>
-	</p></li>
+		</figure>
+		This type is not only used by Meira's and Evil Eye Σ's red and purple billiard ball bullets, but also by some star bullet patterns during the Mima fight.</li>
+	</ul></li>
 	<li><p>Pellet rendering is batched! For the first time, ZUN preserves the GRCG state for successively blitted pellets, avoiding the extra >168 cycles per pellet that master.lib's <code>grcg_setcolor()</code> and <code>grcg_off()</code> would cost on a 486. The caveat, however, lies in the words <i>successively blitted</i>. Without an architectural split between pellets and sprite bullets, the rendering code ends up looking like this:</p>
 	<figure><pre>for(const auto& bullet : bullets) {
 	// (Update code…)
@@ -130,14 +129,16 @@
 	<p>While this definitely is suboptimal once you start mixing the two size types, it's not too bad in context. The actual bullet scripts in TH02 mostly stick to one of the two sprite types, and once the script switches from one to the other, the old and new bullets will occupy mostly contiguous areas of the bullet array anyway. The game doesn't actually mix 8×8 and 16×16 bullets within the same pattern until literally the last pattern of Mima's second form.</p></li>
 	<li>The four other ZUN quirks in the system are all related to clipping and aim point calculations. ZUN tries very hard to use constants that are supposed to work for both 8×8 and 16×16 bullets, but they never perfectly fit either of the two. {{HTML_Emoji "tannedcirno"}}</li>
 </ul><hr id="order-{{.Date}}"><p>
-	To find out where all these bullet types are used, I of course had to label all the individual pattern functions and assign them to their (mid)boss owners. As a side effect, we now also know the preferred boss decompilation order for this game!<ol>
-		<li>Marisa</li>
-		<li>Mima</li>
-		<li>Evil Eye Σ</li>
-		<li>Meira</li>
-		<li>Rika</li>
-		<li>5 Magic Stones</li>
-	</ol>Quite a satisfying order, if I may say so myself – burning off the big fireworks right in the beginning, getting slightly more unexciting later on, but then ending on arguably the best Touhou character ever conceived. {{HTML_Emoji "onricdennat"}}<br id="midbossx-{{.Date}}">
+	To find out where all these bullet types are used, I of course had to label all the individual pattern functions and assign them to their (mid)boss owners. As a side effect, we now also know the preferred boss decompilation order for this game!
+</p><ol>
+	<li>Marisa</li>
+	<li>Mima</li>
+	<li>Evil Eye Σ</li>
+	<li>Meira</li>
+	<li>Rika</li>
+	<li>5 Magic Stones</li>
+</ol><p>
+	Quite a satisfying order, if I may say so myself – burning off the big fireworks right in the beginning, getting slightly more unexciting later on, but then ending on arguably the best Touhou character ever conceived. {{HTML_Emoji "onricdennat"}}<br id="midbossx-{{.Date}}">
 	Each of these decompilations will be preceded by the stage's respective midboss. This includes the Extra Stage – you might not <i>think</i> that this stage has a midboss, but it technically does, in the form of this combination of patterns:
 </p><figure {{$mb.FigureAttrs}}>
 	{{call .VideoPlayer $mb}}<figcaption>Lasting exactly these 420 frames.</figcaption>

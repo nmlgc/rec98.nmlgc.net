@@ -90,11 +90,11 @@
 		<code>(﻿<var>Stage number</var>&nbsp;+&nbsp;1)</code> semi-random item
 		drops are turned into {{template "th02_bigpower"}} items instead.
 		</li></ul>
-	</li><li><p>
-		Items can contribute up to 25 points to the skill value and subsequent
+	</li><li>
+		<p>Items can contribute up to 25 points to the skill value and subsequent
 		rating (<span lang="ja">あなたの腕前</span>) on the final verdict
 		screen. Doing well at item collection first increases a separate
-		<code>collect_skill</code> value:
+		<code>collect_skill</code> value:</p>
 		<figure><table id="collect_skill_{{.Date}}">
 			<thead>
 				<tr>
@@ -136,13 +136,13 @@
 			{{template "th02_1up"}} item is still on screen; in that case,
 			collecting the 1-up has no effect at all.
 		</figcaption></figure>
-		Every 32 <code>collect_skill</code> points will then raise the
+		<p>Every 32 <code>collect_skill</code> points will then raise the
 		<code>item_skill</code> by 1, whereas every 16 dropped items will lower
 		it by 1. Before launching into the ending sequence,
 		<code>item_skill</code> is clamped to the [﻿0;&nbsp;25﻿] range and
 		added to the other skill-relevant metrics we're going to look at in
-		future pushes.
-	</p></li><li><p>
+		future pushes.</p>
+	</li><li><p>
 		When losing a life, the game will drop a single
 		{{template "th02_bigpower"}} and 4 randomly picked {{template
 		"th02_power"}} or {{template "th02_point"}} items in a random order
@@ -152,8 +152,8 @@
 		class="hovertext" title="Sure, under the assumption that the master.lib RNG is uniformly distributed for every seed, but the intent of ZUN's code is clear in this regard.">an
 		equal and independent chance</span> of being either a
 		{{template "th02_power"}} or {{template "th02_point"}} item.
-	</p></li><li><p>
-		Finally, and perhaps <a
+	</p></li><li>
+		<p>Finally, and perhaps <a
 		href="https://twitter.com/jazz_cappricio/status/1665508116799053824">most
 		interestingly</a>, {{template "th02_point"}} item values! These are
 		determined by the top Y coordinate of an item during the frame it is
@@ -161,7 +161,7 @@
 		pixels of the playfield, and drops off as soon as an item falls below
 		that line. For the rest of the playfield, point items then use a formula
 		of <code>(﻿28,000&nbsp;-&nbsp;(﻿<var>top Y coordinate of item in
-		screen space</var>&nbsp;×&nbsp;70﻿)﻿)</code>:
+		screen space</var>&nbsp;×&nbsp;70﻿)﻿)</code>:</p>
 		<figure class="pixelated" id="points-{{.Date}}">
 			<img src="{{$points}}" alt=""><figcaption>
 			Point items and their collection value in TH02. The numbers
@@ -180,7 +180,7 @@
 			point item at the lowest value of 2,240 points, on the exact frame
 			before it falls below the collection hitbox.
 		</figcaption>
-	</figure></p></li>
+	</figure></li>
 </ul><hr><p>
 	Onto score tracking then, which only took a single commit to raise another
 	big research question. It's widely known that TH02 grants extra lives upon

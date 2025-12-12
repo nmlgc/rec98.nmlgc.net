@@ -604,16 +604,16 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</figcaption>
 </figure><p id="hotkeys-{{.Date}}">
 	And then, I was looking for one more small optional feature to complete the 9<sup>th</sup> push and came up with the idea of hotkeys that would allow changing any of these settings at any point. {{DB_CustomerByID 13}} considered it the best one of my ideas, so I went ahead… but little did I know that moving these graphics settings out of the main menu would not only significantly reshape the architecture of my code, but also uncover more bugs in my code and even a replay-related one from the original game. Paraphrasing the release notes:
-	<blockquote style="white-space: unset;">
-		The original game had three bugs that affected the configured difficulty setting when playing the Extra Stage or watching an Extra Stage replay. When returning to the main menu from an Extra Stage replay, the configured difficulty would be overridden with either
-		<ol><li>
-			the difficulty selected before the last time the Extra Stage's Weapon Select screen was entered, or
-		</li><li>
-			Easy, when watching the replay before having been to the Extra Stage's Weapon Select screen during one run of the program.
-		</li><li>
-			Also, closing the game window during the Extra Stage (both self-played and replayed) would override the configured difficulty with Hard (the internal difficulty level of the Extra Stage).
-		</li></ol>
-	</blockquote>
+</p><blockquote style="white-space: unset;">
+	The original game had three bugs that affected the configured difficulty setting when playing the Extra Stage or watching an Extra Stage replay. When returning to the main menu from an Extra Stage replay, the configured difficulty would be overridden with either
+	<ol><li>
+		the difficulty selected before the last time the Extra Stage's Weapon Select screen was entered, or
+	</li><li>
+		Easy, when watching the replay before having been to the Extra Stage's Weapon Select screen during one run of the program.
+	</li><li>
+		Also, closing the game window during the Extra Stage (both self-played and replayed) would override the configured difficulty with Hard (the internal difficulty level of the Extra Stage).
+	</li></ol>
+</blockquote><p>
 	This had always been slightly annoying during development as I'd been closing the game window quite a bit during the Extra Stage. But the true nature of this bug only became obvious once these hotkeys allowed graphics settings to be changed <i>during</i> the Extra Stage: pbg had been <a href="https://github.com/nmlgc/ssg/blob/pbg/GIAN07/DEMOPLAY.CPP#L101-L107">creating a copy of the full configuration structure just because lives, bombs, the difficulty level, and the input flags need to be overwritten with their values from the replay file</a>, only to then recover the user's values <a href="https://github.com/nmlgc/ssg/blob/7dcab4f00881e7d9211b3f9d4229a78fe9a509e9/GIAN07/DEMOPLAY.CPP#L291-L296">by restoring the full structure to its state from before the replay</a>.
 </p><p>
 	But the award for the greatest annoyance goes to <a href="https://github.com/libsdl-org/sdlwiki/pull/592">this SDL quirk that would reset a render target's clipping region when returning to raw framebuffer rendering</a>, which causes sprites to suddenly appear in the two black 128-pixel sidebars for the one frame after such a change. As long as graphics settings were only available from the unclipped main menu, this quirk only required a single silly workaround of manually backing up and restoring the clipping region. But once hotkeys allowed these settings to be changed while SDL_Renderer clips all draw calls to the 384×480 playfield region, I had to deploy the same exact workaround in three additional places…&nbsp;🥲 At least I wrote it in a way that allows it to be easily deleted if we ever update to SDL 3, where the team fixed the underlying issue.
@@ -648,22 +648,22 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </figure><p>
 	Surprisingly though, we don't see much of a difference with the circles in the Weapon Select screen. If geometry scaling only multiplies and offsets vertices, shouldn't the lines along the 32-sided polygons still be just one pixel thick? As it turns out, SDL puts in quite a bit of effort here: <a href="https://github.com/libsdl-org/SDL/blob/378234437fa2a99224391d5578f46971e190c0b7/src/render/SDL_render.c#L3201-L3202">It never actually uses the API's line primitive when scaling the output</a>, but instead takes the endpoints, rasterizes the line on the CPU, and turns each point on the resulting line into a quad the size of the scale factor. Of course, this completely nullifies pbg's original intent of approximating circles with lines for performance reasons. {{HTML_Emoji "onricdennat"}}<br>
 	The result looks better and better the larger the window is scaled. On low fractional scale factors like 1.25×, however, lines end up looking truly horrid as the complete lack of anti-aliasing causes the 1.25×1.25-pixel point quads to be rasterized as 2 pixels rather than a single one at regular intervals:
-	<figure class="pixelated" style="width: 320px;">
-		<rec98-child-switcher><img
-			src="{{$c125_geometry}}"
-			data-title="Geometry scaling"
-			width="320"
-			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using geometry scaling, showing off the inconsistent rasterization of point quads without anti-aliasing"
-			class="active"
-		><img
-			src="{{$c125_framebuf}}"
-			data-title="Framebuffer scaling"
-			width="320"
-			alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using framebuffer scaling"
-		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
-			Also note how you can either have bright circle colors or bright text colors, but not both.
-		</figcaption>
-	</figure>
+</p><figure class="pixelated" style="width: 320px;">
+	<rec98-child-switcher><img
+		src="{{$c125_geometry}}"
+		data-title="Geometry scaling"
+		width="320"
+		alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using geometry scaling, showing off the inconsistent rasterization of point quads without anti-aliasing"
+		class="active"
+	><img
+		src="{{$c125_framebuf}}"
+		data-title="Framebuffer scaling"
+		width="320"
+		alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using framebuffer scaling"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
+		Also note how you can either have bright circle colors or bright text colors, but not both.
+	</figcaption>
+</figure><p>
 	But once we move in-game, we can even spot differences at integer resolutions if we look closely at all the shapes and gradients. In contrast to lines, software-rasterizing triangles with different vertex colors would be significantly more expensive as you'd suddenly have to cover a triangle's entire filled area with point quads. But thanks to that filled nature, SDL doesn't have to bother: It can merely scale the vertex coordinates as you'd expect and pass them onto the driver. Thus, the triangles get rasterized at the output resolution and end up as smooth and detailed as the output resolution allows:
 </p><figure style="width: 1152px;">
 	<rec98-child-switcher><img

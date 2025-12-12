@@ -41,7 +41,7 @@
 </p><figure class="pixelated" style="width: 256px;">
 	<img src="{{$slwin}}" width="256" alt="TH03's SLWIN.CDG, showing off how ZUN baked all 15 possible stat stars into the image">
 	<figcaption>The only stat-related image you will find as part of the game files. The number of stat stars per character is hardcoded and not based on any other internal constant we know about.</figcaption>
-</figure>
+</figure><p>
 	Together with the <span style="color: #800">EXTRA🎔</span> window and the question mark portrait for Story Mode, all of this sums up to 255,216&nbsp;bytes of image data across 14 files. You could remove the unnecessary alpha plane from <code>SLEX.CD2</code> (-1,584 bytes) or store <code>CHNAME.BFT</code> in a 1-bit format (-6,912 bytes), but using 3.3% less memory barely makes a difference in the grand scheme of things.<br>
 	From the code, we can assume that loading such an amount of data all at once would have led to a noticeable pause on the game's target PC-98 models. The obvious alternative would be to just start out with the initially visible images and lazy-load the data for other characters as the cursors move through the menu, but the resulting mini-latencies would have been bound to cause minor frame drops as well. Instead, ZUN opted for a rather creative solution: By segmenting the loading process into four parts and moving three of these parts ahead into the main menu, we instead get four smaller latencies in places where they don't stick out as much, if at all:
 </p><ol>

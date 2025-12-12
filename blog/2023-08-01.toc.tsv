@@ -1,7 +1,7 @@
 Anchor	Name
 strategy	The migration strategy
 ddraw	Learning DirectDraw and its surface management
-palettes	Reverse-engineering the palette logic in 8-bit mode</li>
+palettes	Reverse-engineering the palette logic in 8-bit mode
 text	Portable, offscreen text rendering
 config	The new, forward-compatible configuration file format
 sdl	SDL_Renderer as the perfect abstraction?

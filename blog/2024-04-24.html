@@ -149,8 +149,8 @@
 		I <i>can</i> try to build this netcode as a generic library that can work with any PC-98 emulator, but it would ultimately be up to the respective upstream developers to integrate it into official releases. Therefore, expect this variant to require separate funding and custom builds for each individual emulator codebase that we'd like to support.
 	</p></li><li id="integrated-{{.Date}}"><p>
 		<i>Emulator-level netcode with game-specific hooks</i>
-	</p><p>
-		Takes the generic netcode developed in 1) and adds the possibility for the game to control it via a special interrupt API. This enables several improvements:<ul>
+	</p>
+		<p>Takes the generic netcode developed in 1) and adds the possibility for the game to control it via a special interrupt API. This enables several improvements:</p><ul>
 			<li>Online matches could be initiated through new options in TH03's main menu rather than the emulator's UI.</li>
 			<li>The game could communicate the memory region that should be backed up every frame, cutting down memory usage as described above.</li>
 			<li>The exchanged input data could use the game's internal format instead of keyboard or joypad inputs. This removes the need for key remapping at the emulator level and naturally prevents the inherent issue of remote control where players could mess with each other's controls.</li>
@@ -159,7 +159,7 @@
 			Good places for synchronization points include the beginning of each round, the <i>WARNING!! You are forced to evade / Your life is in peril</i> popups that pause the game for a few frames anyway, and whenever the game is paused via the <kbd>ESC</kbd> key.</li>
 			<li>During such pauses, the game could then also block the resuming <kbd>ESC</kbd> key of the player who didn't pause the game.</li>
 		</ul>
-	</p></li>
+	</li>
 	<li id="compipes-{{.Date}}"><p>
 		<i>Emulated serial port communicating over named pipes with a standalone netplay tool</i>
 	</p><p>
@@ -177,7 +177,7 @@
 		The only slight drawback of this approach is the expected high DOS memory requirement for rollback. Unless we find a way to <i>really</i> compress game state snapshots to just a few KB, this approach will require a more modern DOS setup with EMS/XMS support instead of the pre-installed MS-DOS 3.30C on a certain widely circulated .HDI copy. But apart from that, all you'd need to do is run the separate netplay tool, pick the same pipe name in both the tool and the emulator, and you're good to go.
 	</p><figure class="large">
 		<img src="{{$np21w_compipes}}" alt="Screenshot of Neko Project 21/W's Serial option menu, with COM1 being configured to send over a named pipe">
-	</figure>
+	</figure><p>
 		It could even work for real hardware, but would require the PC-98 to be linked to the separately running modern system via a null modem cable.
 	</p></li>
 	<li id="win9x-{{.Date}}"><p>
@@ -201,7 +201,7 @@
 			<figcaption>This is probably a bug in the latest ver0.86 rev92β3 version of Neko Project 21/W; I got it to work fine on real hardware. {{Blog_PostLink "2019-11-06" "StormySpace"}} did run on the same emulated Windows 95 system without any issues, though. Regardless, it's still worth mentioning as a symbol of everything that can go wrong.</figcaption>
 		</figure></li>
 		<li>A matchmaking server would be much more of a requirement than in any of the emulator variants. Players are unlikely to run their favorite chat client on the same PC-98 system, and the signaling codes are way too unwieldy to type them in manually. (Then again, <a href="https://xkcd.com/1782/">IRC is always an option</a>, and the people who would fund this variant are probably the exact same people who are already running IRC clients on their PC-98.)</li>
-	</ul></p></li>
+	</ul></li>
 	<li id="dos-{{.Date}}"><p>
 		<i>Native PC-98 DOS netcode <strong>(only for real PC-98 hardware equipped with an Ethernet card)</strong></i>
 	</p><p>
@@ -241,14 +241,14 @@
 	<li>and the 48×48 hit circles from <code>EN2.PI</code>.</li>
 </ul><p>
 	It's also the third TH03 {{HTML_TagInline "gameplay"}} push in a row that features inappropriate ASM code in places that really, really didn't need any. As usual, the code is worse than what Turbo C++ 4.0J would generate for idiomatic C code, and the surrounding code remains full of untapped and quick optimization opportunities anyway. This time, the biggest joke is the sprite offset calculation in the hit circle rendering code:
-	<figure><pre>_BX = (circle->age - 1);
+</p><figure><pre>_BX = (circle->age - 1);
 _BX >>= 2;
 _BX *= 2;
 uint16_t sprite_offset_in_sprite16_area = (0x1910 + _BX + _BX + _BX);</pre>
 	<figcaption>
 		A multiplication with 6 would have compiled into a single <code>IMUL</code> instruction. This compiles into 4 <code>MOVs</code>, one <code>IMUL</code> (with 2), and two <code>ADD</code>s. {{HTML_Emoji "zunpet"}} This surely must have been left in on purpose for us to laugh about it one day?
-	</figcaption></figure>
-</p><p>
+	</figcaption>
+</figure><p>
 	But while we've all come to expect the usual share of ZUN bloat by now, this is also the first push <i>without</i> either a ZUN bug or a landmine since I started using these terms! 🎉 It does contain a single ZUN <i>quirk</i> though, which can also be found in the hit circles. This animation comes in two types with different caps: 12 animation slots across both playfields for the <i>enemy</i> circles shown in alternating bright/dark yellow colors, whereas the white animation for the player characters has a cap of… 1? P2 takes precedence over P1 because its update code always runs last, which explains what happens when both players get hit within the 16 frames of the animation:
 </p><figure {{$vid_same.FigureAttrs}}>
 	<figcaption class="dynamic"><div>
@@ -257,7 +257,7 @@ uint16_t sprite_offset_in_sprite16_area = (0x1910 + _BX + _BX + _BX);</pre>
 		If the other player gets hit within 16 frames of an active white circle animation, the animation is reinitialized for the other player as there's only a single slot to hold it. Is this supposed to telegraph that the other player got hit without them having to look over to the other playfield? After all, they're drawn on top of most other entities, but below the player. {{HTML_Emoji "onricdennat"}}
 	</div></figcaption>
 	{{call .VideoPlayer $vid_same.FlipActive $vid_displaced}}
-</figure>
+</figure><p>
 	SPRITE16 uses the PC-98's EGC to draw these single-color sprites. If the EGC is already set up, it can be set into a GRCG-equivalent RMW mode using the pattern/read plane register (<code>0x4A2</code>) and foreground color register (<code>0x4A6</code>), together with setting the mode register (<code>0x4A4</code>) to <code>0x0CAC</code>. Unlike the typical blitting operations that involve its 16-dot pattern register, the EGC even supports 8- or 32-bit writes in this mode, just like the GRCG. {{Blog_PostLink "2023-03-05#egc" "As expected"}} for EGC features beyond the most ordinary ones though, T98-Next simply sets every written pixel to black on a 32-bit write. {{HTML_Emoji "tannedcirno"}} Comparing the actual performance of such writes to the GRCG would be {{Blog_PostLink "2024-02-03" "yet another"}} interesting question to benchmark.
 </p><p>
 	Next up: I think it's time for ReC98's build system to reach its final form.

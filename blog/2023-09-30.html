@@ -2,7 +2,7 @@
 {{$vid_ref_flac := (call .Video "SH01-SE-48000-Reference-FLAC.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects if they were perfectly resampled to 48,000&nbsp;Hz, but converted from floating-point samples to an integer bit depth which clamps any inter-sample peaks to the maximum amplitude, thus permanently baking the resulting distortion into the file") -}}
 {{$vid_dsound := (call .Video "SH01-SE-48000-DirectSound.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects, resampled to 48,000&nbsp;Hz and recorded through the game's original DirectSound backend") -}}
 {{$vid_ma_1 := (call .Video "SH01-SE-48000-miniaudio-LPF-1.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects resampled to 48,000&nbsp;Hz, as rendered by the new miniaudio-based backend. Shows off the slight additional high-frequency content added by miniaudio's resampler in comparison to the original DirectSound backend") -}}
-{{$vid_ma_8 := (call .Video "SH01-SE-48000-miniaudio-LPF-8.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects resampled to 48,000&nbsp;Hz using miniaudio's 8<sup>th</sub>-order low-pass filter, the highest quality level supported") -}}
+{{$vid_ma_8 := (call .Video "SH01-SE-48000-miniaudio-LPF-8.hd" "Frequency spectrum of all of Shuusou Gyoku's sound effects resampled to 48,000&nbsp;Hz using miniaudio's 8<sup>th</sup>-order low-pass filter, the highest quality level supported") -}}
 
 {{$unmap_orig := (call .PostFileURL "SH01-Joypad-unmapping-original.png") -}}
 {{$unmap_P0256 := (call .PostFileURL "SH01-Joypad-unmapping-P0256.png") -}}
@@ -736,7 +736,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	href="https://www.webrtc-developers.com/did-i-choose-the-right-webrtc-stack/#libwebrtc-c-the-original-one">drop
 	a giant part of the Chromium codebase</a> into SDL_mixer, what could
 	possibly go wrong?
-</p><p id="miniaudio-{{.Date}}"></p>
+</p><p id="miniaudio-{{.Date}}">
 	This dire situation made me wonder if SDL was the wrong choice for Shuusou
 	Gyoku to begin with. Looking at other low-level cross-platform game
 	libraries, you'll quickly notice that <i>all</i> of them come with mostly
@@ -913,7 +913,7 @@ template &lt;class T&gt; concept CorrectBackend = requires(
 	8-bit PCM is definitely excusable because it was the turn of the millennium
 	and the resulting noise floor is masked by the BGM anyway, but the blatant
 	clipping and DC offsets definitely aren't:
-</ul><figure class="pixelated"><div id="waveform-{{.Date}}" class="clipped">
+</p><figure class="pixelated"><div id="waveform-{{.Date}}" class="clipped">
 	<table><thead><tr>
 		<td colspan="20" style="height: 38px; border-bottom: unset;"></td>
 	</tr><tr>

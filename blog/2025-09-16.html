@@ -100,7 +100,7 @@
 		That .PI load call would have been much more appropriate before the 30-beat delay in front of the fade-out…
 	</p>
 </li><li>
-	💣 Even worse, ZUN also loads a new image on the last screen, which defines no next image. This causes the game to unconditionally load from a null pointer, resulting in a landmine in {{Blog_PostLink "2023-03-05#landmines" "the classic sense of the word"}}: You can completely ignore it on PC-98 because</p><ul>
+	<p>💣 Even worse, ZUN also loads a new image on the last screen, which defines no next image. This causes the game to unconditionally load from a null pointer, resulting in a landmine in {{Blog_PostLink "2023-03-05#landmines" "the classic sense of the word"}}: You can completely ignore it on PC-98 because</p><ul>
 		<li>Real Mode just lets you read from address <code>0000:0000</code> without a segmentation fault</li>
 		<li>The far pointer to the handler for <code>INT 0</code> is highly unlikely to actually point to the name of an existing file</li>
 		<li>That file is even less likely to be a valid .PI file</li>
@@ -112,7 +112,7 @@
 </p><ul><li>
 	<p>If you game over and continue in-game while having a score that would qualify for the current character/difficulty list, the game automatically enters it with a <code>CONTINUE</code> name while staying within <code>MAIN.EXE</code>. Of course, this means that both games get yet another dedicated piece of code to mutate the High Score list… {{HTML_Emoji "zunpet"}}<br>
 	🐞 And so, the TH04 variant of this code also gets its own distinct version of the {{Blog_PostLink "2024-12-04#limit" "C integer promotion issue"}} that limits the technically supported score to 959 million points. In an unexpected twist though, TH05's ASM rewrite actually manages to fix this issue in a surprisingly <q>natural</q> way by explicitly performing the necessary calculations on 8-bit registers. On the other hand, fixing it within C++ would have still been totally possible <i>and</i> natural <i>and</i> code-simplifying…</p>
-</li><li>
+</li><li><p>
 	The single biggest source of inconsistencies can be found in the code that recreates corrupted scorefiles. During my tests of the cleaned-up and improved rewrite on the <code>debloated</code> branch, I regularly had to corrupt these files on purpose. File contents getting fully or partially overwritten with <code>00</code> bytes is the most common kind of corruption you'd encounter with modern operating systems and SSDs, but hilariously enough, that happens to be the exact kind of corruption these games might even fail to detect. If these <code>00</code> bytes cover an <i>entire</i> character-/difficulty-specific section, all three games consider such a zeroed section as valid, since it passes checksum validation? {{HTML_Emoji "onricdennat"}}<br>
 	The deobfuscation algorithm explains why:
 </p><figure><pre>// [key1] and [key2] are `uint8_t` as well.
@@ -169,7 +169,7 @@ decoded_byte[i] = (key1 + (std::rotr&lt;uint8_t&gt;(encoded_byte[i + 1], 3) ^ ke
 >\p,ed07.pi
 \==0,4
 <span class="ja">魔理沙：なんだよ、そりゃ</span>\ga9\s160\c</blockquote>
-<rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption></figure>
+<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure><p>
 	The {{Blog_PostLink "2022-11-30#ref" "cutscene command reference"}} tells us that the line in the Reimu B variant is preceded by <code>\==</code>, the picture crossfading command, followed by both possible parameters, <var>0</var> and <var>4</var>. Reimu A's script, however, lacks that second <code>=</code> and instead spells out <code>\=</code>, the immediate picture display command, which doesn't take a second parameter. Thus, the command stops reading after the <var>0</var> and leaves the trailing <code>,4</code> as text to be displayed in the newly started box. The line break is then ignored as usual, causing <code lang="ja">魔理沙</code> to be displayed right next to these two characters.
 </p><p>
 	Whew! Once again, this did turn into more of the typical ReC98 research by the end after all. {{HTML_Emoji "godzun"}} And that was just 75% of the pushes assigned to this post, because the rest already went towards the debloating work. Next up: Concluding this series and actually applying all this research to the games.

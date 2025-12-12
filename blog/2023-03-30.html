@@ -46,7 +46,7 @@
 		never uses these tiles and you can't observe them unless you manipulate
 		text RAM from outside the confines of the game, it's not a <a
 		href="https://github.com/nmlgc/ReC98/blob/master/CONTRIBUTING.md#zun-bug">bug</a>
-		according to our definition.
+		according to our definition.</figcaption>
 	</figure>
 	</li>
 	<li>To reduce the memory required for a map, tiles are arranged into fixed
@@ -84,12 +84,12 @@
 	</figure></li>
 </ul><p id="diffs-{{.Date}}">
 	The differences between the three games can best be summarized in a table:
-</p><figure><table class="comparison"><thead>
+</p><figure><table class="comparison"><thead><tr>
 	<th></th>
 	<th>{{HTML_Emoji "th02"}} TH02</th>
 	<th>{{HTML_Emoji "th04"}} TH04</th>
 	<th>{{HTML_Emoji "th05"}} TH05</th>
-</thead><tbody><tr>
+</tr></thead><tbody><tr>
 	<th>Tile image file extension</th>
 	<td colspan="3">.MPN</td>
 </tr><tr>
@@ -103,7 +103,7 @@
 	<th>Tile section index format</th>
 	<td colspan="2">0-based ID</td>
 	<td>0-based ID × 2</td>
-</tr>
+</tr><tr>
 	<th>Tile image index format</th>
 	<td>Index between 0 and 100, 1 byte</td>
 	<td colspan="2">VRAM offset in tile source area, 2 bytes</td>
@@ -162,7 +162,7 @@
 {{- end}}</figure><figcaption>
 	The non-empty tile sections defined in TH02's <code>STAGE4.MAP</code>,
 	showing off three unused ones.
-</figcaption></figure>
+</figcaption></figure><p>
 	These unused tile sections are much more common in the later games though,
 	where we can find them in TH04's Stage 3, 4, and 5, and TH05's Stage 1, 2,
 	and 4. I'll document those once I get to finalize the tile rendering code of
@@ -247,14 +247,16 @@
 	> for redrawing. In this one, it took just one dumb hand-written ASM
 	inconsistency in the function's epilog to make the entire function
 	undecompilable.<br>
-	The standard x86 instruction sequence to set up a stack frame in a function prolog looks like this:<figure><pre>PUSH	BP
+	The standard x86 instruction sequence to set up a stack frame in a function prolog looks like this:
+</p><figure>
+	<pre>PUSH	BP
 MOV 	BP, SP
 SUB 	SP, ?? ; if the function needs the stack for local variables</pre>
 <figcaption>When compiling without optimizations, Turbo C++ 4.0J will
 	replace this sequence with a single <code>ENTER</code> instruction. That one
 	is two bytes smaller, but much slower on every x86 CPU except for the 80186
 	where it was introduced.</figcaption>
-</figure>
+</figure><p>
 	In functions without local variables, <code>BP</code> and <code>SP</code>
 	remain identical, and a single <code>POP BP</code> is all that's needed in
 	the epilog to tear down such a stack frame before returning from the

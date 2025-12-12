@@ -57,7 +57,7 @@ func HTMLDate(t time.Time) template.HTML {
 
 // Calculated from the default `font-size` times `--icon-width` or
 // `--icon-height`.
-const EMOJI_ATTRS = `width="24" height="24" align="top"`
+const EMOJI_ATTRS = `width="24" height="24"`
 
 func emojiURL(fn string) string {
 	return staticHP.VersionURLFor("emoji-" + fn)

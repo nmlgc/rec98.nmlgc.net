@@ -214,7 +214,7 @@ inline bool LaserHITCHK(/* … */)
 	<li>{{Blog_PostLink "2024-07-09#win32" "As we've thoroughly explored last time"}}, Tup still ain't batching. Could it be that Tup's paradigm of spawning one <code>cl.exe</code> process per translation unit prevents us from using modules to their full throughput potential? The <a href="https://learn.microsoft.com/en-us/cpp/build/reference/cgthreads-code-generation-threads"><code>/cgthreads1</code></a> flag seems to help in this regard. Let's do some profiling using <code>cl.exe</code>'s <a href="https://www.geoffchappell.com/studies/msvc/cl/cl/options/b$t.htm">undocumented <code>/Bt</code> flag</a> to find out how the compilation times are distributed between the parsing and semantic analysis frontend (<code>c1*.dll</code>) and the code generation backend (<code>c2.dll</code>):
 	<figure><table id="trials-{{.Date}}" class="numbers trials"><thead>
 		<tr>
-			<th colspan="2" rowspan="3"></th>
+			<th colspan="2" rowspan="2"></th>
 			<th colspan="5">Game code <small>(60 TUs around migration, 58 TUs at end of P0295)</small></th>
 			<th colspan="5">Library code  <small>(211 TUs)</small></th>
 		</tr>

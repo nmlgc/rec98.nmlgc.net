@@ -22,10 +22,10 @@ class ReC98TabSwitcher extends HTMLElement {
 		)?.getElementsByTagName("div");
 	}
 
-	add(title: string, initiallyActive: boolean) {
+	add(title: string | null, initiallyActive: boolean) {
 		const i = this.count;
 		const button = document.createElement("button");
-		button.innerHTML = `${i + 1}️⃣ ${title}`
+		button.innerHTML = (`${i + 1}️⃣` + (title ? ` ${title}` : ''));
 		button.onclick = (() => {
 			this.switchTo(i);
 		});
@@ -136,7 +136,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 				activeSeen = true;
 				this.showChild(this.switchableChildren.length - 1);
 			}
-			this.tabSwitcher.add(attributeAsString(child, "data-title"), active);
+			this.tabSwitcher.add(child.getAttribute("data-title"), active);
 		}
 		if(!activeSeen) {
 			throw "No child marked as active.";

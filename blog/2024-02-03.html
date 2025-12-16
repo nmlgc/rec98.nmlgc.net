@@ -18,7 +18,7 @@
 			src="{{(call $.PostFileURL $pic)}}"
 			data-title="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background in its on-disk state"
-			{{- if eq . 2}}class="active"{{end -}}
+			{{if eq . 2}}class="active"{{end -}}
 		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>Let's call this "the blank image".</figcaption>
@@ -32,7 +32,7 @@
 			src="{{(call $.PostFileURL $pic)}}"
 			data-title="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background, with all bits in the first bitplane set to reveal the spacey background image, and the full color palette at the bottom"
-			{{- if eq . 2}}class="active"{{end -}}
+			{{if eq . 2}}class="active"{{end -}}
 		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>The spacey sub-image. Never before seen!1!! …OK, <a href="https://touhou-memories.com/post/738606806243409920">touhou-memories beat me by a month</a>. Let's add each image's full 16-color palette to deliver some additional value.</figcaption>
@@ -90,7 +90,7 @@ outportb(0x7C, 0x00);
 			src="{{(call $.PostFileURL $pic)}}"
 			data-title="TH0{{.}}"
 			alt=""
-			{{- if eq . 2}}class="active"{{end -}}
+			{{if eq . 2}}class="active"{{end -}}
 		>
 	{{end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>The contents of <code>nopoly_B</code> with each game's first track selected.</figcaption>

@@ -9,9 +9,6 @@
 {{$sub_difference := (call .PostFileURL "Subsampling-VP9-difference.png") -}}
 
 <style>
-	#fullres-{{.Date}} img {
-		width: 1280px;
-	}
 	#singleplayer_playfield-{{.Date}} img {
 		width: 768px;
 	}
@@ -194,16 +191,19 @@
 	between ZMBV and AV1 <code>-crf 1</code>" is a useful metric, this would be
 	its median frame among the 77.7% of non-lossless frames:
 </p><figure class="pixelated">
-	<rec98-child-switcher id="fullres-{{.Date}}"><img
+	<rec98-child-switcher><img
 		src="{{$median_zmbv}}"
+		width="1280"
 		data-title="Lossless"
 		alt="The lossless source image"
 	><img
 		src="{{$median_av1}}"
+		width="1280"
 		data-title="AV1 <code>-crf 1</code>"
 		alt="The same image encoded in AV1"
 	><img
 		src="{{$median_difference}}"
+		width="1280"
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
@@ -546,16 +546,19 @@
 	graphics, as it's the exact cause behind washed-out colors and red fringing
 	around edges:
 </p><figure class="pixelated">
-	<rec98-child-switcher id="fullres-{{.Date}}"><img
+	<rec98-child-switcher><img
 		src="{{$sub_zmbv}}"
+		width="1280"
 		data-title="Lossless"
 		alt="The lossless source image"
 	><img
 		src="{{$sub_vp9}}"
+		width="1280"
 		data-title="VP9 <code>-crf 15 -vf format=yuv422p</code>"
 		alt="The same image encoded in VP9, exhibiting a severe case of chroma subsampling"
 	><img
 		src="{{$sub_difference}}"
+		width="1280"
 		data-title="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"

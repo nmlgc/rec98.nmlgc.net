@@ -88,43 +88,43 @@
 		font-family: unset;
 	}
 
-	#perf-{{.Date}} {
+	.perf-{{.Date}} {
 		font-size: 82.5%;
 		color: white;
 	}
 
-	#perf-{{.Date}} tr {
+	.perf-{{.Date}} tbody tr {
 		background-color: unset;
 	}
 
-	#perf-{{.Date}} thead th:nth-child(1) {
+	.perf-{{.Date}} thead th:nth-child(1) {
 		text-align: right;
 	}
-	#perf-{{.Date}} thead th:nth-child(2),
-	#perf-{{.Date}} tbody td {
+	.perf-{{.Date}} thead th:nth-child(2),
+	.perf-{{.Date}} tbody td {
 		text-align: left;
 		width: 1024px;
 	}
 
-	#perf-{{.Date}} tbody th {
+	.perf-{{.Date}} tbody th {
 		font-weight: normal;
 	}
 
-	#perf-{{.Date}} tbody tr:not(:last-child) {
+	.perf-{{.Date}} tbody tr:not(:last-child) {
 		border-bottom: var(--table-border);
 	}
 
-	#perf-{{.Date}} tbody tr div {
+	.perf-{{.Date}} tbody tr div {
 		width: calc(100% - 11.25ch);
 		white-space: nowrap;
 		justify-self: left;
 	}
 
-	#perf-{{.Date}} tbody tr div .perfbar {
+	.perf-{{.Date}} tbody tr div .perfbar {
 		border-right: 1px solid white;
 	}
 
-	#perf-{{.Date}} tbody tr div span:last-child {
+	.perf-{{.Date}} tbody tr div span:last-child {
 		padding-left: 0.25em;
 	}
 </style>
@@ -390,7 +390,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	But let's assume the hopefully usual case of a functional GPU with at least decently written drivers where most of the APIs will work without visible issues. Which of them is the most performant/power-saving one on any given system? With every API having a slightly different idea about 3D rendering, there are bound to be <i>some</i> performance differences, and maybe these even differ between GPUs. But just how large would they be?<br>
 	The answer is yes:
 </p><figure><rec98-child-switcher>
-	<table data-title="Stage 6, Laser" class="numbers active" id="perf-{{.Date}}">
+	<table data-title="Stage 6, Laser" class="numbers active perf-{{.Date}}">
 		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
 		<tbody><tr>
 			<th>
@@ -442,7 +442,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 			<div>{{HTML_PerfBar	750	1440	100}}<span>OpenGL 2.1</span></div>
 		</td></tr>
 	</tbody></table>
-	<table data-title="Extra Stage, Homing" class="numbers" id="perf-{{.Date}}">
+	<table data-title="Extra Stage, Homing" class="numbers perf-{{.Date}}">
 		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
 		<tbody><tr>
 			<th>

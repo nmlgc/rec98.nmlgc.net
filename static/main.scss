@@ -792,6 +792,14 @@ table.vm tbody td:last-child {
 table.vm var.default {
 	font-weight: bold;
 }
+
+.inverted table,
+table.inverted {
+	color: white;
+	tr {
+		background-color: black;
+	}
+}
 /* ------ */
 
 /* Forms

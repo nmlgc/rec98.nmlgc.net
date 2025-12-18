@@ -75,10 +75,6 @@
 		border-right: var(--table-border);
 	}
 
-	#trials-{{.Date}} tbody tr {
-		background-color: unset;
-	}
-
 	#trials-{{.Date}} tbody td {
 		text-align: right;
 	}
@@ -90,11 +86,6 @@
 
 	.perf-{{.Date}} {
 		font-size: 82.5%;
-		color: white;
-	}
-
-	.perf-{{.Date}} tbody tr {
-		background-color: unset;
 	}
 
 	.perf-{{.Date}} thead th:nth-child(1) {
@@ -389,7 +380,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><p id="benchmark-{{.Date}}"><p>
 	But let's assume the hopefully usual case of a functional GPU with at least decently written drivers where most of the APIs will work without visible issues. Which of them is the most performant/power-saving one on any given system? With every API having a slightly different idea about 3D rendering, there are bound to be <i>some</i> performance differences, and maybe these even differ between GPUs. But just how large would they be?<br>
 	The answer is yes:
-</p><figure><rec98-child-switcher>
+</p><figure><rec98-child-switcher class="inverted">
 	<table data-title="Stage 6, Laser" class="numbers active perf-{{.Date}}">
 		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
 		<tbody><tr>

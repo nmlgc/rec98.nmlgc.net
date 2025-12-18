@@ -67,7 +67,6 @@
 
 	.benchmark-{{.Date}} table {
 		font-size: min(2.25vw, 100%);
-		color: white;
 	}
 
 	.benchmark-{{.Date}} table .used {
@@ -117,7 +116,6 @@
 	}
 
 	.benchmark-{{.Date}} table tr {
-		background-color: unset;
 		border-bottom: var(--table-border);
 	}
 	.benchmark-{{.Date}} table th:not(:last-child),
@@ -211,7 +209,7 @@ add  	di, ((640 - 64) / 8)</pre></figure>
 	<figcaption>This recording in Neko Project 21/W at 2.4576 × 27 = 66.3552 MHz might even be representative?</figcaption>
 </figure><p id="wide-res-{{.Date}}">
 	But of course, the only relevant results are those from real hardware:
-</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}}">
+</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}} inverted">
 	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="wide numbers active">
 		{{- template "wide-thead" -}}
 		<tr>
@@ -487,7 +485,7 @@ add  	di, (640 / 8)</pre></figure>
 </figure><p>
 	…whoa, ZUN's EGC algorithm is <i>bad</i> on emulators. This benchmark even paints it somewhat favorably; for code simplicity reasons, I merely simulate it within my optimized implementation by reducing the number of blitted image rows per EGC run to 1.<br>
 	Let's see how fast it all runs on real hardware. This time, the results for ≥Pentium models are interesting as well:
-</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}}">
+</p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}} inverted">
 	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>

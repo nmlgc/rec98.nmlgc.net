@@ -444,16 +444,6 @@ a:not(.customer):not(.release):not(.goal)[href^="https://github.com/"]:before {
 	content:"";
 }
 
-a:not(.customer)[href^="https://twitter.com/"]:before {
-	background-image: url('/static/twitter.svg?4403429f');
-	display: inline-block;
-	width: 1em;
-	height: 1em;
-	margin-left: 0.175em;
-	margin-right: 0.175em;
-	content:"";
-}
-
 a[href^="mailto"] {
 	display: inline-block;
 }

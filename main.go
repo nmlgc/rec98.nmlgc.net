@@ -29,6 +29,7 @@ func FatalIf(err error) {
 }
 
 var staticHP = NewHostedPath("static/", "/static/")
+var wellKnownHP = NewHostedPath(".well-known/", "/.well-known/")
 
 /// HTML templates.
 // Need to be functions that return template.HTML rather than separate types
@@ -538,6 +539,7 @@ func main() {
 	r.Handle(blogHP.URLPrefix+"{stem}.webm", blog.OldVideoRedirectHandler(&VP9))
 	staticHP.RegisterFileServer(r)
 	blogHP.RegisterFileServer(r)
+	wellKnownHP.RegisterFileServer(r)
 	r.Handle("/robots.txt", staticHP.Server())
 	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))

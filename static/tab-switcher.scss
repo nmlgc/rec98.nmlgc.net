@@ -2,7 +2,7 @@ rec98-tab-switcher {
 	display: grid;
 	font-size: 75%;
 	grid-row: 1;
-	grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(3em, 1fr));
 	width: 100%;
 }
 

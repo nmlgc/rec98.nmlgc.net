@@ -280,7 +280,8 @@ figure figcaption hr {
 }
 
 .checkerboard img,
-img.checkerboard {
+img.checkerboard,
+table.checkerboard td {
 	background-image:
 		linear-gradient(45deg, #888 25%, transparent 25%),
 		linear-gradient(135deg, #888 25%, transparent 25%),

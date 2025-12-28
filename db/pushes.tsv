@@ -328,3 +328,6 @@ P0323	[388]	TH03 debloating (Main menu) / TH03 Anniversary Edition (Fork banner 
 P0324	[362, 371, 379, 386, 392, 396, 400, 355, 365, 375]	Seihou / Shuusou Gyoku (SDL 3 Windows 98 backport + Screenshot compression round-up)	2025-10-19T21:52:40Z	["nmlgc/ssg/compare/e42726f...d9c0a9f", "nmlgc/SDL/compare/c016315...P0324", "nmlgc/tupblocks/compare/142e011...12877be"]	0
 P0325	[375]	Seihou / Shuusou Gyoku (GCC ≥15 support / Resilient API configuration) + TH02-TH05 debloating round-up	2025-10-19T21:52:40Z	["nmlgc/ssg/compare/d9c0a9f...a46a094"]	0
 P0326	[375, 383]	Seihou / Shuusou Gyoku (SDL 3 in frontend, part 1 + SDL 3 file I/O + Screenshot bugfixes)	2025-10-19T21:52:40Z	["nmlgc/ssg/compare/a46a094...P0326"]	0
+P0327	[380, 387, 393, 397, 401, 406]	TH03 RE (Character-specific attack function pointers / Bullet dependencies / Bullet structure)	2025-12-31T22:43:39Z	["nmlgc/ReC98/compare/3130b0a...f862533"]	1
+P0328	[406, 410, 383]	TH03 decompilation (Bullets, part 1)	2025-12-31T22:43:39Z	["nmlgc/ReC98/compare/f862533...843d942"]	1
+P0329	[404, 407, 383, 388]	TH03 decompilation (Bullets, part 2) / Twitter→Fediverse migration, part 1	2025-12-31T22:43:39Z	["nmlgc/ReC98/compare/843d942...d892535", "nmlgc/rec98.nmlgc.net/compare/3d03d1c...8c4f526", "nmlgc/twitter-archive-to-gotosocial/compare/36ad7fb...122f56f"]	1

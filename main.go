@@ -182,6 +182,11 @@ var TH03_PLAYCHARS = [9]template.HTML{
 	"Yumemi",
 }
 
+// HTMLTH03Playchar returns the name of TH03 player character with the given ID.
+func HTMLTH03PlaycharName(i int) template.HTML {
+	return TH03_PLAYCHARS[i]
+}
+
 // HTMLTH03Playchar formats the TH03 player character with the given ID as a
 // portrait with its name.
 func HTMLTH03Playchar(i int) template.HTML {
@@ -304,6 +309,7 @@ var pages = template.New("").Funcs(SharedFuncs).Funcs(map[string]any{
 	"HTML_PerfBar":      HTMLPerfBar,
 	"StaticFileURL":     func(fn string) string { return staticHP.VersionURLFor(fn) },
 	"th03pc":            HTMLTH03Playchar,
+	"th03pcn":           HTMLTH03PlaycharName,
 
 	// ReC98, safe
 	"ReC98_REProgressAtTree": REProgressAtTree,

@@ -1,0 +1,419 @@
+{{$b0 := (call .PostFileURL "TH03-bullet-0.webp")}}
+{{$b1 := (call .PostFileURL "TH03-bullet-1.webp")}}
+{{$b2 := (call .PostFileURL "TH03-bullet-2.webp")}}
+{{$b3 := (call .PostFileURL "TH03-bullet-3.webp")}}
+{{$b4 := (call .PostFileURL "TH03-bullet-4.webp")}}
+{{$b5 := (call .PostFileURL "TH03-bullet-5.webp")}}
+{{$b6 := (call .PostFileURL "TH03-bullet-6.webp")}}
+{{$b7 := (call .PostFileURL "TH03-bullet-7.webp")}}
+{{$b8 := (call .PostFileURL "TH03-bullet-8.webp")}}
+{{$b5_exatt := (call .PostFileURL "TH03-bullet-5-Extra.webp")}}
+{{$s0 := (call .PostFileURL "TH03-bullet-0-Sheet.webp")}}
+{{$s2 := (call .PostFileURL "TH03-bullet-2-Sheet.webp")}}
+{{$s3 := (call .PostFileURL "TH03-bullet-3-Sheet.webp")}}
+{{$s4 := (call .PostFileURL "TH03-bullet-4-Sheet.webp")}}
+{{$s5 := (call .PostFileURL "TH03-bullet-5-Sheet.webp")}}
+{{$s6 := (call .PostFileURL "TH03-bullet-6-Sheet.webp")}}
+{{$s8 := (call .PostFileURL "TH03-bullet-8-Sheet.webp")}}
+{{$s5_exatt := (call .PostFileURL "TH03-bullet-5-Extra-Sheet.webp")}}
+{{$trail_1 := (call .Video "TH03-Mima-trail-pattern" "Video of TH03 Mima's one Boss Attack pattern whose bullets use the trail sprite feature of the game's bullet system, modified to create a better video loop")}}
+{{$trail_7 := (call .Video "TH03-Chiyuri-trail-pattern" "Video of TH03 Chiyuri's one Boss Attack pattern whose bullets use the trail sprite feature of the game's bullet system")}}
+{{$trail_7_1 := (call .Video "TH03-Chiyuri-trail-pattern-Level-1" "Video of TH03 Chiyuri firing multiple instances of her one Boss Attack pattern whose bullets use the trail sprite feature of the game's bullet system on Boss Attack level 1, demonstrating how the slower bullet speed will cause glitches when Chiyuri spawns a new 48-ring before all bullets of the previous 48-ring were clipped")}}
+{{$trail_64 := (call .Video "TH03-Mima-64-ring-trail" "Video of TH03 Mima modded into firing a 64-ring of bullets that use the trail sprite feature of the game's bullet system, demonstrating how such a high number of bullets will cause trail sprite glitches even within individual ring groups")}}
+{{$ring_5 := (call .PostFileURL "TH03-Kana-Boss-Attack-5-ring.webp")}}
+{{$ring_48 := (call .PostFileURL "TH03-Chiyuri-Boss-Attack-48-ring.webp")}}
+{{$gravity_1 := (call .Video "TH03-Kana-gravity-pattern-Easy-level-1" "Video of TH03 Kana's one Boss Attack pattern whose bullets use the gravity feature of the game's bullet system, recorded on Easy on Boss Attack level 1 as a very satisying infinite loop")}}
+{{$gravity_16 := (call .Video "TH03-Kana-gravity-pattern-Lunatic-level-16" "Video of TH03 Kana's one Boss Attack pattern whose bullets use the gravity feature of the game's bullet system, recorded on Lunatic on Boss Attack level 16 as a very satisying infinite loop")}}
+{{$transfer_o := (call .Video "TH03-Pellet-transfer-original" "A typical video of typical transfer pellets in TH03, spawned by killing enemies with existing explosions")}}
+{{$transfer_r := (call .Video "TH03-Pellet-transfer-revealed" "Video demonstrating how transferred pellets in TH03 have to physically travel through the 32 pixels before they appear on the other playfield, recorded by revealing the VRAM contents below the opaque black TRAM cells that hide these pixels in regular gameplay")}}
+{{$pellets := (call .PostFileURL "TH03-pellets.webp")}}
+{{$pellets_bug := (call .PostFileURL "TH03-pellets-bug.webp")}}
+{{$pps_12 := (call .PostFileURL "Pellet-preshift-single-12.webp")}}
+{{$ppd_12 := (call .PostFileURL "Pellet-preshift-double-12.webp")}}
+{{$ppd_0 := (call .PostFileURL "Pellet-preshift-double-0.webp")}}
+{{$ppd_8 := (call .PostFileURL "Pellet-preshift-double-8.webp")}}
+{{$sprite16_mono := (call .PostFileURL "TH03-SPRITE16-area-monochrome.webp")}}
+{{$bsky_crawl := (call .PostFileURL "Bluesky-crawl-override.webp")}}
+
+{{$trail_7_1.AddMarker  41 "1" "" -}}
+{{$trail_7_1.AddMarker 137 "2" "" -}}
+{{$trail_7_1.AddMarker 233 "3" "" -}}
+{{$trail_7_1.AddMarker 329 "4" "" -}}
+{{$trail_7_1.AddMarker 425 "5" "" -}}
+{{$trail_7_1.AddMarker 521 "6" "" -}}
+
+{{$gravity_1.SetTitle "Easy, Boss level 1"}}
+{{$gravity_16.SetTitle "Lunatic, Boss level 16"}}
+{{$transfer_o.SetTitle "Original game" -}}
+{{$transfer_r.SetTitle "Revealed pixels below playfield border" -}}
+
+{{$transfer_o.AddMarker 148 "Last frame of transfer pellet aimed at <code>center_y = 15.8125</code>" "" -}}
+{{$transfer_r.LinkMarkers $transfer_o -}}
+
+{{define "ppd_desc"}}Visualization of blitting a doubly-preshifted 8×8 pellet (32 pixels wide) to horizontal pixel #{{.}}{{end -}}
+{{define "ppd_optimal_desc"}}{{template "ppd_desc" .}}, demonstrating how doubly-preshifted sprites wastefully write the second 16-bit word in the optimal 56.25% of cases{{end -}}
+
+<style>
+	.sprites-{{.Date}} th,
+	.sprites-{{.Date}} td {
+		background-color: silver;
+	}
+	.sprites-{{.Date}} tr>:first-child {
+		border-right: var(--table-border);
+	}
+	.sprites-{{.Date}} tr:not(:last-child) {
+		border-bottom: var(--table-border);
+	}
+	.sprites-{{.Date}} .sprite {
+		display: block; /* Vertically centers! */
+		float: left; /* Allows two block-level elements next to each other */
+		image-rendering: pixelated;
+	}
+</style>
+
+<p>
+	Alright! I've been announcing a big look at TH03's in-game systems all throughout 2025, and I technically still made it before the end of the year. {{HTML_Emoji "tannedcirno"}} TH03's enemy, fireball, and explosion systems are a great fit for this occasion: They fulfill both of the netplay-relevant criteria I mentioned {{Blog_PostLink "2025-10-19" "at the end of the previous blog post"}}, but also unfortunately share the same structure and overload some of their fields with vastly different meanings, much like {{Blog_PostLink "2020-02-29" "TH04's and TH05's custom entities"}}. Hence, they will take rather long to untangle, which ensures that the resulting look will be appropriately big.
+</p><p>
+	Until I noticed that explosions spawn bullets in a not-so-straightforward way that basically requires complete knowledge of the bullet system. What a great discovery to make 2½ pushes into development… Oh well, we have the budget, and bullets also happen to match our netplay-relevant criteria, so let's get those done first.
+</p>{{call .TOC}}<hr id="gba-{{.Date}}"><p>
+	As usual, we'd also like to identify and name all character-specific functions in the ASM code so that we can immediately correlate certain interesting features of the bullet system with the characters and attacks that use them. In TH03, this is particularly worthwhile because it's all we need for a 100% complete overview of how bullets are used. Apart from the transferred pellets fired from exploding enemies outside of Gauge or Boss Attacks, every bullet pattern in the game is part of such a hardcoded and character-specific Extra, Gauge, or Boss Attack, since enemy scripts cannot fire bullets in this game.<br>
+	This quick look also showed how ZUN implemented the 9 characters in a highly consistent manner. Gauge Attacks in particular follow a predictable convention:
+</p><ul>
+	<li>The "Level 2" attack (available at 50% gauge and consuming 25% gauge) always fires 8×8 pellets.</li>
+	<li>The "Level 3" attack (available at 75% gauge and consuming 50% gauge) always fires 16×16 bullets.</li>
+	<li>The game only provides a single function pointer for each of the two levels, which gets called as part of game logic and before the game starts rendering the current frame. With no room for custom rendering calls, characters can only define these attacks as patterns that are made up of common entities.</li>
+</ul><p>
+	The funny part in all of this: All characters follow these conventions, yet ZUN still architected TH03 as if they don't. Each of the two Gauge Attack levels gets a separate per-player function pointer, but every character just uses these two functions to call a single common function with a flag that indicates Level 2 or Level 3. This common function then follows a similar structure for all 9 characters as well. The same trend continues with the Boss Attacks, where we find 9 copies of the more or less unchanged update and rendering boilerplate… so yeah, ZUN basically copy-pasted the same code 9 times with minor variations.<br>
+	And now we can be <i>very</i> hyped for the future of TH03 decompilation. Lots of duplicates of the same functionality means that I'll basically only have to decompile them once, which means that TH03 decompilation is very likely to progress <i>very quickly</i> in terms of absolute numbers once I get the basic gameplay systems done. And there's not a lot of <i>that</i> code left either: After this delivery, we're left with a mere 128 undecompiled foundational functions that are not related to any specific character. After the next delivery, that number will drop to <i>95</i>. I'm expecting a return to the glorious days of 2020, where the 3 copies of TH01's foundational graphics code allowed me to decompile 10% of its entire code within <a href="/progress/f2b454dfc61ed5359b4246e6562da0966eedf58d">2½</a> <a href="/progress/7698f5da6d1b5d56550980a223994308b3f12ff2">weeks</a>. With 9 copies tripling that speed, we may even get to finish this game next year?
+</p><hr id="logic-{{.Date}}"><p>
+	Onto bullets then! As you'd expect, TH03's bullet system is based on {{Blog_PostLink "2025-02-24" "TH02's system we looked at earlier this year"}}, which in turn was based on TH01's system. In some respects, it's a minor iteration of TH02's system adapted to the new features in TH03, but some of these new features also form the missing link between TH02 and {{Blog_PostLink "2020-02-16" "TH04"}}. The high-level overview:
+</p><ul id="overview-{{.Date}}"><li><p>
+	Like most entities in TH03, bullets are stored in a single array that is shared between both players. Each bullet has a structure field that denotes which playfield it is moving on and constrained to.
+</p></li><li><p>
+	The total bullet cap shared among both players is 320, slightly more than twice the 150-bullet cap we saw in TH02.
+</p></li><li><p>
+	Just like in TH02, this system covers both 8×{{HTML_Screen_Y 8}} pellets and 16×{{HTML_Screen_Y 16}} sprite bullets. The former are once again hardcoded and rendered using the GRCG, while the latter are rendered by SPRITE16.
+</p></li><li>
+	<p>The system defines a default set of four adjacent 16×{{HTML_Screen_Y 16}} bullet sprites, starting at (﻿64,&nbsp;0﻿) within {{Blog_PostLink "2022-02-18" "SPRITE16's sprite area"}}. These can be used in two ways:</p><ol>
+		<li>Four animation frames for a single bullet type, animated at the maximum speed of 1 cel per frame. This is how they are used by most characters.</li>
+		<li>Alternatively, they can represent one non-animated bullet type and three trail sprites, as seen in Mima's and Chiyuri's Boss Attacks.</li>
+	</ol>
+	<p>Patterns can override the default 16×{{HTML_Screen_Y 16}} sprites with an arbitrary other set of four adjacent sprites, but this feature is only used in Kana's Extra Attack.</p>
+	<figure class="sprites-{{.Date}}">
+		{{- define "anim" -}}
+			class="sprite"
+			width="16"
+			alt="TH03 {{th03pcn .}}'s animated 16×16 bullet sprites"
+		{{- end -}}
+		{{- define "four" -}}
+			class="sprite"
+			width="64"
+			alt="TH03 {{th03pcn .}}'s single 16×16 bullet sprite, and the three trail sprites"
+		{{- end -}}
+		<table style="text-align: left;">
+			<thead>
+				<tr><th>Character</th><th>Sprites</th></tr>
+			</thead><tbody>
+				<tr>
+					<td>{{th03pc 0}}</td>
+					<td><a href="{{$s0}}"><img src="{{$b0}}" {{template "anim" 0}}></a></td>
+				</tr><tr>
+					<td>{{th03pc 1}}</td>
+					<td><img src="{{$b1}}" {{template "four" 1}}></td>
+				</tr><tr>
+					<td>{{th03pc 2}}</td>
+					<td><a href="{{$s2}}"><img src="{{$b2}}" {{template "anim" 2}}></a></td>
+				</tr><tr>
+					<td>{{th03pc 3}}</td>
+					<td><a href="{{$s3}}"><img src="{{$b3}}" {{template "anim" 3}}></a></td>
+				</tr><tr>
+					<td>{{th03pc 4}}</td>
+					<td><a href="{{$s4}}"><img src="{{$b4}}" {{template "anim" 4}}></a></td>
+				</tr><tr>
+					<td>{{th03pc 5}}</td>
+					<td>
+						<a href="{{$s5}}"><img src="{{$b5}}" {{template "anim" 5}}></a>
+						<a href="{{$s5_exatt}}"><img src="{{$b5_exatt}}" class="sprite"
+							width="16"
+							alt="The animated 16×16 bullet sprites used in TH03 Kana's Extra Attack"
+						></a>
+					</td>
+				</tr><tr>
+					<td>{{th03pc 6}}</td>
+					<td><a href="{{$s6}}"><img src="{{$b6}}" {{template "anim" 6}}></a></td>
+				</tr><tr>
+					<td>{{th03pc 7}}</td>
+					<td><img src="{{$b7}}" {{template "four" 7}}></td>
+				</tr><tr>
+					<td>{{th03pc 8}}</td>
+					<td><a href="{{$s8}}"><img src="{{$b8}}" {{template "anim" 8}}></a></td>
+				</tr>
+			</tbody>
+		</table>
+		<figcaption>
+			The SPRITE16 area of certain characters might contain other bullet-like sprites, but these are used by a different gameplay system than the one described in this post.<br>
+			I've reduced the animation speed to <sup>1</sup>/<sub>8</sub> its original length because 18&nbsp;ms would look <i>very</i> obnoxious in the context of a web page. Run <kbd>webpmux -duration 18ms</kbd> on the animated WebP files to restore the original speed.<br>
+			And yes, Yumemi's sprite is animated <i>very</i> subtly. Click the animated sprites for the raw sprite sheet.
+		</figcaption>
+	</figure>
+</li><li>
+	As we already found out {{Blog_PostLink "2022-02-18" "in 2022"}}, both 8×{{HTML_Screen_Y 8}} pellets and 16×{{HTML_Screen_Y 16}} bullets have the same "hitbox" – a single 2×{{HTML_Screen_Y 2}}-pixel tile in the game's collision bitmap that gets compared against the 8×{{HTML_Screen_Y 8}} square surrounding the player's center.
+</li><li><p>
+	Delay clouds are back after their absence in TH02. They are still limited to pellets, though.
+</p></li><li><p>
+	The {{Blog_PostLink "2020-02-16" "bullet template"}} makes its debut in this game, replacing TH01's and TH02's spawn function parameters with a single piece of global data. This introduces the usual trade-offs with this sort of thing: Code size savings in patterns that spawn multiple groups with minor variations to their parameters, in exchange for the usual confusion that comes with widely mutated global state. As a result, code quality suffers greatly, especially when it comes to the derived transfer pellets fired within the bullet system itself. Sure, there <i>are</i> lots of patterns where retained state comes in handy, but local per-pattern template instances would have solved that as well.
+</p></li><li><p>
+	This decline in code quality also extends to the rest of the logic code. Continuing his <a href="https://en.touhougarakuta.com/article/specialtaidan_zun_hiroyuki_2-en/">general trend of micro-optimizing based purely on vibes</a> we've seen {{Blog_PostLink "2022-02-18" "time"}} and {{Blog_PostLink "2024-04-24#hitcirc" "time"}} again, ZUN wrote a significant part of TH03's bullet logic in ASM, especially in the update function. And once again, it's the same tragic conclusion: While TH04's and TH05's full-on ASM approach might later bring <i>some</i> measurable runtime benefits to bullet logic via self-modifying code and whatnot, TH03 is left with pretty much only the downsides of its partial ASM approach. If ZUN just wrote idiomatic C++ code without any optimization tricks and inlined just one function, the whole bullet update code would have been 87 lines of C++ shorter and <i>exactly</i> as large when compiled. And that's <i>with</i> all the redundant code still in place! TH02's not-great-but-passable implementation of bullets indeed marked the high point for the PC-98 series, and it only went downhill from there.
+</p></li></ul><hr><p>
+	Three features of the bullet system deserve a deeper look:
+</p><h4 id="trail-{{.Date}}">Trail sprites</h4><p>
+	These work by remembering the last 6 positions of a bullet and rendering the sprites at the 2<sup>nd</sup>, 4<sup>th</sup>, and 6<sup>th</sup> position, respectively:
+</p><figure class="side_by_side pixelated">
+	<figure {{$trail_1.FigureAttrs}}>{{call .VideoPlayer $trail_1}}</figure>
+	<figure {{$trail_7.FigureAttrs}}>{{call .VideoPlayer $trail_7}}</figure>
+</figure><p>
+	Obviously, this requires (﻿<span class="hovertext" title="Trail sprite count">6</span>&nbsp;×
+	<span class="hovertext" title="X and Y">2</span>&nbsp;×
+	<span class="hovertext" title="Byte size of a Q12.4 variable">2</span>﻿)&nbsp;=
+	24 additional bytes per bullet. Adding these to the regular bullet structure would waste
+	(﻿24&nbsp;× <span class="hovertext" title="Bullet cap">320</span>﻿)&nbsp;= 7,680 bytes of conventional RAM, which would in no way be justified for a feature that ZUN used in a grand total of two patterns. For once, ZUN agreed, and instead provided a single ring buffer that can hold these 6 additional positions for up to 48 bullets. This allowed ZUN to reduce the per-bullet cost to 3 bytes: 1 byte for the <q>has trail</q> flag, and 2 bytes for a <code>near</code> pointer into the ring buffer. That's still two more bytes than absolutely needed, and the <code>debloated</code> branch will definitely free up these wasted 640 bytes for portability reasons alone.
+</p><p>
+	This trail sprite cap of 48 seems a bit random at first. Unlike the regular bullet cap that the game enforces by just not spawning any new bullets if all 320 slots are occupied, the trail sprite cap is not enforced or even just checked in any way. Due to the circular nature of the buffer, the 49<sup>th</sup> simultaneously active bullet with a trail sprite will then <q>share</q> its position memory with the 1<sup>st</sup> trail sprite bullet, leading to one additional position memory update per frame and trail sprites appearing in wrong positions.<br>
+	Thus, it's the game design's responsibility to make minimal use of trail sprites to avoid these glitches. On the surface, it certainly <i>looks</i> as if ZUN was careful here:
+</p><ol>
+	<li>The cap happens to exactly match the 48 bullets fired as part of the ring group in Chiyuri's pattern, which is definitely the more bullet-intensive pattern of the two.</li>
+	<li>Both trail-using patterns are part of Boss Attacks, and <span class="hovertext" title='Launching a Boss Attack will always counter or "reverse" any active Boss Attack launched by the other player.'>only a single player's Boss Attack can be active at any given time</span>.</li>
+	<li>The ring groups in Chiyuri's pattern move fast and are separated by a 96-frame delay, as captured in the video above. By the time Chiyuri spawns the next group, every bullet of the previous one should have long been removed due to flying past the edges of the playfield.</li>
+	<li>Mima fires her alternating 5- and 4-spreads at a much shorter interval, but that interval is still long enough to never leave more than 5 of these 9-bullet subpatterns on screen at once.</li>
+</ol><p>
+	Until you test Chiyuri's pattern on the ({{Blog_PostLink "2025-05-10#bal" "announced"}}) Boss Attack level 1 and notice that the bullets move slow enough for 2) to no longer apply. The result:
+</p><figure {{$trail_7_1.FigureAttrs}}>{{call .VideoPlayer $trail_7_1}}</figure><p>
+	Missing bullets on every group beyond the first, and even sporadic trail sprites at mixed-up X and Y coordinates. This nicely demonstrates how these trail sprites are not <i>just</i> cosmetic, but also take control of clipping and affect gameplay as a result. For obvious optical reasons, trail sprite bullets will only get removed after the 6<sup>th</sup> remembered position lies outside of the clipping area – i.e., 6 frames later than bullets without trail sprites. If the remembered positions are then shared with a second bullet, the game would also clip <i>that</i> bullet if the clipping condition of the first one is met – regardless of the fact that the second bullet's main sprite might be nowhere close to the boundaries of the playfield. This clipping then either happens on the same frame if the second bullet's slot number within the 320-element bullet array is higher than the slot number of the first one, or on the next frame if the second bullet's slot number is lower.<br>
+	The mixed-up X and Y positions on frames 139 and 235 can also be explained by clipping. The update function processes the X and Y coordinates independently from each other: It starts with the horizontal clipping checks, updates the position memory for the X coordinate, and then repeats both steps for the Y coordinate, immediately removing the bullet and moving on to the next one if it failed the respective clipping check. If the <i>vertical</i> clipping checks fail in a situation where two bullets share the same position memory, you'll end up with a mismatched X/Y pair where X comes from a clipped bullet and Y comes from an active one… for a single frame, until the same clipping check is applied to the other bullet and removes it as well. Hence, this is the only "fixable" bug in the bullet system that won't affect gameplay, as the mixed-up positions are unrelated to the result of the clipping condition that ultimately removes both bullets.
+</p><p>
+	It's rare for Chiyuri's Boss Attack to launch the same pattern multiple times in a row, and once the (announced) Boss Attack level is ≥3, bullets already move fast enough to prevent this quirk from happening. But it's definitely possible to run into it during regular gameplay.
+</p><p>
+	For a clearer and more extreme demonstration of the resulting glitches, let's turn Mima's trail sprite pattern into a 64-ring:
+</p><figure {{$trail_64.FigureAttrs}}>
+	{{call .VideoPlayer $trail_64}}
+	<figcaption>Explaining every single quirk in this hypothetical video is left as an exercise to the reader.</figcaption>
+</figure><h4 id="groups-{{.Date}}">Rings and other groups</h4><p>
+	If there's one aspect where TH03's bullet system shows its TH02 lineage most clearly, it's the set of predefined bullet groups. The 2-, 3-, 4-, and 5-spreads with fixed narrow, medium, and wide arc angles, as well as the multi-bullet groups with randomized angles and speeds, are not only available in TH03 once again, but reuse the exact same code from TH02.<br>
+	Instead, TH03's main innovation can be found in its ring system. Rings can now have any number of bullets between 0 and 255, and are no longer limited to the first six powers of 2. This allowed ZUN to fine-tune most ring groups based on the Gauge or Boss Attack level, and to also just have a few static ring patterns with non-power-of-two bullet counts. Chiyuri's aforementioned 48-ring trail sprite pattern falls in this category, and the rotating 5-ring pattern seen in Kana's Boss Attack is another example.
+</p><figure class="pixelated" style="width: 288px;"><img
+	src="{{$ring_5}}"
+	width="288"
+	alt="Screenshot of the fixed 5-ring pattern used in TH03 Kana's Boss Attack"
+></figure><p>
+	And yes, storing the number of ring bullets in a regular <code>uint8_t</code> field now also allows patterns to spawn 0-rings. And sure enough, the bug that would later cause {{Blog_PostLink "2022-04-18#kurumi" "Kurumi's <code>Divide Error</code> crash in TH04"}} was actually introduced in TH03! The underlying code wasn't modified between the two games, which further proves that TH04's bullet system also traces back to TH03 and wasn't rewritten from scratch, at least concerning this aspect. TH03 just doesn't have any (known) way of triggering the bug in the unmodded original game.<br>
+	Interestingly, TH02's ring system with predefined power-of-2 bullet counts is still part of TH03, and ZUN does use it for some ring groups in a few Boss Attack patterns. Did he do this because it's shorter than adding a second line of code that sets <code>bullet_template.count</code>? Did he deliberately need to preserve the previous value of <code>bullet_template.count</code> across groups? Or did he code these patterns at an earlier time in development when the arbitrary ring system didn't exist yet? Until I've decompiled every single bullet pattern in this game, we can only guess.
+</p><p>
+	However, ZUN also removed two of TH02's group-related features from TH03:
+</p><ol><li><p>
+	The eight special motion types have been reduced to a single <i>gravity</i> type. While gravity is now a separate flag in the bullet structure and template that can now be applied to any group, this vast removal of options still severely limits the expressivity of bullet patterns in TH03. This means that every non-gravity bullet in the game moves at a constant velocity.<br>
+	Gravity is also exclusively used by Kana, in both her Extra attack with the
+	<img src="{{$b5_exatt}}" class="inline_sprite" width="16" alt="">
+	alternative 16×{{HTML_Screen_Y 16}} bullet sprites as well as in one certain pattern of her Boss Attack, which demonstrates gravity in combination with a ring group.
+	<figure {{$gravity_1.FigureAttrs}}>
+		{{call .VideoPlayer $gravity_1.FlipActive $gravity_16}}
+		<figcaption>One of the rare patterns that arguably looks prettier on Easy, where the slower bullet speeds leave more room for the gravity effect to accelerate the fall.</figcaption>
+	</figure>
+</p></li><li><p>
+	The auto-stacking system was removed without any direct replacement. With TH03's more {{Blog_PostLink "2025-05-10#tuning" "numeric"}} method of defining difficulty, ZUN no longer needed this quick mechanism to {{Blog_PostLink "2025-02-24#overview" "distinguish Easy and Normal from Hard and Lunatic"}}. This was one of the better changes between the two games though; the auto-stacking system added <a href="https://github.com/nmlgc/ReC98/blob/d892535e723b3691612363d1bbdbd2a54f43fb43/th02/main/bullet/bullet.hpp#L80-L84">a quite annoying asterisk to the documentation of the random groups</a> that is no longer needed in TH03.<br>
+	Manually creating stacks is obviously still possible by spawning separate versions of the same group with gradually reduced speed. This <i>might</i> be considered another practical advantage of the global bullet template, since you only need to mutate a single field before calling <code>bullets_add()</code> again. But really, nothing justifies global data.
+</p></li></ol><h4 id="transfer-{{.Date}}">Transferred pellets</h4><p>
+	This is the final gameplay feature that deserves its own section. Let's follow the pellet's X coordinate on its way from the spawn point to its destination on the other playfield:
+</p><ol>
+	<li>ZUN calculates the destination coordinate on the target playfield as a random Q12.4 X coordinate between 0 and 288.</li>
+	<li>This subpixel coordinate is translated to screen space, adding either 16 for the left playfield or 336 for the right one. ZUN does this using the regular pixel-space conversion function that is typically used to calculate blitting coordinates, losing subpixel precision in the process and forming a very minor quirk.</li>
+	<li>The pellet's movement angle is calculated in screen space, aiming a screen-space version of the pellet's origin point at the coordinate from 2).</li>
+	<li>The screen-space pixel coordinate from 2) is translated back to a Q12.4 subpixel coordinate on the pellet's <i>originating</i> playfield. The result will deliberately lie outside the boundaries of this playfield: For a pellet flying from left to right, it will be between <span class="hovertext" title="Playfield width (288) + center border width (32)">320</span> and 608, while it will be between -320 and -32 for a pellet flying from right to left.</li>
+	<li>The pellet then flies to this out-of-bounds coordinate while internally staying on the playfield it originated on. This means that neither the update nor the rendering code can clip the pellet at the borders of its originating playfield. Once it flew past the border, it only visually appears on the other playfield because that's what the out-of-bounds X coordinate translates to when the renderer converts it to screen space.</li>
+	<li>Once the pellet's X coordinate has approached or flown past this relative target coordinate from its respective movement direction, the pellet is removed and respawned as a delay cloud.</li>
+</ol><p>
+	This shows that the 32-pixel border between the two playfields is not just visual, but an actual part of the simulated game world. We can visualize this by removing the black cells on the text layer:
+</p><figure {{$transfer_o.FigureAttrs}}>
+	{{call .VideoPlayer $transfer_o $transfer_r.FlipActive}}
+	<figcaption>Also, we need to clear these 32 border pixels in VRAM on every frame to nicely visualize <i>just</i> these pellet transfers. TH03 obviously doesn't do that for performance reasons and lets partially clipped sprites accumulate below the border, {{Blog_PostLink "2024-12-04#digits" "just like the other shmups do"}}.<br>
+	This video also demonstrates another minor quirk: Transferred pellets are aimed at a random center Y coordinate between 0 and 16, but the subsequent delay cloud is always spawned at <code>center_y = 2.0</code>.</figcaption>
+</figure><hr id="render-{{.Date}}"><p>
+	Speaking of, there's also a lot to cover in…
+</p><h3>TH03's bullet renderer</h3><p>
+	And at first, it looks pretty good! TH03 retains the best idea from TH02 and batches rendering into three passes:
+</p><ol>
+	<li>16×{{HTML_Screen_Y 16}} bullets, rendered normally via SPRITE16</li>
+	<li>32×{{HTML_Screen_Y 32}} delay clouds, rendered via SPRITE16's monochrome mode</li>
+	<li>8×{{HTML_Screen_Y 8}} pellets, rendered from hardcoded sprites via the GRCG</li>
+</ol><p>
+	The second pass is skipped if the first pass didn't detect at least a single active delay cloud. However, this skip can only remove 320 out of the 960 iterations over the entire bullet array, every frame. Combine that with the most unlucky allocation of registers, and the resulting instructions end up wasting a low 5-digit number of CPU cycles per frame on a 486 in the worst case of no bullets being active. Same game that wrote large parts of its bullet update function in ASM, by the way. {{HTML_Emoji "zunpet"}}<br>
+	While that number is still an order of magnitude away from causing significant performance problems, this issue became serious enough in TH04 for ZUN to introduce a display list for at least pellets that would cut down the number of iterations.
+</p><p>
+	And then, we look at…
+</p><h4 id="pellets-{{.Date}}">Pellet rendering</h4><p>
+	… and are greeted by the single strangest set of hardcoded sprites across all of PC-98 Touhou so far. TH03's pellets are not only the first time we see a <i>doubly-preshifted</i> sprite sheet, but 2 of the 16 variants for the transfer pellet sprites are also shifted incorrectly:
+</p><figure class="pixelated" style="width: 216px">
+	<figcaption class="dynamic">
+		<div></div>
+		<div>You can see this bug all over the video above, for example in frame 97, 105, 107, 109, 111…</div>
+	</figcaption>
+	<rec98-child-switcher><img
+		src="{{$pellets}}"
+		data-title="Sprite sheet"
+		width="216"
+		alt="TH03's pellet sprite sheet, with byte boundaries as red vertical lines"
+		class="active"
+	><img
+		src="{{$pellets_bug}}"
+		data-title="Bug"
+		width="216"
+		alt="TH03's pellet sprite sheet, with byte boundaries as red vertical lines and the bugged transfer sprites at bit offsets 6 and 14 highlighted in red"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+</figure><p>
+	{{Blog_PostLink "2020-10-06" "Looks familiar?"}} Now we know that ZUN still didn't have a tool for automatically preshifting sprites by the time he developed TH03 – something that {{Blog_PostLink "2020-07-09" "I considered a necessity 5½ years ago"}}. {{HTML_Emoji "onricdennat"}}
+</p><p>
+	The doubly-preshifted nature of this sprite sheet, on the other hand, raises a whole lot of PC-98 blitting performance questions. This only possibly makes sense as an attempt at optimizing away the unaligned 16-bit VRAM writes you'd naturally run into when shifting an 8-wide sprite to cover two bytes.<br>
+	Let's look at a regular 8-wide pellet sprite that was singly-preshifted to 16 pixels/bits. If we want to blit such a sprite to a left X position of 12 with the minimum amount of instructions, we would perform a single 2-byte write to VRAM address <code>0x0001</code>, which itself is not divisible by 2:
+</p><figure class="pixelated" style="width: 576px;"><img
+	src="{{$pps_12}}"
+	alt="Visualization of blitting a preshifted 8×8 pellet (16 pixels wide) to horizontal pixel #12, halfway within an odd byte address and crossing a 16-bit word boundary"
+	width="576"
+></figure><p>
+	On most 16-bit architectures, unaligned memory writes like these are either slower than aligned writes or entirely unsupported. The x86 <code>MOV</code> and <code>MOVS</code> instructions fall into the first category, so it makes sense to think that the GRCG might add a performance penalty of its own on top of the already higher latency of these instructions.<br>
+	The natural workaround, then, is to add a second set of preshifted sprites to cover the remaining 8 possible start bit positions within a 16-pixel VRAM word. This would expand pellet sprites to a total width of 23 pixels. Understandably, ZUN also wanted to optimize for the low instruction counts, so he had to round up the physical width of the sprite to 32 pixels. Then, every preshifted variant could be blitted with a single <code>MOVSD</code> instruction:
+</p><figure class="pixelated" style="width: 576px;"><img
+	src="{{$ppd_12}}"
+	alt="{{template "ppd_desc" 12}}, replacing the unaligned 16-bit word write with an aligned 32-bit write"
+	width="576"
+></figure><p>
+	But does this <i>actually</i> matter for the PC-98 and the GRCG? Are unaligned writes <i>actually</i> slow enough to justify writing 2× as much sprite data per frame and hardcoding 4× as many bytes? Unfortunately, I don't know of any hardware-level documentation about the GRCG that would conclusively answer this question. All the usual books and text files are disappointingly surface-level and only document the same programmer interfaces over and over, and hardware researchers are still waiting for EGC and GRCG die shots to even get started.<br>
+	There are a few signs that this <i>might</i> be a good idea:
+</p><ul><li>
+	The GDC reads out VRAM in 16-bit words, as repeatedly stated on almost every page of <a href="https://archive.org/details/bitsavers_necuPD7220ec85_3707077">its hardware manual</a>. This probably means the least though, because all <q><b>G</b>raphics <b>C</b>hargers</q> <a href="https://archive.org/details/PC9801Bible/page/n11/mode/2up">sit at the other side of the dual-ported VRAM</a>.
+</li><li>
+	Any VRAM-reading EGC operation <i>must</i> use aligned 16-bit accesses, which probably has a deeper reason that goes beyond the size of its internal shift register. And since you activate the EGC by first <a href="https://github.com/nmlgc/ReC98/blob/3130b0ae7125bacb72bfac94ff8873315b87fefa/platform/x86real/pc98/egc.hpp#L59-L61">activating the GRCG in TDW mode</a>…
+</li><li>
+	Neko Project spends the same number of clock cycles on both <a href="https://github.com/AZO234/NP2kai/blob/02b08deb3833305251fb3ee6c5d59b0efb5b52ff/mem/memvram.c#L40">8</a>- and <a href="https://github.com/AZO234/NP2kai/blob/02b08deb3833305251fb3ee6c5d59b0efb5b52ff/mem/memvram.c#L66">16-bit GRCG writes</a>. The absence of a dedicated 32-bit write handler suggests that real hardware breaks down 32-bit writes into two 16-bit writes, implying that we don't also have to worry about <i>32-bit</i> alignment of our single <code>MOVSD</code> instruction.
+</li><li>
+	The MAME developers <a href="https://github.com/mamedev/mame/commit/0e4ba6d49ad68d13966dc2cd14adbe68a7b3b684">removed the 8-bit GRCG write function during a massive refactor 4 years ago</a>, without explaining why. The MAME-typical high-level hardware explanation is still missing as well.
+</li><li>
+	The <cite>PC-9800Series Technical Data Book Hardware</cite> contains this little note in <a href="https://archive.org/details/PC9800TechnicalDataBookHARDWARE1993/page/n205/mode/2up">its description of the GRCG's RMW mode on page 192</a>:
+		<blockquote lang="ja" class="hovertext" title="Byte-accessible">バイトアクセス可能</blockquote>
+	Shouldn't byte access be a given? Clearly, this would only deserve special mention if it <i>wasn't</i> because the previous contents of this book heavily implied some sort of 16-bit nature and I just missed it.
+</li></ul><p>
+	But without documentation or benchmarks, none of this means anything.<br>
+	This is also why I haven't yet explored this whole field of optimizing VRAM writes for alignment. It would always involve branching to alignment-respecting code <a href="https://github.com/nmlgc/ReC98/blob/3130b0ae7125bacb72bfac94ff8873315b87fefa/libs/master.lib/super_put.asm#L79-L85">similar to how master.lib does it</a>, but code like this is at odds with the more tangible goal of minimizing instruction counts in the generic case. Not to mention that we'll once again have to test this across every PC-98 hardware generation and possibly even GRCG revision if we ever go down to <i>that</i> level of optimization…
+</p><p>
+	But even <i>if</i> alignment matters, ZUN's unconditional <code>MOVSD</code> instructions approach still appears to be slower on average. Consider the optimal 56.25% of cases where the sprite <i>does</i> lie within a single 16-bit word:
+</p><figure class="pixelated" style="width: 576px;"><rec98-child-switcher>
+	<img
+		src="{{$ppd_0}}"
+		alt="{{template "ppd_optimal_desc" 0}}"
+		width="576"
+		data-title="Leftmost best case (<code>(x % 16) == 0</code>)"
+		class="active"
+	><img
+		src="{{$ppd_8}}"
+		alt="{{template "ppd_optimal_desc" 8}}"
+		width="576"
+		data-title="Rightmost best case (<code>(x % 16) == 8</code>)"
+	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>
+		8 start positions within the first byte + 1 start position on the second byte&nbsp;= <sup>9</sup>/<sub>16</sub>&nbsp;= 56.25%. The 9<sup>th</sup> variant for <code>(x&nbsp;%&nbsp;16)&nbsp;== 8</code> wouldn't be part of a regular singly-preshifted sprite sheet where the renderer blits the <code>(x&nbsp;%&nbsp;8)</code><sup>th</sup>&nbsp;= 0<sup>th</sup> variant. But it would definitely be worth adding if alignment does matter at all.
+	</figcaption>
+</figure><p>
+	Keep in mind that we still use the GRCG here, and that it will also have to perform its fast-but-not-entirely-free four-plane Read-Modify-Write operation for the empty sprite bytes 3 and 4. Unconditional 32-bit writes would only be worth it if the GRCG somehow optimizes away empty writes at the microarchitecture level. That assumption is even more of a stretch, because {{Blog_PostLink "2023-03-05#blitperf" "why would master.lib even check for emptiness"}} if that were true?
+</p><p>
+	In the end, doubly-preshifted sprites slow down 56.25% of all blitting operations in a dubious attempt to speed up the other 43.75%. Unaligned 16-bit writes would have to be <i>really</i> slow to justify this approach – and judging from the fact that TH04 went back to single-byte preshifting, this is not the case. Maybe I'll write a benchmark for this someday, but honestly, this is the least interesting PC-98 benchmark question I've encountered so far. There <i>are</i> slowdown issues at {{Blog_PostLink "2025-09-06#66" "our performance target of 66&nbsp;MHz in Neko Project"}}, but pellet sprite alignment is unlikely to significantly contribute to those.
+</p><hr id="clouds-{{.Date}}"><p>
+	16×{{HTML_Screen_Y 16}} bullets are simply rendered using standard SPRITE16 calls, nothing special there. That only leaves…
+</p><h4>Pellet delay clouds</h4><figure class="pixelated checkerboard" style="width: 128px;"><rec98-child-switcher>{{range loop 0 3 -}}
+	{{- $pic := printf "TH03-pellet-cloud-%d.webp" . -}}
+	<img
+		src="{{call $.PostFileURL $pic}}"
+		alt="Animation frame #{{inc .}} of TH03's pellet delay clouds"
+		width="128"
+		style="max-height: unset;"
+		class="{{if eq . 0}}active{{end}}"
+	>
+{{- end}}<rec98-parent-init></rec98-parent-init></rec98-child-switcher></figure><p>
+	Just like the 48×{{HTML_Screen_Y 48}} {{Blog_PostLink "2024-04-24#hitcirc" "hit circle"}}, these 32×{{HTML_Screen_Y 32}} sprites are rendered using SPRITE16's single-color render-path, which uses the EGC's GRCG-equivalent mode. Last year, I took a very brief look at this mode and wondered whether this was actually faster than just using the GRCG. 1½ years and {{Blog_PostLink "2025-09-10" "one benchmark won by the EGC"}} later, it certainly seems so, especially since we want to blit these to unaligned X positions. The EGC's hardware-accelerated pixel shifting seems highly preferable once sprite widths exceed 24 pixels and you can't fit a row of pixels in a 32-bit register anymore.<br>
+	Stepping through SPRITE16 reveals that this GRCG-equivalent mode matches the GRCG even in how it doesn't read monochrome sprite data from VRAM, but from SPRITE16's 1bpp alpha mask buffer in conventional RAM.
+</p><p>
+	But that only raises the question of why you'd want to use SPRITE16 over the raw EGC. It makes sense why SPRITE16 would <i>have</i> this feature; flashing existing sprites in a single color every once in a while is a useful thing to have in a game-focused rendering API. But using this feature for sprites that are <i>only</i> rendered in this monochrome mode just wastes the VRAM that these sprites occupy in SPRITE16's sprite area. You still blit such a sprite by passing a byte offset into the sprite area, which then gets interpreted as an offset into SPRITE16's alpha mask buffer.<br>
+	If SPRITE16 had a function for directly blitting from a pointer to 1bpp data, ZUN could have freed up quite a bit of VRAM and maybe even added more sprites for character-specific attacks. Conceptually, it makes sense why SPRITE16 would restrict itself to a single sprite source, but it is quite an unfortunate omission, I'd say.
+</p><figure class="pixelated" style="width: 640px">
+	<img
+		src="{{$sprite16_mono}}"
+		width="640"
+		alt="TH03's SPRITE16 sprite area, with monochrome sprites highlighted"
+	>
+	<figcaption>
+		13,568 pixels, to be exact. And yeah, you could <i>technically</i> overwrite the affected portions of VRAM after generating alpha masks via <code>INT 42h, AH=01h</code>. But since SPRITE16 only stores one such alpha mask buffer, you still couldn't reuse this space for other SPRITE16 sprites.
+	</figcaption>
+</figure><p>
+	And that was the last PC-98 Touhou bullet system we were still missing! But at a little over 2 pushes, I have to find something else to do to round out the third one… wait, what about that one incident?
+</p><hr><h3 id="fedi-{{.Date}}">Migrating away from Twitter</h3><p>
+	On <a href="https://twistedvoxel.com/massive-ban-wave-targets-oldtweetdeck-users-following-xs-crackdown-on-third-party-access/">November 6</a>, Twitter was hit by an automated ban wave that suspended all accounts that were using the <a href="https://github.com/dimdenGD/OldTweetDeck">OldTweetDeck extension</a>. After Twitter discontinued the official free TweetDeck frontend on 2023-08-17, I quickly switched to OldTweetDeck – not just because it was free, but because it supported multiple accounts and was simply more performant than X's own premium offering at the time. In return, I gladly paid my €10 a month to dimden instead, who deserved it much more for continuously updating OldTweetDeck to all of Twitter's API changes over the years. It's very impressive how he kept it running for 2⅓ years without any such critical issues and still keeps maintaining it to this day.<br>
+	Aside from <a href="https://www.facebook.com/thpatch/posts/pfbid0xM3n3SYBdsM7WQbEE2TjSs3RDiDq98iKfNRwoj1E58nG9YRKe2gks1tmNo447Re5l">Touhou Patch Center</a> and all of my accounts, the ban wave affected <a href="https://github.com/dimdenGD/OldTweetDeck/issues/459">enough people</a> that Twitter decided to gradually revert it a day later. But without any public postmortem or excuse, this feels more like an act of gratitude that we shouldn't take for granted.
+</p><p id="downfall-{{.Date}}">
+	Ever since Elon took over, the Internet has been full of sensationalist doomposts about Twitter's <q>imminent downfall any moment now OMG</q>. For the longest time, I could ignore all these pundits because nothing of what they were complaining about was affecting my little corner. But sudden account suspensions are an existential threat to my business, and finally provided the first actual technical and non-political argument to get my data off Twitter in the medium term. I've put too much effort into all of the content there to let it be exclusively controlled by any one company.
+</p><p>
+	Hilariously, things only got worse from there. Until two days ago, <a href="https://www.reddit.com/r/twitterhelp/comments/1pn1ul1/xtwitter_data_download_glitch/">Twitter's data download option was inaccessible due to an infinite redirection bug</a>. Call it malice or incompetence, but leaving such an issue unfixed for <i>weeks</i> is a definite sign of a platform in decline. Thus, I had to run the import on an older archive I happened to request on 2023-07-02.<br>
+	And then I looked <i>inside</i> that archive and noticed that it was missing at least three key pieces of data that Twitter demonstrably stores for my account:
+</p><ol>
+	<li>Poll options</li>
+	<li>Alt text for images. (Also known as the actually most annoying and time-consuming part of every tweet if you actually want to properly <i>explain</i> an image with all its context and implications. AI won't help with that as long as its context window doesn't span every piece of knowledge related to this project. 🤷)</li>
+	<li>The original version of each uploaded image, which they do have for a fact because it's shown in the <code>/status</code> view. The archive only contains the <q>processed</q> versions shown in the timeline, which were resized to at most 1200 pixels along their larger dimension and which may or may not have been converted to JPEG based on rules I didn't bother to reverse-engineer.</li>
+</ol><p>
+	That's a rather selective interpretation of <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#art_20">Art. 20 GDPR</a>. If the argument is that <q>you can just scrape that data out of the HTML yourself</q>, why are they even bothering with sending me anything more than a nested list of tweet IDs, then? 🤨 Someone with more time and care could probably turn this into a lawsuit…<br>
+	Presenting all media in its original quality is one of the more important reasons for moving to a self-hosted service as far as I'm concerned, especially since mainstream media conversion pipelines are infamous for destroying pixel art. So I went through my hard drives and replaced Twitter's images with the original versions of all 167 non-retweeted images I had uploaded to Twitter until July 2023. The videos also desperately needed to be replaced with their original AV1 versions; Twitter's enforced x264 YUV420P format has been the single worst implementation detail of that entire platform…
+</p><h4 id="bluesky-{{.Date}}">Trying a Bluesky PDS</h4><p>
+	So, time to complete the {{Blog_PostLink "2024-11-22#website" "Bluesky self-hosting plan from last year"}}? Setting up a PDS isn't all too annoying, but the import process leaves a lot to be desired:
+</p><ul><li>
+	<p>
+		You <i>can</i> backdate posts by modifying their <i>creation</i> time, but Bluesky's crawlers will also record the <i>indexed</i> time when they first saw each post on the network. Unfortunately, the <a href="https://bsky.app">bsky.app</a> frontend that everyone uses will then present this indexed time as a post's main timestamp, demoting your intended creation time to an <q>archival time</q> that Bluesky <q>can't confirm the authenticity of</q>:
+	</p>
+	<figure><img
+		src="{{$bsky_crawl}}"
+		alt="Screenshot of a certain microblogging platform's insistence to prominently display the time it crawled a post from a PDS, demoting the PDS's actual post creation time to an &quot;archived&quot; time."
+	></figure>
+	<p>
+		The PDS database schema does track an <code>indexedAt</code> timestamp in addition to the <code>createdAt</code> timestamp you specify during the import, but <code>indexedAt</code> might as well not exist because it doesn't seem to be used anywhere.<br>
+		There is <a href="https://github.com/bluesky-social/social-app/pull/7466">a PR that would slightly improve the UI in this case</a>, but it's been languishing unmerged throughout most of 2025. Probably because it has to be merged by <a href="https://news.ycombinator.com/item?id=43401855">the same people who came up with the current UI in the first place</a>, and who prioritized resilience against pranks and disinformation campaigns.<br>
+		But even <i>if</i> the UI is fixed, these imports would spam the timeline of everyone who follows the existing Bluesky account that we obviously want to import into.
+	</p>
+</li><li><p>
+	Why does <a href="https://tangled.org/marcomaroni.it/twitter-to-bluesky/blob/7bc20067408887fce95af50379f5ea47a7ddbe14/app.ts#L870-874">the best-known importing script  convert any non-JPEG image to JPEG</a>? 🤨 Removing the conversion and just uploading the PNG files from Twitter seems to cause any tweet with a post to simply not get imported at all. Of course, {{Blog_PostLink "2025-04-09#webp" "as we know since April"}}, lossless WebP is preferable over PNG anyway, but, uh, <a href="https://github.com/bluesky-social/social-app/issues/7629">what the hell, are they serious</a>?!
+</p></li></ul><p>
+	Figuring out and confirming that first issue required remote debugging of the PDS server written in Node.js. Visual Studio Code's LSP quickly ran up against my server's low amount of RAM, which forced me to upgrade my server just to efficiently navigate through the source code…<br>
+	Typical Node.js criticisms aside, the architecture of the PDS server is quite bizarre. A whole lot of the apparent API surface is never directly called, but generically proxied to some other node in the AT Protocol network at the byte level. If you log into your PDS via <a href="https://bsky.app">bsky.app</a>, it <i>seems</i> as if the AppView calls API endpoints like <code>/xrpc/app.bsky.unspecced.getPostThreadV2</code> on your PDS, but good luck meaningfully intercepting any of these requests, or even just getting your debugger to break on them.<br>
+	Together with lots of bulky API schema descriptions in the form of <q><a href="https://atproto.com/guides/lexicon">lexicons</a></q>, all this XRPC code makes up a big proportion of the code in the <a href="https://www.npmjs.com/package/@atproto/pds"><code>@atproto/pds</code> package</a>. But for… what exactly? Why would the PDS server need a thick layer of type safety and validation for payloads it doesn't look at, and that the relays will have to verify <i>anyway</i>? Why do they install all this dead code that will confuse most people who are trying to understand this system? {{HTML_Emoji "thonk"}}<br>
+	In the end, we just can't thoroughly backdate our imported posts because the crawl timestamps are set by the relays, whose code we have no control over. Now, I could ignore all these issues and still upload <i>some</i> sort of full archive to the platform that now houses <sup>1</sup>/<sub>6</sub> of my following, but this just doesn't match the quality I expect from the canonical, definitive source of my short-form news posts.
+</ul><h4 id="mastodon-{{.Date}}">Trying Mastodon</h4><p>
+	That leaves the Fediverse as the only remaining alternative for a service where people can still follow, like, and repost my content using relatively commonly used clients. Among the various ActivityPub implementations, <a href="https://misskey-hub.net/">Misskey</a> is particularly popular among the Japanese Touhou community, but I've only heard bad things about its resource usage. Mastodon isn't the most lightweight option either – as aptly implied by its name – but you can make the argument that it's become the default option across the Fediverse over the years. Thus, there'll be at least a slight chance that people will be familiar with the web UI of what I'm about to self-host.
+</p><p>
+	Too bad that I didn't even get through the <a href="https://docs.joinmastodon.org/admin/install/">first page of the setup guide</a> before being stumped by obscure asset precompilation errors that apparently no one else has ever faced. In a way, it's commendable that a project would exclusively explain a bare-metal from-source setup in the Docker-dominated DevOps seascape of 2025. But why would you want to do this for a project that requires servers to be infested with npm <i>and</i> Postgres <i>and</i> a bleeding-edge self-compiled version of Ruby <i>and</i> several <code>-dev</code> packages for C dependencies of certain Ruby gems? Unsurprisingly, Japanese Python behaves just like Dutch Ruby in how the community effectively treats every minor version as a major version because there are no adults left in the room to put all the <a href="https://www.youtube.com/watch?v=YnL9vAFphmE">children and Ph.D</a>s in their place…
+</p><p>
+	Fortunately, ActivityPub is relatively simple to implement and there are plenty of existing servers that are better suited to the kind of PR channel I'm actually looking for. After a very quick search, I settled on…
+</p><h4 id="gotosocial-{{.Date}}">GoToSocial</h4><p>
+	…which immediately impresses in pretty much every single area:
+</p><ul>
+	<li>An <a href="https://docs.gotosocial.org/en/v0.20.2/user_guide/importing_posts/#for-developers">explicit backdating feature for imports</a>? In an API that's compatible with Mastodon's and requires minimal adjustments to existing Mastodon import scripts, instead of requiring that feature <a href="https://github.com/KevinPayravi/twitter-archive-to-mastodon/tree/36ad7fb4849e02daff470fbcebceed71344650fb?tab=readme-ov-file#mod-mastodon">to be temporarily modded into the server</a>?</li>
+	<li>After the two previous bloatfests, it's very refreshing to see a single binary next to a bunch of static assets. Sure, 87.4&nbsp;MiB is certainly way more bulky than necessary, but still much smaller than either of our two competitors.</li>
+	<li>The documentation is <i>extremely</i> well-organized and polished, especially for a project that's on version 0.20.2.</li>
+	<li>I can write Markdown in posts!</li>
+	<li>WebP and AV1? Just work too, without any attempt to convert the main image or video that gets attached to a post. Sure, the thumbnailer does convert images, but that's way less critical…</li>
+	<li>…and you can effectively bypass it by passing some five-digit size to <code>media-thumb-max-pixels</code>. {{HTML_Emoji "tannedcirno"}}</li>
+	<li>The whole thing works exactly like a lightweight server <i>should</i> work: A single binary serving posts from a SQLite database and media attachments from static files lying next to it. With easy access to every piece of data, fixing typos and import errors after the fact is trivial. Applying these might need a server restart for caching reasons, but they're immediately reflected in whatever app is accessing the data.</li>
+	<li>Drawbacks? The database schema is highly redundant, poster image conversion for videos results in weirdly green images for every one of my AV1 source files, and the paginated timeline view could use just a <i>few</i> more navigation options and customizability. Other seemingly missing features like posting and search are handled by third-party clients like the very admirable <a href="https://pinafore.social/">Pinafore</a>. And except for the first issue, these are all relatively minor, and I might even fix them myself one day. <i>That's</i> how you get new contributors to your free software project.</li>
+</ul><p>
+	And just in case <i>you</i> ever want to import a Twitter archive onto a GoToSocial instance, here is the no-nonsense importer I used:
+</p><ul>
+	<li><a class="release" href="https://github.com/nmlgc/twitter-archive-to-gotosocial">
+	twitter-archive-to-gotosocial</a></li>
+</ul><p>
+	So if you've got an account on Misskey, Mastodon, or another ActivityPub server, please follow <a href="https://activitypub.nmlgc.net/@rec98">@rec98@nmlgc.net</a>. I'll keep posting everything to both Twitter and Bluesky for the time being, but will no longer advertise either of them. If they ever go down, I'll make no attempt at restoring them.
+</p><p>
+	And that was 2025! It surely brought lots of words, breaking even last year's record by an additional 37% of blog post content. 😮 Here's to 2026 bringing more of the <i>actual</i> reverse-engineering we've been sorely lacking with all the modding and porting projects over the past few years. And with at least four TH03 gameplay pushes queued up, things are already looking quite promising…<br>
+	Next up: Enemies! Formation scripts! Fireballs! Explosions! Combos, or at least the first part of them! And a slightly more common glitch that players have been wondering about for many years…
+</p>

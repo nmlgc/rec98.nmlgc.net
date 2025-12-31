@@ -444,6 +444,16 @@ a:not(.customer):not(.release):not(.goal)[href^="https://github.com/"]:before {
 	content:"";
 }
 
+a:not(.customer)[href^="https://activitypub.nmlgc.net/"]:before {
+	background-image: url('/static/activitypub.svg?032df33d');
+	display: inline-block;
+	width: 1em;
+	height: 0.6315em;
+	margin-left: 0.175em;
+	margin-right: 0.175em;
+	content:"";
+}
+
 a[href^="mailto"] {
 	display: inline-block;
 }

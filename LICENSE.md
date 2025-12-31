@@ -14,6 +14,7 @@ in the blog that do not contain elements copyrighted by third parties:
 * `blog/2021-09-12*`
 * `static/favicon.ico`
 * `static/faq-pi-ranges.svg`
+* `static/activitypub.svg` (released as CC0 by mray, see [original license](https://commons.wikimedia.org/wiki/File:ActivityPub-logo.svg))
 * `static/logo.png`
 
 ### Rationale

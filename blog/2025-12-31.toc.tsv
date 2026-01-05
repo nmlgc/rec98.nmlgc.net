@@ -1,0 +1,15 @@
+Anchor	Name
+gba	A cursory look at character-specific attacks
+logic	TH03's bullet logic
+overview	- High-level overview
+trail	- Trail sprites
+groups	- Rings and other groups
+transfer	- Transferred pellets
+render	TH03's bullet renderer
+pellets	- Pellets, and unresolved VRAM alignment questions
+clouds	- Delay clouds, and the unfortunate lack of a SPRITE16 feature
+fedi	Migrating away from Twitter
+downfall	- Twitter's technical downfall (not clickbait)
+bluesky	- Trying a Bluesky PDS
+mastodon	- Trying Mastodon
+gotosocial	- Deciding on GoToSocial as a Fediverse server

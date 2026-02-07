@@ -155,7 +155,7 @@ uint16_t pixel_hash(uint32_t p) {
 	Adapted from <a href="https://github.com/libjxl/libjxl/blob/0c1aba1d51ed32f61be4de638f075f2b199082d0/lib/jxl/enc_fast_lossless.cc#L3514-L3523">the original code</a>.
 </figcaption></figure><p>
 	But since we're still hashing 32-bit RGBA pixels to 16 bits, we're bound to run into a collision sooner or later. You can certainly think of this hash function as mapping color values to uniformly distributed random numbers and then reason about its efficacy using probability theory, as we saw in the slide above. However, the conclusion drawn in that slide is rather abbreviated and ultimately misleading: The <a href="https://en.wikipedia.org/wiki/Birthday_problem">birthday paradox</a> does <i>not</i> return a binary success/failure result, but a <i>probability</i>. In this case of 256 distinct colors:
-</p><figure style="display: block;">
+</p><figure class="formula">
 	(1&nbsp;-&nbsp;<sup>(
 		<sup>
 			65536!
@@ -167,7 +167,7 @@ uint16_t pixel_hash(uint32_t p) {
 	</sub>)&nbsp;≈ 39.27%
 </figure><p>
 	Let's plug in 191, for no reason whatsoever:
-</p><figure style="display: block;">
+</p><figure class="formula">
 	(1&nbsp;-&nbsp;<sup>(
 		<sup>
 			65536!

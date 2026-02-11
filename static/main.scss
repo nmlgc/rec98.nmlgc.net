@@ -762,6 +762,10 @@ tr.hr {
 
 td, th {
 	padding: 0.25em 0.5em;
+
+	&:not(:last-child) {
+		border-right: var(--table-border);
+	}
 }
 
 .icon-cell {
@@ -771,16 +775,6 @@ td, th {
 table.comparison tr:not(:first-child) {
 	border-top: var(--table-border);
 	border-top-color: var(--c-lightgray);
-}
-
-table.comparison td:not(:first-child),
-table.comparison th:not(:first-child) {
-	border-left: var(--table-border);
-}
-
-table.comparison td:not(:last-child),
-table.comparison th:not(:last-child) {
-	border-right: var(--table-border);
 }
 
 table.vm tbody td {
@@ -946,11 +940,6 @@ form #providers button img {
 .pushes thead tr {
 	background-color: #fcfcfc;
 }
-
-.pushes th:not(:first-child),
-.pushes td:not(:first-child) {
-	border-left: var(--table-border);
-}
 /* ---------- */
 
 /* Number tables
@@ -973,6 +962,7 @@ figure.progress {
 .numbers td,
 .numbers th {
 	text-align: right;
+	border-right: unset;
 }
 
 .numbers th:first-child,

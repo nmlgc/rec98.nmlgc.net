@@ -23,9 +23,15 @@
 {{$popin.AddMarker 64 "Midboss appears" "" -}}
 
 <style>
+	._{{.Date}} td {
+		border-right: unset;
+	}
 	._{{.Date}} tr:not(:first-child) {
 		border-top: var(--table-border);
 		border-top-color: var(--c-lightgray);
+	}
+	#cutscene-{{.Date}} tbody td {
+		border-right: unset;
 	}
 	#cutscene-{{.Date}} tbody td:nth-child(1),
 	#cutscene-{{.Date}} tbody td:nth-child(2),

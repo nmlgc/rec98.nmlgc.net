@@ -55,8 +55,9 @@
 {{end -}}
 
 <style>
-	.cycles-{{.Date}} tbody tr th {
-		text-align: left;
+	#cycles-{{.Date}} th,
+	#cycles-{{.Date}} td {
+		border-right: unset;
 	}
 
 	.benchmark-{{.Date}} > div {

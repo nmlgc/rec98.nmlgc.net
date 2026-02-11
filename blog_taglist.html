@@ -1,5 +1,10 @@
 {{template "blog_header.html" .}}
-<table>{{range Blog_TagDescriptions -}}
+<style>
+	.taglist td {
+		border-right: unset;
+	}
+</style>
+<table class="taglist">{{range Blog_TagDescriptions -}}
 	<tr>
 		<td>{{HTML_TagBlock .Tag nil}}</td>
 		<td>{{.Desc}}</td>

@@ -1138,6 +1138,23 @@ article figure {
 	}
 }
 
+/* Color coding of multiple distinct variables */
+.var1 {
+	color: oklch(66% 0.3 330);
+}
+.var2 {
+	color: oklch(66% 0.3 264);
+}
+.var3 {
+	color: oklch(66% 0.3 198);
+}
+.var4 {
+	color: oklch(66% 0.3 132);
+}
+.var5 {
+	color: oklch(66% 0.3 66);
+}
+
 /* ---- */
 
 /* Syntax highlighting

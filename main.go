@@ -170,6 +170,28 @@ func HTMLPerfBar(min, max, rel float64) template.HTML {
 	))
 }
 
+// HTMLReC98Release provides a template for ReC98 release downloads.
+func HTMLReC98Release(version string, hp *HostedPath, datePrefix string) template.HTML {
+	return template.HTML(fmt.Sprintf(
+		`<p>
+			<a class="release" href="https://github.com/nmlgc/ReC98/releases/tag/%v">
+				<img
+					src="%v"
+					alt="Richard Stallman cosplaying as a shrine maiden"
+					class="inline_sprite"
+					width="24"
+					height="24"
+				> ReC98 (version %v)
+			</a>
+			%v
+		</p>`,
+		version,
+		staticHP.VersionURLFor("logo.png"),
+		version,
+		HTMLDownload(hp, (datePrefix+"ReC98.zip")),
+	))
+}
+
 var TH03_PLAYCHARS = [9]template.HTML{
 	"Reimu",
 	"Mima",
@@ -307,6 +329,7 @@ var pages = template.New("").Funcs(SharedFuncs).Funcs(map[string]any{
 	"HTML_Screen_Y":     HTMLScreenY,
 	"HTML_200_Y":        HTML200Y,
 	"HTML_PerfBar":      HTMLPerfBar,
+	"HTML_ReC98Release": HTMLReC98Release,
 	"StaticFileURL":     func(fn string) string { return staticHP.VersionURLFor(fn) },
 	"th03pc":            HTMLTH03Playchar,
 	"th03pcn":           HTMLTH03PlaycharName,

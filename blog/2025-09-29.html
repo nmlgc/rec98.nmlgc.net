@@ -6,7 +6,6 @@
 {{$hiscore2_d := (call .Video "TH02-High-Score-landmines-fixed-33-MHz" "Video of entering and leaving TH02's HiScore menu, as rendered by the debloated P0323 build on Neko Project 21/W with a clock speed of 1.9968 × 17 = 33.9456 MHz. Showcases how the screen tearing fixes even apply at this lower clock speed, and how retaining the title screen background image in memory allows an instant switch back to that menu")}}
 {{$view4 := (call .PostFileURL "TH04-High-Score-viewer-Marisa-corruption.webp")}}
 {{$anniv3 := (call .PostFileURL "TH03-anniv-VS-Start.webp")}}
-{{$dl := printf "%v%v" .DatePrefix "ReC98.zip" -}}
 
 {{$title2_o.SetTitle "Original game" -}}
 {{$title2_d.SetTitle "Debloated P0323 build" -}}
@@ -623,17 +622,7 @@ for(const auto& tsr : tsrs) {
 […]
 28 files changed, 2213 insertions(+), 258 deletions(-)</pre></figure><p>
 	…not even half that many additional lines in the platform layer. And here's what all of this compiles to:
-</p><p>
-	<a class="release" href="https://github.com/nmlgc/ReC98/releases/tag/P0323">
-	<img
-		src="{{StaticFileURL "logo.png"}}"
-		alt="Richard Stallman cosplaying as a shrine maiden"
-		class="inline_sprite"
-		width="24"
-		height="24"
-	> ReC98 (version P0323)</a>
-	{{HTML_Download .HostedPath $dl}}
-</p><p>
+</p>{{HTML_ReC98Release "P0323" .HostedPath .DatePrefix}}<p>
 	After the Shuusou Gyoku debacle and the many last-minute fixes that cropped up while I was writing this post, I'm not particularly confident in these builds, despite the weeks of testing that went into them. Still, we've got to start <i>somewhere</i>. At least for TH03, we're bound to quickly find any issues that slipped through the cracks while I'm implementing netplay into the Anniversary Edition.
 </p><p>
 	Next up: The very quick round of {{Blog_PostLink "2025-04-09#tag" "Shuusou Gyoku maintenance and forward compatibility"}} I announced in April, to clear out the backlog a bit. This whole series also really stretched the concept of what 11 pushes should be, so I'll charge 2 pushes for that maintenance round to compensate. In exchange, I'll also incorporate a small bit of new Windows 98 feature work, since it fits nicely with the cleanup work.

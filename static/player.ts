@@ -341,9 +341,11 @@ abstract class ReC98Player extends HTMLElement {
 	}
 
 	handleKey(key: VirtualKey, event: Event) {
-		if(this.handleKeySwitch(key)) {
+		const ret = this.handleKeySwitch(key);
+		if(ret) {
 			event.preventDefault();
 		}
+		return ret;
 	}
 
 	// Constant property initialization
@@ -467,10 +469,10 @@ abstract class ReC98Player extends HTMLElement {
 			if(document.activeElement !== this) {
 				return;
 			}
-			if(this.eTabSwitcher?.keydownHandler(event)) {
+			if(this.handleKey(virtualKey(event), event)) {
 				return;
 			}
-			this.handleKey(virtualKey(event), event);
+			this.eTabSwitcher?.keydownHandler(event);
 		});
 
 		// Preloading the video is required for seeking to work before the

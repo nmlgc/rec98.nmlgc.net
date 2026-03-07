@@ -57,20 +57,28 @@ class ReC98TabSwitcher extends HTMLElement {
 	}
 
 	/**
-	 * @param override Optional override for [event.key]
 	 * @returns Whether this event was handled
 	 */
-	keydownHandler(event: KeyboardEvent, override: (VirtualKey | null) = null) {
+	keydownHandler(event: KeyboardEvent) {
 		if(event.key >= `1` && event.key <= `${this.count}`) {
 			this.switchTo(Number(event.key) - 1);
 			return true;
 		}
-		switch(override ?? virtualKey(event)) {
-		case '↑':
+
+		let key = virtualKey(event);
+		if(true) {
+			if(key == '↑') {
+				key = '←';
+			} else if(key == '↓') {
+				key = '→';
+			}
+		}
+		switch(key) {
+		case '←':
 			this.switchTo(((this.activeIndex + this.count) - 1) % this.count);
 			event.preventDefault(); // Prevents scrolling!
 			break;
-		case '↓':
+		case '→':
 			this.switchTo((this.activeIndex + 1) % this.count);
 			event.preventDefault(); // Prevents scrolling!
 			break;
@@ -143,13 +151,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 		}
 
 		this.onclick = (() => this.focus());
-		this.onkeydown = ((event) => {
-			switch(virtualKey(event)) {
-			case '←':	return this.tabSwitcher.keydownHandler(event, '↑');
-			case '→':	return this.tabSwitcher.keydownHandler(event, '↓');
-			}
-			return this.tabSwitcher.keydownHandler(event);
-		});
+		this.onkeydown = ((event) => this.tabSwitcher.keydownHandler(event));
 	}
 };
 

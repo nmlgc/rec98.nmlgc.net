@@ -472,7 +472,7 @@ abstract class ReC98Player extends HTMLElement {
 			if(this.handleKey(virtualKey(event), event)) {
 				return;
 			}
-			this.eTabSwitcher?.keydownHandler(event);
+			this.eTabSwitcher?.keydownHandler(event, true);
 		});
 
 		// Preloading the video is required for seeking to work before the

@@ -1,9 +1,11 @@
 rec98-tab-switcher {
 	width: 100%;
+
+	.layer {
 		display: grid;
 		font-size: 75%;
-		grid-row: 1;
 		grid-template-columns: repeat(auto-fit, minmax(3em, 1fr));
+		width: 100%;
 
 		button {
 			background: var(--header-gradient) !important;
@@ -22,6 +24,7 @@ rec98-tab-switcher {
 				background: var(--header-gradient-hover);
 			}
 		}
+	}
 }
 
 /* Generic child element switcher

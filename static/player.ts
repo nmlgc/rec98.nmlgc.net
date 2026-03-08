@@ -495,7 +495,7 @@ abstract class ReC98Player extends HTMLElement {
 		let requested: (number | null) = null;
 
 		if(elements.length >= 2) {
-			this.eTabSwitcher = new ReC98TabSwitcher((i) => {
+			this.eTabSwitcher = new ReC98TabSwitcher(1, (i) => {
 				this.focus();
 				return this.show(i);
 			});

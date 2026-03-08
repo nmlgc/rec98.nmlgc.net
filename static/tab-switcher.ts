@@ -6,14 +6,21 @@ type TabSwitchFunc = (index: number) => boolean;
 
 // Generic tab switching component.
 class ReC98TabSwitcher extends HTMLElement {
+	rowDivs: HTMLDivElement[] = [];
 	activeIndex = -1;
 	count = 0;
 	switchFunc: TabSwitchFunc;
 	dynamicCaptions?: HTMLCollectionOf<HTMLDivElement>;
 
-	constructor(switchFunc: TabSwitchFunc) {
+	constructor(layerCount: number, switchFunc: TabSwitchFunc) {
 		super();
 		this.switchFunc = switchFunc;
+		for(let i = 0; i < layerCount; i++) {
+			const div = document.createElement("div");
+			div.classList.add("layer");
+			this.appendChild(div);
+			this.rowDivs.push(div);
+		}
 	}
 
 	connectedCallback() {
@@ -29,7 +36,7 @@ class ReC98TabSwitcher extends HTMLElement {
 		button.onclick = (() => {
 			this.switchTo(i);
 		});
-		this.appendChild(button);
+		this.rowDivs[0].appendChild(button);
 		this.count++;
 		if(initiallyActive) {
 			if(this.activeIndex !== -1) {
@@ -40,8 +47,8 @@ class ReC98TabSwitcher extends HTMLElement {
 	}
 
 	setActive(index: number) {
-		this.children[this.activeIndex]?.classList.remove("active");
-		this.children[index].classList.add("active");
+		this.rowDivs[0].children[this.activeIndex]?.classList.remove("active");
+		this.rowDivs[0].children[index].classList.add("active");
 		this.activeIndex = index;
 		if(this.dynamicCaptions) {
 			for(let i = 0; i < this.dynamicCaptions.length; i++) {
@@ -115,7 +122,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 		// now.
 		const linkedID = this.getAttribute("data-link");
 
-		this.tabSwitcher = new ReC98TabSwitcher((i) => {
+		this.tabSwitcher = new ReC98TabSwitcher(1, (i) => {
 			this.focus();
 			const ret = this.showChild(i);
 

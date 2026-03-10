@@ -29,7 +29,7 @@ class ReC98TabSwitcher extends HTMLElement {
 		)?.getElementsByTagName("div");
 	}
 
-	add(title: string | null, initiallyActive: boolean) {
+	add(title: string | null) {
 		const i = this.count;
 		const button = document.createElement("button");
 		button.innerHTML = (`${i + 1}️⃣` + (title ? ` ${title}` : ''));
@@ -38,12 +38,6 @@ class ReC98TabSwitcher extends HTMLElement {
 		});
 		this.rowDivs[0].appendChild(button);
 		this.count++;
-		if(initiallyActive) {
-			if(this.activeIndex !== -1) {
-				throw "Defined two tabs as initially active.";
-			}
-			this.setActive(i);
-		}
 	}
 
 	setActive(index: number) {
@@ -139,7 +133,7 @@ class ReC98ChildSwitcher extends HTMLElement {
 
 		this.tabIndex = -1; // Receive `onkeydown` events from all children
 
-		let activeSeen = false;
+		let activeIndex = null;
 		for(let i = 0; i < this.children.length; i++) {
 			const child = this.children[i];
 			if(child.tagName.startsWith('REC98-')) {
@@ -148,14 +142,15 @@ class ReC98ChildSwitcher extends HTMLElement {
 			this.switchableChildren.push(child);
 			const active = child.classList.contains("active");
 			if(active) {
-				activeSeen = true;
-				this.showChild(this.switchableChildren.length - 1);
+				activeIndex = (this.switchableChildren.length - 1);
+				this.showChild(activeIndex);
 			}
-			this.tabSwitcher.add(child.getAttribute("data-title"), active);
+			this.tabSwitcher.add(child.getAttribute("data-title"));
 		}
-		if(!activeSeen) {
+		if(activeIndex == null) {
 			throw "No child marked as active.";
 		}
+		this.tabSwitcher.setActive(activeIndex);
 
 		this.onclick = (() => this.focus());
 		this.onkeydown = ((event) => this.tabSwitcher.keydownHandler(event));

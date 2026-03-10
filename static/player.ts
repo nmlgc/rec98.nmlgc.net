@@ -509,15 +509,14 @@ abstract class ReC98Player extends HTMLElement {
 			if(element.hasAttribute("data-active")) {
 				requested = i;
 			}
-			this.eTabSwitcher?.add(
-				attributeAsString(element, "data-title"), (i === requested)
-			);
+			this.eTabSwitcher?.add(attributeAsString(element, "data-title"));
 			lastChild = i;
 		}
 		if(lastChild === null) {
 			throw "No child element found.";
 		}
 
+		this.eTabSwitcher?.setActive(requested ?? lastChild);
 		this.show(requested ?? lastChild);
 		this.uiPause();
 

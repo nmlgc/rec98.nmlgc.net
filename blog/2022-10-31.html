@@ -194,17 +194,17 @@
 	<rec98-child-switcher><img
 		src="{{$median_zmbv}}"
 		width="1280"
-		data-title="Lossless"
+		data-t0="Lossless"
 		alt="The lossless source image"
 	><img
 		src="{{$median_av1}}"
 		width="1280"
-		data-title="AV1 <code>-crf 1</code>"
+		data-t0="AV1 <code>-crf 1</code>"
 		alt="The same image encoded in AV1"
 	><img
 		src="{{$median_difference}}"
 		width="1280"
-		data-title="Normalized difference"
+		data-t0="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -220,15 +220,15 @@
 </p><figure class="pixelated">
 	<rec98-child-switcher id="singleplayer_playfield-{{.Date}}"><img
 		src="{{$bleed_zmbv}}"
-		data-title="Lossless"
+		data-t0="Lossless"
 		alt="The lossless source image"
 	><img
 		src="{{$bleed_av1}}"
-		data-title="AV1 <code>-crf 1</code>"
+		data-t0="AV1 <code>-crf 1</code>"
 		alt="The same image encoded in AV1"
 	><img
 		src="{{$bleed_difference}}"
-		data-title="Normalized difference"
+		data-t0="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -549,17 +549,17 @@
 	<rec98-child-switcher><img
 		src="{{$sub_zmbv}}"
 		width="1280"
-		data-title="Lossless"
+		data-t0="Lossless"
 		alt="The lossless source image"
 	><img
 		src="{{$sub_vp9}}"
 		width="1280"
-		data-title="VP9 <code>-crf 15 -vf format=yuv422p</code>"
+		data-t0="VP9 <code>-crf 15 -vf format=yuv422p</code>"
 		alt="The same image encoded in VP9, exhibiting a severe case of chroma subsampling"
 	><img
 		src="{{$sub_difference}}"
 		width="1280"
-		data-title="Normalized difference"
+		data-t0="Normalized difference"
 		alt="The normalized difference between both images"
 		class="active"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>

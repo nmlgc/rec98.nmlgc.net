@@ -120,12 +120,12 @@
 	<figure class="fullres bglayer main-menu-{{.Date}}">
 		<rec98-child-switcher><img
 			src="{{$g_msg_win}}"
-			data-title="Windows"
+			data-t0="Windows"
 			width="640"
 			alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with MS Gothic, demonstrating that font's bitmaps for 14- and 16-pixel text heights"
 		><img
 			src="{{$g_msg_wine}}"
-			data-title="Wine"
+			data-t0="Wine"
 			width="640"
 			alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Wine with MS Gothic, demonstrating Wine's lack of support for TTF bitmaps"
 			class="active"
@@ -148,12 +148,12 @@
 </p><figure class="fullres bglayer main-menu-{{.Date}}">
 	<rec98-child-switcher><img
 		src="{{$g_msg_win}}"
-		data-title="MS Gothic"
+		data-t0="MS Gothic"
 		width="640"
 		alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with the default MS Gothic font"
 	><img
 		src="{{$g_ipa_win}}"
-		data-title="IPAMonaGothic"
+		data-t0="IPAMonaGothic"
 		width="640"
 		alt="Screenshot of Shuusou Gyoku's main menu with the Game Start option selected. Rendered on Windows with IPAMonaGothic, demonstrating its matching metrics and roughly similar look"
 		class="active"
@@ -169,13 +169,13 @@
 	There actually is a single instance where this game uses MS Gothic at a height of 24 pixels, which is too large to be covered by its embedded bitmaps and thus requires rasterization of vector outlines. Whenever the SCL parser encounters an unknown opcode, it shows this error message:<figure class="singleplayer_playfield">
 	<rec98-child-switcher><img
 		src="{{$sclbug_msg}}"
-		data-title="MS Gothic"
+		data-t0="MS Gothic"
 		width="384"
 		alt="Screenshot of Shuusou Gyoku's SCL bug message window, reading 「バグ発生だにょ」, rendered using MS Gothic at 24px with Bézier curve rasterization rather than bitmaps."
 		class="active"
 	><img
 		src="{{$sclbug_ipa}}"
-		data-title="IPAMonaGothic"
+		data-t0="IPAMonaGothic"
 		width="384"
 		alt="Screenshot of Shuusou Gyoku's SCL bug message window, reading 「バグ発生だにょ」, rendered using IPAMonaGothic at 24px with Bézier curve rasterization rather than bitmaps."
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -213,13 +213,13 @@
 		</div></figcaption>
 		<rec98-child-switcher><img
 			src="{{$pc}}"
-			data-title="Pango/Cairo"
+			data-t0="Pango/Cairo"
 			width="275"
 			alt="The infamous iOS Effective Power crash string with an additional rainbow emoji as rendered by Pango with the pango-view tool using MS Gothic at a height of 16 pixels and Pango's Cairo backend, which renders the string as expected with MS Gothic's embedded bitmaps and a colored emoji"
 			class="active"
 		><img
 			src="{{$pf}}"
-			data-title="Pango/FreeType"
+			data-t0="Pango/FreeType"
 			width="275"
 			alt="The infamous iOS Effective Power crash string with an additional rainbow emoji as rendered by Pango with the pango-view tool using MS Gothic at a height of 16 pixels and Pango's FreeType2 backend, demonstrating a lack of support for embedded bitmaps and color emoji as well as completely broken emoji placement"
 		><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -237,12 +237,12 @@
 	{{- define "e_alt"}}Screenshot of Shuusou Gyoku's main menu with the Extra Start option selected{{end -}}
 	<rec98-child-switcher><img
 		src="{{$e_msg_win}}"
-		data-title="MS Gothic, Windows"
+		data-t0="MS Gothic, Windows"
 		width="640"
 		alt="{{template "e_alt"}}, rendered on Windows with the default MS Gothic font."
 	><img
 		src="{{$e_msg_pc}}"
-		data-title="MS Gothic, Pango 1.56.0 / Cairo"
+		data-t0="MS Gothic, Pango 1.56.0 / Cairo"
 		width="640"
 		alt="{{template "e_alt"}}, rendered on Linux using Cairo and version 1.56.0 of Pango with MS Gothic, demonstrating how all 14-pixel text is shifted down by one pixel and how all Japanese characters in 16-pixel text are pushed down by 2 pixels if there are Latin characters on the same line"
 		class="active"
@@ -250,12 +250,12 @@
 </figure><figure class="fullres">
 	<rec98-child-switcher><img
 		src="{{$e_ipa_win}}"
-		data-title="IPAMonaGothic, Windows"
+		data-t0="IPAMonaGothic, Windows"
 		width="640"
 		alt="{{template "e_alt"}}, rendered on Windows with IPAMonaGothic."
 	><img
 		src="{{$e_ipa_pc}}"
-		data-title="IPAMonaGothic, Pango 1.56.0 / Cairo"
+		data-t0="IPAMonaGothic, Pango 1.56.0 / Cairo"
 		width="640"
 		alt="{{template "e_alt"}}, rendered on Linux using Cairo and version 1.56.0 of Pango with IPAMonaGothic, demonstrating how all text is shifted down by one pixel"
 		class="active"
@@ -288,22 +288,22 @@
 </p><figure id="tm-{{.Date}}" class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
 		src="{{$tm_016}}"
-		data-title="16×16"
+		data-t0="16×16"
 		width="384"
 		alt="The 16×16 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
 	><img
 		src="{{$tm_032}}"
-		data-title="32×32"
+		data-t0="32×32"
 		width="384"
 		alt="The 32×32 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
 	><img
 		src="{{$tm_048}}"
-		data-title="48×48"
+		data-t0="48×48"
 		width="384"
 		alt="The 48×48 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
 	><img
 		src="{{$tm_128}}"
-		data-title="128×128"
+		data-t0="128×128"
 		width="384"
 		alt="The 128×128 version of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure"
 		class="active"
@@ -337,12 +337,12 @@
 </p><figure style="width: 271px;">
 	<rec98-child-switcher><img
 		src="{{$tm_e_ico}}"
-		data-title="<code>.ico</code>"
+		data-t0="<code>.ico</code>"
 		width="271"
 		alt="An .ico file of the new Shuusou Gyoku icon commissioned from Mr. Tremolo Measure. Explorer's extra large icon mode shows the highest-resolution 128×128-pixel variant in a 128×128-pixel box, as expected."
 	><img
 		src="{{$tm_e_exe}}"
-		data-title="<code>.exe</code>"
+		data-t0="<code>.exe</code>"
 		width="271"
 		alt="An .exe binary with the same .ico file embedded. Strangely, Explorer's extra large icon mode shows the 48×48-pixel variant in the center of a 256×256-pixel box."
 		class="active"
@@ -580,13 +580,13 @@
 </p><figure style="width: 929px;">
 	<rec98-child-switcher><img
 		src="{{$ff_msg}}"
-		data-title="MS Gothic"
+		data-t0="MS Gothic"
 		width="929"
 		style="max-height: unset;"
 		alt="FontForge screenshot of MS Gothic's embedded 7×14px glyphs in the Basic Latin and Latin-1 Supplement blocks, showing full coverage of both blocks"
 	><img
 		src="{{$ff_ipa}}"
-		data-title="IPAMonaGothic"
+		data-t0="IPAMonaGothic"
 		class="active"
 		width="929"
 		style="max-height: unset;"

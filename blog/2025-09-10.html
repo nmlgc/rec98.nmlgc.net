@@ -211,7 +211,7 @@ add  	di, ((640 - 64) / 8)</pre></figure>
 </figure><p id="wide-res-{{.Date}}">
 	But of course, the only relevant results are those from real hardware:
 </p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}} inverted">
-	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="wide numbers active">
+	<table data-t0="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="wide numbers active">
 		{{- template "wide-thead" -}}
 		<tr>
 			<th> 32</th><td> 1.47</td><td> 1.56</td><td> 1.34</td><td> 1.35</td>
@@ -239,7 +239,7 @@ add  	di, ((640 - 64) / 8)</pre></figure>
 		<tr><th>608</th><td>17.10</td><td>19.19</td><td>14.57</td><td>14.29</td></tr>
 		<tr><th>640</th><td>18.09</td><td>20.04</td><td>15.44</td><td>14.67</td></tr>
 	</table>
-	<table data-title="Neko Project 21/W (16 MHz)" class="wide numbers">
+	<table data-t0="Neko Project 21/W (16 MHz)" class="wide numbers">
 		{{- template "wide-thead" -}}
 		<tr>
 			<th> 32</th><td>0.74</td><td>0.76</td><td>0.68</td><td>0.67</td>
@@ -267,7 +267,7 @@ add  	di, ((640 - 64) / 8)</pre></figure>
 		<tr><th>608</th><td>7.18</td><td>8.50</td><td>6.11</td><td>6.25</td></tr>
 		<tr><th>640</th><td>7.50</td><td>8.88</td><td>6.32</td><td>6.16</td></tr>
 	</table>
-	<table data-title="Neko Project 21/W (66 MHz)" class="wide numbers">
+	<table data-t0="Neko Project 21/W (66 MHz)" class="wide numbers">
 		{{- template "wide-thead" -}}
 		<tr>
 			<th> 32</th><td>0.16</td><td>0.18</td><td>0.15</td><td>0.15</td>
@@ -487,7 +487,7 @@ add  	di, (640 / 8)</pre></figure>
 	…whoa, ZUN's EGC algorithm is <i>bad</i> on emulators. This benchmark even paints it somewhat favorably; for code simplicity reasons, I merely simulate it within my optimized implementation by reducing the number of blitted image rows per EGC run to 1.<br>
 	Let's see how fast it all runs on real hardware. This time, the results for ≥Pentium models are interesting as well:
 </p><figure><rec98-child-switcher class="blitperf benchmark-{{.Date}} inverted">
-	<table data-title="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="xfade numbers">
+	<table data-t0="PC-9801DS/U2 (i386SX, 16 MHz, 1991)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.66</td><td>2.50</td><td>1.15</td><td>1.11</td>
@@ -514,7 +514,7 @@ add  	di, (640 / 8)</pre></figure>
 		<tr><th>576</th><td>6.59</td><td>8.05</td><td>9.39</td><td>9.68</td></tr>
 		<tr><th>608</th><td>6.95</td><td>8.40</td><td>9.84</td><td>10.18</td></tr>
 		<tr class="used"><th>640</th><td>7.30</td><td>8.65</td><td>10.39</td><td>10.66</td></tr>
-	</table><table data-title="PC-9821Na7 (Pentium, 75 MHz, 1995)" class="xfade numbers active">
+	</table><table data-t0="PC-9821Na7 (Pentium, 75 MHz, 1995)" class="xfade numbers active">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.17</td><td>0.41</td><td>0.23</td><td>0.23</td>
@@ -540,7 +540,7 @@ add  	di, (640 / 8)</pre></figure>
 		<tr><th>576</th><td>1.97</td><td>2.14</td><td>3.27</td><td>3.12</td></tr>
 		<tr><th>608</th><td>2.07</td><td>2.24</td><td>3.44</td><td>3.28</td></tr>
 		<tr class="used"><th>640</th><td>2.17</td><td>2.34</td><td>3.61</td><td>3.45</td></tr>
-	</table><table data-title="PC-9821Nw133 (Pentium, 133 MHz, 1997)" class="xfade numbers">
+	</table><table data-t0="PC-9821Nw133 (Pentium, 133 MHz, 1997)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.09</td><td>0.21</td><td>0.15</td><td>0.14</td>
@@ -566,7 +566,7 @@ add  	di, (640 / 8)</pre></figure>
 		<tr><th>576</th><td>1.48</td><td>1.56</td><td>2.65</td><td>2.44</td></tr>
 		<tr><th>608</th><td>1.56</td><td>1.65</td><td>2.80</td><td>2.57</td></tr>
 		<tr class="used"><th>640</th><td>1.64</td><td>1.73</td><td>2.94</td><td>2.71</td></tr>
-	</table><table data-title="AMD K6-III (400 MHz)" class="xfade numbers">
+	</table><table data-t0="AMD K6-III (400 MHz)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.08</td><td>0.16</td><td>0.14</td><td>0.13</td>
@@ -593,7 +593,7 @@ add  	di, (640 / 8)</pre></figure>
 		<tr><th>576</th><td>1.43</td><td>1.49</td><td>2.58</td><td>2.35</td></tr>
 		<tr><th>608</th><td>1.50</td><td>1.56</td><td>2.72</td><td>2.48</td></tr>
 		<tr class="used"><th>640</th><td>1.58</td><td>1.64</td><td>2.87</td><td>2.61</td></tr>
-	</table><table data-title="PC-9821V166 Shooting Star (upgraded to K6-2, 533 MHz, 1997)" class="xfade numbers">
+	</table><table data-t0="PC-9821V166 Shooting Star (upgraded to K6-2, 533 MHz, 1997)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.10</td><td>0.24</td><td>0.17</td><td>0.16</td>
@@ -620,7 +620,7 @@ add  	di, (640 / 8)</pre></figure>
 		<tr><th>576</th><td>1.67</td><td>1.76</td><td>2.99</td><td>2.75</td></tr>
 		<tr><th>608</th><td>1.76</td><td>1.84</td><td>3.15</td><td>2.90</td></tr>
 		<tr class="used"><th>640</th><td>1.85</td><td>1.94</td><td>3.32</td><td>3.06</td></tr>
-	</table><table data-title="Neko Project 21/W (66 MHz)" class="xfade numbers">
+	</table><table data-t0="Neko Project 21/W (66 MHz)" class="xfade numbers">
 		{{- template "xfade-thead" -}}
 		<tr>
 			<th> 32</th><td>0.08</td><td>0.44</td><td>0.20</td><td>0.18</td>
@@ -673,7 +673,7 @@ add  	di, (640 / 8)</pre></figure>
 </p><h3>Optimizing .PI image handling</h3><p>
 	Uncompressed 640×400 images are rather large, common hard disk capacities were just starting to hit single-digit GB ranges in the late 90s, and you wouldn't want to haul even more floppy disks to Comiket. So it made sense why ZUN wanted to store these images in compressed form. Enter PI, the second-most common losslessly compressed image format within the PC-98 scene of the 90s. Technically, it's <a href="https://mooncore.eu/bunny/txt/pi-pic.htm">not that complex</a>, but it still achieves great compression ratios for ZUN's images:
 </p><figure class="ratios pi-{{.Date}}"><rec98-child-switcher>
-	<table data-title="Byte sizes" class="active">
+	<table data-t0="Byte sizes" class="active">
 		<thead>
 			<tr>
 				<th></th>
@@ -709,7 +709,7 @@ add  	di, (640 / 8)</pre></figure>
 			</tr>
 		</tbody>
 	</table>
-	<table data-title="Ratios">
+	<table data-t0="Ratios">
 		<thead>
 			<tr>
 				<th></th>

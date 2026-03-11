@@ -255,13 +255,13 @@
 	</figcaption>
 	<rec98-child-switcher><img
 		src="{{$pellets}}"
-		data-title="Sprite sheet"
+		data-t0="Sprite sheet"
 		width="216"
 		alt="TH03's pellet sprite sheet, with byte boundaries as red vertical lines"
 		class="active"
 	><img
 		src="{{$pellets_bug}}"
-		data-title="Bug"
+		data-t0="Bug"
 		width="216"
 		alt="TH03's pellet sprite sheet, with byte boundaries as red vertical lines and the bugged transfer sprites at bit offsets 6 and 14 highlighted in red"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -306,13 +306,13 @@
 		src="{{$ppd_0}}"
 		alt="{{template "ppd_optimal_desc" 0}}"
 		width="576"
-		data-title="Leftmost best case (<code>(x % 16) == 0</code>)"
+		data-t0="Leftmost best case (<code>(x % 16) == 0</code>)"
 		class="active"
 	><img
 		src="{{$ppd_8}}"
 		alt="{{template "ppd_optimal_desc" 8}}"
 		width="576"
-		data-title="Rightmost best case (<code>(x % 16) == 8</code>)"
+		data-t0="Rightmost best case (<code>(x % 16) == 8</code>)"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
 		8 start positions within the first byte + 1 start position on the second byte&nbsp;= <sup>9</sup>/<sub>16</sub>&nbsp;= 56.25%. The 9<sup>th</sup> variant for <code>(x&nbsp;%&nbsp;16)&nbsp;== 8</code> wouldn't be part of a regular singly-preshifted sprite sheet where the renderer blits the <code>(x&nbsp;%&nbsp;8)</code><sup>th</sup>&nbsp;= 0<sup>th</sup> variant. But it would definitely be worth adding if alignment does matter at all.

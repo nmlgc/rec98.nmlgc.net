@@ -493,9 +493,14 @@ abstract class ReC98Player extends HTMLElement {
 
 		let lastChild: (number | null) = null;
 		let requested: (number | null) = null;
+		let layerCount = 0;
 
 		if(elements.length >= 2) {
-			this.eTabSwitcher = new ReC98TabSwitcher(1, (i) => {
+			// Detect the amount of layers from the first child.
+			while(elements[0].getAttribute(`data-t${layerCount}`)) {
+				layerCount++;
+			}
+			this.eTabSwitcher = new ReC98TabSwitcher(layerCount, (i) => {
 				this.focus();
 				return this.show(i);
 			});
@@ -509,7 +514,11 @@ abstract class ReC98Player extends HTMLElement {
 			if(element.hasAttribute("data-active")) {
 				requested = i;
 			}
-			this.eTabSwitcher?.add(attributeAsString(element, "data-title"));
+			const layers: string[] = [];
+			for(let layerI = 0; layerI < layerCount; layerI++) {
+				layers.push(attributeAsString(element, `data-t${layerI}`));
+			}
+			this.eTabSwitcher?.add(layers);
 			lastChild = i;
 		}
 		if(lastChild === null) {

@@ -559,7 +559,7 @@ for(const auto& tsr : tsrs) {
 	Bundling all these small utility programs into <code>ZUN.COM</code> was apparently not enough for ZUN, and so he additionally compressed TH03's and TH04's <code>ZUN.COM</code> using Diet. This means that these binaries <i>also</i> have to first decompress themselves before they can unbundle and actually launch the requested sub-binary. {{HTML_Emoji "godzun"}} Any compressed binary necessarily decompresses into a process larger than the size of its binary file, and the .COM format has no way of expressing that larger size. Dynamically resizing the program's DOS memory block at startup could work, but Diet made the much more reliable choice of turning such .COM binaries into .EXE binaries, which can declaratively request more memory. Although it certainly is questionable how these binaries retain their original .COM extension… {{HTML_Emoji "thonk"}}<br>
 	Thus, our TSR size calculation code also needs to support .EXE binaries. The implementation is not complicated at all; you read the MZ header and adapt <a href="https://github.com/joncampbell123/dosbox-x/blob/f359dd9a8055c3386868a2ec0dc2c92be851d456/src/dos/dos_execute.cpp#L379-L381">the single expression for calculating the minimum size from DOSBox-X's source code</a>. But then, we're up for a major disappointment once we see how Diet requests almost one full 64&nbsp;KiB segment to fit both its compressed and decompressed payload. This doesn't matter for TH03, where SPRITE16 allocates an extra 32&nbsp;KB for alpha channels that would be placed into that extra bit of memory allocated for Diet before. But TH04 doesn't have a similarly sized third TSR, which leaves us with an unsightly 34,944-byte hole at the top of the DOS heap:
 </p></li></ul><figure><rec98-child-switcher>
-	<table data-title="Uncompressed" class="numbers bundle-{{.Date}}"><thead><tr>
+	<table data-t0="Uncompressed" class="numbers bundle-{{.Date}}"><thead><tr>
 		<th>TSR</th>
 		<th>Binary</th>
 		<th>Resident</th>
@@ -578,7 +578,7 @@ for(const auto& tsr : tsrs) {
 		<td>30,167</td>
 		<td>31,008</td>
 	</tr></tbody></table>
-	<table data-title="Compressed" class="numbers bundle-{{.Date}} active"><thead><tr>
+	<table data-t0="Compressed" class="numbers bundle-{{.Date}} active"><thead><tr>
 		<th>TSR</th>
 		<th>Binary</th>
 		<th>Resident</th>

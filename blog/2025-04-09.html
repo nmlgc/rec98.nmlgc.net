@@ -182,13 +182,13 @@ uint16_t pixel_hash(uint32_t p) {
 </p><figure class="fullres pixelated">
 	<rec98-child-switcher><img
 		src="{{$bm_main_menu}}"
-		data-title="The image"
+		data-t0="The image"
 		width="640"
 		alt="The `main_menu` benchmark image."
 	><img
 		src="{{$pixel}}"
 		class="active"
-		data-title="The pixel"
+		data-t0="The pixel"
 		width="640"
 		alt="A 16× zoomed view of the `main_menu` benchmark image, highlighting the single #583732FF pixel that causes the hash collision in FJXL's palette detection code"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -207,7 +207,7 @@ uint16_t pixel_hash(uint32_t p) {
 	But there is one widely-used image codec that both perfectly fits {{DB_CustomerByID 13}}'s priorities <i>and</i> compresses well on lower effort levels. Let's finally look at the complete benchmark numbers:
 </p><figure class="ratios benchmark-{{.Date}}">
 	<rec98-child-switcher id="numbers-{{.Date}}" data-link="images-{{.Date}}">
-		<table class="numbers active" data-title="<code>main_menu</code>"><thead>
+		<table class="numbers active" data-t0="<code>main_menu</code>"><thead>
 			<tr><th><code>main_menu</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>146,352</td><td>51,851</td><td>59,453</td><td>45,329</td><td>37,864</td><td>37,276</td><td>36,130</td><td>35,222</td><td>33,793</td><td>31,724</td></tr>
@@ -220,7 +220,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
-		</tbody></table><table class="numbers" data-title="<code>ingame</code>"><thead>
+		</tbody></table><table class="numbers" data-t0="<code>ingame</code>"><thead>
 			<tr><th><code>ingame</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>123,606</td><td>102,949</td><td>130,689</td><td>102,944</td><td>84,916</td><td>72,590</td><td>68,302</td><td>49,618</td><td>45,865</td><td>46,997</td></tr>
@@ -233,7 +233,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>BMP, cropped</td><td colspan="10">185,398</td></tr>
 			<tr><td>BMP/RLE, cropped</td><td colspan="10">177,456</td></tr>
 			<tr><td>QOI, cropped</td><td colspan="10">165,620</td></tr>
-		</tbody></table><table class="numbers" data-title="<code>stage6</code>"><thead>
+		</tbody></table><table class="numbers" data-t0="<code>stage6</code>"><thead>
 			<tr><th><code>stage6</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>32,204</td><td>24,146</td><td>35,053</td><td>24,599</td><td>19,936</td><td>19,560</td><td>19,336</td><td>18,444</td><td>17,423</td><td>16,183</td></tr>
@@ -246,7 +246,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>BMP, cropped</td><td colspan="10">185,398</td></tr>
 			<tr><td>BMP/RLE, cropped</td><td colspan="10">&nbsp;48,954</td></tr>
 			<tr><td>QOI, cropped</td><td colspan="10">&nbsp;45,874</td></tr>
-		</tbody></table><table class="numbers" data-title="<code>laser</code>"><thead>
+		</tbody></table><table class="numbers" data-t0="<code>laser</code>"><thead>
 			<tr><th><code>laser</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>345,199</td><td>287,279</td><td>301,608</td><td>248,852</td><td>92,463</td><td>85,529</td><td>81,206</td><td>66,811</td><td>61,445</td><td>47,173</td></tr>
@@ -259,7 +259,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
 			<tr><td>QOI, cropped</td><td colspan="10">280,462</td></tr>
-		</tbody></table><table class="numbers" data-title="<code>laserbomb</code>"><thead>
+		</tbody></table><table class="numbers" data-t0="<code>laserbomb</code>"><thead>
 			<tr><th><code>laserbomb</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>332,706</td><td>125,197</td><td>150,436</td><td>128,755</td><td>110,357</td><td>102,891</td><td>99,718</td><td>68,968</td><td>66,975</td><td>64,484</td></tr>
@@ -272,7 +272,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
 			<tr><td>QOI, cropped</td><td colspan="10">200,002</td></tr>
-		</tbody></table><table class="numbers" data-title="<code>gates</code>"><thead>
+		</tbody></table><table class="numbers" data-t0="<code>gates</code>"><thead>
 			<tr><th><code>gates</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
 			<tr><td>JPEG XL</td><td>208,293</td><td>185,662</td><td>212,615</td><td>172,008</td><td>124,466</td><td>117,509</td><td>113,563</td><td>110,992</td><td>97,454</td><td>91,146</td></tr>
@@ -285,7 +285,7 @@ uint16_t pixel_hash(uint32_t p) {
 			<tr><td>BMP, cropped</td><td colspan="10">553,014</td></tr>
 			<tr><td>&ZeroWidthSpace;</td><td colspan="10"></td></tr>
 			<tr><td>QOI, cropped</td><td colspan="10">147,670</td></tr>
-		</tbody></table><table class="numbers" data-title="<code>seihou</code>">
+		</tbody></table><table class="numbers" data-t0="<code>seihou</code>">
 		<thead>
 			<tr><th><code>seihou</code> / Effort</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
 		</thead><tbody>
@@ -329,37 +329,37 @@ uint16_t pixel_hash(uint32_t p) {
 	<rec98-child-switcher id="images-{{.Date}}" data-link="numbers-{{.Date}}"><img
 		src="{{$bm_main_menu}}"
 		class="active"
-		data-title="<code>main_menu</code>"
+		data-t0="<code>main_menu</code>"
 		width="640"
 		alt="The `main_menu` benchmark image."
 	><img
 		src="{{$bm_ingame}}"
-		data-title="<code>ingame</code>"
+		data-t0="<code>ingame</code>"
 		width="640"
 		alt="The `ingame` benchmark image."
 	><img
 		src="{{$bm_stage6}}"
-		data-title="<code>stage6</code>"
+		data-t0="<code>stage6</code>"
 		width="640"
 		alt="The `stage6` benchmark image."
 	><img
 		src="{{$bm_laser}}"
-		data-title="<code>laser</code>"
+		data-t0="<code>laser</code>"
 		width="640"
 		alt="The `laser` benchmark image."
 	><img
 		src="{{$bm_laserbomb}}"
-		data-title="<code>laserbomb</code>"
+		data-t0="<code>laserbomb</code>"
 		width="640"
 		alt="The `laserbomb` benchmark image."
 	><img
 		src="{{$bm_gates}}"
-		data-title="<code>gates</code>"
+		data-t0="<code>gates</code>"
 		width="640"
 		alt="The `gates` benchmark image."
 	><img
 		src="{{$bm_seihou}}"
-		data-title="<code>seihou</code>"
+		data-t0="<code>seihou</code>"
 		width="640"
 		alt="The `seihou` benchmark image."
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>

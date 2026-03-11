@@ -695,7 +695,7 @@ for(int i = 0; i &lt; length_of_tempo_message; i++) {
 	<pre>【 $title 】 from 秋霜玉  for sc88Pro comp.ZUN</pre>
 	The track titles should definitely not appear in this format in-game, but how do we get rid of this format without hardcoding either the names or the magic to parse the names out of this format? {{HTML_Emoji "thonk"}}</li>
 	<li><p>The absolute state of GS SysEx tooling rears its ugly head one final time in three of the AST MIDIs, which for some reason are missing the Roland vendor prefix byte in all of their SysEx messages and are therefore undeniably bugged. There even seemed to be another SysEx-related bug which <a href="https://twitter.com/Romantique_Tp/status/1734985007616151562">Romantique Tp explained away</a>, but not this one:</p><figure id="sysex-bugs-{{.Date}}">
-		<rec98-child-switcher><div data-title="ZUN's MIDI files" class="active">
+		<rec98-child-switcher><div data-t0="ZUN's MIDI files" class="active">
 			<h4><code>ssg_04.mid</code></h4>
 			<pre>0:000	SysEx(   10 42 12 40 00 7F 00 41 F7)
 0:240	SysEx(   10 42 12 40 01 30 14 7B F7)
@@ -711,7 +711,7 @@ for(int i = 0; i &lt; length_of_tempo_message; i++) {
 0:240	SysEx(   10 42 12 40 01 30 14 7B F7)
 0:360	SysEx(   10 42 12 40 01 33 00 0C F7)
 0:420	SysEx(   10 42 12 40 01 34 60 2B F7)</pre>
-		</div><div data-title="Fixed versions">
+		</div><div data-t0="Fixed versions">
 			<h4><code>ssg_04.mid</code></h4>
 <pre>0:000	SysEx(41 10 42 12 40 00 7F 00 41 F7)	GS Reset
 0:240	SysEx(41 10 42 12 40 01 30 14 7B F7)	Reverb Macro #20
@@ -745,8 +745,8 @@ for(int i = 0; i &lt; length_of_tempo_message; i++) {
 	The single most glaring issue, however, is the drastic difference in volume between the individual tracks in both soundtracks. While Romantique Tp had to normalize each track to the maximum possible volume individually as a consequence of the recording process, the Sound Canvas VA renderings reveal just how inconsistent the volume levels of these MIDI files really are:
 </p><figure id="peaks-{{.Date}}">
 	<rec98-child-switcher style="width: 100%;">
-		<embed data-title="OST" src="{{$peaks_ost}}">
-		<embed data-title="AST" src="{{$peaks_ast}}" class="active">
+		<embed data-t0="OST" src="{{$peaks_ost}}">
+		<embed data-t0="AST" src="{{$peaks_ast}}" class="active">
 		<rec98-parent-init></rec98-parent-init>
 	</rec98-child-switcher>
 	<figcaption>The peak amplitudes of every track in both soundtracks, as rendered by Sound Canvas VA at maximum volume. Looking at these, you might think that kaorin's 2007 recordings were purposely trying to preserve the clipping that would come out of an SC-88Pro if you don't manually adjust the volume knob for each song, but those recordings are still much louder than even these numbers.</figcaption>
@@ -756,11 +756,11 @@ for(int i = 0; i &lt; length_of_tempo_message; i++) {
 </p><figure style="width: 640px;">
 	<rec98-child-switcher><img
 		src="{{$a16_scva}}"
-		data-title="Sound Canvas VA"
+		data-t0="Sound Canvas VA"
 		alt="Stereo waveform of the Sound Canvas VA rendering of Shuusou Gyoku's Extra Stage theme (シルクロードアリス), highlighting the excessive left-panning"
 	><img
 		src="{{$a16_rtp}}"
-		data-title="Romantique Tp"
+		data-t0="Romantique Tp"
 		alt="Stereo waveform of Romantique Tp's recording of Shuusou Gyoku's Extra Stage theme (シルクロードアリス), highlighting the excessive left-panning"
 		class="active"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>

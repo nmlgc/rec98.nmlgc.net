@@ -29,8 +29,9 @@ class ReC98TabSwitcher extends HTMLElement {
 		)?.getElementsByTagName("div");
 	}
 
-	add(title: string | null) {
+	add(layers: string[]) {
 		const i = this.count;
+		const title = layers[0];
 		const button = document.createElement("button");
 		button.innerHTML = (`${i + 1}️⃣` + (title ? ` ${title}` : ''));
 		button.onclick = (() => {
@@ -116,7 +117,20 @@ class ReC98ChildSwitcher extends HTMLElement {
 		// now.
 		const linkedID = this.getAttribute("data-link");
 
-		this.tabSwitcher = new ReC98TabSwitcher(1, (i) => {
+		// Detect the amount of layers from the first child.
+		let layerCount = 1;
+		for(let i = 0; i < this.children.length; i++) {
+			const child = this.children[i];
+			if(child.tagName.startsWith('REC98-')) {
+				continue;
+			}
+			while(child.getAttribute(`data-t${layerCount}`)) {
+				layerCount++;
+			}
+			break;
+		}
+
+		this.tabSwitcher = new ReC98TabSwitcher(layerCount, (i) => {
 			this.focus();
 			const ret = this.showChild(i);
 
@@ -145,7 +159,13 @@ class ReC98ChildSwitcher extends HTMLElement {
 				activeIndex = (this.switchableChildren.length - 1);
 				this.showChild(activeIndex);
 			}
-			this.tabSwitcher.add(child.getAttribute("data-title"));
+
+			const layers = new Array<string>(layerCount);
+			for(let layerI = 0; layerI < layerCount; layerI++) {
+				layers[layerI] = child.getAttribute(`data-t${layerI}`) ?? "";
+			}
+
+			this.tabSwitcher.add(layers);
 		}
 		if(activeIndex == null) {
 			throw "No child marked as active.";

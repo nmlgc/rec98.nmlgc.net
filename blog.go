@@ -40,7 +40,7 @@ type BlogPlayerElement interface {
 // a <rec98-player> subclass.
 type BlogPlayerElementMeta struct {
 	Date   string
-	Title  template.HTML
+	Layers []template.HTML
 	Alt    string
 	Active bool
 	NoLoop bool
@@ -48,8 +48,8 @@ type BlogPlayerElementMeta struct {
 
 func (m *BlogPlayerElementMeta) tagAttributes() (ret template.HTML) {
 	ret += ` preload="none" controls`
-	if m.Title != "" {
-		ret += template.HTML(fmt.Sprintf(` data-title="%s"`, m.Title))
+	for i, layer := range m.Layers {
+		ret += template.HTML(fmt.Sprintf(` data-t%d="%s"`, i, layer))
 	}
 	if !m.NoLoop {
 		ret += ` loop`
@@ -88,7 +88,12 @@ type BlogVideo struct {
 }
 
 func (b *BlogVideo) SetTitle(title template.HTML) string {
-	b.Title = title
+	b.Layers = []template.HTML{title}
+	return ""
+}
+
+func (b *BlogVideo) SetLayers(layers ...template.HTML) string {
+	b.Layers = layers
 	return ""
 }
 
@@ -182,7 +187,7 @@ type BlogAudio struct {
 }
 
 func (b *BlogAudio) SetTitle(title template.HTML) string {
-	b.Title = title
+	b.Layers = []template.HTML{title}
 	return ""
 }
 

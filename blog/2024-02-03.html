@@ -16,7 +16,7 @@
 		{{- $pic := printf "TH0%v-Music-Room-background-B-file.png" . -}}
 		<img
 			src="{{(call $.PostFileURL $pic)}}"
-			data-title="TH0{{.}}"
+			data-t0="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background in its on-disk state"
 			{{if eq . 2}}class="active"{{end -}}
 		>
@@ -30,7 +30,7 @@
 		{{- $pic := printf "TH0%v-Music-Room-background-B-set.png" . -}}
 		<img
 			src="{{(call $.PostFileURL $pic)}}"
-			data-title="TH0{{.}}"
+			data-t0="TH0{{.}}"
 			alt="TH0{{.}}'s Music Room background, with all bits in the first bitplane set to reveal the spacey background image, and the full color palette at the bottom"
 			{{if eq . 2}}class="active"{{end -}}
 		>
@@ -63,12 +63,12 @@ outportb(0x7C, 0x00);
 	<rec98-child-switcher>
 		<img
 			src="{{$grcg_off}}"
-			data-title="GRCG disabled"
+			data-t0="GRCG disabled"
 			alt="Three overlapping Music Room polygons rendered using master.lib's grcg_polygon_c() function with a disabled GRCG"
 			class="active"
 		><img
 			src="{{$grcg_on}}"
-			data-title="GRCG enabled"
+			data-t0="GRCG enabled"
 			alt="Three overlapping Music Room polygons rendered as in the original game, with the GRCG enabled"
 		>
 	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -88,7 +88,7 @@ outportb(0x7C, 0x00);
 		{{- $pic := printf "TH0%v-Music-Room-nopoly-B.png" . -}}
 		<img
 			src="{{(call $.PostFileURL $pic)}}"
-			data-title="TH0{{.}}"
+			data-t0="TH0{{.}}"
 			alt=""
 			{{if eq . 2}}class="active"{{end -}}
 		>
@@ -142,18 +142,18 @@ outportb(0x7C, 0x00);
 </p><figure><rec98-child-switcher>
 	<img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABcBAMAAACVYn9sAAAAIVBMVEWZiIj///+qqv+7VbsimSJmZmb/AAARZhGIAIiqAAAAAABs6OBuAAADSUlEQVR42u2aMWsbQRCF15g9klTeE7i/VZMy1mHQP0h7JLyArjo39xfSGkQgZZor5MrNQny/MoO0OIGFmw0DYw72s9HaMLx5syMdr5ApFAqFQqFQKBQKhf/jum0/mQws0GXrKdLeOef2JgsgW0+N6ztHbB4Nx9UVvaDL1tPi3C/nym5ukhUweipcOyJeGb8AY9Fl6+nQOufPv3t+AYQFcvXUFlDTj2tc/bi8gHgCXa6e2idgs2sd9c27MgC5ekoD1HW7a9umEQwg0BNDy940ztV3db2VDZDqKX0EmtZ571pquPCmtd0/A3S5ejoDUK+mpq6yAVI9rQHq2tfONb7JG8DGAXg9pQGazA0gc4BGewP+9T3rlweIrkF0eXpKAzTxqZE3gAXRCfQSpPl9533dttu28f6jWQDoon8gX0/uD+AHcBtq6L3fLwq9EiDQS2Wl+f1InRrX0Os2b4C+h0Qv9SfM7+92PtI+Lq87EkIn0Uv9CfP7cPQEf2ED4v33kOml/mT5fYxXtqULq5bqLIhAdKaS6KX+RPmdOO7O/fbU3CwRPwCgOpFe6k+UHi1+H1ti/6N/Xq4LuEB1Ir3Un6BgHED8JIAwM3WRMOfqKQwwWADTBODU9/2zSl3qTxJ/8e1pmk4ADuFzmHXqeH/5A9j58Ov9hNOX+/7pO12ZSh3vLz+/o7M4TZi+3oeXEMKsUpf6E+R34HACpp54mmeFOsYfm99TDhMwhTDHdgp1qT9Bfq+qcfjwcprnZzOOg05d6k+Q36tzl/Hy96BSl/qT5HfqR03PXelUqUv9CfJ7bDUO8T+NutSfIL8Psa+Jp0Zd6k+Q36v4vo2NK4W61J8ov18axs0blTreH5/fU2JHhTrWH5/fU+IjT6GO9cfnd31Yf4Jcrg7vj8/l+rD+BLlcE94fn8vfHt4fn8v14fwJcrkyvD8+l+vD+xPkcm14f3wu14f1J8jl6vD++FyuD+tPkMu14f3xuVwfgb+3nkDq7+0foay/8q3XQqFQKPwFK8cAMwGs9TRd75x7sGGtp0F/M45XFms9aQO3ZriyYZ3nZQNVRZOs9TQdrWJ4sGGtpwGtwjxYrPWkDbjb0dmw1tMAhgDWepoOZ8Jaz9VHiT/BlZATUyNFOAAAAABJRU5ErkJggg=="
-		data-title="Stones 0 and 1"
+		data-t0="Stones 0 and 1"
 		alt="Screenshot of TH02's Five Magic Stones, with the first two (both internally and in the order you fight them in) alive and activated"
 		class="active"
 	>
 	<img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABcBAMAAACVYn9sAAAAIVBMVEWZiIj///+qqv+7VbsimSJmZmb/AAARZhGIAIiqAAAAAABs6OBuAAAC90lEQVR42u2asW7bMBCG6QAUqk7mIiAP0mfoKrS4AuYkLof6Cbp2KVBv8SAjzOSFQKNX7FIyJpJNvwIIpxLglyAXwx/A/3CWdINVpVKpVCqVSqVSqbwPTdSv7glDtLonx26XTuxX98TY79OBtLYnOwClqV/bEx2A0kSrezLsciXqV/dEISIBD3Cn/itqAwvQvXqjX9urE3gHWsTDDWwfXHwCfS6CHm6gjEFgWu8fgJIfmJoSMt7yfP5sjHlEDbwSSMRbnq89m8j9z4UNWEsi3vJ86X08Ak2ZEHpJD+drTQSPYKAXrLUk6uF83hiOv2gErCkSIr1qZDycLzfYxR/jTIevArKWSCmW83C+c5rOxZvozY5AU6Ab9irj4XxZ6Dp/8d65uQZ4oFfCJOAtz2eMu3exvXPXHWcuOU1E40hE3lp7FfNwvjYK3jAbH4WZi4C+PY2jJ6JD+BwmEQ/ny0J8z3XRmmtAT4eHdiT/5ZN9+mHtVcDD+bLQdZwucnZzDVCvyY80fv0UnkMIk5SH87UOdJghOnii0UaepknMw/lafv2McRRmOIxEYwhTOk7Mw/ladvkqn2+gaXj4+Oyn6aqYBzkP57swd94fvWP+rmYOfDmFb/8PMh7OlwVzHwVmnnsS85AOTX9TlfNwvhMzO+OY+TjTQD6Kh/xKwFua78OFM37mEshDZpWrgLc033DiCBiAavLndsgvBbyl+Ti3eIwNNmqWhjnPXMJbnu+UjKN/jLKC5BPFPJxP05+Tjzz+sleFyLc8KQ/ny3v57wjYy2XA+fBevj04H97Ltwfnw3u5PDgf3su3B+fDe/n24Hx4L98enA/v5fLgfHgv3x6cD+/l24Pz4b1cHpwP7+Xbg/PhvXx7cD68l2/P8nzA2Bicb/tbKMxXv/VaqVQqlTeocO5uLShVbO2tMcbpUGpVZPfMO02lVtXbTg07HUqtaQJNEzsptKYJ7HlwOpRaFdlOKaep1JruQh0bHUqtqthnQK53f28v+lJr8avEPwqse/10QYvbAAAAAElFTkSuQmCC"
-		data-title="Stones 2 and 3"
+		data-t0="Stones 2 and 3"
 		alt="Screenshot of TH02's Five Magic Stones, with the second two (both internally and in the order you fight them in) alive and activated"
 	>
 	<img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABcBAMAAACVYn9sAAAAIVBMVEWZiIj///+qqv+7VbsimSJmZmb/AAARZhGIAIiqAAAAAABs6OBuAAADfElEQVR42u2asWrcQBCGVwIJkkqjc1yf5jC4Pa39ACGGtIfDBE6VnEKvkAfwC4SAinN1KbawnjKbO8UuFjQyA7sW7Fd4bPiZ+WdXp/sLq0gkEolEIpFIJBJ5GxnRTs0gAShm9/MMkWKBE0qt5/XzR5LYH9yZrVUCqxu9hQLTmf28URT8kaXpGlb67s5ukK7n9fN7ASpjjgyTlb6Biy96W6xn9vN6ASpjjmwNWn8GuNMaZvfzQzJW5s2RrE4LXOjttpjdzys0fWSgVxpKgO0WQNAv4AKwwhIRLAtdoMQKEauyel8LZDs1QpMPbYKIgNougIiFoF+gBdIENQJuEEvUWKzf4QLZ5EBMSl2VjxtEwLoqcGY/Lzlu1sA0KWu4rrFGLOtq6gbI+wLjFGJuABEfTwugxgJn9PO7gK3cZwCvNWKNG/3yGeD7+cj5VnJWst8Dj/Wm1nYBrN7ST+6PE7xgmAXQomuNWAn6uXJpLqf/NA33RYY11rquACT9XH/CXJ7RiDHTYa5E1LpGDVBI+rn+hLm8Hc+LO7AWADd1jQiQivq5/mS5vMvIYiw7lU/ofiRQIm4QocBc0s/1J83l4wNLdviEKl0DnNNo6uiYfnJ/08+soTPNUU1whX/gxCc8yvq5/gSCrqUXzDCluycisLzq+H4eFmgzIup7Ijo0TXP0onP9SWItfX/q+wMR7c1XM3A6xCtWx/fj/c1fIBv2vz70dLi/bZ5+2iNjdL8dHdNPuAAfa2mX0aGn/tuteTbGDF50rj9BLifaH4j6xvI0DH50rj9RLt/3RL0xwzjOg871J8jled61H58Pw3BUXdf60bn+BLk8P03pzr+3XnSuP0ku/zcvP5+VrV50rj9BLh9Hde34lw+d60+Qy9txrhqrD53rT5DL8/G5HQfnHnSuP2kutwOnXhhyHe+Pz+UszESZjvUny+XcK0+u4/zxuTwsvD8+lweF98fn8rDw/vhcHhTeH5/Lw8L6Y3N5YDh/XC4PDeuPz+VB4f3xuTwsrD8+l4eF98fn8qDw/vhcHhbWH5/Lw8L6Y3J5cAT+Qm8g9Rf+Fcr6i//1GolEIpFXaOEoosFCtNSqdg0APGRmqVVRU3RdktFSq72BS9UmmVlmPd9AnttNllrVzl5F+5CZpVZF9irUQ0ZLrfYG4LKDzCy1KiJlIVpqVTs6YZZaFx8l/gJPZ5VZZhyRagAAAABJRU5ErkJggg=="
-		data-title="Stone 4"
+		data-t0="Stone 4"
 		alt="Screenshot of TH02's Five Magic Stones, with the last one (both internally and in the order you fight them in) alive and activated"
 	>
 	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>

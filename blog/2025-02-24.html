@@ -170,14 +170,14 @@
 </p><figure id="miko-{{.Date}}" class="pixelated">
 	<rec98-child-switcher><img
 		src="{{$miko_0}}"
-		data-title="Standing still"
+		data-t0="Standing still"
 		alt="Sprite #0 of TH02's MIKO.BFT"
 		width="320"
 		class="active"
 	><img
-		src="{{$miko_2}}" data-title="Moving left" alt="Sprite #2 of TH02's MIKO.BFT" width="320"
+		src="{{$miko_2}}" data-t0="Moving left" alt="Sprite #2 of TH02's MIKO.BFT" width="320"
 	><img
-		src="{{$miko_3}}" data-title="Moving right" alt="Sprite #3 of TH02's MIKO.BFT" width="320"
+		src="{{$miko_3}}" data-t0="Moving right" alt="Sprite #3 of TH02's MIKO.BFT" width="320"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>It's the <span style="color: red;">red</span> point.</figcaption>
 </figure><p>
@@ -200,18 +200,18 @@
 </p><figure id="hb-{{.Date}}" class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
 		src="{{$hb_p}}"
-		data-title="Pellet"
+		data-t0="Pellet"
 		alt="Hitbox of TH02's 8×8 pellets"
 		class="active"
 		width="384"
 	><img
-		src="{{$hb_ball}}" data-title="Ball" alt="Hitbox of TH02's 16×16 ball bullets" width="384"
+		src="{{$hb_ball}}" data-t0="Ball" alt="Hitbox of TH02's 16×16 ball bullets" width="384"
 	><img
-		src="{{$hb_呪}}" data-title="呪" alt="Hitbox of TH02's 呪 bullets" width="384"
+		src="{{$hb_呪}}" data-t0="呪" alt="Hitbox of TH02's 呪 bullets" width="384"
 	><img
-		src="{{$hb_bill}}" data-title="Billiard" alt="Hitbox of TH02's billiard bullets" width="384"
+		src="{{$hb_bill}}" data-t0="Billiard" alt="Hitbox of TH02's billiard bullets" width="384"
 	><img
-		src="{{$hb_star}}" data-title="Star" alt="Hitbox of TH02's star bullets" width="384"
+		src="{{$hb_star}}" data-t0="Star" alt="Hitbox of TH02's star bullets" width="384"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>{{Blog_PostLink "2022-06-17" "As"}} {{Blog_PostLink "2022-07-10" "usual"}}, a bullet sprite has to be fully surrounded by the blue box for a hit to be registered.</figcaption>
 </figure><p>
@@ -221,18 +221,18 @@
 </p><figure id="asymmetry-{{.Date}}" class="pixelated" style="width: 768px;">
 	<rec98-child-switcher><img
 		src="{{$asym}}"
-		data-title="Pattern"
+		data-t0="Pattern"
 		alt="A 2-spread pattern using a base angle of 0x40, TH02's hardcoded medium spread angle, and spawned at the center of the playfield to trap the player at its spawn point"
 		class="active"
 		width="768"
 	><img
 		src="{{$asym_l}}"
-		data-title="Asymmetry (left)"
+		data-t0="Asymmetry (left)"
 		alt="Visualization of the asymmetry in this 2-spread pattern if the right lane moved at the correct angle; the cyan area shows the symmetric triangle the pattern is expected to form, and the red area shows the inaccurate extra amount of space covered by the left lane"
 		width="768"
 	><img
 		src="{{$asym_r}}"
-		data-title="Asymmetry (right)"
+		data-t0="Asymmetry (right)"
 		alt="Visualization of the asymmetry in this 2-spread pattern if the left lane moved at the correct angle; the cyan area shows the asymmetric triangle being formed by the pattern as it is, and the red area shows the extra amount of space missing from the right lane to make the pattern actually symmetric"
 		width="768"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -330,13 +330,13 @@ int16_t polar_x(int16_t center, int16_t radius, uint8_t angle)
 	If we look at the respective frames in the <code>playperf = +2</code> case, we see that the bullet misses the hitbox by either one or two pixels on three successive frames:
 </p><figure class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
-		src="{{$s_o_2_120}}" data-title="Frame 120" class="active" width="384" alt="Frame 120 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+		src="{{$s_o_2_120}}" data-t0="Frame 120" class="active" width="384" alt="Frame 120 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
 	><img
-		src="{{$s_o_2_121}}" data-title="Frame 121" width="384" alt="Frame 121 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+		src="{{$s_o_2_121}}" data-t0="Frame 121" width="384" alt="Frame 121 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
 	><img
-		src="{{$s_o_2_122}}" data-title="Frame 122" width="384" alt="Frame 122 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+		src="{{$s_o_2_122}}" data-t0="Frame 122" width="384" alt="Frame 122 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
 	><img
-		src="{{$s_o_2_123}}" data-title="Frame 123" width="384" alt="Frame 123 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
+		src="{{$s_o_2_123}}" data-t0="Frame 123" width="384" alt="Frame 123 of the playperf = +2 video above, cropped to Reimu's position at the bottom-right edge of the playfield"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>That's not a safespot, that's Reimu barely surviving only thanks to rounding.</figcaption>
 </figure><p>

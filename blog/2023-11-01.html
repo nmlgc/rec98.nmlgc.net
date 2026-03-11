@@ -143,12 +143,12 @@
 	</div></figcaption>
 	<rec98-child-switcher><img
 		src="{{$hw_5}}"
-		data-title="TH05"
+		data-t0="TH05"
 		alt="Demonstrating the lack of automatic line or box breaks in TH05's dialog system"
 		class="active"
 	><img
 		src="{{$hw_4}}"
-		data-title="TH04"
+		data-t0="TH04"
 		alt="Demonstrating the lack of automatic line or box breaks in TH04's dialog system, in addition to its lack of support for ASCII 0x20 spaces carried over from TH03's cutscene system"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><hr><p id="th05-{{.Date}}">
@@ -250,20 +250,20 @@
 </p><figure class="pixelated singleplayer_playfield">
 	<rec98-child-switcher><img
 		src="{{$noclear_1}}"
-		data-title="Marisa"
+		data-t0="Marisa"
 		alt="TH04's dialog before the Stage 4 Marisa fight without deallocating the stage sprites inside the script, causing Marisa to be turned into one of the stage enemies"
 		class="active"
 	><img
 		src="{{$noclear_2}}"
-		data-title="Yuuka"
+		data-t0="Yuuka"
 		alt="TH04's dialog before the Stage 6 Yuuka fight without deallocating the stage sprites inside the script, causing Yuuka to be turned into two different cels of the same stage enemy"
 	><img
 		src="{{$noclear_3}}"
-		data-title="Louise"
+		data-t0="Louise"
 		alt="TH05's dialog before the Louise fight without deallocating the stage sprites inside the script, causing Louise to be turned into one of the ice enemies from TH05's Stage 2"
 	><img
 		src="{{$noclear_4}}"
-		data-title="Mai & Yuki"
+		data-t0="Mai & Yuki"
 		alt="TH05's dialog before the Louise fight without deallocating the stage sprites inside the script, causing Mai and Yuki to be turned into a windmill and fairy/demon enemy, respectively"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
@@ -612,15 +612,15 @@
 </p><figure class="pixelated" id="bugs-{{.Date}}">
 	<rec98-child-switcher><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABACAMAAAC6GQAEAAAAJFBMVEWadXUAAABVAABlVSCaVUWqAAD/AAD///+6VbqKAIpVihC6ut8RUTigAAABwElEQVR42u2X0W7CMAxF76lrl5X//9+RmGwVSwVb8jaO1SQoV0ehEhYRk9ED6/Dn62Sk6+R68+afAvoNqz0pAFtfLi1PALaNwvIS4gVSOqcf0ubKhH7I1wgb4/0QcqwzjPdDcmQnZ41CeiAXw8bmMWzOEdMyXZhM+xXDRwHG3yFA9V0ul2LEjFEfxXeYRoVlSFHOGlKCtu2hQwjx537YF2L8tR8CPAiBhV/2w4DgKed5HQlp/V5ywnrMN+KsH8Z2I+oSA3cKHrcCBxCdfL8fhsp+oayumLuHp68+qb/SzXf7Yd3PhFSEEeFFBkTOiG6+R+i+e0PRhEXpQPFFnrCf7xBbxG0/E1WYPir5/RH9fAevgVJbuN+FfoPEg4Lo5js+RZ6/BuQYXqHh6TvJd4Sep/dwL0JI3xED0c33j+iHfRphNMwQJ/kO7mU3Efq22EGIOMl38B8+2w1LI3sdxUn+hGYTlT0tmGH7Thr7+dN+SCtWyNNZQmGhnz/th9xroWK27+UpIxhwlk/EU5qw2sfvy2ApBDAm3JdpL5L8mzh+X6aiVhPuywBStU0C0GxjTtJ/MgpmG1PG+zb9g9XmlpbJfAKYWSRpEPtACAAAAABJRU5ErkJggg=="
-		data-title="Frame 35"
+		data-t0="Frame 35"
 		alt="Zoomed-in area around Reimu's sprite from frame 35 of the video above"
 	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABACAMAAAC6GQAEAAAAJFBMVEWadXX///+6ut+6VbpVihCaVUVlVSD/AACKAIqqAABVAAAAAACuhtTuAAAB2klEQVR42u2X0a4aMQwFT7i7dr3z///bTaxcIWqKyqaVKjGGZCOORuYBi4jF6IH98vm2GOm2uD78f8BqHyz2tcZCK4KUrvIl/EmTuz0vvldoFImidDwHcoXvw2vEa7ZV85B+ZqaAi/MQcjWMfLo4D+krKRxnLs5DxpIs+xXDjw5IV7UAw/f19dWNmHHVR/fdbVeFEqQod11SglrjntaEWCy8YAR4EPKGz/trQI2o87Xs/hFq6vyzeejtxMczBhF0ws+CANgp8vU89PPVBt4PWER4pG+8U39Q5st56K0lDnShu0eXAZ57UuYnmrjawE/kSuFQBtB9zuDYi3w1D725t+YjcbtNYQSD/P4YSEW+mIcxAr2aRyiFcUISnv2hW5H/dR6GPPsfAQVGDJgEgEC3Kq9HQpHdh0d0IaTvHiM7LPIqjB53nzNxY2KWHVb5ggg/KxGCabE7IQd1vjY++mwzLI1sYxXUedVMmxhsacEM2zZAHNR5PYNZCLI7S+gIqvxrnxiYbVt/9xUsOyzzrwEETOGwww66AlgKAQxpP9jf/H+YBdjJnIQcB4e9+f8wYXDM6sLfo39/XyZDiFX3Zcht3X0Zxs66+zLkpnXAamPK+NymP/wddltbOhbzE0ExQQX1ARnkAAAAAElFTkSuQmCC"
-		data-title="Frame 36"
+		data-t0="Frame 36"
 		alt="Zoomed-in area around Reimu's sprite from frame 36 of the video above"
 	><img
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABABAMAAAB/6e0FAAAAJFBMVEWadXX///+6ut+6VbpVihCaVUVlVSD/AACKAIqqAABVAAAAAACuhtTuAAACI0lEQVR42t2VMWvjMBiGRbhSwrecsmS4JfFyQ8b7C6FLdy9dgxYtzWTcG28JeOlmjH9AIVl0oYg4z587JZfaLi216NgHkY+8PE4MepEUkagLV4MziUSNIlFfGXGRIsSZAnGqCDrKdCKgUe+QvsL71KdA+ga17bM7Hncct/zYvkF9ro8iV/DsBDfQRxYJsE9goI97BKwdwUAfnTuLSjG00Y4CEAY3mgObTeGtMLTRxeHPr83QhsszsIFDAfCR6FEUQIFw+6HoNGf+fsfGirzvXKv7IAbjIoJzbd7XTtwLlhcM0ub9Pq71NE3voIGyrGnw3rd518eHJ631w9MOyrrJmzwM2LV5r4/rEEyBJsub3+RhYLu86+N9+J5l1+KbLKtr6jLLsHdt3vXx53Q90TpZnMQczp923+ZdH8vpeq71RGjKvAaqModFm7d9HF/riQ4soKnqgqKqapxr85m6MB6v1+HBZAFU9WFDVWFZtHkrqsd8nuh5kmBoKopge+Ncl7fi+HGeTCZ6JoYL3iJdrjpzrpNEzxyAxVjAuS5XHaPwJjPlYGWNMfbGeqTL++IoGSn5ZlhawC8xuDZ/xfm58EvmP36FdLmo1zi/tH51Y1bhn5fOdbl7c4iu4DmIt3BLL5f++ehPkOKDaD0cTS/vn4+7wGngjQV2x37++fMxTAFAIu5rSNjvI+5rIayo+5rTikGC5mJElHMSIzoViTutL04aidpG8g9rsB8etXIeNQAAAABJRU5ErkJggg=="
-		data-title="Frame 37"
+		data-t0="Frame 37"
 		alt="Zoomed-in area around Reimu's sprite from frame 37 of the video above"
 		class="active"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>

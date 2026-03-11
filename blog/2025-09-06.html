@@ -102,7 +102,7 @@
 	But even if we knew, <i>it doesn't matter</i>. The README is clear about ZUN's intentions:
 </p><figure><rec98-child-switcher class="plaintext">
 	<blockquote
-	lang="ja" class="active" data-title="TH02, <code>封魔録.TXT</code>"
+	lang="ja" class="active" data-t0="TH02, <code>封魔録.TXT</code>"
 >　　ＰＣ９８、またはその互換機専用です。（ＥＧＣ搭載機種）
 　　３８６以上で動作しますが、４８６ぐらい無いときついかも知れません。実際は
 　　ＶＲＡＭアクセスが速いことが重要です。
@@ -113,7 +113,7 @@
 　　り遅い機種ですと不幸かもしれません。
 　　ちなみに、４８６（６６ＭＨｚ）ですといっさい処理落ちや、欠けなどは出ませ
 　　ん。</blockquote><blockquote
-	lang="ja" data-title="TH03, <code>夢時空.TXT</code>"
+	lang="ja" data-t0="TH03, <code>夢時空.TXT</code>"
 >　　ＰＣ９８、またはその互換機専用です。（ＥＧＣ搭載機種）
 　　ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
 　　　　　（３８６でも動作はしますがゲームにならないでしょう。
@@ -121,7 +121,7 @@
 　　　　　　また、低クロックの４８６でもかなり処理落ちするかも知れません）
 
 　　実際は、ＣＰＵの他にもＶＲＡＭアクセスが速いことも重要です。</blockquote><blockquote
-	lang="ja" data-title="TH04, <code>夢時空.TXT</code>"
+	lang="ja" data-t0="TH04, <code>夢時空.TXT</code>"
 >　　ＰＣ９８（ＰＣ９８－ＮＸ除く）、またはその互換機専用です。
 　　（ＥＧＣ搭載機種）
 　　ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
@@ -131,7 +131,7 @@
 　　　　　　処理落ちするかも知れません）
 
 　　実際は、ＣＰＵの他にもＶＲＡＭアクセスが速いことも重要です。</blockquote><blockquote
-	lang="ja" data-title="TH05, <code>怪綺談.TXT</code>"
+	lang="ja" data-t0="TH05, <code>怪綺談.TXT</code>"
 >　　●ＰＣ９８（ＰＣ９８－ＮＸ除く）、またはその互換機専用です。
 　　　（ＥＧＣ搭載機種）
 　　●ＣＰＵ：４８６（６６ＭＨｚ）以上推奨
@@ -171,23 +171,23 @@
 	{{define "desc_head"}}Decorative screenshot of the first two rows of the wide blitting benchmark, running on{{end -}}
 	<rec98-child-switcher><img
 		src="{{$perf_dx_simple}}"
-		data-title="DOSBox-X, max cycles, simple core"
+		data-t0="DOSBox-X, max cycles, simple core"
 		width="640"
 		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=simple`"
 	><img
 		src="{{$perf_np21w}}"
-		data-title="Neko Project 21/W, Async @1&nbsp;GHz"
+		data-t0="Neko Project 21/W, Async @1&nbsp;GHz"
 		width="640"
 		alt="{{template "desc_head"}} Neko Project 21/W in Async CPU mode with a maximum clock speed of 2.4576&nbsp;× 407&nbsp;= 1000.2432&nbsp;MHz"
 		class="active"
 	><img
 		src="{{$perf_dx_dynamic}}"
-		data-title="DOSBox-X, max cycles, dynamic core"
+		data-t0="DOSBox-X, max cycles, dynamic core"
 		width="640"
 		alt="{{template "desc_head"}} DOSBox-X with `cycles=max` and `core=dynamic`"
 	><img
 		src="{{$perf_anex86}}"
-		data-title="Anex86, Sync 1"
+		data-t0="Anex86, Sync 1"
 		width="640"
 		alt="{{template "desc_head"}} Anex86 in Sync 1 mode"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
@@ -221,13 +221,13 @@
 </p><figure class="fullres pixelated bglayer">
 	<rec98-child-switcher><img
 		src="{{$th04_tear}}"
-		data-title="Raw image"
+		data-t0="Raw image"
 		width="640"
 		alt="Screenshot of TH04's Music Room, demonstrating the screen tearing landmine that the original game exhibits on every frame"
 		class="active"
 	><img
 		src="{{$th04_tear_v}}"
-		data-title="Tearing visualization"
+		data-t0="Tearing visualization"
 		width="640"
 		alt="Colored visualization of which lines correspond to which frame in the TH04 Music Room screenshot"
 		style="background-image: url('{{$th04_tear}}');"

@@ -144,9 +144,9 @@
 	32, not the 0 we wanted to have. And since this line is part of the <a href="https://github.com/nmlgc/ssg/blob/pbg/GIAN07/TAMA.CPP#L402-L424">sprite selection for VIVIT-captured-'s feather bullets</a>, omitting the cast has a visible effect on the game:
 </p><figure class="pixelated" style="width: 768px;">
 	<rec98-child-switcher><img
-		src="{{$feathercast_missing}}" data-title="Removed cast" class="active" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, but with one feather bullet turned into a &quot;YZ&quot; sprite due to a removed downcast of the dividend in the angle calculation"
+		src="{{$feathercast_missing}}" data-t0="Removed cast" class="active" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, but with one feather bullet turned into a &quot;YZ&quot; sprite due to a removed downcast of the dividend in the angle calculation"
 	><img
-		src="{{$feathercast_correct}}" data-title="Original game" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, rendered correctly"
+		src="{{$feathercast_correct}}" data-t0="Original game" width="768" alt="A circle of VIVIT-captured-'s feather bullets as shown shortly after the beginning of her final form, rendered correctly"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The first file in <code>GRAPH.DAT</code> explains what we're seeing here.
 	</figcaption>
@@ -314,9 +314,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<li>In 8-bit mode, the game draws circles by writing pixels along the accurate outline into the framebuffer. The hardware-accelerated equivalent for the 16-bit mode would be a large unwieldy point list, so the game instead approximates circles by drawing straight lines along a regular 32-sided polygon:
 	<figure class="pixelated" style="width: 512px;">
 		<rec98-child-switcher><img
-			src="{{$circles_8}}" data-title="8-bit" class="active" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
+			src="{{$circles_8}}" data-t0="8-bit" class="active" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
 		><img
-			src="{{$circles_16}}" data-title="16-bit" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
+			src="{{$circles_16}}" data-t0="16-bit" width="512" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
 		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			It's not like the APIs prevent the 16-bit mode from taking the same approach as the 8-bit mode, so I suppose that pbg profiled this and concluded that lines offloaded to the GPU performed better than locking the framebuffer and writing pixels? Then again, given Shuusou Gyoku's comparatively high system requirements…
 		</figcaption>
@@ -324,9 +324,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<li>There's an off-by-one error in the playfield clipping region for Direct3D-rendered shapes, which ends at (﻿511,&nbsp;479﻿) instead of (﻿512,&nbsp;480﻿):
 	<figure class="pixelated" style="width: 640px;">
 		<rec98-child-switcher><img
-			src="{{$ob1_vp_8}}" data-title="8-bit" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
+			src="{{$ob1_vp_8}}" data-t0="8-bit" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight"
 		><img
-			src="{{$ob1_vp_16}}" data-title="16-bit" class="active" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
+			src="{{$ob1_vp_16}}" data-t0="16-bit" class="active" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight"
 		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			The fix is obvious.
 		</figcaption>
@@ -334,9 +334,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<li>There's an off-by-one error in the 8-bit rendering code for opaque rectangles that causes them to appear 1 pixel wider than in 16-bit mode. The red backgrounds behind the currently entered score are the only such boxes in the entire game; the transparent rectangles used everywhere else are drawn with the same width in both modes.
 	<figure class="pixelated" style="width: 912px;">
 		<rec98-child-switcher><img
-			src="{{$ob1_box_8}}" data-title="8-bit" width="912" class="active" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 8-bit mode, highlighting 1st place with red backgrounds that are 1 pixel wider than in 16-bit mode"
+			src="{{$ob1_box_8}}" data-t0="8-bit" width="912" class="active" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 8-bit mode, highlighting 1st place with red backgrounds that are 1 pixel wider than in 16-bit mode"
 		><img
-			src="{{$ob1_box_16}}" data-title="16-bit" width="912" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 16-bit mode, highlighting 1st place with red backgrounds at the correct size passed by game code"
+			src="{{$ob1_box_16}}" data-t0="16-bit" width="912" alt="Screenshot of Shuusou Gyoku's High Score entry menu in 16-bit mode, highlighting 1st place with red backgrounds at the correct size passed by game code"
 		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			The game code also clearly asks for 400 and 14 pixels, respectively.
 		</figcaption>
@@ -344,9 +344,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	<li>If we move the nice and accurate 8-bit circle outlines closer to the edge of the playfield, we discover, you guessed it, yet another off-by-one error:
 	<figure class="pixelated" style="width: 640px;">
 		<rec98-child-switcher><img
-			src="{{$ob1_circles_8}}" data-title="8-bit" width="640" class="active" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight, this time with the circles closer to the right edge of the playfield to highlight the off-by-one error in their clipping condition"
+			src="{{$ob1_circles_8}}" data-t0="8-bit" width="640" class="active" alt="Screenshot of Shuusou Gyoku's circle drawing in 8-bit mode as shown during the Marisa boss fight, this time with the circles closer to the right edge of the playfield to highlight the off-by-one error in their clipping condition"
 		><img
-			src="{{$ob1_circles_16}}" data-title="Line approximation (with fixed clipping)" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight and with a fixed playfield clipping region for Direct3D shapes, this time with the circles closer to the right edge of the playfield to compare their correct clipping against the off-by-one error in 8-bit mode"
+			src="{{$ob1_circles_16}}" data-t0="Line approximation (with fixed clipping)" width="640" alt="Screenshot of Shuusou Gyoku's circle drawing in 16-bit mode as shown during the Marisa boss fight and with a fixed playfield clipping region for Direct3D shapes, this time with the circles closer to the right edge of the playfield to compare their correct clipping against the off-by-one error in 8-bit mode"
 		><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 			No circle pixels at the right edge of the playfield. Obviously, I had to fix bug #2 in order for the line approximation to not also get clipped at the same coordinate.
 		</figcaption>
@@ -363,9 +363,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	By far the funniest porting solution can be found in the Music Room's spectrum analyzer, which calls for 144 1-pixel gradient lines of varying heights. SDL_Renderer has no API for rendering lines with multiple colors… which means that we have to render them as 144 quads with a width of 1 pixel. {{HTML_Emoji "onricdennat"}}
 </p><figure class="pixelated" style="width: 960px;">
 	<rec98-child-switcher><img
-		src="{{$spect}}" data-title="Solid" width="960" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, at 6× magnification"
+		src="{{$spect}}" data-t0="Solid" width="960" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, at 6× magnification"
 	><img
-		src="{{$spect_wf}}" data-title="Wireframe" width="960" class="active" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, with a wireframe render of the spectrum overlaid to demonstrate how the new SDL backend renders these gradient lines, at 6× magnification"
+		src="{{$spect_wf}}" data-t0="Wireframe" width="960" class="active" alt="The spectrum analyzer in Shuusou Gyoku's Music Room, with a wireframe render of the spectrum overlaid to demonstrate how the new SDL backend renders these gradient lines, at 6× magnification"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		The wireframe was generated via a raw <code>glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);</code>
 	</figcaption>
@@ -381,7 +381,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	But let's assume the hopefully usual case of a functional GPU with at least decently written drivers where most of the APIs will work without visible issues. Which of them is the most performant/power-saving one on any given system? With every API having a slightly different idea about 3D rendering, there are bound to be <i>some</i> performance differences, and maybe these even differ between GPUs. But just how large would they be?<br>
 	The answer is yes:
 </p><figure><rec98-child-switcher class="inverted">
-	<table data-title="Stage 6, Laser" class="numbers active perf-{{.Date}}">
+	<table data-t0="Stage 6, Laser" class="numbers active perf-{{.Date}}">
 		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
 		<tbody><tr>
 			<th>
@@ -433,7 +433,7 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 			<div>{{HTML_PerfBar	750	1440	100}}<span>OpenGL 2.1</span></div>
 		</td></tr>
 	</tbody></table>
-	<table data-title="Extra Stage, Homing" class="numbers perf-{{.Date}}">
+	<table data-t0="Extra Stage, Homing" class="numbers perf-{{.Date}}">
 		<thead><tr><th>System</th><th>FPS (lowest | median) / API</th></tr></thead>
 		<tbody><tr>
 			<th>
@@ -576,16 +576,16 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure>
 	<rec98-child-switcher><img
 		src="{{$720p_integer}}"
-		data-title="Integer"
+		data-t0="Integer"
 		alt="Screenshot of the Integer fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
 		class="active"
 	><img
 		src="{{$720p_aspect}}"
-		data-title="4:3"
+		data-t0="4:3"
 		alt="Screenshot of the 4:3 fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
 	><img
 		src="{{$720p_stretch}}"
-		data-title="Stretch"
+		data-t0="Stretch"
 		alt="Screenshot of the Stretch fit option in the borderless fullscreen mode of the P0295 Shuusou Gyoku build, as captured on a 1280×720 display"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>
@@ -628,12 +628,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</div></figcaption>
 	<rec98-child-switcher><img
 		src="{{$menu_geometry}}"
-		data-title="Geometry scaling"
+		data-t0="Geometry scaling"
 		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using geometry scaling, showing off both the sharp edges on boxes and the darker, individually-blended lines of text"
 		class="active"
 	><img
 		src="{{$menu_framebuf}}"
-		data-title="Framebuffer scaling"
+		data-t0="Framebuffer scaling"
 		alt="Screenshot of the new Graphic option menu in the Shuusou Gyoku P0295 build, as rendered at a scale factor of 3.75× using framebuffer scaling, showing off the more natural bilinearly-filtered look that blends the entire screen together and results in brighter text"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
@@ -642,13 +642,13 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure class="pixelated" style="width: 320px;">
 	<rec98-child-switcher><img
 		src="{{$c125_geometry}}"
-		data-title="Geometry scaling"
+		data-t0="Geometry scaling"
 		width="320"
 		alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using geometry scaling, showing off the inconsistent rasterization of point quads without anti-aliasing"
 		class="active"
 	><img
 		src="{{$c125_framebuf}}"
-		data-title="Framebuffer scaling"
+		data-t0="Framebuffer scaling"
 		width="320"
 		alt="Screenshot of the Wide Shot selection in Shuusou Gyoku's Weapon Select screen, as rendered at a scale factor of 1.25× using framebuffer scaling"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
@@ -659,13 +659,13 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure style="width: 1152px;">
 	<rec98-child-switcher><img
 		src="{{$llaser_geometry}}"
-		data-title="Geometry scaling"
+		data-t0="Geometry scaling"
 		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at a scale factor of 3× and using geometry scaling for smooth edges at the scaled resolution"
 		width="1152"
 		class="active"
 	><img
 		src="{{$llaser_framebuf}}"
-		data-title="Framebuffer scaling"
+		data-t0="Framebuffer scaling"
 		width="1152"
 		alt="Screenshot of a long laser used by Shuusou Gyoku's Extra Stage midboss, rendered at 640×480 and framebuffer-scaled to 3× of the original resolution"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
@@ -684,12 +684,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</div></figcaption>
 	<rec98-child-switcher><img
 		src="{{$s3_15_geometry}}"
-		data-title="Geometry scaling"
+		data-t0="Geometry scaling"
 		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using geometry scaling, showing off tons of tilemap texture coordinate glitches and the usually half-transparent shadow of Gates' plane showing up in a strange green color"
 		class="active"
 	><img
 		src="{{$s3_15_framebuf}}"
-		data-title="Framebuffer scaling"
+		data-t0="Framebuffer scaling"
 		alt="Screenshot of a frame of Shuusou Gyoku's Stage 3 intro, rendered at a scale factor of 1.5× using framebuffer scaling, with no graphical glitches"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
@@ -713,9 +713,9 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	Now that we can take screenshots, let's take a few and compare our 640×480 output to pbg's original Direct3D backend to see how close we got. Certain small details might vary across all the APIs we can use with SDL_Renderer, but at least for Direct3D 9, we'd expect nothing less than a pixel-perfect match if we pass the exact same vertices to the exact same APIs. But something seems to be wrong with the SDL backend at the subpixel level with any triangle-based geometry, regardless of which rendering API we choose…
 </p><figure class="pixelated" style="width: 384px;">
 	<rec98-child-switcher><img
-		src="{{$vo_orig}}" data-title="pbg's Direct3D backend" class="active" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by pbg's original Direct3D backend"
+		src="{{$vo_orig}}" data-t0="pbg's Direct3D backend" class="active" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by pbg's original Direct3D backend"
 	><img
-		src="{{$vo_sdl}}" data-title="SDL" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by the initial state of the SDL graphics backend, showing slightly displaced vertices compared to pbg's original Direct3D backend"
+		src="{{$vo_sdl}}" data-t0="SDL" width="384" alt="Screenshot of the laser-heavy pattern of VIVIT-captured-'s first form, as rendered by the initial state of the SDL graphics backend, showing slightly displaced vertices compared to pbg's original Direct3D backend"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher><figcaption>
 		As if each polygon was shifted slightly up and to the left…
 	</figcaption>
@@ -740,12 +740,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 	</div></figcaption>
 	<rec98-child-switcher>
 		{{- define "l_circ_alt"}}Screenshot of Shuusou Gyoku's Homing Missile weapon option with the circular selection cursor{{end -}}
-		<img src="{{$l_circ_8}}" data-title="8-bit" width="795" alt="{{template "l_circ_alt"}} as rendered by pbg's original 8-bit drawing code">
-		<img src="{{$l_circ_16}}" data-title="Direct3D" width="795" class="active" alt="{{template "l_circ_alt"}} as rendered by Direct3D's line drawing algorithm">
-		<img src="{{$l_circ_gl_p}}" data-title="OpenGL" width="795" alt="{{template "l_circ_alt"}} as rendered by OpenGL's line drawing algorithm">
-		<img src="{{$l_circ_sdl_p}}" data-title="SDL points" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's point-based line drawing algorithm">
-		<img src="{{$l_circ_sdl_t_1}}" data-title="SDL triangles (1×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
-		<img src="{{$l_circ_sdl_t_5}}" data-title="SDL triangles (5×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
+		<img src="{{$l_circ_8}}" data-t0="8-bit" width="795" alt="{{template "l_circ_alt"}} as rendered by pbg's original 8-bit drawing code">
+		<img src="{{$l_circ_16}}" data-t0="Direct3D" width="795" class="active" alt="{{template "l_circ_alt"}} as rendered by Direct3D's line drawing algorithm">
+		<img src="{{$l_circ_gl_p}}" data-t0="OpenGL" width="795" alt="{{template "l_circ_alt"}} as rendered by OpenGL's line drawing algorithm">
+		<img src="{{$l_circ_sdl_p}}" data-t0="SDL points" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's point-based line drawing algorithm">
+		<img src="{{$l_circ_sdl_t_1}}" data-t0="SDL triangles (1×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
+		<img src="{{$l_circ_sdl_t_5}}" data-t0="SDL triangles (5×)" width="795" alt="{{template "l_circ_alt"}} as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
 		<rec98-parent-init></rec98-parent-init>
 	</rec98-child-switcher>
 </figure><p>
@@ -753,12 +753,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure class="pixelated" style="width: 768px;">
 	<rec98-child-switcher>
 		{{- define "l_warn_alt"}}The final 5-instance frame of Shuusou Gyoku's pre-boss WARNING wireframe animation against a black background{{end -}}
-		<img src="{{$l_warn_8}}" data-title="8-bit" width="768" alt="{{template "l_warn_alt"}}, as rendered by pbg's original 8-bit drawing code">
-		<img src="{{$l_warn_16}}" data-title="Direct3D" width="768" alt="{{template "l_warn_alt"}}, as rendered by Direct3D's line drawing algorithm">
-		<img src="{{$l_warn_gl_p}}" data-title="OpenGL" width="768" alt="{{template "l_warn_alt"}}, as rendered by OpenGL's line drawing algorithm">
-		<img src="{{$l_warn_sdl_p}}" data-title="SDL points" width="768" class="active" alt="{{template "l_warn_alt"}}, as rendered by SDL's point-based line drawing algorithm">
-		<img src="{{$l_warn_sdl_t_1}}" data-title="SDL triangles 1×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
-		<img src="{{$l_warn_sdl_t_2}}" data-title="SDL triangles 2×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
+		<img src="{{$l_warn_8}}" data-t0="8-bit" width="768" alt="{{template "l_warn_alt"}}, as rendered by pbg's original 8-bit drawing code">
+		<img src="{{$l_warn_16}}" data-t0="Direct3D" width="768" alt="{{template "l_warn_alt"}}, as rendered by Direct3D's line drawing algorithm">
+		<img src="{{$l_warn_gl_p}}" data-t0="OpenGL" width="768" alt="{{template "l_warn_alt"}}, as rendered by OpenGL's line drawing algorithm">
+		<img src="{{$l_warn_sdl_p}}" data-t0="SDL points" width="768" class="active" alt="{{template "l_warn_alt"}}, as rendered by SDL's point-based line drawing algorithm">
+		<img src="{{$l_warn_sdl_t_1}}" data-t0="SDL triangles 1×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a scale factor of 1×">
+		<img src="{{$l_warn_sdl_t_2}}" data-t0="SDL triangles 2×" width="768" alt="{{template "l_warn_alt"}}, as rendered by SDL's triangle-based line drawing algorithm at a geometry scale factor of 5×.">
 		<rec98-parent-init></rec98-parent-init>
 	</rec98-child-switcher>
 	<figcaption>6884 pixels touched by the Direct3D line renderer, a 98.3% match by the OpenGL rasterizer with 119 diverging pixels, and a 97.9% match by the SDL rasterizer with 147 diverging pixels. Looks like OpenGL gets better the longer the lines get, making line render method #2 the better choice even on non-Direct3D drivers.</figcaption>
@@ -799,12 +799,12 @@ Quick info operation failed: FE: 'Compiler exited with error - No IL available'<
 </p><figure>
 	<rec98-child-switcher><img
 		src="{{$domino_02_orig}}"
-		data-title="Original"
+		data-t0="Original"
 		alt="Screenshot of the all SysEx messages appearing in the original MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
 		class="active"
 	><img
 		src="{{$domino_02_fixed}}"
-		data-title="Fixed"
+		data-t0="Fixed"
 		alt="Screenshot of the all SysEx messages appearing in the a SysEx-fixed MIDI file of the OST version of フォルスストロベリー, Shuusou Gyoku's Stage 1 theme, as decoded by Domino"
 	><rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 	<figcaption>As visualized by {{Blog_PostLink "2024-03-09#sysex" "Domino"}}.</figcaption>

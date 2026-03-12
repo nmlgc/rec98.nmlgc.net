@@ -43,12 +43,18 @@ rec98-child-switcher {
 		}
 	}
 
+	pre {
+		margin: 0;
+		border: none;
+		box-shadow: none;
+	}
+
 	&.plaintext {
 		background-color: black;
 		font-family: monospace;
 		text-align: left;
 
-		blockquote {
+		blockquote, pre {
 			color: white!important;
 		}
 	}

@@ -4,11 +4,23 @@
  */
 type TabSwitchFunc = (index: number) => boolean;
 
+interface Layer {
+	name: string;
+	index: number;
+	button: HTMLButtonElement;
+	children: Layer[];
+}
+
+const hideLayer = (child: Layer) => (child.button.hidden = true);
+const showLayer = (child: Layer) => (child.button.hidden = false);
+
 // Generic tab switching component.
 class ReC98TabSwitcher extends HTMLElement {
 	rowDivs: HTMLDivElement[] = [];
-	activeIndex = -1;
-	count = 0;
+	layerTree: Layer[] = [];
+	buttonIDs: number[][] = []; // On each layer of the switcher, in order
+	activeIndex = -1; // Across the entire switcher
+
 	switchFunc: TabSwitchFunc;
 	dynamicCaptions?: HTMLCollectionOf<HTMLDivElement>;
 
@@ -30,20 +42,86 @@ class ReC98TabSwitcher extends HTMLElement {
 	}
 
 	add(layers: string[]) {
-		const i = this.count;
-		const title = layers[0];
-		const button = document.createElement("button");
-		button.innerHTML = (`${i + 1}️⃣` + (title ? ` ${title}` : ''));
-		button.onclick = (() => {
-			this.switchTo(i);
-		});
-		this.rowDivs[0].appendChild(button);
-		this.count++;
+		let count = this.buttonIDs.length;
+		let buttonIDs = new Array<number>(this.rowDivs.length);
+		let layerLevel = this.layerTree;
+		for(let layerID = 0; layerID < layers.length; layerID++) {
+			const name = layers[layerID];
+			let indexOnLayer = layerLevel.findIndex((l) => (l.name == name));
+			if(indexOnLayer == -1) {
+				indexOnLayer = layerLevel.length;
+			}
+			buttonIDs[layerID] = indexOnLayer;
+			if(indexOnLayer == layerLevel.length) {
+				let layer = {
+					name,
+					index: count,
+					button: document.createElement("button"),
+					children: [],
+				};
+				layerLevel.push(layer);
+				layer.button.hidden = true;
+				if(layerID == (layers.length - 1)) {
+					layer.button.innerHTML = (`${indexOnLayer + 1}️⃣` + (name ? ` ${name}` : ''));
+					layer.button.onclick = (() => {
+						this.switchTo(count);
+					});
+				} else {
+					layer.button.innerHTML = name;
+					const buttonIDsUpToThisLayer = buttonIDs.slice(0, (layerID + 1));
+					layer.button.onclick = (() => {
+						this.switchTo(this.findIndexForPartialIDs(buttonIDsUpToThisLayer));
+					});
+				}
+				this.rowDivs[layerID].appendChild(layer.button);
+			}
+			layerLevel = layerLevel[indexOnLayer].children;
+		}
+		this.buttonIDs.push(buttonIDs);
+	}
+
+	findIndexForPartialIDs(ids: number[]) {
+		// Defined layers
+		let layerLevel = this.layerTree;
+		for(const idOnLayer of ids) {
+			layerLevel = layerLevel[idOnLayer].children;
+		}
+
+		// Remaining layers not given in [ids]
+		const prevIDs = this.buttonIDs[this.activeIndex] ?? [];
+		for(let layerI = ids.length; layerI < (prevIDs.length - 1); layerI++) {
+			const idOnLayer = ((prevIDs[layerI] < layerLevel.length)
+				? prevIDs[layerI]
+				: 0
+			);
+			layerLevel = layerLevel[idOnLayer].children;
+		}
+
+		// Lowest layer
+		const idOnLayer = ((prevIDs[prevIDs.length - 1] < layerLevel.length)
+			? prevIDs[prevIDs.length - 1]
+			: 0
+		);
+		return layerLevel[idOnLayer].index;
 	}
 
 	setActive(index: number) {
-		this.rowDivs[0].children[this.activeIndex]?.classList.remove("active");
-		this.rowDivs[0].children[index].classList.add("active");
+		const prevIDs = this.buttonIDs[this.activeIndex] ?? [];
+		let layerLevel = this.layerTree;
+		for(const idOnLayer of prevIDs) {
+			layerLevel[idOnLayer].button.classList.remove("active");
+			layerLevel.forEach(hideLayer);
+			layerLevel = layerLevel[idOnLayer].children;
+		}
+
+		const newIDs = this.buttonIDs[index];
+		layerLevel = this.layerTree;
+		for(const idOnLayer of newIDs) {
+			layerLevel[idOnLayer].button.classList.add("active");
+			layerLevel.forEach(showLayer);
+			layerLevel = layerLevel[idOnLayer].children;
+		}
+
 		this.activeIndex = index;
 		if(this.dynamicCaptions) {
 			for(let i = 0; i < this.dynamicCaptions.length; i++) {
@@ -59,16 +137,26 @@ class ReC98TabSwitcher extends HTMLElement {
 	}
 
 	/**
+	 * @param forceLowest Translates ↑/↓ to ←/→ regardless of the number of actual layers
 	 * @returns Whether this event was handled
 	 */
-	keydownHandler(event: KeyboardEvent) {
-		if(event.key >= `1` && event.key <= `${this.count}`) {
-			this.switchTo(Number(event.key) - 1);
+	keydownHandler(event: KeyboardEvent, forceLowest: boolean | null = null) {
+		const prevIDs = this.buttonIDs[this.activeIndex] ?? [];
+		let layer1 = null;
+		let layer0 = this.layerTree;
+		for(let layerID = 0; layerID < (prevIDs.length - 1); layerID++) {
+			layer1 = layer0;
+			layer0 = layer0[prevIDs[layerID]].children;
+		}
+
+		if(event.key >= `1` && event.key <= `${layer0.length}`) {
+			this.switchTo(layer0[Number(event.key) - 1].index);
 			return true;
 		}
 
+		const total = this.buttonIDs.length;
 		let key = virtualKey(event);
-		if(true) {
+		if(forceLowest || !layer1) {
 			if(key == '↑') {
 				key = '←';
 			} else if(key == '↓') {
@@ -76,12 +164,26 @@ class ReC98TabSwitcher extends HTMLElement {
 			}
 		}
 		switch(key) {
-		case '←':
-			this.switchTo(((this.activeIndex + this.count) - 1) % this.count);
+		case '↑': {
+			const ids = prevIDs.slice(0, -1);
+			ids[ids.length - 1] = (((ids[ids.length - 1] + layer1!.length) - 1) % layer1!.length);
+			this.switchTo(this.findIndexForPartialIDs(ids))
 			event.preventDefault(); // Prevents scrolling!
 			break;
+		}
+		case '↓': {
+			const ids = prevIDs.slice(0, -1);
+			ids[ids.length - 1] = ((ids[ids.length - 1] + 1) % layer1!.length);
+			this.switchTo(this.findIndexForPartialIDs(ids))
+			event.preventDefault(); // Prevents scrolling!
+			break;
+		}
+		case '←':
+			this.switchTo(((this.activeIndex + total) - 1) % total);
+			event.preventDefault(); // Prevents scrolling!
+		break;
 		case '→':
-			this.switchTo((this.activeIndex + 1) % this.count);
+			this.switchTo((this.activeIndex + 1) % total);
 			event.preventDefault(); // Prevents scrolling!
 			break;
 		}

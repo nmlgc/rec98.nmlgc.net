@@ -353,6 +353,12 @@ figure.formula {
 	display: block;
 }
 
+@media (max-width: 500px) {
+	table, pre {
+		font-size: 2.5vw;
+	}
+}
+
 /* Header
    ------ */
 body {
@@ -982,12 +988,6 @@ figure.progress {
 .numbers tfoot th,
 .numbers tfoot td {
 	border-top: var(--table-border);
-}
-
-@media ( max-width: 500px ) {
-	.numbers {
-		font-size: 2.5vw;
-	}
 }
 /* ------------- */
 

@@ -1,0 +1,1350 @@
+{{$exp_v_fb_d_0 := (call .PostFileURL "TH03-explosion-vs-fireball-double-bonus-before.webp") -}}
+{{$exp_v_fb_d_1 := (call .PostFileURL "TH03-explosion-vs-fireball-double-bonus-after.webp") -}}
+{{$f13_e := (call .Video "TH03-enemy-formation-13-Easy" "Video of TH03's enemy formation #13 (Folding \"7\") on Easy, demonstrating how the four vertically moving enemies in the center are prematurely removed before they flew past the bottom edge of the playfield")}}
+{{$f13_l := (call .Video "TH03-enemy-formation-13-Lunatic" "Video of TH03's enemy formation #13 (Folding \"7\") on Lunatic, demonstrating how the four vertically moving enemies in the center are prematurely removed before they flew past the bottom edge of the playfield")}}
+{{$e_capexc_bomb := (call .Video "TH03-enemy-cap-exceed-bomb" "Video showcase of exceeding TH03's 40-enemy cap when constructing a formation sequence that starts with a 12-enemy formation followed by the 16-enemy \"Four Lines of Four\" formation. Demonstrates how closely timed bombs can reserve a majority of TH03's enemy slots for explosions, which prevents successive formations with high enemy counts from being spawned for one of the players, which in turn causes them to skip a lot of formations in its internal 256-formation cycle")}}
+{{$e_capexc_ref := (call .Video "TH03-enemy-cap-exceed-reference" "Reference video for the TH03 enemy cap showcase, showing the two enemy formations moving naturally without the interference of bombs")}}
+{{$hb_e_ghost_16 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-ghost-16.webp") -}}
+{{$hb_e_ghost_32 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-ghost-32.webp") -}}
+{{$hb_e_ghost_48 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-ghost-48.webp") -}}
+{{$hb_e_ghost_64 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-ghost-64.webp") -}}
+{{$hb_e_star_16 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-star-16.webp") -}}
+{{$hb_e_star_32 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-star-32.webp") -}}
+{{$hb_e_star_48 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-star-48.webp") -}}
+{{$hb_e_star_64 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-star-64.webp") -}}
+{{$hb_e_heart_16 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-heart-16.webp") -}}
+{{$hb_e_heart_32 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-heart-32.webp") -}}
+{{$hb_e_heart_48 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-heart-48.webp") -}}
+{{$hb_e_heart_64 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-heart-64.webp") -}}
+{{$hb_e_crescent_16 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-crescent-16.webp") -}}
+{{$hb_e_crescent_32 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-crescent-32.webp") -}}
+{{$hb_e_crescent_48 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-crescent-48.webp") -}}
+{{$hb_e_crescent_64 := (call .PostFileURL "TH03-Hitbox-enemy-shotpair-crescent-64.webp") -}}
+{{$fd_e_16_v_e_16 := (call .Video "TH03-explosion-frame-data-enemy-16-vs-enemy-16" "Frame data of a TH03 explosion originating from a 16×16 enemy against a 16×16 enemy") -}}
+{{$fd_e_16_v_e_32 := (call .Video "TH03-explosion-frame-data-enemy-16-vs-enemy-32" "Frame data of a TH03 explosion originating from a 16×16 enemy against a 32×32 enemy") -}}
+{{$fd_e_16_v_e_48 := (call .Video "TH03-explosion-frame-data-enemy-16-vs-enemy-48" "Frame data of a TH03 explosion originating from a 16×16 enemy against a 48×48 enemy") -}}
+{{$fd_e_16_v_e_64 := (call .Video "TH03-explosion-frame-data-enemy-16-vs-enemy-64" "Frame data of a TH03 explosion originating from a 16×16 enemy against a 64×64 enemy") -}}
+{{$fd_e_16_v_p := (call .Video "TH03-explosion-frame-data-enemy-16-vs-pellet" "Frame data of a TH03 explosion originating from a 16×16 enemy against a pellet") -}}
+{{$fd_e_16_v_f := (call .Video "TH03-explosion-frame-data-enemy-16-vs-fireball" "Frame data of a TH03 explosion originating from a 16×16 enemy against a fireball") -}}
+{{$fd_e_32_v_e_16 := (call .Video "TH03-explosion-frame-data-enemy-32-vs-enemy-16" "Frame data of a TH03 explosion originating from a 32×32 enemy against a 16×16 enemy") -}}
+{{$fd_e_32_v_e_32 := (call .Video "TH03-explosion-frame-data-enemy-32-vs-enemy-32" "Frame data of a TH03 explosion originating from a 32×32 enemy against a 32×32 enemy") -}}
+{{$fd_e_32_v_e_48 := (call .Video "TH03-explosion-frame-data-enemy-32-vs-enemy-48" "Frame data of a TH03 explosion originating from a 32×32 enemy against a 48×48 enemy") -}}
+{{$fd_e_32_v_e_64 := (call .Video "TH03-explosion-frame-data-enemy-32-vs-enemy-64" "Frame data of a TH03 explosion originating from a 32×32 enemy against a 64×64 enemy") -}}
+{{$fd_e_32_v_p := (call .Video "TH03-explosion-frame-data-enemy-32-vs-pellet" "Frame data of a TH03 explosion originating from a 32×32 enemy against a pellet") -}}
+{{$fd_e_32_v_f := (call .Video "TH03-explosion-frame-data-enemy-32-vs-fireball" "Frame data of a TH03 explosion originating from a 32×32 enemy against a fireball") -}}
+{{$fd_e_48_v_e_16 := (call .Video "TH03-explosion-frame-data-enemy-48-vs-enemy-16" "Frame data of a TH03 explosion originating from a 48×48 enemy against a 16×16 enemy") -}}
+{{$fd_e_48_v_e_32 := (call .Video "TH03-explosion-frame-data-enemy-48-vs-enemy-32" "Frame data of a TH03 explosion originating from a 48×48 enemy against a 32×32 enemy") -}}
+{{$fd_e_48_v_e_48 := (call .Video "TH03-explosion-frame-data-enemy-48-vs-enemy-48" "Frame data of a TH03 explosion originating from a 48×48 enemy against a 48×48 enemy") -}}
+{{$fd_e_48_v_e_64 := (call .Video "TH03-explosion-frame-data-enemy-48-vs-enemy-64" "Frame data of a TH03 explosion originating from a 48×48 enemy against a 64×64 enemy") -}}
+{{$fd_e_48_v_p := (call .Video "TH03-explosion-frame-data-enemy-48-vs-pellet" "Frame data of a TH03 explosion originating from a 48×48 enemy against a pellet") -}}
+{{$fd_e_48_v_f := (call .Video "TH03-explosion-frame-data-enemy-48-vs-fireball" "Frame data of a TH03 explosion originating from a 48×48 enemy against a fireball") -}}
+{{$fd_e_64_v_e_16 := (call .Video "TH03-explosion-frame-data-enemy-64-vs-enemy-16" "Frame data of a TH03 explosion originating from a 64×64 enemy against a 16×16 enemy") -}}
+{{$fd_e_64_v_e_32 := (call .Video "TH03-explosion-frame-data-enemy-64-vs-enemy-32" "Frame data of a TH03 explosion originating from a 64×64 enemy against a 32×32 enemy") -}}
+{{$fd_e_64_v_e_48 := (call .Video "TH03-explosion-frame-data-enemy-64-vs-enemy-48" "Frame data of a TH03 explosion originating from a 64×64 enemy against a 48×48 enemy") -}}
+{{$fd_e_64_v_e_64 := (call .Video "TH03-explosion-frame-data-enemy-64-vs-enemy-64" "Frame data of a TH03 explosion originating from a 64×64 enemy against a 64×64 enemy") -}}
+{{$fd_e_64_v_p := (call .Video "TH03-explosion-frame-data-enemy-64-vs-pellet" "Frame data of a TH03 explosion originating from a 64×64 enemy against a pellet") -}}
+{{$fd_e_64_v_f := (call .Video "TH03-explosion-frame-data-enemy-64-vs-fireball" "Frame data of a TH03 explosion originating from a 64×64 enemy against a fireball") -}}
+{{$fd_f_v_e_16 := (call .Video "TH03-explosion-frame-data-fireball-vs-enemy-16" "Frame data of a TH03 explosion originating from a fireball against a 16×16 enemy") -}}
+{{$fd_f_v_e_32 := (call .Video "TH03-explosion-frame-data-fireball-vs-enemy-32" "Frame data of a TH03 explosion originating from a fireball against a 32×32 enemy") -}}
+{{$fd_f_v_e_48 := (call .Video "TH03-explosion-frame-data-fireball-vs-enemy-48" "Frame data of a TH03 explosion originating from a fireball against a 48×48 enemy") -}}
+{{$fd_f_v_e_64 := (call .Video "TH03-explosion-frame-data-fireball-vs-enemy-64" "Frame data of a TH03 explosion originating from a fireball against a 64×64 enemy") -}}
+{{$fd_f_v_p := (call .Video "TH03-explosion-frame-data-fireball-vs-pellet" "Frame data of a TH03 explosion originating from a fireball against a pellet") -}}
+{{$fd_f_v_f := (call .Video "TH03-explosion-frame-data-fireball-vs-fireball" "Frame data of a TH03 explosion originating from a fireball against a fireball") -}}
+{{$exp_edc_orig := (call .Video "TH03-explosion-enemy-damage-cap-original" "Video showcasing the enemy damage cap of TH03's explosions. Demonstrated by chaining formation #4 (Racetrack) and colorizing the resulting explosions based on the amount of damage they've dealt to enemies")}}
+{{$exp_edc_none := (call .Video "TH03-explosion-enemy-damage-cap-none" "Video showcasing how removing the enemy damage cap of TH03's explosions can change the timing and placement of explosions. Demonstrated by chaining formation #4 (Racetrack) and colorizing the resulting explosions based on the amount of damage they've dealt to enemies")}}
+{{$hb_fb_sp := (call .PostFileURL "TH03-Hitbox-fireball-shotpair.webp") -}}
+{{$exp_2_fbs := (call .Video "TH03-explosion-spawning-two-red-fireballs" "Video of a TH03 explosion destroying a fireball and spawning two red fireballs in response, recorded from 1:04 minutes into the Kotohime vs. Marisa demo on Kotohime's playfield")}}
+{{$dl := printf "%v%v" .DatePrefix "ReC98.zip" -}}
+
+{{$f13_e.SetTitle "Easy"}}
+{{$f13_l.SetTitle "Lunatic"}}
+
+{{$f13_e.AddMarker  73 "First vertical enemy starts moving" "" -}}
+{{$f13_e.AddMarker 223 "First vertical enemy removed" "left" -}}
+
+{{$f13_l.AddMarker  49 "First vertical enemy starts moving" "" -}}
+{{$f13_l.AddMarker 149 "First vertical enemy removed" "left" -}}
+
+{{$e_capexc_bomb.SetTitle "Bombing"}}
+{{$e_capexc_ref.SetTitle "Not bombing"}}
+
+{{$e_capexc_bomb.AddMarker 203 "Bombs fired" "" -}}
+{{$e_capexc_bomb.AddMarker 241 "Next enemies for P2" "left" -}}
+
+{{$fd_e_16_v_e_16.SetLayers "from 16×16 enemy" "vs. 16×16 enemy" -}}
+{{$fd_e_16_v_e_32.SetLayers "from 16×16 enemy" "vs. 32×32 enemy" -}}
+{{$fd_e_16_v_e_48.SetLayers "from 16×16 enemy" "vs. 48×48 enemy" -}}
+{{$fd_e_16_v_e_64.SetLayers "from 16×16 enemy" "vs. 64×64 enemy" -}}
+{{$fd_e_16_v_p.SetLayers    "from 16×16 enemy" "vs. pellet" -}}
+{{$fd_e_16_v_f.SetLayers    "from 16×16 enemy" "vs. fireball" -}}
+{{$fd_e_32_v_e_16.SetLayers "from 32×32 enemy" "vs. 16×16 enemy" -}}
+{{$fd_e_32_v_e_32.SetLayers "from 32×32 enemy" "vs. 32×32 enemy" -}}
+{{$fd_e_32_v_e_48.SetLayers "from 32×32 enemy" "vs. 48×48 enemy" -}}
+{{$fd_e_32_v_e_64.SetLayers "from 32×32 enemy" "vs. 64×64 enemy" -}}
+{{$fd_e_32_v_p.SetLayers    "from 32×32 enemy" "vs. pellet" -}}
+{{$fd_e_32_v_f.SetLayers    "from 32×32 enemy" "vs. fireball" -}}
+{{$fd_e_48_v_e_16.SetLayers "from 48×48 enemy" "vs. 16×16 enemy" -}}
+{{$fd_e_48_v_e_32.SetLayers "from 48×48 enemy" "vs. 32×32 enemy" -}}
+{{$fd_e_48_v_e_48.SetLayers "from 48×48 enemy" "vs. 48×48 enemy" -}}
+{{$fd_e_48_v_e_64.SetLayers "from 48×48 enemy" "vs. 64×64 enemy" -}}
+{{$fd_e_48_v_p.SetLayers    "from 48×48 enemy" "vs. pellet" -}}
+{{$fd_e_48_v_f.SetLayers    "from 48×48 enemy" "vs. fireball" -}}
+{{$fd_f_v_e_16.SetLayers    "from fireball" "vs. 16×16 enemy" -}}
+{{$fd_f_v_e_32.SetLayers    "from fireball" "vs. 32×32 enemy" -}}
+{{$fd_f_v_e_48.SetLayers    "from fireball" "vs. 48×48 enemy" -}}
+{{$fd_f_v_e_64.SetLayers    "from fireball" "vs. 64×64 enemy" -}}
+{{$fd_f_v_p.SetLayers       "from fireball" "vs. pellet" -}}
+{{$fd_f_v_f.SetLayers       "from fireball" "vs. fireball" -}}
+{{$fd_e_64_v_e_16.SetLayers "from 64×64 enemy" "vs. 16×16 enemy" -}}
+{{$fd_e_64_v_e_32.SetLayers "from 64×64 enemy" "vs. 32×32 enemy" -}}
+{{$fd_e_64_v_e_48.SetLayers "from 64×64 enemy" "vs. 48×48 enemy" -}}
+{{$fd_e_64_v_e_64.SetLayers "from 64×64 enemy" "vs. 64×64 enemy" -}}
+{{$fd_e_64_v_p.SetLayers    "from 64×64 enemy" "vs. pellet" -}}
+{{$fd_e_64_v_f.SetLayers    "from 64×64 enemy" "vs. fireball" -}}
+
+{{$fd_e_16_v_e_16.AddMarker 13 "First damage frame" "" -}}
+{{$fd_e_16_v_e_16.AddMarker 29 "Last damage frame" "left" -}}
+{{$fd_e_16_v_e_32.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_16_v_e_48.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_16_v_e_64.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_32_v_e_16.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_32_v_e_32.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_32_v_e_48.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_32_v_e_64.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_48_v_e_16.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_48_v_e_32.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_48_v_e_48.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_48_v_e_64.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_64_v_e_16.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_64_v_e_32.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_64_v_e_48.LinkMarkers $fd_e_16_v_e_16 -}}
+{{$fd_e_64_v_e_64.LinkMarkers $fd_e_16_v_e_16 -}}
+
+{{$fd_f_v_e_16.AddMarker 17 "First damage frame" "" -}}
+{{$fd_f_v_e_16.AddMarker 29 "Last damage frame" "left" -}}
+{{$fd_f_v_e_32.LinkMarkers $fd_f_v_e_16 -}}
+{{$fd_f_v_e_48.LinkMarkers $fd_f_v_e_16 -}}
+{{$fd_f_v_e_64.LinkMarkers $fd_f_v_e_16 -}}
+
+{{$fd_e_16_v_p.AddMarker  1 "First damage frame" "" -}}
+{{$fd_e_16_v_p.AddMarker 33 "Last damage frame" "left" -}}
+{{$fd_e_16_v_f.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_32_v_p.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_32_v_f.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_48_v_p.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_48_v_f.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_64_v_p.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_e_64_v_f.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_f_v_p.LinkMarkers $fd_e_16_v_p -}}
+{{$fd_f_v_f.LinkMarkers $fd_e_16_v_p -}}
+
+{{$exp_edc_orig.SetTitle "Original game" -}}
+{{$exp_edc_none.SetTitle "Damage cap removed" -}}
+{{$exp_edc_orig.AddMarker 68 "Desync" "" -}}
+{{$exp_edc_none.LinkMarkers $exp_edc_orig -}}
+
+{{$exp_2_fbs.AddMarker 36 "Two fireballs spawned" "" -}}
+
+{{- define "round_speed_half"}}⌊<sup><code>round_speed</code></sup>/<sub>2.0</sub>⌋{{- end -}}
+{{- define "speed_wide"}}<sup>(512&nbsp;× <var>angle_speed</var>)</sup>/<sub>3</sub>{{- end -}}
+
+<style>
+	.chain_data-{{.Date}} tr :first-child {
+		text-align: right;
+	}
+	.chain_data-{{.Date}} tr :last-child {
+		text-align: left;
+		width: min-content;
+	}
+
+	.exp_v_fb-{{.Date}} tbody td {
+		text-align: left;
+	}
+
+	.enedat-{{.Date}} tbody tr th:first-child,
+	.enedat-{{.Date}} tbody tr .params {
+		font-family: monospace;
+	}
+	.enedat-{{.Date}} tbody tr {
+		border-bottom: var(--table-border);
+	}
+	.enedat-{{.Date}} td,
+	.enedat-{{.Date}} th {
+		border-right: unset;
+	}
+
+	.framedata-{{.Date}} rec98-video video {
+		width: 704px;
+	}
+
+	@media (max-width <= 704px) {
+		.framedata-{{.Date}} rec98-video video {
+			width: 352px;
+		}
+	}
+
+	.map-{{.Date}} th {
+		font-family: monospace;
+		width: 4ch;
+	}
+	.map-{{.Date}} th,
+	.map-{{.Date}} td {
+		border-bottom: var(--table-border);
+	}
+	.map-{{.Date}} td {
+		position: relative;
+		height: 2em;
+		padding-top: 0;
+		padding-bottom: 0;
+		border-right: 1px solid rgb(from var(--c-table-border) r g b / 0.25);
+	}
+	.map-{{.Date}} td .array {
+		box-sizing: border-box;
+		border: 2px groove silver;
+		border-radius: 0.25em;
+		position: absolute;
+		height: 2em;
+		left: 0;
+		top: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1; /* Makes links clickable */
+	}
+	.map-{{.Date}} td .array.temp {
+		border: unset;
+	}
+	.map-{{.Date}} .temp {
+		color: silver;
+	}
+
+	.variant-{{.Date}} {
+		display: inline-grid;
+		grid-template-rows: 1fr 1fr;
+		vertical-align: middle;
+	}
+
+	.stack-{{.Date}} tbody {
+		font-family: monospace;
+	}
+	.stack-{{.Date}} tr :nth-child(1) {
+		text-align: right;
+	}
+	.stack-{{.Date}} thead tr :nth-child(3),
+	.stack-{{.Date}} tbody tr :nth-child(4) {
+		text-align: left;
+	}
+	.stack-{{.Date}} tbody tr .bp {
+		border-left: 2px solid blue;
+	}
+	.stack-{{.Date}} tbody tr .bp_dummy {
+		border-left: 2px solid transparent;
+	}
+	.stack-{{.Date}} tbody tr .sp {
+		border-right: 2px solid red;
+	}
+
+	.ffprobe-{{.Date}} blockquote {
+		white-space: pre;
+	}
+</style>
+
+<p>
+	Most of my blog posts are way too long because they tend to cover multiple and often unrelated topics. I'm well aware that this blog would reach way more people if I just split these posts into multiple smaller and more thematically focused ones. This time, however, there would have been absolutely no way I could have split off anything about TH03's enemy, fireball, explosion, chaining, and combo systems while still leaving you with a coherent understanding. If this were a multi-post series, you'd be clicking back and forth to even just fully understand <i>one</i> of those systems in its entirety.
+</p><p id="intro-{{.Date}}">
+	Really, what <i>is</i> this mess? I've procrastinated RE work on any of these systems ever since {{Blog_PostLink "2022-02-18" "2022"}}, when it became clear just how much enemies, fireballs, and explosions are connected with each other. Because both enemies and fireballs are things that can explode, ZUN decided to use the same <span class="hovertext" title="I'm excluding the 14 bytes of unused padding at the end of the structure here. Bloat!">34-byte structure</span> for them <i>and</i> the explosions they turn into, forming a single 64-element array of explodable entities.<br>
+	This might remind you of {{Blog_PostLink "2023-05-29" "TH04's"}} and {{Blog_PostLink "2020-02-29" "TH05's"}} custom entity structures. Aren't these even used for 6 different things in each of the two games? Well, the difference between those games and TH03 is like night and day:
+</p><ul>
+	<li>The custom entity structure is only 26 bytes large, and uses much more consistent semantics for most of the fields. Only 3 (TH04) or 4 (TH05) fields are truly generic and are used in completely different ways within the custom subclasses…</li>
+	<li>…if these fields are even used at all. These subclasses are always used in isolation, by a small and self-contained gameplay system. At first, TH03 doesn't seem too bad, because explosions aren't actually much of a standalone system. <i>"Exploding"</i> is simply another state that both enemies and fireballs can be in, and both of them update and render their explosions independently from each other, despite using the same sprites. Collision detection, however, <i>is</i> shared, and suddenly introduces a shared "base class" that reaches way further than it has any right to. (Also, enemies are by no means a small system.)</li>
+	<li>But <i>then</i>, all of this also interacts with TH03's chaining system. Which is even less well-defined and isolated, and only exists as ad-hoc code within the collision detection of all three systems. Hence, I couldn't RE the chaining system in isolation because there was no way of deducing the intent behind these very specific calculations without knowing the conditions in the enemy/fireball/explosion mess that triggered them. {{HTML_Emoji "godzun"}}</li>
+</ul><p>
+	This was very much not code written to be read and understood. This was code that naturally evolved from an explorative process of playing around with the data, with the goal of creating an exciting game whose exact mechanics are hard to figure out from the outside.<br>
+	But the result is a ≥2,200-line mess of tangled spaghetti that not only accesses the ostensibly same structure in subtly different ways, but also splashes an unhealthy dose of mutable global state on top, adding an extra layer of intractability. It's so convoluted that I would have loved to refactor it immediately before continuing with anything else in this project. It certainly makes <i>sense</i> to do so earlier rather than later because TH03 is the single most ideal PC-98 Touhou game for these sorts of sweeping architecture changes. Its highly dynamic gameplay makes it highly likely for small accidental deviations from ZUN's gameplay logic to snowball into wildly different game states, and we can easily observe these by comparing the demo replays against their {{Blog_PostLink "2025-05-10#demo" "original state"}}. Alas, we're still 719 potential memory references away from position independence making that possible.
+</p><p>
+	This has been <i>the single</i> hardest to understand piece of game logic in all of PC-98 Touhou. The RE content of this post alone beats {{Blog_PostLink "2023-11-01" "the previous record holder for the post with the largest amount of PC-98 Touhou RE content"}} by 2.38×, and would be the second-heaviest post by HTML size that this project has seen so far, just behind {{Blog_PostLink "2024-03-09" "the giant Shuusou Gyoku waveform BGM project"}}. What else could possibly be left in these games that would be harder than this? A lot of the not yet RE'd code is either an isolated gameplay system <i>or</i> isolated to specific characters or bosses, and {{Blog_PostLink "2025-12-31#gba" "a lot of script code will be highly repetitive"}}… yeah, I'm pretty certain that PC-98 Touhou won't have a single remaining RE task that will take as long to complete as this one.<br>
+	How do you structure a blog post that covers so many intertwined systems? Let's try building this up in the logical order from most to least intertwined:
+</p>{{call .TOC}}<hr id="frames-{{.Date}}"><p>
+	Before I can talk about anything else, I need to clarify the most important fact about in-game durations in TH03:
+</p><p>
+	<strong>Any gameplay-related frame time or real-time duration in TH03 does not include the first 27 frames of every <i>WARNING!!</i> popup shown throughout a round. These frames freeze gameplay precisely because they run in a separate blocking function that runs its own VSync delay loop.</strong>
+</p><p>
+	Obviously, this applies both to this blog and to anything you can read in the code. The gameplay community has been rather confused as far as precise durations are concerned, so I'm going to occasionally link back to this explanation in this post.
+</p><hr id="chain-{{.Date}}"><p>
+	With that out of the way, let's start with…
+</p><h3>The chaining system</h3><p>
+	…which orchestrates most of TH03's wildly escalating gameplay. Internally, chaining works like this:
+</p><ul>
+	<li>Each chain tracks four unsigned 8-bit values:<ul>
+		<li>Number of hits. The <i>Hit!</i> counter in the HUD shows the single highest one of these among all active chains. Contrary to what its two digits might suggest, this internal field is actually clamped at 255, not 99; that's how the defeat screen at the end of each round gets to show the correct overall highest hit count using three digits.</li>
+		<li>Charge values for fireballs (<code>charge_fireball</code>) and Extra Attacks (<code>charge_exatt</code>). These cause the game to fire one of each once the charge hits a certain value (<a href="#tuning-{{.Date}}">see below</a>), after which they get reset to 0. Note how this means that you can't carry over any excess charge across individual fireballs and Extra Attacks, and that you don't get multiple fireballs or Extra Attacks if <code>charge_*</code> has reached a multiple of the required value.</li>
+		<li>A <code>pellet_and_fireball_value</code> that increases as the chain destroys pellets (+1), blue fireballs (+6), and red fireballs (+9). It controls how much charge explosions add to <code>charge_fireball</code> and <code>charge_exatt</code> upon destroying pellets and fireballs (not enemies), as shown in the table below.</li>
+	</ul>
+	Notably, this list doesn't contain the amount of points that each chain contributes to the total bonus shown in the top-left corner of the playfield during an active combo. More on that in <a href="#combo-{{.Date}}">the combo section below</a>.</li>
+	<li>Both these charges and the bonuses described below rely on entities being destroyed <i>by explosions</i>. Therefore, destroying individual enemies with no other entities next to them doesn't impact the chain charges or the combo system in any way.</li>
+	<li>The game can track up to 16 chains per player. On the surface, it looks as if these are organized as a ring buffer and assigned to explosions as such, but there are three cases where the game just adds charge to a different and unrelated chain&nbsp;– and yes, this foreshadows the much nastier details later on in this post. Since new chains also only reset their hit counter and the pellet/fireball value and retain their previous charges, they're best thought of as a regular, mutably written piece of state.</li>
+	<li>Internally, these values are stored as a <a href="https://en.wikipedia.org/wiki/AoS_and_SoA#Structure_of_Arrays">structure of four <span class="hovertext" title="Number of chains">16</span>×<span class="hovertext" title="Number of players">2</span>-element arrays</a>, which will also become <i>very</i> relevant later on.</li>
+	<li>New chains are started by killing enemies and creating new explosions with anything other than an existing explosion. The explosion is then linked to that specific chain slot.</li>
+	<li>These explosions will then hit any pellets, enemies, and fireballs within their hitbox. Destroying the latter two with an explosion will then create new explosions that are linked to the same chain slot.</li>
+</ul><p>
+	The charge values added for destroying enemies with explosions require further explanation, but we can already cover the <code>pellet_and_fireball_value</code>-dependent values added when destroying those two:
+</p><figure>
+	<table class="chain_data-{{.Date}}">
+		<thead>
+			<tr>
+				<th>Pellet/fireball value</th>
+				<th>Chain effect</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>≥&nbsp;<span style="opacity: 0">0</span>0 and &lt;&nbsp;<span style="opacity: 0">0</span>4</td>
+				<td><code>charge_fireball</code>&nbsp;+2</td>
+			</tr><tr>
+				<td>≥&nbsp;<span style="opacity: 0">0</span>4 and &lt;&nbsp;10</td>
+				<td><code>charge_fireball</code>&nbsp;+5</td>
+			</tr><tr>
+				<td>≥&nbsp;10 and &lt;&nbsp;20</td>
+				<td><code>charge_fireball</code>&nbsp;+2, <code>charge_exatt</code>&nbsp;+1</td>
+			</tr><tr>
+				<td>≥&nbsp;20</td>
+				<td><code>charge_exatt</code>&nbsp;+2</td>
+			</tr>
+		</tbody>
+	</table>
+</figure><p>
+	A particularly interesting detail about those: If more than one explosion hits a pellet or fireball within the same frame, these charges are added <i>separately</i> for each colliding explosion, to their respective chains. For red fireballs, TH03 then also adds a final +1 to the <code>charge_exatt</code> value of the chain whose colliding explosion has the highest index within the overall array of explodable entities.
+</p><p>
+	Explaining the combo system would be the logical next step, but that system has a dependency on…
+</p><h3 id="tuning-{{.Date}}">Difficulty-specific tuning</h3><p>
+	Where we get right to the final variable that would {{Blog_PostLink "2025-05-10#tuning" "define TH03's difficulty"}} in a round of netplay:
+</p><h4 id="round_speed-{{.Date}}"><code>round_speed</code></h4><p>
+	This is a Q4.4 fixed-point value that is limited to a range from 0.0 to 7.9375 inclusive, increments by 0.0625 every 64 frames, and starts out at the following values:
+</p><figure><table>
+	<thead>
+		<tr>
+			<th>Easy</th>
+			<th>Normal</th>
+			<th>Hard</th>
+			<th>Lunatic</th>
+			<th>{{Blog_PostLink "2025-05-10#tuning" "Demo"}}</th>
+		</tr>
+	</thead>
+	<tr>
+		<td>(Round ID&nbsp;× 1.0)</td>
+		<td>(Round ID&nbsp;× 2.0)</td>
+		<td>(2.0 + (Round ID&nbsp;× 2.0))</td>
+		<td>6.0</td>
+		<td>4.0</td>
+	</tr>
+</table><figcaption>
+	With the round ID being 0-based and representing either the current VS Mode round or the number of times a Story Mode stage has been repeated.
+</figcaption></figure><p>
+	This variable is then used to derive a whole variety of speeds and limits:
+</p><ul>
+	<li>Speed of pellets and fireballs while they transfer to the other playfield: (4.375&nbsp;+ ⌊<sup><code>round_speed</code></sup>/<sub>3</sub>⌋)</li>
+	<li>Speed of the single pellet fired when killing an enemy with an explosion whose chain has a hit count of ≥3 and ≤(14 - ({{template "round_speed_half"}}&nbsp;× 2)), after it transferred to the other player's field: (1.5&nbsp;+ (<sup>⌊3&nbsp;× <code>round_speed</code>⌋</sup>/<sub>16</sub>))</li>
+	<li>Additional fireball speed added on top of the randomized base speed between 1.25 and 3.25: ⌊<sup><code>round_speed</code></sup>/<sub>2</sub>⌋</li>
+	<li>Required <code>charge_exatt</code> within a chain to fire an Extra Attack after destroying a fireball with an explosion: (7&nbsp;- {{template "round_speed_half"}})</li>
+	<li>Required <code>charge_exatt</code> within a chain to fire an Extra Attack after destroying a fireball <a href="#fireballs_shotted-{{.Date}}" class="hovertext" title="Yes, this makes no sense because these shots exist completely separate from the chaining system, but more on that in the linked section…">with a regular player shot or Charge Shot</a>, or an enemy <i>with</i> an explosion: (6&nbsp;- {{template "round_speed_half"}})</li>
+	<li>Required <code>charge_fireball</code> within a chain to fire a fireball after destroying an enemy, fireball, or pellet with an explosion (12&nbsp;- ⌊<sup><code>round_speed</code></sup>/<sub>1.0</sub>⌋)</li>
+	<li>Two other things in character-specific Extra Attack code I haven't RE'd so far</li>
+</ul><p>
+	Yup&nbsp;– the difficulty setting in the Option menu merely controls where all of these values start out at. After 6,144 <a href="#frames-{{.Date}}">frames</a> of gameplay, or 1:49 <a href="#frames-{{.Date}}">minutes</a>, even an Easy round will have accelerated to Lunatic levels.
+</p><h4 id="enemy_speed-{{.Date}}"><code>enemy_speed</code></h4><p>
+	Whenever the game spawns a new formation, it updates this variable by integer-dividing <code>round_speed</code> by 2.0, resulting in a variable that ranges from 0 to 3 inclusive.<br>
+	This value is then used to scale several speed-related variables using rather weird formulas. For example, ZUN scales movement durations using a formula of
+</p><figure class="formula">
+	(⌊<sup><var>duration</var></sup>/<sub>2</sub>⌋ × 3)&nbsp;-
+	⌊<sup>(<code>enemy_speed</code> × <var>duration</var>)</sup>/<sub>6</sub>⌋
+</figure><p>
+	Which <i>looks</i> like you could simplify it down to
+</p><figure class="formula">
+	⌊<sup>(<var>duration</var>&nbsp;× (9&nbsp;- <code>enemy_speed</code>))</sup>/<sub>6</sub>⌋
+</figure><p>
+	But as the ⌊floor signs⌋ indicate, all of these divisions operate, once again, on integers, where additional divisions lead to additionally truncated remainders. In this case, they introduce an error of ±1 compared to the simplified formula at regular intervals. Such an error might look like ZUN tried to correctly round the non-truncated floating-point result, but that result would sometimes be even further away from what you get from the janky double-division formula. Let's take a duration of 25, for example:
+</p><figure>
+	<table class="numbers">
+		<thead>
+			<tr>
+				<th><code>enemy_speed</code></th>
+				<th>Simplified, real</th>
+				<th>Double-divided</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td>0</td><td>37.5<span style="opacity: 0">00</span></td><td>36</td></tr>
+			<tr><td>1</td><td>33.333</td><td>32</td></tr>
+			<tr><td>2</td><td>29.166</td><td>28</td></tr>
+			<tr><td>3</td><td>25<span style="opacity: 0">.000</span></td><td>24</td></tr>
+		</tbody>
+	</table>
+</figure><p>
+	Hence, this makes no sense on any level. The simplified expressions would take up less space in both the C++ code and the binary <i>and</i> execute faster. {{HTML_Emoji "zunpet"}}<br>
+	The same happens for the speeds that enemies move at. In the code, ZUN uses a formula of
+</p><figure class="formula">
+	⌊<sup>(<code>enemy_speed</code> × <var>speed</var>)</sup>/<sub>9</sub>⌋&nbsp;+
+	⌊<sup>(2&nbsp;× <var>speed</var>)</sup>/<sub>3</sub>⌋
+</figure><p>
+	which looks like
+</p><figure class="formula">
+	<sup>(<var>speed</var>&nbsp;× (<code>enemy_speed</code>&nbsp;+ 6))</sup>/<sub>9</sub>
+</figure><p>
+	but actually isn't, and suffers from the same off-by-one errors at regular intervals.
+</p><p id="enemy_angle-{{.Date}}">
+	The final and most complex <code>enemy_speed</code>-dependent formula is used for tuning the angles for wavy or circular motions. This time around, ZUN actually used <i>16-bit angles</i>, treating each enemy's <code>angle</code> field as effectively a Q8.8 fixed-point value. The movement vectors themselves are still calculated by indexing master.lib's 8-bit sine and cosine lookup tables with the top 8 bits of such an angle, but the extra 8 bits below add extra precision when adding the tuned <code>angle_speed</code> on every frame of such a motion.<br>
+	This extended value range allowed ZUN to reduce the impact of <code>enemy_speed</code> to, literally, a very small degree:
+</p><figure class="formula">
+	⌊{{template "speed_wide"}}⌋&nbsp;+
+	⌊<sup>(<code>enemy_speed</code>&nbsp;× ⌊{{template "speed_wide"}}⌋)</sup>/<sub>9</sub>⌋
+</figure><p>
+	This formula would have benefited most from a simplification to
+</p><figure class="formula">
+	({{template "speed_wide"}})&nbsp;+
+	(<sup>(512&nbsp;× <var>angle_speed</var>&nbsp;× <code>enemy_speed</code>)</sup>/<sub>27</sub>)
+</figure><p>
+	which would have only introduced a maximum discrete error of 1.7 per frame, or an error of 0.0094° when converted to 360° angles. But the more critical issue with this formula lies in the first term, ⌊{{template "speed_wide"}}⌋. Multiplying an 8-bit <code>angle_speed</code> by 512 effectively left-shifts the value by 9 bits, requiring 17 bits to store all possible resulting values. However, ZUN then assigns this temporary result to a signed <i>16</i>-bit variable, causing an overflow into negative numbers&nbsp;– and thus, an incorrectly reversed enemy rotation&nbsp;– as soon as <code>angle_speed</code> reaches ≥0x40, rather than the ≥0x80 where the sign is actually supposed to flip.<br>
+	Then again, who would seriously add ±90° to an enemy's movement angle <i>per frame</i>. -0x08 and +0x08 are the highest speeds used in the original scripts, so this counts as neither a quirk nor a landmine in my book.
+</p><hr id="combo-{{.Date}}"><p>
+	But <i>now</i> we can look at…
+</p><h3>The combo system</h3><p>
+	As you might have already guessed from the list of per-chain fields, the game indeed only tracks the total combo bonus for each player as a single divided-by-10 16-bit value that every chain with ≥2 hits adds onto. For clarity, I'll only use the displayed values in this post. Once the displayed value reaches 655,350, it therefore becomes impossible to cancel the {{Blog_PostLink "2020-01-20" "80-frame cooldown period"}} by adding more bonus points. This also means that you lose all bonus points you would have earned within these last 80 frames.<br>
+	The bonus value itself grows as you destroy certain entity types with an explosion:
+</p><figure>
+	<table class="{{.Date}} numbers">
+		<thead>
+			<tr>
+				<th>Entity</th>
+				<th colspan="3" style="text-align: left;">Bonus</th>
+			</tr>
+		</thead><tbody>
+			<tr style="border-bottom: var(--table-border-thick);">
+				<td>Enemies</td>
+				<td colspan="3" style="text-align: left;">(160&nbsp;× <code>hits</code>)</td>
+			</tr><tr>
+				<td>Pellets</td>
+				<td rowspan="3">((</td>
+				<td>(20&nbsp;× <code>hits</code>)</td>
+				<td rowspan="3">+ (160 × <code>round_speed</code>))&nbsp;× <var>f</var>)</td>
+			</tr><tr>
+				<td>Blue fireballs</td><td>1000&nbsp;+ (160&nbsp;× <code>hits</code>)</td>
+			</tr><tr>
+				<td>Red fireballs</td><td>4440&nbsp;+ (160&nbsp;× <code>hits</code>)</td>
+			</tr>
+		</tbody>
+	</table>
+	<figcaption>
+		This multiplication effectively converts <code>round_speed</code> into an integer value.
+	</figcaption>
+</figure><p>
+	With <var>f</var> being:
+</p><ul>
+	<li>0.5 if <code>round_speed</code>&nbsp;≤ 3.0</li>
+	<li>1<span style="opacity: 0">.0</span> if <code>round_speed</code>&nbsp;&gt; 3.0 and &lt; 6.0</li>
+	<li>2<span style="opacity: 0">.0</span> if <code>round_speed</code>&nbsp;≥ 6.0</li>
+</ul><p>
+	The thick border in the table indicates once again that the pellet and fireball bonuses are awarded multiple times if the entity is destroyed by more than one explosion on the same frame, just like the charges of its chain. Here are some messy screenshots of that case happening:
+</p><figure class="pixelated" style="width: 288px;">
+	<rec98-child-switcher>
+		<img
+			data-t0="Collision frame"
+			src="{{$exp_v_fb_d_0}}"
+			width="288"
+			alt="Screenshot of two explosions destroying a fireball on the same frame of TH03 gameplay"
+			class="active"
+		><img
+			data-t0="Next frame"
+			src="{{$exp_v_fb_d_1}}"
+			width="288"
+			alt="Screenshot of the immediately following frame, showing how the game added 31,600 bonus points for destroying just this one fireball, which is more than twice as high as you'd expect from the table"
+		>
+	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption>That's 2 more hits on the <i>Hit!</i> counter, and an additional 1,600 points of score, and Mima demonstrably is not hitting anything other than this one red fireball here.</figcaption>
+</figure><p>
+	The bonus difference between the two frames is 31,600, which is exactly
+</p><figure><table class="exp_v_fb-{{.Date}}"><tbody><tr>
+	<th>First hit</th>
+	<td>((4,440 + (<span class="hovertext" title="Hit count after the first explosion's hit">14</span>&nbsp;× 160)&nbsp;+ (160&nbsp;× <span class="hovertext" title="round_speed">7.125</span>))&nbsp;× 2)&nbsp;+</td>
+</tr><tr>
+	<th>Second hit</th>
+	<td>((4,440 + (<span class="hovertext" title="Hit count after the second explosion's hit">15</span>&nbsp;× 160)&nbsp;+ (160&nbsp;× <span class="hovertext" title="round_speed">7.125</span>))&nbsp;× 2)</td>
+</tr></tbody></table></figure><p>
+	With a <code>round_speed</code> of 7.125, we can further deduce that this screenshot was made about 21 seconds into a round at Lunatic difficulty, which checks out when looking at the score. Conclusion: The best way to make things happen in TH03 is to destroy red fireballs with explosions, and preferably multiple explosions in a single frame.
+</p><h4 id="boss_attacks-{{.Date}}">Boss Attacks and Panics</h4><p>
+	People seem to have the impression that this system and its bonus point (or <q>Spell Point</q>) requirements are complicated, so let's describe it all in just a few bullet points:
+</p><ul>
+	<li>The bonus point requirement is shared among both players.</li>
+	<li>This requirement is only used for firing bonus-based Boss Attacks.</li>
+	<li>Every time a player has increased their bonus by destroying something with an explosion and is not already displaying a <i>WARNING!!</i> popup on the other player's field, the game checks whether to fire a Boss Attack or Boss Panic:<ul>
+		<li>Boss Attacks are fired once the player's bonus value has reached the point requirement <i>and</i> if they don't already have an active boss on the other player's field. Then, the game also increases the requirement by 51,200, and resets all non-hit fields of the triggering explosion's chain&nbsp;– that is, <code>pellet_and_fireball_value</code>, <code>charge_fireball</code>, and <code>charge_exatt</code>.</li>
+		<li>Boss <i>Panics</i> are additional {{Blog_PostLink "2025-12-31#gba" "Level 3 Gauge Attacks"}} that are fired for players that <i>do</i> already have an active boss on the other player's field, once per combo if its value has reached 300,000 points. For this condition, bosses are already counted as active on the first frame of their entrance animation.<br>
+		Just like the Boss Attacks they depend on, the game delays firing a Boss Panic until all required conditions are met. Panics also do <i>not</i> increase the point requirement for regular Boss Attacks.</li>
+	</ul></li>
+	<li>The initial point requirement is 51,200.</li>
+	<li>Manually firing a Boss Attack by charging the gauge up to Level 4 increases the requirement by 102,400.</li>
+	<li>Destroying a boss, timing it out, or starting a new round will reset the requirement back to 51,200.</li>
+	<li>Internally, the requirement is stored in the same divided-by-10 point format inside an unsigned 16-bit variable. Contrary to the bonus itself, however, none of the additions to the requirement are clamped, so it <a href="https://www.shrinemaiden.org/forum/index.php?topic=8095.msg1288350#msg1288350">can and will overflow</a>.</li>
+	<li>The term <q>spell points</q> seems to have been <a href="https://en.touhouwiki.net/index.php?title=Phantasmagoria_of_Dim.Dream/Gameplay&diff=next&oldid=57382">made up by Rukaroa in 2005</a>. Not too bad of a term to use outside of the codebase, considering that it's a nice two syllables and doesn't collide with any other gameplay feature of TH03.</li>
+</ul><hr><p id="formations-{{.Date}}">
+	Now that we know most of what there is to know about scoring, let's get the whole system going by placing some enemies in more or less chainable positions on the playfield!
+</p><h3>Enemy formations</h3><p>
+	These are loaded from <code>ENEDAT.DAT</code>, which is the only bytecode format in the entirety of TH03. The original game does come with hardcoded limits of up to 16 enemies per formation and up to 24 formations in total, but the actual number of formations is neatly taken from the file itself.<br>
+	The original <code>ENEDAT.DAT</code> defines 18 different formations, which I all recorded and posted to the <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KGRA2RNA1221EKMTYCZVCS4Q">Fediverse</a> along with screenshots of their reconstructed script code, in their original order within the file. Isn't it nice that my primary PR channel can now hold lossless AV1 videos and lossless images that are just as self-hosted as this blog is, and that I can just link to without them taking up space in a blog post? Since there's nothing beyond the internal IDs in the game's memory that you could possibly want to cross-reference these formations with, I chose to number them using the same 0-based scheme. For the same reason, the names aren't important because nothing in the game needs to name these formations, so I just used the names that the gameplay community came up with, taken from <a href="https://www.youtube.com/watch?v=SyxatZtzw70">these</a> <a href="https://www.youtube.com/watch?v=ZNFptJ7SmLc">videos</a> by Christian Azinn and {{DB_CustomerByID 11}}.
+</p><p>
+	Obviously, all these source code images mean that I've also written a dumper for the bytecode format, supporting the 13 functions that ZUN actually used in the original <code>ENEDAT.DAT</code>. Since we {{Blog_PostLink "2024-07-09" "no longer build 32-bit Windows binaries as part of our build process"}}, the ReC98 build process currently exclusively compiles this dumper as a DOS binary to <code>bin\Pipeline\enedat.com</code>. This allowed me to use the game's own header files at the expense of not having a trivially buildable native Windows or Linux version at this point. Such a build wouldn't be all that interesting without a compile option either, I'd say&nbsp;– and <i>that</i> part would definitely fall into the realm of {{HTML_TagInline "contribution-ideas"}} or require dedicated funding.
+</p><h4 id="formation_gameplay-{{.Date}}">Gameplay details</h4><p>
+	These are quickly summarized:
+</p><ul>
+	<li>At the beginning of each Story Mode stage and VS round, TH03 reloads these formations into a dynamically allocated buffer. Then, it randomizes them into a single global cycle of 256 formations (while making sure not to show the same formation twice in a row) and 256 random flags that indicate whether the respective formation's positions and velocities should be horizontally mirrored. This means that you'll see this cycle of formations repeating if a round lasts long enough&nbsp;– although, given the average formation length of 3.93 <a href="#frames-{{.Date}}">seconds</a>, this would take about 16:45 <a href="#frames-{{.Date}}">minutes</a> of gameplay.</li>
+	<li>
+		Once the enemy system reports no living enemies for a player, they are advanced to the next formation on the next frame, where the game then spawns all of the formation's enemies at once. The check treats enemies as no longer alive once they have <i>started</i> playing the 36-frame explosion animation, which means that TH03 will always at least try to render either an enemy or an enemy-originating explosion on every single <a href="#frames-{{.Date}}">frame</a> of gameplay. Enemies might get clipped and not actually be blitted, but the game at least <i>tries</i> to. This fact will become very important later on.<br>
+	</li>
+</ul><p>
+	As usual for these sorts of script {{HTML_TagInline "file-format"}}<span style="white-space: nowrap;"></span>s, I once again wrote a full…
+</p><h4 id="opcodes-{{.Date}}">Command reference</h4><p>
+	…which only requires a few additional bits of context to understand:
+</p><ul>
+	<li>All parameters are 1 byte large. Data types of common values are as follows:<ul>
+		<li><code>angle*</code>: {{Blog_PostLink "2022-03-05" "8-bit angles"}}</li>
+		<li><code>clip*</code>: <code>bool</code></li>
+		<li><code>duration</code>: Unsigned</li>
+		<li><code>speed*</code>: Q4.4 fixed-point, unsigned</li>
+		<li><code>velocity*</code>: Q4.4 fixed-point, signed</li>
+	</ul></li>
+	<li>Most of these functions mutate a few state fields of each enemy, whose last values can therefore be shared across functions:<ul>
+		<li><code class="var1">angle</code>: Used for linear, wavy, and circular motions. This field uses <a href="#enemy_angle-{{.Date}}">the 16-bit angle type described above</a>.</li>
+		<li><code class="var2">speed</code>: The Q4.4 subpixel value that scales every fully recalculated 2D <code class="var3">velocity</code> vector calculated from <code class="var1">angle</code>.</li>
+		<li><code class="var3">velocity</code>: The Q12.4 delta added to the enemy's X and Y coordinates during all movement functions.</li>
+	</ul></li>
+	<li>Functions are executed on the same frame until the script hits a blocking function with a <code>duration</code> parameter.</li>
+	<li>Unused commands are in <span class="unused">gray</span>.</li>
+</ul><table class="enedat-{{.Date}}">
+	<thead>
+		<tr>
+			<th>Opcode</th>
+			<th>Function and parameters</th>
+			<th>Description</th>
+		</tr>
+	</thead><tbody>
+		<tr>
+			<th>0x00</th>
+			<td>Stop</td>
+			<td>Immediately removes the enemy from the playfield and stops script execution.</td>
+		</tr><tr>
+			<th>0x01</th>
+			<td>
+				Linear move
+				<div class="params">angle, speed, duration</div>
+			</td>
+			<td>Sets the enemy's <code class="var1">angle</code> and <code class="var2">speed</code> fields to the given parameters, recalculates the <code class="var3">velocity</code>, and moves the enemy at this velocity for the given <code>duration</code>.</td>
+		</tr><tr>
+			<th>0x02</th>
+			<td>
+				Circular move
+				<div class="params">angle_start, speed, angle_speed, duration</div>
+			</td>
+			<td>Moves the enemy along a circular path. Calculates a new <code class="var3">velocity</code> from the given <code class="var2">speed</code> and the sine and cosine of <code class="var1">angle</code> on every frame. Starts by resetting <code class="var1">angle</code> to <code>angle_start</code>, and then adds <code>angle_speed</code> on every frame of the motion.</td>
+		</tr><tr>
+			<th>0x03</th>
+			<td>
+				Wait
+				<div class="params">duration</div>
+			</td>
+			<td>Does nothing for a while. Exclusively used to delay later enemies that follow the same path as earlier ones.</td>
+		</tr><tr>
+			<th>0x04</th>
+			<td>
+				Wavy X / linear Y move
+				<div class="params">speed_x, angle_speed, velocity_y, duration</div>
+			</td>
+			<td rowspan="2">
+				Moves the enemy on a sinusoidal path. Calculates a new <code class="var3">velocity</code> by applying a cosine oscillation multiplied by the given <code>speed</code> on the wavy axis while using the given constant <code>velocity</code> on the linear axis. Starts out with <code class="var1">angle</code> at <code>0x00</code> and adds <code>angle_speed</code> on every frame of the motion.<br>
+				Most notably, this is the only movement type used in formations <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KGSQBF11SC2C7K2W2PQRVT92">#1 (Drunkards)</a> and <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KHGR8E4D3TPBY99XMSF79529">#12 (Off-centered Crossing)</a>.
+			</td>
+		</tr><tr>
+			<th>0x05</th>
+			<td>
+				Wavy Y / linear X move
+				<div class="params">speed_y, angle_speed, velocity_x, duration</div>
+			</td>
+		</tr><tr>
+			<th>0x06</th>
+			<td>
+				Move
+				<div class="params">duration</div>
+			</td>
+			<td>Continues moving the enemy at its current <code class="var3">velocity</code>.</td>
+		</tr><tr>
+			<th>0x07</th>
+			<td>
+				Set speed and move
+				<div class="params">speed, duration</div>
+			</td>
+			<td>Like <code>0x01</code>, but only sets the enemy's <code class="var2">speed</code> to the given parameter, retaining its current <code class="var1">angle</code> for the <code class="var3">velocity</code> calculation.</td>
+		</tr><tr>
+			<th>0x08</th>
+			<td>
+				Linear move, stopping at player Y
+				<div class="params">angle, speed, duration</div>
+			</td>
+			<td rowspan="2"> Like <code>0x01</code>, but stops if the enemy's center coordinate intersects with the player sprite on the Y or X axis.</td>
+		</tr><tr>
+			<th>0x09</th>
+			<td>
+				Linear move, stopping at player X
+				<div class="params">angle, speed, duration</div>
+			</td>
+		</tr><tr>
+			<th>0x0A</th>
+			<td>
+				Directional circular move
+				<div class="params">angle_start, speed, angle_speed, velocity_x_plus, velocity_y_plus, duration</div>
+			</td>
+			<td>Like <code>0x02</code>, but adds a constant vector on top of the recalculated per-frame <code class="var3">velocity</code>.</td>
+		</tr><tr id="spawn-{{.Date}}">
+			<th>0x10</th>
+			<td>
+				Spawn
+				<div class="params">center_x÷8, center_y÷8, size_words[4], hp[4], clip_x, clip_bottom, unused</div>
+			</td>
+			<td>Makes enemy appear. The <code>center_x</code> and <code>center_y</code> values are in playfield space; storing them as multiples of 8 is a neat way to cover a range from (&NoBreak;-128&nbsp;× 8&NoBreak;)&nbsp;= -1024 to (&NoBreak;+127&nbsp;× 8&NoBreak;)&nbsp;= +1016 pixels in a single byte. <code>size_words</code> (the size of the enemy in multiples of 16) and <code>hp</code> are conveniently indexed with <code>enemy_speed</code> (<a href="#enemy_speed-{{.Date}}">see above</a>).</td>
+		</tr><tr class="unused">
+			<th>0x80</th>
+			<td>
+				Loop (absolute jump)
+				<div class="params">target, count</div>
+			</td>
+			<td rowspan="2">Supposed to loop the block between the current instruction pointer (IP) and <code>target</code> (<code>0x80</code>) or (<code>disp</code> + IP) (<code>0x81</code>), but broken due to several bugs in the implementation. These bugs would later be fixed in TH04, where such a loop appears in the very first enemy formation of Stage 1.</td>
+		</tr><tr class="unused">
+			<th>0x81</th>
+			<td>
+				Loop (relative jump)
+				<div class="params">disp, count</div>
+			</td>
+		</tr><tr>
+			<th>0x82</th>
+			<td>Set <code>clip_x</code> flag</td>
+			<td rowspan="2">Sets either of the two flags to <code>true</code>. Useful if the enemy was previously spawned with <code>clip_x</code> or <code>clip_bottom</code> set to <code>false</code>: In that case, the enemy first gets to live outside the boundaries of its playfield without being clipped, and this call can then reactivate clipping for proper removal later in the script. This can be seen in formations <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KHTVS0X9HQXF6SFSEAY86VPP">#16 (Zigzag)</a> and <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KHX84BPRP45P5H7E97KX21AM">#17 (Flying Junction)</a>.</td>
+		</tr><tr class="unused">
+			<th>0x83</th>
+			<td>Set <code>clip_bottom</code> flag</td>
+		</tr>
+	</tbody>
+</table><p>
+	With no way of deduplicating the multiple enemies that fly along the same path in most formations, the scripts in <code>ENEDAT.DAT</code> end up highly copy-pasted, with individual enemies often only differing in the initial delay. It's hard to criticize this though, as this simple non-abstracted approach also provided the flexibility for ZUN to have enemies on multiple paths within the same formation in the first place.
+</p><p>
+	If there <i>is</i> one design flaw in this format, it's the mere existence of the stop instruction. It does fulfill the role of terminating the script interpreter, whose instruction pointer would otherwise continue past the end of an enemy's script, but even that detail wouldn't justify its existence if we consider the design of these enemy formations. Every enemy of every formation is designed to fly past some edge of the playfield, get clipped, despawn, and end script execution that way, yet they still remove themselves using this stop instruction instead of relying on playfield edge clipping to do so.<br>
+	As usual, I wouldn't mention this if it didn't cause at least one quirk in the game. If we look closely at <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KHK5CN9KKRGETSJKFQC211TV">formation #13 (Folding "7")</a>, we see that the center enemies on the straight vertical path call <code>stop()</code> just a bit too early and despawn themselves just a few pixels above the bottom edge of the playfield:
+</p><figure {{$f13_e.FigureAttrs}}>
+	{{call .VideoPlayer $f13_e $f13_l.FlipActive}}
+</figure><p>
+	You could equally argue that this quirk is simply caused by the human error of passing a <code>duration</code> to <code>move_linear()</code> that is shorter than it should have been. Since the playfield is {{HTML_Screen_Y 368}} pixels tall, a {{HTML_Screen_Y 64}}-pixel enemy spawned at a top Y position of (-{{HTML_Screen_Y 32}}&nbsp;- (<sup>{{HTML_Screen_Y 64}}</sup>/<sub>2</sub>))&nbsp;= {{HTML_Screen_Y -64}} and moving at a velocity of {{HTML_Screen_Y 4}} pixels per second would need to keep moving for (<sup>({{HTML_Screen_Y 64}}&nbsp;+ {{HTML_Screen_Y 368}})</sup>/<sub>{{HTML_Screen_Y 4}}</sub>)&nbsp;= 108 frames rather than just 100. But removing the stop instruction would have made that quirk obvious by causing clearly visible glitches as a result of the script instruction pointer no longer being kept from running past the end of the respective enemy scripts.
+</p><hr id="enemies-{{.Date}}"><h3>Enemies</h3><p>
+	Despite all the explanations above, there's still a bit left to be said about enemies themselves:
+</p><ul><li>
+	<p>
+		The enemy cap is 40 across both playfields. This is only 8 enemies more than the 16×2 enemies that <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KH755VM81ZM4YTQCKXNG3JAQ">formation #8 (Four Lines of Four)</a>, the formation with the highest enemy count, would need when running simultaneously for both players. Due to how <a href="#formation_gameplay-{{.Date}}">TH03 instantly spawns all enemies in a formation</a> and the fact that <a href="#intro-{{.Date}}">exploding enemies still take up an enemy slot</a>, it is absolutely possible to hit this cap during regular gameplay and cause interesting formation-related quirks. The simplest test case would be this one:
+	</p><ul>
+		<li>Randomize enemy formations as usual, but start the game with one of the various 12-enemy formations and then continue with formation #8. Let's pick <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KGRA8ACP5QC346QHSRPBSB9R">formation #0 (Loop-de-Loop)</a>, which has a generous 1-second window where all 12 enemies are visible on the playfield.</li>
+		<li>During this window, both players then need to fire a bomb at roughly the same time, turning all 24 living enemies into explosions.</li>
+		<li>Then, the game will advance both players to formation #8, with P1 taking precedence over P2 if both players bombed on the exact same frame. However, the game will then only have enough free enemy slots to exactly fit the 16 enemies for the one player that spawns them first.</li>
+	</ul><p>
+		If both players do bomb on the exact same frame, this happens:
+	</p><figure {{$e_capexc_bomb.FigureAttrs}}>
+		{{call .VideoPlayer $e_capexc_bomb.FlipActive $e_capexc_ref}}
+	</figure><p>
+		The spawn call for every single one of P2's enemies ends up doing nothing because all enemy slots are occupied. Consequently, the enemy system continues to report no living enemies for P2, which causes the formation system to advance P2 to the next formation on the following frame. This process repeats for 29 more frames until the first three of both P1's and P2's enemies have finished their explosion animation. Then, P2 finally finds itself with enough free enemy slots to spawn at least 6 of the 8 enemies of <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KHA24SG98TH71F0B046ERH30">formation #9 (Inverse "Y")</a>, its then current 30<sup>th</sup> formation of the randomized sequence&nbsp;– and a formation sequence cursor that has moved far ahead of P1's.<br>
+		This way of seeing into the future of the formation sequence might give P1 an advantage in competitive matches, as they can then prepare for the correct chaining route in advance. Then again, this would still require P2's cooperation&nbsp;– if just one of the players bombs a 12-enemy formation that is followed by the 16-enemy formation #8, the 40-enemy cap will be exactly enough to fit P1's then 28 enemies without further quirks.
+	</p>
+</li><li>
+	The difference between ghost, star, heart, and crescent enemies is purely visual, in case anyone was still wondering.
+</li><li>
+	The formation scripts might have already hinted at the fact that enemy HP are 0-based. Thus, enemies are only destroyed once they would reach -1 HP, not 0. Each enemy can also only lose up to 1 HP per frame.
+</li><li>
+	Killing enemies with an explosion adds the following charge values, depending on the hit count of the explosion's chain, to… not the explosion's chain, but the chain in slot {{template "round_speed_half"}}, which may or may not be active? Wait, what?! {{HTML_Emoji "zunpet"}} 	This is most likely why these charges aren't reset when starting a new chain.
+	<figure>
+		<table class="chain_data-{{.Date}}">
+			<thead>
+				<tr>
+					<th>Hit count of explosion's chain</th>
+					<th>Effect</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>≤2</td>
+					<td><code>charge_fireball</code>&nbsp;+1</td>
+				</tr><tr>
+					<td>≤(<span style="opacity: 0">0</span>9&nbsp;- ({{template "round_speed_half"}}&nbsp;× 2))</td>
+					<td><code>charge_fireball</code>&nbsp;+2</td>
+				</tr><tr>
+					<td>≤(14&nbsp;- ({{template "round_speed_half"}}&nbsp;× 2))</td>
+					<td><code>charge_fireball</code>&nbsp;+3, <code>charge_exatt</code>&nbsp;+1</td>
+				</tr><tr>
+					<td>(greater)</td>
+					<td><code>charge_fireball</code>&nbsp;+4, <code>charge_exatt</code>&nbsp;+1</td>
+				</tr>
+			</tbody>
+		</table>
+		<figcaption>
+			The game only picks the first row whose hit count matches the condition, so these are not cumulative.
+		</figcaption>
+	</figure>
+	Contrary to <a href="#chain-{{.Date}}">pellets and fireballs</a>, these are <i>not</i> multiplied if more than one explosion hits an enemy on the same frame.
+</li><li>
+	On the {{Blog_PostLink "2022-02-18" "collision bitmap against players"}}, each enemy is represented by a striped rectangle that's 0.375× the size of the enemy and placed in its center.
+</li><li>
+	The hitboxes against player shots are very generous. Perhaps they might look overly so in the figure below, but that's mainly due to TH03 collision-detecting each pair of player shots as a single 32×{{HTML_Screen_Y 16}} rectangle. The basic hitbox of each enemy is a square in its center that's 0.875× its size, except for 16-pixel enemies, which receive a 20×{{HTML_Screen_Y 20}} square rather than the 14×{{HTML_Screen_Y 14}} one they'd otherwise get.
+	<figure class="hb-e-{{.Date}} pixelated checkerboard" style="width: 480px;">
+		{{- define "enemy-alt" -}}enemy sprite and its hitbox against player shot pairs{{end}}
+		<rec98-child-switcher>
+			{{$layer := "👻 Ghost"}}
+			{{$alt_type := "ghost"}}
+			<img
+				data-t0="{{$layer}}"
+				data-t1="16×16"
+				src="{{$hb_e_ghost_16}}"
+				width="480"
+				alt="TH03's 16×16 ghost {{template "enemy-alt"}}"
+				class="active"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="32×32"
+				src="{{$hb_e_ghost_32}}"
+				width="480"
+				alt="TH03's 32×32 ghost {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="48×48"
+				src="{{$hb_e_ghost_48}}"
+				width="480"
+				alt="TH03's 48×48 ghost {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="64×64"
+				src="{{$hb_e_ghost_64}}"
+				width="480"
+				alt="TH03's 64×64 ghost {{template "enemy-alt"}}"
+			>
+			{{- $layer := "⭐ Star" -}}
+			<img
+				data-t0="{{$layer}}"
+				data-t1="16×16"
+				src="{{$hb_e_star_16}}"
+				width="480"
+				alt="TH03's 16×16 star {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="32×32"
+				src="{{$hb_e_star_32}}"
+				width="480"
+				alt="TH03's 32×32 star {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="48×48"
+				src="{{$hb_e_star_48}}"
+				width="480"
+				alt="TH03's 48×48 star {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="64×64"
+				src="{{$hb_e_star_64}}"
+				width="480"
+				alt="TH03's 64×64 star {{template "enemy-alt"}}"
+			>
+			{{- $layer := "💙 Heart" -}}
+			<img
+				data-t0="{{$layer}}"
+				data-t1="16×16"
+				src="{{$hb_e_heart_16}}"
+				width="480"
+				alt="TH03's 16×16 heart {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="32×32"
+				src="{{$hb_e_heart_32}}"
+				width="480"
+				alt="TH03's 32×32 heart {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="48×48"
+				src="{{$hb_e_heart_48}}"
+				width="480"
+				alt="TH03's 48×48 heart {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="64×64"
+				src="{{$hb_e_heart_64}}"
+				width="480"
+				alt="TH03's 64×64 heart {{template "enemy-alt"}}"
+			>
+			{{- $layer := "🌙 Crescent" -}}
+			<img
+				data-t0="{{$layer}}"
+				data-t1="16×16"
+				src="{{$hb_e_crescent_16}}"
+				width="480"
+				alt="TH03's 16×16 crescent {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="32×32"
+				src="{{$hb_e_crescent_32}}"
+				width="480"
+				alt="TH03's 32×32 crescent {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="48×48"
+				src="{{$hb_e_crescent_48}}"
+				width="480"
+				alt="TH03's 48×48 crescent {{template "enemy-alt"}}"
+			><img
+				data-t0="{{$layer}}"
+				data-t1="64×64"
+				src="{{$hb_e_crescent_64}}"
+				width="480"
+				alt="TH03's 64×64 crescent {{template "enemy-alt"}}"
+			>
+		<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+		<figcaption>
+			{{Blog_PostLink "2022-06-17" "As"}} {{Blog_PostLink "2022-07-10" "usual"}}, a 32×{{HTML_Screen_Y 16}} shot pair has to lie fully within the <span style="color: red">red</span> area for a hit to be registered.<br>
+			I'd {{Blog_PostLink "2025-02-24#hitbox" "usually"}} also like to visualize the exact shape against every type of bullet or shot, but with 4 frames of animation that sometimes change their shape quite heavily&nbsp;× 9 characters, it would be a bit too much&nbsp;– and ultimately not that helpful with such generous hitboxes either.
+		</figcaption>
+	</figure>
+</li><li>
+	Final fun fact: {{th03pc 4}}'s Charge Shot one-hits enemies regardless of HP.
+</li></ul><hr id="explosions-{{.Date}}"><p>
+	For reasons that will soon become apparent, I'll skip over fireballs for now. Instead, let's continue with…
+</p><h3>Explosions</h3><p>
+	Collision detection is the only piece of explosion-related code shared between enemies and fireballs, so we can visualize most of the gritty internal details by simply looking at the hitbox frame data… and of course you're getting all 30 permutations of explosion size/source and destroyable entity:
+</p><figure class="framedata-{{.Date}}">
+	{{call .VideoPlayer
+		$fd_e_16_v_e_16.FlipActive $fd_e_16_v_e_32 $fd_e_16_v_e_48 $fd_e_16_v_e_64 $fd_e_16_v_p $fd_e_16_v_f
+		$fd_e_32_v_e_16 $fd_e_32_v_e_32 $fd_e_32_v_e_48 $fd_e_32_v_e_64 $fd_e_32_v_p $fd_e_32_v_f
+		$fd_e_48_v_e_16 $fd_e_48_v_e_32 $fd_e_48_v_e_48 $fd_e_48_v_e_64 $fd_e_48_v_p $fd_e_48_v_f
+		$fd_f_v_e_16    $fd_f_v_e_32    $fd_f_v_e_48    $fd_f_v_e_64    $fd_f_v_p    $fd_f_v_f
+		$fd_e_64_v_e_16 $fd_e_64_v_e_32 $fd_e_64_v_e_48 $fd_e_64_v_e_64 $fd_e_64_v_p $fd_e_64_v_f
+	}}
+	<figcaption>
+		Thanks to the anonymous backer for providing the <i>Anything</i> budget for these multi-row tabs at the end of the 6<sup>th</sup> push!
+	</figcaption>
+</figure><p>
+	We can summarize these 30 videos in just 5 bullet points:
+</p><ul>
+	<li>Explosions can only ever deal damage once every 4 frames. Against pellets and fireballs, this applies across all 36 frames of an explosion, resulting in 9 possible frames they can be destroyed on.</li>
+	<li>Hits against enemies are further restricted to a window of frames that roughly corresponds to the frames of animation with lots of sparkles in a circle. Since the game flips between these two animation frames on the same 4-frame cycle that the collision detection runs on, the damaging frames are always indicated by a sprite change.</li>
+	<li>For fireball-originating explosions, this window starts 4 frames later than it does for enemy-originating explosions. Whether this was a deliberate design choice or just an unintended inconsistency resulting from outdated copy-pasted code is anybody's guess.</li>
+	<li>This leaves us with only 5 or even just 4 frames where an explosion can possibly damage an enemy: frame 13 (for enemy-originating explosions), 17, 21, 25, and 29.</li>
+	<li>Fireball-originating explosions use the same sprites as explosions that originate from 48×{{HTML_Screen_Y 48}}-pixel enemies, but are rendered {{HTML_Screen_Y 8}} pixels lower than their internal position used for collision detection. This is the only fixable bug in all of the systems covered in this post, and it's already fixed in <a href="#fix-2026-03-16">the new Anniversary Edition release</a>.</li>
+</ul><p>
+	But there is one more obscure detail that we can't see in these frame data videos. Even within the window where explosions <i>can</i> hit enemies, TH03 further caps the total amount of damage that a single explosion can deal to them. Each enemy-originating explosion can deal up to (<a href="#spawn-{{.Date}}"><code>size_words</code></a>&nbsp;× 2) HP of damage in total, while fireball-originating explosions can deal up to 4 HP if the explosion originated from a blue fireball and 6 HP if it originated from a red one. ZUN's code suggests that this detail is among the most accidentally emerged features in the entire game&nbsp;– because <i>of course</i> he did not separately store the damage cap in one of the 14 padding bytes within the explodable structure, but simply reinterpreted <code>size_words</code> (for enemies) or the variant field (for fireballs) as half of the cap's value. {{HTML_Emoji "zunpet"}}<br>
+	This limitation even seems largely pointless from a game design standpoint at first:
+</p><ul>
+	<li>The formation scripts always send more than one enemy along the same path.</li>
+	<li>Hence, explosions from earlier enemies will cause subsequent enemies to explode right next to existing enemies.</li>
+	<li>These new explosions will come with a fresh hit counter, which in turn will ensure the destruction of the next enemy on the same path, and so on.</li>
+</ul><p>
+	Sure, once we consider the small number of frames where explosions can actually hit enemies, this <i>might</i> make it less likely for older explosions to kill enemies further along the formation's path, but does it really matter in practice?<br>
+	Turns out that we have to look no further than <a href="https://activitypub.nmlgc.net/@rec98/statuses/01KGYREPBH9YJDJRBB5KB78Q39">formation #4 (Racetrack)</a>, which sends 12 enemies with increasing HP values along the same path. If we colorize explosions based on the total amount of damage they've dealt, we can clearly see the desync just 48 frames after the first explosion:
+</p><figure {{$exp_edc_orig.FigureAttrs}}>
+	{{call .VideoPlayer $exp_edc_orig.FlipActive $exp_edc_none}}
+	<figcaption>
+		I chose black for explosions that currently can't deal damage to enemies. The other 6 colors (<span style="color: #060">dark green</span>, <span style="color: #2A2">light green</span>, <span style="color: #800">dark red</span>, <span style="color: #F44">light red</span>, <span style="color: #00D">dark blue</span>, and <span style="color: #99E">light blue</span> to represent 0 to 5 dealt hits in this order) are TH03's regular in-game VRAM colors from #5 to #10.
+	</figcaption>
+</figure><p>
+	And now imagine a more complex game state where these earlier explosions might in turn cause <a href="#round_speed-{{.Date}}">hit-count-dependent pellets, charged fireballs, or charged Extra Attacks</a> to fire earlier…
+</p><hr id="fireballs-{{.Date}}"><p>
+	Only one left to go then!
+</p><h3>Fireballs</h3><p>
+	As usual, let's start with a few facts in bullet-point form:
+</p><ul><li>
+	Fireballs can, indeed, only initially enter the playfield as a result of a chain's fireball charge being sufficiently high.
+</li><li>
+	The cap for fireballs is 24, again across both playfields. Since this cap doesn't interact with other gameplay systems, this seems plenty enough.
+</li><li>
+	The target center X coordinates for newly spawned fireballs are random, but the possible value range alternates every 256 <a href="#frames-{{.Date}}">frames</a> between <ul>
+		<li>the initial setting of covering the entire playfield (i.e., [0.0; 288.0[), and</li>
+		<li>being restricted to the 32 pixels to the right of the target player's center X coordinate at the time the fireball was spawned.</li>
+	</ul>
+	Just like bullets, fireballs also need to {{Blog_PostLink "2025-12-31#transfer" "physically travel through the 32-pixel border between the two playfields during their transfer phase"}}.
+</li><li>
+	The HP of fireballs behaves similarly to enemies: Fireballs can also only lose up to 1 HP per frame, and are destroyed once they would reach -1 HP, not 0. This is why the code says that blue fireballs have 2 HP and red fireballs have 3 HP, despite them taking 3 and 4 player shots to destroy, respectively.<br>
+	The main difference lies in how these HP only matter against regular player shots and most Charge Shots. Both explosions and, again, {{th03pc 4}}'s Charge Shot destroy fireballs in a single hit.
+</li><li>
+	There is code to move falling fireballs on the X-axis as well, but it won't have any effect in the original game because the X velocity of falling fireballs is always set to 0.
+</li><li>
+	Bombing immediately removes all fireballs from the field of the player who fired a bomb.
+</li><li>
+	Fireballs only turn into explosions when they are caught in other explosions, whose chains must have ultimately started by destroying an enemy.
+</li><li>
+	On the {{Blog_PostLink "2022-02-18" "collision bitmap against players"}}, each falling fireball is represented by a striped 16×16 rectangle in its center.
+</li><li>
+	Once again, the hitbox against player shots is roughly where you would expect, and not worth worrying about:
+	<figure class="pixelated checkerboard" style="width: 352px;">
+		<img
+			src="{{$hb_fb_sp}}"
+			alt="Hitbox of TH03's fireballs against player shot pairs"
+			width="352"
+		>
+	</figure>
+</li></ul><p>
+	The more interesting parts about fireballs all relate to their destruction. Let's start with destruction by explosions, which seems to always send one new red fireball to the other player's field. In reality, these spawns are limited by a "generation number" system: Each blue fireball starts with a generation number of 0, while each red fireball starts, on paper, with 1 plus the generation number of whatever fireball was involved in its creation. In the case of explosions, the game obviously uses the generation number of the exploding fireball itself, but will only spawn such a new fireball if that number is &lt;4.<br>
+	This might look like even more of a rarely-triggered and expendable gameplay detail than the enemy damage cap we've seen above. How often does the "same" fireball really get transferred between both playfields 4 times in a row, without any player dropping a single generation? Well, exactly this case happens a mere 41.8 real-time seconds into {{Blog_PostLink "2025-05-10#demo" "the very first demo of Reimu vs. Mima"}}. Removing the generation limit would fork gameplay as an explosion would then spawn another <span class="hovertext" title="In 1-based numbers. The internal generation number would be 4.">5<sup>th</sup>-generation</span> fireball that otherwise wouldn't have been there.
+</p><p>
+	Sometimes, however, the game also appears to spawn additional red fireballs in response to destroying only a single one with an explosion. The cleanest example I could find in the four demos happens 1:05 minutes into the {{th03pc 4}} vs. {{th03pc 2}} demo:
+</p><figure {{$exp_2_fbs.FigureAttrs}}>
+	{{call .VideoPlayer $exp_2_fbs}}
+	<figcaption>
+		Note how the "primary" new fireball described above is spawned from the center of its explosion, while the "additional" new fireball is spawned from the center of the explosion that caused the old fireball to explode.
+	</figcaption>
+</figure><p>
+	With all the features we've previously looked at, it's easy to explain <i>why</i> we get that second fireball&nbsp;– because the chain's fireball charge value was high enough to spawn one. But why is this new fireball red? Doesn't <code>夢時空.TXT</code> say that <q>red [fireballs] have been sent back at least once</q>?
+</p><blockquote lang="ja">赤いのは、１回以上送りかえされたことのある奴です。</blockquote><p>
+	Yup, {{Blog_PostLink "2025-02-24#overview" "another case"}} where the manual is flat out wrong. The color variant of newly spawned fireballs is read from a global variable that is <a href="https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th03/main/enemy/fireball.cpp#L477-L483">set to red at the beginning of the fireball collision detection function</a>, <a href="https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th03/main/enemy/fireball.cpp#L555">set back to blue before returning</a>, and not modified anywhere else. Hence, this color variable does not just apply to the fireballs spawned <i>directly</i> in the collision handler itself, but also to any fireballs spawned <i>indirectly</i> via the chaining system as a result of fireballs colliding with explosions. Given the fact that there's a significant gameplay difference between red fireballs and blue ones, this is quite a significant error in the manual, I'd say… {{HTML_Emoji "thonk"}}
+</p><p>
+	But it gets even quirkier. Which generation number do these chain-charged red fireballs spawn with? Logically, you'd expect 0, but red fireballs are always spawned with a generation number of at least 1. Apart from that, though, there is no other generation number that the code could meaningfully propagate. These fireballs are spawned by the same generic explosion collision handler that would also spawn blue fireballs upon destroying pellets, which only has access to a hitbox and not to the structure instance of the object it tests all explosions against.<br>
+	But once again, <a href="https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th03/main/enemy/fireball.cpp#L155-L157">the fireball spawn function reads the previous generation number from a global variable</a>, so it will assign… 1 plus whatever generation number the previous explosion-destroyed fireball had. {{HTML_Emoji "tannedcirno"}}<br>
+	And yes, the <i>previously</i> destroyed fireball, <i>not</i> the current one, because <a href="https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th03/main/enemy/fireball.cpp#L496-L499">the collision handler that spawns these chain-charged fireballs</a> is called before the global variable is updated with the affected fireball's generation number.
+</p><p id="fireballs_shotted-{{.Date}}">
+	You can also destroy a fireball without an explosion though. Internally, this is done by removing the old fireball and spawning a new transferring red one at the same position. This new fireball will start with the old fireball's generation number incremented by 1, matching the explanation of the generation system from above. Unlike explosion-destroyed fireballs, there is no limit to the number of times a particular fireball can be transferred in this way. So you <i>can</i> go higher than 5 generations as long as you keep using shots to transfer fireballs back and forth&nbsp;– and if you manage 256 of those transfers, the generation counter will overflow back to 0. {{HTML_Emoji "onricdennat"}}<br>
+	But then, the game logic goes completely off the rails in the rest of the collision handler. For starters, this kind of fireball destruction still increases the Extra Attack charge of <i>a</i> chain, despite the fact that player shots and Charge Shots exist completely separate from the chaining system <i>and</i> the fact that the respective player may not even have any active explosions on their playfield. ZUN simply takes the chain slot that the next explosion would be assigned to, and adds +1 (for blue fireballs) or +2 (for red fireballs) to its <code>charge_exatt</code> value. Second reason why these charges aren't reset when starting a new chain, I guess…
+</p><p>
+	And <i>then</i>, <a href="https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th03/main/enemy/fireball.cpp#L543-L544">the code performs <i>another</i> <code>charge_exatt</code> firing check</a> <i>without</i> adding any new charge, in what could have only possibly been a leftover function call that was supposed to go into the branch that handles fireball destruction by explosions. On this non-explosion code path, the <code>chain_slot</code> variable used in this check remains uninitialized, which leads to a potential read and write access outside of the bounds of this array…
+</p><hr id="glitches-{{.Date}}"><p>
+	…wait a moment, this immediately reminds me of certain bug reports from players that smelled like they were caused by out-of-bounds array accesses in unrelated parts of the game. I've been waiting to find one of these accesses ever since I heard about these bugs, and it's great that I immediately stumbled over the issue on my first RE pass over the fireball collision handler. Could it be that I've just found…
+</p><h3>TH03's score reduction and extend glitches</h3><p>
+	Yup. In their thousands of hours of mastering this game's intricate systems, the gameplay community has encountered two very rare and seemingly random glitches without any obvious cause:
+</p><ol>
+	<li><a href="https://www.youtube.com/watch?v=JltuH7nAO4Y">Random score reduction</a></li>
+	<li>Two extra Story Mode lives out of nowhere</li>
+</ol><p>
+	And indeed, both of them could be caused if <code>charge_exatt</code> were indexed with a <code>chain_slot</code> ≥16, which would cause certain bytes to accidentally get reinterpreted as an Extra Attack charge value, compared against <code>round_speed</code>, and reset to 0 if their value is high enough. Want to take a guess at which particular pieces of data lie particularly close to <code>charge_exatt</code> in TH03's original memory layout? Well…
+</p><figure>
+	<table class="map-{{.Date}}">
+		<thead>
+			<tr>
+				<th>DS:</th>
+				<th>+00</th><th>+01</th><th>+02</th><th>+03</th>
+				<th>+04</th><th>+05</th><th>+06</th><th>+07</th>
+				<th>+08</th><th>+09</th><th>+0A</th><th>+0B</th>
+				<th>+0C</th><th>+0D</th><th>+0E</th><th>+0F</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>4B3E</th>
+				<td><span class="array" style="width: calc(1600% + 16px);">
+					P1 Extra Attack charge per chain
+				</span></td>
+				{{range loop 0 15}}<td></td>{{end}}
+			</tr><tr>
+				<th>4B4E</th>
+				<td><span class="array" style="width: calc(1600% + 16px);">
+					P2 Extra Attack charge per chain
+				</span></td>
+				{{range loop 0 15}}<td></td>{{end}}
+			</tr><tr>
+				<th>4B5E</th>
+				<td><span class="array temp" style="width: calc(600% + 6px);">
+					(temporary data)
+				</span></td>
+				{{range loop 0 5}}<td></td>{{end}}
+
+				<td><span class="array" style="width: calc(800% + 8px);">
+					P1 score digits ({{Blog_PostLink "2024-12-04#digits" "little-endian BCD"}})
+				</span></td>
+				{{range loop 0 7}}<td></td>{{end}}
+
+				<td><span class="array" style="width: calc(200% + 2px); justify-content: right; border-right: unset;">
+					P2 score&nbsp;
+				</span></td>
+				{{range loop 0 1}}<td></td>{{end}}
+			</tr><tr>
+				<th>4B6E</th>
+
+				<td><span class="array" style="width: calc(600% + 6px); justify-content: left; border-left: unset;">
+					&nbsp;digits ({{Blog_PostLink "2024-12-04#digits" "little-endian BCD"}})
+				</span></td>
+				{{range loop 0 5}}<td></td>{{end}}
+
+				<td><span class="array temp" style="width: calc(800% + 8px);">
+					(temporary data)
+				</span></td>
+				{{range loop 0 7}}<td></td>{{end}}
+				<td><span class="array" style="width: calc(100% + 1px);">☯️</span></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<figcaption>
+		With ☯️ being the number of Story Mode extends gained. These score digits do not include the one's digit, which represents the number of continues used and is stored separately.<br>
+		The 16 bytes below hold more gameplay-relevant data relating to Yumemi's Charge Shot and Gauge Attack, but researching <i>that</i> was out of scope for this delivery.
+	</figcaption>
+</figure><p>
+	This gives us the following <code>chain_slot</code> ranges for the two glitches, depending on which player destroys the fireball:
+</p><ol>
+	<li>
+		If <code>chain_slot</code> is between <span class="variant-{{.Date}}">
+			<span><span class="hovertext" title="38">0x26</span> and <span class="hovertext" title="55">0x35</span> inclusive (P1)</span>
+			<span><span class="hovertext" title="22">0x16</span> and <span class="hovertext" title="27">0x25</span> inclusive (P2)</span>
+		</span>, the charge check will hit one of the score digits, causing the score reduction variant of the glitch if the digit's value is high enough.
+	</li>
+	<li><p>If <code>chain_slot</code> is exactly <span class="variant-{{.Date}}">
+		<span><span class="hovertext" title="62">0x3E</span> (P1)</span>
+		<span><span class="hovertext" title="46">0x2E</span> (P2)</span>
+	</span>, the charge check will hit the byte that controls the number of Story Mode extends gained, causing the extend variant of the glitch if the byte's value is high enough.<br>
+	To understand how this can work, we need to look into how ZUN implemented TH03's extend system:</p>
+	<ul>
+		<li>At the start of each round, <code>extends_gained</code> is initialized to the value of P1's second-highest score digit, or to 255 if the overall score is ≥20 million.</li>
+		<li>On every frame, the game then compares P1's second-highest score digit against <code>extends_gained</code>. If the digit is higher, it then grants an extend and increments the byte accordingly.</li>
+		<li>At a score of ≥20 million, <code>extends_gained</code> is set to 255, which is higher than any possible single digit and thus blocks the game from granting any further extends. Otherwise, you'd get additional ones at 110 million, 120 million, 210 million, …</li>
+	</ul><p>
+		If you edit memory and set <code>extends_gained</code> from any nonzero value to 0, the game will therefore think that you haven't received any extends yet, and newly grant you as many of them as you're <i>supposed</i> to have with P1's current score: one additional extend if the score is ≥10 million, and two if your score is ≥20 million. There are no other checks that prevent the game from granting extends under this condition, so you could repeat this process until you've reached 255 lives, the maximum possible value.<br>
+		The "blocking" value of 255 also explains how this glitch can exist in the first place. It can only work if the game sets <code>extends_gained</code> to 0 on its own as a result of the Extra Attack charge check, and the regular values of 0, 1, and 2 are all smaller than the smallest possible Extra Attack charge value of 3. 255, on the other hand, is larger than any possible charge value. Thus, this glitch can only happen if you have ≥20 million points, but then, it will consistently happen whenever its other conditions are met.
+	</p></li>
+</ol><p>
+	But how likely could it possibly be for the <code>chain_slot</code> to fall within these exact ranges? After all, this bug is reported to only happen very rarely.<br>
+	Turns out that explaining how and why we <i>actually</i> get these effects is not trivial in the slightest. Let's look at the stack layout across the relevant functions during a random frame of gameplay, and try to reason about the value we will actually find in this uninitialized local variable at runtime:
+</p><p>
+	{{- define "stack_thead" -}}
+	<thead>
+		<tr>
+			<th colspan="2">Function</th>
+			<th><code style="color: blue">BP</code> | <code style="color: red">SP</code> after prolog</th>
+			<th>Stack</th>
+		</tr>
+	</thead>
+	{{- end -}}
+	{{- define "stack_below_enr" -}}
+		<var>INST</var>&nbsp;<var>→MAI</var>&nbsp;<span class="var2">1000</span>&nbsp;<var>SEG1</var>&nbsp;<var>→RMN</var>&nbsp;<span class="var3">0FFA</span>
+	{{- end -}}
+	{{- define "stack_data" -}}
+	<tr>
+		<th><small>far</small> main()</th><th>├── (SEG1:MAI)</th>
+		<td><span class="var2">1000</span> | 0FFE</td>
+		<td><var class="bp">INST</var>&nbsp;<span class="sp"></span></td>
+	</tr><tr>
+		<th><small>near</small> round_main()</th><th>├┬─ (SEG1:RMN)</th>
+		<td><span class="var3">0FFA</span> | 0FFA</td>
+		<td><var>INST</var>&nbsp;<var>→MAI</var>&nbsp;<span class="var2">1000</span>&nbsp;<span class="bp sp"></span></td>
+	</tr><tr>
+		<th><small>far</small> enemies_render()</th><th>│├┬ (SEG4:ENR)</th>
+		<td><span class="var4">0FF4</span> | 0FF0</td>
+		<td>{{template "stack_below_enr"}}&nbsp;<var class="bp">INST</var></span>&nbsp;<code><var>INED</var></code>&nbsp;<span class="sp"></span></td>
+	</tr><tr>
+		<th><small>near</small> enemy_put() / enemy_explosion_put()</th><th>{{.}} (SEG4:ENP)</th>
+		<td>0FEC | 0FE4</td>
+		<td>{{template "stack_below_enr"}}&nbsp;<var>INST</var>&nbsp;<code><var>INED</var></code>&nbsp;<var>→ENR</var>&nbsp;<span class="var4">0FF4</span>&nbsp;<var class="bp">en_x</var>&nbsp;<var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var>&nbsp;<span class="sp"></span></td>
+	{{- end -}}
+</p><figure class="stack-{{.Date}}">
+	<table>
+		{{- template "stack_thead" -}}
+		{{- template "stack_data" "││└" -}}
+		</tr><tr>
+			<th><small>far</small> fireballs_hittest_and_render()</th><th>│├┬ (SEG4:FHR)</th>
+			<td><span class="var5">0FF4</span> | 0FF2</td>
+			<td>{{template "stack_below_enr"}}&nbsp;<var class="bp">INST</var>&nbsp;<span class="sp"></span><span class="unused"><code><var>INED</var></code>&nbsp;<var>→ENR</var>&nbsp;0FF4&nbsp;<var>en_x</var>&nbsp;<var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var></span></td>
+		</tr><tr>
+			<th><small>near</small> fireballs_hittest()</th><th>││├ (SEG4:FHT)</th>
+			<td>0FEE | 0FEA</td>
+			<td>{{template "stack_below_enr"}}&nbsp;<var>INST</var>&nbsp;<var>→FHR</var>&nbsp;<span class="var5">0FF4</span>&nbsp;<b class="bp var1">0F</b>F4&nbsp;<var>INST</var>&nbsp;<span class="sp"></span><span class="unused"><var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var></span></td>
+		</tr>
+	</table>
+</figure><p>
+	Where:
+</p><ul>
+	<li>The <span class="var1">purple</span> byte in <code>fireballs_hittest()</code> corresponds to <code>chain_slot</code>.</li>
+	<li>The <span style="color: blue">blue</span> and <span style="color: red">red</span> lines indicate the values of the BP and SP registers.</li>
+	<li><code><var>INST</var></code> and <code><var>INED</var></code> are the offsets of the start and end of the "init function" array that holds pointers to functions that should run before <code>main()</code>, annotated using <code>#pragma startup</code>. <a href="https://en.wikipedia.org/wiki/Crt0"><code>crt0</code></a> happens to load these offsets into the <code>SI</code> and <code>DI</code> registers prior to calling <code>main()</code>. Borland's calling conventions then require the previous value of these registers to be preserved by every function that needs these registers, which is done by pushing them on the stack. And since neither <code>main()</code> nor <code>round_main()</code> use <code>SI</code> or <code>DI</code>, we end up seeing additional stack copies of its original values&nbsp;– i.e., <code><var>INST</var></code> and <code><var>INED</var></code>&nbsp;– in a few other functions further up on the call stack.</li>
+	<li>Labeled addresses prefixed with <i>→</i> correspond to the offset of the following instruction at the current function's call site, where execution will return to.</li>
+	<li><code>en_*</code> are local variables in the single-enemy rendering function. (Top-left X/Y coordinate, half of its size in screen pixels, and a pointer to the enemy instance.)</li>
+	<li>All values are in hexadecimal, obviously.</li>
+</ul><p>
+	That only leaves us with a handful of explicit numbers in this table, all of which are copies of the previous function's base pointer (<code>BP</code>). These get saved onto the stack as part of the typical x86 function prolog, which works like this:
+</p><ol>
+	<li>The <code>CALL</code> instruction pushes the caller's code segment (for <code>far</code> calls) and the offset of the next instruction on the call site, before jumping to the address indicated by <code>CALL</code>'s operand.</li>
+	<li>The new function then calls either <code>ENTER &lt;stack size&gt;, 0</code> <i>or</i> the more RISC-y and consistently faster equivalent sequence of <code>PUSH BP / MOV BP, SP / SUB SP, &lt;stack size&gt;</code>, saving the previous function's base pointer and making room for all required local variables. The key insight here is that <code>SP</code> is simply <i>subtracted</i>. This is exactly where the "garbage values" of uninitialized variables come from, since they will start out with the value of whatever was previously written to their corresponding location on the stack.</li>
+	<li>If the function needs to modify <code>SI</code> or <code>DI</code>, it also pushes those registers, which further decreases <code>SP</code>.</li>
+	<li>Upon returning, the function executes the epilog counterpart of these instructions in reverse order:<ol>
+		<li><code>POP DI</code> and <code>POP SI</code> if needed</li>
+		<li><code>LEAVE</code> or the equivalent sequence of <code>MOV SP, BP / POP BP</code></li>
+		<li><code>RETN</code> (<code>near</code>) or <code>RETF</code> (<code>far</code>) to pop the instruction pointer and (for <code>RETF</code>) the caller's code segment</li>
+	</ol></li>
+</ol><p>
+	And it's these explicit numbers that reveal that ZUN got incredibly lucky:
+</p><ul>
+	<li>The initial 0x<span class="var2">1000</span> value for <code>BP</code> we see in <code>main()</code> exactly corresponds to Turbo C++ 4.0J's default stack size of 4,096 bytes.</li>
+	<li>Since ZUN makes very little use of the stack between <code>main()</code> and the two blitting functions, the top 8 bits of <code>BP</code> are guaranteed to be <span class="var4">0F</span> by the time these two functions push that register onto the stack.</li>
+	<li>The address of the local <code>chain_slot</code> variable within <code>fireballs_hittest()</code> will then fall on exactly that stack location where the blitting functions previously wrote the <span class="var4">0F</span> to…</li>
+	<li>… and since <code>chain_slot</code> is an 8-bit integer, it will therefore start out with an "uninitialized" value of 15, which just happens to be the very last valid index into the 16-element Extra Attack charge arrays.</li>
+</ul><p>
+	This is also why it matters that <a href="#formation_gameplay-{{.Date}}">the game renders at least one enemy or enemy-originating explosion on every frame of gameplay</a>. The only time it renders neither is during the round start animation, but at <i>that</i> time, there also aren't any fireballs to be destroyed. Therefore, this exact tree of function calls is indeed the only one we need to look at, and proves that the formally undefined initial value of <code>chain_slot</code> is indeed deterministic on the one and only code path where it would be read from.
+</p><p>
+	But from this alone, there should be no chance of the game <i>ever</i> writing outside the bounds of the Extra Attack charge array. So what could we possibly be missing here?<br>
+	Well, just looking at <code>MAIN.EXE</code>'s code flow doesn't actually give us the full picture. This is still a PC-98 game, and needs a full PC-98 system to run in the first place. And once we consider all the subsystems involved in running the game, we notice that three of them need to take control of the x86 instruction pointer at regular intervals:
+</p><ul>
+	<li>Keyboard input (calling interrupt 0x09)</li>
+	<li>VSync (calling interrupt 0x0A), and</li>
+	<li>PMD's background task (calling interrupt 0x14)</li>
+</ul><p>
+	If any of the corresponding <span class="hovertext" title="Interrupt Requests">IRQs</span> fires, the CPU has to immediately call the corresponding interrupt handler. This requires saving the current CPU flags, code segment, and offset onto the stack, very much like a call to a regular function. While this would only affect the "inactive" area of the stack below <code>SP</code> at the time of the interrupt call, this area exactly controls the "uninitialized" value of future local variables. Thus, interrupts can easily modify these values beyond the state they would have as a result of the normal flow of code.<br>
+	This theory is supported by the fact that players have reported the extend glitch in particular to occur much more frequently on underclocked PC-98 systems. If each clock cycle takes up a bigger fraction of a second and the three interrupts have to run at regular intervals, we'd get more of them on every frame of gameplay. Thus, slower clock speeds increase the chance of such an interrupt to fall within the exact window of instructions to influence the initial value of the <code>chain_slot</code> variable.<br>
+	Usually, running PC-98 Touhou over and over in underclocked emulators would make for an awful research and debugging experience. Thankfully, DOSBox-X's <i>Turbo (fast-forward)</i> option counteracts the slowdown in exactly the right way: While the reduced clock speed will stretch each {{Blog_PostLink "2025-09-06#fp" "logical frame"}} to multiple real frames, fast-forwarding the emulation will then display all these frames as fast as possible and without blocking at the emulated VSync signal. The result runs very close to the intended 56.423&nbsp;FPS, but with way more of those IRQs firing per second.
+</p><p>
+	With this setup, let's see what happens if PMD's timer interrupt happens to fire somewhere near the end of <code>enemies_render</code>:
+</p><figure>
+	<table class="stack-{{.Date}}">
+		{{- template "stack_thead" -}}
+		{{- template "stack_data" "││├" -}}
+		<tr style="background-color: var(--c-trial-bad)">
+			<th><small>interrupt</small> opnint()</th><th>││└ (PMD_:INT)</th>
+			<td>0FF4 | 0FEA</td>
+			<td>{{template "stack_below_enr"}}&nbsp;<span class="bp"><var>INST</var></span>&nbsp;<code><var>INED</var></code>&nbsp;<var>FLAG</var>&nbsp;<var>SEG4</var>&nbsp;<var>→ENR</var>&nbsp;<span class="sp"></span><span class="unused"><var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var></span></td>
+		</tr><tr>
+			<th><small>far</small> fireballs_hittest_and_render()</th><th>│├┬ (SEG4:FHR)</th>
+			<td><span class="var5">0FF4</span> | 0FF2</td>
+			<td>{{template "stack_below_enr"}}&nbsp;<span class="bp"><var>INST</var></span>&nbsp;<span class="sp"></span><span class="unused"><code><var>INED</var></code>&nbsp;<var>FLAG</var>&nbsp;<var>SEG4</var>&nbsp;<var>→ENR</var>&nbsp;<var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var></span></td>
+		</tr><tr>
+			<th><small>near</small> fireballs_hittest()</th><th>││├ (SEG4:FHT)</th>
+			<td>0FEE | 0FEA</td>
+			<td>{{template "stack_below_enr"}}&nbsp;<var class="bp_dummy">INST</var>&nbsp;<var>→FHR</var>&nbsp;<span class="var5">0FF4</span>&nbsp;<b class="bp var1">SE</b>G4&nbsp;<var>INST</var>&nbsp;<span class="sp"></span><span class="unused"><var>en_y</var>&nbsp;<var>en_s</var>&nbsp;<var>en_p</var></span></td>
+		</tr>
+	</table>
+	<figcaption>With <var>FLAG</var> being the x86's 16-bit flag register that gets saved to the stack in addition to the current CS and IP registers when calling <code>interrupt</code> functions.</figcaption>
+</figure><p>
+	And there we have it. If any of those three interrupts is serviced within the very specific window of x86 instructions between the last rendered enemy and the call to <code>fireballs_hittest()</code>, the call to the interrupt handler will modify the stack in such a way that the future <code>chain_slot</code> variable will start out with the top 8 bits of the address of <code>MAIN.EXE</code>'s fourth code segment, instead of its usually guaranteed value of 15. This will be more likely if the last living or exploding enemy was spawned into a slot close to the beginning of the 48-element enemy array, as TH03 will then spend more time looping over the rest of the structure without calling either of the two <code>*_put()</code> functions.
+</p><p>
+	Alright, now we know <i>what</i> the exact variant of the glitch depends on. But how likely is it for <code>MAIN.EXE</code>'s fourth code segment to <i>actually</i> fall within the affected ranges of memory, and how can we influence this placement?<br>
+	First off, since DOS predates <a href="https://en.wikipedia.org/wiki/Address_space_layout_randomization">ASLR</a>, any specific DOS system will always load its kernel, the shell, and any other drivers at deterministic addresses every time, as long as you don't change any of the parameters that influence this placement. Consequently, the system will also end up with the exact same free regions of memory every time, causing DOS to load a game at the exact same address as well. Of course, since DOS is an open platform where you can get arbitrary code execution by just, uh, writing code, building, and running it, you can easily push the game higher in memory by writing a TSR that reserves the desired amount of memory and executing it before TH03. Pushing TH03 <i>lower</i>, however, would require either
+</p><ol>
+	<li>the infamous oldskool wizardry of freeing up as much conventional RAM as possible,</li>
+	<li>changing the DOS kernel, or</li>
+	<li>changing the {{Blog_PostLink "2025-09-29#prespawn" "version or type of the PMD driver"}} loaded from <code>GAME.BAT</code>. (Note that this won't apply to the debloated or Anniversary Editions if you directly launch them via the <code>debloat</code> or <code>anniv</code> binaries because {{Blog_PostLink "2025-09-29#game-bat" "the integrated TSR spawning code pushes these drivers above the TH03 process"}}).</li>
+</ol><p>
+	Option 2) is particularly impactful, especially if we compare earlier DOS kernels with later ones:
+</p><ul>
+	<li>The first few major versions of MS-DOS load their kernel as a single large contiguous block near the start of conventional RAM, which pushes PMD and the game to the highest segment values I've observed in my tests.</li>
+	<li>With MS-DOS 5, the kernel started pushing more and more of its code into the <a href="https://en.wikipedia.org/wiki/Upper_memory_area">Upper Memory Area</a>. This causes the MS-DOS 6.20 in a certain widely circulating .HDI of TH04 to load PMD and the game at addresses that will be roughly ~50&nbsp;KB lower than the ones we see in MS-DOS 3.3.</li>
+	<li>DOSBox-X doesn't need to reserve any conventional memory for a kernel because its entire kernel is implemented in native code. However, it still needs to spend about ~16&nbsp;KB of low-memory space on run-time data structures for compatibility with programs that directly want to read them, and then chooses to add <a href="https://github.com/joncampbell123/dosbox-x/blob/eabd361a8ed7bec4532e8662f4598935a11dea0a/src/dos/dos.cpp#L4551-L4586">just as much padding to work around issues in certain games</a>. With <code>COMMAND.COM</code> consistently at segment <code>0x0800</code> and the games following immediately after, the resulting segment values strongly resemble those of MS-DOS 6.20.</li>
+	<li>The MS-DOS 7 bundled with Windows 95 features a slightly larger kernel and <code>COMMAND.COM</code>, which again pushes the games slightly higher compared to MS-DOS 6.20.</li>
+</ul><p>
+	And this trend matches exactly with the addresses for segment #4 that we can observe when we go out into the wild and compare various distributions of TH03 against each other:
+</p><figure><table class="numbers">
+	<thead>
+		<tr>
+			<th colspan="2">Game distribution / Kernel</th>
+			<th>PC-9801-26K<br><code>PMD.COM</code></th>
+			<th>PC-9801-86<br><code>PMD86.COM</code></th>
+			<th>PC-9801-73<br><code>PMDB2.COM</code></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th colspan="2">That one old widely circulating .HDI*<br>MS-DOS 3.3</th>
+			<td><code>0x<span class="var1">39</span>27</code></td>
+			<td><code>0x<span class="var1">3A</span>83</code></td>
+			<td><code>0x<span class="var1">3A</span>2B</code></td>
+		</tr><tr>
+			<th colspan="2">Custom, MS-DOS 6.20<sup>†</sup></th>
+			<td><code>0x<span class="var1">2C</span>CC</code></td>
+			<td><code>0x<span class="var1">2E</span>28</code></td>
+			<td><code>0x<span class="var1">2D</span>D0</code></td>
+		</tr><tr>
+			<th colspan="2">Raw files, current DOSBox-X</th>
+			<td><code>0x<span class="var1">2C</span>91</code></td>
+			<td><code>0x<span class="var1">2D</span>ED</code></td>
+			<td>n/a</td>
+		</tr><tr>
+			<th rowspan="2">2021 Ultimate Collection<sup>††</sup><br>MS-DOS 7</th>
+			<th style="border-right: var(--table-border);">DOSBox-X</th>
+			<td><code>0x<span class="var1">2C</span>82</code></td>
+			<td>n/a</td>
+			<td><b><code>0x<span class="var1">2D</span>86</code></b></td>
+		</tr><tr>
+			<th>Neko Project</th>
+			<td><code>0x<span class="var1">2D</span>98</code></td>
+			<td><b><code>0x<span class="var1">2E</span>F4</code></b></td>
+			<td><code>0x<span class="var1">2E</span>9C</code></td>
+		</tr>
+	</tbody>
+	<figcaption>
+		* The Touhou98 Experience v3.00 release is also built around this .HDI.<br>
+		<sup>†</sup> Created by copying the TH03 files onto that one old widely circulating TH04 .HDI that needed a later DOS version due to {{Blog_PostLink "2021-11-29" "the no-EMS crash bug"}}. Representative of other 5-game .HDI setups that might be floating around the Internet or that people have built for themselves, or real-hardware setups.<br>
+		<sup>††</sup> The <b>bold</b> columns indicate the default setting the package came with.
+	</figcaption>
+</table></figure><p>
+	Cross-referencing these with the memory map above then gives us the following affected addresses:
+</p><figure><table>
+	<thead>
+		<tr>
+			<th>Slot</th>
+			<th>destroyed by P1</th>
+			<th>destroyed by P2</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>0x2C</td>
+			<td>P1's 10-million digit</td>
+			<td class="unused">temporary data</td>
+		</tr><tr>
+			<td>0x2D</td>
+			<td>P1's 100-million digit</td>
+			<td class="unused">temporary data</td>
+		</tr><tr>
+			<td>0x2E</td>
+			<td>P2's 10's digit</td>
+			<td>Extends gained</td>
+		</tr><tr>
+			<td>0x39</td>
+			<td class="unused">temporary data</td>
+			<td class="unused">not yet RE'd</td>
+		</tr><tr>
+			<td>0x3A</td>
+			<td class="unused">temporary data</td>
+			<td class="unused">not yet RE'd</td>
+		</tr>
+	</tbody>
+	<figcaption>
+		I guess we can thank spaztron64 for accidentally building just the right setup to reveal the extend glitch in the first place. I certainly needed to be told of its existence by the gameplay community!
+	</figcaption>
+</table></figure><h4 id="fix-{{.Date}}">The fix</h4><p>
+	So, we've got two glitches that may or may not appear on any given PC-98 setup, and whose effects depend on the combination of operating system, sound card model, and machine speed. That should make it abundantly clear that we can classify the underlying code issue as a landmine. There is nothing worth preserving about system-specific behavior on any ReC98 branch other than <code>master</code>, especially since we want to get away from the architecture in the long term.<br>
+	It's also obvious that we <i>must</i> fix this to retain gameplay integrity in any build that wants to support netplay:
+</p><ul>
+	<li>Gameplay would desync if the two players run different PC-98 setups with different glitch behavior. If the glitch on a local player's system then spawns an additional Extra Attack onto their simulation of the other player's field, it wouldn't appear in the remote player's own simulation. Thus, they wouldn't be able to see and dodge it. Obviously, we'd like to strive for crossplay between emulated (and even real) PC-98 systems and ports to modern systems, and only cut that feature if there are good arguments against it. But dumb system-specific glitches don't qualify in the slightest.</li>
+	<li>Also, we'd like to skip rendering during rollback. But that would also skip the call to <code>enemies_render()</code>, which is the whole reason why this glitch occurs with this exact frequency.</li>
+</ul><p>
+	But how <i>do</i> we fix it? The offending call to <code>chain_fire_charged_exatt()</code> might look redundant at first, but it has definite effects on gameplay on both branches:
+</p><ul>
+	<li>The explosion branch contains its own copy of the Extra Attack charge check, with a well-defined chain slot but a higher threshold value. A chain might only meet the lower requirement of the usual function.</li>
+	<li>The non-explosion branch uses the probably inactive chain slot at <code>chain_ring_p[pid]</code>, which will be different from the uninitialized <code>chain_slot</code> value of 15 in the vast majority of cases. Two calls with two different chain slots might therefore cause a destroyed fireball to spawn <i>two</i> Extra Attacks if both charges are high enough.</li>
+</ul><p>
+	The ideal fix is equally simple, though. Just initializing <code>chain_slot</code> to 15 removes all undefined behavior while simultaneously locking down the deterministic and observable effect of normal code flow. We can also easily implement this without breaking the original position-dependent binary by taking the 4 necessary additional bytes from the function's own bloat. And boy is there a lot of it; removing just even the most obvious single piece of bloat in this one function freed up 23 bytes, <a href="https://github.com/nmlgc/ReC98/blob/c7019963ac643333114ccba9ef10adb3728f2384/th03/main/enemy/fireball.cpp#L478">leaving 19 bytes unused</a>. Any concerns about memory budgets for minor mods are vastly overblown.<br>
+	This means that we're already up to the second release of TH03's debloated and Anniversary Editions!
+</p>{{HTML_ReC98Release "P0335" .HostedPath .DatePrefix}}<hr><p>
+	So that was 3,374 words to explain the ramifications of a single uninitialized local variable, leaving us at 5.375 pushes in total. What better way to round out this one than to finish the unfinished subproject from last time:
+</p><h3 id="gotosocial-{{.Date}}">Completing the Fediverse migration</h3><p>
+	{{Blog_PostLink "2025-12-31#downfall" "As of last time"}}, my Fediverse presence was only missing three pieces of data to function as a full-on replacement for Twitter:
+</p><ol>
+	<li>All posts since 2023-07-02, which had twice as much media attached to them as the previous 8½ years combined</li>
+	<li>Alt text for images</li>
+	<li>Polls and their results, if this is even possible without assigning each vote to an existing Fediverse user</li>
+</ol><p>
+	With the latter two not being part of Twitter's data archive, I already expected that I'd have to cobble together some very awkward code to obtain this data. But I <i>didn't</i> expect that this would cast an even worse light on Twitter:
+</p><ul>
+	<li>The frontend has been written in client-side-rendered React for many years, making scripted HTML scraping impossible without executing JavaScript.</li>
+	<li>The <a href="https://blog.zarfhome.com/2020/12/twitter-makes-it-harder-to-read-tweets">Googlebot User-Agent trick that people documented in 2020</a> no longer works and immediately returns <i>403 Forbidden</i>.</li>
+	<li><code>https://publish.twitter.com/oembed?query=</code>? No longer works either.</li>
+	<li>But surely there is some kind of free API I could use to properly retrieve this dat– nope, <a href="https://developer.x.com/">API access is fully paywalled nowadays</a>.</li>
+</ul><p>
+	And I am certainly not paying just to efficiently retrieve data that should have been part of my data archive all along if I can at all avoid it.
+</p><p>
+	Aren't there a few evil third-party projects that could help here? <a href="https://nitter.net/">Nitter</a>, for example, is well-known for retrieving Twitter timelines and displaying them on efficient, server-rendered, and easily scrapeable pages, bypassing the need for both activated JavaScript and a Twitter account just for reading posts. Sadly, it didn't render alt text on its frontend at the time in early February when I wanted to complete the Fediverse import. But it's open-source&nbsp;– and although I couldn't comprehend the exact mechanisms of the <a href="https://github.com/zedeus/nitter?tab=readme-ov-file"><q>unofficial Twitter API</q></a> they use, it might be the best starting point.
+</p><p>
+	And sure enough, <a href="https://github.com/zedeus/nitter/issues/559">someone else previously needed alt text as well, found the string in the API response that Nitter was already processing, and wrote the code to pass it on to the frontend</a>. All I had to do then was to cherry-pick these commits, adjust them for the current API's response schema, and run my own Nitter instance. This was the first time I hacked around in anything written in Nim, but I encountered no issues when building the project on Linux, although the build system is definitely on the slower end as far as systems languages are concerned.<br>
+	Since this was ridiculous enough for what I wanted to do, I then pushed the updated versions of these commits, in the hope that someone else could save those 10-20 minutes of fixing merge conflicts. Since that issue was languishing for over three years, I certainly didn't expect that Nitter's maintainer would actually merge these commits 1½ weeks later. Even better, though! Thanks to ReC98, alt text is now shown on the main nitter.net instance. As of this blog post, the widget in Nitter's frontend still suffers from a visual overlapping bug in its unexpanded form when displaying multi-line alt text, but having that text in the server-rendered DOM <i>at all</i> is all I was asking for…
+</p><p>
+	…except that <a href="https://github.com/nmlgc/twitter-archive-to-gotosocial">my GoToSocial importer</a> can't just automatically scrape this text from nitter.net because <a href="https://github.com/zedeus/nitter/issues/1248">they prevent scraping, and have put a lot of effort into keeping it prevented</a>. Specifically, any request made with <a href="https://pypi.org/project/requests/">the Python Requests library</a> will return a <samp>200 OK</samp> response code but an empty response body.<br>
+	The Nitter wiki links <a href="https://github.com/zedeus/nitter/wiki/Instances">a few other public instances</a>, but none of those would work for us either. Some of these are still running a Nitter version older than <a href="https://github.com/zedeus/nitter/commit/1c06a67afdf589f74756f1dcb330334ca92780d7"><code>1c06a67</code></a>, as of this blog post. And the ones that do run a current version employ similar scraping prevention techniques: They either respond with a <samp>403 Forbidden</samp>, a redirect to a JavaScript challenge page, or just outright close the HTTP connection. Working around that would be way beyond reasonable, considering the budget that this task was supposed to take up… and if they don't <i>want</i> people to scrape them, I should respect that. Yet another example of AI crawlers ruining everything, I guess…<br>
+	zedeus did recommend <a href="https://github.com/d60/twikit">Twikit</a> for programmatic access to Twitter data in the issue I linked above, but that library is currently unusable as well. A simple <a href="https://twikit.readthedocs.io/en/latest/twikit.html#twikit.client.client.Client.get_tweet_by_id"><code>get_tweet_by_id()</code> call</a> returns <samp>403 Forbidden</samp>, suggesting that you have to log in first, but any attempt to <a href="https://twikit.readthedocs.io/en/latest/twikit.html#twikit.client.client.Client.login">login()</a> gets <a href="https://github.com/d60/twikit/issues/388">blocked by CloudFlare</a>.
+</p><p>
+	So yeah. You might only need to run such an import script once, but if you want a complete migration with alt text and polls, there's no way around temporarily self-hosting a Nitter instance, as far as I can tell. Lovely.<br>
+	Speaking of polls, though…
+</p><h4 id="polls-{{.Date}}">Polls</h4><p>
+	With a scraping setup in place, <i>retrieving</i> poll data and calculating the exact votes from the given percentages on Nitter's frontend was no big deal. Instead, all of the annoyance here lies in then getting that data onto a Fediverse server:
+</p><ol>
+	<li>Very understandably, GoToSocial lacks an API to pre-fill poll results,</li>
+	<li>but it also <a href="https://codeberg.org/superseriousbusiness/gotosocial/src/commit/c4f1988a30a013f132f98a84274583305c066c39/internal/processing/status/create.go#L249-L252">refuses to create backdated statuses with polls altogether</a>.</li>
+</ol><p>
+	These two points defeat any lasting automated migration code I could add to my GoToSocial importer. Printing out the imported data to <code>stdout</code> is the best I can do; any efficient method of importing backdated polls relies on removing the condition from 2) and compiling your own build of GoToSocial.<br>
+	Thankfully, this is no big deal even when cross-compiling from Windows to Linux. Then, your <code>POST /api/v1/statuses</code> requests can at least include the poll's question labels and return the database ID of the newly created poll for further manipulation at the SQL level. Then, you can reformat the <code>stdout</code> output into a single query and run it manually:
+</p><figure>
+	<pre>UPDATE polls SET
+	voters = <var>87</var>,
+	votes = '<var>[25, 49, 11, 2]</var>',
+	expires_at = '<var>2022-04-16 23:53:20.000000+00:00</var>'
+WHERE id = <var>{poll_id}</var>;</pre>
+</figure><p>
+	But wait, really? You can manipulate a poll's results, both <a href="https://activitypub.nmlgc.net/@rec98/statuses/01G08BY6B81Q5XJ4EX4M22EP0Q">inside GoToSocial</a> and on all other clients, with just a single SQL query? If these results don't need to be associated with specific users or at least their originating servers, doesn't this mean that polls on the Fediverse are inherently untrustworthy?<br>
+	Of course, it makes little sense to verify poll results before displaying them on a server's own frontend. You can always just place a reverse proxy in front of the server and rig a poll in that way. But <a href="https://shkspr.mobi/blog/2024/09/no-activitypub-isnt-anonymous/">the inbox mechanism of ActivityPub already <i>technically</i> breaks anonymity across servers from the point of view of the server admin</a>, so I would have expected both clients and other federated servers to at least run <i>some</i> sort of validation upon receiving a poll. Although that would definitely cause heavy load on servers and clients as these polls receive more and more answers, within <a href="https://news.ycombinator.com/item?id=35886719">a protocol that is already quite chatty</a>… {{HTML_Emoji "thonk"}}
+</p><p>
+	In any case, this kind of validation would have to exist on an entirely different layer that has nothing to do with ActivityPub. That protocol&nbsp;– or rather, the underlying ActivityStreams vocabulary&nbsp;– only specifies how <a href="https://www.w3.org/TR/activitystreams-vocabulary/#questions"><code>Question</code>s and their associated answers</a> are sent between servers. But once these votes are <i>on</i> a server, they only need to be stored in the minimal way expected by the usual client API. Which, as these words suggest, actually isn't even part of ActivityPub: Although that standard does attempt to specify a client API in addition to the server-to-server protocol, <a href="https://www.stevebate.net/activitypub-client-api-a-way-forward/">its development and adoption have stalled</a>. Instead, <a href="https://activitypub.nmlgc.net/login">most clients in common use</a> simply implement <a href="https://docs.joinmastodon.org/client/intro/">the API that Mastodon once came up with</a>, as a de facto standard. <a href="https://github.com/mastodon/mastodon/issues/1629">Mastodon's poll feature was quickly implemented in the most basic way</a>, and no one has ever even proposed adding any validation features on top, as far as I can tell. And so, the <code>GET /api/v1/statuses/{id}</code> endpoint of any Mastodon-compatible Fediverse server is simply expected to return
+</p><figure>
+	<pre>{
+	…
+	"poll": {
+		"options": [
+			{ "title": "Option 1", "votes_count": 0 },
+			{ "title": "Option 2", "votes_count": 0 },
+		]
+	}
+	…
+}</pre></figure><p>
+	without any reference to where these votes are coming from, expecting the client to fully trust the server as far as the legitimacy of these votes is concerned. Of course, I'm a pretty trustworthy person if I may say so myself, but this detail turns the Fediverse into a pretty bad place to conduct even just semi-serious polls…<br>
+	This is also why I haven't pointed any of the old links to Twitter polls on this website to my ActivityPub server yet. As long as the @ReC98Project account still exists <i>and</i> you can still view individual tweets without a Twitter account, it remains the authoritative and ultimately more trustworthy home of these poll results.
+</p><p id="bluesky-{{.Date}}">
+	So in the end, centralized systems, and Twitter in particular, would still be indispensable for at least the occasional poll I tend to run. Bluesky, unfortunately, <a href="https://github.com/bluesky-social/atproto/discussions/1310">still doesn't natively support polls</a> and instead forces people to build custom poll systems in the meantime. While slightly more trustworthy than Fediverse clients on paper, the ones I've seen are just Strawpoll clones that don't come with <i>any</i> kind of authentication, and often even allow people to place multiple votes by simply opening a new private browser window. Unsurprisingly, I therefore received several random and apparenly botted answers within seconds of creating a poll on both the systems I've used so far, making their results even more unusable. One of them also went offline within roughly 6 months of me using it, taking its one associated post with it.<br>
+	Or maybe I should just conduct polls by asking for thought-out replies and rewarding people with, like, {{HTML_Currency 50}} of ReC98 budget going to a goal of their choice…
+</p><p>
+	On the topic of Bluesky, though…
+</p><p>
+	<a href="https://bsky.app/profile/rec98.nmlgc.net/post/3me5rwzppzc2s">The hell is this video quality</a>? You upload lossless AV1 through the bsky.app frontend, and they blow up the video to 15.5× its original size by applying every single one of the worst possible processing steps:
+</p><ol>
+	<li>For starters, they re-encode your video as H.264 using the High profile with YUV420P chroma subsampling. This is the same state of the art from <span class="hovertext" title="The High Profile was only introduced one year after the 1.0 release of the codec.">2005</span> that Twitter still expects you to produce yourself 21 years later. I'd expect any competitor to be better than that, but with Bluesky, that's just the start.</li>
+	<li>Because <i>then</i>, they <a href="https://github.com/bluesky-social/social-app/issues/8356">enforce 30 FPS</a>, duplicating or dropping frames as needed. This is inexcusable and disgusting.</li>
+	<li>They also bilinearly scale your video to 720&nbsp;pixels in its shortest dimension. At least they maintain its original aspect ratio…</li>
+	<li>But this scaling process also targets a constant bitrate of 3,000&nbsp;kbit/s, regardless of whether the video actually needs that much. I'm getting flashbacks of a certain dumb and uninformed <i><q>if MP3, then 320kbps CBR, everything below sucks</q></i> mentality.</li>
+	<li>Those bits would have been much better invested in keyframes. Of which we get exactly zero, causing seeking lags at consistent spots throughout these videos.</li>
+</ol><p>
+	But maybe that's just bsky.app's backend doing its own video conversion. Maybe its developers did collect statistics and then made the conscious and informed decision that those exact processing steps would deliver the optimal trade-off between quality, traffic, and compatibility for the kind of HD content that people typically want to upload to such a platform nowadays. Maybe, my use case is just a rare exception… wait, <a href="https://github.com/bluesky-social/social-app/issues/5347">gamers are unhappy too</a>? 🤨<br>
+	Surely then, the AT Protocol network still stores the original lossless video I uploaded, and an alternate client could play it directly, right? That's certainly what I would expect from a platform that advertises self-hosting, control over one's own data, and <q>account portability</q>.
+</p><p>
+	So let's check Bluesky's data archive, and… <a href="https://docs.bsky.app/blog/repo-export">the hell is a CAR file</a>? A proprietary binary format in place of the standard .zip file you'd get from even the most evil corporations on the planet? Why the hell would they confront people trying to access their own data with a blog post containing Go code, directly linked from the data export modal? Usually, platforms are hard to leave due to network effects and people's inherent laziness to open another browser tab, but I've never seen a service also put up such a deliberate technical hurdle. How expensive could it have possibly been to set up a server that zips up all of a user's data on request? Why did they have to externalize these costs to their users?<br>
+	The biggest joke, though: All code in that blog post is taken from <a href="https://github.com/bluesky-social/cookbook/tree/main/go-repo-export">this repository with example code</a>, but the README in that directory says:
+</p><blockquote>Check out the <a href="https://github.com/bluesky-social/goat"><code>goat</code></a> command line tool, which does the same thing and is actively maintained.</blockquote><p>
+	Except that the <code>goat</code> subcommand that actually downloads post-attached blobs, <code>goat blob export</code>, downloads directly from the AT Protocol network and doesn't even need the CAR file! Which, by the way, you could also download via <code>goat <i>repo</i> export</code>. And why <i>wouldn't</i> you, because you sure need this tool <i>anyway</i> to do <i>anything</i> because no existing tooling works with this format!<br>
+	Anyway. Let's look at the blob of one of those videos, and…
+</p><figure>
+	<rec98-child-switcher class="ffprobe-{{.Date}} plaintext">
+	<pre data-t0="Original video"
+><span style="color: oklch(80% 0.1 110)">$</span> <span style="color: oklch(80% 0.1 45)">ffprobe <span style="color: oklch(80% 0.1 245)">-hide_banner</span> 03_source.webm</span>
+Input #0, matroska,webm, from '03_source.webm':
+  Metadata:
+    ENCODER         : Lavf62.3.100
+
+
+
+  Duration: 00:00:05.12, start: 0.000000, bitrate: 454 kb/s
+  Stream #0:0:
+    Video:
+      av1 (libdav1d) (High), gbrp(pc, gbr/bt709/iec61966-2-1, progressive),
+      288x368, SAR 1:1 DAR 18:23, <span style="color: red">56.42 fps</span>, 56.42 tbr, 1k tbn
+    Metadata:
+      ENCODER         : Lavc62.11.100 libaom-av1
+      DURATION        : 00:00:05.122000000</pre>
+		<pre class="active" data-t0="Bluesky conversion"
+><span style="color: oklch(80% 0.1 110)">$</span> <span style="color: oklch(80% 0.1 45)">ffprobe <span style="color: oklch(80% 0.1 245)">-hide_banner</span> bafkreid7mp5u7mb32o2a5n7zl2hbfxkiiaiebh7x77vik27alu2hfvuq5q</span>
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'bafkreid7mp5u7mb32o2a5n7zl2hbfxkiiaiebh7x77vik27alu2hfvuq5q':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.1.100
+  Duration: 00:00:05.17, start: 0.000000, bitrate: 193 kb/s
+  Stream #0:0[0x1](und):
+    Video:
+      h264 (High) (avc1 / 0x31637661), yuv420p(tv, unknown/bt709/iec61966-2-1, progressive),
+      288x368 [SAR 1:1 DAR 18:23], 189 kb/s, <span style="color: red">30 fps</span>, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc61.3.100 libx264</pre>
+	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
+	<figcaption></figcaption>
+</figure><p>
+	That's basically the same video before the scaling. Still YUV420P, still 30 FPS, still no keyframes.<br>
+	I hate everything about this&nbsp;– and most importantly, the fact that I even have to bother with this <a href="https://urbanists.social/@sam/110339902538138997">complete waste of human engineering effort</a> just because these kinds of platform choices are decided by politics and marketing for the vast majority of people. If I didn't land the occasional viral hit on there, I would have discontinued Bluesky immediately after this discovery. Maybe I should just trade one corporate platform for another and start looking into Tumblr, as <a href="https://touhou-memories.com/">touhou-memories</a> recommended…
+</p><p>
+	Oh well. Next up: Headless Shuusou Gyoku, preparing the automated replay validation I've wanted for years. Since Shuusou Gyoku's new replay system is long overdue now, I will put all future budget from {{DB_CustomerByID 13}} into that system until it's done. If you'd like more TH03 done sooner, please fund it separately&nbsp;– but with {{HTML_Currency 73500}} of free budget left, there should be plenty of room for everyone.<br>
+	That said, my life priorities do seem to have shifted for good by now. So I might need to reduce the cap if all of you really end up commissioning <i>that</i> much… But let's see how fast things will actually progress in the future, now that this worst possible piece of reverse-engineering is finally done.
+</p>

@@ -1,0 +1,21 @@
+Anchor	Name
+frames	An important note about durations in TH03
+chain	TH03's chaining system
+tuning	Difficulty-specific tuning
+round_speed	- <code>round_speed</code>
+enemy_speed	- <code>enemy_speed</code>
+enemy_angle	-- Angle tuning
+combo	TH03's combo system
+boss_attacks	- Boss Attacks and Panics
+formations	TH03's enemy formation scripts
+formation_gameplay	- Gameplay details
+opcodes	- Function reference
+enemies	TH03's enemies themselves
+explosions	TH03's explosions
+fireballs	TH03's fireballs
+fireballs_shotted	- Destroying fireballs with regular player shots or Charge Shots
+glitches	TH03's score reduction and extend glitches
+fix	- The fix (← new builds here!)
+gotosocial	Completing the Fediverse migration
+polls	- Polls
+bluesky	- Bluesky rant, part 2

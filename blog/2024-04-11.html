@@ -10,9 +10,9 @@
 {{$ed06_1_rgb := (call .PostFileURL "TH02-ED06.PI-1-ED06B.RGB-palette.png") -}}
 {{$staff_2 := (call .Video "TH02-Staff-Roll-ED06.PI-2" "Video of the transition from picture #2 to #3 in TH02's Staff Roll, demonstrating the palette change with the unfitting red-tinted white color") -}}
 {{$ed06_2_pi := (call .PostFileURL "TH02-ED06.PI-2.png") -}}
-{{$ed06_2_rec := (call .PostFileURL "TH02-ED06.PI-2-final-shots.png") -}}
+{{$ed06_2_rec := (call .PostFileURL "TH02-ED06.PI-2-final-shots.webp") -}}
 {{$ed07_1_pi := (call .PostFileURL "TH02-ED07.PI-1.png") -}}
-{{$ed07_1_rec := (call .PostFileURL "TH02-ED07.PI-1-final-shots.png") -}}
+{{$ed07_1_rec := (call .PostFileURL "TH02-ED07.PI-1-final-shots.webp") -}}
 {{$holes := (call .Video "TH02-Staff-Roll-text-holes" "Video of the last 5 screens in TH02's Staff Roll and their rotating rectangle animations, showing off how the original way of unblitting can cut holes into the text")}}
 
 {{$e2s.AddMarker 462 "Shift animation starts" "" -}}
@@ -139,21 +139,30 @@
 	{{call .VideoPlayer $staff_2.SetNoLoop}}
 	<figcaption>Also, that tearing on frame #1 is not a recording artifact, but the expected result of yet another VSync-related landmine. 💣 This time, it's caused by the combination of 1) the entire sequence from the ending to the verdict screen being single-buffered, and 2) this animation always running <i>immediately</i> after an expensive operation (640×400 .PI image loading and blitting to VRAM, 320×200 VRAM inter-page copy, or hardware palette loading from a packed file), without waiting for the VSync interrupt. This makes it highly likely for the first frame of this animation to start rendering at a point where the (real or emulated) electron beam has already traveled over a significant portion of the screen.</figcaption>
 </figure><p>
-	But when I went into Stage 2 to compare these colors to the in-game palette, I found something even more curious. ZUN obviously made this screenshot with the Reimu-C shot type, but one of the shot sprites looks slightly different from how it does in-game. {{HTML_Emoji "thonk"}} These screenshots must have been made earlier in development when the sprite didn't yet feature the second ring at the top. The same applies to the Stage 4 screenshot later on:
+	But when I went into Stage 2 to compare these colors to the in-game palette, I found something even more curious. The laser beam shots suggest that ZUN made this screenshot with the Reimu-C shot type, but if you look closely, you can spot several discrepancies compared to how that shot type appears in-game:
+</p><ol>
+	<li>The purple projectiles are missing the second ring at the top.</li>
+	<li>The shots in the center use the two amulet sprites from the A and B shot types rather than the single arrow sprite you'd expect from Reimu-C.</li>
+	<li>Both the amulet sprites <i>and</i> Reimu's sprite itself are missing the black shadow pixels.</li>
+</ol><p>
+	The same applies to the Stage 4 screenshot later on:
 </p><figure class="colors-{{.Date}} pixelated" style="line-height: 0;">
-	<rec98-child-switcher><div data-t0="Staff Roll screenshots"><img
+	<rec98-child-switcher><div data-t0="Staff Roll screenshots" class="active"><img
 		src="{{$ed06_2_pi}}"
-		alt="Original version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight and showing off an old version of the Reimu-C shot sprites"><img
+		alt="Original version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight and showing off an old version of the Reimu-C shot type"><img
 		src="{{$ed07_1_pi}}"
-		alt="Original version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4 and showing off an old version of the Reimu-C shot sprites"
-	></div><div data-t0="Final sprites and colors" class="active"><img
+		alt="Original version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4 and showing off an old version of the Reimu-C shot type"
+	></div><div data-t0="Final Reimu-C shot type, sprites, and colors"><img
 		src="{{$ed06_2_rec}}"
-		alt="Edited version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight; Reimu-C's shot sprites were replaced with their final version"><img
+		alt="Image-edited version of the third 320×200 quarter from TH02's ED06.PI, representing the Meira boss fight with the final version of the Reimu-C shot type"><img
 		src="{{$ed07_1_rec}}"
-		alt="Edited version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4; Reimu-C's shot sprites were replaced with their final version"
+		alt="Image-edited version of the first 320×200 quarter from TH02's ED07.PI, representing Stage 4 with the final version of the Reimu-C shot type"
 	></div>
 	<rec98-parent-init></rec98-parent-init></rec98-child-switcher>
 </figure><p>
+	Hence, ZUN must have made these screenshots at an earlier point in development when the Reimu-C shot type hadn't yet reached its final form.<br>
+	<strong>Edit (2026-04-16):</strong> Thanks to <a href="https://touhou-memories.com/post/813998219398938625/the-staff-roll-from-story-of-eastern-wonderland">touhou-memories</a> for looking even more closely than I initially did.<br>
+</p><p>
 	Finally, the rotating rectangle animation delivers one more minor rendering bug. Each of the 20 frames removes the largest and outermost rectangle from VRAM by redrawing it in the same black color of the background before drawing the remaining rectangles on top. The corners of these rectangles are placed on a shrinking circle that starts with a radius of 256 pixels and is centered at (﻿192,&nbsp;200﻿), which results in a maximum possible X coordinate of 448 for the rightmost corner of the rectangle. However, the Staff Roll text starts at an X coordinate of 416, causing the first two full-width glyphs to still fall within the area of the circle. Each line of text is also only rendered once before the animation. So if any of the rectangles then happens to be placed at an angle that causes its edges to overlap the text, its removal will cut small holes of black pixels into the glyphs:
 </p><figure {{$holes.FigureAttrs}}>
 	{{call .VideoPlayer $holes.SetNoLoop}}

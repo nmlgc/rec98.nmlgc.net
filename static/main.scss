@@ -43,6 +43,7 @@
 	--blog-shadow: var(--shadow) var(--c-border);
 
 	--footer-height: 1.75em;
+	--line-height: 1.4;
 }
 /* --------- */
 
@@ -365,7 +366,7 @@ body {
 	min-height: 100%;
 	margin: 0;
 	position: relative;
-	line-height: 1.4;
+	line-height: var(--line-height);
 }
 
 header {

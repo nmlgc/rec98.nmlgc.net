@@ -13,6 +13,12 @@ rec98-tab-switcher {
 			padding: 0;
 			width: 100%;
 
+			/**
+			 * Defend against top-level `line-height` modifications making
+			 * text unreadable, as e.g. in 2024-04-11#staffroll.
+			 */
+			line-height: var(--line-height);
+
 			&.active {
 				background: var(--c-dark) !important;
 				color: white !important;

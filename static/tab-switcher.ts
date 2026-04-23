@@ -47,7 +47,13 @@ class ReC98TabSwitcher extends HTMLElement {
 		let layerLevel = this.layerTree;
 		for(let layerID = 0; layerID < layers.length; layerID++) {
 			const name = layers[layerID];
-			let indexOnLayer = layerLevel.findIndex((l) => (l.name == name));
+
+			// Allow empty titles for single-layer tab switchers
+			let indexOnLayer = -1;
+			if(layers.length >= 2) {
+				indexOnLayer = layerLevel.findIndex((l) => (l.name == name));
+			}
+
 			if(indexOnLayer == -1) {
 				indexOnLayer = layerLevel.length;
 			}

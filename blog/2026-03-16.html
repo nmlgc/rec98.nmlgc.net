@@ -149,6 +149,10 @@
 {{- define "speed_wide"}}<sup>(512&nbsp;× <var>angle_speed</var>)</sup>/<sub>3</sub>{{- end -}}
 
 <style>
+	table.combo-{{.Date}} tr {
+		border-bottom: var(--table-border);
+	}
+
 	.chain_data-{{.Date}} tr :first-child {
 		text-align: right;
 	}
@@ -411,7 +415,7 @@
 	As you might have already guessed from the list of per-chain fields, the game indeed only tracks the total combo bonus for each player as a single divided-by-10 16-bit value that every chain with ≥2 hits adds onto. For clarity, I'll only use the displayed values in this post. Once the displayed value reaches 655,350, it therefore becomes impossible to cancel the {{Blog_PostLink "2020-01-20" "80-frame cooldown period"}} by adding more bonus points. This also means that you lose all bonus points you would have earned within these last 80 frames.<br>
 	The bonus value itself grows as you destroy certain entity types with an explosion:
 </p><figure>
-	<table class="{{.Date}} numbers">
+	<table class="{{.Date}} combo-{{.Date}} numbers">
 		<thead>
 			<tr>
 				<th>Entity</th>

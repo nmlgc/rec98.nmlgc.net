@@ -370,6 +370,7 @@ body {
 }
 
 header {
+	position: relative;
 	display: table;
 	height: var(--header-height);
 	background: var(--header-gradient);

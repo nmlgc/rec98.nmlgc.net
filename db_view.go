@@ -192,7 +192,7 @@ func CapCurrent(ctx any) (ret Cap) {
 	ret.PushPrice = scopePrices.Push
 	ret.MicroPrice = scopePrices.Micro
 
-	ret.Pushes = 10
+	ret.Pushes = 0
 	ret.Cap = float64(ret.Pushes) * ret.PushPrice
 
 	backlog := TransactionBacklog()

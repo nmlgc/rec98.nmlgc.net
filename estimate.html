@@ -3,8 +3,3 @@
 	<div style="{{CSS_Meter .Done}} width: {{.Done}}%;"></div>
 	<div class="number">{{HTML_Percentage .Done}}</div>
 </div>
-<span class="cost">{{- if .Money -}}
-		~<span class="amount">{{HTML_Currency .Money}}</span>
-	{{- else -}}
-		Done!
-	{{- end -}}</span>

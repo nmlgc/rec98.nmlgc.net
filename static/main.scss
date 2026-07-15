@@ -565,7 +565,7 @@ span.reserved { color: orange; }
 
 section.overall, section.game, section.binary {
 	display: grid;
-	grid-template-columns: 4.5em 1fr auto;
+	grid-template-columns: 4.5em 1fr;
 	align-items: center;
 	margin-bottom: 1em;
 }

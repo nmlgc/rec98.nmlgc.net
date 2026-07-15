@@ -387,6 +387,13 @@ func pagesHandler(template string) http.Handler {
 	})
 }
 
+// faqRedirectHandler redirects FAQ links to the archived version on the
+// Wayback machine.
+var faqRedirectHandler = http.HandlerFunc(func(wr http.ResponseWriter, req *http.Request) {
+	url := "https://web.archive.org/web/20260715184129/https://rec98.nmlgc.net/faq"
+	http.Redirect(wr, req, url, http.StatusMovedPermanently)
+})
+
 type ProviderHandler = func(http.ResponseWriter, *http.Request, *Incoming)
 
 // incomingHandler wraps the given provider-specific payment processing handler
@@ -572,7 +579,7 @@ func main() {
 	r.Handle("/robots.txt", staticHP.Server())
 	r.Handle("/favicon.ico", staticHP.Server())
 	r.Handle("/", pagesHandler("index.html"))
-	r.Handle("/faq", pagesHandler("faq.html"))
+	r.Handle("/faq", faqRedirectHandler)
 	r.Handle("/fundlog", pagesHandler("fundlog.html"))
 	r.Handle(blogURLPrefix, pagesHandler("blog_toc.html"))
 	r.Handle(blogURLPrefix+"/all", pagesHandler("blog_all.html"))

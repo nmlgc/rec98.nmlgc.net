@@ -2,7 +2,7 @@
 
 <section id="cap">
 	<p>
-		<small>Currently outstanding workload / cap:</small>
+		<small>Final outstanding workload:</small>
 		<span class="amount confirmed">{{HTML_Currency .Outstanding}}</span>
 		{{if .Incoming}}<small>
 			+ <span class="amount incoming">
@@ -13,37 +13,11 @@
 				{{HTML_Currency .Reserved}} reserved for discounts
 			</span>
 		</small>{{end}}
-		out of
-		<span class="amount">{{HTML_Currency .Cap}}</span>
 	</p>
 	<div class="meter"><div
 		style="{{CSS_Meter 100}} width: {{ .FracOutstanding}}%"></div><div
 		style="{{CSS_Meter   0}} width: {{ .FracIncoming}}%"></div><div
 		style="{{CSS_Meter  50}} width: {{ .FracReserved}}%"></div
-	></div>{{- if .Reached -}}<p class="desc">
-		Currently sold out, please check back after the next delivery.<br>
-		In the meantime, you can <a href="/donate">donate</a>.
-	</p>{{- else if not .Ctx -}}<p>
-		Interested in contributing? Make sure you've read the <a href="/faq">
-		FAQ page</a>, and place your order there.
-	</p>{{- end -}}
-	<p class="desc">
-		Want to support translations? These are funded through
-		{{HTML_Emoji "opencollective"}} <a href="https://opencollective.com/thpatch">Touhou Patch Center</a>;
-		{{Blog_PostLink "2023-07-28" "check the announcement for more info"}}!
-	</p>
-	{{if len $discounts -}}<hr style="width: 100%;">
-		<small>Current discounts:</small>
-		<ul class="discounts">{{range $discounts -}}
-			<li>
-				<strong>{{HTML_FloatMaxPrec (pct .FractionCovered) 0}}%
-				(= {{HTML_Currency .PushpriceRemaining}} per push)</strong>,
-				offered by {{DB_CustomerByID .Sponsor}} for the following goals:
-				<ul>{{range .Goals -}}
-					<li>{{.}}</li>
-				{{- end}}</ul>
-				{{.Ad}}
-			</li>{{- end}}</ul>
-	{{- end}}
+	></div>
 </section>
 <hr>

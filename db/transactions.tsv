@@ -321,8 +321,8 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-10-11T10:36:04Z	10	4000	TH02 RE		T0318
 2024-10-22T07:59:00Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0319
 2024-10-25T13:27:07Z	18	4350	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0320
-2024-11-01T04:02:24Z	27	300	Kioh Gyoku (getting started)		T0321
-2024-11-01T04:55:44Z	0	20000	TH05 (anything)		T0322
+2024-11-01T04:02:24Z	27	0	Kioh Gyoku (getting started)		T0321
+2024-11-01T04:55:44Z	0	16000	TH05 (anything)		T0322
 2024-11-01T09:07:38Z	6	915	TH05 OP.EXE		T0323
 2024-11-01T10:56:51Z	13	20000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0324
 2024-11-02T11:44:10Z	15	1000	Reverse-engineering		T0325
@@ -361,7 +361,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-03-02T11:25:44Z	15	1000	Reverse-engineering		T0357
 2025-03-08T01:19:09Z	13	9000	Reverse-engineering (existing goals)		T0358
 2025-03-09T10:15:56Z	0	12500	Anything (including tooling)		T0359
-2025-03-11T10:21:30Z	10	3500	TH02 RE		T0360
+2025-03-11T10:21:30Z	10	0	TH02 RE		T0360
 2025-03-22T11:11:16Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0361
 2025-03-24T09:32:14Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0362
 2025-04-01T11:01:22Z	0	3500	TH03 RE		T0363
@@ -370,28 +370,28 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-04-09T09:12:21Z	0	3000	Anything (including tooling)		T0366
 2025-04-09T10:17:53Z	0	12500	Anything (including tooling)		T0367
 2025-04-09T13:31:53Z	28	5000	Shuusou Gyoku: (<a href="https://github.com/nmlgc/ssg/issues/6">Translation support</a> &gt; Anything)		T0368
-2025-04-11T10:11:32Z	10	3500	TH02 RE		T0369
+2025-04-11T10:11:32Z	10	0	TH02 RE		T0369
 2025-04-22T11:36:58Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0370
 2025-04-24T09:32:15Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0371
-2025-04-29T18:43:04Z	29	500	Reconstructing the original installers		T0372
+2025-04-29T18:43:04Z	29	0	Reconstructing the original installers		T0372
 2025-05-01T11:26:12Z	0	3500	TH03 RE		T0373
 2025-05-02T11:02:46Z	15	1000	Reverse-engineering		T0374
 2025-05-09T10:23:26Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0375
 2025-05-09T11:01:09Z	0	12500	Anything (including tooling)		T0376
-2025-05-11T10:02:50Z	10	3500	TH02 RE		T0377
+2025-05-11T10:02:50Z	10	0	TH02 RE		T0377
 2025-05-22T11:15:08Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0378
 2025-05-24T09:32:32Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0379
 2025-06-01T12:15:43Z	0	3500	TH03 RE		T0380
 2025-06-02T11:12:58Z	15	1000	Reverse-engineering		T0381
 2025-06-09T10:07:42Z	0	12500	Anything (including tooling)		T0382
 2025-06-09T10:20:44Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0383
-2025-06-11T10:42:39Z	10	3500	TH02 RE		T0384
+2025-06-11T10:42:39Z	10	0	TH02 RE		T0384
 2025-06-22T10:56:09Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0385
 2025-06-24T09:32:04Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0386
 2025-07-01T11:52:17Z	0	3500	TH03 RE		T0387
 2025-07-09T10:13:58Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0388
 2025-07-09T10:37:29Z	0	12500	Anything (including tooling)		T0389
-2025-07-11T11:28:53Z	10	3500	TH02 RE		T0390
+2025-07-11T11:28:53Z	10	0	TH02 RE		T0390
 2025-07-22T11:30:45Z	20	1000	TH03 (AI/Enemy/Pattern RE > Gameplay RE > MAIN.EXE > anything)		T0391
 2025-07-24T09:31:28Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0392
 2025-08-01T11:58:32Z	0	3500	TH03 RE		T0393
@@ -424,20 +424,20 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2026-03-01T11:49:33Z	0	3500	TH03 RE		T0420
 2026-03-09T11:11:22Z	0	12500	Anything (including tooling)		T0421
 2026-03-17T17:43:51Z	18	4375	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a>		T0422
-2025-03-20T15:34:58Z	14	20000	TH02: (RE > PI)		T0423
-2025-03-21T06:08:22Z	14	2500	TH02: (RE > PI)		T0424
+2025-03-20T15:34:58Z	14	0	TH02: (RE > PI)		T0423
+2025-03-21T06:08:22Z	14	0	TH02: (RE > PI)		T0424
 2026-03-21T20:52:16Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0425
 2026-03-24T09:31:20Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0426
-2026-04-01T10:18:13Z	0	3500	TH03 RE		T0427
+2026-04-01T10:18:13Z	0	0	TH03 RE		T0427
 2026-04-09T11:29:14Z	0	12500	Anything (including tooling)		T0428
 2026-04-21T10:07:31Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0429
 2026-04-24T09:30:23Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0430
-2026-05-01T10:19:41Z	0	3500	TH03 RE		T0431
+2026-05-01T10:19:41Z	0	0	TH03 RE		T0431
 2026-05-09T12:25:08Z	0	12500	Anything (including tooling)		T0432
 2026-05-21T10:15:26Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0433
 2026-05-24T09:31:43Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0434
-2026-06-01T12:03:09Z	0	3500	TH03 RE		T0435
+2026-06-01T12:03:09Z	0	0	TH03 RE		T0435
 2026-06-09T11:33:48Z	0	12500	Anything (including tooling)		T0436
 2026-06-21T10:32:47Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0437
 2026-06-24T09:30:22Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0438
-2026-07-01T11:11:39Z	0	3500	TH03 RE		T0439
+2026-07-01T11:11:39Z	0	0	TH03 RE		T0439

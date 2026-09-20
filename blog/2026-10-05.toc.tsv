@@ -1,0 +1,15 @@
+Anchor	Name
+negative	Point items with negative values?
+scope	Defining the scope of "game logic"
+rng	- The unexpectedly big scope of RNG
+sprintf	Researching locale bloat in MSVC's <code>sprintf()</code>
+exceptions	Safely bypassing MSVC's C++ exception handling
+split	Completing the separation of game logic
+split-impl	- Implementation details
+debug	- Changing debug invincibility
+hatoyama	The birth of a shared ReC98 source port engine
+cli	A replay validation CLI
+perf	- Validation performance
+future	Future work
+retirement	Retirement announcement
+epilogue	- Epilogue

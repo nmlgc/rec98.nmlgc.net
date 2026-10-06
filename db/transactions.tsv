@@ -304,7 +304,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-06-11T11:26:35Z	10	3500	TH02 RE		T0301
 2024-07-01T21:46:11Z	13	17000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0302
 2024-07-02T10:44:43Z	15	1000	Reverse-engineering		T0303
-2024-07-09T11:21:43Z	0	12500	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0304
+2024-07-09T11:21:43Z	0	12500	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>		T0304
 2024-07-11T11:34:43Z	10	4000	TH02 RE		T0305
 2024-08-01T21:04:24Z	13	20000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0306
 2024-08-02T10:06:04Z	15	1000	Reverse-engineering		T0307
@@ -312,7 +312,7 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2024-08-11T10:00:56Z	10	4000	TH02 RE		T0309
 2024-09-01T12:02:42Z	13	20000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0310
 2024-09-02T10:15:40Z	15	1000	Reverse-engineering		T0311
-2024-09-09T11:36:49Z	0	7000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0312
+2024-09-09T11:36:49Z	0	7000	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>		T0312
 2024-09-09T11:36:49Z	0	5400	Anything (including tooling)		T0313
 2024-09-11T10:08:35Z	10	4000	TH02 RE		T0314
 2024-10-01T10:16:26Z	13	20000	Shuusou Gyoku: Linux port > <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> > <a href="https://github.com/nmlgc/ssg/issues/54">Screenshot compression</a>		T0315
@@ -400,11 +400,11 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2025-08-24T09:30:25Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0396
 2025-09-01T12:17:17Z	0	3500	TH03 RE		T0397
 2025-09-09T11:06:48Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0398
-2025-09-09T11:32:02Z	0	12500	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0399
+2025-09-09T11:32:02Z	0	12500	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>		T0399
 2025-09-24T09:31:03Z	25	1000	Shuusou Gyoku: SDL2 port to Windows 98		T0400
 2025-09-01T10:52:53Z	0	3500	TH03 RE		T0401
 2025-10-09T10:35:30Z	13	30000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0402
-2025-10-09T10:41:46Z	0	10625	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>	Almost done since early 2022, will be completed and delivered during a crowdfunding lull	T0403
+2025-10-09T10:41:46Z	0	10625	<a href="/blog/2021-09-12">PC-98 text RAM JIS trail word rendering research</a>		T0403
 2025-10-09T10:41:46Z	0	1875	Anything (including tooling)		T0404
 2025-10-24T09:30:49Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0405
 2025-11-01T11:40:36Z	0	3500	TH03 RE		T0406
@@ -422,22 +422,22 @@ Time	Customer	Cents	Goal	DelayReason	ID
 2026-02-09T11:37:24Z	0	12500	Anything (including tooling)		T0418
 2026-02-24T09:32:31Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0419
 2026-03-01T11:49:33Z	0	3500	TH03 RE		T0420
-2026-03-09T11:11:22Z	0	12500	Anything (including tooling)		T0421
+2026-03-09T11:11:22Z	0	5000	Anything (including tooling)		T0421
 2026-03-17T17:43:51Z	18	4375	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a>		T0422
 2025-03-20T15:34:58Z	14	0	TH02: (RE > PI)		T0423
 2025-03-21T06:08:22Z	14	0	TH02: (RE > PI)		T0424
 2026-03-21T20:52:16Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0425
-2026-03-24T09:31:20Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0426
+2026-03-24T09:31:20Z	25	0	Shuusou Gyoku: SDL port to Windows 98		T0426
 2026-04-01T10:18:13Z	0	0	TH03 RE		T0427
-2026-04-09T11:29:14Z	0	12500	Anything (including tooling)		T0428
+2026-04-09T11:29:14Z	0	0	Anything (including tooling)		T0428
 2026-04-21T10:07:31Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0429
-2026-04-24T09:30:23Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0430
+2026-04-24T09:30:23Z	25	0	Shuusou Gyoku: SDL port to Windows 98		T0430
 2026-05-01T10:19:41Z	0	0	TH03 RE		T0431
-2026-05-09T12:25:08Z	0	12500	Anything (including tooling)		T0432
+2026-05-09T12:25:08Z	0	0	Anything (including tooling)		T0432
 2026-05-21T10:15:26Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0433
-2026-05-24T09:31:43Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0434
+2026-05-24T09:31:43Z	25	0	Shuusou Gyoku: SDL port to Windows 98		T0434
 2026-06-01T12:03:09Z	0	0	TH03 RE		T0435
-2026-06-09T11:33:48Z	0	12500	Anything (including tooling)		T0436
+2026-06-09T11:33:48Z	0	0	Anything (including tooling)		T0436
 2026-06-21T10:32:47Z	13	5000	Shuusou Gyoku: <a href="https://github.com/nmlgc/ssg/issues/36">Better replays</a> &gt; TH03: (Decompilation &gt; replays &gt; modern port &gt; netplay)		T0437
-2026-06-24T09:30:22Z	25	1000	Shuusou Gyoku: SDL port to Windows 98		T0438
+2026-06-24T09:30:22Z	25	0	Shuusou Gyoku: SDL port to Windows 98		T0438
 2026-07-01T11:11:39Z	0	0	TH03 RE		T0439
